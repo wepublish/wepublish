@@ -1,0 +1,8 @@
+.DS_Store
+.idea/
+lib/
+packages/**/LICENSE
+node_modules
+npm-debug.log
+yarn-error.log
+.tsbuildinfo
