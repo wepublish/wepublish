@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  frontend:
+    init: true
+    build:
+      dockerfile: services/frontend-service/development.Dockerfile
+      context: .
+    ports:
+      - '3000:3000'
+      - '3001:3001'
+    container_name: frontend
+    volumes:
+      - ./packages/frontend/:/home/node/packages/frontend/
+      - ./services/frontend-service/:/home/node/services/frontend-service/
+    restart: always
+    environment:
+      - NODE_ENV=development

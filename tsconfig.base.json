@@ -4,10 +4,13 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2017", "dom", "dom.iterable"],
+
+    "declaration": true,
+    "declarationMap": true,
+
     "types": [],
     "jsx": "react",
     "incremental": true,
-    "tsBuildInfoFile": "./.tsbuildinfo",
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,

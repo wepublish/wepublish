@@ -1,0 +1,23 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.rulers": [100],
+  "editor.formatOnSave": true,
+
+  "[json]": {
+    "editor.formatOnSave": false
+  },
+
+  "[jsonc]": {
+    "editor.formatOnSave": false
+  },
+
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  }
+}
