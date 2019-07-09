@@ -1,7 +1,7 @@
 {
   "watch": [
-    "../node_modules/@wepublish/frontend/lib/cjs/common/**/*.js",
-    "../node_modules/@wepublish/frontend/lib/cjs/server/**/*.js",
+    "../../node_modules/@wepublish/frontend/lib/cjs/common/**/*.js",
+    "../../node_modules/@wepublish/frontend/lib/cjs/server/**/*.js",
     "./dist/**.js"
   ],
   "ignoreRoot": []

@@ -9,6 +9,7 @@ services:
     ports:
       - '3000:3000'
       - '3001:3001'
+      - '9229:9229'
     container_name: frontend
     volumes:
       - ./packages/frontend/:/home/node/packages/frontend/
@@ -16,3 +17,5 @@ services:
     restart: always
     environment:
       - NODE_ENV=development
+      - PORT=3000
+      - ADDRESS=0.0.0.0

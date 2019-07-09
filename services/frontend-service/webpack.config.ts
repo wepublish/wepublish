@@ -3,7 +3,7 @@ import webpack from 'webpack'
 
 export const clientConfig: webpack.Configuration = {
   entry: {
-    client: './src/client.tsx'
+    client: './src/client.ts'
   },
   output: {
     chunkFilename: 'client.[name].js',

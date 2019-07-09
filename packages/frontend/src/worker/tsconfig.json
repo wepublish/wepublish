@@ -5,7 +5,7 @@
     "module": "commonjs",
     "outDir": "../../lib/cjs/server",
     "tsBuildInfoFile": "./.tsbuildinfo",
-    "lib": ["es2017"]
+    "lib": ["es2017", "webworker"]
   },
   "references": [{"path": "../common"}]
 }

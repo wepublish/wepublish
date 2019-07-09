@@ -1,7 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {TestComponent} from '../common'
+import {Button} from '../common'
 
-window.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(<TestComponent />, document.body)
-})
+export interface ClientOptions {}
+
+export class Client {
+  constructor(_opts: ClientOptions) {}
+
+  async hydrate(): Promise<void> {
+    return new Promise(resolve => {
+      function onDOMContentLoaded() {
+        ReactDOM.hydrate(<Button />, document.body, () => resolve())
+      }
+
+      if (document.readyState === 'complete') {
+        onDOMContentLoaded()
+      } else {
+        window.addEventListener('DOMContentLoaded', onDOMContentLoaded)
+      }
+    })
+  }
+}

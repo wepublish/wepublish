@@ -10,7 +10,7 @@
     "build:server": "tsc -p ./tsconfig.json",
     "watch": "run-p watch:**",
     "watch:client": "webpack-dev-server --progress --mode development --hot --inline",
-    "watch:server:start": "nodemon ./dist/server.js",
+    "watch:server:start": "nodemon --inspect=0.0.0.0 ./dist/server.js",
     "watch:server:build": "tsc --watch",
     "clean": "shx rm -rf ./dist ./static",
     "start": "node ./dist/server.js",

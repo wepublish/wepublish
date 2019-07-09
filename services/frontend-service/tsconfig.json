@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["./src/modules.d.ts", "./src/server.tsx"],
+  "include": ["./src/server.ts"],
   "compilerOptions": {
     "types": ["@types/node", "@types/webpack-dev-server"],
     "outDir": "./dist/",
