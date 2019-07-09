@@ -9,9 +9,9 @@
     "watch:frontend": "yarn workspace @wepublish/frontend watch",
     "build:frontend-service": "yarn workspace @wepublish/frontend-service build",
     "watch:frontend-service": "yarn workspace @wepublish/frontend-service watch",
-    "docker-build:frontend-service": "docker build -f ./services/frontend-service/Dockerfile .",
-    "prettier": "prettier --write './{packages,services}/**/*.{js,ts,tsx,json}'",
-    "prettier-check": "prettier --check './{packages,services}/**/*.{js,ts,tsx,json}'"
+    "docker-build:frontend-service": "docker build -f services/frontend-service/Dockerfile .",
+    "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
+    "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
   },
   "workspaces": [
     "packages/*",
@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern './{packages,services}/**/*.{js,ts,tsx,json}'"
+      "pre-commit": "pretty-quick --pattern '{packages,services}/**/*.{js,ts,tsx,json}'"
     }
   }
 }
