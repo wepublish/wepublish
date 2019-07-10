@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Button} from '../common'
+import {LazyTestComponent, preload} from '../common/lazy'
 
 export interface ClientOptions {}
 
@@ -9,14 +9,18 @@ export class Client {
 
   async hydrate(): Promise<void> {
     return new Promise(resolve => {
-      function onDOMContentLoaded() {
-        ReactDOM.hydrate(<Button />, document.body, () => resolve())
+      async function onDOMContentLoaded() {
+        const renderedKeys = JSON.parse(document.getElementById('renderedKeys')!.textContent!)
+        await preload(renderedKeys)
+        ReactDOM.hydrate(<LazyTestComponent />, document.getElementById('reactRoot'), () =>
+          resolve()
+        )
       }
 
-      if (document.readyState === 'complete') {
+      if (document.readyState !== 'loading') {
         onDOMContentLoaded()
       } else {
-        window.addEventListener('DOMContentLoaded', onDOMContentLoaded)
+        document.addEventListener('DOMContentLoaded', onDOMContentLoaded)
       }
     })
   }

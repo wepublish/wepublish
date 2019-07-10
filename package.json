@@ -9,6 +9,7 @@
     "watch:frontend": "yarn workspace @wepublish/frontend watch",
     "build:frontend-service": "yarn workspace @wepublish/frontend-service build",
     "watch:frontend-service": "yarn workspace @wepublish/frontend-service watch",
+    "start:frontend-service": "yarn workspace @wepublish/frontend-service start",
     "docker-build:frontend-service": "docker build -f services/frontend-service/Dockerfile .",
     "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
     "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
