@@ -30,6 +30,8 @@
     "@babel/preset-typescript": "^7.3.3",
     "@babel/preset-env": "^7.5.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@wepublish/webpack": "^0.0.0",
+    "@hot-loader/react-dom": "^16.8.6",
     "babel-loader": "^8.0.6",
     "react-hot-loader": "^4.12.3",
     "nodemon": "^1.19.1",

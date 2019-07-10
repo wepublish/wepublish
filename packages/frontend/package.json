@@ -1,7 +1,7 @@
 {
   "name": "@wepublish/frontend",
   "version": "0.0.0",
-  "main": "./lib/cjs/server",
+  "main": "./server.js",
   "module": "./lib/esm/client",
   "license": "MIT",
   "browser": {

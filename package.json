@@ -5,8 +5,11 @@
     "yarn": "^1.16.0"
   },
   "scripts": {
+    "build": "run-s build:webpack build:frontend build:frontend-service",
     "build:frontend": "yarn workspace @wepublish/frontend build",
     "watch:frontend": "yarn workspace @wepublish/frontend watch",
+    "build:webpack": "yarn workspace @wepublish/webpack build",
+    "watch:webpack": "yarn workspace @wepublish/webpack watch",
     "build:frontend-service": "yarn workspace @wepublish/frontend-service build",
     "watch:frontend-service": "yarn workspace @wepublish/frontend-service watch",
     "start:frontend-service": "yarn workspace @wepublish/frontend-service start",
