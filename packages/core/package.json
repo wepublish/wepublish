@@ -1,0 +1,28 @@
+{
+  "name": "@wepublish/core",
+  "version": "0.0.0",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "run-s copy-license sync-package-info build:*",
+    "build:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json",
+    "watch": "run-s copy-license sync-package-info watch:*",
+    "watch:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json --watch",
+    "copy-license": "shx cp ../../LICENSE ./",
+    "clean": "shx rm -rf ./LICENSE ./lib",
+    "prepare": "run-s clean copy:license build sync-package-info",
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "typescript": "^3.5.2",
+    "npm-run-all": "^4.1.5",
+    "shx": "^0.3.2"
+  }
+}

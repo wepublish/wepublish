@@ -4,7 +4,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "../lib/",
-    "tsBuildInfoFile": "./.tsbuildinfo",
+    "tsBuildInfoFile": "../lib/.tsbuildinfo",
     "types": ["@types/node", "@types/webpack"],
     "lib": ["es2017"]
   }

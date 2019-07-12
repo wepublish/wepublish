@@ -1,43 +1,46 @@
 version: '3.7'
 
 services:
-  frontend-build:
+  packages-build:
     init: true
     build:
-      dockerfile: ./packages/frontend/Dockerfile
+      dockerfile: ./packages/Dockerfile
       context: .
-    container_name: frontend-build
+    container_name: packages-build
     volumes:
-      - ./packages/frontend/:/home/node/packages/frontend/:delegated
+      - ./packages/:/home/node/packages/
 
-  frontend:
+  website:
     init: true
+    depends_on: [packages-build]
     build:
-      dockerfile: ./services/frontend-service/development.Dockerfile
+      dockerfile: ./services/website/development.Dockerfile
       context: .
     ports:
       - '3000:3000'
       - '3001:3001'
       - '9229:9229'
-    container_name: frontend
+    container_name: website
     volumes:
-      - ./packages/frontend/:/home/node/packages/frontend/:delegated
-      - ./services/frontend-service/:/home/node/services/frontend-service/:delegated
+      - ./packages/core/:/home/node/packages/core/:delegated
+      - ./packages/website/:/home/node/packages/website/:delegated
+      - ./services/website/:/home/node/services/website/:delegated
     restart: always
     environment:
       - NODE_ENV=development
       - PORT=3000
       - ADDRESS=0.0.0.0
 
-  frontend-storybook:
+  website-storybook:
     init: true
+    depends_on: [packages-build]
     build:
-      dockerfile: ./services/frontend-storybook/Dockerfile
+      dockerfile: ./services/website-storybook/Dockerfile
       context: .
     ports:
       - '3002:3002'
-    container_name: frontend-storybook
+    container_name: website-storybook
     volumes:
-      - ./packages/frontend/:/home/node/packages/frontend/:delegated
-      - ./services/frontend-storybook/:/home/node/services/frontend-storybook/:delegated
+      - ./packages/website/:/home/node/packages/website/:delegated
+      - ./services/website-storybook/:/home/node/services/website-storybook/:delegated
     restart: always

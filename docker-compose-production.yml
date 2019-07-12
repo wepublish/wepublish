@@ -1,12 +1,12 @@
 version: '3.7'
 
 services:
-  frontend:
+  website:
     init: true
     build:
-      dockerfile: services/frontend-service/production.Dockerfile
+      dockerfile: services/website/production.Dockerfile
       context: .
-    container_name: frontend
+    container_name: website
     restart: always
     environment:
       - NODE_ENV=production
