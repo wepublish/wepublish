@@ -1,5 +1,9 @@
 import React from 'react'
 
-export function Button() {
-  return <button>Hello World</button>
+export interface ButtonProps {
+  text: string
+}
+
+export function Button(props: ButtonProps) {
+  return <button>Hello World!!??????!!!!</button>
 }

@@ -22,6 +22,7 @@ export const clientConfig: webpack.Configuration = {
     rules: [
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
         loader: 'babel-loader'
       }
     ]

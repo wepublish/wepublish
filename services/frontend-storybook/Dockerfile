@@ -5,9 +5,8 @@ WORKDIR /home/node/
 # Install build tools
 RUN apk add python gcc g++ make --update-cache
 
-COPY packages/webpack/ packages/webpack/
 COPY packages/frontend/ packages/frontend/
-COPY services/frontend-service/ services/frontend-service/
+COPY services/frontend-storybook/ services/frontend-storybook/
 
 COPY LICENSE .
 COPY tsconfig.base.json .
@@ -17,6 +16,4 @@ COPY .yarnclean .
 COPY scripts/ scripts/
 
 RUN yarn install --pure-lockfile --non-interactive
-RUN yarn build:webpack
-
-CMD yarn watch:frontend-service
+CMD yarn start:frontend-storybook

@@ -1,10 +1,19 @@
 version: '3.7'
 
 services:
+  frontend-build:
+    init: true
+    build:
+      dockerfile: ./packages/frontend/Dockerfile
+      context: .
+    container_name: frontend-build
+    volumes:
+      - ./packages/frontend/:/home/node/packages/frontend/:delegated
+
   frontend:
     init: true
     build:
-      dockerfile: services/frontend-service/development.Dockerfile
+      dockerfile: ./services/frontend-service/development.Dockerfile
       context: .
     ports:
       - '3000:3000'
@@ -12,10 +21,23 @@ services:
       - '9229:9229'
     container_name: frontend
     volumes:
-      - ./packages/frontend/:/home/node/packages/frontend/
-      - ./services/frontend-service/:/home/node/services/frontend-service/
+      - ./packages/frontend/:/home/node/packages/frontend/:delegated
+      - ./services/frontend-service/:/home/node/services/frontend-service/:delegated
     restart: always
     environment:
       - NODE_ENV=development
       - PORT=3000
       - ADDRESS=0.0.0.0
+
+  frontend-storybook:
+    init: true
+    build:
+      dockerfile: ./services/frontend-storybook/Dockerfile
+      context: .
+    ports:
+      - '3002:3002'
+    container_name: frontend-storybook
+    volumes:
+      - ./packages/frontend/:/home/node/packages/frontend/:delegated
+      - ./services/frontend-storybook/:/home/node/services/frontend-storybook/:delegated
+    restart: always

@@ -48,6 +48,8 @@ export class Server {
         new Set(bundles.map(urls => urls.map((url: string) => url)))
       ).filter(url => url !== this.clientEntryURL)
 
+      console.log(bundleSet)
+
       return `
         <html>
           <head>
