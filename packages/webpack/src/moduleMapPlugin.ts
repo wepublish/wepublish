@@ -36,7 +36,7 @@ export class ModuleMapPlugin implements Plugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.emit.tapPromise('ModuleMapPlugin', async compilation => {
+    compiler.hooks.emit.tap('ModuleMapPlugin', async compilation => {
       const moduleMap = compilation.chunks.reduce(
         (map, chunk) => {
           chunk.files.forEach((file: any) => {

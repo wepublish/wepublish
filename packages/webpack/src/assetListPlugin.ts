@@ -13,7 +13,7 @@ export class AssetListPlugin implements Plugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.emit.tapPromise('AssetListPlugin', async compilation => {
+    compiler.hooks.emit.tap('AssetListPlugin', async compilation => {
       const stats = compilation.getStats().toJson()
 
       // Webpack typings are incorrect.
