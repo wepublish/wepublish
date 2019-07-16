@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "../../node_modules/@wepublish/react/lib/cjs/core/**/*.js",
+    "../../node_modules/@wepublish/react/lib/cjs/server/**/*.js",
+    "./dist/**.js"
+  ],
+  "ignoreRoot": [],
+  "env": {
+    "USE_WEBPACK_DEV_SERVER": true
+  }
+}
