@@ -2,9 +2,9 @@
   "extends": "../../../../tsconfig.base.json",
   "include": ["./**/*"],
   "compilerOptions": {
-    "outDir": "../../lib/esm/core",
-    "module": "esnext",
-    "lib": ["dom", "es2017"],
+    "types": [],
+    "outDir": "../../dist/common",
+    "lib": ["dom", "dom.iterable", "es2017"],
     "composite": true
   }
 }

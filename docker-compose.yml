@@ -10,37 +10,37 @@ services:
     volumes:
       - ./packages/:/home/node/packages/
 
-  website:
+  example:
     init: true
     depends_on: [packages-build]
     build:
-      dockerfile: ./services/website/development.Dockerfile
+      dockerfile: ./services/example/Dockerfile
       context: .
     ports:
       - '3000:3000'
       - '3001:3001'
       - '9229:9229'
-    container_name: website
+    container_name: example
     volumes:
-      - ./packages/core/:/home/node/packages/core/:delegated
-      - ./packages/website/:/home/node/packages/website/:delegated
-      - ./services/website/:/home/node/services/website/:delegated
+      - ./packages/core/:/home/node/packages/core/:cached
+      - ./packages/react/:/home/node/packages/react/:cached
+      - ./services/example/:/home/node/services/example/:delegated
     restart: always
     environment:
       - NODE_ENV=development
       - PORT=3000
       - ADDRESS=0.0.0.0
 
-  website-storybook:
+  editor-storybook:
     init: true
     depends_on: [packages-build]
     build:
-      dockerfile: ./services/website-storybook/Dockerfile
+      dockerfile: ./services/editor-storybook/Dockerfile
       context: .
     ports:
       - '3002:3002'
-    container_name: website-storybook
+    container_name: editor-storybook
     volumes:
-      - ./packages/website/:/home/node/packages/website/:delegated
-      - ./services/website-storybook/:/home/node/services/website-storybook/:delegated
+      - ./packages/react/:/home/node/packages/react/:cached
+      - ./services/editor-storybook/:/home/node/services/editor-storybook/:delegated
     restart: always

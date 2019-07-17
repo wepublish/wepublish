@@ -1,4 +1,6 @@
-import url from 'url'
+import fs from 'fs'
+import path from 'path'
+
 import {Plugin, Compiler} from 'webpack'
 
 export interface AssetListPluginOptions {
@@ -13,7 +15,7 @@ export class AssetListPlugin implements Plugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.emit.tap('AssetListPlugin', async compilation => {
+    compiler.hooks.emit.tapPromise('AssetListPlugin', async compilation => {
       const stats = compilation.getStats().toJson()
 
       // Webpack typings are incorrect.
@@ -32,10 +34,8 @@ export class AssetListPlugin implements Plugin {
 
       const output = JSON.stringify(normalizedAssetByChunkName)
 
-      compilation.assets[this.filename] = {
-        size: () => Buffer.byteLength(output, 'utf-8'),
-        source: () => output
-      }
+      fs.promises.mkdir(path.dirname(this.filename), {recursive: true})
+      fs.promises.writeFile(this.filename, output, 'utf-8')
     })
   }
 }

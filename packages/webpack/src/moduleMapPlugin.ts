@@ -20,7 +20,9 @@
 
 // Highly modifed version of:
 // https://github.com/jamiebuilds/react-loadable/blob/master/src/webpack.js
-import url from 'url'
+import fs from 'fs'
+import path from 'path'
+
 import {Plugin, Compiler} from 'webpack'
 import ConcatenatedModule from 'webpack/lib/optimize/ConcatenatedModule'
 
@@ -36,7 +38,7 @@ export class ModuleMapPlugin implements Plugin {
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.emit.tap('ModuleMapPlugin', async compilation => {
+    compiler.hooks.emit.tapPromise('ModuleMapPlugin', async compilation => {
       const moduleMap = compilation.chunks.reduce(
         (map, chunk) => {
           chunk.files.forEach((file: any) => {
@@ -63,10 +65,8 @@ export class ModuleMapPlugin implements Plugin {
 
       const moduleMapJSON = JSON.stringify(moduleMap)
 
-      compilation.assets[this.filename] = {
-        size: () => Buffer.byteLength(moduleMapJSON, 'utf-8'),
-        source: () => moduleMapJSON
-      }
+      fs.promises.mkdir(path.dirname(this.filename), {recursive: true})
+      fs.promises.writeFile(this.filename, moduleMapJSON, 'utf-8')
     })
   }
 }

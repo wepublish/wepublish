@@ -11,11 +11,10 @@ COPY LICENSE .
 COPY tsconfig.base.json .
 COPY package.json .
 COPY yarn.lock .
-COPY .yarnclean .
 COPY scripts/ scripts/
 
 RUN yarn install --pure-lockfile --non-interactive
-RUN yarn build:website
 RUN yarn build:core
+RUN yarn build:react
 
-CMD yarn watch:website & yarn watch:core
+CMD yarn watch:react & yarn watch:core

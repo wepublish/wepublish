@@ -2,25 +2,24 @@
   "name": "@wepublish/example",
   "version": "0.0.0",
   "private": true,
-  "main": "./dist/server.js",
+  "main": "./dist/server/index.js",
   "license": "MIT",
   "scripts": {
     "build": "run-p build:*",
     "build:client": "webpack --progress --mode production --devtool source-map",
-    "build:server": "tsc -p ./tsconfig.json",
+    "build:server": "tsc -b ./src/server ./src/common",
     "watch": "run-p watch:**",
-    "watch:client": "webpack-dev-server --progress --mode development --hot --inline --json",
+    "watch:client": "webpack-dev-server --progress --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
-    "watch:server:start": "nodemon --inspect=0.0.0.0 ./dist/server.js",
-    "watch:server:build": "tsc --watch",
+    "watch:server:start": "nodemon --inspect=0.0.0.0 ./dist/server/index.js",
+    "watch:server:build": "tsc -b ./src/server ./src/common --watch",
     "clean": "shx rm -rf ./dist ./static",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/server/index.js",
     "copy-license": "exit 0",
     "sync-package-info": "exit 0"
   },
   "dependencies": {
     "@wepublish/react": "^0.0.0",
-    "axios": "^0.19.0",
     "react": "^16.8.6"
   },
   "devDependencies": {

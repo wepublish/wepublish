@@ -6,15 +6,14 @@ WORKDIR /home/node/
 RUN apk add python gcc g++ make --update-cache
 
 COPY packages/core/ packages/core/
-COPY packages/website/ packages/website/
-COPY services/website-storybook/ services/website-storybook/
+COPY packages/react/ packages/react/
+COPY services/editor-storybook/ services/editor-storybook/
 
 COPY LICENSE .
 COPY tsconfig.base.json .
 COPY package.json .
 COPY yarn.lock .
-COPY .yarnclean .
 COPY scripts/ scripts/
 
 RUN yarn install --pure-lockfile --non-interactive
-CMD yarn start:website-storybook
+CMD yarn start:editor-storybook
