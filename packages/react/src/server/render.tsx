@@ -1,18 +1,30 @@
-import React from 'react'
+import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom/server'
 
-import {LazyCapture} from '../core/lazy'
-import {LazyTestComponent} from '../core/lazyTest'
+import {LazyCapture, RouteProvider, Route} from '../core'
 
-export function render(): [string, string[]] {
-  const renderedPaths: string[] = []
+export interface RenderedAppResult {
+  componentString: string
+  renderedLazyPaths: string[]
+}
 
-  return [
-    ReactDOM.renderToString(
-      <LazyCapture rendered={renderedPaths}>
-        <LazyTestComponent />
-      </LazyCapture>
-    ),
-    renderedPaths
-  ]
+export interface RenderOptions {
+  initialRoute: Route
+  appComponent: ComponentType<{}>
+}
+
+export function renderApp(opts: RenderOptions): RenderedAppResult {
+  const renderedLazyPaths: string[] = []
+  const componentString = ReactDOM.renderToString(
+    <LazyCapture rendered={renderedLazyPaths}>
+      <RouteProvider initialRoute={opts.initialRoute}>
+        <opts.appComponent />
+      </RouteProvider>
+    </LazyCapture>
+  )
+
+  return {
+    componentString,
+    renderedLazyPaths
+  }
 }

@@ -14,7 +14,6 @@ COPY yarn.lock .
 COPY scripts/ scripts/
 
 RUN yarn install --pure-lockfile --non-interactive
-RUN yarn build:core
-RUN yarn build:react
+RUN yarn build:core && yarn build:webpack && yarn build:react
 
-CMD yarn watch:react & yarn watch:core
+CMD yarn watch:core & yarn watch:webpack & yarn watch:react

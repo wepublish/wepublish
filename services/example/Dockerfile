@@ -17,6 +17,5 @@ COPY yarn.lock .
 COPY scripts/ scripts/
 
 RUN yarn install --pure-lockfile --non-interactive
-RUN yarn build:webpack
 
 CMD yarn watch:example

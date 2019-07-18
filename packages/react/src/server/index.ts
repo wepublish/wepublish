@@ -1,8 +1,9 @@
 import path from 'path'
 import fastify from 'fastify'
+import {ComponentType} from 'react'
 
-import {preloadAllLazyComponents} from '../core/lazy'
-import {render} from './render'
+import {preloadAllLazyComponents, RouteType} from '../core'
+import {renderApp} from './render'
 
 export interface ListenResult {
   port: number
@@ -22,17 +23,22 @@ export interface ServerOptions {
 
   clientEntryFile: string
   moduleBundleMap?: ModuleBundleMap
+
+  appComponent: ComponentType<{}>
 }
 
 export class Server {
   private readonly port: number
   private readonly address: string
 
+  // TODO
   private readonly staticDirPath?: string
   private readonly staticHost?: string
   private readonly clientEntryFile: string
 
   private readonly moduleBundleMap?: ModuleBundleMap
+
+  private readonly appComponent: ComponentType<{}>
 
   constructor(opts: ServerOptions) {
     this.port = opts.port || 3000
@@ -45,6 +51,8 @@ export class Server {
     this.staticDirPath = opts.staticDirPath
     this.staticHost = opts.staticHost || '/static'
     this.clientEntryFile = opts.clientEntryFile
+
+    this.appComponent = opts.appComponent
   }
 
   async listen(): Promise<ListenResult> {
@@ -57,8 +65,12 @@ export class Server {
     server.get('/', async (_req, reply) => {
       reply.type('text/html')
 
-      const [componentString, renderedPaths] = await render()
-      const bundles: string[] = renderedPaths.map(path => moduleMap[path])
+      const {componentString, renderedLazyPaths} = await renderApp({
+        initialRoute: {type: RouteType.Article},
+        appComponent: this.appComponent
+      })
+
+      const bundles: string[] = renderedLazyPaths.map(path => moduleMap[path])
       const bundleSet = Array.from(
         new Set(bundles.reduce((acc, file) => [...acc, file], [] as string[]))
       ).filter(url => url !== this.clientEntryFile)
@@ -71,7 +83,7 @@ export class Server {
               .join('\n')}
             <script async src="${this.staticHost}/${this.clientEntryFile}"></script>
             <script id="renderedKeys" type="application/json">${JSON.stringify(
-              renderedPaths
+              renderedLazyPaths
             )}</script>
           </head>
           <body><div id="reactRoot">${componentString}</div></body>

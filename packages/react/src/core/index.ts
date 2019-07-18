@@ -1,2 +1,6 @@
 export * from './version'
-export * from './components/button'
+
+export * from './utility'
+export * from './lazy'
+
+export * from './route'

@@ -4,6 +4,8 @@ import path from 'path'
 import {startServer} from '@wepublish/react/server'
 import {findEntryFromAssetList} from '@wepublish/webpack'
 
+import {App} from '../common'
+
 async function asyncMain() {
   const staticHost = process.env.STATIC_HOST
 
@@ -25,7 +27,8 @@ async function asyncMain() {
     staticDirPath: staticHost ? undefined : path.resolve(__dirname, '../static'),
     staticHost: staticHost || '/static',
     clientEntryFile: entry,
-    moduleBundleMap: moduleMap
+    moduleBundleMap: moduleMap,
+    appComponent: App
   })
 
   console.log(`Server listening: http://${address}:${port}`)

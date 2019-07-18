@@ -8,7 +8,7 @@
     "build": "run-p build:*",
     "build:client": "webpack --progress --mode production --devtool source-map",
     "build:server": "tsc -b ./src/server ./src/common",
-    "watch": "run-p watch:**",
+    "watch": "run-p watch:*",
     "watch:client": "webpack-dev-server --progress --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon --inspect=0.0.0.0 ./dist/server/index.js",

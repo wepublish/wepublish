@@ -1,3 +1,1 @@
-export function test() {
-  console.log('TESt')
-}
+export * from './app'

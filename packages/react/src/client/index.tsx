@@ -1,26 +1,33 @@
-import {hot} from 'react-hot-loader/root'
-
-import React from 'react'
+import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom'
 
-import {preloadLazyComponents} from '../core/lazy'
-import {LazyTestComponent} from '../core/lazyTest'
+import {preloadLazyComponents, RouteProvider, RouteType} from '../core'
 
-export interface ClientOptions {}
-
-const HotApp = hot(LazyTestComponent)
+export interface ClientOptions {
+  appComponent: ComponentType<{}>
+}
 
 export class Client {
-  constructor(_opts: ClientOptions) {}
+  private readonly appComponent: ComponentType<{}>
+
+  constructor(opts: ClientOptions) {
+    this.appComponent = opts.appComponent
+  }
 
   async hydrate(): Promise<void> {
     return new Promise(resolve => {
-      async function onDOMContentLoaded() {
+      const onDOMContentLoaded = async () => {
         const renderedKeys = JSON.parse(document.getElementById('renderedKeys')!.textContent!)
 
         await preloadLazyComponents(renderedKeys)
 
-        ReactDOM.hydrate(<HotApp />, document.getElementById('reactRoot'), () => resolve())
+        ReactDOM.hydrate(
+          <RouteProvider initialRoute={{type: RouteType.Article}}>
+            <this.appComponent />
+          </RouteProvider>,
+          document.getElementById('reactRoot'),
+          () => resolve()
+        )
       }
 
       if (document.readyState !== 'loading') {

@@ -21,7 +21,6 @@
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-hot-loader": "^4.12.3",
     "fastify": "2.6.0"
   },
   "devDependencies": {
