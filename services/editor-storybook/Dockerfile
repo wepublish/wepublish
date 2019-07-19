@@ -5,8 +5,7 @@ WORKDIR /home/node/
 # Install build tools
 RUN apk add python gcc g++ make --update-cache
 
-COPY packages/core/ packages/core/
-COPY packages/react/ packages/react/
+COPY packages/ packages/
 COPY services/editor-storybook/ services/editor-storybook/
 
 COPY LICENSE .

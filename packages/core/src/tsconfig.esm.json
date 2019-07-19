@@ -3,8 +3,8 @@
   "include": ["./**/*"],
   "compilerOptions": {
     "outDir": "../lib/esm/",
-    "tsBuildInfoFile": "../lib/esm/.tsbuildinfo",
     "module": "esnext",
+    "types": [],
     "lib": ["dom", "es2017"],
     "composite": true
   }

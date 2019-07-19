@@ -22,9 +22,8 @@ services:
       - '9229:9229'
     container_name: example
     volumes:
-      - ./packages/core/:/home/node/packages/core/:cached
-      - ./packages/react/:/home/node/packages/react/:cached
-      - ./services/example/:/home/node/services/example/:delegated
+      - ./packages/:/home/node/packages/
+      - ./services/example/:/home/node/services/example/
     restart: always
     environment:
       - NODE_ENV=development
@@ -41,6 +40,6 @@ services:
       - '3002:3002'
     container_name: editor-storybook
     volumes:
-      - ./packages/react/:/home/node/packages/react/:cached
-      - ./services/editor-storybook/:/home/node/services/editor-storybook/:delegated
+      - ./packages/:/home/node/packages/
+      - ./services/editor-storybook/:/home/node/services/editor-storybook/
     restart: always

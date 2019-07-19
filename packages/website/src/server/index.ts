@@ -1,13 +1,15 @@
 import path from 'path'
-import fastify from 'fastify'
+import fastify, {FastifyInstance} from 'fastify'
 import {ComponentType} from 'react'
 
-import {preloadAllLazyComponents, RouteType} from '../core'
+import {preloadAllLazyComponents} from '@wepublish/react'
+import {RouteType} from '../shared'
 import {renderApp} from './render'
 
 export interface ListenResult {
   port: number
   address: string
+  close: () => Promise<void>
 }
 
 export interface ModuleBundleMap {
@@ -18,6 +20,7 @@ export interface ServerOptions {
   port?: number
   address?: string
 
+  apiURL: string
   staticDirPath?: string
   staticHost?: string
 
@@ -28,17 +31,18 @@ export interface ServerOptions {
 }
 
 export class Server {
-  private readonly port: number
-  private readonly address: string
+  public readonly port: number
+  public readonly address: string
 
   // TODO
-  private readonly staticDirPath?: string
-  private readonly staticHost?: string
-  private readonly clientEntryFile: string
+  public readonly staticDirPath?: string
+  public readonly staticHost?: string
+  public readonly clientEntryFile: string
 
-  private readonly moduleBundleMap?: ModuleBundleMap
+  public readonly moduleBundleMap: ModuleBundleMap
+  public readonly appComponent: ComponentType<{}>
 
-  private readonly appComponent: ComponentType<{}>
+  private _server?: FastifyInstance
 
   constructor(opts: ServerOptions) {
     this.port = opts.port || 3000
@@ -47,7 +51,7 @@ export class Server {
     if (opts.staticDirPath && !path.isAbsolute(opts.staticDirPath))
       throw new Error('"staticDirPath" should be an absolute path.')
 
-    this.moduleBundleMap = opts.moduleBundleMap
+    this.moduleBundleMap = opts.moduleBundleMap || {}
     this.staticDirPath = opts.staticDirPath
     this.staticHost = opts.staticHost || '/static'
     this.clientEntryFile = opts.clientEntryFile
@@ -56,13 +60,12 @@ export class Server {
   }
 
   async listen(): Promise<ListenResult> {
-    const server = fastify()
-
     await preloadAllLazyComponents()
 
-    const moduleMap = this.moduleBundleMap || {}
+    this._server = fastify()
 
-    server.get('/', async (_req, reply) => {
+    // Root route
+    this._server.get('/', async (request, reply) => {
       reply.type('text/html')
 
       const {componentString, renderedLazyPaths} = await renderApp({
@@ -70,7 +73,7 @@ export class Server {
         appComponent: this.appComponent
       })
 
-      const bundles: string[] = renderedLazyPaths.map(path => moduleMap[path])
+      const bundles: string[] = renderedLazyPaths.map(path => this.moduleBundleMap[path])
       const bundleSet = Array.from(
         new Set(bundles.reduce((acc, file) => [...acc, file], [] as string[]))
       ).filter(url => url !== this.clientEntryFile)
@@ -91,12 +94,22 @@ export class Server {
       `
     })
 
-    await server.listen(this.port, this.address)
+    // Route API route
+    this._server.get('/api/route/*', async (request, reply) => {
+      return request.params['*']
+    })
+
+    await this._server.listen(this.port, this.address)
 
     return {
       port: this.port,
-      address: this.address
+      address: this.address,
+      close: () => this.close()
     }
+  }
+
+  async close(): Promise<void> {
+    if (this._server) await this._server.close()
   }
 }
 

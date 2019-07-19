@@ -14,13 +14,8 @@
     "prepare": "run-s clean copy:license build sync-package-info",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
-  "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
     "typescript": "^3.5.2",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2"

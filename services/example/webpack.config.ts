@@ -6,7 +6,8 @@ import {ModuleMapPlugin, AssetListPlugin} from '@wepublish/webpack'
 export default (mode: string) =>
   ({
     entry: {
-      client: './src/client/index.ts'
+      client: './src/client/index.ts',
+      worker: './src/worker/index.ts'
     },
     output: {
       filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].js',

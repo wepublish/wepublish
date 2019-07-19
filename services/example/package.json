@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@wepublish/react": "^0.0.0",
+    "@wepublish/website": "^0.0.0",
     "react": "^16.8.6"
   },
   "devDependencies": {

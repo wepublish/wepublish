@@ -4,7 +4,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "../../lib/cjs/server",
+    "types": [],
     "lib": ["es2017"]
   },
-  "references": [{"path": "../core"}]
+  "references": [{"path": "../shared"}]
 }

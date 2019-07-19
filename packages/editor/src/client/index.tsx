@@ -1,7 +1,8 @@
 import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom'
 
-import {preloadLazyComponents, RouteProvider, RouteType} from '../core'
+import {preloadLazyComponents} from '@wepublish/react'
+import {RouteProvider, RouteType} from '../shared'
 
 export interface ClientOptions {
   appComponent: ComponentType<{}>

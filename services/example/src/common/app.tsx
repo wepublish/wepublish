@@ -1,5 +1,5 @@
-import React, {useContext} from 'react'
-import {RouteContext, useRoute} from '@wepublish/react'
+import React from 'react'
+import {useRoute} from '@wepublish/website'
 
 export function App() {
   return <Test />
@@ -7,10 +7,7 @@ export function App() {
 
 export function Test() {
   const route = useRoute()
-
-  console.log(route)
-
-  return <div>Hello World!!!!!!!!!</div>
+  return <div>{route.type}</div>
 }
 
 export default App

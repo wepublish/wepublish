@@ -1,7 +1,8 @@
 import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom/server'
 
-import {LazyCapture, RouteProvider, Route} from '../core'
+import {LazyCapture} from '@wepublish/react'
+import {RouteProvider, Route} from '../shared'
 
 export interface RenderedAppResult {
   componentString: string

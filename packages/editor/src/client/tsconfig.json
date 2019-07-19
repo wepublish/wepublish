@@ -4,7 +4,8 @@
   "compilerOptions": {
     "module": "esnext",
     "outDir": "../../lib/esm/client",
+    "types": [],
     "lib": ["dom", "dom.iterable", "es2017"]
   },
-  "references": [{"path": "../core"}]
+  "references": [{"path": "../shared"}]
 }

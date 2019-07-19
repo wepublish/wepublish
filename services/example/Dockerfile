@@ -5,9 +5,7 @@ WORKDIR /home/node/
 # Install build tools
 RUN apk add python gcc g++ make --update-cache
 
-COPY packages/core/ packages/core/
-COPY packages/webpack/ packages/webpack/
-COPY packages/react/ packages/react/
+COPY packages/ packages/
 COPY services/example/ services/example/
 
 COPY LICENSE .

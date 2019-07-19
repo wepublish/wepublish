@@ -1,0 +1,10 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "module": "esnext",
+    "outDir": "../../lib/esm/client",
+    "lib": ["dom", "dom.iterable", "es2017"]
+  },
+  "references": [{"path": "../shared"}]
+}

@@ -3,8 +3,8 @@
   "include": ["./**/*"],
   "compilerOptions": {
     "outDir": "../lib/cjs/",
-    "tsBuildInfoFile": "../lib/cjs/.tsbuildinfo",
     "module": "commonjs",
+    "types": [],
     "lib": ["dom", "es2017"],
     "composite": true
   }

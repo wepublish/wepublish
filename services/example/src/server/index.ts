@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import {startServer} from '@wepublish/react/server'
+import {startServer} from '@wepublish/website/server'
 import {findEntryFromAssetList} from '@wepublish/webpack'
 
 import {App} from '../common'

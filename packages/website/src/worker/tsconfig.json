@@ -4,8 +4,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "../../lib/cjs/worker",
-    "tsBuildInfoFile": "../../lib/cjs/worker/.tsbuildinfo",
+    "types": [],
     "lib": ["es2017", "webworker"]
   },
-  "references": [{"path": "../core"}]
+  "references": [{"path": "../shared"}]
 }
