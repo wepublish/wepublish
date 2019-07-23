@@ -6,12 +6,12 @@
 
 ### Prerequisites
 
-- [Yarn v1.16.0](yarn-download-url)
+- [Yarn v1.16.0][yarn-download-url]
 
 ## Recommended
 
-- [VSCode](vscode-download-url)
-- [VSCode Prettier Extension](vscode-prettier-download-url)
+- [VSCode][vscode-download-url]
+- [VSCode Prettier Extension][vscode-prettier-download-url]
 
 ## Install, Build & Watch
 
@@ -35,7 +35,7 @@ The following servers will be available:
 - **Website:** [http://localhost:8000](http://localhost:8000)
 - **Webpack Dev Server:** [http://localhost:8080](http://localhost:8080)
 
-If you want to build/watch only certain packages just have a look inside the [package.json](package-json-url),
+If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
 
 ## Debugging via VSCode
