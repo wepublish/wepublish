@@ -1,7 +1,13 @@
 import {RequestListener, IncomingMessage, OutgoingMessage} from 'http'
 import createRouter from 'find-my-way'
 
-export interface Adapter {}
+export interface Adapter {
+  getArticle(): any
+  getArticles(): any
+  createArticle(): any
+  updateArticle(): any
+}
+
 export interface HandlerOptions {
   adapter: Adapter
 }
@@ -10,12 +16,13 @@ export function createAPIHandler(opts: HandlerOptions): RequestListener {
   const router = createRouter()
 
   router.on('GET', '/', (req, res) => {
-    const test = JSON.stringify({test: '123'})
+    const articles = opts.adapter.getArticles()
+    const articlesJSON = JSON.stringify(articles)
 
     res.setHeader('content-type', 'application/json')
-    res.setHeader('content-length', Buffer.byteLength(test))
+    res.setHeader('content-length', Buffer.byteLength(articlesJSON))
 
-    res.write(test)
+    res.write(articlesJSON)
     res.end()
   })
 

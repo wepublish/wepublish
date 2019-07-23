@@ -29,11 +29,11 @@ yarn watch
 
 The following servers will be available:
 
-- API: [http://localhost:3000](http://localhost:3000)
-- Editor: [http://localhost:3030](http://localhost:3030)
-- Editor Storybook: [http://localhost:3002](http://localhost:3002)
-- Website: [http://localhost:8000](http://localhost:8000)
-- Webpack Dev Server: [http://localhost:8080](http://localhost:8080)
+- **API:** [http://localhost:3000](http://localhost:3000)
+- **Editor:** [http://localhost:3030](http://localhost:3030)
+- **Editor Storybook:** [http://localhost:3002](http://localhost:3002)
+- **Website:** [http://localhost:8000](http://localhost:8000)
+- **Webpack Dev Server:** [http://localhost:8080](http://localhost:8080)
 
 If you want to build/watch only certain packages just have a look inside the [package.json](package-json-url),
 to find commands for each package.
