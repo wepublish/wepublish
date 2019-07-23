@@ -1,10 +1,11 @@
 {
   "name": "@wepublish/editor-storybook",
   "version": "0.0.0",
+  "private": true,
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "start-storybook -p 3002"
+    "watch": "start-storybook --ci -p 3002"
   },
   "devDependencies": {
     "@wepublish/react": "^0.0.0",

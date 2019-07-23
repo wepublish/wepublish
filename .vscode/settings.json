@@ -10,5 +10,6 @@
     "**/.git": true,
     "**/.DS_Store": true,
     "**/node_modules": true
-  }
+  },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

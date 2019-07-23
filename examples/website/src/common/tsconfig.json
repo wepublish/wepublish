@@ -1,0 +1,10 @@
+{
+  "extends": "../../../../tsconfig.base.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "outDir": "../../dist/common",
+    "types": [],
+    "lib": ["dom", "dom.iterable", "es2017"],
+    "composite": true
+  }
+}

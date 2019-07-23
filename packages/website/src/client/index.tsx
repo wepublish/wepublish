@@ -2,40 +2,34 @@ import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom'
 
 import {preloadLazyComponents} from '@wepublish/react'
-import {RouteProvider, RouteType} from '../shared'
+import {RouteProvider, RouteType, ElementID} from '../shared'
 
 export interface ClientOptions {
   appComponent: ComponentType<{}>
 }
 
-export class Client {
-  private readonly appComponent: ComponentType<{}>
+export function hydrateClient(opts: ClientOptions): Promise<void> {
+  return new Promise(resolve => {
+    const onDOMContentLoaded = async () => {
+      const renderedKeys = JSON.parse(
+        document.getElementById(ElementID.RenderedPaths)!.textContent!
+      )
 
-  constructor(opts: ClientOptions) {
-    this.appComponent = opts.appComponent
-  }
+      await preloadLazyComponents(renderedKeys)
 
-  async hydrate(): Promise<void> {
-    return new Promise(resolve => {
-      const onDOMContentLoaded = async () => {
-        const renderedKeys = JSON.parse(document.getElementById('renderedKeys')!.textContent!)
+      ReactDOM.hydrate(
+        <RouteProvider initialRoute={{type: RouteType.Article}}>
+          <opts.appComponent />
+        </RouteProvider>,
+        document.getElementById(ElementID.ReactRoot),
+        () => resolve()
+      )
+    }
 
-        await preloadLazyComponents(renderedKeys)
-
-        ReactDOM.hydrate(
-          <RouteProvider initialRoute={{type: RouteType.Article}}>
-            <this.appComponent />
-          </RouteProvider>,
-          document.getElementById('reactRoot'),
-          () => resolve()
-        )
-      }
-
-      if (document.readyState !== 'loading') {
-        onDOMContentLoaded()
-      } else {
-        document.addEventListener('DOMContentLoaded', onDOMContentLoaded)
-      }
-    })
-  }
+    if (document.readyState !== 'loading') {
+      onDOMContentLoaded()
+    } else {
+      document.addEventListener('DOMContentLoaded', onDOMContentLoaded)
+    }
+  })
 }

@@ -2,10 +2,9 @@
   "extends": "../../../../tsconfig.base.json",
   "include": ["./**/*"],
   "compilerOptions": {
-    "module": "commonjs",
-    "outDir": "../../lib/cjs/server",
+    "outDir": "../../dist/server",
     "types": ["@types/node"],
     "lib": ["es2017"]
   },
-  "references": [{"path": "../shared"}]
+  "references": [{"path": "../common"}]
 }

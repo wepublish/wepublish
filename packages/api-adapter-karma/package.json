@@ -6,7 +6,7 @@
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
-    "watch": "run-s copy-license sync-package-info watch:*",
+    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
