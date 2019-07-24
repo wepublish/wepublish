@@ -1,5 +1,6 @@
-import {RequestListener, IncomingMessage, OutgoingMessage} from 'http'
-import createRouter from 'find-my-way'
+import {RequestListener} from 'http'
+import {GraphQLSchema, GraphQLObjectType, GraphQLString} from 'graphql'
+import graphqlHTTP from 'express-graphql'
 
 export interface Adapter {
   getArticle(): any
@@ -13,22 +14,24 @@ export interface HandlerOptions {
 }
 
 export function createAPIHandler(opts: HandlerOptions): RequestListener {
-  const router = createRouter()
-
-  router.on('GET', '/', (req, res) => {
-    const articles = opts.adapter.getArticles()
-    const articlesJSON = JSON.stringify(articles)
-
-    res.setHeader('content-type', 'application/json')
-    res.setHeader('content-length', Buffer.byteLength(articlesJSON))
-
-    res.write(articlesJSON)
-    res.end()
+  const schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+      name: 'Root',
+      fields: {
+        test: {
+          type: GraphQLString,
+          resolve() {
+            return 'test'
+          }
+        }
+      }
+    })
   })
 
-  return (req, res) => {
-    router.lookup(req, res)
-  }
+  return graphqlHTTP({
+    schema,
+    graphiql: true
+  })
 }
 
 export default createAPIHandler

@@ -8,12 +8,12 @@
 
 - [Yarn v1.16.0][yarn-download-url]
 
-## Recommended
+### Recommended
 
 - [VSCode][vscode-download-url]
 - [VSCode Prettier Extension][vscode-prettier-download-url]
 
-## Install, Build & Watch
+### Install, Build & Watch
 
 If you're setting up the project for the first time:
 
@@ -38,7 +38,7 @@ The following servers will be available:
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
 
-## Debugging via VSCode
+### Debugging via VSCode
 
 There are several launch configurations that allow you to attach the debugger to the various examples.
 
