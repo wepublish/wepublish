@@ -14,7 +14,8 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "find-my-way": "^2.1.0"
+    "find-my-way": "^2.1.0",
+    "graphql": "^14.4.2"
   },
   "devDependencies": {
     "@types/node": "^12.6.8",

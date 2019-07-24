@@ -1,2 +1,4 @@
-lib
+lib/
+dist/
+static/
 package.json

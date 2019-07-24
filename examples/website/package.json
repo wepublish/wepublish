@@ -22,11 +22,11 @@
     "sync-package-info": "exit 0"
   },
   "dependencies": {
-    "@wepublish/react": "^0.0.0",
     "@wepublish/website": "^0.0.0",
     "react": "^16.8.6"
   },
   "devDependencies": {
+    "@types/react": "^16.8.23",
     "@types/axios": "^0.14.0",
     "@types/node": "^12.0.12",
     "@types/webpack": "^4.4.34",
