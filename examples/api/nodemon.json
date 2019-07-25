@@ -1,5 +1,10 @@
 {
-  "watch": ["../../node_modules/@wepublish/api/lib/**/*.js", "./lib/**/*.js"],
+  "watch": [
+    "../../node_modules/@wepublish/api/lib/**/*.js",
+    "../../node_modules/@wepublish/api-adapter-mock/lib/**/*.js",
+    "../../node_modules/@wepublish/api-adapter-karma/lib/**/*.js",
+    "./lib/**/*.js"
+  ],
   "ignoreRoot": [".git"],
   "env": {}
 }

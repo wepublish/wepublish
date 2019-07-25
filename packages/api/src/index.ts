@@ -1,37 +1,29 @@
 import {RequestListener} from 'http'
-import {GraphQLSchema, GraphQLObjectType, GraphQLString} from 'graphql'
+import {GraphQLSchema} from 'graphql'
 import graphqlHTTP from 'express-graphql'
 
-export interface Adapter {
-  getArticle(): any
-  getArticles(): any
-  createArticle(): any
-  updateArticle(): any
-}
+import {queryType} from './types'
+import Adapter from './adapter'
+import Context from './context'
+
+export * from './types'
+export * from './adapter'
+export * from './context'
 
 export interface HandlerOptions {
   adapter: Adapter
 }
 
-export function createAPIHandler(opts: HandlerOptions): RequestListener {
-  const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-      name: 'Root',
-      fields: {
-        test: {
-          type: GraphQLString,
-          resolve() {
-            return 'test'
-          }
-        }
-      }
-    })
-  })
+export const graphQLSchema = new GraphQLSchema({
+  query: queryType
+})
 
-  return graphqlHTTP({
-    schema,
-    graphiql: true
-  })
+export function createAPIHandler(opts: HandlerOptions): RequestListener {
+  return graphqlHTTP(req => ({
+    schema: graphQLSchema,
+    graphiql: true,
+    context: {adapter: opts.adapter} as Context
+  }))
 }
 
 export default createAPIHandler
