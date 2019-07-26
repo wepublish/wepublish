@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {createServer} from 'http'
-import wepublish, {Article} from '@wepublish/api'
+import wepublish, {Article, Peer} from '@wepublish/api'
 import MockAdapter from '@wepublish/api-adapter-mock'
 
 const mockArticles: Article[] = [
@@ -11,6 +11,7 @@ const mockArticles: Article[] = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.'
   },
   {
+    peer: 'foo',
     id: 'b',
     title: 'Article B',
     lead:
@@ -24,10 +25,20 @@ const mockArticles: Article[] = [
   }
 ]
 
+const mockPeers: Peer[] = [
+  {
+    id: 'a',
+    name: 'test',
+    url: 'http://localhost:3030'
+  }
+]
+
 const server = createServer(
   wepublish({
+    peerFetchTimeout: 200,
     adapter: new MockAdapter({
-      articles: mockArticles
+      articles: mockArticles,
+      peers: mockPeers
     })
   })
 )

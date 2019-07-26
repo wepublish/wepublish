@@ -5,10 +5,10 @@ export const articleType = new GraphQLObjectType({
 
   fields: {
     id: {
-      type: GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString)
     },
     title: {
-      type: GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString)
     },
     lead: {
       type: GraphQLString
