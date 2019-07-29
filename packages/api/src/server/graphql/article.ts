@@ -1,6 +1,7 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull} from 'graphql'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
-export const articleType = new GraphQLObjectType({
+export const GraphQLArticle = new GraphQLObjectType({
   name: 'Article',
 
   fields: {
@@ -12,8 +13,9 @@ export const articleType = new GraphQLObjectType({
     },
     lead: {
       type: GraphQLString
-    }
+    },
+    publishedDate: {type: GraphQLDateTime}
   }
 })
 
-export default articleType
+export default GraphQLArticle

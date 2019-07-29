@@ -5,8 +5,10 @@ export interface ArticleArguments {
 
 export interface ArticlesArguments {
   // peer?: string
-  first: number
-  after?: string
+  dateRange: {
+    start: Date
+    end: Date
+  }
 }
 
 export interface PeerArguments {
@@ -20,6 +22,7 @@ export interface Article {
   id: string
   title: string
   lead: string
+  publishedDate: Date
 }
 
 export interface ArticleEdge {
@@ -28,12 +31,14 @@ export interface ArticleEdge {
 }
 
 export interface PaginatedArticles {
-  edges: ArticleEdge[]
-  info: {
-    startCursor: string
-    endCursor: string
-    hasNextPage: boolean
+  nodes: Article[]
+  pageInfo: {
+    dateRange: {
+      start: Date
+      end: Date
+    }
   }
+  totalCount: number
 }
 
 export interface Peer {
@@ -45,6 +50,7 @@ export interface Peer {
 export interface ArticleCreateInput {
   title: string
   lead: string
+  publishedDate: Date
 }
 
 export interface ArticleCreateArguments {

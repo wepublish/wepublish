@@ -1,10 +1,10 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../../tsconfig.base.json",
   "include": ["./**/*"],
   "compilerOptions": {
-    "outDir": "../lib/",
+    "outDir": "../../lib/cjs/shared/",
     "module": "commonjs",
-    "types": ["@types/node"],
+    "types": [],
     "lib": ["dom", "es2017"],
     "composite": true
   }

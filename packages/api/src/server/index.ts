@@ -2,14 +2,14 @@ import {createReadStream} from 'fs'
 import {resolve} from 'path'
 
 import {RequestListener} from 'http'
-import {GraphQLSchema, buildSchema, GraphQLObjectType} from 'graphql'
+import {GraphQLSchema} from 'graphql'
 import graphqlHTTP from 'express-graphql'
 
-import {queryType, mutationType} from './types'
+import {GraphQLQuery, GraphQLMutation} from './graphql'
 import Adapter from './adapter'
 import Context from './context'
 
-export * from './types'
+export * from './graphql'
 export * from './adapter'
 export * from './context'
 
@@ -19,8 +19,8 @@ export interface HandlerOptions {
 }
 
 export const graphQLSchema = new GraphQLSchema({
-  query: queryType,
-  mutation: mutationType as GraphQLObjectType
+  query: GraphQLQuery,
+  mutation: GraphQLMutation
 })
 
 export function createAPIHandler(opts: HandlerOptions): RequestListener {
@@ -31,15 +31,13 @@ export function createAPIHandler(opts: HandlerOptions): RequestListener {
   }))
 
   return (req, res) => {
-    if (req.url && req.url.endsWith('/favicon.ico')) {
+    if (req.method === 'GET' && req.url && req.url.endsWith('/favicon.ico')) {
       res.setHeader('content-type', 'image/x-icon')
       res.setHeader('cache-control', 'public, max-age=3600')
 
-      return createReadStream(resolve(__dirname, '../favicon.ico')).pipe(res)
+      return createReadStream(resolve(__dirname, '../../../favicon.ico')).pipe(res)
     }
 
     return graphQLHandler(req, res)
   }
 }
-
-export default createAPIHandler

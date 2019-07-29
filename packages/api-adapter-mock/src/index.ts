@@ -1,6 +1,6 @@
 import {
   Adapter,
-  Article,
+  ArticleType,
   ArticleArguments,
   ArticlesArguments,
   Peer,
@@ -11,12 +11,12 @@ import {
 } from '@wepublish/api'
 
 export interface MockAdapterOptions {
-  articles?: Article[]
+  articles?: ArticleType[]
   peers?: Peer[]
 }
 
 export class MockAdapter implements Adapter {
-  private _articles: Article[]
+  private _articles: ArticleType[]
   private _peers: Peer[]
 
   constructor(opts: MockAdapterOptions = {}) {
@@ -24,33 +24,29 @@ export class MockAdapter implements Adapter {
     this._peers = opts.peers || []
   }
 
-  createArticle(id: string, args: ArticleCreateArguments): Article {
+  createArticle(id: string, args: ArticleCreateArguments): ArticleType {
     const article = {...args.article, id}
     this._articles.push(article)
     return article
   }
 
-  getArticle(args: ArticleArguments): Article | undefined {
+  getArticle(args: ArticleArguments): ArticleType | undefined {
     return this._articles.find(article => article.id === args.id)
   }
 
   getArticles(args: ArticlesArguments): PaginatedArticles {
-    const startCursor = args.after ? parseInt(args.after) : 0
-
-    const edges = this._articles
-      .slice(startCursor, args.first)
-      .map((article, index) => ({node: article, cursor: index.toString()}))
+    const nodes = this._articles.filter(
+      article =>
+        article.publishedDate >= args.dateRange.start && article.publishedDate < args.dateRange.end
+    )
 
     return {
-      edges: edges,
-      info: {
-        startCursor: edges[0].cursor,
-        endCursor: edges[edges.length - 1].cursor,
-        hasNextPage: false
-      }
+      nodes,
+      pageInfo: {
+        dateRange: args.dateRange
+      },
+      totalCount: nodes.length
     }
-
-    // return this._articles.filter(article => args.peer === undefined || article.peer == args.peer)
   }
 
   getPeer(args: PeerArguments): Peer | undefined {

@@ -1,6 +1,6 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID} from 'graphql'
 
-export const peerType = new GraphQLObjectType({
+export const GraphQLPeer = new GraphQLObjectType({
   name: 'Peer',
 
   fields: {
@@ -16,4 +16,4 @@ export const peerType = new GraphQLObjectType({
   }
 })
 
-export default peerType
+export default GraphQLPeer
