@@ -1,9 +1,10 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLID} from 'graphql'
+import {GraphQLArticleConnection} from './article'
 
-export const GraphQLPeer = new GraphQLObjectType({
+export const GraphQLPeer: GraphQLObjectType = new GraphQLObjectType({
   name: 'Peer',
 
-  fields: {
+  fields: () => ({
     id: {
       type: GraphQLNonNull(GraphQLID)
     },
@@ -12,8 +13,9 @@ export const GraphQLPeer = new GraphQLObjectType({
     },
     url: {
       type: GraphQLNonNull(GraphQLString)
+    },
+    articles: {
+      type: GraphQLArticleConnection
     }
-  }
+  })
 })
-
-export default GraphQLPeer

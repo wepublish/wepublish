@@ -1,22 +1,10 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLInputObjectType} from 'graphql'
 
-import GraphQLArticle from './article'
-import Context from '../context'
+import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {Context} from '../context'
 
 import {ArticleCreateArguments} from '../adapter'
 import {generateID} from '../utility'
-
-export const GraphQLArticleInput = new GraphQLInputObjectType({
-  name: 'ArticleInput',
-  fields: {
-    title: {
-      type: GraphQLNonNull(GraphQLString)
-    },
-    lead: {
-      type: GraphQLNonNull(GraphQLString)
-    }
-  }
-})
 
 export const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',

@@ -6,8 +6,8 @@ import {GraphQLSchema} from 'graphql'
 import graphqlHTTP from 'express-graphql'
 
 import {GraphQLQuery, GraphQLMutation} from './graphql'
-import Adapter from './adapter'
-import Context from './context'
+import {Adapter} from './adapter'
+import {Context} from './context'
 
 export * from './graphql'
 export * from './adapter'

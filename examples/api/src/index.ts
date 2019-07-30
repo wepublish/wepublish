@@ -5,46 +5,43 @@ import {Article, Peer} from '@wepublish/api/shared'
 
 import MockAdapter from '@wepublish/api-adapter-mock'
 
-const mockArticles: Article[] = [
-  {
-    id: 'a',
-    title: 'Article A',
-    lead:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
-    publishedDate: new Date('2019-02-01T00:00:00Z')
-  },
-  {
-    peer: 'foo',
-    id: 'b',
-    title: 'Article B',
-    lead:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
-    publishedDate: new Date('2019-02-01T00:00:00Z')
-  },
-  {
-    id: 'c',
-    title: 'Article C',
-    lead:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
-    publishedDate: new Date('2019-02-01T00:00:00Z')
-  }
-]
+// const mockArticles: Article[] = [
+//   {
+//     id: 'a',
+//     title: 'Article A',
+//     lead:
+//       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
+//     publishedDate: new Date('2019-02-01T00:00:00Z')
+//   },
+//   {
+//     peer: 'foo',
+//     id: 'b',
+//     title: 'Article B',
+//     lead:
+//       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
+//     publishedDate: new Date('2019-02-01T00:00:00Z')
+//   },
+//   {
+//     id: 'c',
+//     title: 'Article C',
+//     lead:
+//       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper hendrerit tortor non feugiat.',
+//     publishedDate: new Date('2019-02-01T00:00:00Z')
+//   }
+// ]
 
-const mockPeers: Peer[] = [
-  {
-    id: 'a',
-    name: 'test',
-    url: 'http://localhost:3030'
-  }
-]
+// const mockPeers: Peer[] = [
+//   {
+//     id: 'a',
+//     name: 'test',
+//     url: 'http://localhost:3030'
+//   }
+// ]
 
 const server = createServer(
   createAPIHandler({
     peerFetchTimeout: 200,
-    adapter: new MockAdapter({
-      articles: mockArticles,
-      peers: mockPeers
-    })
+    adapter: new MockAdapter()
   })
 )
 

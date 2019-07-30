@@ -3,61 +3,17 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLID,
   GraphQLInt,
-  GraphQLInputObjectType,
   GraphQLBoolean
 } from 'graphql'
 
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLDateRangeInput} from './dateRange'
+import {GraphQLArticle, GraphQLArticleConnection} from './article'
+import {GraphQLPeer} from './peer'
 
-import GraphQLArticle from './article'
-import GraphQLPeer from './peer'
+import {Context} from '../context'
 
-import Context from '../context'
-
-import {ArticleArguments, ArticlesArguments, PeersArguments, PeerArguments} from '../adapter'
-
-// export const ArticleEdge = new GraphQLObjectType({
-//   name: 'ArticleEdge',
-//   fields: {
-//     node: {type: Article}
-//   }
-// })
-
-export const GraphQLDateRange = new GraphQLObjectType({
-  name: 'DateRange',
-  fields: {
-    start: {type: GraphQLNonNull(GraphQLDateTime)},
-    end: {type: GraphQLNonNull(GraphQLDateTime)}
-  }
-})
-
-export const GraphQLDateRangeInput = new GraphQLInputObjectType({
-  name: 'DateRangeInput',
-  fields: {
-    start: {type: GraphQLNonNull(GraphQLDateTime)},
-    end: {type: GraphQLNonNull(GraphQLDateTime)}
-  }
-})
-
-export const GraphQLDatePageInfo = new GraphQLObjectType({
-  name: 'DatePageInfo',
-  fields: {
-    dateRange: {type: GraphQLDateRange}
-  }
-})
-
-export const GraphQLArticleConnection = new GraphQLObjectType({
-  name: 'ArticleConnection',
-  fields: {
-    nodes: {type: new GraphQLList(GraphQLArticle)},
-    pageInfo: {
-      type: GraphQLDatePageInfo
-    },
-    totalCount: {type: GraphQLInt}
-  }
-})
+import {ArticlesArguments, PeersArguments, PeerArguments, ArticleArguments} from '../adapter'
 
 export const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
@@ -71,7 +27,7 @@ export const GraphQLQuery = new GraphQLObjectType({
         }
       },
       resolve(_root, args, context: Context) {
-        return context.adapter.getArticle(args)
+        // return context.adapter.getArticle(args)
       }
     },
     articles: {
@@ -81,8 +37,16 @@ export const GraphQLQuery = new GraphQLObjectType({
           type: GraphQLInt
         },
 
-        dateRange: {
-          type: GraphQLNonNull(GraphQLDateRangeInput)
+        publishedBetween: {
+          type: GraphQLDateRangeInput
+        },
+
+        updatedBetween: {
+          type: GraphQLDateRangeInput
+        },
+
+        createdBetween: {
+          type: GraphQLDateRangeInput
         },
 
         tagsInclude: {
@@ -96,6 +60,8 @@ export const GraphQLQuery = new GraphQLObjectType({
         }
       },
       resolve(_root, args, context: Context) {
+        const articleArgs = args as ArticlesArguments
+
         // TODO: Fetch peers aswell
         const peers = context.adapter.getPeers({})
 
@@ -103,7 +69,14 @@ export const GraphQLQuery = new GraphQLObjectType({
           peer.url
         }
 
-        return context.adapter.getArticles(args as ArticlesArguments)
+        const articles = context.adapter.getArticles(articleArgs)
+
+        return {
+          nodes: articles,
+          pageInfo: {
+            publishedBetween: articleArgs.publishedBetween
+          }
+        }
       }
     },
 
