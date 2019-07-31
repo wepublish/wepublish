@@ -42,7 +42,7 @@ export class MockAdapter implements Adapter {
     this._peers = opts.peers || []
   }
 
-  createArticle(id: string, args: ArticleCreateArguments): AdapterArticle {
+  async createArticle(id: string, args: ArticleCreateArguments): Promise<AdapterArticle> {
     const articleVersion = {
       ...args.article,
       createdAt: new Date(),
@@ -68,22 +68,16 @@ export class MockAdapter implements Adapter {
           ? articleVersion.updatedAt
           : undefined,
 
-      latestVersion: 0,
       publishedVersion: articleVersion.state === ArticleVersionState.Published ? 0 : undefined,
-      reviewVersion: articleVersion.state === ArticleVersionState.Review ? 0 : undefined,
       draftVersion: articleVersion.state === ArticleVersionState.Draft ? 0 : undefined
     }
   }
 
-  // getArticle(args: ArticleArguments): Article | undefined {
-  //   return this._articles.find(article => article.id === args.id)
-  // }
-
-  getArticleVersionContent(id: string, version: number): any {
+  async getArticleVersionContent(id: string, version: number): Promise<any> {
     return {}
   }
 
-  getArticleVersion(id: string, version: number): AdapterArticleVersion {
+  async getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion> {
     const article = this._articles.find(article => article.id === id)
 
     if (!article) throw new Error(`Couldn't find article with ID: ${id}`)
@@ -96,18 +90,13 @@ export class MockAdapter implements Adapter {
     }
   }
 
-  getArticleVersions(id: string): AdapterArticleVersion[] {
+  async getArticleVersions(id: string): Promise<AdapterArticleVersion[]> {
     const article = this._articles.find(article => article.id === id)
     if (!article) throw new Error(`Couldn't find article with ID: ${id}`)
     return article.versions.map((articleVersion, index) => ({...articleVersion, version: index}))
   }
 
-  getArticles(args: ArticlesArguments): AdapterArticle[] {
-    // const nodes = this._articles.filter(
-    //   article =>
-    //     article.publishedDate >= args.dateRange.start && article.publishedDate < args.dateRange.end
-    // )
-
+  async getArticles(args: ArticlesArguments): Promise<AdapterArticle[]> {
     const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
@@ -119,11 +108,9 @@ export class MockAdapter implements Adapter {
       )
 
       const draftVersion = reverseVersions.find(
-        version => version.state === ArticleVersionState.Draft
-      )
-
-      const reviewVersion = reverseVersions.find(
-        version => version.state === ArticleVersionState.Review
+        version =>
+          version.state === ArticleVersionState.Draft ||
+          version.state === ArticleVersionState.DraftReview
       )
 
       return {
@@ -135,21 +122,23 @@ export class MockAdapter implements Adapter {
 
         publishedAt: publishedVersion && publishedVersion.updatedAt,
 
-        latestVersion: article.versions.indexOf(latestVersion),
         publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
-        draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined,
-        reviewVersion: reviewVersion ? article.versions.indexOf(reviewVersion) : undefined
+        draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined
       }
     })
 
     return articles
   }
 
-  getPeer(args: PeerArguments): Peer | undefined {
+  async createPeer(): Promise<Peer> {
+    return {} as any
+  }
+
+  async getPeer(args: PeerArguments): Promise<Peer | undefined> {
     return this._peers.find(peer => peer.id === args.id)
   }
 
-  getPeers(args: PeersArguments): Peer[] {
+  async getPeers(args: PeersArguments): Promise<Peer[]> {
     return this._peers
   }
 }

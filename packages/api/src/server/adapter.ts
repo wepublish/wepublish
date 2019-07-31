@@ -1,15 +1,24 @@
 import {Article, ArticleVersionState} from '../shared'
 
+export interface DateRange {
+  start: Date
+  end: Date
+}
+
 export interface ArticleArguments {
   peer?: string
   id?: string
 }
 
 export interface ArticlesArguments {
-  publishedBetween: {
-    start: Date
-    end: Date
-  }
+  limit: number
+
+  publishedBetween: DateRange
+  updatedBetween: DateRange
+  createdBetween: DateRange
+
+  tagsInclude: string[]
+  includePeers: boolean
 }
 
 export interface PeerArguments {
@@ -51,9 +60,7 @@ export interface AdapterArticle {
   updatedAt: Date
   publishedAt?: Date
 
-  latestVersion: number
   publishedVersion?: number
-  reviewVersion?: number
   draftVersion?: number
 }
 
@@ -71,15 +78,24 @@ export interface AdapterArticleVersion {
 export type AdapterArticleVersionContent = any
 
 export interface Adapter {
-  createArticle(id: string, args: ArticleCreateArguments): AdapterArticle
+  // Articles
+  createArticle(id: string, args: ArticleCreateArguments): Promise<AdapterArticle>
   // updateArticle(id: string, args: ArticleCreateArguments): Article
 
-  getArticleVersion(id: string, version: number): AdapterArticleVersion
-  getArticleVersions(id: string): AdapterArticleVersion[]
+  getArticles(args: ArticlesArguments): Promise<AdapterArticle[]>
 
-  getArticles(args: ArticlesArguments): AdapterArticle[]
-  getArticleVersionContent(id: string, version: number): AdapterArticleVersionContent
+  getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion>
+  getArticleVersions(id: string): Promise<AdapterArticleVersion[]>
+  getArticleVersionContent(id: string, version: number): Promise<AdapterArticleVersionContent>
 
-  getPeer(args: PeerArguments): Peer | undefined
-  getPeers(args: PeersArguments): Peer[]
+  // Peers
+  createPeer(id: string, args: any): Promise<Peer>
+
+  getPeer(args: PeerArguments): Promise<Peer | undefined>
+  getPeers(args: PeersArguments): Promise<Peer[]>
+
+  // Pages
+  // Front
+
+  // Navigation
 }

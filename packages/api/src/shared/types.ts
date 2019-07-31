@@ -1,6 +1,6 @@
 export enum ArticleVersionState {
   Draft = 'draft',
-  Review = 'review',
+  DraftReview = 'draftReview',
   Published = 'publish'
 }
 
@@ -12,9 +12,7 @@ export interface Article {
   updatedAt: Date
   publishedAt?: Date
 
-  latest?: ArticleVersion
   published?: ArticleVersion
-  review?: ArticleVersion
   draft?: ArticleVersion
 
   versions: ArticleVersion[]

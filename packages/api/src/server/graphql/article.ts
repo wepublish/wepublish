@@ -13,15 +13,18 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 
 import {GraphQLPeer} from './peer'
 import {GraphQLDateRange} from './dateRange'
-import {ArticleVersionState} from '../../shared'
+
 import {Context} from '../context'
 import {AdapterArticle} from '../adapter'
 
+import {ArticleVersionState} from '../../shared'
+
 export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
+  description: 'Current state of the article version.',
   values: {
     DRAFT: {value: ArticleVersionState.Draft},
-    REVIEW: {value: ArticleVersionState.Review},
+    DRAFT_REVIEW: {value: ArticleVersionState.DraftReview},
     PUBLISHED: {value: ArticleVersionState.Published}
   }
 })
@@ -42,7 +45,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 })
 
 export const GraphQLArticlePageInfo = new GraphQLObjectType({
-  name: 'DatePageInfo',
+  name: 'ArticlePageInfo',
   fields: {
     publishedBetween: {type: GraphQLDateRange},
     updatedBetween: {type: GraphQLDateRange},
@@ -64,22 +67,17 @@ export const GraphQLArticleVersion = new GraphQLObjectType({
   }
 })
 
+// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
 export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
   name: 'Article',
 
   fields: () => ({
-    id: {type: new GraphQLNonNull(GraphQLID)},
+    id: {type: GraphQLNonNull(GraphQLID)},
 
     createdAt: {type: GraphQLDateTime},
     updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
 
-    latest: {
-      type: GraphQLArticleVersion,
-      resolve(root: AdapterArticle, _args, context: Context) {
-        return context.adapter.getArticleVersion(root.id, root.latestVersion)
-      }
-    },
     published: {
       type: GraphQLArticleVersion,
       resolve(root: AdapterArticle, _args, context: Context) {
@@ -87,13 +85,7 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
         return context.adapter.getArticleVersion(root.id, root.publishedVersion)
       }
     },
-    review: {
-      type: GraphQLArticleVersion,
-      resolve(root: AdapterArticle, _args, context: Context) {
-        if (root.reviewVersion == undefined) return undefined
-        return context.adapter.getArticleVersion(root.id, root.reviewVersion)
-      }
-    },
+
     draft: {
       type: GraphQLArticleVersion,
       resolve(root: AdapterArticle, _args, context: Context) {
@@ -101,8 +93,9 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
         return context.adapter.getArticleVersion(root.id, root.draftVersion)
       }
     },
+
     versions: {
-      type: new GraphQLList(GraphQLArticleVersion),
+      type: GraphQLList(GraphQLArticleVersion),
       resolve(root: AdapterArticle, _args, context: Context) {
         return context.adapter.getArticleVersions(root.id)
       }
@@ -112,10 +105,10 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
   })
 })
 
-export const GraphQLArticleConnection: GraphQLObjectType = new GraphQLObjectType({
+export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
-    nodes: {type: new GraphQLList(GraphQLArticle)},
+    nodes: {type: GraphQLList(GraphQLArticle)},
     pageInfo: {
       type: GraphQLArticlePageInfo
     }

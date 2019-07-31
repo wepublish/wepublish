@@ -4,7 +4,7 @@ import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {Context} from '../context'
 
 import {ArticleCreateArguments} from '../adapter'
-import {generateID} from '../utility'
+import {generateID} from '../../shared'
 
 export const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',

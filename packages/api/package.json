@@ -10,9 +10,9 @@
   },
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
-    "build:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client ./src/server",
+    "build:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client ./src/server --watch",
+    "watch:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy:license build sync-package-info",
