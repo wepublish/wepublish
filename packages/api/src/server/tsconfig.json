@@ -1,6 +1,6 @@
 {
   "extends": "../../../../tsconfig.base.json",
-  "include": ["./**/*", "../shared/utility.ts"],
+  "include": ["./**/*"],
   "compilerOptions": {
     "outDir": "../../lib/cjs/server",
     "module": "commonjs",
