@@ -1,7 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
 
-import {ModuleMapPlugin, AssetListPlugin} from '@wepublish/webpack'
+import {ModuleMapPlugin, AssetListPlugin} from '@karma.run/webpack'
 
 export default (mode: string) =>
   ({

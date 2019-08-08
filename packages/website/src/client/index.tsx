@@ -1,7 +1,7 @@
 import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom'
 
-import {preloadLazyComponents} from '@wepublish/react'
+import {preloadLazyComponents} from '@karma.run/react'
 import {RouteProvider, RouteType, ElementID} from '../shared'
 
 export interface ClientOptions {

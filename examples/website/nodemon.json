@@ -1,6 +1,6 @@
 {
   "watch": [
-    "../../node_modules/@wepublish/react/lib/**/*.js",
+    "../../node_modules/@karma.run/react/lib/**/*.js",
     "../../node_modules/@wepublish/website/lib/cjs/**/*.js",
     "./dist/**/*.js"
   ],

@@ -4,7 +4,7 @@ import path from 'path'
 import {createServer} from 'http'
 
 import {createWebsiteHandler} from '@wepublish/website/server'
-import {findEntryFromAssetList} from '@wepublish/webpack'
+import {findEntryFromAssetList} from '@karma.run/webpack'
 
 import {App} from '../common'
 

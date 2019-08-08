@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "node": "^10.0.0",
+    "node": "^12.0.0",
     "yarn": "^1.16.0"
   },
   "scripts": {
@@ -20,15 +20,9 @@
     "clean:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock clean",
     "build:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock build",
     "watch:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock watch",
-    "clean:react": "yarn workspace @wepublish/react clean",
-    "build:react": "yarn workspace @wepublish/react build",
-    "watch:react": "yarn workspace @wepublish/react watch",
     "clean:website": "yarn workspace @wepublish/website clean",
     "build:website": "yarn workspace @wepublish/website build",
     "watch:website": "yarn workspace @wepublish/website watch",
-    "clean:webpack": "yarn workspace @wepublish/webpack clean",
-    "build:webpack": "yarn workspace @wepublish/webpack build",
-    "watch:webpack": "yarn workspace @wepublish/webpack watch",
     "clean:editor": "yarn workspace @wepublish/editor clean",
     "build:editor": "yarn workspace @wepublish/editor build",
     "watch:editor": "yarn workspace @wepublish/editor watch",

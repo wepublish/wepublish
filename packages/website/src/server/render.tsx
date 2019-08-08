@@ -1,7 +1,7 @@
 import React, {ComponentType} from 'react'
 import ReactDOM from 'react-dom/server'
 
-import {LazyCapture} from '@wepublish/react'
+import {LazyCapture} from '@karma.run/react'
 import {RouteProvider, Route} from '../shared'
 
 export interface RenderedAppResult {

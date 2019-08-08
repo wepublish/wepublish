@@ -1,4 +1,4 @@
-import {createRouteContext} from '@wepublish/react'
+import {createRouteContext} from '@karma.run/react'
 
 export enum RouteType {
   Front = 'front',

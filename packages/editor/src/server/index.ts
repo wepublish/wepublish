@@ -3,7 +3,7 @@ import createRouter from 'find-my-way'
 
 import {ComponentType} from 'react'
 
-import {preloadAllLazyComponents} from '@wepublish/react'
+import {preloadAllLazyComponents} from '@karma.run/react'
 import {RouteType} from '../shared'
 import {renderApp} from './render'
 

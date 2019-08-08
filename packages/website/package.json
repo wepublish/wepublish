@@ -19,7 +19,7 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts"
   },
   "dependencies": {
-    "@wepublish/react": "^0.0.0",
+    "@karma.run/react": "link:../../../karma.run-packages/packages/react",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "find-my-way": "^2.1.0"
