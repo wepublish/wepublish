@@ -9,7 +9,7 @@ Monorepo for wepublish packages.
 ### Prerequisites
 
 - [Node v12.x.x][node-download-url]
-- [Yarn v1.16.0][yarn-download-url]
+- [Yarn v1.17.x][yarn-download-url]
 
 ### Recommended
 
