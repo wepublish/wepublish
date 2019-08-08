@@ -1,7 +1,8 @@
 {
   "watch": [
     "../../node_modules/@karma.run/react/lib/**/*.js",
-    "../../node_modules/@wepublish/editor/lib/cjs/**/*.js",
+    "../../node_modules/@karma.run/cms-kit/lib/**/*.js",
+    "../../node_modules/@wepublish/cms/lib/cjs/**/*.js",
     "./dist/**/*.js"
   ],
   "ignoreRoot": [".git"],
