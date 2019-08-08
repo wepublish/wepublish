@@ -15,7 +15,7 @@
     "watch:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client ./src/server --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean copy:license build sync-package-info",
+    "prepare": "run-s clean copy-license build sync-package-info",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts"
   },
   "dependencies": {

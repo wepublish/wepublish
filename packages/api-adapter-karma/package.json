@@ -10,7 +10,7 @@
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean copy:license build sync-package-info",
+    "prepare": "run-s clean copy-license build sync-package-info",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {},
