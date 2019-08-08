@@ -7,18 +7,8 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach to Website Example",
-      "port": 9229,
-      "address": "localhost",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "${workspaceFolder}",
-      "protocol": "inspector"
-    },
-    {
-      "type": "node",
-      "request": "attach",
       "name": "Attach to API Example",
-      "port": 9230,
+      "port": 9240,
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "${workspaceFolder}",
@@ -27,8 +17,18 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach to Editor Example",
-      "port": 9231,
+      "name": "Attach to CMS Example",
+      "port": 9241,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "${workspaceFolder}",
+      "protocol": "inspector"
+    }
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Website Example",
+      "port": 9242,
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "${workspaceFolder}",

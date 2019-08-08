@@ -14,7 +14,7 @@
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
     "watch:client": "webpack-dev-server --progress --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
-    "watch:server:start": "nodemon --inspect=0.0.0.0:9229 ./dist/server/index.js",
+    "watch:server:start": "nodemon --inspect=0.0.0.0:9242 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/server ./src/common --watch",
     "clean": "shx rm -rf ./dist ./static",
     "start": "node ./dist/server/index.js",

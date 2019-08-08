@@ -12,7 +12,7 @@
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:server": "nodemon --inspect=0.0.0.0:9230 ./lib/index.js",
+    "watch:server": "nodemon --inspect=0.0.0.0:9240 ./lib/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",

@@ -1,4 +1,6 @@
-# we.publish
+# we.publish Packages
+
+Monorepo for wepublish packages.
 
 ## Getting Started
 
@@ -6,6 +8,7 @@
 
 ### Prerequisites
 
+- [Node v12.x.x][node-download-url]
 - [Yarn v1.16.0][yarn-download-url]
 
 ### Recommended
@@ -30,18 +33,18 @@ yarn watch
 The following servers will be available:
 
 - **API:** [http://localhost:3000](http://localhost:3000)
-- **Editor:** [http://localhost:3030](http://localhost:3030)
-- **Editor Storybook:** [http://localhost:3002](http://localhost:3002)
-- **Website:** [http://localhost:8000](http://localhost:8000)
-- **Webpack Dev Server:** [http://localhost:8080](http://localhost:8080)
+- **CMS:** [http://localhost:3001](http://localhost:3001)
+- **Website:** [http://localhost:3002](http://localhost:3002)
+- **Webpack Dev Server:** [http://localhost:3003](http://localhost:3003)
 
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
 
-### Debugging via VSCode
+### Debugging Node.js via VSCode
 
 There are several launch configurations that allow you to attach the debugger to the various examples.
 
+[node-download-url]: https://nodejs.org/en/download/current/
 [yarn-download-url]: https://yarnpkg.com/en/docs/install
 [vscode-download-url]: https://code.visualstudio.com/Download
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
