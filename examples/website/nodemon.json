@@ -6,7 +6,7 @@
   ],
   "ignoreRoot": [".git"],
   "env": {
-    "STATIC_HOST": "http://localhost:8080",
+    "STATIC_HOST": "http://localhost:3003",
     "API_URL": "http://localhost:3000"
   }
 }
