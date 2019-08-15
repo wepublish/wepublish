@@ -752,6 +752,17 @@
     fela-dom "^10.6.1"
     react "^16.8.6"
 
+"@karma.run/react@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.0.3.tgz#ba6217b0fc44dd18dce3d44c46599fd2a3dfa14d"
+  integrity sha512-u326PWW8rq7w6PmHcaBpZ9huzeiLpkTm/zo7l9+fYhQo1wG+uPVa6bwroKZXwl+o664PS3Rvvya/r9Bi86qvMg==
+  dependencies:
+    csstype "^2.6.6"
+    fela "^10.6.1"
+    fela-dom "^10.6.1"
+    path-to-regexp "3.0.0"
+    react "^16.8.6"
+
 "@karma.run/webpack@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@karma.run/webpack/-/webpack-0.0.0.tgz#24202f33d2cfa1d13ccf3da4ca67c24679b0b400"
@@ -4496,6 +4507,11 @@ path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
+
+path-to-regexp@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.0.0.tgz#c981a218f3df543fa28696be2f88e0c58d2e012a"
+  integrity sha512-ZOtfhPttCrqp2M1PBBH4X13XlvnfhIwD7yCLx+GoGoXRPQyxGOTdQMpIzPSPKXAJT/JQrdfFrgdJOyAzvgpQ9A==
 
 path-type@^3.0.0:
   version "3.0.0"
