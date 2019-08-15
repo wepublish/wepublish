@@ -27,7 +27,7 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach to Website Example",
+      "name": "Attach to React Example",
       "port": 9242,
       "address": "localhost",
       "localRoot": "${workspaceFolder}",

@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import {createServer} from 'http'
 
-import {createWebsiteHandler} from '@wepublish/website/server'
+import {createWebsiteHandler} from '@wepublish/react/server'
 import {findEntryFromAssetList} from '@karma.run/webpack'
 
 import {App} from '../common'

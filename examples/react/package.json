@@ -1,5 +1,5 @@
 {
-  "name": "@wepublish/example-website",
+  "name": "@wepublish/react-example",
   "version": "0.0.0",
   "private": true,
   "bin": {
@@ -22,7 +22,7 @@
     "sync-package-info": "exit 0"
   },
   "dependencies": {
-    "@wepublish/website": "^0.0.0",
+    "@wepublish/react": "^0.0.0",
     "react": "^16.8.6"
   },
   "devDependencies": {

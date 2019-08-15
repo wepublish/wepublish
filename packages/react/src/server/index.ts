@@ -32,7 +32,7 @@ export async function createWebsiteHandler(opts: ServerOptions): Promise<Request
   await preloadAllLazyComponents()
 
   router.on('GET', '/*', async (req, res) => {
-    const {componentString, renderedLazyPaths} = await renderApp({
+    const {componentString, renderedLazyPaths, styleMarkup} = await renderApp({
       initialRoute: {type: RouteType.Article},
       appComponent: opts.appComponent
     })
@@ -42,20 +42,18 @@ export async function createWebsiteHandler(opts: ServerOptions): Promise<Request
       new Set(bundles.reduce((acc, file) => [...acc, file], [] as string[]))
     ).filter(url => url !== opts.clientEntryFile)
 
-    const htmlString = `
-    <html>
-      <head>
-        ${bundleSet
-          .map(url => `<script async src="${opts.staticHost}/${url}"></script>`)
-          .join('\n')}
-        <script async src="${opts.staticHost}/${opts.clientEntryFile}"></script>
-        <script id="${ElementID.RenderedPaths}" type="application/json">${JSON.stringify(
-      renderedLazyPaths
-    )}</script>
-      </head>
-      <body><div id="${ElementID.ReactRoot}">${componentString}</div></body>
-    </html>
-  `
+    const htmlString = `<html>
+  <head>
+    ${bundleSet.map(url => `<script async src="${opts.staticHost}/${url}"></script>`).join('\n')}
+    <script async src="${opts.staticHost}/${opts.clientEntryFile}"></script>
+    <script id="${ElementID.RenderedPaths}" type="application/json">
+      ${JSON.stringify(renderedLazyPaths)}
+    </script>
+    ${styleMarkup}
+  </head>
+  <body><div id="${ElementID.ReactRoot}">${componentString}</div></body>
+</html>
+    `
 
     res.setHeader('content-type', 'text/html')
     res.setHeader('content-length', Buffer.byteLength(htmlString))

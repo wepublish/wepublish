@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import {createServer} from 'http'
 
-import {createWebsiteHandler} from '@wepublish/website/server'
+import {createWebsiteHandler} from '@wepublish/react/server'
 import {findEntryFromAssetList} from '@karma.run/webpack'
 
 import {App} from '../common'
@@ -40,7 +40,7 @@ async function asyncMain() {
     })
   )
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 8000
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3002
   const address = process.env.ADDRESS || 'localhost'
 
   server.listen(port, address)

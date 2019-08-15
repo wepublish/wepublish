@@ -3,6 +3,7 @@
 lib/
 dist/
 static/
+examples/**/LICENSE
 packages/**/LICENSE
 node_modules
 npm-debug.log

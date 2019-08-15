@@ -1,8 +1,12 @@
-# we.publish Packages
+![We.Publish](./assets/wepublish.svg 'We.Publish')
 
-Monorepo for wepublish packages.
+## Packages
 
-## Getting Started
+- [@wepublish/api](./packages/api)
+  - [@wepublish/api-adapter-mock](./packages/api-adapter-mock)
+  - [@wepublish/api-adapter-karma](./packages/api-adapter-karma)
+- [@wepublish/cms](./packages/cms)
+- [@wepublish/react](./packages/react)
 
 ## Development
 
@@ -34,8 +38,8 @@ The following servers will be available:
 
 - **API:** [http://localhost:3000](http://localhost:3000)
 - **CMS:** [http://localhost:3001](http://localhost:3001)
-- **Website:** [http://localhost:3002](http://localhost:3002)
-- **Webpack Dev Server:** [http://localhost:3003](http://localhost:3003)
+- **React Example:** [http://localhost:3002](http://localhost:3002)
+- **React Example Webpack Dev Server:** [http://localhost:3003](http://localhost:3003)
 
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
