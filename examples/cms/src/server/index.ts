@@ -40,7 +40,7 @@ async function asyncMain() {
     })
   )
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 8001
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3001
   const address = process.env.ADDRESS || 'localhost'
 
   server.listen(port, address)
