@@ -22,7 +22,6 @@
     "sync-package-info": "exit 0"
   },
   "dependencies": {
-    "@karma.run/react": "^0.0.0",
     "@wepublish/cms": "^0.0.0",
     "react": "^16.8.6"
   },
