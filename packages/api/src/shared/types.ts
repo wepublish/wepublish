@@ -1,4 +1,4 @@
-import {ValueJSON} from 'slate'
+import {DocumentJSON} from 'slate'
 
 export enum ArticleVersionState {
   Draft = 'draft',
@@ -45,9 +45,9 @@ export interface Article {
   id: string
   peer?: Peer
 
-  createdAt: Date
-  updatedAt: Date
-  publishedAt?: Date
+  createdAt: string
+  updatedAt: string
+  publishedAt?: string
 
   published?: ArticleVersion
   draft?: ArticleVersion
@@ -55,15 +55,28 @@ export interface Article {
   versions: ArticleVersion[]
 }
 
+export interface PublishedArticle {
+  id: string
+  peer?: Peer
+
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+
+  published: ArticleVersion
+}
+
 export interface ArticleVersion {
   version: number
   state: ArticleVersionState
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 
   title: string
   lead: string
+  image: any
+  slug: string
 
   blocks: ArticleBlock[]
 }
@@ -92,36 +105,33 @@ export enum BlockType {
   GridBlock = 'gridBlock'
 }
 
-export interface RichTextBlock {
-  type: BlockType.RichText
-  value: ValueJSON
+export interface Block<T extends BlockType, V> {
+  type: T
+  key: string
+  value: V
 }
 
-export interface GalleryBlock {
-  type: BlockType.Gallery
-  value: {
+export type RichTextBlock = Block<BlockType.RichText, DocumentJSON>
+
+export type GalleryBlock = Block<
+  BlockType.Gallery,
+  {
     title: string
     media: any[]
   }
-}
+>
 
-export interface GridBlock {
-  type: BlockType.GridBlock
-  value: {
-    numRows: number
+export type GridBlock = Block<
+  BlockType.GridBlock,
+  {
     numColumns: number
     blocks: FrontContentBlock
   }
-}
+>
 
-export interface TeaserBlock {
-  type: BlockType.Teaser
-  value: {
-    article: Article
-  }
-}
+export type TeaserBlock = Block<BlockType.Teaser, Article>
 
 export type ArticleBlock = RichTextBlock | GalleryBlock
 
 export type FrontLayoutBlock = GridBlock
-export type FrontContentBlock = GalleryBlock
+export type FrontContentBlock = TeaserBlock | GalleryBlock

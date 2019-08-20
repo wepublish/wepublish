@@ -24,15 +24,5 @@
       "remoteRoot": "${workspaceFolder}",
       "protocol": "inspector"
     }
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Attach to React Example",
-      "port": 9242,
-      "address": "localhost",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "${workspaceFolder}",
-      "protocol": "inspector"
-    }
   ]
 }
