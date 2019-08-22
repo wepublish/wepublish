@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./lib/cjs/shared/",
   "module": "./lib/esm/shared/",
   "license": "MIT",
