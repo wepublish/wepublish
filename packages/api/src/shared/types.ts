@@ -100,9 +100,10 @@ export enum BlockType {
   RichText = 'richText',
   Gallery = 'gallery',
   Teaser = 'teaser',
+  Embed = 'embed',
 
   // Layout
-  GridBlock = 'gridBlock'
+  Grid = 'grid'
 }
 
 export interface Block<T extends BlockType, V> {
@@ -110,6 +111,9 @@ export interface Block<T extends BlockType, V> {
   key: string
   value: V
 }
+
+// Content Blocks
+// --------------
 
 export type RichTextBlock = Block<BlockType.RichText, DocumentJSON>
 
@@ -121,15 +125,72 @@ export type GalleryBlock = Block<
   }
 >
 
+export type TeaserBlock = Block<BlockType.Teaser, Article>
+
+export enum EmbedType {
+  FacebookPost = 'facebookPost',
+  InstagramPost = 'instagramPost',
+  TwitterTweet = 'twitterTweet',
+  VimeoVideo = 'vimeoVideo',
+  YouTubeVideo = 'youTubeVideo',
+  SoundCloudTrack = 'soundCloudTrack'
+}
+
+export interface FacebookPostEmbedData {
+  type: EmbedType.FacebookPost
+  userID: string
+  postID: string
+}
+
+export interface InstagramPostEmbedData {
+  type: EmbedType.InstagramPost
+  postID: string
+}
+
+export interface TwitterTweetEmbedData {
+  type: EmbedType.TwitterTweet
+  userID: string
+  tweetID: string
+}
+
+export interface VimeoVideoEmbedData {
+  type: EmbedType.VimeoVideo
+  videoID: string
+}
+
+export interface YouTubeVideoEmbedData {
+  type: EmbedType.YouTubeVideo
+  videoID: string
+}
+
+export interface SoundCloudTrackEmbedData {
+  type: EmbedType.SoundCloudTrack
+  trackID: string
+}
+
+export type EmbedData =
+  | FacebookPostEmbedData
+  | InstagramPostEmbedData
+  | TwitterTweetEmbedData
+  | VimeoVideoEmbedData
+  | YouTubeVideoEmbedData
+  | SoundCloudTrackEmbedData
+
+export type EmbedBlock = Block<BlockType.Embed, EmbedData>
+
+// Layout Blocks
+// -------------
+
 export type GridBlock = Block<
-  BlockType.GridBlock,
+  BlockType.Grid,
   {
     numColumns: number
     blocks: FrontContentBlock
   }
 >
 
-export type TeaserBlock = Block<BlockType.Teaser, Article>
+// Block Unions
+// ------------
 
 export type ArticleBlock = RichTextBlock | GalleryBlock
 

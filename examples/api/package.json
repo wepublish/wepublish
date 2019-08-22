@@ -20,7 +20,7 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@wepublish/api": "^0.0.4"
+    "@wepublish/api": "^6"
   },
   "devDependencies": {
     "@types/node": "^12.6.8",
