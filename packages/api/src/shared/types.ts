@@ -106,7 +106,7 @@ export enum BlockType {
   Grid = 'grid'
 }
 
-export interface Block<T extends BlockType, V> {
+export interface BaseBlock<T extends BlockType, V> {
   type: T
   key: string
   value: V
@@ -115,9 +115,9 @@ export interface Block<T extends BlockType, V> {
 // Content Blocks
 // --------------
 
-export type RichTextBlock = Block<BlockType.RichText, DocumentJSON>
+export type RichTextBlock = BaseBlock<BlockType.RichText, DocumentJSON>
 
-export type GalleryBlock = Block<
+export type GalleryBlock = BaseBlock<
   BlockType.Gallery,
   {
     title: string
@@ -125,7 +125,7 @@ export type GalleryBlock = Block<
   }
 >
 
-export type TeaserBlock = Block<BlockType.Teaser, Article>
+export type TeaserBlock = BaseBlock<BlockType.Teaser, Article>
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
@@ -176,12 +176,12 @@ export type EmbedData =
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
 
-export type EmbedBlock = Block<BlockType.Embed, EmbedData>
+export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
 
 // Layout Blocks
 // -------------
 
-export type GridBlock = Block<
+export type GridBlock = BaseBlock<
   BlockType.Grid,
   {
     numColumns: number
@@ -192,7 +192,9 @@ export type GridBlock = Block<
 // Block Unions
 // ------------
 
-export type ArticleBlock = RichTextBlock | GalleryBlock
+export type ArticleBlock = RichTextBlock | GalleryBlock | EmbedBlock
 
 export type FrontLayoutBlock = GridBlock
 export type FrontContentBlock = TeaserBlock | GalleryBlock
+
+export type Block = GridBlock | RichTextBlock | GalleryBlock | EmbedBlock | TeaserBlock
