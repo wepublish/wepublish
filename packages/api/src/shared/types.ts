@@ -115,7 +115,7 @@ export interface BaseBlock<T extends BlockType, V> {
 // Content Blocks
 // --------------
 
-export type RichTextBlock = BaseBlock<BlockType.RichText, DocumentJSON>
+export interface RichTextBlock extends BaseBlock<BlockType.RichText, DocumentJSON> {}
 
 export type GalleryBlock = BaseBlock<
   BlockType.Gallery,
