@@ -91,7 +91,7 @@ export const GraphQLQuery = new GraphQLObjectType({
           (publishedBetween && updatedBetween) ||
           (createdBetween && updatedBetween)
         ) {
-          return new Error(
+          throw new Error(
             '`publishedBetween`, `createdBetween` and `updatedBetween` are mutally exclusive.'
           )
         }

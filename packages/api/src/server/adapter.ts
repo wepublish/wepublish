@@ -1,4 +1,4 @@
-import {Article, ArticleVersionState} from '../shared'
+import {Article, ArticleVersionState, BlockType} from '../shared'
 
 export interface DateRange {
   start: Date
@@ -39,6 +39,21 @@ export interface Peer {
   url: string
 }
 
+export interface FooBlock {
+  foo: string
+}
+
+export interface BarBlock {
+  bar: number
+}
+
+export interface BlockMap {
+  [BlockType.Foo]?: FooBlock
+  [BlockType.Bar]?: BarBlock
+}
+
+export type Block = ({type: BlockType.Foo} & FooBlock) | ({type: BlockType.Bar} & BarBlock)
+
 export interface ArticleInput {
   state: ArticleVersionState
 
@@ -46,10 +61,7 @@ export interface ArticleInput {
   lead: string
 
   publishDate?: Date
-}
-
-export interface ArticleCreateArguments {
-  article: ArticleInput
+  blocks: Block[]
 }
 
 export interface AdapterArticle {
@@ -73,13 +85,15 @@ export interface AdapterArticleVersion {
 
   title: string
   lead: string
+
+  blocks: Block[]
 }
 
 export type AdapterArticleVersionContent = any
 
 export interface Adapter {
   // Articles
-  createArticle(id: string, args: ArticleCreateArguments): Promise<AdapterArticle>
+  createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>
   // updateArticle(id: string, args: ArticleCreateArguments): Article
 
   getArticles(args: ArticlesArguments): Promise<AdapterArticle[]>

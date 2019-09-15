@@ -15,17 +15,11 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPeer} from './peer'
 import {GraphQLDateRange} from './dateRange'
 import {GraphQLStringLiteral} from './stringLiteral'
-import {GraphQLUnionInputType} from './unionInput'
 
 import {Context} from '../context'
 import {AdapterArticle} from '../adapter'
 
-import {ArticleVersionState} from '../../shared'
-
-export enum BlockTypes {
-  Foo = 'foo',
-  Bar = 'bar'
-}
+import {ArticleVersionState, BlockType} from '../../shared'
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
@@ -37,28 +31,71 @@ export const GraphQLArticleVersionState = new GraphQLEnumType({
   }
 })
 
-export const GraphQLFooBlock = new GraphQLInputObjectType({
-  name: 'FooBlock',
+export const GraphQLStringLiteralFoo = GraphQLStringLiteral(BlockType.Foo)
+export const GraphQLStringLiteralBar = GraphQLStringLiteral(BlockType.Bar)
+
+export const GraphQLInputFooBlock = new GraphQLInputObjectType({
+  name: 'FooInputBlock',
   fields: {
-    type: {
-      type: GraphQLNonNull(GraphQLStringLiteral(BlockTypes.Foo))
-    },
     foo: {
       type: GraphQLNonNull(GraphQLString)
     }
   }
 })
 
-export const GraphQLBarBlock = new GraphQLInputObjectType({
-  name: 'BarBlock',
+export const GraphQLInputBarBlock = new GraphQLInputObjectType({
+  name: 'BarInputBlock',
   fields: {
-    type: {
-      type: GraphQLNonNull(GraphQLStringLiteral(BlockTypes.Bar))
-    },
-    foo: {
+    bar: {
       type: GraphQLNonNull(GraphQLInt)
     }
   }
+})
+
+// export const GraphQLInputBlock = GraphQLUnionInputType({
+//   name: 'InputBlock',
+//   typeMap: {
+//     [BlockType.Foo]: GraphQLInputFooBlock,
+//     [BlockType.Bar]: GraphQLInputBarBlock
+//   },
+//   discriminatingField: 'type'
+// })
+
+export const GraphQLFooBlock = new GraphQLObjectType({
+  name: BlockType.Foo,
+  fields: {
+    foo: {
+      type: GraphQLNonNull(GraphQLString)
+    }
+  },
+  isTypeOf(value) {
+    return value.type === BlockType.Foo
+  }
+})
+
+export const GraphQLBarBlock = new GraphQLObjectType({
+  name: BlockType.Bar,
+  fields: {
+    bar: {
+      type: GraphQLNonNull(GraphQLInt)
+    }
+  },
+  isTypeOf(value) {
+    return value.type === BlockType.Bar
+  }
+})
+
+export const GraphQLInputBlockUnionMap = new GraphQLInputObjectType({
+  name: 'InputBlockUnionMap',
+  fields: {
+    [BlockType.Foo]: {type: GraphQLInputFooBlock},
+    [BlockType.Bar]: {type: GraphQLInputBarBlock}
+  }
+})
+
+export const GraphQLBlock = new GraphQLUnionType({
+  name: 'Block',
+  types: [GraphQLFooBlock, GraphQLBarBlock]
 })
 
 export const GraphQLArticleInput = new GraphQLInputObjectType({
@@ -74,17 +111,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLString)
     },
     blocks: {
-      type: GraphQLNonNull(
-        GraphQLList(
-          GraphQLNonNull(
-            GraphQLUnionInputType({
-              name: 'Blocks',
-              typeMap: {[BlockTypes.Foo]: GraphQLFooBlock, [BlockTypes.Bar]: GraphQLBarBlock},
-              discriminatingField: 'type'
-            })
-          )
-        )
-      )
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInputBlockUnionMap)))
     }
   }
 })
@@ -108,7 +135,9 @@ export const GraphQLArticleVersion = new GraphQLObjectType({
     updatedAt: {type: GraphQLDateTime},
 
     title: {type: GraphQLString},
-    lead: {type: GraphQLString}
+    lead: {type: GraphQLString},
+
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
 })
 

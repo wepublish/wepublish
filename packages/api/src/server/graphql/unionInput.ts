@@ -8,8 +8,6 @@ import {
   isValidLiteralValue
 } from 'graphql'
 
-import Maybe from 'graphql/tsutils/Maybe'
-
 export interface GraphQLUnionInputTypeConfig {
   name: string
   typeMap: Record<string, GraphQLInputObjectType>
@@ -60,7 +58,7 @@ export function GraphQLUnionInputType({
       return coercedValue
     },
 
-    parseLiteral(ast) {
+    parseLiteral(ast, variables) {
       if (ast.kind !== Kind.OBJECT) {
         throw new TypeError(
           `${name} cannot parse non object type ${JSON.stringify(valueFromASTUntyped(ast))}.`
@@ -97,11 +95,11 @@ export function GraphQLUnionInputType({
         )
       }
 
-      const foo = valueFromAST(ast, type)
+      const errors = isValidLiteralValue(type, ast)
 
-      console.log(isValidLiteralValue(type, ast))
+      if (errors.length) throw errors[0]
 
-      return valueFromAST(ast, type)
+      return valueFromAST(ast, type, variables)
     }
   })
 }

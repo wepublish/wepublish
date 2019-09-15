@@ -1,10 +1,14 @@
-import {Adapter, ArticlesArguments, PeerArguments, PeersArguments} from '@wepublish/api/server'
-import {Article, Peer, ArticleVersionState} from '@wepublish/api'
 import {
-  ArticleCreateArguments,
+  Adapter,
+  ArticlesArguments,
+  PeerArguments,
+  PeersArguments,
   AdapterArticle,
   AdapterArticleVersion
-} from '@wepublish/api/lib/cjs/server'
+} from '@wepublish/api/server'
+
+import {Peer, ArticleVersionState} from '@wepublish/api'
+import {ArticleInput, Block} from '@wepublish/api/server'
 
 export interface MockPeer {
   id: string
@@ -20,6 +24,8 @@ export interface MockArticleVersion {
 
   title: string
   lead: string
+
+  blocks: Block[]
 }
 
 export interface MockArticle {
@@ -42,23 +48,23 @@ export class MockAdapter implements Adapter {
     this._peers = opts.peers || []
   }
 
-  async createArticle(id: string, args: ArticleCreateArguments): Promise<AdapterArticle> {
+  async createArticle(id: string, article: ArticleInput): Promise<AdapterArticle> {
     const articleVersion = {
-      ...args.article,
+      ...article,
       createdAt: new Date(),
       updatedAt: new Date()
     }
 
-    const article: MockArticle = {
+    const mockArticle: MockArticle = {
       id,
       versions: [articleVersion]
     }
 
-    this._articles.push(article)
+    this._articles.push(mockArticle)
 
     return {
-      id: article.id,
-      peer: article.peer,
+      id: mockArticle.id,
+      peer: mockArticle.peer,
 
       createdAt: articleVersion.createdAt,
       updatedAt: articleVersion.updatedAt,

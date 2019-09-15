@@ -3,8 +3,20 @@ import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLInputObjectType
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {Context} from '../context'
 
-import {ArticleCreateArguments} from '../adapter'
-import {generateID} from '../../shared'
+import {generateID, ArticleVersionState} from '../../shared'
+import {BlockMap, ArticleInput} from '../adapter'
+
+export interface ArticleCreateArguments {
+  article: {
+    state: ArticleVersionState
+
+    title: string
+    lead: string
+
+    publishDate?: Date
+    blocks: BlockMap[]
+  }
+}
 
 export const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -17,8 +29,31 @@ export const GraphQLMutation = new GraphQLObjectType({
           description: 'Article to create.'
         }
       },
-      resolve(_root, args, context: Context) {
-        return context.adapter.createArticle(generateID(), args as ArticleCreateArguments)
+      resolve(_root, args: ArticleCreateArguments, context: Context) {
+        const articleInput: ArticleInput = {
+          ...args.article,
+          blocks: args.article.blocks.map(value => {
+            const numKeys = Object.keys(value).length
+
+            if (numKeys === 0) {
+              throw new Error(`Received no block types in GraphQLInputBlockMap.`)
+            }
+
+            if (numKeys > 1) {
+              throw new Error(
+                `Received multiple block types (${JSON.stringify(
+                  Object.keys(value)
+                )}) in GraphQLInputBlockMap, they're mutually exclusive.`
+              )
+            }
+
+            const key = Object.keys(value)[0] as keyof BlockMap
+
+            return {type: key, ...value[key]} as any // TODO
+          })
+        }
+
+        return context.adapter.createArticle(generateID(), articleInput)
       }
     }
   }

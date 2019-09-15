@@ -2,10 +2,10 @@ import {createReadStream} from 'fs'
 import {resolve} from 'path'
 
 import {RequestListener} from 'http'
-import {GraphQLSchema} from 'graphql'
+import {GraphQLSchema, GraphQLObjectType} from 'graphql'
 import graphqlHTTP from 'express-graphql'
 
-import {GraphQLQuery, GraphQLMutation} from './graphql'
+import {GraphQLQuery, GraphQLMutation, GraphQLInputFooBlock, GraphQLInputBarBlock} from './graphql'
 import {Adapter} from './adapter'
 import {Context} from './context'
 
@@ -20,7 +20,8 @@ export interface HandlerOptions {
 
 export const graphQLSchema = new GraphQLSchema({
   query: GraphQLQuery,
-  mutation: GraphQLMutation
+  mutation: GraphQLMutation as GraphQLObjectType,
+  types: [GraphQLInputFooBlock, GraphQLInputBarBlock]
 })
 
 export function createAPIHandler(opts: HandlerOptions): RequestListener {

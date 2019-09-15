@@ -2,17 +2,16 @@
 import {createServer} from 'http'
 import {createAPIHandler} from '@wepublish/api/server'
 import MockAdapter from '@wepublish/api-adapter-mock'
-import {generateID, ArticleVersionState} from '@wepublish/api/shared'
+import {generateID, ArticleVersionState, BlockType} from '@wepublish/api/shared'
 
 const adapter = new MockAdapter()
 
 adapter.createArticle(generateID(), {
-  article: {
-    title: 'Test',
-    lead:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    state: ArticleVersionState.Published
-  }
+  title: 'Test',
+  lead:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+  state: ArticleVersionState.Published,
+  blocks: [{type: BlockType.Foo, foo: 'test'}, {type: BlockType.Bar, bar: 0}]
 })
 
 const server = createServer(

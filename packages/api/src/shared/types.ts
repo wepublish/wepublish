@@ -78,7 +78,7 @@ export interface ArticleVersion {
   image: any
   slug: string
 
-  blocks: ArticleBlock[]
+  // blocks: ArticleBlock[]
 }
 
 export interface Front {
@@ -96,14 +96,17 @@ export interface Peer {
 }
 
 export enum BlockType {
+  Foo = 'FooBlock',
+  Bar = 'BarBlock'
+
   // Content
-  RichText = 'richText',
-  Gallery = 'gallery',
-  Teaser = 'teaser',
-  Embed = 'embed',
+  // RichText = 'richText',
+  // Gallery = 'gallery',
+  // Teaser = 'teaser',
+  // Embed = 'embed',
 
   // Layout
-  Grid = 'grid'
+  // Grid = 'grid'
 }
 
 export interface BaseBlock<T extends BlockType, V> {
@@ -115,17 +118,17 @@ export interface BaseBlock<T extends BlockType, V> {
 // Content Blocks
 // --------------
 
-export interface RichTextBlock extends BaseBlock<BlockType.RichText, DocumentJSON> {}
+// export interface RichTextBlock extends BaseBlock<BlockType.RichText, DocumentJSON> {}
 
-export type GalleryBlock = BaseBlock<
-  BlockType.Gallery,
-  {
-    title: string
-    media: any[]
-  }
->
+// export type GalleryBlock = BaseBlock<
+//   BlockType.Gallery,
+//   {
+//     title: string
+//     media: any[]
+//   }
+// >
 
-export type TeaserBlock = BaseBlock<BlockType.Teaser, Article>
+// export type TeaserBlock = BaseBlock<BlockType.Teaser, Article>
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
@@ -176,25 +179,25 @@ export type EmbedData =
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
 
-export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
+// export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
 
 // Layout Blocks
 // -------------
 
-export type GridBlock = BaseBlock<
-  BlockType.Grid,
-  {
-    numColumns: number
-    blocks: FrontContentBlock
-  }
->
+// export type GridBlock = BaseBlock<
+//   BlockType.Grid,
+//   {
+//     numColumns: number
+//     blocks: FrontContentBlock
+//   }
+// >
 
 // Block Unions
 // ------------
 
-export type ArticleBlock = RichTextBlock | GalleryBlock | EmbedBlock
+// export type ArticleBlock = RichTextBlock | GalleryBlock | EmbedBlock
 
-export type FrontLayoutBlock = GridBlock
-export type FrontContentBlock = TeaserBlock | GalleryBlock
+// export type FrontLayoutBlock = GridBlock
+// export type FrontContentBlock = TeaserBlock | GalleryBlock
 
-export type Block = GridBlock | RichTextBlock | GalleryBlock | EmbedBlock | TeaserBlock
+// export type Block = GridBlock | RichTextBlock | GalleryBlock | EmbedBlock | TeaserBlock
