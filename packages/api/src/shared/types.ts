@@ -97,10 +97,10 @@ export interface Peer {
 
 export enum BlockType {
   Foo = 'FooBlock',
-  Bar = 'BarBlock'
+  Bar = 'BarBlock',
 
   // Content
-  // RichText = 'richText',
+  RichText = 'RichTextBlock'
   // Gallery = 'gallery',
   // Teaser = 'teaser',
   // Embed = 'embed',

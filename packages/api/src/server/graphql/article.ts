@@ -14,12 +14,12 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 
 import {GraphQLPeer} from './peer'
 import {GraphQLDateRange} from './dateRange'
-import {GraphQLStringLiteral} from './stringLiteral'
 
 import {Context} from '../context'
 import {AdapterArticle} from '../adapter'
 
 import {ArticleVersionState, BlockType} from '../../shared'
+import {GraphQLRichText} from './richText'
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
@@ -30,9 +30,6 @@ export const GraphQLArticleVersionState = new GraphQLEnumType({
     PUBLISHED: {value: ArticleVersionState.Published}
   }
 })
-
-export const GraphQLStringLiteralFoo = GraphQLStringLiteral(BlockType.Foo)
-export const GraphQLStringLiteralBar = GraphQLStringLiteral(BlockType.Bar)
 
 export const GraphQLInputFooBlock = new GraphQLInputObjectType({
   name: 'FooInputBlock',
@@ -52,14 +49,23 @@ export const GraphQLInputBarBlock = new GraphQLInputObjectType({
   }
 })
 
-// export const GraphQLInputBlock = GraphQLUnionInputType({
-//   name: 'InputBlock',
-//   typeMap: {
-//     [BlockType.Foo]: GraphQLInputFooBlock,
-//     [BlockType.Bar]: GraphQLInputBarBlock
-//   },
-//   discriminatingField: 'type'
-// })
+export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
+  name: 'InputRichTextBlock',
+  fields: {
+    richText: {
+      type: GraphQLNonNull(GraphQLRichText)
+    }
+  }
+})
+
+export const GraphQLInputBlockUnionMap = new GraphQLInputObjectType({
+  name: 'InputBlockUnionMap',
+  fields: {
+    [BlockType.Foo]: {type: GraphQLInputFooBlock},
+    [BlockType.Bar]: {type: GraphQLInputBarBlock},
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock}
+  }
+})
 
 export const GraphQLFooBlock = new GraphQLObjectType({
   name: BlockType.Foo,
@@ -85,17 +91,19 @@ export const GraphQLBarBlock = new GraphQLObjectType({
   }
 })
 
-export const GraphQLInputBlockUnionMap = new GraphQLInputObjectType({
-  name: 'InputBlockUnionMap',
+export const GraphQLRichTextBlock = new GraphQLObjectType({
+  name: BlockType.RichText,
   fields: {
-    [BlockType.Foo]: {type: GraphQLInputFooBlock},
-    [BlockType.Bar]: {type: GraphQLInputBarBlock}
+    richText: {type: GraphQLRichText}
+  },
+  isTypeOf(value) {
+    return value.type === BlockType.RichText
   }
 })
 
 export const GraphQLBlock = new GraphQLUnionType({
   name: 'Block',
-  types: [GraphQLFooBlock, GraphQLBarBlock]
+  types: [GraphQLFooBlock, GraphQLBarBlock, GraphQLRichTextBlock]
 })
 
 export const GraphQLArticleInput = new GraphQLInputObjectType({

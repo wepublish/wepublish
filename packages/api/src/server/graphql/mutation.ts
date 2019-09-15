@@ -1,6 +1,6 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLInputObjectType} from 'graphql'
 
-import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
 import {Context} from '../context'
 
 import {generateID, ArticleVersionState} from '../../shared'
@@ -36,14 +36,14 @@ export const GraphQLMutation = new GraphQLObjectType({
             const numKeys = Object.keys(value).length
 
             if (numKeys === 0) {
-              throw new Error(`Received no block types in GraphQLInputBlockMap.`)
+              throw new Error(`Received no block types in ${GraphQLInputBlockUnionMap.name}.`)
             }
 
             if (numKeys > 1) {
               throw new Error(
-                `Received multiple block types (${JSON.stringify(
-                  Object.keys(value)
-                )}) in GraphQLInputBlockMap, they're mutually exclusive.`
+                `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
+                  GraphQLInputBlockUnionMap.name
+                }, they're mutually exclusive.`
               )
             }
 
