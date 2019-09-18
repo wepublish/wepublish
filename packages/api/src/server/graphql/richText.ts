@@ -6,7 +6,7 @@ import {
   ASTNode,
   GraphQLError
 } from 'graphql'
-import {DocumentJSON, NodeJSON} from 'slate'
+import {DocumentJSON, NodeJSON, BlockJSON, TextJSON, MarkJSON} from 'slate'
 import Maybe from 'graphql/tsutils/Maybe'
 import {generateID} from '../../shared'
 
@@ -76,6 +76,12 @@ export const GraphQLRichText = new GraphQLScalarType({
 })
 
 export function validateNodeJSON(node: unknown): NodeJSON {}
+
+export function validateBlockNode(node: unknown): BlockJSON {}
+
+export function validateTextNode(node: unknown): TextJSON {}
+
+export function validateMarkNode(node: unknown): MarkJSON {}
 
 export function validateDocumentJSON(document: unknown): DocumentJSON {
   if (typeof document !== 'object' && document == null && Array.isArray(document)) {
