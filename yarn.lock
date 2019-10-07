@@ -742,6 +742,14 @@
     prop-types "^15.6.2"
     scheduler "^0.13.6"
 
+"@karma.run/graphql@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/graphql/-/graphql-0.0.0.tgz#06e403a9d0584142b871b103c5496fbf7c915942"
+  integrity sha512-tCSOAn/sP7Ouv9Fq+Uueacr6wptBw2mtTLbfhmsYYzjLVG8VKsy3T+5SFYiyXkCz8A+QtLvqCCvlH325bHSVQQ==
+  dependencies:
+    "@karma.run/utility" "0.0.0"
+    "@types/slate" "^0.47.1"
+
 "@karma.run/react@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.0.0.tgz#8e732db27a00842e8c8ca23197fdac16160acec8"
@@ -751,6 +759,11 @@
     fela "^10.6.1"
     fela-dom "^10.6.1"
     react "^16.8.6"
+
+"@karma.run/utility@0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/utility/-/utility-0.0.0.tgz#5c9f791427c5d375f7c0ad5cb94892193b21df23"
+  integrity sha512-GV+mmm0iwcvVFtHyRy82ssHCXTqpoeNH+SU4B9GdBgn45R8MBt3Eohiw1bvKZt0HJi8zJlA2OUhkftQSrUTWDg==
 
 "@karma.run/webpack@^0.0.0":
   version "0.0.0"
@@ -5778,10 +5791,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.2.tgz#105b0f1934119dde543ac8eb71af3a91009efe54"
-  integrity sha512-lmQ4L+J6mnu3xweP8+rOrUwzmN+MRAj7TgtJtDaXE5PMyX2kCrklhg3rvOsOIfNeAWMQWO2F1GPc1kMD2vLAfw==
+typescript@beta:
+  version "3.7.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.0-beta.tgz#4ad556e0eee14b90ecc39261001690e16e5eeba9"
+  integrity sha512-4jyCX+IQamrPJxgkABPq9xf+hUN+GWHVxoj+oey1TadCPa4snQl1RKwUba+1dyzYCamwlCxKvZQ3TjyWLhMGBA==
 
 undefsafe@^2.0.2:
   version "2.0.2"

@@ -19,7 +19,6 @@ import {Context} from '../context'
 import {AdapterArticle} from '../adapter'
 
 import {ArticleVersionState, BlockType} from '../../shared'
-import {GraphQLRichText} from './richText'
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
@@ -53,7 +52,7 @@ export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
   name: 'InputRichTextBlock',
   fields: {
     richText: {
-      type: GraphQLNonNull(GraphQLRichText)
+      type: GraphQLNonNull(GraphQLString)
     }
   }
 })

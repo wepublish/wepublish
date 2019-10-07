@@ -19,7 +19,7 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@types/slate": "^0.47.1",
+    "@karma.run/graphql": "^0.0.0",
     "axios": "^0.19.0",
     "express-graphql": "^0.9.0",
     "graphql": "^14.4.2",
@@ -34,6 +34,6 @@
     "@types/node": "^12.6.8",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "^3.6.2"
+    "typescript": "beta"
   }
 }
