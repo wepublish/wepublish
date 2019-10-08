@@ -92,6 +92,9 @@ export interface AdapterArticleVersion {
 export type AdapterArticleVersionContent = any
 
 export interface Adapter {
+  // User
+  resolveUserForToken(token: string): Promise<any>
+
   // Articles
   createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>
   // updateArticle(id: string, args: ArticleCreateArguments): Article

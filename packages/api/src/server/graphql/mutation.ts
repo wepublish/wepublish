@@ -1,6 +1,13 @@
-import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLInputObjectType} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+  GraphQLBoolean
+} from 'graphql'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
+import {GraphQLUserSession} from './session'
 import {Context} from '../context'
 
 import {generateID, ArticleVersionState} from '../../shared'
@@ -21,6 +28,18 @@ export interface ArticleCreateArguments {
 export const GraphQLMutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    createAccessToken: {
+      type: GraphQLUserSession,
+      args: {
+        username: {type: GraphQLNonNull(GraphQLString)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve() {}
+    },
+    revokeAccessToken: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      resolve() {}
+    },
     createArticle: {
       type: GraphQLArticle,
       args: {

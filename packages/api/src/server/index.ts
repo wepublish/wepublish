@@ -1,9 +1,10 @@
-import {createReadStream} from 'fs'
 import {resolve} from 'path'
+import {RequestListener, IncomingMessage, OutgoingMessage} from 'http'
 
-import {RequestListener} from 'http'
 import {GraphQLSchema, GraphQLObjectType} from 'graphql'
-import graphqlHTTP from 'express-graphql'
+import createGraphQLHTTPHandler from 'express-graphql'
+import {getDistDirectory, renderAltair, renderInitialOptions, RenderOptions} from 'altair-static'
+import send from 'send'
 
 import {GraphQLQuery, GraphQLMutation, GraphQLInputFooBlock, GraphQLInputBarBlock} from './graphql'
 import {Adapter} from './adapter'
@@ -24,21 +25,40 @@ export const graphQLSchema = new GraphQLSchema({
   types: [GraphQLInputFooBlock, GraphQLInputBarBlock]
 })
 
-export function createAPIHandler(opts: HandlerOptions): RequestListener {
-  const graphQLHandler = graphqlHTTP(req => ({
+export function faviconHandler(req: IncomingMessage, res: OutgoingMessage) {
+  return send(req, resolve(__dirname, '../../../favicon.ico'), {maxAge: '1h'}).pipe(res)
+}
+
+export function graphQLPlaygroundHandler(req: IncomingMessage, res: OutgoingMessage) {}
+
+export function defaultHandler(req: IncomingMessage, res: OutgoingMessage) {
+  res.end()
+}
+
+export function createAPIHandler({adapter}: HandlerOptions): RequestListener {
+  const graphQLHandler = createGraphQLHTTPHandler(req => ({
     schema: graphQLSchema,
-    graphiql: true,
-    context: {adapter: opts.adapter} as Context
+    context(req: IncomingMessage): Context {
+      return {
+        adapter,
+        user: adapter.resolveUserForToken(req.headers.authorization!)
+      }
+    }
   }))
 
   return (req, res) => {
-    if (req.method === 'GET' && req.url && req.url.endsWith('/favicon.ico')) {
-      res.setHeader('content-type', 'image/x-icon')
-      res.setHeader('cache-control', 'public, max-age=3600')
-
-      return createReadStream(resolve(__dirname, '../../../favicon.ico')).pipe(res)
+    if (req.url!.endsWith('/favicon.ico')) {
+      return faviconHandler(req, res)
     }
 
-    return graphQLHandler(req, res)
+    if (req.url!.startsWith('/graphql')) {
+      return graphQLHandler(req, res)
+    }
+
+    if (req.url!.startsWith('/playground')) {
+      // return graphQLPlaygroundHandler()
+    }
+
+    return defaultHandler(req, res)
   }
 }
