@@ -8,10 +8,12 @@ import {
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
 import {GraphQLUserSession} from './session'
-import {Context} from '../context'
+import {Context, ContextRequest} from '../context'
 
 import {generateID, ArticleVersionState} from '../../shared'
 import {BlockMap, ArticleInput} from '../adapter'
+import {IncomingMessage} from 'http'
+import {contextFromRequest} from '../context'
 
 export interface ArticleCreateArguments {
   article: {
@@ -34,7 +36,11 @@ export const GraphQLMutation = new GraphQLObjectType({
         username: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve() {}
+      resolve(_root: any, _args: any, req: ContextRequest) {
+        const {adapter, user} = contextFromRequest(req)
+        console.log(user, adapter)
+        return {}
+      }
     },
     revokeAccessToken: {
       type: GraphQLNonNull(GraphQLBoolean),
@@ -48,17 +54,18 @@ export const GraphQLMutation = new GraphQLObjectType({
           description: 'Article to create.'
         }
       },
-      resolve(_root, args: ArticleCreateArguments, context: Context) {
+      resolve(_root, args: ArticleCreateArguments, req: ContextRequest) {
+        const {adapter, user} = contextFromRequest(req)
         const articleInput: ArticleInput = {
           ...args.article,
           blocks: args.article.blocks.map(value => {
-            const numKeys = Object.keys(value).length
+            const valueKeys = Object.keys(value)
 
-            if (numKeys === 0) {
+            if (valueKeys.length === 0) {
               throw new Error(`Received no block types in ${GraphQLInputBlockUnionMap.name}.`)
             }
 
-            if (numKeys > 1) {
+            if (valueKeys.length > 1) {
               throw new Error(
                 `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
                   GraphQLInputBlockUnionMap.name
@@ -72,7 +79,7 @@ export const GraphQLMutation = new GraphQLObjectType({
           })
         }
 
-        return context.adapter.createArticle(generateID(), articleInput)
+        return adapter.createArticle(generateID(), articleInput)
       }
     }
   }

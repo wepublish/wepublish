@@ -147,6 +147,8 @@ export class MockAdapter implements Adapter {
   async getPeers(args: PeersArguments): Promise<Peer[]> {
     return this._peers
   }
+
+  async resolveUserForToken() {}
 }
 
 export default MockAdapter
