@@ -78,7 +78,7 @@ export interface ArticleVersion {
   image: any
   slug: string
 
-  // blocks: ArticleBlock[]
+  blocks: ArticleBlock[]
 }
 
 export interface Front {
@@ -95,18 +95,29 @@ export interface Peer {
   url: string
 }
 
+export interface Media {
+  src: string
+  width: number
+  height: number
+  caption: string
+}
+
 export enum BlockType {
-  Foo = 'FooBlock',
-  Bar = 'BarBlock',
+  Foo = 'foo',
+  Bar = 'bar',
 
   // Content
-  RichText = 'RichTextBlock'
-  // Gallery = 'gallery',
-  // Teaser = 'teaser',
-  // Embed = 'embed',
+  RichText = 'RichTextBlock',
+  Gallery = 'gallery',
+  Teaser = 'teaser',
+  Embed = 'embed',
+  Quote = 'quote',
+  Image = 'image',
+  Listicle = 'listicle',
+  PeerPageBreak = 'linkPageBreak',
 
   // Layout
-  // Grid = 'grid'
+  Grid = 'grid'
 }
 
 export interface BaseBlock<T extends BlockType, V> {
@@ -118,17 +129,42 @@ export interface BaseBlock<T extends BlockType, V> {
 // Content Blocks
 // --------------
 
-// export interface RichTextBlock extends BaseBlock<BlockType.RichText, DocumentJSON> {}
+export interface QuoteBlock extends BaseBlock<BlockType.Quote, {text: string; author: string}> {}
 
-// export type GalleryBlock = BaseBlock<
-//   BlockType.Gallery,
-//   {
-//     title: string
-//     media: any[]
-//   }
-// >
+export interface ImageBlock extends BaseBlock<BlockType.Image, Media> {}
 
-// export type TeaserBlock = BaseBlock<BlockType.Teaser, Article>
+export interface ListicleBlock
+  extends BaseBlock<
+    BlockType.Listicle,
+    {
+      title: string
+      image: Media
+      text: DocumentJSON
+    }[]
+  > {}
+
+export interface PeerPageBreakBlock
+  extends BaseBlock<
+    BlockType.PeerPageBreak,
+    {
+      peer: Peer
+      text: string
+      linkURL: string
+      linkText: string
+    }
+  > {}
+
+export interface RichTextBlock extends BaseBlock<BlockType.RichText, DocumentJSON> {}
+
+export type GalleryBlock = BaseBlock<
+  BlockType.Gallery,
+  {
+    title: string
+    media: any[]
+  }
+>
+
+export type TeaserBlock = BaseBlock<BlockType.Teaser, Article>
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
@@ -179,25 +215,32 @@ export type EmbedData =
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
 
-// export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
+export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>
 
 // Layout Blocks
 // -------------
 
-// export type GridBlock = BaseBlock<
-//   BlockType.Grid,
-//   {
-//     numColumns: number
-//     blocks: FrontContentBlock
-//   }
-// >
+export type GridBlock = BaseBlock<
+  BlockType.Grid,
+  {
+    numColumns: number
+    blocks: FrontContentBlock
+  }
+>
 
 // Block Unions
 // ------------
 
-// export type ArticleBlock = RichTextBlock | GalleryBlock | EmbedBlock
+export type ArticleBlock =
+  | RichTextBlock
+  | GalleryBlock
+  | EmbedBlock
+  | ImageBlock
+  | QuoteBlock
+  | ListicleBlock
+  | PeerPageBreakBlock
 
-// export type FrontLayoutBlock = GridBlock
-// export type FrontContentBlock = TeaserBlock | GalleryBlock
+export type FrontLayoutBlock = GridBlock
+export type FrontContentBlock = TeaserBlock
 
-// export type Block = GridBlock | RichTextBlock | GalleryBlock | EmbedBlock | TeaserBlock
+export type Block = FrontLayoutBlock | FrontContentBlock | ArticleBlock

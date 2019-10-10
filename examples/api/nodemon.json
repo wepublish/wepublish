@@ -1,7 +1,7 @@
 {
   "watch": [
     "../../node_modules/@wepublish/api/lib/**/*.js",
-    "../../node_modules/@wepublish/api-adapter-mock/lib/**/*.js",
+    "../../node_modules/@wepublish/api-adapter-memory/lib/**/*.js",
     "../../node_modules/@wepublish/api-adapter-karma/lib/**/*.js",
     "./lib/**/*.js"
   ],

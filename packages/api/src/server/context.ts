@@ -10,7 +10,11 @@ export interface Context {
   user: any
 }
 
-export function contextFromRequest({adapter}: ContextRequest): Context {
+export interface ContextOptions {
+  adapter: Adapter
+}
+
+export function contextFromRequest(req: IncomingMessage, {adapter}: ContextOptions): Context {
   return {
     adapter,
     user: {}

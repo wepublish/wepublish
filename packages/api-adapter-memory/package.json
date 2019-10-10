@@ -1,5 +1,5 @@
 {
-  "name": "@wepublish/api-adapter-mock",
+  "name": "@wepublish/api-adapter-memory",
   "version": "0.0.0",
   "main": "./lib/",
   "license": "MIT",

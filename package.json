@@ -14,9 +14,9 @@
     "clean:api-adapter-karma": "yarn workspace @wepublish/api-adapter-karma clean",
     "build:api-adapter-karma": "yarn workspace @wepublish/api-adapter-karma build",
     "watch:api-adapter-karma": "yarn workspace @wepublish/api-adapter-karma watch",
-    "clean:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock clean",
-    "build:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock build",
-    "watch:api-adapter-mock": "yarn workspace @wepublish/api-adapter-mock watch",
+    "clean:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory clean",
+    "build:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory build",
+    "watch:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory watch",
     "clean:cms": "yarn workspace @wepublish/cms clean",
     "build:cms": "yarn workspace @wepublish/cms build",
     "watch:cms": "yarn workspace @wepublish/cms watch",
@@ -36,10 +36,10 @@
     "examples/*"
   ],
   "devDependencies": {
+    "husky": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1",
-    "husky": "^3.0.0"
+    "pretty-quick": "^1.11.1"
   },
   "husky": {
     "hooks": {

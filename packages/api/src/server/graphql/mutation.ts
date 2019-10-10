@@ -3,7 +3,8 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLInputObjectType,
-  GraphQLBoolean
+  GraphQLBoolean,
+  GraphQLID
 } from 'graphql'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
@@ -15,7 +16,12 @@ import {BlockMap, ArticleInput} from '../adapter'
 import {IncomingMessage} from 'http'
 import {contextFromRequest} from '../context'
 
-export interface ArticleCreateArguments {
+interface CreateSessionArgs {
+  username: string
+  password: string
+}
+
+interface ArticleCreateArguments {
   article: {
     state: ArticleVersionState
 
@@ -27,23 +33,23 @@ export interface ArticleCreateArguments {
   }
 }
 
-export const GraphQLMutation = new GraphQLObjectType({
+export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
   name: 'Mutation',
   fields: {
-    createAccessToken: {
+    createSession: {
       type: GraphQLUserSession,
       args: {
         username: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve(_root: any, _args: any, req: ContextRequest) {
-        const {adapter, user} = contextFromRequest(req)
-        console.log(user, adapter)
-        return {}
+      async resolve(_root, {username, password}: CreateSessionArgs, {adapter}) {
+        const user = await adapter.userForCredentials(username, password)
+
+        return adapter.createSession(user)
       }
     },
-    revokeAccessToken: {
-      type: GraphQLNonNull(GraphQLBoolean),
+    revokeSessionToken: {
+      type: GraphQLNonNull(GraphQLID),
       resolve() {}
     },
     createArticle: {
@@ -54,11 +60,10 @@ export const GraphQLMutation = new GraphQLObjectType({
           description: 'Article to create.'
         }
       },
-      resolve(_root, args: ArticleCreateArguments, req: ContextRequest) {
-        const {adapter, user} = contextFromRequest(req)
+      resolve(_root, {article}: ArticleCreateArguments, {adapter, user}) {
         const articleInput: ArticleInput = {
-          ...args.article,
-          blocks: args.article.blocks.map(value => {
+          ...article,
+          blocks: article.blocks.map(value => {
             const valueKeys = Object.keys(value)
 
             if (valueKeys.length === 0) {

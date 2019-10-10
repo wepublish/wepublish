@@ -3,7 +3,7 @@
 ## Packages
 
 - [@wepublish/api](./packages/api)
-  - [@wepublish/api-adapter-mock](./packages/api-adapter-mock)
+  - [@wepublish/api-adapter-memory](./packages/api-adapter-memory)
   - [@wepublish/api-adapter-karma](./packages/api-adapter-karma)
 - [@wepublish/cms](./packages/cms)
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import {createServer} from 'http'
 import {createAPIHandler} from '@wepublish/api/server'
-import MockAdapter from '@wepublish/api-adapter-mock'
 import {generateID, ArticleVersionState, BlockType} from '@wepublish/api/shared'
+import MockAdapter from '@wepublish/api-adapter-memory'
 
 const adapter = new MockAdapter()
 

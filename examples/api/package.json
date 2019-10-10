@@ -24,9 +24,9 @@
   },
   "devDependencies": {
     "@types/node": "^12.6.8",
-    "typescript": "beta",
+    "nodemon": "^1.19.1",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "nodemon": "^1.19.1"
+    "typescript": "beta"
   }
 }

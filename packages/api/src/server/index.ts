@@ -7,7 +7,7 @@ import send from 'send'
 
 import {GraphQLQuery, GraphQLMutation, GraphQLInputFooBlock, GraphQLInputBarBlock} from './graphql'
 import {Adapter} from './adapter'
-import {Context, ContextRequest} from './context'
+import {contextFromRequest, Context} from './context'
 
 export * from './graphql'
 export * from './adapter'
@@ -31,23 +31,15 @@ export function faviconHandler(req: IncomingMessage, res: ServerResponse) {
 export function createAPIHandler({adapter}: HandlerOptions): RequestListener {
   const graphQLHandler = createGraphQLHTTPHandler(req => ({
     schema: graphQLSchema,
-    graphiql: true
+    graphiql: true,
+    context: contextFromRequest(req, {adapter})
   }))
-
-  // context(req: IncomingMessage): Context {
-  //   console.log(req.url)
-
-  //   return {
-  //     adapter,
-  //     user: adapter.resolveUserForToken(req.headers.authorization!)
-  //   }
-  // }
 
   return ((req, res) => {
     if (req.url!.endsWith('/favicon.ico')) {
       return faviconHandler(req, res)
     }
 
-    return graphQLHandler(Object.assign(req, {adapter}), res)
+    return graphQLHandler(req, res)
   }) as RequestListener
 }
