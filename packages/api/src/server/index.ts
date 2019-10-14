@@ -29,10 +29,10 @@ export function faviconHandler(req: IncomingMessage, res: ServerResponse) {
 }
 
 export function createAPIHandler({adapter}: HandlerOptions): RequestListener {
-  const graphQLHandler = createGraphQLHTTPHandler(req => ({
+  const graphQLHandler = createGraphQLHTTPHandler(async req => ({
     schema: graphQLSchema,
     graphiql: true,
-    context: contextFromRequest(req, {adapter})
+    context: await contextFromRequest(req, {adapter})
   }))
 
   return ((req, res) => {

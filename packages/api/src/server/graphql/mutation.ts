@@ -7,18 +7,20 @@ import {
   GraphQLID
 } from 'graphql'
 
+import {sign as signJWT} from 'jsonwebtoken'
+
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
 import {GraphQLUserSession} from './session'
 import {Context, ContextRequest} from '../context'
 
-import {generateID, ArticleVersionState} from '../../shared'
+import {generateID, ArticleVersionState, generateToken} from '../../shared'
 import {BlockMap, ArticleInput} from '../adapter'
 import {IncomingMessage} from 'http'
 import {contextFromRequest} from '../context'
 
 interface CreateSessionArgs {
-  username: string
-  password: string
+  readonly email: string
+  readonly password: string
 }
 
 interface ArticleCreateArguments {
@@ -36,19 +38,58 @@ interface ArticleCreateArguments {
 export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
   name: 'Mutation',
   fields: {
-    createSession: {
+    authorize: {
       type: GraphQLUserSession,
       args: {
-        username: {type: GraphQLNonNull(GraphQLString)},
+        email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {username, password}: CreateSessionArgs, {adapter}) {
-        const user = await adapter.userForCredentials(username, password)
 
-        return adapter.createSession(user)
+      async resolve(_root, {email, password}: CreateSessionArgs, {adapter}) {
+        // const [user, verifyToken] = await Promise.all([
+        //   adapter.userForCredentials(email, password)
+        // ])
+
+        const user = adapter.userForCredentials(email, password)
+
+        // TODO: Make expiresIn in configurable
+        const refreshTokenExpiresIn = 60 * 60 * 24 * 7
+        const accessTokenExpiresIn = 60 * 60
+
+        const refreshTokenExpiry = new Date(Date.now() + refreshTokenExpiresIn * 1000)
+        const accessTokenExpiry = new Date(Date.now() + accessTokenExpiresIn * 1000)
+
+        // TODO: Make secret key configurable
+        const refreshToken = signJWT({user, exp: refreshTokenExpiry.getTime() / 1000}, 'secret')
+        const accessToken = signJWT({user, exp: accessTokenExpiry.getTime() / 1000}, 'secret')
+
+        await adapter.insertRefreshToken(refreshToken)
+
+        // const [index, session] = Array.from(
+        //   this._sessions.entries()).find(([_index, {token}]) => token === sessionToken
+        // ) ?? []
+
+        // if (index == null || !session) return null
+
+        // const {user, expiry} = session
+
+        // if (new Date() > expiry) {
+        //   this._sessions.splice(index, 1)
+        //   return null
+        // }
+
+        // return user
+
+        return {
+          user,
+          refreshToken,
+          accessToken,
+          refreshTokenExpiresIn,
+          accessTokenExpiresIn
+        }
       }
     },
-    revokeSessionToken: {
+    deauthorize: {
       type: GraphQLNonNull(GraphQLID),
       resolve() {}
     },
@@ -60,7 +101,9 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
           description: 'Article to create.'
         }
       },
-      resolve(_root, {article}: ArticleCreateArguments, {adapter, user}) {
+      async resolve(_root, {article}: ArticleCreateArguments, {adapter, user}) {
+        if (!user) throw new Error('Access Denied')
+
         const articleInput: ArticleInput = {
           ...article,
           blocks: article.blocks.map(value => {
@@ -84,7 +127,7 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
           })
         }
 
-        return adapter.createArticle(generateID(), articleInput)
+        return adapter.createArticle(await generateID(), articleInput)
       }
     }
   }

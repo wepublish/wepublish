@@ -41,24 +41,36 @@ export interface MockAdapterOptions {
   peers?: MockPeer[]
 }
 
+export interface MockUser {
+  readonly email: string
+  readonly password: string
+}
+
 export class MockAdapter implements Adapter {
-  private _articles: MockArticle[]
-  private _peers: MockPeer[]
+  private _sessions: string[] = []
+  private _articles: MockArticle[] = []
+  private _peers: MockPeer[] = []
 
-  constructor(opts: MockAdapterOptions = {}) {
-    this._articles = opts.articles || []
-    this._peers = opts.peers || []
+  constructor({articles = [], peers = []}: MockAdapterOptions = {}) {
+    this._articles.push(...articles)
+    this._peers.push(...peers)
   }
 
-  async createSession(user: AdapterUser): Promise<AdapterSession> {
-    return {
-      user,
-      token: '123',
-      expiry: new Date()
-    }
+  async verifyRefreshToken(verifyToken: string): Promise<boolean> {
+    return this._sessions.some(token => token === verifyToken)
   }
 
-  async resolveUserForToken() {}
+  async insertRefreshToken(token: string): Promise<void> {
+    this._sessions.push(token)
+  }
+
+  async revokeRefreshToken(revokeToken: string): Promise<void> {
+    this._sessions.splice(this._sessions.findIndex(token => token === revokeToken), 1)
+  }
+
+  async userForCredentials(email: string, password: string) {
+    return {email}
+  }
 
   async createArticle(id: string, article: ArticleInput): Promise<AdapterArticle> {
     const articleVersion = {

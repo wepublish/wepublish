@@ -92,24 +92,22 @@ export interface AdapterArticleVersion {
 export type AdapterArticleVersionContent = any
 
 export interface AdapterUser {
-  id: string
-  username: string
+  readonly email: string
 }
 
 export interface AdapterSession {
-  user: AdapterUser
-  token: string
-  expiry: Date
+  readonly user: AdapterUser
+  readonly token: string
+  readonly expiresIn: number
 }
 
 export interface Adapter {
   // User
-  userForCredentials(username: string, password: string): Promise<AdapterUser>
+  userForCredentials(email: string, password: string): Promise<AdapterUser>
 
-  createSession(user: AdapterUser): Promise<AdapterSession>
-  revokeSession(token: string): Promise<void>
-
-  resolveUserForSessionToken(token: string): Promise<AdapterUser>
+  verifyRefreshToken(token: string): Promise<boolean>
+  insertRefreshToken(token: string): Promise<void>
+  revokeRefreshToken(token: string): Promise<void>
 
   // Articles
   createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>

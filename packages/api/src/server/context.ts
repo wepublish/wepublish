@@ -1,5 +1,8 @@
 import {IncomingMessage} from 'http'
-import {Adapter} from './adapter'
+import {verify as verifyJWT} from 'jsonwebtoken'
+
+import {parse as parseQueryString} from 'querystring'
+import {Adapter, AdapterUser} from './adapter'
 
 export interface ContextRequest extends IncomingMessage {
   adapter: Adapter
@@ -7,16 +10,32 @@ export interface ContextRequest extends IncomingMessage {
 
 export interface Context {
   adapter: Adapter
-  user: any
+  user: AdapterUser | null
 }
 
 export interface ContextOptions {
   adapter: Adapter
 }
 
-export function contextFromRequest(req: IncomingMessage, {adapter}: ContextOptions): Context {
+export function tokenFromRequest(req: IncomingMessage) {
+  if (req.headers.authorization) {
+    return req.headers.authorization?.match(/Bearer (.+?$)/i)?.[1]
+  } else if (req.url) {
+    const token = parseQueryString(req.url.split('?')[1])['token']
+    return typeof token === 'string' ? token : null
+  }
+
+  return null
+}
+
+export async function contextFromRequest(req: IncomingMessage, {adapter}: ContextOptions): Promise<Context> {
+  const token = tokenFromRequest(req)
+  const test = token ? verifyJWT(token, 'secret') : null // TODO: Secret configurable
+
+  console.log(test)
+
   return {
     adapter,
-    user: {}
+    user: {} as any
   }
 }

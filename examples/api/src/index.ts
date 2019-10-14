@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import {createServer} from 'http'
 import {createAPIHandler} from '@wepublish/api/server'
-import {generateID, ArticleVersionState, BlockType} from '@wepublish/api/shared'
+import {ArticleVersionState, BlockType, generateIDSync} from '@wepublish/api/shared'
 import MockAdapter from '@wepublish/api-adapter-memory'
 
 const adapter = new MockAdapter()
 
-adapter.createArticle(generateID(), {
+adapter.createArticle(generateIDSync(), {
   title: 'Test',
   lead:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
