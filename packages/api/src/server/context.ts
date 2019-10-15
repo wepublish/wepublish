@@ -10,6 +10,7 @@ export interface ContextRequest extends IncomingMessage {
 
 export interface Context {
   adapter: Adapter
+  token: string | null
   user: AdapterUser | null
 }
 
@@ -19,7 +20,7 @@ export interface ContextOptions {
 
 export function tokenFromRequest(req: IncomingMessage) {
   if (req.headers.authorization) {
-    return req.headers.authorization?.match(/Bearer (.+?$)/i)?.[1]
+    return req.headers.authorization?.match(/Bearer (.+?$)/i)?.[1] ?? null
   } else if (req.url) {
     const token = parseQueryString(req.url.split('?')[1])['token']
     return typeof token === 'string' ? token : null
@@ -30,12 +31,13 @@ export function tokenFromRequest(req: IncomingMessage) {
 
 export async function contextFromRequest(req: IncomingMessage, {adapter}: ContextOptions): Promise<Context> {
   const token = tokenFromRequest(req)
-  const test = token ? verifyJWT(token, 'secret') : null // TODO: Secret configurable
+  const test = token ? verifyJWT(token, 'secret', {}) : null // TODO: Secret configurable
 
   console.log(test)
 
   return {
     adapter,
+    token,
     user: {} as any
   }
 }

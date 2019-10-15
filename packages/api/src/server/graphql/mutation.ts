@@ -38,7 +38,7 @@ interface ArticleCreateArguments {
 export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
   name: 'Mutation',
   fields: {
-    authorize: {
+    authenticate: {
       type: GraphQLUserSession,
       args: {
         email: {type: GraphQLNonNull(GraphQLString)},
@@ -46,24 +46,26 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
       },
 
       async resolve(_root, {email, password}: CreateSessionArgs, {adapter}) {
-        // const [user, verifyToken] = await Promise.all([
-        //   adapter.userForCredentials(email, password)
-        // ])
-
-        const user = adapter.userForCredentials(email, password)
+        const [user, token] = await Promise.all([
+          adapter.userForCredentials(email, password),
+          generateToken()
+        ])
 
         // TODO: Make expiresIn in configurable
         const refreshTokenExpiresIn = 60 * 60 * 24 * 7
         const accessTokenExpiresIn = 60 * 60
 
-        const refreshTokenExpiry = new Date(Date.now() + refreshTokenExpiresIn * 1000)
-        const accessTokenExpiry = new Date(Date.now() + accessTokenExpiresIn * 1000)
-
         // TODO: Make secret key configurable
-        const refreshToken = signJWT({user, exp: refreshTokenExpiry.getTime() / 1000}, 'secret')
-        const accessToken = signJWT({user, exp: accessTokenExpiry.getTime() / 1000}, 'secret')
+        const refreshToken = signJWT({user}, 'secret', {
+          expiresIn: 60 * 60 * 24 * 7,
+          jwtid: token
+        })
 
-        await adapter.insertRefreshToken(refreshToken)
+        const accessToken = signJWT({user}, 'secret', {
+          expiresIn: accessTokenExpiresIn
+        })
+
+        await adapter.insertRefreshToken(user, token)
 
         // const [index, session] = Array.from(
         //   this._sessions.entries()).find(([_index, {token}]) => token === sessionToken
@@ -89,9 +91,20 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
         }
       }
     },
-    deauthorize: {
+    refresh: {
       type: GraphQLNonNull(GraphQLID),
-      resolve() {}
+      args: {
+        refreshToken: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(_root, {refreshToken}, {adapter}) {
+        await adapter.verifyRefreshToken(refreshToken)
+      }
+    },
+    revokeRefreshToken: {
+      type: GraphQLNonNull(GraphQLID),
+      async resolve(_root, _args, {token, adapter}) {
+        if (token) await adapter.revokeRefreshToken(token)
+      }
     },
     createArticle: {
       type: GraphQLArticle,

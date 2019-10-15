@@ -9,7 +9,7 @@ export function generateID() {
 }
 
 export function generateToken() {
-  return generateNanoID(tokenAlphabet, 21)
+  return generateNanoID(tokenAlphabet, 32)
 }
 
 export function generateIDSync() {
@@ -17,5 +17,5 @@ export function generateIDSync() {
 }
 
 export function generateTokenSync() {
-  return generateNanoIDSync(tokenAlphabet, 21)
+  return generateNanoIDSync(tokenAlphabet, 32)
 }

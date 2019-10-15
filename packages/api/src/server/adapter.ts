@@ -105,9 +105,9 @@ export interface Adapter {
   // User
   userForCredentials(email: string, password: string): Promise<AdapterUser>
 
-  verifyRefreshToken(token: string): Promise<boolean>
-  insertRefreshToken(token: string): Promise<void>
-  revokeRefreshToken(token: string): Promise<void>
+  verifyRefreshToken(user: AdapterUser, token: string): Promise<boolean>
+  insertRefreshToken(user: AdapterUser, token: string): Promise<void>
+  revokeRefreshToken(user: AdapterUser, token: string): Promise<void>
 
   // Articles
   createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>

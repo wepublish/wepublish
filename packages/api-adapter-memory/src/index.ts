@@ -46,8 +46,13 @@ export interface MockUser {
   readonly password: string
 }
 
+export interface MockSession {
+  readonly email: string
+  readonly token: string
+}
+
 export class MockAdapter implements Adapter {
-  private _sessions: string[] = []
+  private _sessions: MockSession[] = []
   private _articles: MockArticle[] = []
   private _peers: MockPeer[] = []
 
@@ -56,16 +61,19 @@ export class MockAdapter implements Adapter {
     this._peers.push(...peers)
   }
 
-  async verifyRefreshToken(verifyToken: string): Promise<boolean> {
-    return this._sessions.some(token => token === verifyToken)
+  async verifyRefreshToken(user: AdapterUser, verifyToken: string): Promise<boolean> {
+    return this._sessions.some(({email, token}) => token === verifyToken && email === user.email)
   }
 
-  async insertRefreshToken(token: string): Promise<void> {
-    this._sessions.push(token)
+  async insertRefreshToken(user: AdapterUser, token: string): Promise<void> {
+    this._sessions.push({email: user.email, token})
   }
 
-  async revokeRefreshToken(revokeToken: string): Promise<void> {
-    this._sessions.splice(this._sessions.findIndex(token => token === revokeToken), 1)
+  async revokeRefreshToken(user: AdapterUser, revokeToken: string): Promise<void> {
+    this._sessions.splice(
+      this._sessions.findIndex(({email, token}) => token === revokeToken && email === user.email),
+      1
+    )
   }
 
   async userForCredentials(email: string, password: string) {
