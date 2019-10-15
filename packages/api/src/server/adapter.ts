@@ -103,11 +103,13 @@ export interface AdapterSession {
 
 export interface Adapter {
   // User
-  userForCredentials(email: string, password: string): Promise<AdapterUser>
+  userForCredentials(email: string, password: string): Promise<AdapterUser | null>
+  userForEmail(email: string): Promise<AdapterUser | null>
 
-  verifyRefreshToken(user: AdapterUser, token: string): Promise<boolean>
-  insertRefreshToken(user: AdapterUser, token: string): Promise<void>
-  revokeRefreshToken(user: AdapterUser, token: string): Promise<void>
+  // Auth
+  insertRefreshTokenID(user: AdapterUser, token: string): Promise<void>
+  revokeRefreshTokenID(token: string): Promise<void>
+  verifyRefreshTokenID(token: string): Promise<boolean>
 
   // Articles
   createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>

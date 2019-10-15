@@ -10,12 +10,18 @@ export interface ContextRequest extends IncomingMessage {
 
 export interface Context {
   adapter: Adapter
+  tokenSecret: string
+  refreshTokenExpiresIn: number
+  accessTokenExpiresIn: number
   token: string | null
   user: AdapterUser | null
 }
 
 export interface ContextOptions {
   adapter: Adapter
+  tokenSecret: string
+  refreshTokenExpiresIn: number
+  accessTokenExpiresIn: number
 }
 
 export function tokenFromRequest(req: IncomingMessage) {
@@ -29,7 +35,7 @@ export function tokenFromRequest(req: IncomingMessage) {
   return null
 }
 
-export async function contextFromRequest(req: IncomingMessage, {adapter}: ContextOptions): Promise<Context> {
+export async function contextFromRequest(req: IncomingMessage, {adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}: ContextOptions): Promise<Context> {
   const token = tokenFromRequest(req)
   const test = token ? verifyJWT(token, 'secret', {}) : null // TODO: Secret configurable
 
@@ -38,6 +44,9 @@ export async function contextFromRequest(req: IncomingMessage, {adapter}: Contex
   return {
     adapter,
     token,
+    tokenSecret,
+    refreshTokenExpiresIn,
+    accessTokenExpiresIn,
     user: {} as any
   }
 }

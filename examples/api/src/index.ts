@@ -14,10 +14,15 @@ adapter.createArticle(generateIDSync(), {
   blocks: [{type: BlockType.Foo, foo: 'test'}, {type: BlockType.Bar, bar: 0}]
 })
 
+if (!process.env.TOKEN_SECRET) {
+  throw new Error('No TOKEN_SECRET provided in the environment!')
+}
+
 const server = createServer(
   createAPIHandler({
     peerFetchTimeout: 200,
-    adapter
+    adapter,
+    tokenSecret: process.env.TOKEN_SECRET
   })
 )
 
