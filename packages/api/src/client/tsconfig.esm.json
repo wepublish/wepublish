@@ -7,6 +7,5 @@
     "types": [],
     "lib": ["dom", "es2017"],
     "composite": true
-  },
-  "references": [{"path": "../shared/tsconfig.esm.json"}]
+  }
 }

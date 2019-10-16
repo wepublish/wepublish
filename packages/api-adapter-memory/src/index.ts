@@ -37,6 +37,7 @@ export interface MockArticle {
 }
 
 export interface MockAdapterOptions {
+  users?: MockUser[]
   articles?: MockArticle[]
   peers?: MockPeer[]
 }
@@ -57,7 +58,8 @@ export class MockAdapter implements Adapter {
   private _articles: MockArticle[] = []
   private _peers: MockPeer[] = []
 
-  constructor({articles = [], peers = []}: MockAdapterOptions = {}) {
+  constructor({users = [], articles = [], peers = []}: MockAdapterOptions = {}) {
+    this._users.push(...users)
     this._articles.push(...articles)
     this._peers.push(...peers)
   }

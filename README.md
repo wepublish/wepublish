@@ -5,7 +5,7 @@
 - [@wepublish/api](./packages/api)
   - [@wepublish/api-adapter-memory](./packages/api-adapter-memory)
   - [@wepublish/api-adapter-karma](./packages/api-adapter-karma)
-- [@wepublish/cms](./packages/cms)
+- [@wepublish/editor](./packages/editor)
 
 ## Development
 
@@ -36,7 +36,7 @@ yarn watch
 The following servers will be available:
 
 - **API:** [http://localhost:3000](http://localhost:3000)
-- **CMS:** [http://localhost:3001](http://localhost:3001)
+- **Editor:** [http://localhost:3001](http://localhost:3001)
 
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.

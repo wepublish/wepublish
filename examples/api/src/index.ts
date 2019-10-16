@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import {createServer} from 'http'
 import {createAPIHandler} from '@wepublish/api/server'
-import {ArticleVersionState, BlockType, generateIDSync} from '@wepublish/api/shared'
+import {ArticleVersionState, BlockType, generateIDSync} from '@wepublish/api'
 import MockAdapter from '@wepublish/api-adapter-memory'
 
-const adapter = new MockAdapter()
+const adapter = new MockAdapter({users: [{email: 'dev@wepublish.ch', password: '123'}]})
 
 adapter.createArticle(generateIDSync(), {
   title: 'Test',

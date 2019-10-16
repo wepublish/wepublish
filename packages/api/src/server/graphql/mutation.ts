@@ -7,20 +7,30 @@ import {
   GraphQLID
 } from 'graphql'
 
-import {sign as signJWT, verify as verifyJTW} from 'jsonwebtoken'
+import {
+  sign as signJWT,
+  verify as verifyJTW,
+  TokenExpiredError as JWTTokenExpiredError
+} from 'jsonwebtoken'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
 
 import {GraphQLTokenAuthResponse, GraphQLCredentialAuthResponse} from './session'
 
-import {Context, ContextRequest} from '../context'
+import {Context, ContextRequest, AuthenticationContextType} from '../context'
 
-import {generateID, ArticleVersionState, generateTokenID} from '../../shared'
+import {generateID, ArticleVersionState, generateTokenID} from '../../client'
 import {BlockMap, ArticleInput, AdapterUser} from '../adapter'
 import {IncomingMessage} from 'http'
 import {contextFromRequest} from '../context'
 
-import {verifyRefreshToken} from '../utility'
+import {verifyRefreshToken, signRefreshToken, signAccessToken} from '../utility'
+import {
+  UnauthorizedError,
+  InvalidCredentialsError,
+  TokenExpiredError,
+  InvalidTokenError
+} from './error'
 
 interface CreateSessionArgs {
   readonly email: string
@@ -54,28 +64,23 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
         {email, password}: CreateSessionArgs,
         {adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}
       ) {
-        const [user, token] = await Promise.all<AdapterUser | null, string>([
+        const [user, tokenID] = await Promise.all<AdapterUser | null, string>([
           adapter.userForCredentials(email, password),
           generateTokenID()
         ])
 
-        if (!user) throw new Error('Invalid credentials!')
+        if (!user) throw new InvalidCredentialsError()
 
-        // TODO: Make secret key configurable
-        const refreshToken = signJWT({}, tokenSecret, {
-          expiresIn: refreshTokenExpiresIn,
-          subject: `user:${user.email}`,
-          audience: 'refresh',
-          jwtid: token
-        })
+        const refreshToken = signRefreshToken(
+          tokenID,
+          user.email,
+          tokenSecret,
+          refreshTokenExpiresIn
+        )
 
-        const accessToken = signJWT({}, tokenSecret, {
-          subject: `user:${user.email}`,
-          audience: 'access',
-          expiresIn: accessTokenExpiresIn
-        })
+        const accessToken = signAccessToken(user.email, tokenSecret, accessTokenExpiresIn)
 
-        await adapter.insertRefreshTokenID(user, token)
+        await adapter.insertRefreshTokenID(user, tokenID)
 
         return {
           user,
@@ -91,11 +96,25 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
       args: {
         refreshToken: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {refreshToken}, {adapter}) {
-        const {email, id} = verifyRefreshToken(refreshToken)
-        const user = await adapter.userForEmail(email)
+      async resolve(_root, {refreshToken}, {adapter, tokenSecret, accessTokenExpiresIn}) {
+        try {
+          const {email, id} = verifyRefreshToken(refreshToken, tokenSecret)
 
-        await adapter.verifyRefreshTokenID(id)
+          if (await adapter.verifyRefreshTokenID(id)) {
+            const user = await adapter.userForEmail(email)
+
+            if (user) {
+              const accessToken = signAccessToken(user.email, tokenSecret, accessTokenExpiresIn)
+              return {user, accessToken, accessTokenExpiresIn}
+            }
+          }
+        } catch (err) {
+          if (err instanceof JWTTokenExpiredError) {
+            throw new TokenExpiredError()
+          }
+        }
+
+        throw new InvalidTokenError()
       }
     },
     revokeRefreshToken: {
@@ -103,10 +122,23 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
       args: {
         refreshToken: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {refreshToken}, {token, user, adapter}) {
-        verifyRefreshToken(refreshToken)
+      async resolve(_root, {refreshToken}, {authentication, tokenSecret, adapter}) {
+        if (authentication.type !== AuthenticationContextType.User) {
+          if (authentication.type === AuthenticationContextType.Unauthenticated) {
+            throw authentication.error
+          }
 
-        if (token && user) await adapter.revokeRefreshTokenID(refreshToken)
+          throw new UnauthorizedError()
+        }
+
+        const {email, id} = verifyRefreshToken(refreshToken, tokenSecret)
+
+        if (authentication.user.email === email) {
+          await adapter.revokeRefreshTokenID(id)
+          return refreshToken
+        }
+
+        throw new Error('Invalid refresh token.')
       }
     },
     createArticle: {
@@ -117,8 +149,14 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
           description: 'Article to create.'
         }
       },
-      async resolve(_root, {article}: ArticleCreateArguments, {adapter, user}) {
-        if (!user) throw new Error('Access Denied')
+      async resolve(_root, {article}: ArticleCreateArguments, {adapter, authentication}) {
+        if (authentication.type !== AuthenticationContextType.User) {
+          if (authentication.type === AuthenticationContextType.Unauthenticated) {
+            throw authentication.error
+          }
+
+          throw new UnauthorizedError()
+        }
 
         const articleInput: ArticleInput = {
           ...article,

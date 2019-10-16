@@ -1,0 +1,12 @@
+{
+  // This file is only needed for VSCode, client will be built by webpack/babel.
+  "extends": "../../../../tsconfig.base.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "outDir": "../../dist/client",
+    "module": "esnext",
+    "types": [],
+    "lib": ["dom", "dom.iterable", "es2017"]
+  },
+  "references": [{"path": "../shared"}]
+}

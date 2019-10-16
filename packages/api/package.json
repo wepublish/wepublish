@@ -1,22 +1,17 @@
 {
   "name": "@wepublish/api",
   "version": "0.0.9",
-  "main": "./lib/cjs/shared/",
-  "module": "./lib/esm/shared/",
+  "module": "./lib/esm/client/",
   "license": "MIT",
-  "browser": {
-    "./client.js": "./lib/esm/client/",
-    "./shared.js": "./lib/esm/shared/"
-  },
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
-    "build:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server",
+    "build:typescript": "tsc -b ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server --watch",
+    "watch:typescript": "tsc -b ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy-license build sync-package-info",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/client/version.ts"
   },
   "dependencies": {
     "@karma.run/graphql": "^0.0.0",
@@ -38,6 +33,6 @@
     "@types/jsonwebtoken": "7.2.7",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "beta"
+    "typescript": "^3.6.4"
   }
 }

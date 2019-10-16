@@ -1,4 +1,4 @@
-import {Article, ArticleVersionState, BlockType} from '../shared'
+import {Article, ArticleVersionState, BlockType} from '../client'
 
 export interface DateRange {
   start: Date

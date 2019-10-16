@@ -25,6 +25,17 @@ export function signRefreshToken(
   })
 }
 
+export function verifyRefreshToken(token: string, tokenSecret: string): RefreshToken {
+  const tokenData = verifyJWT(token, tokenSecret, {
+    audience: JWTAudience.Refresh
+  }) as {sub: string; jti: string}
+
+  return {
+    email: tokenData.sub.split('user:')[1],
+    id: tokenData.jti
+  }
+}
+
 export function signAccessToken(email: string, tokenSecret: string, expiresIn: number): string {
   return signJWT({}, tokenSecret, {
     expiresIn,
@@ -33,13 +44,12 @@ export function signAccessToken(email: string, tokenSecret: string, expiresIn: n
   })
 }
 
-export function verifyRefreshToken(token: string): RefreshToken {
-  const tokenData = verifyJWT(token, 'secret', {
-    audience: JWTAudience.Refresh
-  }) as {sub: string; jti: string}
+export function verifyAccessToken(token: string, tokenSecret: string) {
+  const tokenData = verifyJWT(token, tokenSecret, {
+    audience: [JWTAudience.Access, JWTAudience.Peer]
+  }) as {sub: string}
 
   return {
-    email: tokenData.sub.split('user:')[1],
-    id: tokenData.jti
+    email: tokenData.sub.split('user:')[1]
   }
 }

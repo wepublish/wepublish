@@ -18,7 +18,7 @@ import {GraphQLDateRange} from './dateRange'
 import {Context} from '../context'
 import {AdapterArticle} from '../adapter'
 
-import {ArticleVersionState, BlockType} from '../../shared'
+import {ArticleVersionState, BlockType} from '../../client'
 import {GraphQLRichText} from './richText'
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({

@@ -1,0 +1,12 @@
+{
+  // This file is only needed for VSCode, client will be built by webpack/babel.
+  "extends": "../../../../tsconfig.base.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../dist/shared",
+    "module": "commonjs",
+    "types": [],
+    "lib": ["es2017"]
+  }
+}

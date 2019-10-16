@@ -1,0 +1,59 @@
+{
+  "name": "@wepublish/editor",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "ui-example": "./dist/server/index.js"
+  },
+  "main": "./dist/server/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "run-p build:*",
+    "build:client": "webpack --mode production --devtool source-map",
+    "build:server": "tsc -b ./src/shared ./src/server",
+    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch:client": "webpack-dev-server --mode development --hot --inline",
+    "watch:server": "run-p watch:server:*",
+    "watch:server:start": "nodemon --inspect=0.0.0.0:9230 ./dist/server/index.js",
+    "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
+    "clean": "shx rm -rf ./dist ./static",
+    "start": "node ./dist/server/index.js",
+    "copy-license": "shx cp ../../LICENSE ./",
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts"
+  },
+  "dependencies": {
+    "@wepublish/api": "^0.0.9",
+    "@karma.run/ui": "^0.0.1",
+    "@karma.run/react": "^0.0.18",
+    "@karma.run/icons": "^0.0.0",
+    "find-my-way": "^2.2.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-hot-loader": "^4.12.3",
+    "core-js": "^3.1.4",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.7",
+    "@types/react-dom": "^16.9.2",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^12.0.12",
+    "@types/webpack": "^4.4.34",
+    "@types/webpack-dev-server": "^2.9.4",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@babel/preset-env": "^7.5.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@hot-loader/react-dom": "^16.8.6",
+    "@karma.run/webpack": "^0.0.3",
+    "babel-loader": "^8.0.6",
+    "nodemon": "^1.19.1",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.6.4",
+    "npm-run-all": "^4.1.5"
+  }
+}

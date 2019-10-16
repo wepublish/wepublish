@@ -5,8 +5,7 @@
     "outDir": "../../lib/cjs/client/",
     "module": "commonjs",
     "types": [],
-    "lib": ["es2017"],
+    "lib": ["dom", "es2017"],
     "composite": true
-  },
-  "references": [{"path": "../shared/"}]
+  }
 }
