@@ -28,7 +28,7 @@ export default (mode: string) =>
         }
       ]
     },
-    devtool: 'cheap-module-source-map',
+    devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
     plugins: [new AssetListPlugin({filename: './dist/assetList.json'})],
     devServer: {
       writeToDisk: true,
