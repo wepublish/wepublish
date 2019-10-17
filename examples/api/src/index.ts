@@ -4,7 +4,7 @@ import {createAPIHandler} from '@wepublish/api/server'
 import {ArticleVersionState, BlockType, generateIDSync} from '@wepublish/api'
 import MockAdapter from '@wepublish/api-adapter-memory'
 
-const adapter = new MockAdapter({users: [{email: 'dev@wepublish.ch', password: '123'}]})
+const adapter = new MockAdapter({users: [{id: '123', email: 'dev@wepublish.ch', password: '123'}]})
 
 adapter.createArticle(generateIDSync(), {
   title: 'Test',

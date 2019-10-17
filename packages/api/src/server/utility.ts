@@ -2,54 +2,103 @@ import {sign as signJWT, verify as verifyJWT} from 'jsonwebtoken'
 
 export enum JWTAudience {
   Refresh = 'refresh',
-  Access = 'access',
-  Peer = 'peer'
+  Access = 'access'
+}
+
+export enum AccessScope {
+  Admin = 'admin',
+  ArticleWrite = 'article:write',
+  ArticleRead = 'article:read',
+  PeerWrite = '',
+  PeerRead = '',
+  PeerTokenRead = 'peer_token:read',
+  PeerTokenWrite = 'peer_token:write',
+  UserSessionRead = 'user_token:read',
+  UserSessionWrite = 'user_token:write'
 }
 
 export interface RefreshToken {
-  email: string
+  type: SubjectType
+  subject: string
+  id: string
+  scope: AccessScope[]
+}
+
+export interface AccessToken {
+  type: SubjectType
+  subject: string
+  scope: AccessScope[]
+}
+
+export enum SubjectType {
+  User = 'user',
+  Peer = 'peer'
+}
+
+export interface Subject {
+  type: SubjectType
   id: string
 }
 
 export function signRefreshToken(
   id: string,
-  email: string,
-  tokenSecret: string,
-  expiresIn: number
+  subjectType: SubjectType,
+  subject: string,
+  scope: AccessScope[],
+  expiresIn: number,
+  tokenSecret: string
 ): string {
-  return signJWT({}, tokenSecret, {
+  return signJWT({scope}, tokenSecret, {
     expiresIn,
-    subject: `user:${email}`,
+    subject: `${subjectType}:${subject}`,
+    algorithm: 'HS256',
     audience: JWTAudience.Refresh,
     jwtid: id
   })
 }
 
 export function verifyRefreshToken(token: string, tokenSecret: string): RefreshToken {
-  const tokenData = verifyJWT(token, tokenSecret, {
+  const {sub: subjectString, jti: id, scope} = verifyJWT(token, tokenSecret, {
+    algorithms: ['HS256'],
     audience: JWTAudience.Refresh
-  }) as {sub: string; jti: string}
+  }) as {sub: string; jti: string; scope: AccessScope[]}
+
+  const [type, subject] = subjectString.split(':')
 
   return {
-    email: tokenData.sub.split('user:')[1],
-    id: tokenData.jti
+    id,
+    type: type as SubjectType,
+    subject,
+    scope
   }
 }
 
-export function signAccessToken(email: string, tokenSecret: string, expiresIn: number): string {
-  return signJWT({}, tokenSecret, {
+export function signAccessToken(
+  subjectType: SubjectType,
+  subject: string,
+  scope: AccessScope[],
+  expiresIn: number,
+  tokenSecret: string
+): string {
+  return signJWT({scope}, tokenSecret, {
     expiresIn,
-    subject: `user:${email}`,
+    subject: `${subjectType}:${subject}`,
+    algorithm: 'HS256',
     audience: JWTAudience.Access
   })
 }
 
 export function verifyAccessToken(token: string, tokenSecret: string) {
-  const tokenData = verifyJWT(token, tokenSecret, {
-    audience: [JWTAudience.Access, JWTAudience.Peer]
-  }) as {sub: string}
+  const {scope, sub: subjectString} = verifyJWT(token, tokenSecret, {
+    algorithms: ['HS256'],
+    audience: [JWTAudience.Access]
+  }) as {scope: AccessScope[]; sub: string}
+
+  const [subjectType, subject] = subjectString.split(':')
 
   return {
-    email: tokenData.sub.split('user:')[1]
+    subjectType,
+    subject,
+    scope
   }
 }

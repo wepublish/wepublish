@@ -1,12 +1,13 @@
 import React, {useState, useContext} from 'react'
 import {LoginTemplate, TextInput, PrimaryButton} from '@karma.run/ui'
+import {authenticateWithCredentials} from '@wepublish/api'
 import {RouteActionType} from '@karma.run/react'
 
 import {useRouteDispatch, matchRoute, useRoute, IndexRoute} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
 export function Login() {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -15,11 +16,19 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  function login() {
+  async function login() {
     setLoading(true)
 
-    setTimeout(() => {
-      authDispatch({type: AuthDispatchActionType.Login, username, token: '123'})
+    try {
+      const {refreshToken, accessToken} = await authenticateWithCredentials(
+        'http://localhost:3000',
+        email,
+        password
+      )
+
+      console.log(refreshToken)
+
+      authDispatch({type: AuthDispatchActionType.Login, email, refreshToken, accessToken})
 
       if (current!.query && current!.query.next) {
         const route = matchRoute(location.origin + current!.query.next)
@@ -31,16 +40,14 @@ export function Login() {
       }
 
       routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
-    }, 1000)
+    } catch (err) {
+      setLoading(false)
+    }
   }
 
   return (
     <LoginTemplate>
-      <TextInput
-        label="Username"
-        value={username}
-        onChange={event => setUsername(event.target.value)}
-      />
+      <TextInput label="Email" value={email} onChange={event => setEmail(event.target.value)} />
       <TextInput
         label="Password"
         value={password}

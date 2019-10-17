@@ -1,4 +1,5 @@
 import {Article, ArticleVersionState, BlockType} from '../client'
+import {AccessScope} from './utility'
 
 export interface DateRange {
   start: Date
@@ -92,6 +93,7 @@ export interface AdapterArticleVersion {
 export type AdapterArticleVersionContent = any
 
 export interface AdapterUser {
+  readonly id: string
   readonly email: string
 }
 
@@ -105,11 +107,17 @@ export interface Adapter {
   // User
   userForCredentials(email: string, password: string): Promise<AdapterUser | null>
   userForEmail(email: string): Promise<AdapterUser | null>
+  userForID(id: string): Promise<AdapterUser | null>
 
-  // Auth
-  insertRefreshTokenID(user: AdapterUser, token: string): Promise<void>
-  revokeRefreshTokenID(token: string): Promise<void>
-  verifyRefreshTokenID(token: string): Promise<boolean>
+  // User Token
+  insertUserSessionTokenID(user: AdapterUser, scopes: AccessScope[], token: string): Promise<void>
+  revokeUserSessionTokenID(token: string): Promise<void>
+  verifyUserSessionTokenID(token: string): Promise<boolean>
+
+  // Peer Token
+  insertPeerTokenID(peer: any, scopes: AccessScope[], token: string): Promise<void>
+  revokePeerTokenID(token: string): Promise<void>
+  verifyPeerTokenID(token: string): Promise<boolean>
 
   // Articles
   createArticle(id: string, article: ArticleInput): Promise<AdapterArticle>

@@ -49,6 +49,18 @@ export function createAPIHandler({
   }))
 
   return (req, res) => {
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Authorization, Content-Type, Content-Length, Accept, Origin, User-Agent'
+    )
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+    res.setHeader('Access-Control-Allow-Origin', '*')
+
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 200
+      return res.end()
+    }
+
     if (req.url!.endsWith('/favicon.ico')) {
       return faviconHandler(req, res)
     }

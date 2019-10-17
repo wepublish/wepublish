@@ -3,8 +3,7 @@ import {TokenExpiredError as JWTTokenExpiredError} from 'jsonwebtoken'
 
 import {parse as parseQueryString} from 'querystring'
 import {Adapter, AdapterUser} from './adapter'
-import {verifyAccessToken} from './utility'
-import {GraphQLError} from 'graphql'
+import {verifyAccessToken, AccessScope, SubjectType} from './utility'
 import {TokenExpiredError, InvalidTokenError} from './graphql/error'
 
 export interface ContextRequest extends IncomingMessage {
@@ -36,12 +35,14 @@ export interface UserAuthenticationContext {
   type: AuthenticationContextType.User
   token: string
   user: AdapterUser
+  scope: AccessScope[]
 }
 
 export interface PeerAuthenticationContext {
   type: AuthenticationContextType.Peer
   token: string
   peer: any // TODO
+  scope: AccessScope[]
 }
 
 export interface UnauthenticatedAuthenticationContext {
@@ -70,36 +71,48 @@ export async function contextFromRequest(
   req: IncomingMessage,
   {adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}: ContextOptions
 ): Promise<Context> {
-  let authentication: AuthenticationContext
-
   const token = tokenFromRequest(req)
-
-  if (token) {
-    try {
-      const {email} = verifyAccessToken(token, tokenSecret)
-      const user = email ? await adapter.userForEmail(email) : null
-
-      authentication = user
-        ? {type: AuthenticationContextType.User, token, user}
-        : {type: AuthenticationContextType.Unauthenticated, error: new InvalidTokenError()}
-    } catch (err) {
-      authentication =
-        err instanceof JWTTokenExpiredError
-          ? {type: AuthenticationContextType.Unauthenticated, error: new TokenExpiredError()}
-          : {type: AuthenticationContextType.Unauthenticated, error: new InvalidTokenError()}
-    }
-  } else {
-    authentication = {
-      type: AuthenticationContextType.Unauthenticated,
-      error: new InvalidTokenError()
-    }
-  }
 
   return {
     adapter,
     tokenSecret,
     refreshTokenExpiresIn,
     accessTokenExpiresIn,
-    authentication
+    authentication: await authenticationContextForToken(token, adapter, tokenSecret)
+  }
+}
+
+export async function authenticationContextForToken(
+  token: string | null,
+  adapter: Adapter,
+  tokenSecret: string
+): Promise<AuthenticationContext> {
+  if (token) {
+    try {
+      const {subjectType, subject, scope} = verifyAccessToken(token, tokenSecret)
+
+      switch (subjectType) {
+        case SubjectType.User:
+          const user = await adapter.userForID(subject)
+          return user
+            ? {type: AuthenticationContextType.User, token, user, scope}
+            : {type: AuthenticationContextType.Unauthenticated, error: new InvalidTokenError()}
+
+        case SubjectType.Peer:
+          const peer = {} // TODO
+          return peer
+            ? {type: AuthenticationContextType.Peer, token, peer, scope}
+            : {type: AuthenticationContextType.Unauthenticated, error: new InvalidTokenError()}
+      }
+    } catch (err) {
+      return err instanceof JWTTokenExpiredError
+        ? {type: AuthenticationContextType.Unauthenticated, error: new TokenExpiredError()}
+        : {type: AuthenticationContextType.Unauthenticated, error: new InvalidTokenError()}
+    }
+  }
+
+  return {
+    type: AuthenticationContextType.Unauthenticated,
+    error: new InvalidTokenError()
   }
 }

@@ -3,8 +3,9 @@ import {createContext, Dispatch, useReducer, ReactNode} from 'react'
 
 export interface AuthContextState {
   readonly session?: {
-    readonly username: string
-    readonly token: string
+    readonly email: string
+    readonly refreshToken: string
+    readonly accessToken: string
   }
 }
 
@@ -17,8 +18,9 @@ export enum AuthDispatchActionType {
 
 export interface AuthDispatchLoginAction {
   readonly type: AuthDispatchActionType.Login
-  readonly username: string
-  readonly token: string
+  readonly email: string
+  readonly refreshToken: string
+  readonly accessToken: string
 }
 
 export interface AuthDispatchLogoutAction {
@@ -37,7 +39,13 @@ export function authReducer(
 ): AuthContextState {
   switch (action.type) {
     case AuthDispatchActionType.Login:
-      return {session: {username: action.username, token: action.token}}
+      return {
+        session: {
+          email: action.email,
+          refreshToken: action.refreshToken,
+          accessToken: action.accessToken
+        }
+      }
 
     case AuthDispatchActionType.Logout:
       return {}

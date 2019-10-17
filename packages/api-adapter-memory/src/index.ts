@@ -11,6 +11,7 @@ import {
 
 import {Peer, ArticleVersionState} from '@wepublish/api'
 import {ArticleInput, Block} from '@wepublish/api/server'
+import {AccessScope} from '@wepublish/api/lib/cjs/server/utility'
 
 export interface MockPeer {
   id: string
@@ -43,18 +44,20 @@ export interface MockAdapterOptions {
 }
 
 export interface MockUser {
+  readonly id: string
   readonly email: string
   readonly password: string
 }
 
-export interface MockSession {
-  readonly email: string
+export interface MockUserSession {
+  readonly id: string
+  readonly scope: AccessScope[]
   readonly token: string
 }
 
 export class MockAdapter implements Adapter {
   private _users: MockUser[] = []
-  private _sessions: MockSession[] = []
+  private _sessions: MockUserSession[] = []
   private _articles: MockArticle[] = []
   private _peers: MockPeer[] = []
 
@@ -66,23 +69,41 @@ export class MockAdapter implements Adapter {
 
   async userForCredentials(email: string, password: string): Promise<AdapterUser | null> {
     const user = this._users.find(user => user.email === email && user.password === password)
-    return user ? {email: user.email} : null
+    return user ? {id: user.id, email: user.email} : null
   }
 
   async userForEmail(email: string): Promise<AdapterUser | null> {
-    return {email}
+    const user = this._users.find(user => user.email === email)
+    return user ? {id: user.id, email: user.email} : null
   }
 
-  async insertRefreshTokenID(user: AdapterUser, token: string): Promise<void> {
-    this._sessions.push({email: user.email, token})
+  async userForID(id: string): Promise<AdapterUser | null> {
+    const user = this._users.find(user => user.id === id)
+    return user ? {id: user.id, email: user.email} : null
   }
 
-  async revokeRefreshTokenID(revokeToken: string): Promise<void> {
+  async insertUserSessionTokenID(
+    {id}: AdapterUser,
+    scope: AccessScope[],
+    token: string
+  ): Promise<void> {
+    this._sessions.push({id, scope, token})
+  }
+
+  async revokeUserSessionTokenID(revokeToken: string): Promise<void> {
     this._sessions.splice(this._sessions.findIndex(({token}) => token === revokeToken), 1)
   }
 
-  async verifyRefreshTokenID(verifyToken: string): Promise<boolean> {
-    return this._sessions.some(({email, token}) => token === verifyToken)
+  async verifyUserSessionTokenID(verifyToken: string): Promise<boolean> {
+    return this._sessions.some(({token}) => token === verifyToken)
+  }
+
+  async insertPeerTokenID() {}
+
+  async revokePeerTokenID() {}
+
+  async verifyPeerTokenID() {
+    return false
   }
 
   async createArticle(id: string, article: ArticleInput): Promise<AdapterArticle> {
