@@ -22,13 +22,16 @@ export enum RouteType {
 
   ArticleList = 'articleList',
   ArticleEdit = 'articleEdit',
-  ArticleCreate = 'articleCreate'
+  ArticleCreate = 'articleCreate',
+
+  FrontList = 'frontList'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`, null)
 export const LoginRoute = route(RouteType.Login, routePath`/login`, null)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`, null)
 export const ArticleListRoute = route(RouteType.ArticleList, routePath`/article/list`, null)
+export const FrontListRoute = route(RouteType.FrontList, routePath`/front/list`, null)
 
 export const ArticleEditRoute = route(
   RouteType.ArticleEdit,
@@ -42,10 +45,11 @@ export const routes = [
   IndexRoute,
   LoginRoute,
   LogoutRoute,
-  NotFoundRoute,
+  FrontListRoute,
   ArticleListRoute,
   ArticleEditRoute,
-  ArticleCreateRoute
+  ArticleCreateRoute,
+  NotFoundRoute
 ] as const
 
 export const {
@@ -74,6 +78,7 @@ export function RouteProvider({children}: RouteProviderProps) {
     <BaseRouteProvider
       handleNextRoute={(next, dispatch) => {
         if (next.type === RouteType.Logout) {
+          localStorage.removeItem('refreshToken')
           authDispatch({type: AuthDispatchActionType.Logout})
           dispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
         } else if (next.type === RouteType.Login) {

@@ -16,15 +16,15 @@ export async function authenticateWithCredentials(
     url,
     {
       query: `
-    mutation authenticateWithCredentials($email: String!, $password: String!) {
-      authenticateWithCredentials(email: $email, password: $password) {
-        user {email},
-        refreshToken,
-        accessToken,
-        refreshTokenExpiresIn,
-        accessTokenExpiresIn
-      }
-    }
+mutation authenticateWithCredentials($email: String!, $password: String!) {
+  authenticateWithCredentials(email: $email, password: $password) {
+    user {email},
+    refreshToken,
+    accessToken,
+    refreshTokenExpiresIn,
+    accessTokenExpiresIn
+  }
+}
   `,
       variables: {
         email,
@@ -33,5 +33,6 @@ export async function authenticateWithCredentials(
     },
     opts
   )
+
   return response
 }

@@ -1,12 +1,15 @@
 import React from 'react'
-import {useRoute, RouteType} from './route'
+
+import {useRoute, RouteType, Route} from './route'
+
 import {Login} from './login'
 import {Base} from './base'
+import {ArticleList} from './routes/articleList'
 
-export function App() {
-  const {current} = useRoute()
+import {ArticleEditor} from './routes/articleEditor'
 
-  switch (current && current.type) {
+export function contentForRoute(route: Route) {
+  switch (route.type) {
     case RouteType.Login:
       return <Login />
 
@@ -14,11 +17,39 @@ export function App() {
       return <Base></Base>
 
     case RouteType.ArticleList:
-      return <Base></Base>
+      return <ArticleList />
+
+    case RouteType.ArticleCreate:
+      return <ArticleEditor />
+
+    case RouteType.FrontList:
+      return null
 
     case RouteType.NotFound:
-      return <Base></Base>
+      return null
   }
 
-  return <div>Loading...</div>
+  return null
+}
+
+export function App() {
+  const {current} = useRoute()
+
+  if (current) {
+    switch (current.type) {
+      case RouteType.Login:
+        return <Login />
+
+      case RouteType.Index:
+      case RouteType.ArticleList:
+      case RouteType.FrontList:
+      case RouteType.NotFound:
+        return <Base>{contentForRoute(current)}</Base>
+
+      case RouteType.ArticleCreate:
+        return <ArticleEditor />
+    }
+  }
+
+  return null
 }

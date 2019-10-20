@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react'
 import {NavigationTemplate} from '@karma.run/ui'
 import {MaterialIconInsertDriveFileOutlined, MaterialIconPowerSettingsNew} from '@karma.run/icons'
 
-import {LinkMenuIconButton, LogoutRoute, ArticleListRoute} from './route'
+import {LinkMenuIconButton, LogoutRoute, ArticleListRoute, FrontListRoute} from './route'
 
 export interface BaseProps {
   readonly children?: ReactNode
@@ -18,6 +18,12 @@ export function Base({children}: BaseProps) {
             icon={MaterialIconInsertDriveFileOutlined}
             label="Article"
             route={ArticleListRoute.create({})}
+          />
+
+          <LinkMenuIconButton
+            icon={MaterialIconInsertDriveFileOutlined}
+            label="Front"
+            route={FrontListRoute.create({})}
           />
 
           <LinkMenuIconButton

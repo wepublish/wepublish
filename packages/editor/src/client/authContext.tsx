@@ -1,5 +1,7 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {createContext, Dispatch, useReducer, ReactNode} from 'react'
+import {authenticateWithCredentials} from '@wepublish/api'
+import {CancelToken} from '@wepublish/api/lib/cjs/client/query'
 
 export interface AuthContextState {
   readonly session?: {
@@ -61,7 +63,7 @@ export function AuthProvider({children}: AuthProviderProps) {
 
   return (
     <AuthDispatchContext.Provider value={dispatch}>
-      <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
+      {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
     </AuthDispatchContext.Provider>
   )
 }

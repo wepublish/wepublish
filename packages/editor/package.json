@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@wepublish/api": "^0.0.9",
-    "@karma.run/ui": "^0.0.1",
+    "@karma.run/ui": "file:../../../karma.run-packages/packages/ui",
     "@karma.run/react": "^0.0.18",
     "@karma.run/icons": "^0.0.0",
     "find-my-way": "^2.2.1",

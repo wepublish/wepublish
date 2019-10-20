@@ -31,6 +31,7 @@ async function asyncMain() {
             href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
             rel="stylesheet"
           />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script async src={`${staticHost}/${entry}`} crossOrigin=""></script>
         </head>
         <body>
