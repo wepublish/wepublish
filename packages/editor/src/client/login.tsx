@@ -40,8 +40,6 @@ export function Login() {
           if (current!.query && current!.query.next) {
             const route = matchRoute(location.origin + current!.query.next)
 
-            console.log(route, location.origin + current!.query.next)
-
             if (route) {
               routeDispatch({type: RouteActionType.ReplaceRoute, route})
               return

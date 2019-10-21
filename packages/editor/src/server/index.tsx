@@ -28,7 +28,7 @@ async function asyncMain() {
       <html>
         <head>
           <link
-            href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+            href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap"
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />

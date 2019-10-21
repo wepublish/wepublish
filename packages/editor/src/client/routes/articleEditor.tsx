@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {Value, Block, Document} from 'slate'
 
 import {
   EditorTemplate,
@@ -6,12 +7,13 @@ import {
   IconLabelButton,
   UnionListField,
   UnionListValue,
-  TextField
+  RichTextField
 } from '@karma.run/ui'
 
 import {MaterialIconArrowBack, MaterialIconTextFormat} from '@karma.run/icons'
 
-export type RichTextBlockValue = UnionListValue<'string', string>
+export type RichTextBlockValue = UnionListValue<'richText', Value>
+export type TitleBlockValue = UnionListValue<'title', {title: string; text: string}>
 export type BlockValue = RichTextBlockValue
 
 export function ArticleEditor() {
@@ -32,9 +34,9 @@ export function ArticleEditor() {
       }>
       <UnionListField value={blocks} onChange={blocks => setBlocks(blocks)}>
         {{
-          string: {
-            field: props => <TextField {...props} />,
-            defaultValue: '',
+          richText: {
+            field: props => <RichTextField {...props} />,
+            defaultValue: Value.create({document: Document.create([Block.create('')])}),
             label: 'String',
             icon: MaterialIconTextFormat
           }
