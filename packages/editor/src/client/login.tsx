@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react'
-import {LoginTemplate, TextInput, PrimaryButton} from '@karma.run/ui'
+import {LoginTemplate, TextInput, PrimaryButton, Box} from '@karma.run/ui'
 import {authenticateWithCredentials} from '@wepublish/api'
 import {RouteActionType} from '@karma.run/react'
 
@@ -87,13 +87,23 @@ export function Login() {
 
   return (
     <LoginTemplate>
-      <TextInput label="Email" value={email} onChange={event => setEmail(event.target.value)} />
-      <TextInput
-        label="Password"
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
-      <PrimaryButton label="Login" onClick={login} disabled={loading} />
+      <Box>
+        {props => (
+          <form {...props}>
+            <TextInput
+              label="Email"
+              value={email}
+              onChange={event => setEmail(event.target.value)}
+            />
+            <TextInput
+              label="Password"
+              value={password}
+              onChange={event => setPassword(event.target.value)}
+            />
+            <PrimaryButton label="Login" disabled={loading} />
+          </form>
+        )}
+      </Box>
     </LoginTemplate>
   )
 }
