@@ -756,11 +756,10 @@
   dependencies:
     react "^16.10.1"
 
-"@karma.run/react@^0.0.18":
+"@karma.run/react@^0.0.18", "@karma.run/react@file:../karma.run-packages/packages/react":
   version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.0.18.tgz#b8fc525763ebd70188d7b5fff577247ab08abfc5"
-  integrity sha512-4AiVsnoXZuztnlpSx0ubqN8WfVWCkQq/PZ/Fh5Cota99cwPkTQHbjuhMFZsaEcoD8Nt9BsejDcHgUpzj2r9X9g==
   dependencies:
+    "@karma.run/utility" "^0.0.0"
     csstype "^2.6.6"
     fela "^10.6.1"
     fela-dom "^10.6.1"
@@ -783,7 +782,7 @@
     slate "^0.47.8"
     slate-react "^0.22.9"
 
-"@karma.run/utility@0.0.0":
+"@karma.run/utility@0.0.0", "@karma.run/utility@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@karma.run/utility/-/utility-0.0.0.tgz#5c9f791427c5d375f7c0ad5cb94892193b21df23"
   integrity sha512-GV+mmm0iwcvVFtHyRy82ssHCXTqpoeNH+SU4B9GdBgn45R8MBt3Eohiw1bvKZt0HJi8zJlA2OUhkftQSrUTWDg==

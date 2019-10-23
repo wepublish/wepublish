@@ -2,7 +2,9 @@
 import React from 'react'
 
 import fs from 'fs'
-import path from 'path'
+import path, {isAbsolute as isAbsolutePath, join as joinPath} from 'path'
+import send from 'send'
+
 import {createServer} from 'http'
 import createRouter from 'find-my-way'
 import {renderToStaticMarkup} from 'react-dom/server'
@@ -11,7 +13,7 @@ import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
 async function asyncMain() {
-  const staticHost = process.env.STATIC_HOST
+  const staticHost = process.env.STATIC_HOST || '/static'
 
   const assetList = JSON.parse(
     await fs.promises.readFile(path.resolve(__dirname, '../assetList.json'), 'utf-8')
@@ -22,6 +24,17 @@ async function asyncMain() {
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
   const router = createRouter()
+
+  router.on('GET', '/static*', (req, res, params) => {
+    const path = params['*']!
+
+    if (isAbsolutePath(path)) {
+      send(req, path, {root: joinPath(__dirname, '../../static'), index: false}).pipe(res)
+    } else {
+      res.statusCode = 400
+      res.end()
+    }
+  })
 
   router.on('GET', '/*', (req, res) => {
     const markup = renderToStaticMarkup(
@@ -40,7 +53,7 @@ async function asyncMain() {
       </html>
     )
 
-    res.setHeader('content-type', 'text/html')
+    res.setHeader('content-type', 'text/html; charset=UTF-8')
     res.setHeader('content-length', Buffer.byteLength(markup))
 
     res.write(markup)
