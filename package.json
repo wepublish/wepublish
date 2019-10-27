@@ -14,6 +14,7 @@
     "clean:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory clean",
     "build:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory build",
     "watch:api-adapter-memory": "yarn workspace @wepublish/api-adapter-memory watch",
+    "start:editor": "yarn workspace @wepublish/editor start",
     "clean:editor": "yarn workspace @wepublish/editor clean",
     "build:editor": "yarn workspace @wepublish/editor build",
     "watch:editor": "yarn workspace @wepublish/editor watch",

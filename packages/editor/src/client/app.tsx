@@ -14,7 +14,7 @@ export function contentForRoute(route: Route) {
       return <Login />
 
     case RouteType.Index:
-      return <Base></Base>
+      return <ArticleList />
 
     case RouteType.ArticleList:
       return <ArticleList />

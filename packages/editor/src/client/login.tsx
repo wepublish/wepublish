@@ -1,11 +1,16 @@
-import React, {useState, useContext, useEffect} from 'react'
-import {LoginTemplate, TextInput, PrimaryButton} from '@karma.run/ui'
+import React, {useState, useContext, useEffect, FormEvent} from 'react'
+import {LoginTemplate, TextInput, PrimaryButton, Box} from '@karma.run/ui'
 import {authenticateWithCredentials} from '@wepublish/api'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType, styled} from '@karma.run/react'
 
 import {useRouteDispatch, matchRoute, useRoute, IndexRoute} from './route'
 import {AuthDispatchContext, AuthDispatchActionType, AuthContext} from './authContext'
 import {CancelToken} from '@wepublish/api/lib/cjs/client/query'
+
+export const LoginForm = styled('form', () => ({
+  display: 'flex',
+  flexDirection: 'column'
+}))
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -40,8 +45,6 @@ export function Login() {
           if (current!.query && current!.query.next) {
             const route = matchRoute(location.origin + current!.query.next)
 
-            console.log(route, location.origin + current!.query.next)
-
             if (route) {
               routeDispatch({type: RouteActionType.ReplaceRoute, route})
               return
@@ -60,7 +63,8 @@ export function Login() {
     return () => {}
   }, [])
 
-  async function login() {
+  async function login(e: FormEvent) {
+    e.preventDefault()
     setLoading(true)
 
     try {
@@ -89,13 +93,15 @@ export function Login() {
 
   return (
     <LoginTemplate>
-      <TextInput label="Email" value={email} onChange={event => setEmail(event.target.value)} />
-      <TextInput
-        label="Password"
-        value={password}
-        onChange={event => setPassword(event.target.value)}
-      />
-      <PrimaryButton label="Login" onClick={login} disabled={loading} />
+      <LoginForm onSubmit={login}>
+        <TextInput label="Email" value={email} onChange={event => setEmail(event.target.value)} />
+        <TextInput
+          label="Password"
+          value={password}
+          onChange={event => setPassword(event.target.value)}
+        />
+        <PrimaryButton label="Login" disabled={loading} />
+      </LoginForm>
     </LoginTemplate>
   )
 }
