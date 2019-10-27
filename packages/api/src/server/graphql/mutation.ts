@@ -7,6 +7,10 @@ import {
   GraphQLID
 } from 'graphql'
 
+import {GraphQLUpload, FileUpload} from 'graphql-upload'
+
+import {AuthenticationError, UserInputError} from 'apollo-server'
+
 import {TokenExpiredError as JWTTokenExpiredError} from 'jsonwebtoken'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
@@ -23,12 +27,7 @@ import {
   AccessScope
 } from '../utility'
 
-import {
-  UnauthorizedError,
-  InvalidCredentialsError,
-  TokenExpiredError,
-  InvalidTokenError
-} from './error'
+import {InvalidCredentialsError, TokenExpiredError, InvalidTokenError} from './error'
 
 interface CreateSessionArgs {
   readonly email: string
@@ -47,7 +46,7 @@ interface ArticleCreateArguments {
   }
 }
 
-export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
+export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
   name: 'Mutation',
   fields: {
     authenticateWithCredentials: {
@@ -60,7 +59,7 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
       async resolve(
         _root,
         {email, password}: CreateSessionArgs,
-        {adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}
+        {res, adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}
       ) {
         const [user, tokenID] = await Promise.all<AdapterUser | null, string>([
           adapter.userForCredentials(email, password),
@@ -146,7 +145,7 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
             throw authentication.error
           }
 
-          throw new UnauthorizedError()
+          throw new AuthenticationError('Unauthorized')
         }
 
         try {
@@ -183,7 +182,7 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
             throw authentication.error
           }
 
-          throw new UnauthorizedError()
+          throw new AuthenticationError('Unauthorized')
         }
 
         const articleInput: ArticleInput = {
@@ -210,6 +209,20 @@ export const GraphQLMutation = new GraphQLObjectType<never, Context, any>({
         }
 
         return adapter.createArticle(await generateID(), articleInput)
+      }
+    },
+    createMedia: {
+      type: GraphQLString,
+      args: {
+        file: {
+          type: GraphQLUpload
+        }
+      },
+      async resolve(_root, {file}, {adapter, authentication}) {
+        if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
+
+        console.log(file)
+        const {}: FileUpload = await file
       }
     }
   }

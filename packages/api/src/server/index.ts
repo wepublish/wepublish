@@ -1,13 +1,7 @@
-import {resolve} from 'path'
-import {RequestListener, IncomingMessage, ServerResponse} from 'http'
+import {GraphQLSchema} from 'graphql'
 
-import {GraphQLSchema, GraphQLObjectType} from 'graphql'
-import createGraphQLHTTPHandler from 'express-graphql'
-import send from 'send'
-
-import {GraphQLQuery, GraphQLMutation, GraphQLInputFooBlock, GraphQLInputBarBlock} from './graphql'
+import {GraphQLQuery, GraphQLMutation} from './graphql'
 import {Adapter} from './adapter'
-import {contextFromRequest} from './context'
 
 export * from './graphql'
 export * from './adapter'
@@ -21,50 +15,113 @@ export interface HandlerOptions {
   peerFetchTimeout: number
 }
 
-export const graphQLSchema = new GraphQLSchema({
+export const WepublishGraphQLSchema = new GraphQLSchema({
   query: GraphQLQuery,
-  mutation: GraphQLMutation as GraphQLObjectType,
-  types: [GraphQLInputFooBlock, GraphQLInputBarBlock]
+  mutation: GraphQLMutation
 })
 
-export function faviconHandler(req: IncomingMessage, res: ServerResponse) {
-  return send(req, resolve(__dirname, '../../../favicon.ico'), {maxAge: '1h'}).pipe(res)
-}
+// export function createAPIHandler({
+//   adapter,
+//   tokenSecret,
+//   refreshTokenExpiresIn = 60 * 60 * 24 * 7, // 1 Week
+//   accessTokenExpiresIn = 60 * 60 // 1 Hour
+// }: HandlerOptions): RequestListener {
+//   const graphQLHandler = createGraphQLHTTPHandler(async req => ({
+//     schema: WepublishGraphQLSchema,
+//     graphiql: true,
+//     context: await contextFromRequest(req, {
+//       adapter,
+//       tokenSecret,
+//       refreshTokenExpiresIn,
+//       accessTokenExpiresIn
+//     })
+//   }))
 
-export function createAPIHandler({
-  adapter,
-  tokenSecret,
-  refreshTokenExpiresIn = 60 * 60 * 24 * 7, // 1 Week
-  accessTokenExpiresIn = 60 * 60 // 1 Hour
-}: HandlerOptions): RequestListener {
-  const graphQLHandler = createGraphQLHTTPHandler(async req => ({
-    schema: graphQLSchema,
-    graphiql: true,
-    context: await contextFromRequest(req, {
-      adapter,
-      tokenSecret,
-      refreshTokenExpiresIn,
-      accessTokenExpiresIn
-    })
-  }))
+//   return (req, res) => {
+//     res.setHeader(
+//       'Access-Control-Allow-Headers',
+//       'Authorization, Content-Type, Content-Length, Accept, Origin, User-Agent'
+//     )
 
-  return (req, res) => {
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Authorization, Content-Type, Content-Length, Accept, Origin, User-Agent'
-    )
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-    res.setHeader('Access-Control-Allow-Origin', '*')
+//     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+//     res.setHeader('Access-Control-Allow-Origin', '*')
 
-    if (req.method === 'OPTIONS') {
-      res.statusCode = 200
-      return res.end()
-    }
+//     if (req.method === 'OPTIONS') {
+//       res.statusCode = 200
+//       return res.end()
+//     }
 
-    if (req.url!.endsWith('/favicon.ico')) {
-      return faviconHandler(req, res)
-    }
+//     if (
+//       req.method === 'POST' &&
+//       req.headers['content-type'] &&
+//       req.headers['content-type'].startsWith('multipart/form-data')
+//     ) {
+//       processRequest(req, res)
+//         .then(body => {
+//           ;(req as any).body = body
+//           graphQLHandler(req, res)
+//         })
+//         .catch(err => {
+//           console.error(err)
 
-    return graphQLHandler(req, res)
-  }
-}
+//           res.statusCode = 500
+//           res.end()
+//         })
+//     } else {
+//       graphQLHandler(req, res)
+//     }
+//   }
+// }
+
+// export function createAPIHandler({
+//   adapter,
+//   tokenSecret,
+//   refreshTokenExpiresIn = 60 * 60 * 24 * 7, // 1 Week
+//   accessTokenExpiresIn = 60 * 60 // 1 Hour
+// }: HandlerOptions): RequestListener {
+//   const graphQLHandler = createGraphQLHTTPHandler(async req => ({
+//     schema: graphQLSchema,
+//     graphiql: true,
+//     context: await contextFromRequest(req, {
+//       adapter,
+//       tokenSecret,
+//       refreshTokenExpiresIn,
+//       accessTokenExpiresIn
+//     })
+//   }))
+
+//   return (req, res) => {
+//     res.setHeader(
+//       'Access-Control-Allow-Headers',
+//       'Authorization, Content-Type, Content-Length, Accept, Origin, User-Agent'
+//     )
+
+//     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+//     res.setHeader('Access-Control-Allow-Origin', '*')
+
+//     if (req.method === 'OPTIONS') {
+//       res.statusCode = 200
+//       return res.end()
+//     }
+
+//     if (
+//       req.method === 'POST' &&
+//       req.headers['content-type'] &&
+//       req.headers['content-type'].startsWith('multipart/form-data')
+//     ) {
+//       processRequest(req, res)
+//         .then(body => {
+//           ;(req as any).body = body
+//           graphQLHandler(req, res)
+//         })
+//         .catch(err => {
+//           console.error(err)
+
+//           res.statusCode = 500
+//           res.end()
+//         })
+//     } else {
+//       graphQLHandler(req, res)
+//     }
+//   }
+// }

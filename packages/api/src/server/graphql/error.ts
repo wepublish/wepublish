@@ -1,35 +1,20 @@
-import {GraphQLError} from 'graphql'
-
+import {ApolloError} from 'apollo-server'
 import {ErrorCode} from '../../client/error'
 
-export class TokenExpiredError extends GraphQLError {
+export class TokenExpiredError extends ApolloError {
   constructor() {
-    super('Token expired.', undefined, undefined, undefined, undefined, undefined, {
-      code: ErrorCode.TokenExpired
-    })
+    super('Token expired', ErrorCode.TokenExpired)
   }
 }
 
-export class InvalidTokenError extends GraphQLError {
+export class InvalidTokenError extends ApolloError {
   constructor() {
-    super('Invalid token.', undefined, undefined, undefined, undefined, undefined, {
-      code: ErrorCode.InvalidToken
-    })
+    super('Invalid token', ErrorCode.InvalidToken)
   }
 }
 
-export class UnauthorizedError extends GraphQLError {
+export class InvalidCredentialsError extends ApolloError {
   constructor() {
-    super('Unauthorized.', undefined, undefined, undefined, undefined, undefined, {
-      code: ErrorCode.Unauthorized
-    })
-  }
-}
-
-export class InvalidCredentialsError extends GraphQLError {
-  constructor() {
-    super('Invalid credentials.', undefined, undefined, undefined, undefined, undefined, {
-      code: ErrorCode.InvalidCredentials
-    })
+    super('Invalid credentials', ErrorCode.InvalidCredentials)
   }
 }

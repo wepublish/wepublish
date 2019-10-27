@@ -1,7 +1,6 @@
-import {IncomingMessage} from 'http'
+import {IncomingMessage, ServerResponse} from 'http'
 import {TokenExpiredError as JWTTokenExpiredError} from 'jsonwebtoken'
 
-import {parse as parseQueryString} from 'querystring'
 import {Adapter, AdapterUser} from './adapter'
 import {verifyAccessToken, AccessScope, SubjectType} from './utility'
 import {TokenExpiredError, InvalidTokenError} from './graphql/error'
@@ -16,13 +15,15 @@ export interface Context {
   refreshTokenExpiresIn: number
   accessTokenExpiresIn: number
   authentication: AuthenticationContext
+  req: IncomingMessage
+  res: ServerResponse
 }
 
 export interface ContextOptions {
   adapter: Adapter
   tokenSecret: string
-  refreshTokenExpiresIn: number
-  accessTokenExpiresIn: number
+  refreshTokenExpiresIn?: number
+  accessTokenExpiresIn?: number
 }
 
 export enum AuthenticationContextType {
@@ -57,11 +58,9 @@ export type AuthenticationContext =
 
 export function tokenFromRequest(req: IncomingMessage) {
   if (req.headers.authorization) {
-    const [token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
+    const [_, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
+    console.log('??', token)
     return token || null
-  } else if (req.url) {
-    const token = parseQueryString(req.url.split('?')[1])['token']
-    return typeof token === 'string' ? token : null
   }
 
   return null
@@ -69,7 +68,13 @@ export function tokenFromRequest(req: IncomingMessage) {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}: ContextOptions
+  res: ServerResponse,
+  {
+    adapter,
+    tokenSecret,
+    refreshTokenExpiresIn = 60 * 60 * 24 * 7, // 1 Week
+    accessTokenExpiresIn = 60 * 60 // 1 Hour
+  }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
 
@@ -78,7 +83,9 @@ export async function contextFromRequest(
     tokenSecret,
     refreshTokenExpiresIn,
     accessTokenExpiresIn,
-    authentication: await authenticationContextForToken(token, adapter, tokenSecret)
+    authentication: await authenticationContextForToken(token, adapter, tokenSecret),
+    req,
+    res
   }
 }
 

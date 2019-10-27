@@ -1,6 +1,5 @@
 export enum ErrorCode {
-  TokenExpired = 'tokenExpired',
-  InvalidToken = 'invalidToken',
-  Unauthorized = 'unauthorized',
-  InvalidCredentials = 'invalidCredentials'
+  TokenExpired = 'TOKEN_EXPIRED',
+  InvalidToken = 'INVALID_TOKEN',
+  InvalidCredentials = 'INVALID_CREDENTIALS'
 }
