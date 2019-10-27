@@ -1,33 +1,14 @@
-import {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLNonNull,
-  GraphQLInputObjectType,
-  GraphQLBoolean,
-  GraphQLID
-} from 'graphql'
-
+import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean} from 'graphql'
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
-
-import {AuthenticationError, UserInputError} from 'apollo-server'
-
-import {TokenExpiredError as JWTTokenExpiredError} from 'jsonwebtoken'
+import {UserInputError} from 'apollo-server'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
-import {GraphQLTokenAuthResponse, GraphQLCredentialAuthResponse} from './session'
-import {Context, AuthenticationContextType} from '../context'
+import {Context} from '../context'
 import {generateID, ArticleVersionState, generateTokenID} from '../../client'
-import {BlockMap, ArticleInput, AdapterUser} from '../adapter'
+import {BlockMap, ArticleInput} from '../adapter'
 
-import {
-  verifyRefreshToken,
-  signRefreshToken,
-  signAccessToken,
-  SubjectType,
-  AccessScope
-} from '../utility'
-
-import {InvalidCredentialsError, TokenExpiredError, InvalidTokenError} from './error'
+import {InvalidCredentialsError} from './error'
+import {GraphQLSession} from './session'
 
 interface CreateSessionArgs {
   readonly email: string
@@ -49,123 +30,38 @@ interface ArticleCreateArguments {
 export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
   name: 'Mutation',
   fields: {
-    authenticateWithCredentials: {
-      type: GraphQLNonNull(GraphQLCredentialAuthResponse),
+    createSession: {
+      type: GraphQLNonNull(GraphQLSession),
       args: {
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
 
-      async resolve(
-        _root,
-        {email, password}: CreateSessionArgs,
-        {res, adapter, tokenSecret, refreshTokenExpiresIn, accessTokenExpiresIn}
-      ) {
-        const [user, tokenID] = await Promise.all<AdapterUser | null, string>([
-          adapter.userForCredentials(email, password),
-          generateTokenID()
-        ])
+      async resolve(_root, {email, password}: CreateSessionArgs, {adapter, sessionExpiry}) {
+        const user = await adapter.getUserForCredentials(email, password)
 
         if (!user) throw new InvalidCredentialsError()
 
-        const refreshToken = signRefreshToken(
-          tokenID,
-          SubjectType.User,
-          user.id,
-          [AccessScope.Admin],
-          refreshTokenExpiresIn,
-          tokenSecret
-        )
+        const token = await generateTokenID()
 
-        const accessToken = signAccessToken(
-          SubjectType.User,
-          user.id,
-          [AccessScope.Admin],
-          accessTokenExpiresIn,
-          tokenSecret
-        )
-
-        await adapter.insertUserSessionTokenID(user, [AccessScope.Admin], tokenID)
+        await adapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
 
         return {
           user,
-          refreshToken,
-          accessToken,
-          refreshTokenExpiresIn,
-          accessTokenExpiresIn
+          token,
+          expiresIn: sessionExpiry
         }
       }
     },
-    authenticateWithToken: {
-      type: GraphQLNonNull(GraphQLTokenAuthResponse),
-      args: {
-        token: {type: GraphQLNonNull(GraphQLString)}
-      },
-      async resolve(_root, {token}, {adapter, tokenSecret, accessTokenExpiresIn}) {
-        try {
-          const {type, subject, id, scope} = verifyRefreshToken(token, tokenSecret)
-
-          const valid =
-            type === SubjectType.User
-              ? await adapter.verifyUserSessionTokenID(id)
-              : await adapter.verifyPeerTokenID(id)
-
-          if (valid) {
-            const user = await adapter.userForID(subject)
-
-            if (user) {
-              const accessToken = signAccessToken(
-                type,
-                user.email,
-                scope,
-                accessTokenExpiresIn,
-                tokenSecret
-              )
-
-              return {user, accessToken, accessTokenExpiresIn}
-            }
-          }
-        } catch (err) {
-          if (err instanceof JWTTokenExpiredError) {
-            throw new TokenExpiredError()
-          }
-        }
-
-        throw new InvalidTokenError()
-      }
-    },
-    revokeUserToken: {
+    revokeSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {token}, {authentication, tokenSecret, adapter}) {
-        if (authentication.type !== AuthenticationContextType.User) {
-          if (authentication.type === AuthenticationContextType.Unauthenticated) {
-            throw authentication.error
-          }
-
-          throw new AuthenticationError('Unauthorized')
-        }
-
-        try {
-          const {type, subject, scope, id} = verifyRefreshToken(token, tokenSecret)
-
-          if (
-            type === SubjectType.User &&
-            authentication.user.id === subject &&
-            scope.includes(AccessScope.PeerTokenWrite)
-          ) {
-            await adapter.revokeUserSessionTokenID(id)
-            return true
-          }
-        } catch (err) {
-          if (err instanceof JWTTokenExpiredError) {
-            throw new TokenExpiredError()
-          }
-        }
-
-        throw new InvalidTokenError()
+      async resolve(_root, {token}, {authenticate, adapter}) {
+        const user = await authenticate()
+        await adapter.revokeSession(user, token)
+        return true
       }
     },
     createArticle: {
@@ -176,14 +72,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           description: 'Article to create.'
         }
       },
-      async resolve(_root, {article}: ArticleCreateArguments, {adapter, authentication}) {
-        if (authentication.type !== AuthenticationContextType.User) {
-          if (authentication.type === AuthenticationContextType.Unauthenticated) {
-            throw authentication.error
-          }
-
-          throw new AuthenticationError('Unauthorized')
-        }
+      async resolve(_root, {article}: ArticleCreateArguments, {adapter, authenticate}) {
+        await authenticate()
 
         const articleInput: ArticleInput = {
           ...article,
@@ -211,18 +101,19 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         return adapter.createArticle(await generateID(), articleInput)
       }
     },
-    createMedia: {
+    uploadImage: {
       type: GraphQLString,
       args: {
         file: {
           type: GraphQLUpload
         }
       },
-      async resolve(_root, {file}, {adapter, authentication}) {
+      async resolve(_root, {file}, {}) {
         if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
 
-        console.log(file)
-        const {}: FileUpload = await file
+        const {filename, mimetype, encoding, createReadStream}: FileUpload = await file
+        console.log(filename, mimetype, encoding, createReadStream)
+        // TODO
       }
     }
   }

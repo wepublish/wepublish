@@ -16,6 +16,7 @@
   "dependencies": {
     "@karma.run/graphql": "^0.0.0",
     "jsonwebtoken": "^8.5.1",
+    "ms": "^2.1.2",
     "cross-fetch": "^3.0.4",
     "apollo-client": "^2.6.4",
     "apollo-server": "^2.9.7",
@@ -25,6 +26,7 @@
     "nanoid": "^2.1.2"
   },
   "devDependencies": {
+    "@types/ms": "^0.7.31",
     "@types/graphql": "^14.5.0",
     "@types/graphql-iso-date": "^3.3.1",
     "@types/graphql-upload": "^8.0.3",

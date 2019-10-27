@@ -1,94 +1,70 @@
-import React, {useState, useContext, useEffect, FormEvent} from 'react'
-import {LoginTemplate, TextInput, PrimaryButton, Box} from '@karma.run/ui'
-import {authenticateWithCredentials} from '@wepublish/api'
+import React, {useState, useContext, FormEvent} from 'react'
+import {LoginTemplate, TextInput, PrimaryButton} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
+import {useMutation} from '@apollo/react-hooks'
 
 import {useRouteDispatch, matchRoute, useRoute, IndexRoute} from './route'
-import {AuthDispatchContext, AuthDispatchActionType, AuthContext} from './authContext'
-import {CancelToken} from '@wepublish/api/lib/cjs/client/query'
+import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
+
+import gql from 'graphql-tag'
 
 export const LoginForm = styled('form', () => ({
   display: 'flex',
   flexDirection: 'column'
 }))
 
+const AuthWithCredentialsQuery = gql`
+  mutation authenticateWithCredentials($email: String!, $password: String!) {
+    authenticateWithCredentials(email: $email, password: $password) {
+      user {
+        email
+      }
+      refreshToken
+      accessToken
+      refreshTokenExpiresIn
+      accessTokenExpiresIn
+    }
+  }
+`
+
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
 
   const {current} = useRoute()
 
-  const {session} = useContext(AuthContext)
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken')
-
-    if (refreshToken) {
-      setLoading(true)
-
-      const cancelToken = new CancelToken()
-
-      authenticateWithCredentials('http://localhost:3000', 'dev@wepublish.ch', '123', {
-        cancelToken
-      })
-        .then(({user, refreshToken, accessToken, refreshTokenExpiresIn, accessTokenExpiresIn}) => {
-          authDispatch({
-            type: AuthDispatchActionType.Login,
-            email: user.email,
-            refreshToken,
-            accessToken
-          })
-
-          if (current!.query && current!.query.next) {
-            const route = matchRoute(location.origin + current!.query.next)
-
-            if (route) {
-              routeDispatch({type: RouteActionType.ReplaceRoute, route})
-              return
-            }
-          }
-
-          routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
-        })
-        .catch(err => {
-          console.error(err)
-        })
-
-      return () => cancelToken.cancel()
-    }
-
-    return () => {}
-  }, [])
+  const [authenticate, {loading, error}] = useMutation(AuthWithCredentialsQuery)
 
   async function login(e: FormEvent) {
     e.preventDefault()
-    setLoading(true)
 
-    try {
-      const {refreshToken, accessToken} = await authenticateWithCredentials(
-        'http://localhost:3000',
-        email,
-        password
-      )
+    const response = await authenticate({variables: {email, password}})
 
-      localStorage.setItem('refreshToken', refreshToken)
-      authDispatch({type: AuthDispatchActionType.Login, email, refreshToken, accessToken})
+    const {
+      refreshToken,
+      accessToken,
+      user: {email: responseEmail}
+    } = response.data.authenticateWithCredentials
 
-      if (current!.query && current!.query.next) {
-        const route = matchRoute(location.origin + current!.query.next)
-        if (route) {
-          routeDispatch({type: RouteActionType.ReplaceRoute, route})
-          return
-        }
+    authDispatch({
+      type: AuthDispatchActionType.Login,
+      email: responseEmail,
+      refreshToken,
+      accessToken
+    })
+
+    if (current!.query && current!.query.next) {
+      const route = matchRoute(location.origin + current!.query.next)
+      if (route) {
+        routeDispatch({type: RouteActionType.ReplaceRoute, route})
+        return
       }
-
-      routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
-    } catch (err) {
-      setLoading(false)
     }
+
+    routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
   }
 
   return (
@@ -101,6 +77,7 @@ export function Login() {
           onChange={event => setPassword(event.target.value)}
         />
         <PrimaryButton label="Login" disabled={loading} />
+        {error && error.message}
       </LoginForm>
     </LoginTemplate>
   )

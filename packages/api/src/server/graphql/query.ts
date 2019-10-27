@@ -5,7 +5,9 @@ import {
   GraphQLNonNull,
   GraphQLInt,
   GraphQLBoolean,
-  GraphQLError
+  GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLID
 } from 'graphql'
 
 import {GraphQLDateRangeInput} from './dateRange'
@@ -14,8 +16,47 @@ import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
 
-import {ArticlesArguments, PeersArguments, PeerArguments, ArticleArguments} from '../adapter'
+import {ArticlesArguments, PeersArguments, PeerArguments} from '../adapter'
 import {queryArticles} from '../../client'
+
+export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
+  name: 'BaseNavigationLink',
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLPageNavigationLink = new GraphQLObjectType({
+  name: 'PageNavigationLink',
+  interfaces: [GraphQLBaseNavigationLink],
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    page: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLArticleNavigationLink = new GraphQLObjectType({
+  name: 'ArticleNavigationLink',
+  interfaces: [GraphQLBaseNavigationLink],
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    article: {type: GraphQLNonNull(GraphQLArticle)}
+  }
+})
+
+export const GraphQLNavigationLink = new GraphQLUnionType({
+  name: 'NavigationLink',
+  types: [GraphQLPageNavigationLink, GraphQLArticleNavigationLink]
+})
+
+export const GraphQLNavigation = new GraphQLObjectType({
+  name: 'Navigation',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink)))}
+  }
+})
 
 export const GraphQLQuery = new GraphQLObjectType({
   name: 'Query',
@@ -25,11 +66,18 @@ export const GraphQLQuery = new GraphQLObjectType({
       args: {
         id: {
           description: 'ID of the Article.',
-          type: GraphQLString
+          type: GraphQLID
         }
       },
-      resolve(_root, args, context: Context) {
+      resolve(_root, _args, _context: Context) {
         // return context.adapter.getArticle(args)
+      }
+    },
+    navigation: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink))),
+      args: {id: {type: GraphQLNonNull(GraphQLString)}},
+      async resolve() {
+        return []
       }
     },
     articles: {

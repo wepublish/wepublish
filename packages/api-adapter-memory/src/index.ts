@@ -5,15 +5,14 @@ import {
   PeersArguments,
   AdapterArticle,
   AdapterArticleVersion,
-  AdapterUser,
-  AdapterSession
+  AdapterUser
 } from '@wepublish/api/server'
 
 import {Peer, ArticleVersionState} from '@wepublish/api'
 import {ArticleInput, Block} from '@wepublish/api/server'
-import {AccessScope} from '@wepublish/api/lib/cjs/server/utility'
+import {InvalidTokenError, TokenExpiredError} from '@wepublish/api/lib/cjs/server/graphql/error'
 
-export interface MockPeer {
+export interface MemoryPeer {
   id: string
   name: string
   url: string
@@ -31,35 +30,35 @@ export interface MockArticleVersion {
   blocks: Block[]
 }
 
-export interface MockArticle {
+export interface MemoryArticle {
   id: string
   versions: MockArticleVersion[]
-  peer?: MockPeer
+  peer?: MemoryPeer
 }
 
 export interface MockAdapterOptions {
-  users?: MockUser[]
-  articles?: MockArticle[]
-  peers?: MockPeer[]
+  users?: MemoryUser[]
+  articles?: MemoryArticle[]
+  peers?: MemoryPeer[]
 }
 
-export interface MockUser {
+export interface MemoryUser {
   readonly id: string
   readonly email: string
   readonly password: string
 }
 
-export interface MockUserSession {
-  readonly id: string
-  readonly scope: AccessScope[]
+export interface MemoryUserSession {
+  readonly userID: string
+  readonly expiryDate: Date
   readonly token: string
 }
 
-export class MockAdapter implements Adapter {
-  private _users: MockUser[] = []
-  private _sessions: MockUserSession[] = []
-  private _articles: MockArticle[] = []
-  private _peers: MockPeer[] = []
+export class MemoryAdapter implements Adapter {
+  private _users: MemoryUser[] = []
+  private _sessions: MemoryUserSession[] = []
+  private _articles: MemoryArticle[] = []
+  private _peers: MemoryPeer[] = []
 
   constructor({users = [], articles = [], peers = []}: MockAdapterOptions = {}) {
     this._users.push(...users)
@@ -67,43 +66,36 @@ export class MockAdapter implements Adapter {
     this._peers.push(...peers)
   }
 
-  async userForCredentials(email: string, password: string): Promise<AdapterUser | null> {
+  async getUserForCredentials(email: string, password: string): Promise<AdapterUser | null> {
     const user = this._users.find(user => user.email === email && user.password === password)
     return user ? {id: user.id, email: user.email} : null
   }
 
-  async userForEmail(email: string): Promise<AdapterUser | null> {
-    const user = this._users.find(user => user.email === email)
-    return user ? {id: user.id, email: user.email} : null
+  async createSession({id: userID}: AdapterUser, token: string, expiryDate: Date): Promise<void> {
+    this._sessions.push({userID, token, expiryDate})
   }
 
-  async userForID(id: string): Promise<AdapterUser | null> {
-    const user = this._users.find(user => user.id === id)
-    return user ? {id: user.id, email: user.email} : null
+  async revokeSession({id: revokeUserID}: AdapterUser, revokeToken: string): Promise<void> {
+    this._sessions.splice(
+      this._sessions.findIndex(
+        ({userID, token}) => userID === revokeUserID && token === revokeToken
+      ),
+      1
+    )
   }
 
-  async insertUserSessionTokenID(
-    {id}: AdapterUser,
-    scope: AccessScope[],
-    token: string
-  ): Promise<void> {
-    this._sessions.push({id, scope, token})
-  }
+  async getSessionUser(verifyToken: string): Promise<AdapterUser> {
+    const {userID, expiryDate} = this._sessions.find(({token}) => token === verifyToken) || {}
 
-  async revokeUserSessionTokenID(revokeToken: string): Promise<void> {
-    this._sessions.splice(this._sessions.findIndex(({token}) => token === revokeToken), 1)
-  }
+    if (!userID || !expiryDate) {
+      throw new InvalidTokenError()
+    }
 
-  async verifyUserSessionTokenID(verifyToken: string): Promise<boolean> {
-    return this._sessions.some(({token}) => token === verifyToken)
-  }
+    if (expiryDate < new Date()) {
+      throw new TokenExpiredError()
+    }
 
-  async insertPeerTokenID() {}
-
-  async revokePeerTokenID() {}
-
-  async verifyPeerTokenID() {
-    return false
+    return this._users.find(({id}) => id === userID)!
   }
 
   async createArticle(id: string, article: ArticleInput): Promise<AdapterArticle> {
@@ -113,7 +105,7 @@ export class MockAdapter implements Adapter {
       updatedAt: new Date()
     }
 
-    const mockArticle: MockArticle = {
+    const mockArticle: MemoryArticle = {
       id,
       versions: [articleVersion]
     }
@@ -129,7 +121,7 @@ export class MockAdapter implements Adapter {
 
       publishedAt:
         articleVersion.state === ArticleVersionState.Published
-          ? articleVersion.updatedAt
+          ? articleVersion.publishDate
           : undefined,
 
       publishedVersion: articleVersion.state === ArticleVersionState.Published ? 0 : undefined,
@@ -137,7 +129,7 @@ export class MockAdapter implements Adapter {
     }
   }
 
-  async getArticleVersionContent(id: string, version: number): Promise<any> {
+  async getArticleVersionContent(_id: string, _version: number): Promise<any> {
     return {}
   }
 
@@ -160,7 +152,7 @@ export class MockAdapter implements Adapter {
     return article.versions.map((articleVersion, index) => ({...articleVersion, version: index}))
   }
 
-  async getArticles(args: ArticlesArguments): Promise<AdapterArticle[]> {
+  async getArticles(_args: ArticlesArguments): Promise<AdapterArticle[]> {
     const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
@@ -202,9 +194,9 @@ export class MockAdapter implements Adapter {
     return this._peers.find(peer => peer.id === args.id)
   }
 
-  async getPeers(args: PeersArguments): Promise<Peer[]> {
+  async getPeers(_args: PeersArguments): Promise<Peer[]> {
     return this._peers
   }
 }
 
-export default MockAdapter
+export default MemoryAdapter

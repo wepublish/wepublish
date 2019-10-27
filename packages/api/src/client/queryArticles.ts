@@ -1,5 +1,4 @@
 import {query} from './query'
-import {Article} from './types'
 
 export async function queryArticles(url: string): Promise<any> {
   return query(url, {

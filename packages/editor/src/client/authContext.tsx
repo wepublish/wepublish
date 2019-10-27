@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {authenticateWithCredentials} from '@wepublish/api'
-import {CancelToken} from '@wepublish/api/lib/cjs/client/query'
+import {useMutation} from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 
 export interface AuthContextState {
   readonly session?: {
@@ -54,14 +54,49 @@ export function authReducer(
   }
 }
 
+const AuthWithTokenQuery = gql`
+  mutation AuthenticateWithToken($token: String!) {
+    authenticateWithToken(token: $token) {
+      user {
+        email
+      }
+      accessToken
+      accessTokenExpiresIn
+    }
+  }
+`
+
 export interface AuthProviderProps {
   readonly children?: ReactNode
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
   const [state, dispatch] = useReducer(authReducer, {})
+  const [authenticate, {loading}] = useMutation(AuthWithTokenQuery)
+  const {session: {refreshToken = undefined} = {}} = state
 
-  return (
+  useEffect(() => {
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken)
+    }
+  }, [refreshToken])
+
+  useEffect(() => {
+    const refreshToken = localStorage.getItem('refreshToken')
+
+    if (refreshToken) {
+      authenticate({variables: {token: refreshToken}}).then(response => {
+        const {
+          accessToken,
+          user: {email}
+        } = response.data.authenticateWithToken
+
+        dispatch({type: AuthDispatchActionType.Login, email, refreshToken, accessToken})
+      })
+    }
+  }, [])
+
+  return loading ? null : (
     <AuthDispatchContext.Provider value={dispatch}>
       {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
     </AuthDispatchContext.Provider>

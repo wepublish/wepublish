@@ -133,6 +133,41 @@ export const GraphQLArticlePageInfo = new GraphQLObjectType({
   }
 })
 
+export const GraphQLImage = new GraphQLObjectType({
+  name: 'Image',
+
+  fields: {
+    id: {type: GraphQLID}
+  }
+})
+
+export const GraphQLAuthor = new GraphQLObjectType({
+  name: 'Author',
+
+  fields: () => ({
+    id: {type: GraphQLID},
+    name: {type: GraphQLString},
+    image: {type: GraphQLImage},
+    articles: {type: GraphQLArticleConnection}
+  })
+})
+
+export const GraphQLPageVersion = new GraphQLObjectType({
+  name: 'PageVersion',
+
+  fields: {
+    version: {type: GraphQLInt},
+
+    createdAt: {type: GraphQLDateTime},
+    updatedAt: {type: GraphQLDateTime},
+
+    slug: {type: GraphQLString},
+    title: {type: GraphQLString},
+
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
+  }
+})
+
 export const GraphQLArticleVersion = new GraphQLObjectType({
   name: 'ArticleVersion',
 
@@ -142,8 +177,12 @@ export const GraphQLArticleVersion = new GraphQLObjectType({
     createdAt: {type: GraphQLDateTime},
     updatedAt: {type: GraphQLDateTime},
 
+    slug: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
+
+    tags: {type: GraphQLList(GraphQLString)},
+    authors: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
 
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
@@ -170,6 +209,47 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
 
     draft: {
       type: GraphQLArticleVersion,
+      async resolve(root: AdapterArticle, _args, {adapter, authenticate}: Context) {
+        await authenticate()
+        if (root.draftVersion == undefined) return undefined
+
+        return adapter.getArticleVersion(root.id, root.draftVersion)
+      }
+    },
+
+    versions: {
+      type: GraphQLList(GraphQLArticleVersion),
+      async resolve(root: AdapterArticle, _args, {adapter, authenticate}: Context) {
+        await authenticate()
+        return adapter.getArticleVersions(root.id)
+      }
+    },
+
+    peer: {type: GraphQLPeer}
+  })
+})
+
+// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
+export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
+  name: 'Article',
+
+  fields: () => ({
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    createdAt: {type: GraphQLDateTime},
+    updatedAt: {type: GraphQLDateTime},
+    publishedAt: {type: GraphQLDateTime},
+
+    published: {
+      type: GraphQLPageVersion,
+      resolve(root: AdapterArticle, _args, context: Context) {
+        if (root.publishedVersion == undefined) return undefined
+        return context.adapter.getArticleVersion(root.id, root.publishedVersion)
+      }
+    },
+
+    draft: {
+      type: GraphQLPageVersion,
       resolve(root: AdapterArticle, _args, context: Context) {
         if (root.draftVersion == undefined) return undefined
         return context.adapter.getArticleVersion(root.id, root.draftVersion)
@@ -177,13 +257,11 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
     },
 
     versions: {
-      type: GraphQLList(GraphQLArticleVersion),
+      type: GraphQLList(GraphQLPageVersion),
       resolve(root: AdapterArticle, _args, context: Context) {
         return context.adapter.getArticleVersions(root.id)
       }
-    },
-
-    peer: {type: GraphQLPeer}
+    }
   })
 })
 

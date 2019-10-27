@@ -2,11 +2,9 @@
 import React from 'react'
 
 import fs from 'fs'
-import path, {isAbsolute as isAbsolutePath, join as joinPath} from 'path'
-import send from 'send'
+import path, {join as joinPath} from 'path'
 
-import {createServer} from 'http'
-import createRouter from 'find-my-way'
+import express from 'express'
 import {renderToStaticMarkup} from 'react-dom/server'
 
 import {findEntryFromAssetList} from '@karma.run/webpack'
@@ -23,20 +21,11 @@ async function asyncMain() {
 
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
-  const router = createRouter()
+  const app = express()
 
-  router.on('GET', '/static*', (req, res, params) => {
-    const path = params['*']!
+  app.use(express.static(joinPath(__dirname, '../../static'), {index: false}))
 
-    if (isAbsolutePath(path)) {
-      send(req, path, {root: joinPath(__dirname, '../../static'), index: false}).pipe(res)
-    } else {
-      res.statusCode = 400
-      res.end()
-    }
-  })
-
-  router.on('GET', '/*', (req, res) => {
+  app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
       <html>
         <head>
@@ -53,21 +42,15 @@ async function asyncMain() {
       </html>
     )
 
-    res.setHeader('content-type', 'text/html; charset=UTF-8')
-    res.setHeader('content-length', Buffer.byteLength(markup))
-
-    res.write(markup)
-    res.end()
-  })
-
-  const server = createServer((req, res) => {
-    router.lookup(req, res)
+    res.header('content-type', 'text/html; charset=UTF-8')
+    res.header('content-length', Buffer.byteLength(markup).toString())
+    res.send(markup)
   })
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3001
   const address = process.env.ADDRESS || 'localhost'
 
-  server.listen(port, address)
+  app.listen(port, address)
 
   console.log(`Server listening: http://${address}:${port}`)
 }
