@@ -4,10 +4,11 @@ import {UserInputError} from 'apollo-server'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
 import {Context} from '../context'
-import {generateID, ArticleVersionState, generateTokenID} from '../../client'
-import {BlockMap, ArticleInput} from '../adapter'
+import {ArticleVersionState} from '../types'
+import {generateID, generateTokenID} from '../utility'
+import {BlockMap, AdapterArticleInput} from '../adapter'
 
-import {InvalidCredentialsError} from './error'
+import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
 
 interface CreateSessionArgs {
@@ -21,6 +22,7 @@ interface ArticleCreateArguments {
 
     title: string
     lead: string
+    slug: string
 
     publishDate?: Date
     blocks: BlockMap[]
@@ -75,8 +77,9 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       async resolve(_root, {article}: ArticleCreateArguments, {adapter, authenticate}) {
         await authenticate()
 
-        const articleInput: ArticleInput = {
+        const articleInput: AdapterArticleInput = {
           ...article,
+          id: await generateID(),
           blocks: article.blocks.map(value => {
             const valueKeys = Object.keys(value)
 
@@ -98,7 +101,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           })
         }
 
-        return adapter.createArticle(await generateID(), articleInput)
+        return adapter.createArticle(articleInput)
       }
     },
     uploadImage: {

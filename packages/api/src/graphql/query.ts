@@ -11,18 +11,22 @@ import {
 } from 'graphql'
 
 import {GraphQLDateRangeInput} from './dateRange'
-import {GraphQLArticle, GraphQLArticleConnection} from './article'
+import {GraphQLArticle, GraphQLArticleConnection, GraphQLPage} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
 
-import {ArticlesArguments, PeersArguments, PeerArguments} from '../adapter'
-import {queryArticles} from '../../client'
+import {
+  ArticlesArguments,
+  PeersArguments,
+  PeerArguments,
+  AdapterNavigationLinkType
+} from '../adapter'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)}
+    label: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -30,8 +34,11 @@ export const GraphQLPageNavigationLink = new GraphQLObjectType({
   name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    page: {type: GraphQLNonNull(GraphQLString)}
+    label: {type: GraphQLNonNull(GraphQLString)},
+    page: {type: GraphQLPage}
+  },
+  isTypeOf(value) {
+    return value.type === AdapterNavigationLinkType.Page
   }
 })
 
@@ -39,8 +46,23 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType({
   name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    article: {type: GraphQLNonNull(GraphQLArticle)}
+    label: {type: GraphQLNonNull(GraphQLString)},
+    article: {type: GraphQLArticle}
+  },
+  isTypeOf(value) {
+    return value.type === AdapterNavigationLinkType.Article
+  }
+})
+
+export const GraphQLExternalNavigationLink = new GraphQLObjectType({
+  name: 'ArticleExternalLink',
+  interfaces: [GraphQLBaseNavigationLink],
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    url: {type: GraphQLNonNull(GraphQLString)}
+  },
+  isTypeOf(value) {
+    return value.type === AdapterNavigationLinkType.External
   }
 })
 
@@ -58,26 +80,71 @@ export const GraphQLNavigation = new GraphQLObjectType({
   }
 })
 
-export const GraphQLQuery = new GraphQLObjectType({
+export const GraphQLQuery = new GraphQLObjectType<any, Context>({
   name: 'Query',
   fields: {
+    navigation: {
+      type: GraphQLNavigation,
+      args: {key: {type: GraphQLNonNull(GraphQLString)}},
+      async resolve(_root, {key}, {adapter}) {
+        const navigation = await adapter.getNavigation(key)
+
+        if (!navigation) return null
+
+        return {
+          ...navigation,
+          links: await Promise.all(
+            navigation.links.map(async link => {
+              switch (link.type) {
+                case AdapterNavigationLinkType.Article:
+                  return {...link, article: await adapter.getArticle(link.articleID)}
+
+                case AdapterNavigationLinkType.Page:
+                  return {...link, page: await adapter.getPage(link.pageID)}
+
+                case AdapterNavigationLinkType.External:
+                  return link
+              }
+            })
+          )
+        }
+      }
+    },
     article: {
-      type: GraphQLNonNull(GraphQLArticle),
+      type: GraphQLArticle,
       args: {
         id: {
           description: 'ID of the Article.',
           type: GraphQLID
         }
       },
-      resolve(_root, _args, _context: Context) {
-        // return context.adapter.getArticle(args)
+      resolve(_root, {id}, {adapter}) {
+        return adapter.getArticle(id)
       }
     },
-    navigation: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink))),
-      args: {id: {type: GraphQLNonNull(GraphQLString)}},
-      async resolve() {
-        return []
+    page: {
+      type: GraphQLPage,
+      args: {
+        id: {
+          description: 'ID of the Page.',
+          type: GraphQLString
+        }
+      },
+      resolve(_root, {id}, {adapter}) {
+        return adapter.getPage(id)
+      }
+    },
+
+    pageBySlug: {
+      type: GraphQLPage,
+      args: {
+        slug: {
+          description: 'Slug of the Page.',
+          type: GraphQLString
+        }
+      },
+      resolve(_root, {slug}, {adapter}) {
+        return adapter.getPageBySlug(slug)
       }
     },
     articles: {
@@ -146,13 +213,12 @@ export const GraphQLQuery = new GraphQLObjectType({
 
         if (includePeers) {
           // TODO: Fetch peers aswell
-          const peers = await context.adapter.getPeers({})
-          const peerArticles: any[] = []
-
-          for (const peer of peers) {
-            const result = await queryArticles(peer.url)
-            peerArticles.push(...result.data.nodes.map((article: any) => ({...article, peer})))
-          }
+          // const peers = await context.adapter.getPeers({})
+          // const peerArticles: any[] = []
+          // for (const peer of peers) {
+          // const result = await queryArticles(peer.url)
+          // peerArticles.push(...result.data.nodes.map((article: any) => ({...article, peer})))
+          // }
         }
 
         const articles = context.adapter.getArticles(args as ArticlesArguments)

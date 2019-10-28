@@ -1,38 +1,89 @@
 #!/usr/bin/env node
-import {WepublishGraphQLSchema, contextFromRequest} from '@wepublish/api/server'
-import {ArticleVersionState, BlockType, generateIDSync} from '@wepublish/api'
+import {
+  WepublishGraphQLSchema,
+  contextFromRequest,
+  AdapterNavigationLinkType,
+  ArticleVersionState,
+  generateIDSync,
+  BlockType
+} from '@wepublish/api'
+
 import {ApolloServer} from 'apollo-server'
 
 import MockAdapter from '@wepublish/api-adapter-memory'
 
-const adapter = new MockAdapter({users: [{id: '123', email: 'dev@wepublish.ch', password: '123'}]})
+async function asyncMain() {
+  const adapter = new MockAdapter({
+    users: [{id: '123', email: 'dev@wepublish.ch', password: '123'}]
+  })
 
-adapter.createArticle(generateIDSync(), {
-  title: 'Test',
-  lead:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  state: ArticleVersionState.Published,
-  blocks: [{type: BlockType.Foo, foo: 'test'}, {type: BlockType.Bar, bar: 0}]
-})
+  const testImage = await adapter.createImage({
+    id: generateIDSync(),
+    title: 'Test',
+    description: 'test',
+    extension: 'png',
+    mimeType: 'image/png',
+    fileSize: 1024,
+    filename: 'test',
+    width: 400,
+    height: 200,
+    host: 'dummyimage.com',
+    url: 'https://dummyimage.com/600x400/000/fff',
+    tags: []
+  })
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
-const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+  const article = await adapter.createArticle({
+    id: generateIDSync(),
+    title: 'Test',
+    slug: 'test',
+    publishDate: new Date(),
+    lead:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    state: ArticleVersionState.Published,
+    blocks: [{type: BlockType.Image, imageID: testImage.id}]
+  })
 
-const server = new ApolloServer({
-  cors: {
-    origin: '*',
-    allowedHeaders: ['content-type', 'content-length', 'accept', 'origin', 'user-agent'],
-    methods: ['POST', 'GET', 'OPTIONS']
-  },
-  schema: WepublishGraphQLSchema,
-  tracing: true,
+  const page = await adapter.createPage({
+    id: generateIDSync(),
+    title: 'Test',
+    slug: 'test',
+    publishDate: new Date(),
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    state: ArticleVersionState.Published,
+    blocks: [{type: BlockType.Image, imageID: testImage.id}]
+  })
 
-  context: ({req}) =>
-    contextFromRequest(req, {
-      adapter
-    })
-})
+  await adapter.createNavigation({
+    key: 'test',
+    name: 'Test',
+    links: [
+      {type: AdapterNavigationLinkType.Article, label: '123', articleID: article.id},
+      {type: AdapterNavigationLinkType.Page, label: '123', pageID: page.id}
+    ]
+  })
 
-server.listen(port, address).then(({url}) => {
-  console.log(`Server ready at ${url}`)
-})
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+
+  const server = new ApolloServer({
+    cors: {
+      origin: '*',
+      allowedHeaders: ['content-type', 'content-length', 'accept', 'origin', 'user-agent'],
+      methods: ['POST', 'GET', 'OPTIONS']
+    },
+    schema: WepublishGraphQLSchema,
+    tracing: true,
+
+    context: ({req}) =>
+      contextFromRequest(req, {
+        adapter
+      })
+  })
+
+  server.listen(port, address).then(({url}) => {
+    console.log(`Server ready at ${url}`)
+  })
+}
+
+asyncMain()

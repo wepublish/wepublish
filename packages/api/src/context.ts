@@ -2,7 +2,7 @@ import ms from 'ms'
 import {IncomingMessage} from 'http'
 
 import {Adapter, AdapterUser} from './adapter'
-import {InvalidTokenError} from './graphql/error'
+import {InvalidTokenError} from './error'
 
 export interface ContextRequest extends IncomingMessage {
   adapter: Adapter

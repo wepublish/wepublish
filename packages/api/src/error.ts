@@ -1,5 +1,10 @@
 import {ApolloError} from 'apollo-server'
-import {ErrorCode} from '../../client/error'
+
+export enum ErrorCode {
+  TokenExpired = 'TOKEN_EXPIRED',
+  InvalidToken = 'INVALID_TOKEN',
+  InvalidCredentials = 'INVALID_CREDENTIALS'
+}
 
 export class TokenExpiredError extends ApolloError {
   constructor() {

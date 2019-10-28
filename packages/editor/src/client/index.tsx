@@ -15,7 +15,17 @@ import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
 import {ApolloProvider} from '@apollo/react-hooks'
 
-const client = new ApolloClient({uri: 'http://localhost:3000'})
+const client = new ApolloClient({
+  uri: 'http://localhost:3000',
+  request(operation) {
+    const token = localStorage.getItem('refreshToken')
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    })
+  }
+})
 
 const HotApp = hot(App)
 

@@ -5,13 +5,13 @@
   "license": "MIT",
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
-    "build:typescript": "tsc -b ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server",
+    "build:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:typescript": "tsc -b ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server --watch",
+    "watch:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy-license build sync-package-info",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/client/version.ts"
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
     "@karma.run/graphql": "^0.0.0",

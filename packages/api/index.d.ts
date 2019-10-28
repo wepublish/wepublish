@@ -1,1 +1,1 @@
-export * from './lib/cjs/client'
+export * from './lib/cjs/'

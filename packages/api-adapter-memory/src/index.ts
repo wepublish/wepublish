@@ -5,12 +5,20 @@ import {
   PeersArguments,
   AdapterArticle,
   AdapterArticleVersion,
-  AdapterUser
-} from '@wepublish/api/server'
-
-import {Peer, ArticleVersionState} from '@wepublish/api'
-import {ArticleInput, Block} from '@wepublish/api/server'
-import {InvalidTokenError, TokenExpiredError} from '@wepublish/api/lib/cjs/server/graphql/error'
+  AdapterNavigation,
+  AdapterUser,
+  Peer,
+  ArticleVersionState,
+  InvalidTokenError,
+  TokenExpiredError,
+  AdapterArticleBlock,
+  AdapterImage,
+  AdapterArticleInput,
+  AdapterPageInput,
+  AdapterPage,
+  AdapterPageBlock,
+  AdapterPageVersion
+} from '@wepublish/api'
 
 export interface MemoryPeer {
   id: string
@@ -26,8 +34,9 @@ export interface MockArticleVersion {
 
   title: string
   lead: string
+  slug: string
 
-  blocks: Block[]
+  blocks: AdapterArticleBlock[]
 }
 
 export interface MemoryArticle {
@@ -36,9 +45,27 @@ export interface MemoryArticle {
   peer?: MemoryPeer
 }
 
+export interface MemoryPageVersion {
+  state: ArticleVersionState
+
+  createdAt: Date
+  updatedAt: Date
+
+  title: string
+  description: string
+  slug: string
+
+  blocks: AdapterPageBlock[]
+}
+
+export interface MemoryPage {
+  id: string
+  versions: MemoryPageVersion[]
+  peer?: MemoryPeer
+}
+
 export interface MockAdapterOptions {
   users?: MemoryUser[]
-  articles?: MemoryArticle[]
   peers?: MemoryPeer[]
 }
 
@@ -58,11 +85,13 @@ export class MemoryAdapter implements Adapter {
   private _users: MemoryUser[] = []
   private _sessions: MemoryUserSession[] = []
   private _articles: MemoryArticle[] = []
+  private _pages: MemoryPage[] = []
   private _peers: MemoryPeer[] = []
+  private _navigations: AdapterNavigation[] = []
+  private _images: AdapterImage[] = []
 
-  constructor({users = [], articles = [], peers = []}: MockAdapterOptions = {}) {
+  constructor({users = [], peers = []}: MockAdapterOptions = {}) {
     this._users.push(...users)
-    this._articles.push(...articles)
     this._peers.push(...peers)
   }
 
@@ -95,10 +124,28 @@ export class MemoryAdapter implements Adapter {
       throw new TokenExpiredError()
     }
 
-    return this._users.find(({id}) => id === userID)!
+    return this._users.find(user => user.id === userID)!
   }
 
-  async createArticle(id: string, article: ArticleInput): Promise<AdapterArticle> {
+  async createNavigation(navigation: AdapterNavigation): Promise<AdapterNavigation> {
+    this._navigations.push(navigation)
+    return navigation
+  }
+
+  async getNavigation(key: string): Promise<AdapterNavigation | null> {
+    return this._navigations.find(navigation => navigation.key === key) || null
+  }
+
+  async createImage(image: AdapterImage): Promise<AdapterImage> {
+    this._images.push(image)
+    return image
+  }
+
+  async getImage(id: string): Promise<AdapterImage | null> {
+    return this._images.find(({id: imageID}) => imageID === id) || null
+  }
+
+  async createArticle(article: AdapterArticleInput): Promise<AdapterArticle> {
     const articleVersion = {
       ...article,
       createdAt: new Date(),
@@ -106,7 +153,7 @@ export class MemoryAdapter implements Adapter {
     }
 
     const mockArticle: MemoryArticle = {
-      id,
+      id: article.id,
       versions: [articleVersion]
     }
 
@@ -129,31 +176,213 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getArticleVersionContent(_id: string, _version: number): Promise<any> {
-    return {}
-  }
-
-  async getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion> {
+  async getArticle(id: string): Promise<AdapterArticle | null> {
     const article = this._articles.find(article => article.id === id)
 
-    if (!article) throw new Error(`Couldn't find article with ID: ${id}`)
+    if (!article) return null
+
+    const reverseVersions = article.versions.slice().reverse()
+
+    const oldestVersion = article.versions[0]
+    const latestVersion = article.versions[article.versions.length - 1]
+
+    const publishedVersion = reverseVersions.find(
+      version => version.state === ArticleVersionState.Published
+    )
+
+    const draftVersion = reverseVersions.find(
+      version =>
+        version.state === ArticleVersionState.Draft ||
+        version.state === ArticleVersionState.DraftReview
+    )
+
+    return {
+      id: article.id,
+      peer: article.peer,
+
+      createdAt: oldestVersion.createdAt,
+      updatedAt: latestVersion.updatedAt,
+
+      publishedAt: publishedVersion && publishedVersion.updatedAt,
+
+      publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
+      draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined
+    }
+  }
+
+  async getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion | null> {
+    const article = this._articles.find(article => article.id === id)
+
+    if (!article) return null
 
     const articleVersion = article.versions[version]
 
     return {
+      articleID: id,
       ...articleVersion,
       version
     }
   }
 
+  async getArticleVersionBlocks(id: string, version: number): Promise<AdapterArticleBlock[]> {
+    const article = this._articles.find(article => article.id === id)
+
+    if (!article) return []
+
+    const articleVersion = article.versions[version]
+    return articleVersion ? articleVersion.blocks : []
+  }
+
   async getArticleVersions(id: string): Promise<AdapterArticleVersion[]> {
     const article = this._articles.find(article => article.id === id)
     if (!article) throw new Error(`Couldn't find article with ID: ${id}`)
-    return article.versions.map((articleVersion, index) => ({...articleVersion, version: index}))
+    return article.versions.map((articleVersion, index) => ({
+      articleID: id,
+      ...articleVersion,
+      version: index
+    }))
+  }
+
+  async createPage(page: AdapterPageInput): Promise<AdapterPage> {
+    const pageVersion = {
+      ...page,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    const memoryPage: MemoryPage = {
+      id: page.id,
+      versions: [pageVersion]
+    }
+
+    this._pages.push(memoryPage)
+
+    return {
+      id: memoryPage.id,
+
+      createdAt: pageVersion.createdAt,
+      updatedAt: pageVersion.updatedAt,
+
+      publishedAt:
+        pageVersion.state === ArticleVersionState.Published ? pageVersion.publishDate : undefined,
+
+      publishedVersion: pageVersion.state === ArticleVersionState.Published ? 0 : undefined,
+      draftVersion: pageVersion.state === ArticleVersionState.Draft ? 0 : undefined
+    }
+  }
+
+  async getPage(id: string): Promise<AdapterPage | null> {
+    const page = this._pages.find(page => page.id === id)
+
+    if (!page) return null
+
+    const reverseVersions = page.versions.slice().reverse()
+
+    const oldestVersion = page.versions[0]
+    const latestVersion = page.versions[page.versions.length - 1]
+
+    const publishedVersion = reverseVersions.find(
+      version => version.state === ArticleVersionState.Published
+    )
+
+    const draftVersion = reverseVersions.find(
+      version =>
+        version.state === ArticleVersionState.Draft ||
+        version.state === ArticleVersionState.DraftReview
+    )
+
+    return {
+      id: page.id,
+
+      createdAt: oldestVersion.createdAt,
+      updatedAt: latestVersion.updatedAt,
+
+      publishedAt: publishedVersion && publishedVersion.updatedAt,
+
+      publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
+      draftVersion: draftVersion ? page.versions.indexOf(draftVersion) : undefined
+    }
+  }
+
+  async getPageBySlug(slug: string): Promise<AdapterPage | null> {
+    const page = this._pages.find(page => {
+      const reverseVersions = page.versions.slice().reverse()
+      const publishedVersion = reverseVersions.find(
+        version => version.state === ArticleVersionState.Published
+      )
+
+      if (publishedVersion) {
+        return publishedVersion.slug === slug
+      }
+
+      return false
+    })
+
+    if (!page) return null
+
+    const reverseVersions = page.versions.slice().reverse()
+
+    const oldestVersion = page.versions[0]
+    const latestVersion = page.versions[page.versions.length - 1]
+
+    const publishedVersion = reverseVersions.find(
+      version => version.state === ArticleVersionState.Published
+    )
+
+    const draftVersion = reverseVersions.find(
+      version =>
+        version.state === ArticleVersionState.Draft ||
+        version.state === ArticleVersionState.DraftReview
+    )
+
+    return {
+      id: page.id,
+
+      createdAt: oldestVersion.createdAt,
+      updatedAt: latestVersion.updatedAt,
+
+      publishedAt: publishedVersion && publishedVersion.updatedAt,
+
+      publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
+      draftVersion: draftVersion ? page.versions.indexOf(draftVersion) : undefined
+    }
+  }
+
+  async getPageVersion(id: string, version: number): Promise<AdapterPageVersion | null> {
+    const page = this._pages.find(article => article.id === id)
+
+    if (!page) return null
+
+    const pageVersion = page.versions[version]
+
+    return {
+      articleID: id,
+      ...pageVersion,
+      version
+    }
+  }
+
+  async getPageVersionBlocks(id: string, version: number): Promise<AdapterPageBlock[]> {
+    const page = this._pages.find(article => article.id === id)
+
+    if (!page) return []
+
+    const pageVersion = page.versions[version]
+    return pageVersion ? pageVersion.blocks : []
+  }
+
+  async getPageVersions(id: string): Promise<AdapterPageVersion[]> {
+    const page = this._pages.find(article => article.id === id)
+    if (!page) throw new Error(`Couldn't find article with ID: ${id}`)
+    return page.versions.map((articleVersion, index) => ({
+      articleID: id,
+      ...articleVersion,
+      version: index
+    }))
   }
 
   async getArticles(_args: ArticlesArguments): Promise<AdapterArticle[]> {
-    const articles = this._articles.map(article => {
+    const articles = this._pages.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
       const oldestVersion = article.versions[0]
