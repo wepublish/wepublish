@@ -1,4 +1,5 @@
 import {ArticleVersionState, BlockType} from './types'
+import {DocumentJSON} from 'slate'
 
 export interface DateRange {
   start: Date
@@ -27,112 +28,116 @@ export interface PeerArguments {
 
 export interface PeersArguments {}
 
-export interface ArticleVersion {
-  title: string
-  lead: string
-  publishedDate: Date
+export interface AdapterPeer {
+  readonly id: string
+  readonly name: string
+  readonly url: string
 }
 
-export interface Peer {
-  id: string
-  name: string
-  url: string
+export interface AdapterBaseBlock {
+  readonly key: string
 }
 
-export interface RichTextBlock {
-  foo: string
+export interface AdapterRichTextBlock extends AdapterBaseBlock {
+  readonly type: BlockType.RichText
+  readonly richText: DocumentJSON
 }
 
-export interface ImageBlock {
-  imageID: string
+export interface AdapterImageBlock extends AdapterBaseBlock {
+  readonly type: BlockType.Image
+  readonly imageID: string
+}
+
+export interface AdapterArticleGridBlock extends AdapterBaseBlock {
+  readonly type: BlockType.ArticleGrid
+  readonly articleIDs: string[]
+  readonly numColumns: number
 }
 
 export interface BlockMap {
-  [BlockType.RichText]?: RichTextBlock
-  [BlockType.Image]?: ImageBlock
+  [BlockType.RichText]?: Omit<AdapterRichTextBlock, 'type'>
+  [BlockType.Image]?: AdapterImageBlock
 }
 
-export type AdapterArticleBlock =
-  | ({type: BlockType.RichText} & RichTextBlock)
-  | ({type: BlockType.Image} & ImageBlock)
-
-export type AdapterPageBlock =
-  | ({type: BlockType.RichText} & RichTextBlock)
-  | ({type: BlockType.Image} & ImageBlock)
+export type AdapterArticleBlock = AdapterRichTextBlock | AdapterImageBlock
+export type AdapterPageBlock = AdapterRichTextBlock | AdapterImageBlock | AdapterArticleGridBlock
 
 export interface AdapterArticleInput {
-  id: string
-  state: ArticleVersionState
+  readonly id: string
+  readonly state: ArticleVersionState
 
-  title: string
-  lead: string
-  slug: string
+  readonly title: string
+  readonly lead: string
+  readonly slug: string
 
-  publishDate?: Date
-  blocks: AdapterArticleBlock[]
+  readonly publishDate?: Date
+
+  readonly featuredBlock: AdapterArticleBlock
+  readonly blocks: AdapterArticleBlock[]
 }
 
 export interface AdapterPageInput {
-  id: string
-  state: ArticleVersionState
+  readonly id: string
+  readonly state: ArticleVersionState
 
-  title: string
-  description: string
-  slug: string
+  readonly title: string
+  readonly description: string
+  readonly slug: string
 
-  publishDate?: Date
-  blocks: AdapterPageBlock[]
+  readonly publishDate?: Date
+
+  readonly blocks: AdapterPageBlock[]
 }
 
 export interface AdapterPage {
-  id: string
+  readonly id: string
 
-  createdAt: Date
-  updatedAt: Date
-  publishedAt?: Date
+  readonly createdAt: Date
+  readonly updatedAt: Date
+  readonly publishedAt?: Date
 
-  publishedVersion?: number
-  draftVersion?: number
+  readonly publishedVersion?: number
+  readonly draftVersion?: number
 }
 
 export interface AdapterPageVersion {
-  articleID: string
+  readonly articleID: string
 
-  version: number
-  state: ArticleVersionState
+  readonly version: number
+  readonly state: ArticleVersionState
 
-  createdAt: Date
-  updatedAt: Date
+  readonly createdAt: Date
+  readonly updatedAt: Date
 
-  title: string
-  description: string
-  slug: string
+  readonly title: string
+  readonly description: string
+  readonly slug: string
 }
 
 export interface AdapterArticle {
-  id: string
-  peer?: Peer
+  readonly id: string
+  readonly peer?: AdapterPeer
 
-  createdAt: Date
-  updatedAt: Date
-  publishedAt?: Date
+  readonly createdAt: Date
+  readonly updatedAt: Date
+  readonly publishedAt?: Date
 
-  publishedVersion?: number
-  draftVersion?: number
+  readonly publishedVersion?: number
+  readonly draftVersion?: number
 }
 
 export interface AdapterArticleVersion {
-  articleID: string
+  readonly articleID: string
 
-  version: number
-  state: ArticleVersionState
+  readonly version: number
+  readonly state: ArticleVersionState
 
-  createdAt: Date
-  updatedAt: Date
+  readonly createdAt: Date
+  readonly updatedAt: Date
 
-  title: string
-  lead: string
-  slug: string
+  readonly title: string
+  readonly lead: string
+  readonly slug: string
 }
 
 export interface AdapterUser {
@@ -234,8 +239,8 @@ export interface Adapter {
   getImage(id: string): Promise<AdapterImage | null>
 
   // Peers
-  createPeer(id: string, args: any): Promise<Peer>
+  createPeer(id: string, args: any): Promise<AdapterPeer>
 
-  getPeer(args: PeerArguments): Promise<Peer | undefined>
-  getPeers(args: PeersArguments): Promise<Peer[]>
+  getPeer(args: PeerArguments): Promise<AdapterPeer | undefined>
+  getPeers(args: PeersArguments): Promise<AdapterPeer[]>
 }

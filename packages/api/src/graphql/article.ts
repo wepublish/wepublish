@@ -16,10 +16,23 @@ import {GraphQLPeer} from './peer'
 import {GraphQLDateRange} from './dateRange'
 
 import {Context} from '../context'
-import {AdapterArticle, AdapterArticleVersion, AdapterPage} from '../adapter'
+import {AdapterArticle, AdapterArticleVersion} from '../adapter'
 
 import {ArticleVersionState, BlockType} from '../types'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLInputRichTextBlock} from './blocks'
+import {GraphQLImage} from './image'
+
+export const GraphQLInputArticleBlockUnionMap = new GraphQLInputObjectType({
+  name: 'InputBlockUnionMap',
+  fields: {
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock}
+  }
+})
+
+export const GraphQLArticleBlock = new GraphQLUnionType({
+  name: 'ArticleBlock',
+  types: [GraphQLRichTextBlock, GraphQLImageBlock]
+})
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
@@ -29,83 +42,6 @@ export const GraphQLArticleVersionState = new GraphQLEnumType({
     DRAFT_REVIEW: {value: ArticleVersionState.DraftReview},
     PUBLISHED: {value: ArticleVersionState.Published}
   }
-})
-
-export const GraphQLInputFooBlock = new GraphQLInputObjectType({
-  name: 'FooInputBlock',
-  fields: {
-    foo: {
-      type: GraphQLNonNull(GraphQLString)
-    }
-  }
-})
-
-export const GraphQLInputBarBlock = new GraphQLInputObjectType({
-  name: 'BarInputBlock',
-  fields: {
-    bar: {
-      type: GraphQLNonNull(GraphQLInt)
-    }
-  }
-})
-
-export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
-  name: 'InputRichTextBlock',
-  fields: {
-    richText: {
-      type: GraphQLNonNull(GraphQLString)
-    }
-  }
-})
-
-export const GraphQLInputBlockUnionMap = new GraphQLInputObjectType({
-  name: 'InputBlockUnionMap',
-  fields: {
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock}
-  }
-})
-
-export const GraphQLImage = new GraphQLObjectType<any, Context>({
-  name: 'Image',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    filename: {type: GraphQLNonNull(GraphQLString)},
-    fileSize: {type: GraphQLNonNull(GraphQLInt)},
-    extension: {type: GraphQLNonNull(GraphQLString)},
-    mimeType: {type: GraphQLNonNull(GraphQLString)},
-    host: {type: GraphQLNonNull(GraphQLString)},
-    title: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    url: {type: GraphQLNonNull(GraphQLString)},
-    width: {type: GraphQLNonNull(GraphQLInt)},
-    height: {type: GraphQLNonNull(GraphQLInt)}
-  }
-})
-
-export const GraphQLRichTextBlock = new GraphQLObjectType({
-  name: BlockType.RichText,
-  fields: {
-    richText: {type: GraphQLRichText}
-  },
-  isTypeOf(value) {
-    return value.type === BlockType.RichText
-  }
-})
-
-export const GraphQLImageBlock = new GraphQLObjectType({
-  name: BlockType.Image,
-  fields: {
-    image: {type: GraphQLImage}
-  },
-  isTypeOf(value) {
-    return value.type === BlockType.Image
-  }
-})
-
-export const GraphQLBlock = new GraphQLUnionType({
-  name: 'Block',
-  types: [GraphQLRichTextBlock, GraphQLImageBlock]
 })
 
 export const GraphQLArticleInput = new GraphQLInputObjectType({
@@ -121,7 +57,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLString)
     },
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInputBlockUnionMap)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInputArticleBlockUnionMap)))
     }
   }
 })
@@ -146,47 +82,11 @@ export const GraphQLAuthor = new GraphQLObjectType({
   })
 })
 
-export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
-  name: 'PageVersion',
-
-  fields: {
-    version: {type: GraphQLInt},
-
-    createdAt: {type: GraphQLDateTime},
-
-    slug: {type: GraphQLString},
-    title: {type: GraphQLString},
-    description: {type: GraphQLString},
-
-    tags: {type: GraphQLList(GraphQLString)},
-
-    blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock))),
-      async resolve(root: AdapterArticleVersion, _args, {adapter}) {
-        const blocks = await adapter.getPageVersionBlocks(root.articleID, root.version)
-
-        return Promise.all(
-          blocks.map(async block => {
-            switch (block.type) {
-              case BlockType.Image:
-                return {...block, image: await adapter.getImage(block.imageID)}
-
-              default:
-                return block
-            }
-          })
-        )
-      }
-    }
-  }
-})
-
 export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
   name: 'ArticleVersion',
 
   fields: {
     version: {type: GraphQLInt},
-
     createdAt: {type: GraphQLDateTime},
 
     slug: {type: GraphQLString},
@@ -196,8 +96,13 @@ export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
     tags: {type: GraphQLList(GraphQLString)},
     authors: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
 
+    featuredBlock: {
+      type: GraphQLArticleBlock,
+      async resolve() {}
+    },
+
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
       async resolve(root: AdapterArticleVersion, _args, {adapter}) {
         const blocks = await adapter.getArticleVersionBlocks(root.articleID, root.version)
 
@@ -255,42 +160,6 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
     },
 
     peer: {type: GraphQLPeer}
-  })
-})
-
-// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
-export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
-  name: 'Page',
-
-  fields: () => ({
-    id: {type: GraphQLNonNull(GraphQLID)},
-
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
-    publishedAt: {type: GraphQLDateTime},
-
-    published: {
-      type: GraphQLPageVersion,
-      resolve(root: AdapterPage, _args, context: Context) {
-        if (root.publishedVersion == undefined) return undefined
-        return context.adapter.getPageVersion(root.id, root.publishedVersion)
-      }
-    },
-
-    draft: {
-      type: GraphQLPageVersion,
-      resolve(root: AdapterPage, _args, context: Context) {
-        if (root.draftVersion == undefined) return undefined
-        return context.adapter.getPageVersion(root.id, root.draftVersion)
-      }
-    },
-
-    versions: {
-      type: GraphQLList(GraphQLPageVersion),
-      resolve(root: AdapterPage, _args, context: Context) {
-        return context.adapter.getPageVersions(root.id)
-      }
-    }
   })
 })
 

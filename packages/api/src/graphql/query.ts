@@ -11,7 +11,7 @@ import {
 } from 'graphql'
 
 import {GraphQLDateRangeInput} from './dateRange'
-import {GraphQLArticle, GraphQLArticleConnection, GraphQLPage} from './article'
+import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
@@ -20,8 +20,11 @@ import {
   ArticlesArguments,
   PeersArguments,
   PeerArguments,
-  AdapterNavigationLinkType
+  AdapterNavigationLinkType,
+  AdapterPageNavigationLink,
+  AdapterArticleNavigationLink
 } from '../adapter'
+import {GraphQLPage} from './page'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -30,24 +33,37 @@ export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   }
 })
 
-export const GraphQLPageNavigationLink = new GraphQLObjectType({
+export const GraphQLPageNavigationLink = new GraphQLObjectType<AdapterPageNavigationLink, Context>({
   name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
-    page: {type: GraphQLPage}
+    page: {
+      type: GraphQLPage,
+      resolve({pageID}, _args, {adapter}) {
+        return adapter.getPage(pageID)
+      }
+    }
   },
   isTypeOf(value) {
     return value.type === AdapterNavigationLinkType.Page
   }
 })
 
-export const GraphQLArticleNavigationLink = new GraphQLObjectType({
+export const GraphQLArticleNavigationLink = new GraphQLObjectType<
+  AdapterArticleNavigationLink,
+  Context
+>({
   name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
-    article: {type: GraphQLArticle}
+    article: {
+      type: GraphQLArticle,
+      resolve({articleID}, _args, {adapter}) {
+        return adapter.getArticle(articleID)
+      }
+    }
   },
   isTypeOf(value) {
     return value.type === AdapterNavigationLinkType.Article
@@ -87,27 +103,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       type: GraphQLNavigation,
       args: {key: {type: GraphQLNonNull(GraphQLString)}},
       async resolve(_root, {key}, {adapter}) {
-        const navigation = await adapter.getNavigation(key)
-
-        if (!navigation) return null
-
-        return {
-          ...navigation,
-          links: await Promise.all(
-            navigation.links.map(async link => {
-              switch (link.type) {
-                case AdapterNavigationLinkType.Article:
-                  return {...link, article: await adapter.getArticle(link.articleID)}
-
-                case AdapterNavigationLinkType.Page:
-                  return {...link, page: await adapter.getPage(link.pageID)}
-
-                case AdapterNavigationLinkType.External:
-                  return link
-              }
-            })
-          )
-        }
+        return await adapter.getNavigation(key)
       }
     },
     article: {

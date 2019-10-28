@@ -7,7 +7,7 @@ import {
   AdapterArticleVersion,
   AdapterNavigation,
   AdapterUser,
-  Peer,
+  AdapterPeer,
   ArticleVersionState,
   InvalidTokenError,
   TokenExpiredError,
@@ -36,6 +36,7 @@ export interface MockArticleVersion {
   lead: string
   slug: string
 
+  featuredBlock: AdapterArticleBlock
   blocks: AdapterArticleBlock[]
 }
 
@@ -415,15 +416,15 @@ export class MemoryAdapter implements Adapter {
     return articles
   }
 
-  async createPeer(): Promise<Peer> {
+  async createPeer(): Promise<AdapterPeer> {
     return {} as any
   }
 
-  async getPeer(args: PeerArguments): Promise<Peer | undefined> {
+  async getPeer(args: PeerArguments): Promise<AdapterPeer | undefined> {
     return this._peers.find(peer => peer.id === args.id)
   }
 
-  async getPeers(_args: PeersArguments): Promise<Peer[]> {
+  async getPeers(_args: PeersArguments): Promise<AdapterPeer[]> {
     return this._peers
   }
 }

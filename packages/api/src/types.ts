@@ -7,16 +7,16 @@ export enum NavigationLinkType {
 export enum BlockType {
   // Content
   RichText = 'RichTextBlock',
-  Gallery = 'gallery',
-  Teaser = 'teaser',
-  Embed = 'embed',
-  Quote = 'quote',
+  Gallery = 'GalleryBlock',
+  Teaser = 'TeaserBlock',
+  Embed = 'EmbedBlock',
+  Quote = 'QuoteBlock',
   Image = 'ImageBlock',
-  Listicle = 'listicle',
-  PeerPageBreak = 'linkPageBreak',
+  Listicle = 'ListicleBlock',
+  PeerPageBreak = 'PeerPageBreakBlock',
 
   // Layout
-  Grid = 'grid'
+  ArticleGrid = 'ArticleGridBlock'
 }
 
 export enum ArticleVersionState {

@@ -40,7 +40,15 @@ async function asyncMain() {
     lead:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     state: ArticleVersionState.Published,
-    blocks: [{type: BlockType.Image, imageID: testImage.id}]
+    featuredBlock: {type: BlockType.Image, key: '0', imageID: '123'},
+    blocks: [
+      {
+        type: BlockType.RichText,
+        key: '1',
+        richText: {object: 'document', nodes: [], key: '1'}
+      },
+      {type: BlockType.Image, key: '2', imageID: testImage.id}
+    ]
   })
 
   const page = await adapter.createPage({
@@ -51,7 +59,16 @@ async function asyncMain() {
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     state: ArticleVersionState.Published,
-    blocks: [{type: BlockType.Image, imageID: testImage.id}]
+    blocks: [
+      {type: BlockType.Image, key: '0', imageID: testImage.id},
+      {type: BlockType.RichText, key: '1', richText: {object: 'document', nodes: [], key: '1'}},
+      {
+        type: BlockType.ArticleGrid,
+        key: '2',
+        articleIDs: [article.id, article.id, article.id],
+        numColumns: 3
+      }
+    ]
   })
 
   await adapter.createNavigation({

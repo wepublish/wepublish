@@ -2,7 +2,7 @@ import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean} from '
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
-import {GraphQLArticle, GraphQLArticleInput, GraphQLInputBlockUnionMap} from './article'
+import {GraphQLArticle, GraphQLArticleInput, GraphQLInputArticleBlockUnionMap} from './article'
 import {Context} from '../context'
 import {ArticleVersionState} from '../types'
 import {generateID, generateTokenID} from '../utility'
@@ -80,17 +80,20 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         const articleInput: AdapterArticleInput = {
           ...article,
           id: await generateID(),
+          featuredBlock: {} as any, // TODO
           blocks: article.blocks.map(value => {
             const valueKeys = Object.keys(value)
 
             if (valueKeys.length === 0) {
-              throw new Error(`Received no block types in ${GraphQLInputBlockUnionMap.name}.`)
+              throw new Error(
+                `Received no block types in ${GraphQLInputArticleBlockUnionMap.name}.`
+              )
             }
 
             if (valueKeys.length > 1) {
               throw new Error(
                 `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
-                  GraphQLInputBlockUnionMap.name
+                  GraphQLInputArticleBlockUnionMap.name
                 }, they're mutually exclusive.`
               )
             }
