@@ -3,7 +3,11 @@ import 'regenerator-runtime/runtime'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ApolloClient from 'apollo-boost'
+import {ApolloClient} from 'apollo-client'
+import {HttpLink} from 'apollo-link-http'
+import {ApolloLink} from 'apollo-link'
+import {InMemoryCache} from 'apollo-cache-inmemory'
+import {ApolloProvider} from '@apollo/react-hooks'
 
 import {createStyleRenderer, renderStyles} from '@karma.run/react'
 import {CMSKitProvider} from '@karma.run/ui'
@@ -13,18 +17,22 @@ import {App} from './app'
 import {ElementID} from '../shared/elementID'
 import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
-import {ApolloProvider} from '@apollo/react-hooks'
+
+const authLink = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem('refreshToken')
+
+  operation.setContext({
+    headers: {
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  })
+
+  return forward(operation)
+})
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000',
-  request(operation) {
-    const token = localStorage.getItem('refreshToken')
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : ''
-      }
-    })
-  }
+  link: authLink.concat(new HttpLink({uri: 'http://localhost:3000'})),
+  cache: new InMemoryCache()
 })
 
 const HotApp = hot(App)
