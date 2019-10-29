@@ -9,15 +9,14 @@ import {
   AdapterUser,
   AdapterPeer,
   ArticleVersionState,
-  InvalidTokenError,
-  TokenExpiredError,
   AdapterArticleBlock,
   AdapterImage,
   AdapterArticleInput,
   AdapterPageInput,
   AdapterPage,
   AdapterPageBlock,
-  AdapterPageVersion
+  AdapterPageVersion,
+  Session
 } from '@wepublish/api'
 
 export interface MemoryPeer {
@@ -101,31 +100,31 @@ export class MemoryAdapter implements Adapter {
     return user ? {id: user.id, email: user.email} : null
   }
 
-  async createSession({id: userID}: AdapterUser, token: string, expiryDate: Date): Promise<void> {
-    this._sessions.push({userID, token, expiryDate})
+  async createSession(user: AdapterUser, token: string, expiryDate: Date): Promise<Session> {
+    this._sessions.push({userID: user.id, token, expiryDate})
+    return {user, token, expiryDate}
   }
 
-  async revokeSession({id: revokeUserID}: AdapterUser, revokeToken: string): Promise<void> {
-    this._sessions.splice(
-      this._sessions.findIndex(
-        ({userID, token}) => userID === revokeUserID && token === revokeToken
-      ),
-      1
+  async deleteSession(user: AdapterUser, revokeToken: string): Promise<Session | null> {
+    const index = this._sessions.findIndex(
+      ({userID, token}) => userID === user.id && token === revokeToken
     )
+
+    if (index === -1) return null
+
+    this._sessions.splice(index, 1)
+
+    const {expiryDate} = this._sessions[index]
+    return {user, token: revokeToken, expiryDate}
   }
 
-  async getSessionUser(verifyToken: string): Promise<AdapterUser> {
+  async getSession(verifyToken: string): Promise<Session | null> {
     const {userID, expiryDate} = this._sessions.find(({token}) => token === verifyToken) || {}
+    const user = this._users.find(user => user.id === userID)!
 
-    if (!userID || !expiryDate) {
-      throw new InvalidTokenError()
-    }
+    if (!user || !expiryDate) return null
 
-    if (expiryDate < new Date()) {
-      throw new TokenExpiredError()
-    }
-
-    return this._users.find(user => user.id === userID)!
+    return {user, token: verifyToken, expiryDate}
   }
 
   async createNavigation(navigation: AdapterNavigation): Promise<AdapterNavigation> {

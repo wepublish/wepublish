@@ -15,14 +15,11 @@ export const LoginForm = styled('form', () => ({
 
 const AuthWithCredentialsQuery = gql`
   mutation authenticateWithCredentials($email: String!, $password: String!) {
-    authenticateWithCredentials(email: $email, password: $password) {
+    createSession(email: $email, password: $password) {
       user {
         email
       }
-      refreshToken
-      accessToken
-      refreshTokenExpiresIn
-      accessTokenExpiresIn
+      token
     }
   }
 `

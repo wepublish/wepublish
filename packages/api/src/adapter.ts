@@ -146,7 +146,7 @@ export interface AdapterArticleInput {
 
   readonly publishDate?: Date
 
-  readonly featuredBlock: AdapterArticleBlock
+  readonly featuredBlock?: AdapterArticleBlock
   readonly blocks: AdapterArticleBlock[]
 }
 
@@ -237,6 +237,7 @@ export interface AdapterImage {
   readonly description: string
   readonly tags: string[]
   readonly url: string
+  readonly format: string
   readonly width: number
   readonly height: number
 }
@@ -277,14 +278,20 @@ export interface AdapterNavigation {
   readonly links: AdapterNavigationLink[]
 }
 
+export interface Session {
+  user: AdapterUser
+  token: string
+  expiryDate: Date
+}
+
 export interface Adapter {
   // User
   getUserForCredentials(email: string, password: string): Promise<AdapterUser | null>
 
   // Session
-  createSession(user: AdapterUser, token: string, expiryDate: Date): Promise<void>
-  revokeSession(user: AdapterUser, token: string): Promise<void>
-  getSessionUser(token: string): Promise<AdapterUser>
+  createSession(user: AdapterUser, token: string, expiryDate: Date): Promise<Session>
+  deleteSession(user: AdapterUser, token: string): Promise<Session | null>
+  getSession(token: string): Promise<Session | null>
 
   // Navigation
   createNavigation(navigation: AdapterNavigation): Promise<AdapterNavigation>
@@ -320,4 +327,9 @@ export interface Adapter {
 
   getPeer(args: PeerArguments): Promise<AdapterPeer | undefined>
   getPeers(args: PeersArguments): Promise<AdapterPeer[]>
+}
+
+export interface ImageAdapter {
+  uploadImage(): Promise<AdapterImage>
+  getURLForTransformation(): Promise<string>
 }

@@ -10,6 +10,8 @@ import {
   GraphQLID
 } from 'graphql'
 
+import graphQLFields from 'graphql-fields'
+
 import {GraphQLDateRangeInput} from './dateRange'
 import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
@@ -188,7 +190,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           defaultValue: true
         }
       },
-      async resolve(_root, args, context: Context) {
+      async resolve(_root, args, context: Context, info) {
         const {
           publishedBetween,
           createdBetween,
@@ -206,6 +208,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
             '`publishedBetween`, `createdBetween` and `updatedBetween` are mutally exclusive.'
           )
         }
+
+        console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
 
         if (includePeers) {
           // TODO: Fetch peers aswell

@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {ApolloClient} from 'apollo-client'
-import {HttpLink} from 'apollo-link-http'
+import {createHttpLink} from 'apollo-link-http'
 import {ApolloLink} from 'apollo-link'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {ApolloProvider} from '@apollo/react-hooks'
@@ -31,7 +31,11 @@ const authLink = new ApolloLink((operation, forward) => {
 })
 
 const client = new ApolloClient({
-  link: authLink.concat(new HttpLink({uri: 'http://localhost:3000'})),
+  link: authLink.concat(
+    createHttpLink({uri: 'http://localhost:3000'}).concat(
+      createHttpLink({uri: 'http://localhost:3006'})
+    )
+  ),
   cache: new InMemoryCache()
 })
 

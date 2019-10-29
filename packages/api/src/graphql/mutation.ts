@@ -1,6 +1,8 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean} from 'graphql'
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
-import {UserInputError} from 'apollo-server'
+import {UserInputError, ApolloError} from 'apollo-server'
+import {fetch} from 'cross-fetch'
+import FormData from 'form-data'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputArticleBlockUnionMap} from './article'
 import {Context} from '../context'
@@ -10,6 +12,7 @@ import {BlockMap, AdapterArticleInput} from '../adapter'
 
 import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
+import {GraphQLImage} from './image'
 
 interface CreateSessionArgs {
   readonly email: string
@@ -62,7 +65,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       },
       async resolve(_root, {token}, {authenticate, adapter}) {
         const user = await authenticate()
-        await adapter.revokeSession(user, token)
+        await adapter.deleteSession(user, token)
         return true
       }
     },
@@ -108,18 +111,47 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       }
     },
     uploadImage: {
-      type: GraphQLString,
+      type: GraphQLImage,
       args: {
         file: {
           type: GraphQLUpload
         }
       },
-      async resolve(_root, {file}, {}) {
+      async resolve(_root, {file}, {mediaServerURL, mediaServerToken, authenticate, adapter}) {
+        await authenticate()
+
         if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
 
-        const {filename, mimetype, encoding, createReadStream}: FileUpload = await file
-        console.log(filename, mimetype, encoding, createReadStream)
-        // TODO
+        const {filename, mimetype, createReadStream}: FileUpload = await file
+        const form = new FormData()
+
+        form.append('file', createReadStream(), {filename, contentType: mimetype, knownLength: 123})
+
+        // The form-data module reports a known length for the stream returned by createReadStream,
+        // which is wrong, override it and always set it to false.
+        // Related issue: https://github.com/form-data/form-data/issues/394
+        form.hasKnownLength = () => false
+
+        const response = await fetch(mediaServerURL.toString(), {
+          method: 'POST',
+          headers: {authorization: `Bearer ${mediaServerToken}`},
+          body: form as any // Uses node-fetch under the hood which allows FormData from the form-data module
+        })
+
+        const json = await response.json()
+
+        if (response.status !== 200) {
+          throw new ApolloError(`Received error from media server: ${JSON.stringify(json)}`)
+        }
+
+        return adapter.createImage({
+          ...json,
+          host: mediaServerURL.toString(),
+          url: `${mediaServerURL.toString()}${json.id}`,
+          tags: [],
+          title: '',
+          description: ''
+        })
       }
     }
   }
