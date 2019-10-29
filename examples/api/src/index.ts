@@ -1,29 +1,35 @@
 #!/usr/bin/env node
-import {createServer} from 'http'
-import {createAPIHandler} from '@wepublish/api/server'
-import MockAdapter from '@wepublish/api-adapter-mock'
-import {generateID, ArticleVersionState} from '@wepublish/api/shared'
+import {WepublishGraphQLSchema, contextFromRequest, generateIDSync} from '@wepublish/api'
+import MockAdapter from '@wepublish/api-adapter-memory'
 
-const adapter = new MockAdapter()
+import {ApolloServer} from 'apollo-server'
 
-adapter.createArticle(generateID(), {
-  article: {
-    title: 'Test',
-    lead:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    state: ArticleVersionState.Published
-  }
-})
-
-const server = createServer(
-  createAPIHandler({
-    peerFetchTimeout: 200,
-    adapter
+async function asyncMain() {
+  const adapter = new MockAdapter({
+    users: [{id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'}]
   })
-)
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
-const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
 
-server.listen(port, address)
-console.log(`API server listening on: http://${address}:${port}`)
+  const server = new ApolloServer({
+    cors: {
+      origin: '*',
+      allowedHeaders: ['content-type', 'content-length', 'accept', 'origin', 'user-agent'],
+      methods: ['POST', 'GET', 'OPTIONS']
+    },
+    schema: WepublishGraphQLSchema,
+    tracing: true,
+
+    context: ({req}) =>
+      contextFromRequest(req, {
+        adapter
+      })
+  })
+
+  server.listen(port, address).then(({url}) => {
+    console.log(`Server ready at ${url}`)
+  })
+}
+
+asyncMain()

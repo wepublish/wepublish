@@ -1,39 +1,40 @@
 {
   "name": "@wepublish/api",
-  "version": "0.0.7",
-  "main": "./lib/cjs/shared/",
-  "module": "./lib/esm/shared/",
+  "version": "0.0.12",
+  "module": "./lib/esm/client/",
   "license": "MIT",
-  "browser": {
-    "./client.js": "./lib/esm/client/",
-    "./shared.js": "./lib/esm/shared/"
-  },
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
-    "build:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server",
+    "build:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:typescript": "tsc -b ./src/shared/tsconfig.json ./src/shared/tsconfig.esm.json ./src/client/tsconfig.json ./src/client/tsconfig.esm.json ./src/server --watch",
+    "watch:typescript": "tsc -b ./src/tsconfig.json ./src/tsconfig.esm.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean copy-license build sync-package-info",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@types/slate": "^0.47.1",
-    "axios": "^0.19.0",
-    "express-graphql": "^0.9.0",
-    "graphql": "^14.4.2",
+    "@karma.run/graphql": "^0.0.0",
+    "apollo-client": "^2.6.4",
+    "apollo-server": "^2.9.7",
+    "cross-fetch": "^3.0.4",
+    "graphql": "^14.5.8",
     "graphql-iso-date": "^3.6.1",
-    "immutable": "^4.0.0-rc.12",
-    "nanoid": "^2.0.3"
+    "graphql-upload": "8.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "ms": "^2.1.2",
+    "nanoid": "^2.1.2"
   },
   "devDependencies": {
-    "@types/graphql": "^14.2.3",
+    "@types/graphql": "^14.5.0",
     "@types/graphql-iso-date": "^3.3.1",
+    "@types/graphql-upload": "^8.0.3",
+    "@types/jsonwebtoken": "7.2.7",
+    "@types/ms": "^0.7.31",
     "@types/nanoid": "^2.0.0",
     "@types/node": "^12.6.8",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.4"
   }
 }

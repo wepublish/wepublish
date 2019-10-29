@@ -18,9 +18,10 @@
     "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "alwaysStrict": true,
 
     "forceConsistentCasingInFileNames": true,
