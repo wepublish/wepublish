@@ -43,14 +43,78 @@ export interface AdapterRichTextBlock extends AdapterBaseBlock {
   readonly richText: DocumentJSON
 }
 
+export interface AdapterImageEdge {
+  readonly description: string
+  readonly imageID: string
+}
+
 export interface AdapterImageBlock extends AdapterBaseBlock {
   readonly type: BlockType.Image
-  readonly imageID: string
+  readonly image: AdapterImageEdge
+}
+
+export interface AdapterImageGalleryBlock extends AdapterBaseBlock {
+  readonly type: BlockType.ImageGallery
+  readonly images: AdapterImageEdge[]
+}
+
+export interface FacebookPostBlock extends AdapterBaseBlock {
+  readonly type: BlockType.FacebookPost
+  readonly userID: string
+  readonly postID: string
+}
+
+export interface InstagramPostBlock extends AdapterBaseBlock {
+  readonly type: BlockType.InstagramPost
+  readonly postID: string
+}
+
+export interface TwitterTweetBlock extends AdapterBaseBlock {
+  readonly type: BlockType.TwitterTweet
+  readonly userID: string
+  readonly tweetID: string
+}
+
+export interface VimeoVideoBlock extends AdapterBaseBlock {
+  readonly type: BlockType.VimeoVideo
+  readonly videoID: string
+}
+
+export interface YouTubeVideoBlock extends AdapterBaseBlock {
+  readonly type: BlockType.YouTubeVideo
+  readonly videoID: string
+}
+
+export interface SoundCloudTrackBlock extends AdapterBaseBlock {
+  readonly type: BlockType.SoundCloudTrack
+  readonly trackID: string
+}
+
+export interface ListicleItem {
+  readonly title: string
+  readonly imageID?: string
+  readonly richText: DocumentJSON
+}
+
+export interface ListicleBlock extends AdapterBaseBlock {
+  readonly type: BlockType.Listicle
+  readonly listicle: ListicleItem[]
+}
+
+export interface LinkPageBreakBlock extends AdapterBaseBlock {
+  readonly type: BlockType.LinkPageBreak
+  readonly text: string
+  readonly linkURL: string
+  readonly linkText: string
+}
+
+export interface AdapterArticleEdge {
+  readonly articleID: string
 }
 
 export interface AdapterArticleGridBlock extends AdapterBaseBlock {
   readonly type: BlockType.ArticleGrid
-  readonly articleIDs: string[]
+  readonly articles: AdapterArticleEdge[]
   readonly numColumns: number
 }
 
@@ -59,7 +123,17 @@ export interface BlockMap {
   [BlockType.Image]?: AdapterImageBlock
 }
 
-export type AdapterArticleBlock = AdapterRichTextBlock | AdapterImageBlock
+export type AdapterArticleBlock =
+  | AdapterRichTextBlock
+  | AdapterImageBlock
+  | AdapterImageGalleryBlock
+  | FacebookPostBlock
+  | InstagramPostBlock
+  | TwitterTweetBlock
+  | VimeoVideoBlock
+  | YouTubeVideoBlock
+  | SoundCloudTrackBlock
+
 export type AdapterPageBlock = AdapterRichTextBlock | AdapterImageBlock | AdapterArticleGridBlock
 
 export interface AdapterArticleInput {
@@ -109,6 +183,7 @@ export interface AdapterPageVersion {
   readonly createdAt: Date
   readonly updatedAt: Date
 
+  readonly preTitle?: string
   readonly title: string
   readonly description: string
   readonly slug: string
@@ -232,6 +307,8 @@ export interface Adapter {
 
   getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion | null>
   getArticleVersions(id: string): Promise<AdapterArticleVersion[]>
+
+  getArticleVersionFeaturedBlock(id: string, version: number): Promise<AdapterArticleBlock | null>
   getArticleVersionBlocks(id: string, version: number): Promise<AdapterArticleBlock[]>
 
   // Image

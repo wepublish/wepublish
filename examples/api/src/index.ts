@@ -40,14 +40,29 @@ async function asyncMain() {
     lead:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     state: ArticleVersionState.Published,
-    featuredBlock: {type: BlockType.Image, key: '0', imageID: '123'},
+    featuredBlock: {
+      type: BlockType.Image,
+      key: '0',
+      image: {description: '123', imageID: testImage.id}
+    },
     blocks: [
       {
         type: BlockType.RichText,
         key: '1',
         richText: {object: 'document', nodes: [], key: '1'}
       },
-      {type: BlockType.Image, key: '2', imageID: testImage.id}
+      {type: BlockType.Image, key: '2', image: {description: '123', imageID: testImage.id}},
+      {
+        type: BlockType.ImageGallery,
+        key: '3',
+        images: [{description: '123', imageID: testImage.id}]
+      },
+      {
+        type: BlockType.FacebookPost,
+        key: '4',
+        postID: '123',
+        userID: '123'
+      }
     ]
   })
 
@@ -60,12 +75,12 @@ async function asyncMain() {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     state: ArticleVersionState.Published,
     blocks: [
-      {type: BlockType.Image, key: '0', imageID: testImage.id},
+      {type: BlockType.Image, key: '0', image: {description: '123', imageID: testImage.id}},
       {type: BlockType.RichText, key: '1', richText: {object: 'document', nodes: [], key: '1'}},
       {
         type: BlockType.ArticleGrid,
         key: '2',
-        articleIDs: [article.id, article.id, article.id],
+        articles: [{articleID: article.id}, {articleID: article.id}, {articleID: article.id}],
         numColumns: 3
       }
     ]

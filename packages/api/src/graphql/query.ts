@@ -111,7 +111,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       args: {
         id: {
           description: 'ID of the Article.',
-          type: GraphQLID
+          type: GraphQLNonNull(GraphQLID)
         }
       },
       resolve(_root, {id}, {adapter}) {

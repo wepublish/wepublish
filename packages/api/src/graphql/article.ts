@@ -19,7 +19,22 @@ import {Context} from '../context'
 import {AdapterArticle, AdapterArticleVersion} from '../adapter'
 
 import {ArticleVersionState, BlockType} from '../types'
-import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLInputRichTextBlock} from './blocks'
+
+import {
+  GraphQLRichTextBlock,
+  GraphQLImageBlock,
+  GraphQLInputRichTextBlock,
+  GraphQLImageGalleryBlock,
+  GraphQLFacebookPostBlock,
+  GraphQLInstagramPostBlock,
+  GraphQLTwitterTweetBlock,
+  GraphQLVimeoVideoBlock,
+  GraphQLYouTubeVideoBlock,
+  GraphQLSoundCloudTrackBlock,
+  GraphQLListicleBlock,
+  GraphQLLinkPageBreakBlock
+} from './blocks'
+
 import {GraphQLImage} from './image'
 
 export const GraphQLInputArticleBlockUnionMap = new GraphQLInputObjectType({
@@ -31,7 +46,19 @@ export const GraphQLInputArticleBlockUnionMap = new GraphQLInputObjectType({
 
 export const GraphQLArticleBlock = new GraphQLUnionType({
   name: 'ArticleBlock',
-  types: [GraphQLRichTextBlock, GraphQLImageBlock]
+  types: [
+    GraphQLRichTextBlock,
+    GraphQLImageBlock,
+    GraphQLImageGalleryBlock,
+    GraphQLFacebookPostBlock,
+    GraphQLInstagramPostBlock,
+    GraphQLTwitterTweetBlock,
+    GraphQLVimeoVideoBlock,
+    GraphQLYouTubeVideoBlock,
+    GraphQLSoundCloudTrackBlock,
+    GraphQLListicleBlock,
+    GraphQLLinkPageBreakBlock
+  ]
 })
 
 export const GraphQLArticleVersionState = new GraphQLEnumType({
@@ -86,37 +113,29 @@ export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
   name: 'ArticleVersion',
 
   fields: {
-    version: {type: GraphQLInt},
-    createdAt: {type: GraphQLDateTime},
+    version: {type: GraphQLNonNull(GraphQLInt)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    slug: {type: GraphQLString},
-    title: {type: GraphQLString},
-    lead: {type: GraphQLString},
+    slug: {type: GraphQLNonNull(GraphQLString)},
 
-    tags: {type: GraphQLList(GraphQLString)},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLNonNull(GraphQLString)},
+
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     authors: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
 
     featuredBlock: {
       type: GraphQLArticleBlock,
-      async resolve() {}
+      resolve({articleID, version}: AdapterArticleVersion, _args, {adapter}) {
+        return adapter.getArticleVersionFeaturedBlock(articleID, version)
+      }
     },
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      async resolve(root: AdapterArticleVersion, _args, {adapter}) {
-        const blocks = await adapter.getArticleVersionBlocks(root.articleID, root.version)
-
-        return Promise.all(
-          blocks.map(async block => {
-            switch (block.type) {
-              case BlockType.Image:
-                return {...block, image: await adapter.getImage(block.imageID)}
-
-              default:
-                return block
-            }
-          })
-        )
+      resolve({articleID, version}: AdapterArticleVersion, _args, {adapter}) {
+        return adapter.getArticleVersionBlocks(articleID, version)
       }
     }
   }

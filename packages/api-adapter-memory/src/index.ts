@@ -225,6 +225,18 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
+  async getArticleVersionFeaturedBlock(
+    id: string,
+    version: number
+  ): Promise<AdapterArticleBlock | null> {
+    const article = this._articles.find(article => article.id === id)
+
+    if (!article) return null
+
+    const articleVersion = article.versions[version]
+    return articleVersion ? articleVersion.featuredBlock : null
+  }
+
   async getArticleVersionBlocks(id: string, version: number): Promise<AdapterArticleBlock[]> {
     const article = this._articles.find(article => article.id === id)
 
@@ -383,7 +395,7 @@ export class MemoryAdapter implements Adapter {
   }
 
   async getArticles(_args: ArticlesArguments): Promise<AdapterArticle[]> {
-    const articles = this._pages.map(article => {
+    const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
       const oldestVersion = article.versions[0]

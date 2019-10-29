@@ -5,6 +5,7 @@
     "../../node_modules/@wepublish/api-adapter-karma/lib/**/*.js",
     "./lib/**/*.js"
   ],
+  "delay": 250,
   "ignoreRoot": [".git"],
   "env": {}
 }

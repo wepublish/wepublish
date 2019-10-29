@@ -12,7 +12,6 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {AdapterArticleVersion, AdapterPage} from '../adapter'
 
-import {BlockType} from '../types'
 import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleGridBlock} from './blocks'
 
 export const GraphQLPageBlock = new GraphQLUnionType({
@@ -35,20 +34,8 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock))),
-      async resolve(root: AdapterArticleVersion, _args, {adapter}) {
-        const blocks = await adapter.getPageVersionBlocks(root.articleID, root.version)
-
-        return Promise.all(
-          blocks.map(async block => {
-            switch (block.type) {
-              case BlockType.Image:
-                return {...block, image: await adapter.getImage(block.imageID)}
-
-              default:
-                return block
-            }
-          })
-        )
+      resolve(root: AdapterArticleVersion, _args, {adapter}) {
+        return adapter.getPageVersionBlocks(root.articleID, root.version)
       }
     }
   }

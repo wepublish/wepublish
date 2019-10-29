@@ -13,7 +13,24 @@ import {BlockType} from '../types'
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
 import {GraphQLArticle} from './article'
-import {AdapterImageBlock, AdapterArticleGridBlock} from '../adapter'
+
+import {
+  AdapterImageBlock,
+  AdapterArticleGridBlock,
+  AdapterImageEdge,
+  AdapterArticleEdge,
+  AdapterImageGalleryBlock,
+  FacebookPostBlock,
+  InstagramPostBlock,
+  TwitterTweetBlock,
+  VimeoVideoBlock,
+  YouTubeVideoBlock,
+  SoundCloudTrackBlock,
+  ListicleBlock,
+  ListicleItem,
+  LinkPageBreakBlock
+} from '../adapter'
+
 import {Context} from '../context'
 
 export const GraphQLBaseBlock = new GraphQLInterfaceType({
@@ -24,7 +41,7 @@ export const GraphQLBaseBlock = new GraphQLInterfaceType({
 })
 
 export const GraphQLRichTextBlock = new GraphQLObjectType({
-  name: BlockType.RichText,
+  name: 'RichTextBlock',
   fields: {
     key: {type: GraphQLNonNull(GraphQLID)},
     richText: {type: GraphQLNonNull(GraphQLRichText)}
@@ -35,16 +52,50 @@ export const GraphQLRichTextBlock = new GraphQLObjectType({
   }
 })
 
-export const GraphQLImageBlock = new GraphQLObjectType<AdapterImageBlock, Context>({
-  name: BlockType.Image,
+export const GraphQLArticleEdge = new GraphQLObjectType<AdapterArticleEdge, Context>({
+  name: 'ArticleEdge',
+  fields: () => ({
+    description: {type: GraphQLString},
+    node: {
+      type: GraphQLArticle,
+      resolve({articleID}, _args, {adapter}) {
+        return adapter.getArticle(articleID)
+      }
+    }
+  })
+})
+
+export const GraphQLArticleGridBlock = new GraphQLObjectType<AdapterArticleGridBlock, Context>({
+  name: 'ArticleGridBlock',
   fields: {
     key: {type: GraphQLNonNull(GraphQLID)},
-    image: {
+    articles: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleEdge)))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.ArticleGrid
+  }
+})
+
+export const GraphQLImageEdge = new GraphQLObjectType<AdapterImageEdge, Context>({
+  name: 'ImageEdge',
+  fields: {
+    description: {type: GraphQLString},
+    node: {
       type: GraphQLImage,
       resolve({imageID}, _args, {adapter}) {
         return adapter.getImage(imageID)
       }
     }
+  }
+})
+
+export const GraphQLImageBlock = new GraphQLObjectType<AdapterImageBlock, Context>({
+  name: 'ImageBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    image: {type: GraphQLImageEdge}
   },
   interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
@@ -52,21 +103,131 @@ export const GraphQLImageBlock = new GraphQLObjectType<AdapterImageBlock, Contex
   }
 })
 
-export const GraphQLArticleGridBlock = new GraphQLObjectType<AdapterArticleGridBlock, Context>({
-  name: BlockType.ArticleGrid,
-  fields: () => ({
+export const GraphQLImageGalleryBlock = new GraphQLObjectType<AdapterImageGalleryBlock, Context>({
+  name: 'ImageGalleryBlock',
+  fields: {
     key: {type: GraphQLNonNull(GraphQLID)},
-    articles: {
-      type: GraphQLNonNull(GraphQLList(GraphQLArticle)),
-      resolve({articleIDs}, _args, {adapter}) {
-        return Promise.all(articleIDs.map(id => adapter.getArticle(id)))
-      }
-    },
-    numColumns: {type: GraphQLNonNull(GraphQLInt)}
-  }),
+    images: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImageEdge)))
+    }
+  },
   interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
-    return value.type === BlockType.ArticleGrid
+    return value.type === BlockType.ImageGallery
+  }
+})
+
+export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock, Context>({
+  name: 'FacebookPostBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    postID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.FacebookPost
+  }
+})
+
+export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBlock, Context>({
+  name: 'InstagramPostBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    postID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.InstagramPost
+  }
+})
+
+export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock, Context>({
+  name: 'TwitterTweetBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    tweetID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.TwitterTweet
+  }
+})
+
+export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Context>({
+  name: 'VimeoVideoBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.VimeoVideo
+  }
+})
+
+export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock, Context>({
+  name: 'YouTubeVideoBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.YouTubeVideo
+  }
+})
+
+export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrackBlock, Context>({
+  name: 'SoundCloudTrackBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.SoundCloudTrack
+  }
+})
+
+export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>({
+  name: 'ListicleItem',
+  fields: {
+    title: {type: GraphQLNonNull(GraphQLString)},
+    image: {
+      type: GraphQLNonNull(GraphQLImage),
+      resolve({imageID}, _args, {adapter}) {
+        return imageID ? adapter.getImage(imageID) : null
+      }
+    },
+    richText: {type: GraphQLNonNull(GraphQLRichText)}
+  }
+})
+
+export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context>({
+  name: 'ListicleBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    listicle: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLListicleItem)))}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.Listicle
+  }
+})
+
+export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBlock, Context>({
+  name: 'LinkPageBreakBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    linkURL: {type: GraphQLNonNull(GraphQLString)},
+    linkText: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.LinkPageBreak
   }
 })
 

@@ -1,26 +1,27 @@
 export enum NavigationLinkType {
-  Page = 'PageNavigationLink',
-  Article = 'ArticleNavigationLink',
-  External = 'ExternalNavigationLink'
+  Page = 'page',
+  Article = 'article',
+  External = 'external'
 }
 
 export enum BlockType {
-  // Content
-  RichText = 'RichTextBlock',
-  Gallery = 'GalleryBlock',
-  Teaser = 'TeaserBlock',
-  Embed = 'EmbedBlock',
-  Quote = 'QuoteBlock',
-  Image = 'ImageBlock',
-  Listicle = 'ListicleBlock',
-  PeerPageBreak = 'PeerPageBreakBlock',
-
-  // Layout
-  ArticleGrid = 'ArticleGridBlock'
+  RichText = 'richText',
+  FacebookPost = 'facebookPost',
+  InstagramPost = 'instagramPost',
+  TwitterTweet = 'twitterTweet',
+  VimeoVideo = 'vimeoVideo',
+  YouTubeVideo = 'youTubeVideo',
+  SoundCloudTrack = 'soundCloudTrack',
+  Quote = 'quote',
+  Image = 'image',
+  ImageGallery = 'imageGallery',
+  Listicle = 'listicle',
+  LinkPageBreak = 'linkPageBreak',
+  ArticleGrid = 'articleGrid'
 }
 
 export enum ArticleVersionState {
-  Draft = 'DRAFT',
-  DraftReview = 'DRAFT_REVIEW',
-  Published = 'PUBLISHED'
+  Draft = 'draft',
+  DraftReview = 'draftReview',
+  Published = 'published'
 }
