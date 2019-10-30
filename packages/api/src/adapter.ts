@@ -108,6 +108,18 @@ export interface LinkPageBreakBlock extends AdapterBaseBlock {
   readonly linkText: string
 }
 
+export interface TitleBlock extends AdapterBaseBlock {
+  readonly type: BlockType.Title
+  readonly title: string
+  readonly subtitle: string
+}
+
+export interface QuoteBlock extends AdapterBaseBlock {
+  readonly type: BlockType.Quote
+  readonly text: string
+  readonly author?: string
+}
+
 export interface AdapterArticleEdge {
   readonly articleID: string
 }
@@ -127,6 +139,10 @@ export type AdapterArticleBlock =
   | AdapterRichTextBlock
   | AdapterImageBlock
   | AdapterImageGalleryBlock
+  | TitleBlock
+  | QuoteBlock
+  | ListicleBlock
+  | LinkPageBreakBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

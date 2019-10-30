@@ -5,6 +5,7 @@ export enum NavigationLinkType {
 }
 
 export enum BlockType {
+  Title = 'title',
   RichText = 'richText',
   FacebookPost = 'facebookPost',
   InstagramPost = 'instagramPost',
