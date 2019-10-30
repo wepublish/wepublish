@@ -32,7 +32,9 @@ import {
   GraphQLYouTubeVideoBlock,
   GraphQLSoundCloudTrackBlock,
   GraphQLListicleBlock,
-  GraphQLLinkPageBreakBlock
+  GraphQLLinkPageBreakBlock,
+  GraphQLQuoteBlock,
+  GraphQLTitleBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
@@ -57,7 +59,9 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
     GraphQLListicleBlock,
-    GraphQLLinkPageBreakBlock
+    GraphQLLinkPageBreakBlock,
+    GraphQLTitleBlock,
+    GraphQLQuoteBlock
   ]
 })
 

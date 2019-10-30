@@ -28,7 +28,9 @@ import {
   SoundCloudTrackBlock,
   ListicleBlock,
   ListicleItem,
-  LinkPageBreakBlock
+  LinkPageBreakBlock,
+  TitleBlock,
+  QuoteBlock
 } from '../adapter'
 
 import {Context} from '../context'
@@ -183,7 +185,7 @@ export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrack
   name: 'SoundCloudTrackBlock',
   fields: {
     key: {type: GraphQLNonNull(GraphQLID)},
-    videoID: {type: GraphQLNonNull(GraphQLString)}
+    trackID: {type: GraphQLNonNull(GraphQLString)}
   },
   interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
@@ -228,6 +230,32 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
   interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.LinkPageBreak
+  }
+})
+
+export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
+  name: 'TitleBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    subtitle: {type: GraphQLNonNull(GraphQLString)}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.Title
+  }
+})
+
+export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
+  name: 'QuoteBlock',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLID)},
+    text: {type: GraphQLNonNull(GraphQLString)},
+    author: {type: GraphQLString}
+  },
+  interfaces: [GraphQLBaseBlock],
+  isTypeOf(value) {
+    return value.type === BlockType.Quote
   }
 })
 
