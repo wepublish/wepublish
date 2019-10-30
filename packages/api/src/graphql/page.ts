@@ -10,9 +10,10 @@ import {
 
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
-import {AdapterArticleVersion, AdapterPage} from '../adapter'
 
 import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleGridBlock} from './blocks'
+import {ArticleVersion} from '../adapter/article'
+import {Page} from '../adapter/page'
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
@@ -34,8 +35,8 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock))),
-      resolve(root: AdapterArticleVersion, _args, {adapter}) {
-        return adapter.getPageVersionBlocks(root.articleID, root.version)
+      resolve(root: ArticleVersion, _args, {storageAdapter}) {
+        return storageAdapter.getPageVersionBlocks(root.articleID, root.version)
       }
     }
   }
@@ -54,24 +55,24 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
 
     published: {
       type: GraphQLPageVersion,
-      resolve(root: AdapterPage, _args, context: Context) {
+      resolve(root: Page, _args, {storageAdapter}: Context) {
         if (root.publishedVersion == undefined) return undefined
-        return context.adapter.getPageVersion(root.id, root.publishedVersion)
+        return storageAdapter.getPageVersion(root.id, root.publishedVersion)
       }
     },
 
     draft: {
       type: GraphQLPageVersion,
-      resolve(root: AdapterPage, _args, context: Context) {
+      resolve(root: Page, _args, {storageAdapter}: Context) {
         if (root.draftVersion == undefined) return undefined
-        return context.adapter.getPageVersion(root.id, root.draftVersion)
+        return storageAdapter.getPageVersion(root.id, root.draftVersion)
       }
     },
 
     versions: {
       type: GraphQLList(GraphQLPageVersion),
-      resolve(root: AdapterPage, _args, context: Context) {
-        return context.adapter.getPageVersions(root.id)
+      resolve(root: Page, _args, {storageAdapter}: Context) {
+        return storageAdapter.getPageVersions(root.id)
       }
     }
   })

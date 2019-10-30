@@ -8,8 +8,10 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType
 } from 'graphql'
+
 import {Context} from '../context'
-import {AdapterImage} from '../adapter'
+import {Image} from '../adapter/image'
+import {GraphQLPageInfo} from './pageInfo'
 
 export const GraphQLFocusPoint = new GraphQLObjectType<any, Context>({
   name: 'Point',
@@ -31,6 +33,15 @@ export const GraphQLImageRotation = new GraphQLEnumType({
   }
 })
 
+export const GraphQLImageOutput = new GraphQLEnumType({
+  name: 'ImageOutput',
+  values: {
+    PNG: {value: 'png'},
+    JPEG: {value: 'jpeg'},
+    WEBP: {value: 'webp'}
+  }
+})
+
 export const GraphQLImageTransformation = new GraphQLInputObjectType({
   name: 'ImageTransformation',
   fields: {
@@ -38,11 +49,11 @@ export const GraphQLImageTransformation = new GraphQLInputObjectType({
     height: {type: GraphQLInt},
     rotation: {type: GraphQLImageRotation},
     quality: {type: GraphQLFloat},
-    output: {type: GraphQLString}
+    output: {type: GraphQLImageOutput}
   }
 })
 
-export const GraphQLImage = new GraphQLObjectType<AdapterImage, Context>({
+export const GraphQLImage = new GraphQLObjectType<Image, Context>({
   name: 'Image',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
@@ -51,7 +62,6 @@ export const GraphQLImage = new GraphQLObjectType<AdapterImage, Context>({
     extension: {type: GraphQLNonNull(GraphQLString)},
     mimeType: {type: GraphQLNonNull(GraphQLString)},
     format: {type: GraphQLNonNull(GraphQLString)},
-    host: {type: GraphQLNonNull(GraphQLString)},
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLString)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
@@ -59,13 +69,24 @@ export const GraphQLImage = new GraphQLObjectType<AdapterImage, Context>({
     width: {type: GraphQLNonNull(GraphQLInt)},
     height: {type: GraphQLNonNull(GraphQLInt)},
     focusPoint: {type: GraphQLFocusPoint},
-
     transform: {
       type: GraphQLNonNull(GraphQLList(GraphQLString)),
       args: {transformations: {type: GraphQLList(GraphQLImageTransformation)}},
-      resolve({}, {transformations}, {}) {
-        return transformations.map((transformation: any) => JSON.stringify(transformation))
+      resolve(image, {transformations}, {mediaAdapter}) {
+        return Promise.all(
+          transformations.map((transformation: any) =>
+            mediaAdapter.getImageURLForTransformation(image, transformation)
+          )
+        )
       }
     }
+  }
+})
+
+export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
+  name: 'ImageConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
   }
 })

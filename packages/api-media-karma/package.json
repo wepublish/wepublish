@@ -1,18 +1,12 @@
 {
-  "name": "@wepublish/api-example",
+  "name": "@wepublish/api-media-karma",
   "version": "0.0.0",
-  "private": true,
-  "bin": {
-    "wepublish-api-example": "./lib/index.js"
-  },
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
-    "start": "node ./lib/index.js",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:server": "nodemon --inspect=0.0.0.0:9240 ./lib/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
@@ -20,16 +14,16 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@wepublish/api": "*",
-    "@wepublish/api-storage-memory": "*",
-    "apollo-server": "^2.9.7",
-    "graphql": "^14.5.8"
+    "node-fetch": "^2.6.0",
+    "form-data": "^2.5.1"
   },
   "devDependencies": {
-    "@types/node": "^12.6.8",
-    "nodemon": "^1.19.1",
+    "@types/node-fetch": "^2.5.2",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
     "typescript": "^3.6.4"
+  },
+  "peerDependencies": {
+    "@wepublish/api": "*"
   }
 }

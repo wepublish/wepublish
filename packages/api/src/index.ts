@@ -1,14 +1,28 @@
-import {GraphQLSchema} from 'graphql'
-import {GraphQLQuery, GraphQLMutation} from './graphql'
+export * from './graphql/article'
+export * from './graphql/blocks'
+export * from './graphql/dateRange'
+export * from './graphql/image'
+export * from './graphql/mutation'
+export * from './graphql/page'
+export * from './graphql/pageInfo'
+export * from './graphql/peer'
+export * from './graphql/query'
+export * from './graphql/richText'
+export * from './graphql/schema'
+export * from './graphql/session'
 
-export * from './graphql'
-export * from './adapter'
+export * from './adapter/article'
+export * from './adapter/blocks'
+export * from './adapter/date'
+export * from './adapter/image'
+export * from './adapter/mediaAdapter'
+export * from './adapter/navigation'
+export * from './adapter/page'
+export * from './adapter/peer'
+export * from './adapter/storageAdapter'
+export * from './adapter/user'
+export * from './adapter/versionState'
+
 export * from './context'
 export * from './utility'
-export * from './types'
 export * from './error'
-
-export const WepublishGraphQLSchema = new GraphQLSchema({
-  query: GraphQLQuery,
-  mutation: GraphQLMutation
-})

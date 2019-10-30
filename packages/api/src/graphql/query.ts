@@ -17,16 +17,11 @@ import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
-
-import {
-  ArticlesArguments,
-  PeersArguments,
-  PeerArguments,
-  AdapterNavigationLinkType,
-  AdapterPageNavigationLink,
-  AdapterArticleNavigationLink
-} from '../adapter'
 import {GraphQLPage} from './page'
+import {PageNavigationLink, NavigationLinkType, ArticleNavigationLink} from '../adapter/navigation'
+import {ArticlesArguments} from '../adapter/article'
+import {PeerArguments, PeersArguments} from '../adapter/peer'
+import {GraphQLImageConnection} from './image'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -35,40 +30,37 @@ export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   }
 })
 
-export const GraphQLPageNavigationLink = new GraphQLObjectType<AdapterPageNavigationLink, Context>({
+export const GraphQLPageNavigationLink = new GraphQLObjectType<PageNavigationLink, Context>({
   name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
     page: {
       type: GraphQLPage,
-      resolve({pageID}, _args, {adapter}) {
-        return adapter.getPage(pageID)
+      resolve({pageID}, _args, {storageAdapter}) {
+        return storageAdapter.getPage(pageID)
       }
     }
   },
   isTypeOf(value) {
-    return value.type === AdapterNavigationLinkType.Page
+    return value.type === NavigationLinkType.Page
   }
 })
 
-export const GraphQLArticleNavigationLink = new GraphQLObjectType<
-  AdapterArticleNavigationLink,
-  Context
->({
+export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigationLink, Context>({
   name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
     article: {
       type: GraphQLArticle,
-      resolve({articleID}, _args, {adapter}) {
-        return adapter.getArticle(articleID)
+      resolve({articleID}, _args, {storageAdapter}) {
+        return storageAdapter.getArticle(articleID)
       }
     }
   },
   isTypeOf(value) {
-    return value.type === AdapterNavigationLinkType.Article
+    return value.type === NavigationLinkType.Article
   }
 })
 
@@ -80,7 +72,7 @@ export const GraphQLExternalNavigationLink = new GraphQLObjectType({
     url: {type: GraphQLNonNull(GraphQLString)}
   },
   isTypeOf(value) {
-    return value.type === AdapterNavigationLinkType.External
+    return value.type === NavigationLinkType.External
   }
 })
 
@@ -104,8 +96,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     navigation: {
       type: GraphQLNavigation,
       args: {key: {type: GraphQLNonNull(GraphQLString)}},
-      async resolve(_root, {key}, {adapter}) {
-        return await adapter.getNavigation(key)
+      async resolve(_root, {key}, {storageAdapter}) {
+        return await storageAdapter.getNavigation(key)
       }
     },
     article: {
@@ -116,8 +108,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           type: GraphQLNonNull(GraphQLID)
         }
       },
-      resolve(_root, {id}, {adapter}) {
-        return adapter.getArticle(id)
+      resolve(_root, {id}, {storageAdapter}) {
+        return storageAdapter.getArticle(id)
       }
     },
     page: {
@@ -128,8 +120,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           type: GraphQLString
         }
       },
-      resolve(_root, {id}, {adapter}) {
-        return adapter.getPage(id)
+      resolve(_root, {id}, {storageAdapter}) {
+        return storageAdapter.getPage(id)
       }
     },
 
@@ -141,8 +133,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           type: GraphQLString
         }
       },
-      resolve(_root, {slug}, {adapter}) {
-        return adapter.getPageBySlug(slug)
+      resolve(_root, {slug}, {storageAdapter}) {
+        return storageAdapter.getPageBySlug(slug)
       }
     },
     articles: {
@@ -209,9 +201,9 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           )
         }
 
-        console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
-
         if (includePeers) {
+          console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
+
           // TODO: Fetch peers aswell
           // const peers = await context.adapter.getPeers({})
           // const peerArticles: any[] = []
@@ -221,7 +213,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           // }
         }
 
-        const articles = context.adapter.getArticles(args as ArticlesArguments)
+        const articles = context.storageAdapter.getArticles(args as ArticlesArguments)
 
         return {
           nodes: articles,
@@ -229,6 +221,26 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
             publishedBetween,
             createdBetween,
             updatedBetween
+          }
+        }
+      }
+    },
+
+    images: {
+      type: GraphQLNonNull(GraphQLImageConnection),
+      args: {
+        offset: {type: GraphQLNonNull(GraphQLInt)},
+        limit: {type: GraphQLNonNull(GraphQLInt)}
+      },
+      async resolve(_root, {offset, limit}, {storageAdapter}) {
+        const [total, nodes] = await storageAdapter.getImages(offset, limit)
+
+        return {
+          nodes,
+          pageInfo: {
+            total,
+            offset,
+            limit
           }
         }
       }
@@ -243,13 +255,14 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
       },
       resolve(_root, args: PeerArguments, context: Context) {
-        return context.adapter.getPeer(args)
+        return context.storageAdapter.getPeer(args)
       }
     },
+
     peers: {
       type: GraphQLNonNull(GraphQLPeerConnection),
       resolve(_root, args: PeersArguments, context: Context) {
-        return context.adapter.getPeers(args)
+        return context.storageAdapter.getPeers(args)
       }
     }
   }

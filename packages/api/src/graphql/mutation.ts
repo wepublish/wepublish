@@ -1,18 +1,18 @@
 import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean} from 'graphql'
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
-import {UserInputError, ApolloError} from 'apollo-server'
-import {fetch} from 'cross-fetch'
-import FormData from 'form-data'
+import {UserInputError} from 'apollo-server'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputArticleBlockUnionMap} from './article'
+
 import {Context} from '../context'
-import {ArticleVersionState} from '../types'
 import {generateID, generateTokenID} from '../utility'
-import {BlockMap, AdapterArticleInput} from '../adapter'
 
 import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
 import {GraphQLImage} from './image'
+import {VersionState} from '../adapter/versionState'
+import {BlockMap} from '../adapter/blocks'
+import {ArticleInput} from '../adapter/article'
 
 interface CreateSessionArgs {
   readonly email: string
@@ -21,7 +21,7 @@ interface CreateSessionArgs {
 
 interface ArticleCreateArguments {
   article: {
-    state: ArticleVersionState
+    state: VersionState
 
     title: string
     lead: string
@@ -42,14 +42,12 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         password: {type: GraphQLNonNull(GraphQLString)}
       },
 
-      async resolve(_root, {email, password}: CreateSessionArgs, {adapter, sessionExpiry}) {
-        const user = await adapter.getUserForCredentials(email, password)
-
+      async resolve(_root, {email, password}: CreateSessionArgs, {storageAdapter, sessionExpiry}) {
+        const user = await storageAdapter.getUserForCredentials(email, password)
         if (!user) throw new InvalidCredentialsError()
 
         const token = await generateTokenID()
-
-        await adapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
+        await storageAdapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
 
         return {
           user,
@@ -63,9 +61,9 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       args: {
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {token}, {authenticate, adapter}) {
+      async resolve(_root, {token}, {authenticate, storageAdapter}) {
         const user = await authenticate()
-        await adapter.deleteSession(user, token)
+        await storageAdapter.deleteSession(user, token)
         return true
       }
     },
@@ -77,10 +75,10 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           description: 'Article to create.'
         }
       },
-      async resolve(_root, {article}: ArticleCreateArguments, {adapter, authenticate}) {
+      async resolve(_root, {article}: ArticleCreateArguments, {storageAdapter, authenticate}) {
         await authenticate()
 
-        const articleInput: AdapterArticleInput = {
+        const articleInput: ArticleInput = {
           ...article,
           id: await generateID(),
           featuredBlock: {} as any, // TODO
@@ -107,7 +105,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           })
         }
 
-        return adapter.createArticle(articleInput)
+        return storageAdapter.createArticle(articleInput)
       }
     },
     uploadImage: {
@@ -117,41 +115,13 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           type: GraphQLUpload
         }
       },
-      async resolve(_root, {file}, {mediaServerURL, mediaServerToken, authenticate, adapter}) {
+      async resolve(_root, {file}, {authenticate, storageAdapter, mediaAdapter}) {
         await authenticate()
 
         if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
 
-        const {filename, mimetype, createReadStream}: FileUpload = await file
-        const form = new FormData()
-
-        form.append('file', createReadStream(), {filename, contentType: mimetype, knownLength: 123})
-
-        // The form-data module reports a known length for the stream returned by createReadStream,
-        // which is wrong, override it and always set it to false.
-        // Related issue: https://github.com/form-data/form-data/issues/394
-        form.hasKnownLength = () => false
-
-        const response = await fetch(mediaServerURL.toString(), {
-          method: 'POST',
-          headers: {authorization: `Bearer ${mediaServerToken}`},
-          body: form as any // Uses node-fetch under the hood which allows FormData from the form-data module
-        })
-
-        const json = await response.json()
-
-        if (response.status !== 200) {
-          throw new ApolloError(`Received error from media server: ${JSON.stringify(json)}`)
-        }
-
-        return adapter.createImage({
-          ...json,
-          host: mediaServerURL.toString(),
-          url: `${mediaServerURL.toString()}${json.id}`,
-          tags: [],
-          title: '',
-          description: ''
-        })
+        const uploadImage = await mediaAdapter.uploadImage(file as Promise<FileUpload>)
+        return storageAdapter.createImage({...uploadImage, title: '', description: '', tags: []})
       }
     }
   }

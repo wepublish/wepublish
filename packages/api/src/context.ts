@@ -1,27 +1,25 @@
 import ms from 'ms'
 import {IncomingMessage} from 'http'
-
-import {Adapter, AdapterUser} from './adapter'
-import {TokenExpiredError} from './error'
 import {AuthenticationError} from 'apollo-server'
 
-export interface ContextRequest extends IncomingMessage {
-  adapter: Adapter
-}
+import {User} from './adapter/user'
+import {StorageAdapter} from './adapter/storageAdapter'
+import {MediaAdapter} from './adapter/mediaAdapter'
+
+import {TokenExpiredError} from './error'
 
 export interface Context {
-  adapter: Adapter
-  sessionExpiry: number
-  mediaServerURL: URL
-  mediaServerToken: string
-  authenticate(): Promise<AdapterUser>
+  readonly storageAdapter: StorageAdapter
+  readonly mediaAdapter: MediaAdapter
+  readonly sessionExpiry: number
+
+  authenticate(): Promise<User>
 }
 
 export interface ContextOptions {
-  adapter: Adapter
-  mediaServerURL: string
-  mediaServerToken: string
-  sessionExpiry?: number | string
+  readonly storageAdapter: StorageAdapter
+  readonly mediaAdapter: MediaAdapter
+  readonly sessionExpiry?: number | string
 }
 
 export function tokenFromRequest(req: IncomingMessage) {
@@ -35,24 +33,21 @@ export function tokenFromRequest(req: IncomingMessage) {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {adapter, mediaServerURL, mediaServerToken, sessionExpiry = '1w'}: ContextOptions
+  {storageAdapter, mediaAdapter, sessionExpiry = '1w'}: ContextOptions
 ): Promise<Context> {
   return {
-    adapter,
-    mediaServerURL: new URL(mediaServerURL),
-    mediaServerToken,
+    storageAdapter,
+    mediaAdapter,
     sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
+
     async authenticate() {
       const token = tokenFromRequest(req)
-
       if (!token) throw new AuthenticationError('Missing token')
 
-      const session = await adapter.getSession(token)
-
+      const session = await storageAdapter.getSession(token)
       if (!session) throw new AuthenticationError('Invalid token')
 
       const {user, expiryDate} = session
-
       if (new Date() >= expiryDate) throw new TokenExpiredError()
 
       return user
