@@ -223,7 +223,7 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
   name: 'LinkPageBreakBlock',
   fields: {
     key: {type: GraphQLNonNull(GraphQLID)},
-    title: {type: GraphQLNonNull(GraphQLString)},
+    text: {type: GraphQLNonNull(GraphQLString)},
     linkURL: {type: GraphQLNonNull(GraphQLString)},
     linkText: {type: GraphQLNonNull(GraphQLString)}
   },
