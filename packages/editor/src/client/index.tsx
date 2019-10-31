@@ -17,9 +17,10 @@ import {App} from './app'
 import {ElementID} from '../shared/elementID'
 import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
+import {LocalStorageKey} from './utility'
 
 const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('refreshToken')
+  const token = localStorage.getItem(LocalStorageKey.SessionToken)
 
   operation.setContext({
     headers: {
@@ -31,11 +32,7 @@ const authLink = new ApolloLink((operation, forward) => {
 })
 
 const client = new ApolloClient({
-  link: authLink.concat(
-    createHttpLink({uri: 'http://localhost:3000'}).concat(
-      createHttpLink({uri: 'http://localhost:3006'})
-    )
-  ),
+  link: authLink.concat(createHttpLink({uri: 'http://localhost:3000'})),
   cache: new InMemoryCache()
 })
 

@@ -106,14 +106,13 @@ export const GraphQLAuthor = new GraphQLObjectType({
   name: 'Author',
 
   fields: () => ({
-    id: {type: GraphQLID},
-    name: {type: GraphQLString},
-    image: {type: GraphQLImage},
-    articles: {type: GraphQLArticleConnection}
+    id: {type: GraphQLNonNull(GraphQLID)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    image: {type: GraphQLImage}
   })
 })
 
-export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
+export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
   name: 'ArticleVersion',
 
   fields: {
@@ -125,20 +124,19 @@ export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLNonNull(GraphQLString)},
+    image: {type: GraphQLImage},
 
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    authors: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
-
-    featuredBlock: {
-      type: GraphQLArticleBlock,
-      resolve({articleID, version}: ArticleVersion, _args, {storageAdapter}) {
-        return storageAdapter.getArticleVersionFeaturedBlock(articleID, version)
+    authors: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      resolve({authorIDs}, args, {storageAdapter}) {
+        return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
       }
     },
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      resolve({articleID, version}: ArticleVersion, _args, {storageAdapter}) {
+      resolve({articleID, version}, _args, {storageAdapter}) {
         return storageAdapter.getArticleVersionBlocks(articleID, version)
       }
     }

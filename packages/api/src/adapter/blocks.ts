@@ -1,8 +1,8 @@
 import {RichTextValue} from '@karma.run/graphql'
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 
-import {ArticleEdge} from './article'
 import {ImageEdge} from './image'
+import {ArticleTeaser} from './article'
 
 export enum BlockType {
   Title = 'title',
@@ -18,7 +18,7 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  ArticleGrid = 'articleGrid'
+  ArticleTeaserGrid = 'articleTeaserGrid'
 }
 
 export interface BaseBlock {
@@ -102,9 +102,9 @@ export interface QuoteBlock extends BaseBlock {
   readonly author?: string
 }
 
-export interface ArticleGridBlock extends BaseBlock {
-  readonly type: BlockType.ArticleGrid
-  readonly articles: ArticleEdge[]
+export interface ArticleTeaserGridBlock extends BaseBlock {
+  readonly type: BlockType.ArticleTeaserGrid
+  readonly teasers: ArticleTeaser[]
   readonly numColumns: number
 }
 
@@ -123,7 +123,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
 
-export type PageBlock = RichTextBlock | ImageBlock | ArticleGridBlock
+export type PageBlock = RichTextBlock | ImageBlock | ArticleTeaserGridBlock
 
 export type BaseBlockMap = MapDiscriminatedUnion<ArticleBlock, 'type'>
 export type BlockMap = {[K in ArticleBlock['type']]?: Omit<BaseBlockMap[K], 'type'>}

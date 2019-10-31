@@ -40,12 +40,25 @@ export interface ArticleVersion {
   readonly createdAt: Date
   readonly updatedAt: Date
 
+  readonly preTitle?: string
   readonly title: string
   readonly lead: string
   readonly slug: string
+
+  readonly imageID?: string
+  readonly authorIDs: string[]
 }
 
-export interface ArticleEdge {
+export interface ArticleTeaserOverrides {
+  readonly preTitle?: string
+  readonly title?: string
+  readonly lead?: string
+  readonly imageID?: string
+}
+
+export interface ArticleTeaser {
+  readonly type: string
+  readonly overrides: ArticleTeaserOverrides
   readonly articleID: string
 }
 
@@ -53,12 +66,13 @@ export interface ArticleInput {
   readonly id: string
   readonly state: VersionState
 
+  readonly preTitle?: string
   readonly title: string
   readonly lead: string
   readonly slug: string
+  readonly imageID?: string
 
   readonly publishDate?: Date
-
-  readonly featuredBlock: ArticleBlock | null
   readonly blocks: ArticleBlock[]
+  readonly authorIDs: string[]
 }

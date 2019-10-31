@@ -1,4 +1,4 @@
-import {MediaAdapter, Image, ImageTransformation} from '@wepublish/api'
+import {MediaAdapter, Image, UploadImage, ImageTransformation} from '@wepublish/api'
 import {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
@@ -14,7 +14,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
     this.token = token
   }
 
-  async uploadImage(file: Promise<FileUpload>): Promise<Image> {
+  async uploadImage(file: Promise<FileUpload>): Promise<UploadImage> {
     const {filename, mimetype, createReadStream}: FileUpload = await file
     const form = new FormData()
 

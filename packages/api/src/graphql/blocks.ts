@@ -11,13 +11,12 @@ import {
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
-import {GraphQLArticle} from './article'
 
 import {Context} from '../context'
 
 import {
   BlockType,
-  ArticleGridBlock,
+  ArticleTeaserGridBlock,
   ImageBlock,
   ImageGalleryBlock,
   FacebookPostBlock,
@@ -33,8 +32,9 @@ import {
   QuoteBlock
 } from '../adapter/blocks'
 
-import {ArticleEdge} from '../adapter/article'
 import {ImageEdge} from '../adapter/image'
+import {ArticleTeaser, ArticleTeaserOverrides} from '../adapter/article'
+import {GraphQLArticle} from './article'
 
 export const GraphQLBaseBlock = new GraphQLInterfaceType({
   name: 'BaseBlock',
@@ -55,31 +55,57 @@ export const GraphQLRichTextBlock = new GraphQLObjectType({
   }
 })
 
-export const GraphQLArticleEdge = new GraphQLObjectType<ArticleEdge, Context>({
-  name: 'ArticleEdge',
+export const GraphQLTeaserInfo = new GraphQLObjectType<any, Context>({
+  name: 'TeaserInfo',
+  fields: {
+    type: {type: GraphQLNonNull(GraphQLString)},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+    image: {type: GraphQLImage}
+  }
+})
+
+export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaserOverrides, Context>(
+  {
+    name: 'ArticleTeaserOverrides',
+    fields: {
+      preTitle: {type: GraphQLString},
+      title: {type: GraphQLString},
+      lead: {type: GraphQLString},
+      image: {type: GraphQLImage}
+    }
+  }
+)
+
+export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
+  name: 'ArticleTeaser',
   fields: () => ({
-    description: {type: GraphQLString},
-    node: {
-      type: GraphQLArticle,
-      resolve({articleID}, _args, {storageAdapter}) {
+    type: {type: GraphQLNonNull(GraphQLString)},
+    overrides: {type: GraphQLNonNull(GraphQLArticleTeaserOverrides)},
+    article: {
+      type: GraphQLNonNull(GraphQLArticle),
+      async resolve({articleID}, args, {storageAdapter}) {
         return storageAdapter.getArticle(articleID)
       }
     }
   })
 })
 
-export const GraphQLArticleGridBlock = new GraphQLObjectType<ArticleGridBlock, Context>({
-  name: 'ArticleGridBlock',
-  fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
-    articles: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleEdge)))},
-    numColumns: {type: GraphQLNonNull(GraphQLInt)}
-  },
-  interfaces: [GraphQLBaseBlock],
-  isTypeOf(value) {
-    return value.type === BlockType.ArticleGrid
+export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaserGridBlock, Context>(
+  {
+    name: 'ArticleTeaserGridBlock',
+    fields: {
+      key: {type: GraphQLNonNull(GraphQLID)},
+      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleTeaser)))},
+      numColumns: {type: GraphQLNonNull(GraphQLInt)}
+    },
+    interfaces: [GraphQLBaseBlock],
+    isTypeOf(value) {
+      return value.type === BlockType.ArticleTeaserGrid
+    }
   }
-})
+)
 
 export const GraphQLImageEdge = new GraphQLObjectType<ImageEdge, Context>({
   name: 'ImageEdge',
@@ -199,7 +225,7 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
   fields: {
     title: {type: GraphQLNonNull(GraphQLString)},
     image: {
-      type: GraphQLNonNull(GraphQLImage),
+      type: GraphQLImage,
       resolve({imageID}, _args, {storageAdapter}) {
         return imageID ? storageAdapter.getImage(imageID) : null
       }

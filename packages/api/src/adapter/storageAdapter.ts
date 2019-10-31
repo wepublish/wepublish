@@ -5,6 +5,7 @@ import {ArticleInput, Article, ArticlesArguments, ArticleVersion} from './articl
 import {PageBlock, ArticleBlock} from './blocks'
 import {Peer, PeerArguments, PeersArguments} from './peer'
 import {Image} from './image'
+import {Author} from './author'
 
 export interface StorageAdapter {
   // User
@@ -36,9 +37,11 @@ export interface StorageAdapter {
 
   getArticleVersion(id: string, version: number): Promise<ArticleVersion | null>
   getArticleVersions(id: string): Promise<ArticleVersion[]>
-
-  getArticleVersionFeaturedBlock(id: string, version: number): Promise<ArticleBlock | null>
   getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]>
+
+  // Author
+  createAuthor(author: Author): Promise<Author>
+  getAuthor(id: string): Promise<Author | null>
 
   // Image
   createImage(image: Image): Promise<Image>

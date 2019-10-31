@@ -16,7 +16,8 @@ import {
   ArticlesArguments,
   Peer,
   PeerArguments,
-  PeersArguments
+  PeersArguments,
+  Author
 } from '@wepublish/api'
 
 export interface MemoryPeer {
@@ -34,9 +35,10 @@ export interface MockArticleVersion {
   title: string
   lead: string
   slug: string
+  imageID?: string
 
-  featuredBlock: ArticleBlock | null
   blocks: ArticleBlock[]
+  authorIDs: string[]
 }
 
 export interface MemoryArticle {
@@ -89,6 +91,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
   private _peers: MemoryPeer[] = []
   private _navigations: Navigation[] = []
   private _images: Image[] = []
+  private _authors: Author[] = []
 
   constructor({users = [], peers = []}: MockAdapterOptions = {}) {
     this._users.push(...users)
@@ -147,6 +150,15 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
   async getImages(offset: number, limit: number): Promise<[number, Image[]]> {
     return [this._images.length, this._images.slice(offset, offset + limit)]
+  }
+
+  async createAuthor(author: Author): Promise<Author> {
+    this._authors.push(author)
+    return author
+  }
+
+  async getAuthor(id: string): Promise<Author | null> {
+    return this._authors.find(author => author.id === id) || null
   }
 
   async createArticle(article: ArticleInput): Promise<Article> {
@@ -222,15 +234,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       ...articleVersion,
       version
     }
-  }
-
-  async getArticleVersionFeaturedBlock(id: string, version: number): Promise<ArticleBlock | null> {
-    const article = this._articles.find(article => article.id === id)
-
-    if (!article) return null
-
-    const articleVersion = article.versions[version]
-    return articleVersion ? articleVersion.featuredBlock : null
   }
 
   async getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]> {

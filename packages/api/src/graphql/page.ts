@@ -11,13 +11,13 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 
-import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleGridBlock} from './blocks'
+import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock} from './blocks'
 import {ArticleVersion} from '../adapter/article'
 import {Page} from '../adapter/page'
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
-  types: [GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleGridBlock]
+  types: [GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
 })
 
 export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({

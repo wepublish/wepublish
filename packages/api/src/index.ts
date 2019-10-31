@@ -12,6 +12,7 @@ export * from './graphql/schema'
 export * from './graphql/session'
 
 export * from './adapter/article'
+export * from './adapter/author'
 export * from './adapter/blocks'
 export * from './adapter/date'
 export * from './adapter/image'

@@ -1,13 +1,11 @@
 import React, {useEffect} from 'react'
 import {createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {useMutation} from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import {LocalStorageKey} from './utility'
 
 export interface AuthContextState {
   readonly session?: {
     readonly email: string
-    readonly refreshToken: string
-    readonly accessToken: string
+    readonly sessionToken: string
   }
 }
 
@@ -21,8 +19,7 @@ export enum AuthDispatchActionType {
 export interface AuthDispatchLoginAction {
   readonly type: AuthDispatchActionType.Login
   readonly email: string
-  readonly refreshToken: string
-  readonly accessToken: string
+  readonly sessionToken: string
 }
 
 export interface AuthDispatchLogoutAction {
@@ -36,7 +33,7 @@ export const AuthDispatchContext = createContext<Dispatch<AuthDispatchAction>>((
 })
 
 export function authReducer(
-  _prevState: AuthContextState,
+  prevState: AuthContextState,
   action: AuthDispatchAction
 ): AuthContextState {
   switch (action.type) {
@@ -44,8 +41,7 @@ export function authReducer(
       return {
         session: {
           email: action.email,
-          refreshToken: action.refreshToken,
-          accessToken: action.accessToken
+          sessionToken: action.sessionToken
         }
       }
 
@@ -54,49 +50,23 @@ export function authReducer(
   }
 }
 
-const AuthWithTokenQuery = gql`
-  mutation AuthenticateWithToken($token: String!) {
-    authenticateWithToken(token: $token) {
-      user {
-        email
-      }
-      accessToken
-      accessTokenExpiresIn
-    }
-  }
-`
-
 export interface AuthProviderProps {
   readonly children?: ReactNode
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
   const [state, dispatch] = useReducer(authReducer, {})
-  const [authenticate, {loading}] = useMutation(AuthWithTokenQuery)
-  const {session: {refreshToken = undefined} = {}} = state
+  const {sessionToken} = state.session || {}
 
   useEffect(() => {
-    if (refreshToken) {
-      localStorage.setItem('refreshToken', refreshToken)
+    if (sessionToken) {
+      localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
+    } else {
+      localStorage.removeItem(LocalStorageKey.SessionToken)
     }
-  }, [refreshToken])
+  }, [sessionToken])
 
-  useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken')
-
-    if (refreshToken) {
-      authenticate({variables: {token: refreshToken}}).then(response => {
-        const {
-          accessToken,
-          user: {email}
-        } = response.data.authenticateWithToken
-
-        dispatch({type: AuthDispatchActionType.Login, email, refreshToken, accessToken})
-      })
-    }
-  }, [])
-
-  return loading ? null : (
+  return (
     <AuthDispatchContext.Provider value={dispatch}>
       {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
     </AuthDispatchContext.Provider>

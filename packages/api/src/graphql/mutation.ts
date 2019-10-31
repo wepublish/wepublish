@@ -10,26 +10,12 @@ import {generateID, generateTokenID} from '../utility'
 import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
 import {GraphQLImage} from './image'
-import {VersionState} from '../adapter/versionState'
 import {BlockMap} from '../adapter/blocks'
 import {ArticleInput} from '../adapter/article'
 
 interface CreateSessionArgs {
   readonly email: string
   readonly password: string
-}
-
-interface ArticleCreateArguments {
-  article: {
-    state: VersionState
-
-    title: string
-    lead: string
-    slug: string
-
-    publishDate?: Date
-    blocks: BlockMap[]
-  }
 }
 
 export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
@@ -75,14 +61,13 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           description: 'Article to create.'
         }
       },
-      async resolve(_root, {article}: ArticleCreateArguments, {storageAdapter, authenticate}) {
+      async resolve(_root, {article}, {storageAdapter, authenticate}) {
         await authenticate()
 
         const articleInput: ArticleInput = {
           ...article,
           id: await generateID(),
-          featuredBlock: {} as any, // TODO
-          blocks: article.blocks.map(value => {
+          blocks: article.blocks.map((value: any) => {
             const valueKeys = Object.keys(value)
 
             if (valueKeys.length === 0) {
