@@ -25,7 +25,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
     // Related issue: https://github.com/form-data/form-data/issues/394
     form.hasKnownLength = () => false
 
-    const response = await fetch(this.url.toString(), {
+    const response = await fetch(this.url, {
       method: 'POST',
       headers: {authorization: `Bearer ${this.token}`},
       body: form
@@ -37,13 +37,27 @@ export class KarmaMediaAdapter implements MediaAdapter {
       throw new ApolloError(`Received error from media server: ${JSON.stringify(json)}`)
     }
 
-    return {...json, url: `${this.url.toString()}${json.id}/${json.filename}${json.extension}`}
+    return {...json, url: `${this.url}${json.id}/${json.filename}${json.extension}`}
   }
 
   async getImageURLForTransformation(
-    image: Image,
-    _transformation: ImageTransformation
+    {id, filename, extension, focusPoint}: Image,
+    {width, height, rotation, output, quality}: ImageTransformation
   ): Promise<string> {
-    return image.url
+    const transformations = []
+    const fullFilename = `${filename}${output ? `.${output}` : extension}`
+
+    if (width) transformations.push(`w_${width}`)
+    if (height) transformations.push(`h_${height}`)
+    if (rotation) transformations.push(`r_${rotation}`)
+    if (output) transformations.push(`o_${output}`)
+    if (quality) transformations.push(`q_${quality}`)
+    if (focusPoint && (width || height)) transformations.push(`f_${focusPoint.x}:${focusPoint.y}`)
+
+    if (transformations.length > 0) {
+      return `${this.url}${id}/${transformations.join(',')}/${fullFilename}`
+    } else {
+      return `${this.url}${id}/${fullFilename}`
+    }
   }
 }

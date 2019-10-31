@@ -1,3 +1,8 @@
+export interface FocusPoint {
+  readonly x: number
+  readonly y: number
+}
+
 export interface Image {
   readonly id: string
   readonly filename: string
@@ -11,6 +16,7 @@ export interface Image {
   readonly format: string
   readonly width: number
   readonly height: number
+  readonly focusPoint?: FocusPoint
 }
 
 export interface ImageEdge {
@@ -30,4 +36,24 @@ export interface UploadImage {
   readonly height: number
 }
 
-export interface ImageTransformation {}
+export enum ImageRotation {
+  Auto = 'auto',
+  Rotate0 = '0',
+  Rotate90 = '90',
+  Rotate180 = '180',
+  Rotate270 = '270'
+}
+
+export enum ImageOutput {
+  PNG = 'png',
+  JPEG = 'jpeg',
+  WEBP = 'webp'
+}
+
+export interface ImageTransformation {
+  readonly width?: string
+  readonly height?: string
+  readonly rotation?: ImageRotation
+  readonly quality?: number
+  readonly output?: ImageOutput
+}
