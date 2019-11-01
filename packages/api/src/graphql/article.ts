@@ -16,9 +16,6 @@ import {GraphQLPeer} from './peer'
 import {GraphQLDateRange} from './dateRange'
 
 import {Context} from '../context'
-import {AdapterArticle, AdapterArticleVersion} from '../adapter'
-
-import {ArticleVersionState, BlockType} from '../types'
 
 import {
   GraphQLRichTextBlock,
@@ -38,6 +35,9 @@ import {
 } from './blocks'
 
 import {GraphQLImage} from './image'
+import {BlockType} from '../adapter/blocks'
+import {VersionState} from '../adapter/versionState'
+import {ArticleVersion, Article} from '../adapter/article'
 
 export const GraphQLInputArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'InputBlockUnionMap',
@@ -69,9 +69,9 @@ export const GraphQLArticleVersionState = new GraphQLEnumType({
   name: 'ArticleVersionState',
   description: 'Current state of the article version.',
   values: {
-    DRAFT: {value: ArticleVersionState.Draft},
-    DRAFT_REVIEW: {value: ArticleVersionState.DraftReview},
-    PUBLISHED: {value: ArticleVersionState.Published}
+    DRAFT: {value: VersionState.Draft},
+    DRAFT_REVIEW: {value: VersionState.DraftReview},
+    PUBLISHED: {value: VersionState.Published}
   }
 })
 
@@ -106,14 +106,13 @@ export const GraphQLAuthor = new GraphQLObjectType({
   name: 'Author',
 
   fields: () => ({
-    id: {type: GraphQLID},
-    name: {type: GraphQLString},
-    image: {type: GraphQLImage},
-    articles: {type: GraphQLArticleConnection}
+    id: {type: GraphQLNonNull(GraphQLID)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    image: {type: GraphQLImage}
   })
 })
 
-export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
+export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
   name: 'ArticleVersion',
 
   fields: {
@@ -125,21 +124,20 @@ export const GraphQLArticleVersion = new GraphQLObjectType<any, Context>({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLNonNull(GraphQLString)},
+    image: {type: GraphQLImage},
 
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    authors: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
-
-    featuredBlock: {
-      type: GraphQLArticleBlock,
-      resolve({articleID, version}: AdapterArticleVersion, _args, {adapter}) {
-        return adapter.getArticleVersionFeaturedBlock(articleID, version)
+    authors: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      resolve({authorIDs}, args, {storageAdapter}) {
+        return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
       }
     },
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      resolve({articleID, version}: AdapterArticleVersion, _args, {adapter}) {
-        return adapter.getArticleVersionBlocks(articleID, version)
+      resolve({articleID, version}, _args, {storageAdapter}) {
+        return storageAdapter.getArticleVersionBlocks(articleID, version)
       }
     }
   }
@@ -158,27 +156,27 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
 
     published: {
       type: GraphQLArticleVersion,
-      resolve(root: AdapterArticle, _args, context: Context) {
+      resolve(root: Article, _args, {storageAdapter}: Context) {
         if (root.publishedVersion == undefined) return undefined
-        return context.adapter.getArticleVersion(root.id, root.publishedVersion)
+        return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
       }
     },
 
     draft: {
       type: GraphQLArticleVersion,
-      async resolve(root: AdapterArticle, _args, {adapter, authenticate}: Context) {
+      async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
         await authenticate()
         if (root.draftVersion == undefined) return undefined
 
-        return adapter.getArticleVersion(root.id, root.draftVersion)
+        return storageAdapter.getArticleVersion(root.id, root.draftVersion)
       }
     },
 
     versions: {
       type: GraphQLList(GraphQLArticleVersion),
-      async resolve(root: AdapterArticle, _args, {adapter, authenticate}: Context) {
+      async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
         await authenticate()
-        return adapter.getArticleVersions(root.id)
+        return storageAdapter.getArticleVersions(root.id)
       }
     },
 

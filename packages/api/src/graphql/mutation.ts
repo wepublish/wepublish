@@ -3,30 +3,19 @@ import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
 import {GraphQLArticle, GraphQLArticleInput, GraphQLInputArticleBlockUnionMap} from './article'
+
 import {Context} from '../context'
-import {ArticleVersionState} from '../types'
 import {generateID, generateTokenID} from '../utility'
-import {BlockMap, AdapterArticleInput} from '../adapter'
 
 import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
+import {GraphQLImage} from './image'
+import {BlockMap} from '../adapter/blocks'
+import {ArticleInput} from '../adapter/article'
 
 interface CreateSessionArgs {
   readonly email: string
   readonly password: string
-}
-
-interface ArticleCreateArguments {
-  article: {
-    state: ArticleVersionState
-
-    title: string
-    lead: string
-    slug: string
-
-    publishDate?: Date
-    blocks: BlockMap[]
-  }
 }
 
 export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
@@ -39,14 +28,12 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         password: {type: GraphQLNonNull(GraphQLString)}
       },
 
-      async resolve(_root, {email, password}: CreateSessionArgs, {adapter, sessionExpiry}) {
-        const user = await adapter.getUserForCredentials(email, password)
-
+      async resolve(_root, {email, password}: CreateSessionArgs, {storageAdapter, sessionExpiry}) {
+        const user = await storageAdapter.getUserForCredentials(email, password)
         if (!user) throw new InvalidCredentialsError()
 
         const token = await generateTokenID()
-
-        await adapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
+        await storageAdapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
 
         return {
           user,
@@ -60,9 +47,9 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       args: {
         token: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(_root, {token}, {authenticate, adapter}) {
+      async resolve(_root, {token}, {authenticate, storageAdapter}) {
         const user = await authenticate()
-        await adapter.revokeSession(user, token)
+        await storageAdapter.deleteSession(user, token)
         return true
       }
     },
@@ -74,14 +61,13 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           description: 'Article to create.'
         }
       },
-      async resolve(_root, {article}: ArticleCreateArguments, {adapter, authenticate}) {
+      async resolve(_root, {article}, {storageAdapter, authenticate}) {
         await authenticate()
 
-        const articleInput: AdapterArticleInput = {
+        const articleInput: ArticleInput = {
           ...article,
           id: await generateID(),
-          featuredBlock: {} as any, // TODO
-          blocks: article.blocks.map(value => {
+          blocks: article.blocks.map((value: any) => {
             const valueKeys = Object.keys(value)
 
             if (valueKeys.length === 0) {
@@ -104,22 +90,23 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           })
         }
 
-        return adapter.createArticle(articleInput)
+        return storageAdapter.createArticle(articleInput)
       }
     },
     uploadImage: {
-      type: GraphQLString,
+      type: GraphQLImage,
       args: {
         file: {
           type: GraphQLUpload
         }
       },
-      async resolve(_root, {file}, {}) {
+      async resolve(_root, {file}, {authenticate, storageAdapter, mediaAdapter}) {
+        await authenticate()
+
         if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
 
-        const {filename, mimetype, encoding, createReadStream}: FileUpload = await file
-        console.log(filename, mimetype, encoding, createReadStream)
-        // TODO
+        const uploadImage = await mediaAdapter.uploadImage(file as Promise<FileUpload>)
+        return storageAdapter.createImage({...uploadImage, title: '', description: '', tags: []})
       }
     }
   }

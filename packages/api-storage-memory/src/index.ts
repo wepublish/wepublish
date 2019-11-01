@@ -1,23 +1,23 @@
 import {
-  Adapter,
+  StorageAdapter,
+  VersionState,
+  ArticleBlock,
+  PageBlock,
+  Navigation,
+  Image,
+  User,
+  Session,
+  ArticleInput,
+  Article,
+  ArticleVersion,
+  Page,
+  PageInput,
+  PageVersion,
   ArticlesArguments,
+  Peer,
   PeerArguments,
   PeersArguments,
-  AdapterArticle,
-  AdapterArticleVersion,
-  AdapterNavigation,
-  AdapterUser,
-  AdapterPeer,
-  ArticleVersionState,
-  InvalidTokenError,
-  TokenExpiredError,
-  AdapterArticleBlock,
-  AdapterImage,
-  AdapterArticleInput,
-  AdapterPageInput,
-  AdapterPage,
-  AdapterPageBlock,
-  AdapterPageVersion
+  Author
 } from '@wepublish/api'
 
 export interface MemoryPeer {
@@ -27,7 +27,7 @@ export interface MemoryPeer {
 }
 
 export interface MockArticleVersion {
-  state: ArticleVersionState
+  state: VersionState
 
   createdAt: Date
   updatedAt: Date
@@ -35,9 +35,10 @@ export interface MockArticleVersion {
   title: string
   lead: string
   slug: string
+  imageID?: string
 
-  featuredBlock: AdapterArticleBlock
-  blocks: AdapterArticleBlock[]
+  blocks: ArticleBlock[]
+  authorIDs: string[]
 }
 
 export interface MemoryArticle {
@@ -47,7 +48,7 @@ export interface MemoryArticle {
 }
 
 export interface MemoryPageVersion {
-  state: ArticleVersionState
+  state: VersionState
 
   createdAt: Date
   updatedAt: Date
@@ -56,7 +57,7 @@ export interface MemoryPageVersion {
   description: string
   slug: string
 
-  blocks: AdapterPageBlock[]
+  blocks: PageBlock[]
 }
 
 export interface MemoryPage {
@@ -82,71 +83,85 @@ export interface MemoryUserSession {
   readonly token: string
 }
 
-export class MemoryAdapter implements Adapter {
+export class MemoryStorageAdapter implements StorageAdapter {
   private _users: MemoryUser[] = []
   private _sessions: MemoryUserSession[] = []
   private _articles: MemoryArticle[] = []
   private _pages: MemoryPage[] = []
   private _peers: MemoryPeer[] = []
-  private _navigations: AdapterNavigation[] = []
-  private _images: AdapterImage[] = []
+  private _navigations: Navigation[] = []
+  private _images: Image[] = []
+  private _authors: Author[] = []
 
   constructor({users = [], peers = []}: MockAdapterOptions = {}) {
     this._users.push(...users)
     this._peers.push(...peers)
   }
 
-  async getUserForCredentials(email: string, password: string): Promise<AdapterUser | null> {
+  async getUserForCredentials(email: string, password: string): Promise<User | null> {
     const user = this._users.find(user => user.email === email && user.password === password)
     return user ? {id: user.id, email: user.email} : null
   }
 
-  async createSession({id: userID}: AdapterUser, token: string, expiryDate: Date): Promise<void> {
-    this._sessions.push({userID, token, expiryDate})
+  async createSession(user: User, token: string, expiryDate: Date): Promise<Session> {
+    this._sessions.push({userID: user.id, token, expiryDate})
+    return {user, token, expiryDate}
   }
 
-  async revokeSession({id: revokeUserID}: AdapterUser, revokeToken: string): Promise<void> {
-    this._sessions.splice(
-      this._sessions.findIndex(
-        ({userID, token}) => userID === revokeUserID && token === revokeToken
-      ),
-      1
+  async deleteSession(user: User, revokeToken: string): Promise<Session | null> {
+    const index = this._sessions.findIndex(
+      ({userID, token}) => userID === user.id && token === revokeToken
     )
+
+    if (index === -1) return null
+
+    this._sessions.splice(index, 1)
+
+    const {expiryDate} = this._sessions[index]
+    return {user, token: revokeToken, expiryDate}
   }
 
-  async getSessionUser(verifyToken: string): Promise<AdapterUser> {
+  async getSession(verifyToken: string): Promise<Session | null> {
     const {userID, expiryDate} = this._sessions.find(({token}) => token === verifyToken) || {}
+    const user = this._users.find(user => user.id === userID)!
 
-    if (!userID || !expiryDate) {
-      throw new InvalidTokenError()
-    }
+    if (!user || !expiryDate) return null
 
-    if (expiryDate < new Date()) {
-      throw new TokenExpiredError()
-    }
-
-    return this._users.find(user => user.id === userID)!
+    return {user, token: verifyToken, expiryDate}
   }
 
-  async createNavigation(navigation: AdapterNavigation): Promise<AdapterNavigation> {
+  async createNavigation(navigation: Navigation): Promise<Navigation> {
     this._navigations.push(navigation)
     return navigation
   }
 
-  async getNavigation(key: string): Promise<AdapterNavigation | null> {
+  async getNavigation(key: string): Promise<Navigation | null> {
     return this._navigations.find(navigation => navigation.key === key) || null
   }
 
-  async createImage(image: AdapterImage): Promise<AdapterImage> {
+  async createImage(image: Image): Promise<Image> {
     this._images.push(image)
     return image
   }
 
-  async getImage(id: string): Promise<AdapterImage | null> {
+  async getImage(id: string): Promise<Image | null> {
     return this._images.find(({id: imageID}) => imageID === id) || null
   }
 
-  async createArticle(article: AdapterArticleInput): Promise<AdapterArticle> {
+  async getImages(offset: number, limit: number): Promise<[number, Image[]]> {
+    return [this._images.length, this._images.slice(offset, offset + limit)]
+  }
+
+  async createAuthor(author: Author): Promise<Author> {
+    this._authors.push(author)
+    return author
+  }
+
+  async getAuthor(id: string): Promise<Author | null> {
+    return this._authors.find(author => author.id === id) || null
+  }
+
+  async createArticle(article: ArticleInput): Promise<Article> {
     const articleVersion = {
       ...article,
       createdAt: new Date(),
@@ -168,16 +183,14 @@ export class MemoryAdapter implements Adapter {
       updatedAt: articleVersion.updatedAt,
 
       publishedAt:
-        articleVersion.state === ArticleVersionState.Published
-          ? articleVersion.publishDate
-          : undefined,
+        articleVersion.state === VersionState.Published ? articleVersion.publishDate : undefined,
 
-      publishedVersion: articleVersion.state === ArticleVersionState.Published ? 0 : undefined,
-      draftVersion: articleVersion.state === ArticleVersionState.Draft ? 0 : undefined
+      publishedVersion: articleVersion.state === VersionState.Published ? 0 : undefined,
+      draftVersion: articleVersion.state === VersionState.Draft ? 0 : undefined
     }
   }
 
-  async getArticle(id: string): Promise<AdapterArticle | null> {
+  async getArticle(id: string): Promise<Article | null> {
     const article = this._articles.find(article => article.id === id)
 
     if (!article) return null
@@ -188,13 +201,11 @@ export class MemoryAdapter implements Adapter {
     const latestVersion = article.versions[article.versions.length - 1]
 
     const publishedVersion = reverseVersions.find(
-      version => version.state === ArticleVersionState.Published
+      version => version.state === VersionState.Published
     )
 
     const draftVersion = reverseVersions.find(
-      version =>
-        version.state === ArticleVersionState.Draft ||
-        version.state === ArticleVersionState.DraftReview
+      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
     )
 
     return {
@@ -211,7 +222,7 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getArticleVersion(id: string, version: number): Promise<AdapterArticleVersion | null> {
+  async getArticleVersion(id: string, version: number): Promise<ArticleVersion | null> {
     const article = this._articles.find(article => article.id === id)
 
     if (!article) return null
@@ -225,19 +236,7 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getArticleVersionFeaturedBlock(
-    id: string,
-    version: number
-  ): Promise<AdapterArticleBlock | null> {
-    const article = this._articles.find(article => article.id === id)
-
-    if (!article) return null
-
-    const articleVersion = article.versions[version]
-    return articleVersion ? articleVersion.featuredBlock : null
-  }
-
-  async getArticleVersionBlocks(id: string, version: number): Promise<AdapterArticleBlock[]> {
+  async getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]> {
     const article = this._articles.find(article => article.id === id)
 
     if (!article) return []
@@ -246,7 +245,7 @@ export class MemoryAdapter implements Adapter {
     return articleVersion ? articleVersion.blocks : []
   }
 
-  async getArticleVersions(id: string): Promise<AdapterArticleVersion[]> {
+  async getArticleVersions(id: string): Promise<ArticleVersion[]> {
     const article = this._articles.find(article => article.id === id)
     if (!article) throw new Error(`Couldn't find article with ID: ${id}`)
     return article.versions.map((articleVersion, index) => ({
@@ -256,7 +255,7 @@ export class MemoryAdapter implements Adapter {
     }))
   }
 
-  async createPage(page: AdapterPageInput): Promise<AdapterPage> {
+  async createPage(page: PageInput): Promise<Page> {
     const pageVersion = {
       ...page,
       createdAt: new Date(),
@@ -277,14 +276,14 @@ export class MemoryAdapter implements Adapter {
       updatedAt: pageVersion.updatedAt,
 
       publishedAt:
-        pageVersion.state === ArticleVersionState.Published ? pageVersion.publishDate : undefined,
+        pageVersion.state === VersionState.Published ? pageVersion.publishDate : undefined,
 
-      publishedVersion: pageVersion.state === ArticleVersionState.Published ? 0 : undefined,
-      draftVersion: pageVersion.state === ArticleVersionState.Draft ? 0 : undefined
+      publishedVersion: pageVersion.state === VersionState.Published ? 0 : undefined,
+      draftVersion: pageVersion.state === VersionState.Draft ? 0 : undefined
     }
   }
 
-  async getPage(id: string): Promise<AdapterPage | null> {
+  async getPage(id: string): Promise<Page | null> {
     const page = this._pages.find(page => page.id === id)
 
     if (!page) return null
@@ -295,13 +294,11 @@ export class MemoryAdapter implements Adapter {
     const latestVersion = page.versions[page.versions.length - 1]
 
     const publishedVersion = reverseVersions.find(
-      version => version.state === ArticleVersionState.Published
+      version => version.state === VersionState.Published
     )
 
     const draftVersion = reverseVersions.find(
-      version =>
-        version.state === ArticleVersionState.Draft ||
-        version.state === ArticleVersionState.DraftReview
+      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
     )
 
     return {
@@ -317,11 +314,11 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getPageBySlug(slug: string): Promise<AdapterPage | null> {
+  async getPageBySlug(slug: string): Promise<Page | null> {
     const page = this._pages.find(page => {
       const reverseVersions = page.versions.slice().reverse()
       const publishedVersion = reverseVersions.find(
-        version => version.state === ArticleVersionState.Published
+        version => version.state === VersionState.Published
       )
 
       if (publishedVersion) {
@@ -339,13 +336,11 @@ export class MemoryAdapter implements Adapter {
     const latestVersion = page.versions[page.versions.length - 1]
 
     const publishedVersion = reverseVersions.find(
-      version => version.state === ArticleVersionState.Published
+      version => version.state === VersionState.Published
     )
 
     const draftVersion = reverseVersions.find(
-      version =>
-        version.state === ArticleVersionState.Draft ||
-        version.state === ArticleVersionState.DraftReview
+      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
     )
 
     return {
@@ -361,7 +356,7 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getPageVersion(id: string, version: number): Promise<AdapterPageVersion | null> {
+  async getPageVersion(id: string, version: number): Promise<PageVersion | null> {
     const page = this._pages.find(article => article.id === id)
 
     if (!page) return null
@@ -375,7 +370,7 @@ export class MemoryAdapter implements Adapter {
     }
   }
 
-  async getPageVersionBlocks(id: string, version: number): Promise<AdapterPageBlock[]> {
+  async getPageVersionBlocks(id: string, version: number): Promise<PageBlock[]> {
     const page = this._pages.find(article => article.id === id)
 
     if (!page) return []
@@ -384,7 +379,7 @@ export class MemoryAdapter implements Adapter {
     return pageVersion ? pageVersion.blocks : []
   }
 
-  async getPageVersions(id: string): Promise<AdapterPageVersion[]> {
+  async getPageVersions(id: string): Promise<PageVersion[]> {
     const page = this._pages.find(article => article.id === id)
     if (!page) throw new Error(`Couldn't find article with ID: ${id}`)
     return page.versions.map((articleVersion, index) => ({
@@ -394,7 +389,7 @@ export class MemoryAdapter implements Adapter {
     }))
   }
 
-  async getArticles(_args: ArticlesArguments): Promise<AdapterArticle[]> {
+  async getArticles(_args: ArticlesArguments): Promise<Article[]> {
     const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
@@ -402,13 +397,12 @@ export class MemoryAdapter implements Adapter {
       const latestVersion = article.versions[article.versions.length - 1]
 
       const publishedVersion = reverseVersions.find(
-        version => version.state === ArticleVersionState.Published
+        version => version.state === VersionState.Published
       )
 
       const draftVersion = reverseVersions.find(
         version =>
-          version.state === ArticleVersionState.Draft ||
-          version.state === ArticleVersionState.DraftReview
+          version.state === VersionState.Draft || version.state === VersionState.DraftReview
       )
 
       return {
@@ -428,17 +422,15 @@ export class MemoryAdapter implements Adapter {
     return articles
   }
 
-  async createPeer(): Promise<AdapterPeer> {
+  async createPeer(): Promise<Peer> {
     return {} as any
   }
 
-  async getPeer(args: PeerArguments): Promise<AdapterPeer | undefined> {
-    return this._peers.find(peer => peer.id === args.id)
+  async getPeer(args: PeerArguments): Promise<Peer | null> {
+    return this._peers.find(peer => peer.id === args.id) || null
   }
 
-  async getPeers(_args: PeersArguments): Promise<AdapterPeer[]> {
+  async getPeers(_args: PeersArguments): Promise<Peer[]> {
     return this._peers
   }
 }
-
-export default MemoryAdapter

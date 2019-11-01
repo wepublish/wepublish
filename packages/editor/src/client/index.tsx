@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {ApolloClient} from 'apollo-client'
-import {HttpLink} from 'apollo-link-http'
+import {createHttpLink} from 'apollo-link-http'
 import {ApolloLink} from 'apollo-link'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {ApolloProvider} from '@apollo/react-hooks'
@@ -17,9 +17,10 @@ import {App} from './app'
 import {ElementID} from '../shared/elementID'
 import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
+import {LocalStorageKey} from './utility'
 
 const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('refreshToken')
+  const token = localStorage.getItem(LocalStorageKey.SessionToken)
 
   operation.setContext({
     headers: {
@@ -31,7 +32,7 @@ const authLink = new ApolloLink((operation, forward) => {
 })
 
 const client = new ApolloClient({
-  link: authLink.concat(new HttpLink({uri: 'http://localhost:3000'})),
+  link: authLink.concat(createHttpLink({uri: 'http://localhost:3000'})),
   cache: new InMemoryCache()
 })
 

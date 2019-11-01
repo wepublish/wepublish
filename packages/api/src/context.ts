@@ -1,22 +1,25 @@
 import ms from 'ms'
 import {IncomingMessage} from 'http'
+import {AuthenticationError} from 'apollo-server'
 
-import {Adapter, AdapterUser} from './adapter'
-import {InvalidTokenError} from './error'
+import {User} from './adapter/user'
+import {StorageAdapter} from './adapter/storageAdapter'
+import {MediaAdapter} from './adapter/mediaAdapter'
 
-export interface ContextRequest extends IncomingMessage {
-  adapter: Adapter
-}
+import {TokenExpiredError} from './error'
 
 export interface Context {
-  adapter: Adapter
-  sessionExpiry: number
-  authenticate(): Promise<AdapterUser>
+  readonly storageAdapter: StorageAdapter
+  readonly mediaAdapter: MediaAdapter
+  readonly sessionExpiry: number
+
+  authenticate(): Promise<User>
 }
 
 export interface ContextOptions {
-  adapter: Adapter
-  sessionExpiry?: number | string
+  readonly storageAdapter: StorageAdapter
+  readonly mediaAdapter: MediaAdapter
+  readonly sessionExpiry?: number | string
 }
 
 export function tokenFromRequest(req: IncomingMessage) {
@@ -30,16 +33,24 @@ export function tokenFromRequest(req: IncomingMessage) {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {adapter, sessionExpiry = '1w'}: ContextOptions
+  {storageAdapter, mediaAdapter, sessionExpiry = '1w'}: ContextOptions
 ): Promise<Context> {
   return {
-    adapter,
+    storageAdapter,
+    mediaAdapter,
     sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
+
     async authenticate() {
       const token = tokenFromRequest(req)
-      if (!token) throw new InvalidTokenError()
+      if (!token) throw new AuthenticationError('Missing token')
 
-      return await adapter.getSessionUser(token)
+      const session = await storageAdapter.getSession(token)
+      if (!session) throw new AuthenticationError('Invalid token')
+
+      const {user, expiryDate} = session
+      if (new Date() >= expiryDate) throw new TokenExpiredError()
+
+      return user
     }
   }
 }

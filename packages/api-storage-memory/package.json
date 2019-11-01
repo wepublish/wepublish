@@ -1,6 +1,6 @@
 {
-  "name": "@wepublish/api-adapter-memory",
-  "version": "0.0.2",
+  "name": "@wepublish/api-storage-memory",
+  "version": "0.0.5",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
