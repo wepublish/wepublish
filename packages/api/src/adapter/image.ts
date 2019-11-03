@@ -12,7 +12,6 @@ export interface Image {
   readonly title: string
   readonly description: string
   readonly tags: string[]
-  readonly url: string
   readonly format: string
   readonly width: number
   readonly height: number
@@ -30,7 +29,6 @@ export interface UploadImage {
   readonly fileSize: number
   readonly extension: string
   readonly mimeType: string
-  readonly url: string
   readonly format: string
   readonly width: number
   readonly height: number

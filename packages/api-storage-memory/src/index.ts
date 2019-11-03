@@ -115,9 +115,9 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
     if (index === -1) return null
 
+    const {expiryDate} = this._sessions[index]
     this._sessions.splice(index, 1)
 
-    const {expiryDate} = this._sessions[index]
     return {user, token: revokeToken, expiryDate}
   }
 

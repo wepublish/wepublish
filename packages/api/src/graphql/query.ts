@@ -22,6 +22,7 @@ import {PageNavigationLink, NavigationLinkType, ArticleNavigationLink} from '../
 import {ArticlesArguments} from '../adapter/article'
 import {PeerArguments, PeersArguments} from '../adapter/peer'
 import {GraphQLImageConnection} from './image'
+import {GraphQLUser} from './session'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -93,11 +94,18 @@ export const GraphQLNavigation = new GraphQLObjectType({
 export const GraphQLQuery = new GraphQLObjectType<any, Context>({
   name: 'Query',
   fields: {
+    me: {
+      type: GraphQLUser,
+      resolve(root, {}, {authenticate, storageAdapter}) {
+        return authenticate()
+      }
+    },
+
     navigation: {
       type: GraphQLNavigation,
       args: {key: {type: GraphQLNonNull(GraphQLString)}},
-      async resolve(_root, {key}, {storageAdapter}) {
-        return await storageAdapter.getNavigation(key)
+      resolve(root, {key}, {storageAdapter}) {
+        return storageAdapter.getNavigation(key)
       }
     },
     article: {

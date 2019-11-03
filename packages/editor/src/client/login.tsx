@@ -7,13 +7,14 @@ import {useRouteDispatch, matchRoute, useRoute, IndexRoute} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
 import gql from 'graphql-tag'
+import {LocalStorageKey} from './utility'
 
 export const LoginForm = styled('form', () => ({
   display: 'flex',
   flexDirection: 'column'
 }))
 
-const AuthWithCredentialsQuery = gql`
+const AuthWithCredentialsMutation = gql`
   mutation CreateSession($email: String!, $password: String!) {
     createSession(email: $email, password: $password) {
       user {
@@ -33,7 +34,7 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  const [authenticate, {loading, error}] = useMutation(AuthWithCredentialsQuery)
+  const [authenticate, {loading, error}] = useMutation(AuthWithCredentialsMutation)
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -41,16 +42,16 @@ export function Login() {
     const response = await authenticate({variables: {email, password}})
 
     const {
-      sessionToken,
-      accessToken,
+      token: sessionToken,
       user: {email: responseEmail}
     } = response.data.createSession
+
+    localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
 
     authDispatch({
       type: AuthDispatchActionType.Login,
       email: responseEmail,
-      refreshToken,
-      accessToken
+      sessionToken
     })
 
     if (current!.query && current!.query.next) {

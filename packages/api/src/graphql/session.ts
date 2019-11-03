@@ -3,6 +3,7 @@ import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInt} from 'grap
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
+    id: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)}
   }
 })

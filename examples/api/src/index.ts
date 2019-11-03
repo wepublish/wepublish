@@ -23,6 +23,7 @@ async function asyncMain() {
   const mediaServerToken = process.env.MEDIA_SERVER_TOKEN
 
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
+
   const storageAdapter = new MemoryStorageAdapter({
     users: [{id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'}]
   })

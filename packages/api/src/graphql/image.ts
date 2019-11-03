@@ -64,17 +64,22 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLString)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    url: {type: GraphQLNonNull(GraphQLString)},
     width: {type: GraphQLNonNull(GraphQLInt)},
     height: {type: GraphQLNonNull(GraphQLInt)},
     focusPoint: {type: GraphQLFocusPoint},
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(image, {}, {mediaAdapter}) {
+        return mediaAdapter.getImageURL(image)
+      }
+    },
     transform: {
       type: GraphQLNonNull(GraphQLList(GraphQLString)),
       args: {transformations: {type: GraphQLList(GraphQLImageTransformation)}},
       resolve(image, {transformations}, {mediaAdapter}) {
         return Promise.all(
           transformations.map((transformation: any) =>
-            mediaAdapter.getImageURLForTransformation(image, transformation)
+            mediaAdapter.getImageURL(image, transformation)
           )
         )
       }

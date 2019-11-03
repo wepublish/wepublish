@@ -10,7 +10,7 @@ import {InMemoryCache} from 'apollo-cache-inmemory'
 import {ApolloProvider} from '@apollo/react-hooks'
 
 import {createStyleRenderer, renderStyles} from '@karma.run/react'
-import {CMSKitProvider} from '@karma.run/ui'
+import {UIProvider} from '@karma.run/ui'
 
 import {hot} from 'react-hot-loader/root'
 import {App} from './app'
@@ -43,7 +43,7 @@ const onDOMContentLoaded = async () => {
   renderStyles(styleRenderer)
 
   ReactDOM.render(
-    <CMSKitProvider styleRenderer={styleRenderer} rootElementID={ElementID.ReactRoot}>
+    <UIProvider styleRenderer={styleRenderer} rootElementID={ElementID.ReactRoot}>
       <ApolloProvider client={client}>
         <AuthProvider>
           <RouteProvider>
@@ -51,7 +51,7 @@ const onDOMContentLoaded = async () => {
           </RouteProvider>
         </AuthProvider>
       </ApolloProvider>
-    </CMSKitProvider>,
+    </UIProvider>,
     document.getElementById(ElementID.ReactRoot)
   )
 }

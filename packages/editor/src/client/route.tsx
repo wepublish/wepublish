@@ -13,6 +13,9 @@ import {
 
 import {PrimaryButton, MenuIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
+import {useMutation} from '@apollo/react-hooks'
+import {LocalStorageKey} from './utility'
+import gql from 'graphql-tag'
 
 export enum RouteType {
   Login = 'login',
@@ -24,7 +27,9 @@ export enum RouteType {
   ArticleEdit = 'articleEdit',
   ArticleCreate = 'articleCreate',
 
-  FrontList = 'frontList'
+  FrontList = 'frontList',
+
+  MediaList = 'mediaList'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`, null)
@@ -38,7 +43,11 @@ export const ArticleEditRoute = route(
   routePath`/article/edit/${required('id')}`,
   null
 )
+
 export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`, null)
+
+export const MediaListRoute = route(RouteType.MediaList, routePath`/media/list`, null)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
@@ -49,6 +58,7 @@ export const routes = [
   ArticleListRoute,
   ArticleEditRoute,
   ArticleCreateRoute,
+  MediaListRoute,
   NotFoundRoute
 ] as const
 
@@ -70,7 +80,14 @@ export interface RouteProviderProps {
   readonly children?: ReactNode
 }
 
+const LogoutMutation = gql`
+  mutation Logout($token: String!) {
+    revokeSession(token: $token)
+  }
+`
+
 export function RouteProvider({children}: RouteProviderProps) {
+  const [logout] = useMutation(LogoutMutation)
   const {session} = useContext(AuthContext)
   const authDispatch = useContext(AuthDispatchContext)
 
@@ -78,8 +95,12 @@ export function RouteProvider({children}: RouteProviderProps) {
     <BaseRouteProvider
       handleNextRoute={(next, dispatch) => {
         if (next.type === RouteType.Logout) {
-          localStorage.removeItem('refreshToken')
-          authDispatch({type: AuthDispatchActionType.Logout})
+          if (session) {
+            logout({variables: {token: session!.sessionToken}})
+            localStorage.removeItem(LocalStorageKey.SessionToken)
+            authDispatch({type: AuthDispatchActionType.Logout})
+          }
+
           dispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
         } else if (next.type === RouteType.Login) {
           if (session) {

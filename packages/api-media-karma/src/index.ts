@@ -40,24 +40,29 @@ export class KarmaMediaAdapter implements MediaAdapter {
     return {...json, url: `${this.url}${json.id}/${json.filename}${json.extension}`}
   }
 
-  async getImageURLForTransformation(
+  async getImageURL(
     {id, filename, extension, focusPoint}: Image,
-    {width, height, rotation, output, quality}: ImageTransformation
+    transformation?: ImageTransformation
   ): Promise<string> {
-    const transformations = []
-    const fullFilename = `${filename}${output ? `.${output}` : extension}`
+    if (transformation) {
+      const {width, height, rotation, output, quality} = transformation
+      const fullFilename = `${filename}${output ? `.${output}` : extension}`
+      const transformations = []
 
-    if (width) transformations.push(`w_${width}`)
-    if (height) transformations.push(`h_${height}`)
-    if (rotation) transformations.push(`r_${rotation}`)
-    if (output) transformations.push(`o_${output}`)
-    if (quality) transformations.push(`q_${quality}`)
-    if (focusPoint && (width || height)) transformations.push(`f_${focusPoint.x}:${focusPoint.y}`)
+      if (width) transformations.push(`w_${width}`)
+      if (height) transformations.push(`h_${height}`)
+      if (rotation) transformations.push(`r_${rotation}`)
+      if (output) transformations.push(`o_${output}`)
+      if (quality) transformations.push(`q_${quality}`)
+      if (focusPoint && (width || height)) transformations.push(`f_${focusPoint.x}:${focusPoint.y}`)
 
-    if (transformations.length > 0) {
-      return `${this.url}${id}/${transformations.join(',')}/${fullFilename}`
+      if (transformations.length > 0) {
+        return `${this.url}${id}/${transformations.join(',')}/${fullFilename}`
+      } else {
+        return `${this.url}${id}/${fullFilename}`
+      }
     } else {
-      return `${this.url}${id}/${fullFilename}`
+      return `${this.url}${id}/${filename}${extension}`
     }
   }
 }
