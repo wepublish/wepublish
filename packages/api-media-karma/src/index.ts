@@ -46,7 +46,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
   ): Promise<string> {
     if (transformation) {
       const {width, height, rotation, output, quality} = transformation
-      const fullFilename = `${filename}${output ? `.${output}` : extension}`
+      const fullFilename = encodeURIComponent(`${filename}${output ? `.${output}` : extension}`)
       const transformations = []
 
       if (width) transformations.push(`w_${width}`)
@@ -62,7 +62,8 @@ export class KarmaMediaAdapter implements MediaAdapter {
         return `${this.url}${id}/${fullFilename}`
       }
     } else {
-      return `${this.url}${id}/${filename}${extension}`
+      const fullFilename = encodeURIComponent(`${filename}${extension}`)
+      return `${this.url}${id}/${fullFilename}`
     }
   }
 }

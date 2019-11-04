@@ -1,4 +1,10 @@
-import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLBoolean,
+  GraphQLList
+} from 'graphql'
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
@@ -93,20 +99,34 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         return storageAdapter.createArticle(articleInput)
       }
     },
-    uploadImage: {
-      type: GraphQLImage,
+    uploadImages: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage))),
       args: {
-        file: {
-          type: GraphQLUpload
+        images: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUpload)))
         }
       },
-      async resolve(_root, {file}, {authenticate, storageAdapter, mediaAdapter}) {
+      async resolve(_root, {images}, {authenticate, storageAdapter, mediaAdapter}) {
         await authenticate()
 
-        if (!(file instanceof Promise)) throw new UserInputError('Invalid file')
+        for (const image of images) {
+          if (!(image instanceof Promise)) throw new UserInputError('Invalid image')
+        }
 
-        const uploadImage = await mediaAdapter.uploadImage(file as Promise<FileUpload>)
-        return storageAdapter.createImage({...uploadImage, title: '', description: '', tags: []})
+        return Promise.all(
+          images.map(async (image: Promise<FileUpload>) => {
+            const uploadImage = await mediaAdapter.uploadImage(image)
+
+            return storageAdapter.createImage({
+              ...uploadImage,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              title: '',
+              description: '',
+              tags: []
+            })
+          })
+        )
       }
     }
   }

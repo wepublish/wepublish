@@ -55,17 +55,6 @@ export const GraphQLRichTextBlock = new GraphQLObjectType({
   }
 })
 
-export const GraphQLTeaserInfo = new GraphQLObjectType<any, Context>({
-  name: 'TeaserInfo',
-  fields: {
-    type: {type: GraphQLNonNull(GraphQLString)},
-    preTitle: {type: GraphQLString},
-    title: {type: GraphQLString},
-    lead: {type: GraphQLString},
-    image: {type: GraphQLImage}
-  }
-})
-
 export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaserOverrides, Context>(
   {
     name: 'ArticleTeaserOverrides',
@@ -73,7 +62,12 @@ export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaser
       preTitle: {type: GraphQLString},
       title: {type: GraphQLString},
       lead: {type: GraphQLString},
-      image: {type: GraphQLImage}
+      image: {
+        type: GraphQLImage,
+        resolve({imageID}, args, {storageAdapter}) {
+          return imageID ? storageAdapter.getImage(imageID) : null
+        }
+      }
     }
   }
 )

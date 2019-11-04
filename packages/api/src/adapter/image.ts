@@ -5,6 +5,8 @@ export interface FocusPoint {
 
 export interface Image {
   readonly id: string
+  readonly createdAt: Date
+  readonly updatedAt: Date
   readonly filename: string
   readonly fileSize: number
   readonly extension: string

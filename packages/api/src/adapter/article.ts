@@ -39,6 +39,7 @@ export interface ArticleVersion {
 
   readonly createdAt: Date
   readonly updatedAt: Date
+  readonly breaking: boolean
 
   readonly preTitle?: string
   readonly title: string
@@ -72,6 +73,7 @@ export interface ArticleInput {
   readonly slug: string
   readonly imageID?: string
 
+  readonly breaking: boolean
   readonly publishDate?: Date
   readonly blocks: ArticleBlock[]
   readonly authorIDs: string[]

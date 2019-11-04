@@ -4,9 +4,9 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {ApolloClient} from 'apollo-client'
-import {createHttpLink} from 'apollo-link-http'
 import {ApolloLink} from 'apollo-link'
 import {InMemoryCache} from 'apollo-cache-inmemory'
+import {createUploadLink} from 'apollo-upload-client'
 import {ApolloProvider} from '@apollo/react-hooks'
 
 import {createStyleRenderer, renderStyles} from '@karma.run/react'
@@ -32,7 +32,7 @@ const authLink = new ApolloLink((operation, forward) => {
 })
 
 const client = new ApolloClient({
-  link: authLink.concat(createHttpLink({uri: 'http://localhost:3000'})),
+  link: authLink.concat(createUploadLink({uri: 'http://localhost:3000'})),
   cache: new InMemoryCache()
 })
 

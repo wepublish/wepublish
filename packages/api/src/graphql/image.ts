@@ -12,6 +12,7 @@ import {
 import {Context} from '../context'
 import {Image, ImageRotation, ImageOutput} from '../adapter/image'
 import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLFocusPoint = new GraphQLObjectType<any, Context>({
   name: 'FocusPoint',
@@ -56,6 +57,10 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
   name: 'Image',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
+
+    createdAt: {type: GraphQLDateTime},
+    updatedAt: {type: GraphQLDateTime},
+
     filename: {type: GraphQLNonNull(GraphQLString)},
     fileSize: {type: GraphQLNonNull(GraphQLInt)},
     extension: {type: GraphQLNonNull(GraphQLString)},

@@ -31,6 +31,7 @@ export interface MockArticleVersion {
 
   createdAt: Date
   updatedAt: Date
+  breaking: boolean
 
   title: string
   lead: string
@@ -149,7 +150,11 @@ export class MemoryStorageAdapter implements StorageAdapter {
   }
 
   async getImages(offset: number, limit: number): Promise<[number, Image[]]> {
-    return [this._images.length, this._images.slice(offset, offset + limit)]
+    const sorted = this._images
+      .slice()
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+
+    return [this._images.length, sorted.slice(offset, offset + limit)]
   }
 
   async createAuthor(author: Author): Promise<Author> {
