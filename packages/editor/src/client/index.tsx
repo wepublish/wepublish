@@ -42,6 +42,9 @@ const onDOMContentLoaded = async () => {
   const styleRenderer = createStyleRenderer()
   renderStyles(styleRenderer)
 
+  window.addEventListener('dragover', e => e.preventDefault())
+  window.addEventListener('drop', e => e.preventDefault())
+
   ReactDOM.render(
     <UIProvider styleRenderer={styleRenderer} rootElementID={ElementID.ReactRoot}>
       <ApolloProvider client={client}>

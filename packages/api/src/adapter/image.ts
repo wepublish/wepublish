@@ -1,4 +1,4 @@
-export interface FocusPoint {
+export interface Point {
   readonly x: number
   readonly y: number
 }
@@ -17,7 +17,7 @@ export interface Image {
   readonly format: string
   readonly width: number
   readonly height: number
-  readonly focusPoint?: FocusPoint
+  readonly focalPoint?: Point
 }
 
 export interface ImageEdge {

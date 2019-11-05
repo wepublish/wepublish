@@ -21,7 +21,7 @@ import {GraphQLPage} from './page'
 import {PageNavigationLink, NavigationLinkType, ArticleNavigationLink} from '../adapter/navigation'
 import {ArticlesArguments} from '../adapter/article'
 import {PeerArguments, PeersArguments} from '../adapter/peer'
-import {GraphQLImageConnection} from './image'
+import {GraphQLImageConnection, GraphQLImage} from './image'
 import {GraphQLUser} from './session'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
@@ -231,6 +231,16 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
             updatedBetween
           }
         }
+      }
+    },
+
+    image: {
+      type: GraphQLImage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {storageAdapter}) {
+        return storageAdapter.getImage(id)
       }
     },
 

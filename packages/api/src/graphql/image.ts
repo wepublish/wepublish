@@ -14,8 +14,8 @@ import {Image, ImageRotation, ImageOutput} from '../adapter/image'
 import {GraphQLPageInfo} from './pageInfo'
 import {GraphQLDateTime} from 'graphql-iso-date'
 
-export const GraphQLFocusPoint = new GraphQLObjectType<any, Context>({
-  name: 'FocusPoint',
+export const GraphQLPoint = new GraphQLObjectType<any, Context>({
+  name: 'Point',
   fields: {
     x: {type: GraphQLNonNull(GraphQLFloat)},
     y: {type: GraphQLNonNull(GraphQLFloat)}
@@ -71,7 +71,7 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     width: {type: GraphQLNonNull(GraphQLInt)},
     height: {type: GraphQLNonNull(GraphQLInt)},
-    focusPoint: {type: GraphQLFocusPoint},
+    focalPoint: {type: GraphQLPoint},
     url: {
       type: GraphQLNonNull(GraphQLString),
       resolve(image, {}, {mediaAdapter}) {

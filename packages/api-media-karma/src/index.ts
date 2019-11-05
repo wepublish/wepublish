@@ -41,7 +41,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
   }
 
   async getImageURL(
-    {id, filename, extension, focusPoint}: Image,
+    {id, filename, extension, focalPoint}: Image,
     transformation?: ImageTransformation
   ): Promise<string> {
     if (transformation) {
@@ -54,7 +54,7 @@ export class KarmaMediaAdapter implements MediaAdapter {
       if (rotation) transformations.push(`r_${rotation}`)
       if (output) transformations.push(`o_${output}`)
       if (quality) transformations.push(`q_${quality}`)
-      if (focusPoint && (width || height)) transformations.push(`f_${focusPoint.x}:${focusPoint.y}`)
+      if (focalPoint && (width || height)) transformations.push(`f_${focalPoint.x}:${focalPoint.y}`)
 
       if (transformations.length > 0) {
         return `${this.url}${id}/${transformations.join(',')}/${fullFilename}`
