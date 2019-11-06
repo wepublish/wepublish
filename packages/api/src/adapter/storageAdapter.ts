@@ -4,7 +4,7 @@ import {PageInput, Page, PageVersion} from './page'
 import {ArticleInput, Article, ArticlesArguments, ArticleVersion} from './article'
 import {PageBlock, ArticleBlock} from './blocks'
 import {Peer, PeerArguments, PeersArguments} from './peer'
-import {Image} from './image'
+import {Image, ImageUpdate} from './image'
 import {Author} from './author'
 
 export interface StorageAdapter {
@@ -45,6 +45,7 @@ export interface StorageAdapter {
 
   // Image
   createImage(image: Image): Promise<Image>
+  updateImage(image: ImageUpdate): Promise<Image | null>
   getImage(id: string): Promise<Image | null>
   getImages(offset: number, limit: number): Promise<[number, Image[]]>
 

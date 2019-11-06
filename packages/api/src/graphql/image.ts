@@ -14,6 +14,14 @@ import {Image, ImageRotation, ImageOutput} from '../adapter/image'
 import {GraphQLPageInfo} from './pageInfo'
 import {GraphQLDateTime} from 'graphql-iso-date'
 
+export const GraphQLInputPoint = new GraphQLInputObjectType({
+  name: 'InputPoint',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLFloat)},
+    y: {type: GraphQLNonNull(GraphQLFloat)}
+  }
+})
+
 export const GraphQLPoint = new GraphQLObjectType<any, Context>({
   name: 'Point',
   fields: {

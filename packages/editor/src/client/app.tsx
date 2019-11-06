@@ -7,7 +7,7 @@ import {Base} from './base'
 import {ArticleList} from './routes/articleList'
 
 import {ArticleEditor} from './routes/articleEditor'
-import {MediaList} from './routes/mediaList'
+import {ImageList} from './routes/imageList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -26,8 +26,10 @@ export function contentForRoute(route: Route) {
     case RouteType.FrontList:
       return null
 
-    case RouteType.MediaList:
-      return <MediaList />
+    case RouteType.ImageList:
+    case RouteType.ImageUpload:
+    case RouteType.ImageEdit:
+      return <ImageList />
 
     case RouteType.NotFound:
       return null
@@ -47,7 +49,9 @@ export function App() {
       case RouteType.Index:
       case RouteType.ArticleList:
       case RouteType.FrontList:
-      case RouteType.MediaList:
+      case RouteType.ImageList:
+      case RouteType.ImageUpload:
+      case RouteType.ImageEdit:
       case RouteType.NotFound:
         return <Base>{contentForRoute(current)}</Base>
 

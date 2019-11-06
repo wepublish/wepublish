@@ -6,22 +6,35 @@ import {
   Spacing,
   Grid,
   Column,
-  PrimaryButton,
   Drawer,
   Panel,
   PanelHeader,
   PanelSection,
-  IconButton,
-  Image as ListImage,
   FileDropInput,
   Toast,
-  FocalPointSetter,
-  ImageMeta
+  Image,
+  NavigationButton
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
 import {useMutation, useQuery} from '@apollo/react-hooks'
+
 import gql from 'graphql-tag'
+
+import {ImagedEditPanel} from '../panel/imageEditPanel'
+
+import {
+  ImageUploadRoute,
+  PrimaryRouteLinkButton,
+  useRoute,
+  RouteType,
+  ImageListRoute,
+  useRouteDispatch,
+  Link,
+  ImageEditRoute
+} from '../route'
+
+import {RouteActionType} from '@karma.run/react'
 
 const ImagesQuery = gql`
   {
@@ -39,26 +52,48 @@ interface ListImage {
   readonly transform: string[]
 }
 
-export function MediaList() {
-  const [isUploadModalOpen, setUploadModalOpen] = useState(false)
+export function ImageList() {
+  const {current} = useRoute()
+  const dispatch = useRouteDispatch()
+
+  const [isUploadModalOpen, setUploadModalOpen] = useState(current?.type === RouteType.ImageUpload)
+  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.ImageEdit)
+
+  const [editID, setEditID] = useState<string | null>(
+    current?.type === RouteType.ImageEdit ? current.params.id : null
+  )
+
   const {data, refetch} = useQuery(ImagesQuery)
 
   const images: ListImage[] = data ? data.images.nodes : []
   const missingColumns = new Array(3 - (images.length % 3)).fill(null)
 
+  useEffect(() => {
+    if (current?.type === RouteType.ImageUpload) {
+      setUploadModalOpen(true)
+    }
+
+    if (current?.type === RouteType.ImageEdit) {
+      setEditModalOpen(true)
+      setEditID(current.params.id)
+    }
+  }, [current])
+
   return (
     <>
       <Box flexDirection="row" marginBottom={Spacing.Medium} flex>
-        <Typography variant="h1">Media Library</Typography>
+        <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
-        <PrimaryButton label="Upload Image" onClick={() => setUploadModalOpen(true)} />
+        <PrimaryRouteLinkButton label="Upload Image" route={ImageUploadRoute.create({})} />
       </Box>
       <Box>
         <Grid spacing={Spacing.Small}>
           {images.map(({id, transform: [url]}) => (
             <Column key={id} ratio={1 / 3}>
               <Box height={200}>
-                <ListImage src={url} />
+                <Link route={ImageEditRoute.create({id})}>
+                  <Image src={url} />
+                </Link>
               </Box>
             </Column>
           ))}
@@ -67,11 +102,25 @@ export function MediaList() {
           ))}
         </Grid>
       </Box>
-      <Drawer open={isUploadModalOpen} onClose={() => setUploadModalOpen(false)} width={480}>
+      <Drawer open={isUploadModalOpen} width={480}>
         {() => (
           <ImageUploadAndEditPanel
-            onClose={() => setUploadModalOpen(false)}
+            onClose={() => {
+              setUploadModalOpen(false)
+              dispatch({type: RouteActionType.PushRoute, route: ImageListRoute.create({})})
+            }}
             onUpload={() => refetch()}
+          />
+        )}
+      </Drawer>
+      <Drawer open={isEditModalOpen} width={480}>
+        {() => (
+          <ImagedEditPanel
+            id={editID!}
+            onClose={() => {
+              setEditModalOpen(false)
+              dispatch({type: RouteActionType.PushRoute, route: ImageListRoute.create({})})
+            }}
           />
         )}
       </Drawer>
@@ -88,19 +137,19 @@ const UploadMutation = gql`
 `
 export interface ImageUploadAndEditPanelProps {
   onClose(): void
-  onUpload(imageIDs: string[]): void
+  onUpload(ids: string[]): void
 }
 
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
-  const [imageID, setImageID] = useState<string | null>(null)
+  const [id, setID] = useState<string | null>(null)
 
-  function handleUpload(imageIDs: string[]) {
-    setImageID(imageIDs[0])
-    onUpload(imageIDs)
+  function handleUpload(ids: string[]) {
+    setID(ids[0])
+    onUpload(ids)
   }
 
-  return imageID ? (
-    <ImagedEditPanel imageID={imageID} onClose={onClose} />
+  return id ? (
+    <ImagedEditPanel id={id} onClose={onClose} />
   ) : (
     <ImageUploadPanel onClose={onClose} onUpload={handleUpload} />
   )
@@ -146,7 +195,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
         <PanelHeader
           title="Upload Image"
           leftChildren={
-            <IconButton
+            <NavigationButton
               icon={MaterialIconClose}
               label="Close"
               onClick={() => onClose()}
@@ -165,95 +214,6 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
           </Box>
         </PanelSection>
       </Panel>
-      <Toast
-        type="error"
-        open={errorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-    </>
-  )
-}
-
-const ImageQuery = gql`
-  query($imageID: ID!) {
-    image(id: $imageID) {
-      id
-      createdAt
-      filename
-      extension
-      width
-      height
-      url
-      fileSize
-      transform(transformations: [{width: 300}])
-    }
-  }
-`
-
-interface Image {
-  readonly id: string
-  readonly filename: string
-  readonly extension: string
-  readonly width: number
-  readonly height: number
-  readonly createdAt: string
-  readonly fileSize: number
-  readonly url: string
-  readonly transform: string[]
-}
-
-export interface ImageEditPanelProps {
-  readonly imageID: string
-
-  onClose(): void
-}
-
-export function ImagedEditPanel({imageID, onClose}: ImageEditPanelProps) {
-  const [errorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  const {data, loading, error} = useQuery(ImageQuery, {variables: {imageID}})
-  const image: Image | null = data ? data.image : null
-
-  useEffect(() => {
-    if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
-    }
-  }, [error])
-
-  return (
-    <>
-      <Panel>
-        <PanelHeader
-          title="Edit Image"
-          leftChildren={
-            <IconButton
-              icon={MaterialIconClose}
-              label="Close"
-              onClick={() => onClose()}
-              disabled={loading}
-            />
-          }
-        />
-        {image && (
-          <ImageMeta
-            file={{
-              src: image.transform[0],
-              name: `${image.filename}${image.extension}`,
-              width: image.width,
-              height: image.height,
-              date: image.createdAt,
-              size: image.fileSize,
-              link: image.url
-            }}
-          />
-        )}
-        <PanelSection></PanelSection>
-      </Panel>
-
       <Toast
         type="error"
         open={errorToastOpen}

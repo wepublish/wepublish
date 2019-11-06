@@ -1,22 +1,21 @@
 import React, {ReactNode} from 'react'
 
 import {NavigationTemplate} from '@karma.run/ui'
+
 import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPowerSettingsNew,
-  MaterialIconPhotoLibrary,
   MaterialIconTextFields,
-  MaterialIconNavigation,
   MaterialIconPhotoLibraryOutlined,
   MaterialIconNavigationOutlined
 } from '@karma.run/icons'
 
 import {
-  LinkMenuIconButton,
+  MenuIconRouteLinkButton,
   LogoutRoute,
   ArticleListRoute,
   FrontListRoute,
-  MediaListRoute
+  ImageListRoute
 } from './route'
 
 export interface BaseProps {
@@ -28,31 +27,31 @@ export function Base({children}: BaseProps) {
     <NavigationTemplate
       navigationChildren={
         <>
-          <LinkMenuIconButton
+          <MenuIconRouteLinkButton
             icon={MaterialIconTextFields}
             label="Article"
             route={ArticleListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <MenuIconRouteLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
             label="Page"
             route={FrontListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <MenuIconRouteLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
-            label="Media Library"
-            route={MediaListRoute.create({})}
+            label="Image Library"
+            route={ImageListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <MenuIconRouteLinkButton
             icon={MaterialIconNavigationOutlined}
             label="Navigation"
-            route={MediaListRoute.create({})}
+            route={ImageListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <MenuIconRouteLinkButton
             icon={MaterialIconPowerSettingsNew}
             label="Logout"
             route={LogoutRoute.create({})}

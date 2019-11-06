@@ -9,7 +9,7 @@ export interface ArticleArguments {
 }
 
 export interface ArticlesArguments {
-  readonly limit: number
+  readonly limit?: number
 
   readonly publishedBetween: DateRange
   readonly updatedBetween: DateRange
@@ -45,6 +45,7 @@ export interface ArticleVersion {
   readonly title: string
   readonly lead: string
   readonly slug: string
+  readonly tags: string[]
 
   readonly imageID?: string
   readonly authorIDs: string[]
@@ -71,10 +72,10 @@ export interface ArticleInput {
   readonly title: string
   readonly lead: string
   readonly slug: string
+  readonly tags: string[]
   readonly imageID?: string
 
   readonly breaking: boolean
-  readonly publishDate?: Date
   readonly blocks: ArticleBlock[]
   readonly authorIDs: string[]
 }

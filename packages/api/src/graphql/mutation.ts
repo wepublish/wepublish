@@ -3,8 +3,10 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLBoolean,
-  GraphQLList
+  GraphQLList,
+  GraphQLID
 } from 'graphql'
+
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
@@ -15,16 +17,12 @@ import {generateID, generateTokenID} from '../utility'
 
 import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
-import {GraphQLImage} from './image'
+import {GraphQLImage, GraphQLInputPoint} from './image'
 import {BlockMap} from '../adapter/blocks'
 import {ArticleInput} from '../adapter/article'
+import {ImageUpdate} from '../adapter/image'
 
-interface CreateSessionArgs {
-  readonly email: string
-  readonly password: string
-}
-
-export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
+export const GraphQLMutation = new GraphQLObjectType<any, Context>({
   name: 'Mutation',
   fields: {
     createSession: {
@@ -34,7 +32,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         password: {type: GraphQLNonNull(GraphQLString)}
       },
 
-      async resolve(_root, {email, password}: CreateSessionArgs, {storageAdapter, sessionExpiry}) {
+      async resolve(_root, {email, password}, {storageAdapter, sessionExpiry}) {
         const user = await storageAdapter.getUserForCredentials(email, password)
         if (!user) throw new InvalidCredentialsError()
 
@@ -123,10 +121,24 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
               updatedAt: new Date(),
               title: '',
               description: '',
+              focalPoint: {x: 0.5, y: 0.5}, // TODO: Focal Point might be optional in the future to allow auto focus
               tags: []
             })
           })
         )
+      }
+    },
+    updateImage: {
+      type: GraphQLImage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        title: {type: GraphQLNonNull(GraphQLString)},
+        description: {type: GraphQLNonNull(GraphQLString)},
+        tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+        focalPoint: {type: GraphQLInputPoint}
+      },
+      resolve(root, args, {storageAdapter}) {
+        return storageAdapter.updateImage(args as ImageUpdate)
       }
     }
   }

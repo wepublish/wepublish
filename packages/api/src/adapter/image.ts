@@ -17,7 +17,15 @@ export interface Image {
   readonly format: string
   readonly width: number
   readonly height: number
-  readonly focalPoint?: Point
+  readonly focalPoint: Point | null
+}
+
+export interface ImageUpdate {
+  readonly id: string
+  readonly title: string
+  readonly description: string
+  readonly tags: string[]
+  readonly focalPoint: Point | null
 }
 
 export interface ImageEdge {

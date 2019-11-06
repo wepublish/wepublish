@@ -4,7 +4,7 @@ import {Value, Block, Document} from 'slate'
 import {
   EditorTemplate,
   NavigationBar,
-  IconButton,
+  NavigationButton,
   UnionListField,
   UnionListValue,
   RichTextField
@@ -24,7 +24,11 @@ export function ArticleEditor() {
       navigationChildren={
         <NavigationBar
           leftChildren={
-            <IconButton icon={MaterialIconArrowBack} label="Back" onClick={() => history.back()} />
+            <NavigationButton
+              icon={MaterialIconArrowBack}
+              label="Back"
+              onClick={() => history.back()}
+            />
           }
         />
       }>

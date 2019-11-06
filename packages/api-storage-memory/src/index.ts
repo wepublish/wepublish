@@ -5,6 +5,7 @@ import {
   PageBlock,
   Navigation,
   Image,
+  ImageUpdate,
   User,
   Session,
   ArticleInput,
@@ -20,35 +21,27 @@ import {
   Author
 } from '@wepublish/api'
 
-export interface MemoryPeer {
+type Writeable<T> = {-readonly [P in keyof T]: T[P]}
+
+interface MemoryPeer {
   id: string
   name: string
   url: string
 }
 
-export interface MockArticleVersion {
-  state: VersionState
-
-  createdAt: Date
-  updatedAt: Date
-  breaking: boolean
-
-  title: string
-  lead: string
-  slug: string
-  imageID?: string
-
+interface MemoryArticleVersion extends Writeable<ArticleVersion> {
   blocks: ArticleBlock[]
-  authorIDs: string[]
 }
 
-export interface MemoryArticle {
+type MemoryImage = Writeable<Image>
+
+interface MemoryArticle {
   id: string
-  versions: MockArticleVersion[]
+  versions: MemoryArticleVersion[]
   peer?: MemoryPeer
 }
 
-export interface MemoryPageVersion {
+interface MemoryPageVersion {
   state: VersionState
 
   createdAt: Date
@@ -61,27 +54,27 @@ export interface MemoryPageVersion {
   blocks: PageBlock[]
 }
 
-export interface MemoryPage {
+interface MemoryPage {
   id: string
   versions: MemoryPageVersion[]
   peer?: MemoryPeer
 }
 
-export interface MockAdapterOptions {
-  users?: MemoryUser[]
-  peers?: MemoryPeer[]
-}
-
-export interface MemoryUser {
+interface MemoryUser {
   readonly id: string
   readonly email: string
   readonly password: string
 }
 
-export interface MemoryUserSession {
+interface MemoryUserSession {
   readonly userID: string
   readonly expiryDate: Date
   readonly token: string
+}
+
+export interface MemoryAdapterOptions {
+  users?: MemoryUser[]
+  peers?: MemoryPeer[]
 }
 
 export class MemoryStorageAdapter implements StorageAdapter {
@@ -91,10 +84,10 @@ export class MemoryStorageAdapter implements StorageAdapter {
   private _pages: MemoryPage[] = []
   private _peers: MemoryPeer[] = []
   private _navigations: Navigation[] = []
-  private _images: Image[] = []
+  private _images: MemoryImage[] = []
   private _authors: Author[] = []
 
-  constructor({users = [], peers = []}: MockAdapterOptions = {}) {
+  constructor({users = [], peers = []}: MemoryAdapterOptions = {}) {
     this._users.push(...users)
     this._peers.push(...peers)
   }
@@ -123,7 +116,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
   }
 
   async getSession(verifyToken: string): Promise<Session | null> {
-    const {userID, expiryDate} = this._sessions.find(({token}) => token === verifyToken) || {}
+    const {userID, expiryDate} = this._sessions.find(({token}) => token === verifyToken) ?? {}
     const user = this._users.find(user => user.id === userID)!
 
     if (!user || !expiryDate) return null
@@ -137,7 +130,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
   }
 
   async getNavigation(key: string): Promise<Navigation | null> {
-    return this._navigations.find(navigation => navigation.key === key) || null
+    return this._navigations.find(navigation => navigation.key === key) ?? null
   }
 
   async createImage(image: Image): Promise<Image> {
@@ -145,8 +138,27 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return image
   }
 
+  async updateImage({
+    id,
+    title,
+    description,
+    focalPoint,
+    tags
+  }: ImageUpdate): Promise<Image | null> {
+    const image = this._images.find(({id: imageID}) => imageID === id) ?? null
+
+    if (image) {
+      image.title = title
+      image.description = description
+      image.focalPoint = focalPoint
+      image.tags = tags
+    }
+
+    return image
+  }
+
   async getImage(id: string): Promise<Image | null> {
-    return this._images.find(({id: imageID}) => imageID === id) || null
+    return this._images.find(({id: imageID}) => imageID === id) ?? null
   }
 
   async getImages(offset: number, limit: number): Promise<[number, Image[]]> {
@@ -163,32 +175,34 @@ export class MemoryStorageAdapter implements StorageAdapter {
   }
 
   async getAuthor(id: string): Promise<Author | null> {
-    return this._authors.find(author => author.id === id) || null
+    return this._authors.find(author => author.id === id) ?? null
   }
 
   async createArticle(article: ArticleInput): Promise<Article> {
-    const articleVersion = {
+    const articleVersion: MemoryArticleVersion = {
       ...article,
+      articleID: article.id,
+      version: 0,
       createdAt: new Date(),
       updatedAt: new Date()
     }
 
-    const mockArticle: MemoryArticle = {
+    const memoryArticle: MemoryArticle = {
       id: article.id,
       versions: [articleVersion]
     }
 
-    this._articles.push(mockArticle)
+    this._articles.push(memoryArticle)
 
     return {
-      id: mockArticle.id,
-      peer: mockArticle.peer,
+      id: memoryArticle.id,
+      peer: memoryArticle.peer,
 
       createdAt: articleVersion.createdAt,
       updatedAt: articleVersion.updatedAt,
 
       publishedAt:
-        articleVersion.state === VersionState.Published ? articleVersion.publishDate : undefined,
+        articleVersion.state === VersionState.Published ? articleVersion.createdAt : undefined,
 
       publishedVersion: articleVersion.state === VersionState.Published ? 0 : undefined,
       draftVersion: articleVersion.state === VersionState.Draft ? 0 : undefined
@@ -394,7 +408,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     }))
   }
 
-  async getArticles(_args: ArticlesArguments): Promise<Article[]> {
+  async getArticles(args: ArticlesArguments): Promise<Article[]> {
     const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
@@ -424,7 +438,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
       }
     })
 
-    return articles
+    return args.limit ? articles.slice(0, args.limit) : articles
   }
 
   async createPeer(): Promise<Peer> {

@@ -7,11 +7,10 @@ import {
   RouteActionType,
   fullPathForRoute,
   zeroOrMore,
-  optional,
   required
 } from '@karma.run/react'
 
-import {PrimaryButton, MenuIconButton} from '@karma.run/ui'
+import {MenuIconButton, PrimaryLinkButton, NavigationLinkButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation} from '@apollo/react-hooks'
 import {LocalStorageKey} from './utility'
@@ -29,7 +28,9 @@ export enum RouteType {
 
   FrontList = 'frontList',
 
-  MediaList = 'mediaList'
+  ImageList = 'imageList',
+  ImageUpload = 'imageUpload',
+  ImageEdit = 'imageEdit'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`, null)
@@ -46,7 +47,14 @@ export const ArticleEditRoute = route(
 
 export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`, null)
 
-export const MediaListRoute = route(RouteType.MediaList, routePath`/media/list`, null)
+export const ImageListRoute = route(RouteType.ImageList, routePath`/image/list`, null)
+export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`, null)
+
+export const ImageEditRoute = route(
+  RouteType.ImageEdit,
+  routePath`/image/edit/${required('id')}`,
+  null
+)
 
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
@@ -58,21 +66,24 @@ export const routes = [
   ArticleListRoute,
   ArticleEditRoute,
   ArticleCreateRoute,
-  MediaListRoute,
+  ImageListRoute,
+  ImageUploadRoute,
+  ImageEditRoute,
   NotFoundRoute
 ] as const
 
 export const {
   Link,
-  createLinkHOC,
+  routeLink,
   RouteProvider: BaseRouteProvider,
   matchRoute,
   useRoute,
   useRouteDispatch
 } = createRouteContext(routes)
 
-export const LinkPrimaryButton = createLinkHOC(PrimaryButton)
-export const LinkMenuIconButton = createLinkHOC(MenuIconButton)
+export const PrimaryRouteLinkButton = routeLink(PrimaryLinkButton)
+export const MenuIconRouteLinkButton = routeLink(MenuIconButton)
+export const NavigationRouteLinkButton = routeLink(NavigationLinkButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>
 
