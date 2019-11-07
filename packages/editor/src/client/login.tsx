@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent} from 'react'
-import {LoginTemplate, TextInput, PrimaryButton, Box, Spacing} from '@karma.run/ui'
+import {LoginTemplate, TextInput, Button, Box, Spacing} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
 import {useMutation} from '@apollo/react-hooks'
 
@@ -79,7 +79,7 @@ export function Login() {
             onChange={event => setPassword(event.target.value)}
           />
         </Box>
-        <PrimaryButton label="Login" disabled={loading} />
+        <Button label="Login" disabled={loading} />
         {error && error.message}
       </LoginForm>
     </LoginTemplate>

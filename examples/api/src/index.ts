@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 import {contextFromRequest, generateIDSync, GraphQLWepublishSchema} from '@wepublish/api'
-
 import {MemoryStorageAdapter} from '@wepublish/api-storage-memory'
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 
+import startMediaServer from '@karma.run/media'
+import LocalStorageBackend from '@karma.run/media-storage-local'
+import SharpImageBackend from '@karma.run/media-image-sharp'
+
 import {ApolloServer} from 'apollo-server'
 import {URL} from 'url'
+import {resolve as resolvePath} from 'path'
 
 async function asyncMain() {
-  if (!process.env.MEDIA_SERVER_URL) {
-    throw new Error('No MEDIA_SERVER_URL defined in environment.')
-  }
-
-  if (!process.env.MEDIA_SERVER_TOKEN) {
-    throw new Error('No MEDIA_SERVER_TOKEN defined in environment.')
-  }
-
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
 
-  const mediaServerURL = new URL(process.env.MEDIA_SERVER_URL)
-  const mediaServerToken = process.env.MEDIA_SERVER_TOKEN
+  const mediaStoragePath = process.env.MEDIA_STORAGE_PATH ?? resolvePath(__dirname, '../.media')
+  const mediaServerToken = process.env.MEDIA_SERVER_TOKEN! || '123'
+  const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 3005
+  const mediaServerAddress = process.env.MEDIA_ADDRESS ?? 'localhost'
 
+  const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
 
   const storageAdapter = new MemoryStorageAdapter({
@@ -52,9 +51,16 @@ async function asyncMain() {
       })
   })
 
-  server.listen(port, address).then(({url}) => {
-    console.log(`Server ready at ${url}`)
+  await startMediaServer({
+    storageBackend: new LocalStorageBackend(mediaStoragePath),
+    imageBackend: new SharpImageBackend(),
+    port: mediaServerPort,
+    address: mediaServerAddress,
+    token: mediaServerToken
   })
+
+  const {url} = await server.listen(port, address)
+  console.log(`API server listening: ${url}`)
 }
 
 asyncMain()

@@ -25,7 +25,7 @@ import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {
   ImageUploadRoute,
-  PrimaryRouteLinkButton,
+  RouteLinkButton,
   useRoute,
   RouteType,
   ImageListRoute,
@@ -84,7 +84,7 @@ export function ImageList() {
       <Box flexDirection="row" marginBottom={Spacing.Medium} flex>
         <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
-        <PrimaryRouteLinkButton label="Upload Image" route={ImageUploadRoute.create({})} />
+        <RouteLinkButton label="Upload Image" color="primary" route={ImageUploadRoute.create({})} />
       </Box>
       <Box>
         <Grid spacing={Spacing.Small}>
