@@ -37,11 +37,17 @@ import {
 import {RouteActionType} from '@karma.run/react'
 
 const ImagesQuery = gql`
-  {
-    images(offset: 0, limit: 10) {
+  query($after: ID, $before: ID, $first: Int, $last: Int) {
+    images(after: $after, before: $before, first: $first, last: $last) {
       nodes {
         id
-        transform(transformations: [{width: 300}])
+        transform(transformations: [{width: 300, height: 200}])
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
       }
     }
   }
@@ -51,6 +57,15 @@ interface ListImage {
   readonly id: string
   readonly transform: string[]
 }
+
+interface PageInfo {
+  startCursor?: string
+  endCursor?: string
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+}
+
+const pageLimit = 12
 
 export function ImageList() {
   const {current} = useRoute()
@@ -63,9 +78,23 @@ export function ImageList() {
     current?.type === RouteType.ImageEdit ? current.params.id : null
   )
 
-  const {data, refetch} = useQuery(ImagesQuery)
+  const after = current?.query?.after
+  const before = current?.query?.before
 
-  const images: ListImage[] = data ? data.images.nodes : []
+  const {data, refetch} = useQuery(ImagesQuery, {
+    fetchPolicy: 'network-only',
+    variables: {
+      after,
+      before,
+      first: before ? undefined : pageLimit,
+      last: before ? pageLimit : undefined
+    }
+  })
+
+  const images: ListImage[] = data?.images?.nodes ?? []
+  const {startCursor, endCursor, hasNextPage, hasPreviousPage}: PageInfo =
+    data?.images?.pageInfo ?? {}
+
   const missingColumns = new Array(3 - (images.length % 3)).fill(null)
 
   useEffect(() => {
@@ -84,14 +113,18 @@ export function ImageList() {
       <Box flexDirection="row" marginBottom={Spacing.Medium} flex>
         <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton label="Upload Image" color="primary" route={ImageUploadRoute.create({})} />
+        <RouteLinkButton
+          label="Upload Image"
+          color="primary"
+          route={ImageUploadRoute.create({}, {query: current?.query})}
+        />
       </Box>
-      <Box>
+      <Box marginBottom={Spacing.Medium}>
         <Grid spacing={Spacing.Small}>
           {images.map(({id, transform: [url]}) => (
             <Column key={id} ratio={1 / 3}>
               <Box height={200}>
-                <Link route={ImageEditRoute.create({id})}>
+                <Link route={ImageEditRoute.create({id}, {query: current?.query})}>
                   <Image src={url} />
                 </Link>
               </Box>
@@ -102,12 +135,32 @@ export function ImageList() {
           ))}
         </Grid>
       </Box>
+      <Box flexDirection="row" flex>
+        <RouteLinkButton
+          variant="outlined"
+          label="Previous"
+          route={
+            startCursor ? ImageListRoute.create({}, {query: {before: startCursor}}) : undefined
+          }
+          disabled={!hasPreviousPage}
+        />
+        <Box flexGrow={1} />
+        <RouteLinkButton
+          variant="outlined"
+          label="Next"
+          route={endCursor ? ImageListRoute.create({}, {query: {after: endCursor}}) : undefined}
+          disabled={!hasNextPage}
+        />
+      </Box>
       <Drawer open={isUploadModalOpen} width={480}>
         {() => (
           <ImageUploadAndEditPanel
             onClose={() => {
               setUploadModalOpen(false)
-              dispatch({type: RouteActionType.PushRoute, route: ImageListRoute.create({})})
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: ImageListRoute.create({}, {query: current?.query})
+              })
             }}
             onUpload={() => refetch()}
           />
@@ -119,7 +172,10 @@ export function ImageList() {
             id={editID!}
             onClose={() => {
               setEditModalOpen(false)
-              dispatch({type: RouteActionType.PushRoute, route: ImageListRoute.create({})})
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: ImageListRoute.create({}, {query: current?.query})
+              })
             }}
           />
         )}

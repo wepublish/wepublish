@@ -7,6 +7,6 @@
   "delay": 250,
   "ignoreRoot": [".git"],
   "env": {
-    "STATIC_HOST": "http://localhost:3002"
+    "ASSET_HOST": "http://localhost:3002"
   }
 }

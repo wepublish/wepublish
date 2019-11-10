@@ -79,7 +79,7 @@ export function Login() {
             onChange={event => setPassword(event.target.value)}
           />
         </Box>
-        <Button label="Login" disabled={loading} />
+        <Button color="primary" label="Login" disabled={loading} />
         {error && error.message}
       </LoginForm>
     </LoginTemplate>

@@ -6,6 +6,7 @@ import {PageBlock, ArticleBlock} from './blocks'
 import {Peer, PeerArguments, PeersArguments} from './peer'
 import {Image, ImageUpdate} from './image'
 import {Author} from './author'
+import {PageInfo, Pagination} from './pageInfo'
 
 export interface StorageAdapter {
   // User
@@ -47,7 +48,7 @@ export interface StorageAdapter {
   createImage(image: Image): Promise<Image>
   updateImage(image: ImageUpdate): Promise<Image | null>
   getImage(id: string): Promise<Image | null>
-  getImages(offset: number, limit: number): Promise<[number, Image[]]>
+  getImages(pagination: Pagination): Promise<[Image[], PageInfo, number]>
 
   // Peers
   createPeer(id: string, args: any): Promise<Peer>

@@ -23,6 +23,7 @@ export * from './adapter/peer'
 export * from './adapter/storageAdapter'
 export * from './adapter/user'
 export * from './adapter/versionState'
+export * from './adapter/pageInfo'
 
 export * from './context'
 export * from './utility'

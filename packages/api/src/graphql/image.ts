@@ -104,6 +104,7 @@ export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
   name: 'ImageConnection',
   fields: {
     nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage)))},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
   }
 })

@@ -2,7 +2,7 @@
 .idea/
 lib/
 dist/
-static/
+assets/
 examples/**/LICENSE
 packages/**/LICENSE
 node_modules

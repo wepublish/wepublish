@@ -23,6 +23,7 @@ import {ArticlesArguments} from '../adapter/article'
 import {PeerArguments, PeersArguments} from '../adapter/peer'
 import {GraphQLImageConnection, GraphQLImage} from './image'
 import {GraphQLUser} from './session'
+import {UserInputError} from 'apollo-server'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -247,18 +248,35 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
-        offset: {type: GraphQLNonNull(GraphQLInt)},
-        limit: {type: GraphQLNonNull(GraphQLInt)}
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
       },
-      async resolve(_root, {offset, limit}, {storageAdapter}) {
-        const [total, nodes] = await storageAdapter.getImages(offset, limit)
+      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        const [
+          nodes,
+          {startCursor, endCursor, hasNextPage, hasPreviousPage},
+          totalCount
+        ] = await storageAdapter.getImages({
+          after: after && Buffer.from(after, 'base64').toString(),
+          before: before && Buffer.from(before, 'base64').toString(),
+          first,
+          last
+        })
 
         return {
           nodes,
+          totalCount,
           pageInfo: {
-            total,
-            offset,
-            limit
+            startCursor: startCursor && Buffer.from(startCursor).toString('base64'),
+            endCursor: endCursor && Buffer.from(endCursor).toString('base64'),
+            hasNextPage,
+            hasPreviousPage
           }
         }
       }

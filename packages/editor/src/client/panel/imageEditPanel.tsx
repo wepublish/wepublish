@@ -14,7 +14,8 @@ import {
   DescriptionListItem,
   PanelSectionHeader,
   TextInput,
-  Point
+  Point,
+  Link
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
@@ -164,7 +165,7 @@ export function ImagedEditPanel({id, onClose}: ImageEditPanelProps) {
                   {image.extension}
                 </DescriptionListItem>
                 <DescriptionListItem label="Dimension">
-                  {image.width}x{image.height}
+                  {image.width} x {image.height}
                 </DescriptionListItem>
                 <DescriptionListItem label="Created">
                   {new Date(image.createdAt).toLocaleString()}
@@ -173,9 +174,9 @@ export function ImagedEditPanel({id, onClose}: ImageEditPanelProps) {
                   {prettyBytes(image.fileSize)}
                 </DescriptionListItem>
                 <DescriptionListItem label="Link">
-                  <a href={image.url} target="_blank">
+                  <Link href={image.url} target="_blank">
                     {image.url}
-                  </a>
+                  </Link>
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

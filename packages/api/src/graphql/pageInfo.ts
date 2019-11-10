@@ -1,10 +1,11 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLInt} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
 
 export const GraphQLPageInfo = new GraphQLObjectType({
   name: 'PageInfo',
   fields: {
-    total: {type: GraphQLNonNull(GraphQLInt)},
-    offset: {type: GraphQLNonNull(GraphQLInt)},
-    limit: {type: GraphQLNonNull(GraphQLInt)}
+    startCursor: {type: GraphQLString},
+    endCursor: {type: GraphQLString},
+    hasNextPage: {type: GraphQLNonNull(GraphQLBoolean)},
+    hasPreviousPage: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })

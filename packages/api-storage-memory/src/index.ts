@@ -18,7 +18,9 @@ import {
   Peer,
   PeerArguments,
   PeersArguments,
-  Author
+  Author,
+  PageInfo,
+  Pagination
 } from '@wepublish/api'
 
 type Writeable<T> = {-readonly [P in keyof T]: T[P]}
@@ -161,12 +163,49 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this._images.find(({id: imageID}) => imageID === id) ?? null
   }
 
-  async getImages(offset: number, limit: number): Promise<[number, Image[]]> {
+  async getImages({after, before, first, last}: Pagination): Promise<[Image[], PageInfo, number]> {
     const sorted = this._images
       .slice()
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
-    return [this._images.length, sorted.slice(offset, offset + limit)]
+    let afterIndex: number | undefined = after
+      ? sorted.findIndex(({id}) => id === after)
+      : undefined
+
+    let beforeIndex: number | undefined = before
+      ? sorted.findIndex(({id}) => id === before)
+      : undefined
+
+    if (afterIndex === -1) afterIndex = undefined
+    if (beforeIndex === -1) beforeIndex = undefined
+
+    const paginated = sorted.slice(
+      afterIndex != undefined ? Math.min(afterIndex + 1, sorted.length) : undefined,
+      beforeIndex != undefined ? Math.max(beforeIndex, 0) : undefined
+    )
+
+    if (paginated.length) {
+      const limited = paginated.slice(last ? -last : 0, first)
+      const startCursor = limited[0].id
+      const endCursor = limited[limited.length - 1].id
+
+      return [
+        limited,
+        {
+          startCursor,
+          endCursor,
+          hasNextPage: endCursor !== sorted[sorted.length - 1].id,
+          hasPreviousPage: startCursor !== sorted[0].id
+        },
+        this._images.length
+      ]
+    } else {
+      return [
+        paginated,
+        {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
+        this._images.length
+      ]
+    }
   }
 
   async createAuthor(author: Author): Promise<Author> {

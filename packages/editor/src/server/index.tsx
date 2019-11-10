@@ -11,7 +11,7 @@ import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
 async function asyncMain() {
-  const staticHost = process.env.STATIC_HOST || '/static'
+  const assetHost = process.env.ASSET_HOST || '/assets'
 
   const assetList = JSON.parse(
     await fs.promises.readFile(path.resolve(__dirname, '../assetList.json'), 'utf-8')
@@ -23,7 +23,7 @@ async function asyncMain() {
 
   const app = express()
 
-  app.use(express.static(joinPath(__dirname, '../../static'), {index: false}))
+  app.use('/assets', express.static(joinPath(__dirname, '../../assets'), {index: false}))
 
   app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
@@ -34,7 +34,7 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <script async src={`${staticHost}/${entry}`} crossOrigin=""></script>
+          <script async src={`${assetHost}/${entry}`} crossOrigin=""></script>
         </head>
         <body>
           <div id={ElementID.ReactRoot}></div>

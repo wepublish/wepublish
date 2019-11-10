@@ -10,8 +10,8 @@ export default (mode: string) =>
     },
     output: {
       filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].js',
-      path: path.resolve(__dirname, 'static'),
-      publicPath: mode === 'production' ? '/static' : 'http://localhost:3002/'
+      path: path.resolve(__dirname, 'assets'),
+      publicPath: mode === 'production' ? '/assets' : 'http://localhost:3002/'
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
