@@ -13,7 +13,9 @@ import {
   FileDropInput,
   Toast,
   Image,
-  NavigationButton
+  NavigationButton,
+  Card,
+  Divider
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
@@ -95,7 +97,8 @@ export function ImageList() {
   const {startCursor, endCursor, hasNextPage, hasPreviousPage}: PageInfo =
     data?.images?.pageInfo ?? {}
 
-  const missingColumns = new Array(3 - (images.length % 3)).fill(null)
+  const missingColumns =
+    images.length % 3 !== 0 ? new Array(3 - (images.length % 3)).fill(null) : []
 
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
@@ -116,31 +119,40 @@ export function ImageList() {
         <RouteLinkButton
           label="Upload Image"
           color="primary"
-          route={ImageUploadRoute.create({}, {query: current?.query})}
+          route={ImageUploadRoute.create({}, current ?? undefined)}
         />
       </Box>
-      <Box marginBottom={Spacing.Medium}>
+      <Box>
         <Grid spacing={Spacing.Small}>
           {images.map(({id, transform: [url]}) => (
             <Column key={id} ratio={1 / 3}>
               <Box height={200}>
-                <Link route={ImageEditRoute.create({id}, {query: current?.query})}>
-                  <Image src={url} />
+                <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
+                  <Card>
+                    <Image src={url} />
+                  </Card>
                 </Link>
               </Box>
             </Column>
           ))}
           {missingColumns.map((value, index) => (
-            <Column key={index} ratio={1 / 3}></Column>
+            <Column key={index} ratio={1 / 3}>
+              <Box height={200}>
+                <Card />
+              </Box>
+            </Column>
           ))}
         </Grid>
+      </Box>
+      <Box paddingTop={Spacing.Medium} paddingBottom={Spacing.Medium}>
+        <Divider />
       </Box>
       <Box flexDirection="row" flex>
         <RouteLinkButton
           variant="outlined"
           label="Previous"
           route={
-            startCursor ? ImageListRoute.create({}, {query: {before: startCursor}}) : undefined
+            hasPreviousPage ? ImageListRoute.create({}, {query: {before: startCursor!}}) : undefined
           }
           disabled={!hasPreviousPage}
         />
@@ -148,7 +160,7 @@ export function ImageList() {
         <RouteLinkButton
           variant="outlined"
           label="Next"
-          route={endCursor ? ImageListRoute.create({}, {query: {after: endCursor}}) : undefined}
+          route={hasNextPage ? ImageListRoute.create({}, {query: {after: endCursor!}}) : undefined}
           disabled={!hasNextPage}
         />
       </Box>
@@ -159,7 +171,7 @@ export function ImageList() {
               setUploadModalOpen(false)
               dispatch({
                 type: RouteActionType.PushRoute,
-                route: ImageListRoute.create({}, {query: current?.query})
+                route: ImageListRoute.create({}, current ?? undefined)
               })
             }}
             onUpload={() => refetch()}
@@ -174,7 +186,7 @@ export function ImageList() {
               setEditModalOpen(false)
               dispatch({
                 type: RouteActionType.PushRoute,
-                route: ImageListRoute.create({}, {query: current?.query})
+                route: ImageListRoute.create({}, current ?? undefined)
               })
             }}
           />

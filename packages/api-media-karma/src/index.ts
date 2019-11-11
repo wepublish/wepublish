@@ -54,7 +54,10 @@ export class KarmaMediaAdapter implements MediaAdapter {
       if (rotation) transformations.push(`r_${rotation}`)
       if (output) transformations.push(`o_${output}`)
       if (quality) transformations.push(`q_${quality}`)
-      if (focalPoint && (width || height)) transformations.push(`f_${focalPoint.x}:${focalPoint.y}`)
+
+      if (focalPoint && (width || height)) {
+        transformations.push(`f_${focalPoint.x.toFixed(3)}:${focalPoint.y.toFixed(3)}`)
+      }
 
       if (transformations.length > 0) {
         return `${this.url}${id}/${transformations.join(',')}/${fullFilename}`
