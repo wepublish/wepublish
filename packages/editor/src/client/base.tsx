@@ -11,7 +11,7 @@ import {
 } from '@karma.run/icons'
 
 import {
-  MenuIconRouteLinkButton,
+  RouteMenuIconLinkButton,
   LogoutRoute,
   ArticleListRoute,
   FrontListRoute,
@@ -27,31 +27,31 @@ export function Base({children}: BaseProps) {
     <NavigationTemplate
       navigationChildren={
         <>
-          <MenuIconRouteLinkButton
+          <RouteMenuIconLinkButton
             icon={MaterialIconTextFields}
             label="Article"
             route={ArticleListRoute.create({})}
           />
 
-          <MenuIconRouteLinkButton
+          <RouteMenuIconLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
             label="Page"
             route={FrontListRoute.create({})}
           />
 
-          <MenuIconRouteLinkButton
+          <RouteMenuIconLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
             label="Image Library"
             route={ImageListRoute.create({})}
           />
 
-          <MenuIconRouteLinkButton
+          <RouteMenuIconLinkButton
             icon={MaterialIconNavigationOutlined}
             label="Navigation"
             route={ImageListRoute.create({})}
           />
 
-          <MenuIconRouteLinkButton
+          <RouteMenuIconLinkButton
             icon={MaterialIconPowerSettingsNew}
             label="Logout"
             route={LogoutRoute.create({})}

@@ -8,7 +8,7 @@ export function ArticleList() {
     <Box flexDirection="row" flex>
       <Typography variant="h1">Articles</Typography>
       <Box flexGrow={1} />
-      <RouteLinkButton label="New Article" route={ArticleCreateRoute.create({})} />
+      <RouteLinkButton color="primary" label="New Article" route={ArticleCreateRoute.create({})} />
     </Box>
   )
 }

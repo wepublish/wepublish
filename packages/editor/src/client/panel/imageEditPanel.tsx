@@ -80,11 +80,13 @@ interface EditImage {
 
 export interface ImageEditPanelProps {
   readonly id: string
+  readonly saveLabel?: string
 
-  onClose(): void
+  onClose?(): void
+  onSave?(): void
 }
 
-export function ImagedEditPanel({id, onClose}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanelProps) {
   const [isSavedToastOpen, setSavedToastOpen] = useState(false)
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -122,6 +124,7 @@ export function ImagedEditPanel({id, onClose}: ImageEditPanelProps) {
   async function handleSave() {
     await editImage({variables: {id, title, description, tags: [], focalPoint}})
     setSavedToastOpen(true)
+    onSave?.()
   }
 
   return (
@@ -133,14 +136,14 @@ export function ImagedEditPanel({id, onClose}: ImageEditPanelProps) {
             <NavigationButton
               icon={MaterialIconClose}
               label="Close"
-              onClick={() => onClose()}
+              onClick={() => onClose?.()}
               disabled={disabled}
             />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label="Save"
+              label={saveLabel ?? 'Save'}
               onClick={() => handleSave()}
               disabled={disabled}
             />

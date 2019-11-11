@@ -82,8 +82,8 @@ export const {
 } = createRouteContext(routes)
 
 export const RouteLinkButton = routeLink(LinkButton)
-export const MenuIconRouteLinkButton = routeLink(MenuIconButton)
-export const NavigationRouteLinkButton = routeLink(NavigationLinkButton)
+export const RouteMenuIconLinkButton = routeLink(MenuIconButton)
+export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>
 
