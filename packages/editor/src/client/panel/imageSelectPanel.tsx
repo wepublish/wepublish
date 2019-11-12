@@ -41,10 +41,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     after,
     before,
     pageLimit: 20,
-    transformations: [
-      {width: 220, height: 140},
-      {width: 800, height: 500}
-    ]
+    transformations: [{width: 220, height: 140}, {height: 300}]
   })
 
   const images = data?.images.nodes ?? []
