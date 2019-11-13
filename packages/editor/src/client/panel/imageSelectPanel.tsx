@@ -62,7 +62,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     }
 
     const response = await upload({
-      variables: {images: [file], transformations: [{width: 800, height: 500}]}
+      variables: {images: [file], transformations: [{height: 300}]}
     })
 
     const {

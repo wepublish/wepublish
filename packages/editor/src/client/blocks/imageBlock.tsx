@@ -3,60 +3,96 @@ import React, {useState, useEffect} from 'react'
 import {
   PlaceholderInput,
   Drawer,
-  FieldProps,
+  BlockProps,
   Image,
   Box,
   Layer,
   LayerContainer,
   Spacing,
-  OptionButtonSmall
+  OptionButtonSmall,
+  TypograpyTextArea
 } from '@karma.run/ui'
 
-import {MaterialIconEditOutlined} from '@karma.run/icons'
+import {
+  MaterialIconEditOutlined,
+  MaterialIconImageOutlined,
+  MaterialIconSyncAlt
+} from '@karma.run/icons'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImageReference} from '../api/types'
+import {ImagedEditPanel} from '../panel/imageEditPanel'
 
-export function ImageBlock({value, onChange}: FieldProps<ImageReference | null>) {
-  const [isModalOpen, setModalOpen] = useState(false)
+export interface ImageBlockValue {
+  image: ImageReference | null
+  caption: string
+}
 
-  useEffect(() => setModalOpen(true), [])
+export function ImageBlock({value, onChange, allowInit}: BlockProps<ImageBlockValue>) {
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
+  const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (allowInit) {
+      setChooseModalOpen(true)
+    }
+  }, [allowInit])
+
+  function handleImageChange(image: ImageReference | null) {
+    onChange({...value, image})
+  }
 
   return (
     <>
       <Box height={300}>
-        <PlaceholderInput onAddClick={() => setModalOpen(true)}>
-          {value && (
+        <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
+          {value.image && (
             <LayerContainer>
-              <Layer>
-                <Image src={value.url} height={300} contain />
-              </Layer>
-              <Layer>
-                <Box
-                  padding={Spacing.ExtraSmall}
-                  flexDirection="row"
-                  justifyContent="flex-end"
-                  flex>
+              {/* TODO: Allow layer position, don't fill by default */}
+              <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
+                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
+                  <OptionButtonSmall
+                    icon={MaterialIconImageOutlined}
+                    title="Choose Image"
+                    onClick={() => setChooseModalOpen(true)}
+                  />
+                </Box>
+                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
                   <OptionButtonSmall
                     icon={MaterialIconEditOutlined}
-                    onClick={() => setModalOpen(true)}
+                    title="Edit Image"
+                    onClick={() => setEditModalOpen(true)}
+                  />
+                </Box>
+                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
+                  <OptionButtonSmall
+                    icon={MaterialIconSyncAlt}
+                    title="Use as Meta Image"
+                    onClick={() => setChooseModalOpen(true)}
                   />
                 </Box>
               </Layer>
+              <Image src={value.image.url} height={300} contain />
             </LayerContainer>
           )}
         </PlaceholderInput>
       </Box>
-      <Drawer open={isModalOpen} width={480}>
+      <Box marginTop={Spacing.ExtraSmall}>
+        <TypograpyTextArea variant="subtitle2" align="center" placeholder="Caption" />
+      </Box>
+      <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
-            onClose={() => setModalOpen(false)}
+            onClose={() => setChooseModalOpen(false)}
             onSelect={value => {
-              setModalOpen(false)
-              onChange(value)
+              setChooseModalOpen(false)
+              handleImageChange(value)
             }}
           />
         )}
+      </Drawer>
+      <Drawer open={isEditModalOpen} width={480}>
+        {() => <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />}
       </Drawer>
     </>
   )

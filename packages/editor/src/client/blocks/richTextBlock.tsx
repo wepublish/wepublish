@@ -15,7 +15,12 @@ import {
   MaterialIconLink
 } from '@karma.run/icons'
 
-import {RichTextField, RichTextFieldProps, Typography, RichTextMenuPlugin} from '@karma.run/ui'
+import {
+  RichTextInputBlock,
+  RichTextInputBlockProps,
+  Typography,
+  RichTextMenuPlugin
+} from '@karma.run/ui'
 
 enum BlockType {
   Heading2 = 'heading-two',
@@ -270,7 +275,6 @@ const schema: SchemaProperties = {
       }
     ],
     normalize: (editor, error) => {
-      console.log(error)
       if (error.code === 'child_type_invalid') {
         editor.setNodeByKey(error.child.key, {type: BlockType.Paragraph})
       }
@@ -291,6 +295,13 @@ const schema: SchemaProperties = {
   // }
 }
 
-export function RichTextBlock(props: RichTextFieldProps) {
-  return <RichTextField {...props} plugins={plugins} schema={schema}></RichTextField>
+export function RichTextBlock(props: RichTextInputBlockProps) {
+  return (
+    <RichTextInputBlock
+      {...props}
+      plugins={plugins}
+      schema={schema}
+      placeholder="Start writing..."
+    />
+  )
 }

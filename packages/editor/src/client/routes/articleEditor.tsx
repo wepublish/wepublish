@@ -6,7 +6,7 @@ import {
   NavigationBar,
   NavigationButton,
   BlockListValue,
-  BlockListField
+  BlockList
 } from '@karma.run/ui'
 
 import {
@@ -15,18 +15,19 @@ import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPublishOutlined,
   MaterialIconSaveOutlined,
-  MaterialIconImage
+  MaterialIconImage,
+  MaterialIconTitle
 } from '@karma.run/icons'
 
-import {ImageReference} from '../api/types'
 import {RouteNavigationLinkButton, ArticleListRoute} from '../route'
 import {RichTextBlock} from '../blocks/richTextBlock'
-import {ImageBlock} from '../blocks/imageBlock'
+import {ImageBlock, ImageBlockValue} from '../blocks/imageBlock'
+import {TitleBlockValue, TitleBlock} from '../blocks/titleBlock'
 
-export type RichTextBlockValue = BlockListValue<'richText', Value>
-export type TitleBlockValue = BlockListValue<'title', {title: string; text: string}>
-export type ImageBlockValue = BlockListValue<'image', ImageReference | null>
-export type BlockValue = RichTextBlockValue | ImageBlockValue
+export type RichTextBlockListValue = BlockListValue<'richText', Value>
+export type TitleBlockListValue = BlockListValue<'title', TitleBlockValue>
+export type ImageBlockListValue = BlockListValue<'image', ImageBlockValue>
+export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
 
 export function ArticleEditor() {
   const [blocks, setBlocks] = useState<BlockValue[]>([])
@@ -51,8 +52,15 @@ export function ArticleEditor() {
           }
         />
       }>
-      <BlockListField value={blocks} onChange={blocks => setBlocks(blocks)}>
+      <BlockList value={blocks} onChange={blocks => setBlocks(blocks)} allowInit>
         {{
+          title: {
+            field: props => <TitleBlock {...props} />,
+            defaultValue: {title: '', lead: ''},
+            label: 'Title',
+            icon: MaterialIconTitle
+          },
+
           richText: {
             field: props => <RichTextBlock {...props} />,
             defaultValue: Value.create({document: Document.create([Block.create('')])}),
@@ -62,12 +70,12 @@ export function ArticleEditor() {
 
           image: {
             field: props => <ImageBlock {...props} />,
-            defaultValue: null,
+            defaultValue: {image: null, caption: ''},
             label: 'Image',
             icon: MaterialIconImage
           }
         }}
-      </BlockListField>
+      </BlockList>
     </EditorTemplate>
   )
 }
