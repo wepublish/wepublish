@@ -246,13 +246,14 @@ const standardRichTextEditItems = [
     label: BlockType.NumberedList,
     onApply: (editor: Editor, value: Value) => toggleList(editor, value, BlockType.NumberedList),
     isActive: isListOfType
-  },
-  {
-    icon: MaterialIconLink,
-    label: InlineType.Link,
-    onApply: (editor: Editor, value: Value) => {},
-    isActive: hasInlines
   }
+  // TODO: Link
+  // {
+  //   icon: MaterialIconLink,
+  //   label: InlineType.Link,
+  //   onApply: (editor: Editor, value: Value) => {},
+  //   isActive: hasInlines
+  // }
 ]
 
 const plugins: Plugin[] = [

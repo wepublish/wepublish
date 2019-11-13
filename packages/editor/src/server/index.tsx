@@ -11,6 +11,8 @@ import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
 async function asyncMain() {
+  if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
+
   const assetHost = process.env.ASSET_HOST || '/assets'
 
   const assetList = JSON.parse(
@@ -20,6 +22,10 @@ async function asyncMain() {
   const entry = findEntryFromAssetList('client', assetList)
 
   if (!entry) throw new Error("Couldn't find entry in asset list.")
+
+  const clientSettings = {
+    apiURL: process.env.API_URL
+  }
 
   const app = express()
 
@@ -34,7 +40,14 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <script async src={`${assetHost}/${entry}`} crossOrigin=""></script>
+
+          <script
+            type="application/json"
+            id={ElementID.Settings}
+            dangerouslySetInnerHTML={{__html: JSON.stringify(clientSettings)}}
+          />
+
+          <script async src={`${assetHost}/${entry}`} crossOrigin="" />
         </head>
         <body>
           <div id={ElementID.ReactRoot}></div>

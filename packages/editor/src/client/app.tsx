@@ -56,7 +56,12 @@ export function App() {
         return <Base>{contentForRoute(current)}</Base>
 
       case RouteType.ArticleCreate:
-        return <ArticleEditor />
+      case RouteType.ArticleEdit:
+        return (
+          <ArticleEditor
+            id={current.type === RouteType.ArticleEdit ? current.params.id : undefined}
+          />
+        )
     }
   }
 

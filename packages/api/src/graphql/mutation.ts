@@ -10,7 +10,7 @@ import {
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
-import {GraphQLArticle, GraphQLArticleInput, GraphQLInputArticleBlockUnionMap} from './article'
+import {GraphQLArticleInput, GraphQLArticle, GraphQLArticleBlockUnionMap} from './article'
 
 import {Context} from '../context'
 import {generateID, generateTokenID} from '../utility'
@@ -19,8 +19,8 @@ import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
 import {GraphQLImage, GraphQLInputPoint} from './image'
 import {BlockMap} from '../adapter/blocks'
-import {ArticleInput} from '../adapter/article'
 import {ImageUpdate} from '../adapter/image'
+import {VersionState} from '../adapter/versionState'
 
 export const GraphQLMutation = new GraphQLObjectType<any, Context>({
   name: 'Mutation',
@@ -60,30 +60,26 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
     createArticle: {
       type: GraphQLArticle,
       args: {
-        article: {
-          type: GraphQLNonNull(GraphQLArticleInput),
-          description: 'Article to create.'
-        }
+        input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
-      async resolve(_root, {article}, {storageAdapter, authenticate}) {
+      async resolve(_root, {input}, {authenticate, storageAdapter}) {
         await authenticate()
 
-        const articleInput: ArticleInput = {
-          ...article,
+        return storageAdapter.createArticle({
+          ...input,
           id: await generateID(),
-          blocks: article.blocks.map((value: any) => {
+          state: VersionState.Draft,
+          blocks: input.blocks.map((value: any) => {
             const valueKeys = Object.keys(value)
 
             if (valueKeys.length === 0) {
-              throw new Error(
-                `Received no block types in ${GraphQLInputArticleBlockUnionMap.name}.`
-              )
+              throw new Error(`Received no block types in ${GraphQLArticleBlockUnionMap.name}.`)
             }
 
             if (valueKeys.length > 1) {
               throw new Error(
                 `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
-                  GraphQLInputArticleBlockUnionMap.name
+                  GraphQLArticleBlockUnionMap.name
                 }, they're mutually exclusive.`
               )
             }
@@ -92,9 +88,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
 
             return {type: key, ...value[key]} as any // TODO
           })
-        }
-
-        return storageAdapter.createArticle(articleInput)
+        })
       }
     },
     uploadImages: {

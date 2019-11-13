@@ -853,8 +853,8 @@
     pino-pretty "^3.2.0"
     pump "^3.0.0"
 
-"@karma.run/react@^0.0.19", "@karma.run/react@file:../karma.run-packages/packages/react":
-  version "0.0.19"
+"@karma.run/react@^0.0.20", "@karma.run/react@file:../karma.run-packages/packages/react":
+  version "0.0.20"
   dependencies:
     "@karma.run/utility" "^0.0.1"
     csstype "^2.6.6"
@@ -865,10 +865,10 @@
     path-to-regexp "^3.0.0"
 
 "@karma.run/ui@file:../karma.run-packages/packages/ui":
-  version "0.0.2"
+  version "0.0.5"
   dependencies:
     "@karma.run/icons" "^0.0.0"
-    "@karma.run/react" "^0.0.19"
+    "@karma.run/react" "^0.0.20"
     "@karma.run/utility" "^0.0.1"
     "@types/slate" "^0.47.3"
     "@types/slate-react" "^0.22.5"
@@ -6754,6 +6754,11 @@ slate@^0.47.8:
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
     type-of "^2.0.1"
+
+slugify@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.3.6.tgz#ba5fd6159b570fe4811d02ea9b1f4906677638c3"
+  integrity sha512-wA9XS475ZmGNlEnYYLPReSfuz/c3VQsEMoU43mi6OnKMCdbnFXd4/Yg7J0lBv8jkPolacMpOrWEaoYxuE1+hoQ==
 
 snapdragon-node@^2.0.1:
   version "2.1.1"

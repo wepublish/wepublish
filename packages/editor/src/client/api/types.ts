@@ -1,3 +1,8 @@
+export enum VersionState {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED'
+}
+
 export interface ImageTransformation {
   readonly width?: number
   readonly height?: number

@@ -15,30 +15,35 @@ import {UIProvider} from '@karma.run/ui'
 import {hot} from 'react-hot-loader/root'
 import {App} from './app'
 import {ElementID} from '../shared/elementID'
+import {ClientSettings} from '../shared/types'
 import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
 import {LocalStorageKey} from './utility'
 
-const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem(LocalStorageKey.SessionToken)
-
-  operation.setContext({
-    headers: {
-      authorization: token ? `Bearer ${token}` : ''
-    }
-  })
-
-  return forward(operation)
-})
-
-const client = new ApolloClient({
-  link: authLink.concat(createUploadLink({uri: 'http://localhost:3000'})),
-  cache: new InMemoryCache()
-})
-
 const HotApp = hot(App)
 
 const onDOMContentLoaded = async () => {
+  const {apiURL}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+
+  const authLink = new ApolloLink((operation, forward) => {
+    const token = localStorage.getItem(LocalStorageKey.SessionToken)
+
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    })
+
+    return forward(operation)
+  })
+
+  const client = new ApolloClient({
+    link: authLink.concat(createUploadLink({uri: apiURL})),
+    cache: new InMemoryCache()
+  })
+
   const styleRenderer = createStyleRenderer()
   renderStyles(styleRenderer)
 

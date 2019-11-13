@@ -244,7 +244,8 @@ export class MemoryStorageAdapter implements StorageAdapter {
         articleVersion.state === VersionState.Published ? articleVersion.createdAt : undefined,
 
       publishedVersion: articleVersion.state === VersionState.Published ? 0 : undefined,
-      draftVersion: articleVersion.state === VersionState.Draft ? 0 : undefined
+      draftVersion: articleVersion.state === VersionState.Draft ? 0 : undefined,
+      latestVersion: 0
     }
   }
 
@@ -262,9 +263,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
       version => version.state === VersionState.Published
     )
 
-    const draftVersion = reverseVersions.find(
-      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
-    )
+    const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
 
     return {
       id: article.id,
@@ -276,7 +275,8 @@ export class MemoryStorageAdapter implements StorageAdapter {
       publishedAt: publishedVersion && publishedVersion.updatedAt,
 
       publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
-      draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined
+      draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined,
+      latestVersion: article.versions.length - 1
     }
   }
 
@@ -355,9 +355,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
       version => version.state === VersionState.Published
     )
 
-    const draftVersion = reverseVersions.find(
-      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
-    )
+    const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
 
     return {
       id: page.id,
@@ -397,9 +395,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
       version => version.state === VersionState.Published
     )
 
-    const draftVersion = reverseVersions.find(
-      version => version.state === VersionState.Draft || version.state === VersionState.DraftReview
-    )
+    const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
 
     return {
       id: page.id,
@@ -458,10 +454,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
         version => version.state === VersionState.Published
       )
 
-      const draftVersion = reverseVersions.find(
-        version =>
-          version.state === VersionState.Draft || version.state === VersionState.DraftReview
-      )
+      const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
 
       return {
         id: article.id,
@@ -473,7 +466,8 @@ export class MemoryStorageAdapter implements StorageAdapter {
         publishedAt: publishedVersion && publishedVersion.updatedAt,
 
         publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
-        draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined
+        draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined,
+        latestVersion: article.versions.length - 1
       }
     })
 

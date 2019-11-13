@@ -30,7 +30,7 @@ export function TitleBlock({}: TitleBlockProps) {
           />
         </Layer>
         <TypograpyTextArea variant="title" align="center" placeholder="Title" />
-        <TypograpyTextArea variant="body2" align="center" placeholder="Lead Text" />
+        <TypograpyTextArea variant="body1" align="center" placeholder="Lead Text" />
       </LayerContainer>
     </>
   )

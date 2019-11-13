@@ -36,7 +36,7 @@ export function ImageBlock({value, onChange, allowInit}: BlockProps<ImageBlockVa
     if (allowInit) {
       setChooseModalOpen(true)
     }
-  }, [allowInit])
+  }, [])
 
   function handleImageChange(image: ImageReference | null) {
     onChange({...value, image})

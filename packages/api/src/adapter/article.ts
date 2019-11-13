@@ -27,6 +27,7 @@ export interface Article {
   readonly updatedAt: Date
   readonly publishedAt?: Date
 
+  readonly latestVersion: number
   readonly publishedVersion?: number
   readonly draftVersion?: number
 }
