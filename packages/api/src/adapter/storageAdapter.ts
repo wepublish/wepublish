@@ -22,23 +22,21 @@ export interface StorageAdapter {
   getNavigation(key: string): Promise<Navigation | null>
 
   // Page
-  createPage(article: PageInput): Promise<Page>
-  getPage(id: string): Promise<Page | null>
-  getPageBySlug(slug: string): Promise<Page | null>
+  createPage(id: string, input: PageInput): Promise<Page>
+  createPageVersion(id: string, input: PageInput): Promise<Page | null>
+  updatePageVersion(id: string, version: number, input: PageInput): Promise<Page | null>
+
   getPages(): Promise<Page[]>
+  getPage(id: string | undefined, slug?: string): Promise<Page | null>
 
   getPageVersion(id: string, version: number): Promise<PageVersion | null>
   getPageVersions(id: string): Promise<PageVersion[]>
   getPageVersionBlocks(id: string, version: number): Promise<PageBlock[]>
 
   // Articles
-  createArticle(article: ArticleInput): Promise<Article>
-  createArticleVersion(id: string, input: Omit<ArticleInput, 'id'>): Promise<Article | null>
-  updateArticleVersion(
-    id: string,
-    version: number,
-    input: Omit<ArticleInput, 'id'>
-  ): Promise<Article | null>
+  createArticle(id: string, input: ArticleInput): Promise<Article>
+  createArticleVersion(id: string, input: ArticleInput): Promise<Article | null>
+  updateArticleVersion(id: string, version: number, input: ArticleInput): Promise<Article | null>
 
   getArticles(args: ArticlesArguments): Promise<Article[]>
   getArticle(id: string): Promise<Article | null>

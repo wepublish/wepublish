@@ -126,6 +126,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                   <Card
                     onClick={() => onSelect({id, width, height, url: hdURL})}
                     style={{cursor: 'pointer'}}>
+                    {/* TODO: Add Clickable */}
                     <Image src={url} />
                   </Card>
                 </Box>

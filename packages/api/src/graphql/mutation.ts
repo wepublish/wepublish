@@ -90,9 +90,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
       async resolve(_root, {input}, {authenticate, storageAdapter}) {
         await authenticate()
 
-        return storageAdapter.createArticle({
+        return storageAdapter.createArticle(await generateID(), {
           ...input,
-          id: await generateID(),
           state: VersionState.Draft,
           blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
         })
@@ -117,14 +116,12 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         if (version.state === VersionState.Published) {
           return storageAdapter.createArticleVersion(id, {
             ...input,
-            id: await generateID(),
             state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         } else {
           return storageAdapter.updateArticleVersion(id, article.latestVersion, {
             ...input,
-            id: await generateID(),
             state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
@@ -139,9 +136,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
       async resolve(_root, {input}, {authenticate, storageAdapter}) {
         await authenticate()
 
-        return storageAdapter.createPage({
+        return storageAdapter.createPage(await generateID(), {
           ...input,
-          id: await generateID(),
           state: VersionState.Draft,
           blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
         })
@@ -157,23 +153,21 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
       async resolve(_root, {id, state, input}, {authenticate, storageAdapter}) {
         await authenticate()
 
-        const article = await storageAdapter.getArticle(id)
-        if (!article) throw new UserInputError('Invalid article ID.')
+        const page = await storageAdapter.getPage(id)
+        if (!page) throw new UserInputError('Invalid page ID.')
 
-        const version = await storageAdapter.getArticleVersion(id, article.latestVersion)
-        if (!version) throw new Error('Latest article version not found.')
+        const version = await storageAdapter.getPageVersion(id, page.latestVersion)
+        if (!version) throw new Error('Latest page version not found.')
 
         if (version.state === VersionState.Published) {
-          return storageAdapter.createArticleVersion(id, {
+          return storageAdapter.createPageVersion(id, {
             ...input,
-            id: await generateID(),
             state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         } else {
-          return storageAdapter.updateArticleVersion(id, article.latestVersion, {
+          return storageAdapter.updatePageVersion(id, page.latestVersion, {
             ...input,
-            id: await generateID(),
             state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })

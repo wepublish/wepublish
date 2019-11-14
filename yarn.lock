@@ -853,8 +853,10 @@
     pino-pretty "^3.2.0"
     pump "^3.0.0"
 
-"@karma.run/react@^0.0.20", "@karma.run/react@file:../karma.run-packages/packages/react":
-  version "0.0.20"
+"@karma.run/react@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.0.21.tgz#ec0513ef00193c56d5a6a6e9199cc6d3d3633ecb"
+  integrity sha512-OzRetkgVvQTSz7IHKr22+s68FioAt/9KCajvwO5qmicP7b4CBloTiNrRwsoV6xztw2g+krgYC23svjb3eg5JCg==
   dependencies:
     "@karma.run/utility" "^0.0.1"
     csstype "^2.6.6"
@@ -864,11 +866,13 @@
     fela-plugin-prefixer "^10.6.1"
     path-to-regexp "^3.0.0"
 
-"@karma.run/ui@file:../karma.run-packages/packages/ui":
-  version "0.0.5"
+"@karma.run/ui@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.0.6.tgz#c23089570f9de5fcfafd1f7cc2292e5925ab29bb"
+  integrity sha512-0N1FJEpc6shRypvOaUNXXmw969ZSOfcb9MKSY/8ZWLV/ZMelkpbEq4ojO10Xbn/IGhe9ZPhQ1O71CHHSAhIvug==
   dependencies:
     "@karma.run/icons" "^0.0.0"
-    "@karma.run/react" "^0.0.20"
+    "@karma.run/react" "^0.0.21"
     "@karma.run/utility" "^0.0.1"
     "@types/slate" "^0.47.3"
     "@types/slate-react" "^0.22.5"

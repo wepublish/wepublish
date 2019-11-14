@@ -33,11 +33,11 @@ export function PublishArticlePanel({metadata, onClose, onConfirm}: PublishArtic
       />
       <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label="Pre-title">{metadata.preTitle}</DescriptionListItem>
-          <DescriptionListItem label="Title">{metadata.title}</DescriptionListItem>
-          <DescriptionListItem label="Lead">{metadata.lead}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ')}</DescriptionListItem>
+          <DescriptionListItem label="Pre-title">{metadata.preTitle || '-'}</DescriptionListItem>
+          <DescriptionListItem label="Title">{metadata.title || '-'}</DescriptionListItem>
+          <DescriptionListItem label="Lead">{metadata.lead || '-'}</DescriptionListItem>
+          <DescriptionListItem label="Slug">{metadata.slug || '-'}</DescriptionListItem>
+          <DescriptionListItem label="Tags">{metadata.tags.join(', ') || '-'}</DescriptionListItem>
           <DescriptionListItem label="Breaking News">
             {metadata.breaking ? 'Yes' : 'No'}
           </DescriptionListItem>

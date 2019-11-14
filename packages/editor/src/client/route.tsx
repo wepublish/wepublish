@@ -51,7 +51,7 @@ export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/arti
 
 export const PageListRoute = route(RouteType.PageList, routePath`/pages`)
 export const PageCreateRoute = route(RouteType.PageCreate, routePath`/page/create`)
-export const PageEditRoute = route(RouteType.PageEdit, routePath`/page/${required('id')}`)
+export const PageEditRoute = route(RouteType.PageEdit, routePath`/page/edit/${required('id')}`)
 
 export const ImageListRoute = route(RouteType.ImageList, routePath`/images`)
 export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`)
@@ -69,11 +69,11 @@ export const routes = [
   LoginRoute,
   LogoutRoute,
   PageListRoute,
-  PageEditRoute,
   PageCreateRoute,
+  PageEditRoute,
   ArticleListRoute,
-  ArticleEditRoute,
   ArticleCreateRoute,
+  ArticleEditRoute,
   ImageListRoute,
   ImageUploadRoute,
   ImageEditRoute,

@@ -81,7 +81,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, loading: isArticleLoading} = useGetPageQuery({
+  const {data: pageData, loading: isPageLoading} = useGetPageQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {
@@ -91,24 +91,24 @@ export function PageEditor({id}: PageEditorProps) {
     }
   })
 
-  const isDisabled = isArticleLoading
+  const isDisabled = isPageLoading
 
   useEffect(() => {
-    if (pageData && pageData.page) {
-      const articleVersion = pageData.page.latest
-      const image = articleVersion.image
+    if (pageData?.page) {
+      const latest = pageData.page.latest
+      const {slug, title, description, tags, image, blocks} = latest
 
       setMetadata({
-        slug: articleVersion.slug ?? '',
-        title: articleVersion.title,
-        description: articleVersion.description,
-        tags: articleVersion.tags,
+        slug,
+        title,
+        description,
+        tags,
         image: image
           ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
           : null
       })
 
-      setBlocks(articleVersion.blocks.map(blockForQueryBlock))
+      setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [pageData])
 
@@ -137,7 +137,7 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, state: VersionState.Draft, input}})
 
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Saved')
+      setSuccessMessage('Page Draft Saved')
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -149,7 +149,7 @@ export function PageEditor({id}: PageEditorProps) {
       }
 
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Created')
+      setSuccessMessage('Page Draft Created')
     }
   }
 
@@ -161,7 +161,7 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setSuccessToastOpen(true)
-    setSuccessMessage('Article Published')
+    setSuccessMessage('Page Published')
   }
 
   if (pageData && !pageData.page) {
@@ -216,7 +216,7 @@ export function PageEditor({id}: PageEditorProps) {
             }
           />
         }>
-        {isArticleLoading ? null : ( // TODO: Loading indicator
+        {isPageLoading ? null : ( // TODO: Loading indicator
           <BlockList value={blocks} onChange={blocks => setBlocks(blocks)}>
             {{
               [BlockType.ArticleTeaserGrid1]: {
@@ -300,7 +300,22 @@ function blockForQueryBlock(block: any): PageBlockValue | null {
         key,
         type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid3,
         value: {
-          teasers: [] // TODO
+          teasers: block.teasers.map(
+            (teaser: any) =>
+              teaser && {
+                type: teaser.type,
+                article: teaser.article && {
+                  id: teaser.article.id,
+                  title: teaser.article.latest.title,
+                  image: teaser.article.latest.image && {
+                    id: teaser.article.latest.image.id,
+                    width: teaser.article.latest.image.width,
+                    height: teaser.article.latest.image.height,
+                    url: teaser.article.latest.image.transform[0]
+                  }
+                }
+              }
+          )
         }
       }
 

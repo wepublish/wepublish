@@ -124,24 +124,15 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       args: {
         id: {
           description: 'ID of the Page.',
-          type: GraphQLString
-        }
-      },
-      resolve(_root, {id}, {storageAdapter}) {
-        return storageAdapter.getPage(id)
-      }
-    },
-
-    pageBySlug: {
-      type: GraphQLPage,
-      args: {
+          type: GraphQLID
+        },
         slug: {
           description: 'Slug of the Page.',
           type: GraphQLString
         }
       },
-      resolve(_root, {slug}, {storageAdapter}) {
-        return storageAdapter.getPageBySlug(slug)
+      resolve(_root, {id, slug}, {storageAdapter}) {
+        return storageAdapter.getPage(id, slug)
       }
     },
 

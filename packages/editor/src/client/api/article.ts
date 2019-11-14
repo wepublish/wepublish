@@ -18,6 +18,12 @@ const ListArticlesQuery = gql`
         latest {
           state
           title
+          image {
+            id
+            width
+            height
+            transform(transformations: [{width: 800}]) # TODO: Input as variable
+          }
         }
       }
     }
@@ -28,9 +34,7 @@ export interface ListArticlesData {
   readonly articles: any
 }
 
-export interface ListArticlesVariables {
-  readonly input: ArticleInput
-}
+export interface ListArticlesVariables {}
 
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>

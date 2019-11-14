@@ -100,25 +100,25 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const isDisabled = isArticleLoading
 
   useEffect(() => {
-    if (articleData && articleData.article) {
-      const articleVersion = articleData.article.latest
-      const image = articleVersion.image
+    if (articleData?.article) {
+      const {latest} = articleData.article
+      const {slug, preTitle, title, lead, tags, shared, breaking, authors, image, blocks} = latest
 
       setMetadata({
-        slug: articleVersion.slug ?? '',
-        preTitle: articleVersion.preTitle || '',
-        title: articleVersion.title,
-        lead: articleVersion.lead,
-        tags: articleVersion.tags,
-        shared: articleVersion.shared,
-        breaking: articleVersion.breaking,
-        authors: articleVersion.authors,
+        slug,
+        preTitle: preTitle || '',
+        title,
+        lead,
+        tags,
+        shared,
+        breaking,
+        authors,
         image: image
           ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
           : null
       })
 
-      setBlocks(articleVersion.blocks.map(blockForQueryBlock).filter((block: any) => block != null))
+      setBlocks(blocks.map(blockForQueryBlock).filter((block: any) => block != null))
     }
   }, [articleData])
 

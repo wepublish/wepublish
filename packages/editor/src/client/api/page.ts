@@ -27,9 +27,7 @@ export interface ListPagesData {
   readonly pages: any
 }
 
-export interface ListPagesVariables {
-  readonly input: PageInput
-}
+export interface ListPagesVariables {}
 
 export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPagesVariables>) {
   return useQuery<ListPagesData, ListPagesVariables>(ListPagesQuery, opts)

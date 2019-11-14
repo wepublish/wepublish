@@ -1,9 +1,23 @@
 import React, {useState} from 'react'
 
-import {PlaceholderInput, Drawer, BlockProps, Box, Grid, Column} from '@karma.run/ui'
+import {
+  PlaceholderInput,
+  Drawer,
+  BlockProps,
+  Box,
+  Grid,
+  Column,
+  LayerContainer,
+  Layer,
+  Spacing,
+  OptionButtonSmall,
+  Image,
+  Typography
+} from '@karma.run/ui'
 
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImageReference, ArticleReference} from '../api/types'
+import {ArticleChoosePanel} from '../panel/articleChoosePanel'
+import {ArticleReference} from '../api/types'
+import {MaterialIconEditOutlined, MaterialIconDeleteOutlined} from '@karma.run/icons'
 
 export interface ArticleTeaser {
   readonly type: string
@@ -16,19 +30,80 @@ export interface TeaserGridBlockValue {
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const {teasers} = value
+  const [choosingIndex, setChoosingIndex] = useState(0)
 
-  function handleTeaserChange(image: ImageReference | null) {
-    onChange({...value})
+  const {teasers} = value
+  const numColumns = teasers.length
+
+  function handleArticleChange(index: number, article: ArticleReference | null) {
+    const currentValue = teasers[index] || {}
+
+    onChange({
+      teasers: Object.assign([], teasers, {
+        [index]: article ? {...currentValue, article} : null
+      })
+    })
   }
 
   return (
     <>
-      <Grid>
+      <Grid spacing={Spacing.ExtraSmall}>
         {teasers.map((value, index) => (
+          // NOTE: Using index as a key here should be fine.
           <Column key={index} ratio={1 / teasers.length}>
-            <Box height={200}>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}></PlaceholderInput>
+            <Box height={numColumns === 1 ? 400 : 300}>
+              <PlaceholderInput
+                onAddClick={() => {
+                  setChoosingIndex(index)
+                  setChooseModalOpen(true)
+                }}>
+                {value && (
+                  <LayerContainer>
+                    {/* TODO: Allow layer position, don't fill by default */}
+                    <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
+                      <Box margin={Spacing.ExtraSmall}>
+                        <OptionButtonSmall
+                          icon={MaterialIconEditOutlined}
+                          title="Choose Article"
+                          onClick={() => {
+                            setChoosingIndex(index)
+                            setChooseModalOpen(true)
+                          }}
+                        />
+                      </Box>
+                      <Box margin={Spacing.ExtraSmall}>
+                        <OptionButtonSmall
+                          icon={MaterialIconDeleteOutlined}
+                          title="Remove Article"
+                          onClick={() => {
+                            handleArticleChange(index, null)
+                          }}
+                        />
+                      </Box>
+                    </Layer>
+
+                    <Layer
+                      style={{
+                        bottom: 0,
+                        top: 'unset',
+                        left: 'unset',
+                        height: numColumns === 1 ? 'auto' : '150px',
+                        backgroundColor: numColumns === 1 ? 'rgba(34,34,34,0.6)' : 'white'
+                      }}>
+                      <Box padding={numColumns === 1 ? Spacing.Small : Spacing.ExtraSmall}>
+                        <Typography
+                          variant="h2"
+                          align={numColumns === 1 ? 'center' : 'left'}
+                          color={numColumns === 1 ? 'white' : 'dark'}>
+                          {value.article.title || 'Untitled'}
+                        </Typography>
+                      </Box>
+                    </Layer>
+
+                    {value.article.image && <Image src={value.article.image.url} />}
+                  </LayerContainer>
+                )}
+              </PlaceholderInput>
             </Box>
           </Column>
         ))}
@@ -36,11 +111,11 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
 
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
-          <ImageSelectPanel
+          <ArticleChoosePanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={article => {
               setChooseModalOpen(false)
-              handleTeaserChange(value)
+              handleArticleChange(choosingIndex, article)
             }}
           />
         )}
