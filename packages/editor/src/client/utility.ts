@@ -5,5 +5,5 @@ export enum LocalStorageKey {
 }
 
 export function slugify(value: string) {
-  return baseSlugify(value, {remove: /[*+~.()'"!:@]/g})
+  return baseSlugify(value, {remove: /[^0-9a-z]/gi}) // TODO: Replace with custom slugify
 }

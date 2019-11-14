@@ -15,7 +15,7 @@ import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
-import {GraphQLPage} from './page'
+import {GraphQLPage, GraphQLPageConnection} from './page'
 import {PageNavigationLink, NavigationLinkType, ArticleNavigationLink} from '../adapter/navigation'
 import {ArticlesArguments} from '../adapter/article'
 import {PeerArguments, PeersArguments} from '../adapter/peer'
@@ -144,6 +144,16 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         return storageAdapter.getPageBySlug(slug)
       }
     },
+
+    pages: {
+      type: GraphQLNonNull(GraphQLPageConnection),
+      async resolve(_root, args, context: Context, info) {
+        return {
+          nodes: await context.storageAdapter.getPages()
+        }
+      }
+    },
+
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       description: 'Request articles based on a date range.',

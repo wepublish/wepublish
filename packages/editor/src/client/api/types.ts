@@ -3,6 +3,14 @@ export enum VersionState {
   Published = 'PUBLISHED'
 }
 
+export enum BlockType {
+  RichText = 'richText',
+  Title = 'title',
+  Image = 'image',
+  ArticleTeaserGrid1 = 'articleTeaserGrid1',
+  ArticleTeaserGrid3 = 'articleTeaserGrid3'
+}
+
 export interface ImageTransformation {
   readonly width?: number
   readonly height?: number
@@ -13,4 +21,10 @@ export interface ImageReference {
   readonly url: string
   readonly width: number
   readonly height: number
+}
+
+export interface ArticleReference {
+  readonly id: string
+  readonly title: string
+  readonly image: ImageReference
 }

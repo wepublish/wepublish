@@ -9,6 +9,7 @@ import {ArticleList} from './routes/articleList'
 import {ArticleEditor} from './routes/articleEditor'
 import {ImageList} from './routes/imageList'
 import {PageList} from './routes/pageList'
+import {PageEditor} from './routes/pageEditor'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -16,8 +17,6 @@ export function contentForRoute(route: Route) {
       return <Login />
 
     case RouteType.Index:
-      return <ArticleList />
-
     case RouteType.ArticleList:
       return <ArticleList />
 
@@ -64,7 +63,7 @@ export function App() {
       case RouteType.PageCreate:
       case RouteType.PageEdit:
         return (
-          <ArticleEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
+          <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
         )
     }
   }

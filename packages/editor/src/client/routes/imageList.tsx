@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Typography, Box, Spacing, Grid, Column, Drawer, Image, Card, Divider} from '@karma.run/ui'
+import {Typography, Box, Spacing, Grid, Column, Drawer, Image, Card} from '@karma.run/ui'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {

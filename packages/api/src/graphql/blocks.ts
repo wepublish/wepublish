@@ -75,7 +75,7 @@ export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaser
 export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
-    type: {type: GraphQLNonNull(GraphQLString)},
+    type: {type: GraphQLString},
     overrides: {type: GraphQLNonNull(GraphQLArticleTeaserOverrides)},
     article: {
       type: GraphQLNonNull(GraphQLArticle),
@@ -91,7 +91,7 @@ export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaser
     name: 'ArticleTeaserGridBlock',
     fields: {
       key: {type: GraphQLNonNull(GraphQLID)},
-      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleTeaser)))},
+      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaser))},
       numColumns: {type: GraphQLNonNull(GraphQLInt)}
     },
     interfaces: [GraphQLBaseBlock],
@@ -309,5 +309,21 @@ export const GraphQLInputImageBlock = new GraphQLInputObjectType({
   fields: {
     caption: {type: GraphQLString},
     imageID: {type: GraphQLID}
+  }
+})
+
+export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
+  name: 'ArticleTeaserInput',
+  fields: {
+    type: {type: GraphQLString},
+    articleID: {type: GraphQLID}
+  }
+})
+
+export const GraphQLArticleTeaserGridBlockInput = new GraphQLInputObjectType({
+  name: 'ArticleTeaserGridBlockInput',
+  fields: {
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaserInput))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

@@ -3,9 +3,12 @@ import React, {useState} from 'react'
 import {PlaceholderInput, Drawer, BlockProps, Box, Grid, Column} from '@karma.run/ui'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImageReference} from '../api/types'
+import {ImageReference, ArticleReference} from '../api/types'
 
-export interface ArticleTeaser {}
+export interface ArticleTeaser {
+  readonly type: string
+  readonly article: ArticleReference
+}
 
 export interface TeaserGridBlockValue {
   readonly teasers: Array<ArticleTeaser | null>
@@ -22,8 +25,8 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
   return (
     <>
       <Grid>
-        {teasers.map(() => (
-          <Column ratio={1 / teasers.length}>
+        {teasers.map((value, index) => (
+          <Column key={index} ratio={1 / teasers.length}>
             <Box height={200}>
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}></PlaceholderInput>
             </Box>

@@ -33,14 +33,12 @@ export interface Article {
 }
 
 export interface ArticleVersion {
-  readonly articleID: string
-
+  readonly id: string
   readonly version: number
   readonly state: VersionState
 
   readonly createdAt: Date
   readonly updatedAt: Date
-  readonly breaking: boolean
 
   readonly preTitle?: string
   readonly title: string
@@ -50,6 +48,9 @@ export interface ArticleVersion {
 
   readonly imageID?: string
   readonly authorIDs: string[]
+
+  readonly shared: boolean
+  readonly breaking: boolean
 }
 
 export interface ArticleTeaserOverrides {
@@ -77,6 +78,7 @@ export interface ArticleInput {
   readonly imageID?: string
 
   readonly breaking: boolean
+  readonly shared: boolean
   readonly blocks: ArticleBlock[]
   readonly authorIDs: string[]
 }

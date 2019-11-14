@@ -1,22 +1,22 @@
 import React from 'react'
 
 import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
-import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
-import {useListArticlesQuery} from '../api/article'
+import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
+import {useListPagesQuery} from '../api/page'
 
 export function PageList() {
-  const {data} = useListArticlesQuery({fetchPolicy: 'no-cache'})
+  const {data} = useListPagesQuery({fetchPolicy: 'no-cache'})
 
   return (
     <>
       <Box marginBottom={Spacing.Large} flexDirection="row" flex>
         <Typography variant="h1">Pages</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label="New Page" route={ArticleCreateRoute.create({})} />
+        <RouteLinkButton color="primary" label="New Page" route={PageCreateRoute.create({})} />
       </Box>
       <Box>
-        {data?.articles.nodes
+        {data?.pages.nodes
           .sort((a: any, b: any) => {
             const dateA = new Date(a.updatedAt)
             const dateB = new Date(b.updatedAt)
@@ -26,7 +26,7 @@ export function PageList() {
           .map(({id, createdAt, updatedAt, latest: {title}}: any) => (
             <Box key={id} marginBottom={Spacing.Small}>
               <Box marginBottom={Spacing.ExtraSmall}>
-                <Link route={ArticleEditRoute.create({id})}>
+                <Link route={PageEditRoute.create({id})}>
                   <Typography variant="h3" color={title ? 'dark' : 'gray'}>
                     {title || 'Untitled'}
                   </Typography>

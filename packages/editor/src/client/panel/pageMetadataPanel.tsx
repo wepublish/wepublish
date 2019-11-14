@@ -8,7 +8,6 @@ import {
   TextInput,
   Box,
   Spacing,
-  Toggle,
   TextArea,
   PlaceholderInput,
   PanelSectionHeader,
@@ -32,27 +31,23 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
 
-export interface ArticleMetadata {
+export interface PageMetadata {
   readonly slug: string
-  readonly preTitle: string
   readonly title: string
-  readonly lead: string
-  readonly authors: string[]
+  readonly description: string
   readonly tags: string[]
   readonly image: ImageReference | null
-  readonly shared: boolean
-  readonly breaking: boolean
 }
 
-export interface ArticleMetadataPanelProps {
-  readonly value: ArticleMetadata
+export interface PageMetadataPanelProps {
+  readonly value: PageMetadata
 
   onClose?(): void
-  onChange?(value: ArticleMetadata): void
+  onChange?(value: PageMetadata): void
 }
 
-export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, shared, breaking, image} = value
+export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
+  const {title, description, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -70,16 +65,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
           }
         />
-
         <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Pre-title"
-              value={preTitle}
-              onChange={e => onChange?.({...value, preTitle: e.target.value})}
-            />
-          </Box>
-
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
               label="Title"
@@ -92,19 +78,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
           <Box marginBottom={Spacing.Small}>
             <TextArea
-              label="Lead"
+              label="Description"
               description=""
-              placeholder="Lead"
-              value={lead}
-              onValueChange={lead => onChange?.({...value, lead: lead})}
-            />
-          </Box>
-
-          <Box>
-            <Toggle
-              label="Breaking News"
-              checked={breaking}
-              onChange={e => onChange?.({...value, breaking: e.target.checked})}
+              placeholder="Description"
+              value={description}
+              onValueChange={description => onChange?.({...value, description})}
             />
           </Box>
 
@@ -160,15 +138,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               </PlaceholderInput>
             </Card>
           </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Peering" />
-        <PanelSection>
-          <Toggle
-            label="Share with peers"
-            description="Allow peers to publish this Article."
-            checked={shared}
-            onChange={e => onChange?.({...value, shared: e.target.checked})}
-          />
         </PanelSection>
       </Panel>
       <Drawer open={isChooseModalOpen} width={480}>

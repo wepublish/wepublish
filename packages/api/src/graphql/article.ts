@@ -128,6 +128,7 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
     version: {type: GraphQLNonNull(GraphQLInt)},
+    state: {type: GraphQLNonNull(GraphQLVersionState)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
@@ -156,8 +157,8 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      resolve({articleID, version}, _args, {storageAdapter}) {
-        return storageAdapter.getArticleVersionBlocks(articleID, version)
+      resolve({id, version}, _args, {storageAdapter}) {
+        return storageAdapter.getArticleVersionBlocks(id, version)
       }
     }
   }
@@ -195,7 +196,6 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
       type: GraphQLArticleVersion,
       async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
         await authenticate()
-        if (root.latestVersion == undefined) return undefined
         return storageAdapter.getArticleVersion(root.id, root.latestVersion)
       }
     },

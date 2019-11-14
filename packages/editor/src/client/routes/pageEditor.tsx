@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import {Value, Block, Document} from 'slate'
 
 import {
   EditorTemplate,
@@ -14,42 +13,41 @@ import {
 
 import {
   MaterialIconArrowBack,
-  MaterialIconTextFormat,
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPublishOutlined,
   MaterialIconSaveOutlined,
-  MaterialIconImage,
-  MaterialIconTitle
+  IconColumn6,
+  IconColumn1
 } from '@karma.run/icons'
 
-import {
-  RouteNavigationLinkButton,
-  ArticleListRoute,
-  useRouteDispatch,
-  ArticleEditRoute
-} from '../route'
-
-import {RichTextBlock} from '../blocks/richTextBlock'
-import {ImageBlock, ImageBlockValue} from '../blocks/imageBlock'
-import {TitleBlockValue, TitleBlock} from '../blocks/titleBlock'
-import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
-import {PublishArticlePanel} from '../panel/publishArticlePanel'
-
-import {
-  useCreateArticleMutation,
-  useGetArticleQuery,
-  ArticleBlockUnionMap,
-  BlockType,
-  useUpdateArticleMutation,
-  usePublishArticleMutation
-} from '../api/article'
+import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
 
 import {RouteActionType} from '@karma.run/react'
+import {TeaserGridBlockValue, TeaserGridBlock} from '../blocks/teaserGridBlock'
+import {BlockType, VersionState} from '../api/types'
 
-export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Value>
-export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
-export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
-export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
+import {
+  PageInput,
+  useCreatePageMutation,
+  useUpdatePageMutation,
+  useGetPageQuery,
+  PageBlockUnionMap
+} from '../api/page'
+
+import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
+import {PublishPagePanel} from '../panel/publishPagePanel'
+
+export type ArticleTeaserGridBlock1ListValue = BlockListValue<
+  BlockType.ArticleTeaserGrid1,
+  TeaserGridBlockValue
+>
+
+export type ArticleTeaserGridBlock3ListValue = BlockListValue<
+  BlockType.ArticleTeaserGrid3,
+  TeaserGridBlockValue
+>
+
+export type PageBlockValue = ArticleTeaserGridBlock1ListValue | ArticleTeaserGridBlock3ListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -58,9 +56,8 @@ export interface PageEditorProps {
 export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
 
-  const [createArticle, {data: createData, error: createError}] = useCreateArticleMutation()
-  const [updateArticle, {error: updateError}] = useUpdateArticleMutation()
-  const [publishArticle, {error: publishError}] = usePublishArticleMutation()
+  const [createPage, {data: createData, error: createError}] = useCreatePageMutation()
+  const [updatePage, {error: updateError}] = useUpdatePageMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -71,28 +68,24 @@ export function PageEditor({id}: PageEditorProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [metadata, setMetadata] = useState<ArticleMetadata>({
+  const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
-    preTitle: '',
     title: '',
-    lead: '',
-    authors: [],
+    description: '',
     tags: [],
-    shared: false,
-    breaking: false,
     image: null
   })
 
-  const [blocks, setBlocks] = useState<BlockValue[]>([])
+  const [blocks, setBlocks] = useState<PageBlockValue[]>([])
   const [isNew] = useState(id == undefined)
 
-  const articleID = id || createData?.createArticle.id
+  const pageID = id || createData?.createPage.id
 
-  const {data: articleData, loading: isArticleLoading} = useGetArticleQuery({
+  const {data: pageData, loading: isArticleLoading} = useGetPageQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {
-      id: articleID!,
+      id: pageID!,
       metaImageTransformation: {height: 200},
       blockImageTransformation: {height: 300}
     }
@@ -101,19 +94,15 @@ export function PageEditor({id}: PageEditorProps) {
   const isDisabled = isArticleLoading
 
   useEffect(() => {
-    if (articleData && articleData.article) {
-      const articleVersion = articleData.article.latest
+    if (pageData && pageData.page) {
+      const articleVersion = pageData.page.latest
       const image = articleVersion.image
 
       setMetadata({
         slug: articleVersion.slug ?? '',
-        preTitle: articleVersion.preTitle || '',
         title: articleVersion.title,
-        lead: articleVersion.lead,
+        description: articleVersion.description,
         tags: articleVersion.tags,
-        shared: articleVersion.shared,
-        breaking: articleVersion.breaking,
-        authors: articleVersion.authors,
         image: image
           ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
           : null
@@ -121,48 +110,41 @@ export function PageEditor({id}: PageEditorProps) {
 
       setBlocks(articleVersion.blocks.map(blockForQueryBlock))
     }
-  }, [articleData])
+  }, [pageData])
 
   useEffect(() => {
-    if (createData) {
-      dispatch({
-        type: RouteActionType.ReplaceRoute,
-        route: ArticleEditRoute.create({id: createData?.createArticle.id})
-      })
-    }
-
-    if (createError || updateError || publishError) {
+    if (createError || updateError) {
       setErrorToastOpen(true)
-      setErrorMessage(publishError?.message ?? updateError?.message ?? createError!.message)
+      setErrorMessage(updateError?.message ?? createError!.message)
     }
-  }, [createError, updateError, publishError])
+  }, [createError, updateError])
 
-  async function handleSave() {
-    const input = {
+  function createInput(): PageInput {
+    return {
       slug: metadata.slug,
-      preTitle: metadata.preTitle || undefined,
       title: metadata.title,
-      lead: metadata.lead,
-      authorIDs: metadata.authors,
+      description: metadata.description,
       imageID: metadata.image?.id,
-      breaking: metadata.breaking,
-      shared: metadata.shared,
       tags: metadata.tags,
       blocks: blocks.map(unionMapForBlock)
     }
+  }
 
-    if (articleID) {
-      await updateArticle({variables: {id: articleID, input}})
+  async function handleSave() {
+    const input = createInput()
+
+    if (pageID) {
+      await updatePage({variables: {id: pageID, state: VersionState.Draft, input}})
 
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
     } else {
-      const {data} = await createArticle({variables: {input}})
+      const {data} = await createPage({variables: {input}})
 
       if (data) {
         dispatch({
           type: RouteActionType.ReplaceRoute,
-          route: ArticleEditRoute.create({id: data?.createArticle.id})
+          route: PageEditRoute.create({id: data?.createPage.id})
         })
       }
 
@@ -172,15 +154,17 @@ export function PageEditor({id}: PageEditorProps) {
   }
 
   async function handlePublish() {
-    if (articleID) {
-      await publishArticle({variables: {id: articleID}})
+    if (pageID) {
+      await updatePage({
+        variables: {id: pageID, state: VersionState.Published, input: createInput()}
+      })
     }
 
     setSuccessToastOpen(true)
     setSuccessMessage('Article Published')
   }
 
-  if (articleData && !articleData.article) {
+  if (pageData && !pageData.page) {
     return <div>Not Found</div> // TODO
   }
 
@@ -193,7 +177,7 @@ export function PageEditor({id}: PageEditorProps) {
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
                 label="Back"
-                route={ArticleListRoute.create({})}
+                route={PageListRoute.create({})}
               />
             }
             centerChildren={
@@ -235,25 +219,18 @@ export function PageEditor({id}: PageEditorProps) {
         {isArticleLoading ? null : ( // TODO: Loading indicator
           <BlockList value={blocks} onChange={blocks => setBlocks(blocks)}>
             {{
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
+              [BlockType.ArticleTeaserGrid1]: {
+                field: props => <TeaserGridBlock {...props} />,
+                defaultValue: {teasers: [null]},
+                label: '1 Col',
+                icon: IconColumn1
               },
 
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: Value.create({document: Document.create([Block.create('')])}),
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
+              [BlockType.ArticleTeaserGrid3]: {
+                field: props => <TeaserGridBlock {...props} />,
+                defaultValue: {teasers: [null, null, null]},
+                label: '3 Cols',
+                icon: IconColumn6
               }
             }}
           </BlockList>
@@ -261,7 +238,7 @@ export function PageEditor({id}: PageEditorProps) {
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
         {() => (
-          <ArticleMetadataPanel
+          <PageMetadataPanel
             value={metadata}
             onClose={() => setMetaDrawerOpen(false)}
             onChange={value => setMetadata(value)}
@@ -270,7 +247,7 @@ export function PageEditor({id}: PageEditorProps) {
       </Drawer>
       <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
         {() => (
-          <PublishArticlePanel
+          <PublishPagePanel
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
             onConfirm={() => {
@@ -298,65 +275,33 @@ export function PageEditor({id}: PageEditorProps) {
   )
 }
 
-function unionMapForBlock(block: BlockValue): ArticleBlockUnionMap {
+function unionMapForBlock(block: PageBlockValue): PageBlockUnionMap {
   switch (block.type) {
-    case BlockType.Image:
+    case BlockType.ArticleTeaserGrid1:
+    case BlockType.ArticleTeaserGrid3:
       return {
-        [BlockType.Image]: {
-          imageID: block.value.image?.id,
-          caption: block.value.caption || undefined
+        articleTeaserGrid: {
+          teasers: block.value.teasers.map(value =>
+            value ? {type: value.type, articleID: value.article.id} : null
+          ),
+          numColumns: block.value.teasers.length
         }
-      }
-
-    case BlockType.Title:
-      return {
-        [BlockType.Title]: {title: block.value.title, lead: block.value.lead}
-      }
-
-    case BlockType.RichText:
-      return {
-        [BlockType.RichText]: {richText: block.value.document.toJSON()}
       }
   }
 }
 
-function blockForQueryBlock(block: any): BlockValue | null {
+function blockForQueryBlock(block: any): PageBlockValue | null {
   const type: string = block.__typename
   const key: string = block.key
 
   switch (type) {
-    case 'ImageBlock':
+    case 'ArticleTeaserGridBlock':
       return {
         key,
-        type: BlockType.Image,
+        type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid3,
         value: {
-          caption: block.caption ?? '',
-          image: block.image
-            ? {
-                id: block.image.id,
-                width: block.image.width,
-                height: block.image.height,
-                url: block.image.transform[0]
-              }
-            : null
+          teasers: [] // TODO
         }
-      }
-
-    case 'TitleBlock':
-      return {
-        key,
-        type: BlockType.Title,
-        value: {
-          title: block.title,
-          lead: block.lead ?? ''
-        }
-      }
-
-    case 'RichTextBlock':
-      return {
-        key,
-        type: BlockType.RichText,
-        value: Value.create({document: Document.fromJSON(block.richText)})
       }
 
     default:

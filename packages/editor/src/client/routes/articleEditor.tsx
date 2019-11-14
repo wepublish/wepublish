@@ -39,12 +39,12 @@ import {
   useCreateArticleMutation,
   useGetArticleQuery,
   ArticleBlockUnionMap,
-  BlockType,
   useUpdateArticleMutation,
-  usePublishArticleMutation
+  ArticleInput
 } from '../api/article'
 
 import {RouteActionType} from '@karma.run/react'
+import {BlockType, VersionState} from '../api/types'
 
 export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Value>
 export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
@@ -60,7 +60,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [createArticle, {data: createData, error: createError}] = useCreateArticleMutation()
   const [updateArticle, {error: updateError}] = useUpdateArticleMutation()
-  const [publishArticle, {error: publishError}] = usePublishArticleMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -119,26 +118,19 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           : null
       })
 
-      setBlocks(articleVersion.blocks.map(blockForQueryBlock))
+      setBlocks(articleVersion.blocks.map(blockForQueryBlock).filter((block: any) => block != null))
     }
   }, [articleData])
 
   useEffect(() => {
-    if (createData) {
-      dispatch({
-        type: RouteActionType.ReplaceRoute,
-        route: ArticleEditRoute.create({id: createData?.createArticle.id})
-      })
-    }
-
-    if (createError || updateError || publishError) {
+    if (createError || updateError) {
       setErrorToastOpen(true)
-      setErrorMessage(publishError?.message ?? updateError?.message ?? createError!.message)
+      setErrorMessage(updateError?.message ?? createError!.message)
     }
-  }, [createError, updateError, publishError])
+  }, [createError, updateError])
 
-  async function handleSave() {
-    const input = {
+  function createInput(): ArticleInput {
+    return {
       slug: metadata.slug,
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
@@ -150,9 +142,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       tags: metadata.tags,
       blocks: blocks.map(unionMapForBlock)
     }
+  }
+
+  async function handleSave() {
+    const input = createInput()
 
     if (articleID) {
-      await updateArticle({variables: {id: articleID, input}})
+      await updateArticle({variables: {id: articleID, state: VersionState.Draft, input}})
 
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
@@ -173,7 +169,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   async function handlePublish() {
     if (articleID) {
-      await publishArticle({variables: {id: articleID}})
+      await updateArticle({
+        variables: {id: articleID, state: VersionState.Published, input: createInput()}
+      })
     }
 
     setSuccessToastOpen(true)

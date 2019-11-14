@@ -2,13 +2,7 @@ import gql from 'graphql-tag'
 
 import {DocumentJSON} from 'slate'
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
-import {ImageTransformation} from './types'
-
-export enum BlockType {
-  RichText = 'richText',
-  Title = 'title',
-  Image = 'image'
-}
+import {ImageTransformation, BlockType, VersionState} from './types'
 
 // Query
 // =====
@@ -21,12 +15,8 @@ const ListArticlesQuery = gql`
         createdAt
         updatedAt
 
-        draft {
-          version
-        }
-
         latest {
-          version
+          state
           title
         }
       }
@@ -95,8 +85,8 @@ export function useCreateArticleMutation() {
 }
 
 const UpdateArticleMutation = gql`
-  mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
-    updateArticle(id: $id, input: $input) {
+  mutation UpdateArticle($id: ID!, $state: VersionState!, $input: ArticleInput!) {
+    updateArticle(id: $id, state: $state, input: $input) {
       id
     }
   }
@@ -108,31 +98,12 @@ export interface UpdateArticleMutationData {
 
 export interface UpdateArticleVariables {
   readonly id: string
+  readonly state: VersionState
   readonly input: ArticleInput
 }
 
 export function useUpdateArticleMutation() {
   return useMutation<UpdateArticleMutationData, UpdateArticleVariables>(UpdateArticleMutation)
-}
-
-const PublishArticleMutation = gql`
-  mutation PublishArticle($id: ID!) {
-    publishArticle(id: $id) {
-      id
-    }
-  }
-`
-
-export interface PublishArticleMutationData {
-  readonly publishArticle: ArticleMutationData
-}
-
-export interface PublishArticleVariables {
-  readonly id: string
-}
-
-export function usePublishArticleMutation() {
-  return useMutation<PublishArticleMutationData, PublishArticleVariables>(PublishArticleMutation)
 }
 
 const GetArticleQuery = gql`
@@ -190,13 +161,6 @@ const GetArticleQuery = gql`
     }
   }
 `
-
-export interface BaseBlock {
-  readonly __typename: BlockType
-  readonly key: string
-}
-
-export interface TitleBlock {}
 
 export interface GetArticleData {
   readonly article?: any // TODO: Type query

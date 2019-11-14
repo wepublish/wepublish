@@ -25,6 +25,7 @@ export interface StorageAdapter {
   createPage(article: PageInput): Promise<Page>
   getPage(id: string): Promise<Page | null>
   getPageBySlug(slug: string): Promise<Page | null>
+  getPages(): Promise<Page[]>
 
   getPageVersion(id: string, version: number): Promise<PageVersion | null>
   getPageVersions(id: string): Promise<PageVersion[]>

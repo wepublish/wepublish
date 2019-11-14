@@ -10,7 +10,12 @@ import {
 import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
-import {GraphQLArticleInput, GraphQLArticle, GraphQLArticleBlockUnionMap} from './article'
+import {
+  GraphQLArticleInput,
+  GraphQLArticle,
+  GraphQLArticleBlockUnionMap,
+  GraphQLVersionState
+} from './article'
 
 import {Context} from '../context'
 import {generateID, generateTokenID} from '../utility'
@@ -21,6 +26,7 @@ import {GraphQLImage, GraphQLInputPoint} from './image'
 import {BlockMap, ArticleBlock} from '../adapter/blocks'
 import {ImageUpdate} from '../adapter/image'
 import {VersionState} from '../adapter/versionState'
+import {GraphQLPage, GraphQLPageInput} from './page'
 
 async function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -96,38 +102,10 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
       type: GraphQLArticle,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
+        state: {type: GraphQLNonNull(GraphQLVersionState)},
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
-      async resolve(_root, {id, input}, {authenticate, storageAdapter}) {
-        await authenticate()
-
-        const article = await storageAdapter.getArticle(id)
-
-        if (!article) throw new UserInputError('Invalid article ID.')
-
-        if (article.publishedVersion === article.latestVersion) {
-          return storageAdapter.createArticleVersion(id, {
-            ...input,
-            id: await generateID(),
-            state: VersionState.Draft,
-            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
-          })
-        } else {
-          return storageAdapter.updateArticleVersion(id, article.latestVersion, {
-            ...input,
-            id: await generateID(),
-            state: VersionState.Draft,
-            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
-          })
-        }
-      }
-    },
-    publishArticle: {
-      type: GraphQLArticle,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      async resolve(_root, {id}, {authenticate, storageAdapter}) {
+      async resolve(_root, {id, state, input}, {authenticate, storageAdapter}) {
         await authenticate()
 
         const article = await storageAdapter.getArticle(id)
@@ -136,11 +114,70 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         const version = await storageAdapter.getArticleVersion(id, article.latestVersion)
         if (!version) throw new Error('Latest article version not found.')
 
-        return storageAdapter.updateArticleVersion(id, article.latestVersion, {
-          ...version,
-          state: VersionState.Published,
-          blocks: await storageAdapter.getArticleVersionBlocks(id, article.latestVersion)
+        if (version.state === VersionState.Published) {
+          return storageAdapter.createArticleVersion(id, {
+            ...input,
+            id: await generateID(),
+            state: state,
+            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
+          })
+        } else {
+          return storageAdapter.updateArticleVersion(id, article.latestVersion, {
+            ...input,
+            id: await generateID(),
+            state: state,
+            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
+          })
+        }
+      }
+    },
+    createPage: {
+      type: GraphQLPage,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPageInput)}
+      },
+      async resolve(_root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
+
+        return storageAdapter.createPage({
+          ...input,
+          id: await generateID(),
+          state: VersionState.Draft,
+          blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
         })
+      }
+    },
+    updatePage: {
+      type: GraphQLPage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        state: {type: GraphQLNonNull(GraphQLVersionState)},
+        input: {type: GraphQLNonNull(GraphQLPageInput)}
+      },
+      async resolve(_root, {id, state, input}, {authenticate, storageAdapter}) {
+        await authenticate()
+
+        const article = await storageAdapter.getArticle(id)
+        if (!article) throw new UserInputError('Invalid article ID.')
+
+        const version = await storageAdapter.getArticleVersion(id, article.latestVersion)
+        if (!version) throw new Error('Latest article version not found.')
+
+        if (version.state === VersionState.Published) {
+          return storageAdapter.createArticleVersion(id, {
+            ...input,
+            id: await generateID(),
+            state: state,
+            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
+          })
+        } else {
+          return storageAdapter.updateArticleVersion(id, article.latestVersion, {
+            ...input,
+            id: await generateID(),
+            state: state,
+            blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
+          })
+        }
       }
     },
     uploadImages: {
