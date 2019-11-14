@@ -76,7 +76,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
   name: 'ArticleTeaser',
   fields: () => ({
     type: {type: GraphQLString},
-    overrides: {type: GraphQLNonNull(GraphQLArticleTeaserOverrides)},
+    overrides: {type: GraphQLArticleTeaserOverrides},
     article: {
       type: GraphQLNonNull(GraphQLArticle),
       async resolve({articleID}, args, {storageAdapter}) {

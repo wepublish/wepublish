@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent} from 'react'
-import {LoginTemplate, TextInput, Button, Box, Spacing} from '@karma.run/ui'
+import {LoginTemplate, TextInput, Button, Box, Spacing, InputType} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
 import {useMutation} from '@apollo/react-hooks'
 
@@ -74,6 +74,7 @@ export function Login() {
         </Box>
         <Box marginBottom={Spacing.Small}>
           <TextInput
+            type={InputType.Password}
             label="Password"
             value={password}
             onChange={event => setPassword(event.target.value)}

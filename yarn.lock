@@ -866,10 +866,10 @@
     fela-plugin-prefixer "^10.6.1"
     path-to-regexp "^3.0.0"
 
-"@karma.run/ui@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.0.6.tgz#c23089570f9de5fcfafd1f7cc2292e5925ab29bb"
-  integrity sha512-0N1FJEpc6shRypvOaUNXXmw969ZSOfcb9MKSY/8ZWLV/ZMelkpbEq4ojO10Xbn/IGhe9ZPhQ1O71CHHSAhIvug==
+"@karma.run/ui@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.0.7.tgz#25865635cf79e272755895f7f71313987436b4e0"
+  integrity sha512-3nNtYhtLAPolvBTpBPW/7b3lL8GuB1SPm0qxqFK9ZGPV2imv01Yc2T2083sUo8z26liMKMP8wIbmAZgx6B3New==
   dependencies:
     "@karma.run/icons" "^0.0.0"
     "@karma.run/react" "^0.0.21"

@@ -61,8 +61,8 @@ export interface ArticleTeaserOverrides {
 }
 
 export interface ArticleTeaser {
-  readonly type: string
-  readonly overrides: ArticleTeaserOverrides
+  readonly type?: string
+  readonly overrides?: ArticleTeaserOverrides
   readonly articleID: string
 }
 

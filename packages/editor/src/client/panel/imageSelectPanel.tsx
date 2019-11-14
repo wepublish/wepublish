@@ -100,7 +100,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Select Image"
+          title="Choose Image"
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
