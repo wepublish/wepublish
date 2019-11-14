@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.0.5",
+  "version": "0.0.12",
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
@@ -15,10 +15,11 @@
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon --inspect=0.0.0.0:9230 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
-    "clean": "shx rm -rf ./dist ./static",
+    "clean": "shx rm -rf ./dist ./assets",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts"
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
+    "prepare": "run-s clean copy-license sync-package-info build"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
