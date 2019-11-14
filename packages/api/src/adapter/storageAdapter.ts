@@ -32,6 +32,12 @@ export interface StorageAdapter {
 
   // Articles
   createArticle(article: ArticleInput): Promise<Article>
+  createArticleVersion(id: string, input: Omit<ArticleInput, 'id'>): Promise<Article | null>
+  updateArticleVersion(
+    id: string,
+    version: number,
+    input: Omit<ArticleInput, 'id'>
+  ): Promise<Article | null>
 
   getArticles(args: ArticlesArguments): Promise<Article[]>
   getArticle(id: string): Promise<Article | null>

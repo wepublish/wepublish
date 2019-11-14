@@ -5,19 +5,15 @@ import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../ro
 import {useListArticlesQuery} from '../api/article'
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
 
-export function ArticleList() {
+export function PageList() {
   const {data} = useListArticlesQuery({fetchPolicy: 'no-cache'})
 
   return (
     <>
       <Box marginBottom={Spacing.Large} flexDirection="row" flex>
-        <Typography variant="h1">Articles</Typography>
+        <Typography variant="h1">Pages</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label="New Article"
-          route={ArticleCreateRoute.create({})}
-        />
+        <RouteLinkButton color="primary" label="New Page" route={ArticleCreateRoute.create({})} />
       </Box>
       <Box>
         {data?.articles.nodes

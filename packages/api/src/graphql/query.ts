@@ -10,8 +10,6 @@ import {
   GraphQLID
 } from 'graphql'
 
-import graphQLFields from 'graphql-fields'
-
 import {GraphQLDateRangeInput} from './dateRange'
 import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
@@ -211,9 +209,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
 
         if (includePeers) {
-          console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
-
           // TODO: Fetch peers aswell
+          // console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
           // const peers = await context.adapter.getPeers({})
           // const peerArticles: any[] = []
           // for (const peer of peers) {

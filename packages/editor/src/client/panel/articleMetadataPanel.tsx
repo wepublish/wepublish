@@ -92,6 +92,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
           <Box marginBottom={Spacing.Small}>
             <TextArea
+              label="Lead"
               description=""
               placeholder="Lead"
               value={lead}
@@ -101,7 +102,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
           <Box>
             <Toggle
-              label="Breaking"
+              label="Breaking News"
               checked={breaking}
               onChange={e => onChange?.({...value, breaking: e.target.checked})}
             />

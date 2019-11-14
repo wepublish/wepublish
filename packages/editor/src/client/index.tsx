@@ -5,7 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {ApolloClient} from 'apollo-client'
 import {ApolloLink} from 'apollo-link'
-import {InMemoryCache} from 'apollo-cache-inmemory'
+import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory'
 import {createUploadLink} from 'apollo-upload-client'
 import {ApolloProvider} from '@apollo/react-hooks'
 
@@ -20,6 +20,37 @@ import {RouteProvider} from './route'
 import {AuthProvider} from './authContext'
 import {LocalStorageKey} from './utility'
 
+// See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
+export async function fetchIntrospectionQueryResultData(url: string) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      variables: {},
+      query: `
+      {
+        __schema {
+          types {
+            kind
+            name
+            possibleTypes {
+              name
+            }
+          }
+        }
+      }
+    `
+    })
+  })
+
+  const result = await response.json()
+
+  const filteredData = result.data.__schema.types.filter((type: any) => type.possibleTypes !== null)
+  result.data.__schema.types = filteredData
+
+  return result.data
+}
+
 const HotApp = hot(App)
 
 const onDOMContentLoaded = async () => {
@@ -27,6 +58,7 @@ const onDOMContentLoaded = async () => {
     document.getElementById(ElementID.Settings)!.textContent!
   )
 
+  const introspectionQueryResultData = await fetchIntrospectionQueryResultData(apiURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
 
@@ -41,7 +73,9 @@ const onDOMContentLoaded = async () => {
 
   const client = new ApolloClient({
     link: authLink.concat(createUploadLink({uri: apiURL})),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
+    })
   })
 
   const styleRenderer = createStyleRenderer()

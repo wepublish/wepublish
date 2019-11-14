@@ -28,8 +28,8 @@ export interface ImageUpdate {
   readonly focalPoint: Point | null
 }
 
-export interface ImageEdge {
-  readonly description: string
+export interface ImageCaptionEdge {
+  readonly caption: string
   readonly imageID: string
 }
 

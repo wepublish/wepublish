@@ -42,6 +42,7 @@ async function asyncMain() {
     },
 
     schema: GraphQLWepublishSchema,
+    introspection: true,
     tracing: true,
 
     context: ({req}) =>

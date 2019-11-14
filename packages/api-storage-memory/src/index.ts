@@ -243,10 +243,43 @@ export class MemoryStorageAdapter implements StorageAdapter {
       publishedAt:
         articleVersion.state === VersionState.Published ? articleVersion.createdAt : undefined,
 
-      publishedVersion: articleVersion.state === VersionState.Published ? 0 : undefined,
-      draftVersion: articleVersion.state === VersionState.Draft ? 0 : undefined,
+      draftVersion: 0,
       latestVersion: 0
     }
+  }
+
+  async createArticleVersion(id: string, input: ArticleInput) {
+    const article = this._articles.find(article => article.id === id)
+    if (!article) return null
+
+    const articleVersion: MemoryArticleVersion = {
+      ...input,
+      articleID: article.id,
+      version: article.versions.length,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    article.versions.push(articleVersion)
+
+    return this.getArticle(id)
+  }
+
+  async updateArticleVersion(id: string, version: number, input: ArticleInput) {
+    const article = this._articles.find(article => article.id === id)
+    if (!article) return null
+
+    const oldVersion = article.versions[version]
+    const newVersion: MemoryArticleVersion = {
+      ...oldVersion,
+      ...input,
+      articleID: article.id,
+      updatedAt: new Date()
+    }
+
+    article.versions[version] = newVersion
+
+    return this.getArticle(id)
   }
 
   async getArticle(id: string): Promise<Article | null> {
@@ -271,7 +304,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
       createdAt: oldestVersion.createdAt,
       updatedAt: latestVersion.updatedAt,
-
       publishedAt: publishedVersion && publishedVersion.updatedAt,
 
       publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,

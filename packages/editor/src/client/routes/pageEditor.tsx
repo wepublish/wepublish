@@ -51,11 +51,11 @@ export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValu
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
 export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
 
-export interface ArticleEditorProps {
+export interface PageEditorProps {
   readonly id?: string
 }
 
-export function ArticleEditor({id}: ArticleEditorProps) {
+export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
 
   const [createArticle, {data: createData, error: createError}] = useCreateArticleMutation()

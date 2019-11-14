@@ -88,7 +88,7 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
     },
     transform: {
       type: GraphQLNonNull(GraphQLList(GraphQLString)),
-      args: {transformations: {type: GraphQLList(GraphQLImageTransformation)}},
+      args: {transformations: {type: GraphQLList(GraphQLImageTransformation)}}, // TODO: Consider renaming transformations to input
       resolve(image, {transformations}, {mediaAdapter}) {
         return Promise.all(
           transformations.map((transformation: any) =>

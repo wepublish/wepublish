@@ -1,7 +1,7 @@
 import {RichTextValue} from '@karma.run/graphql'
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 
-import {ImageEdge} from './image'
+import {ImageCaptionEdge} from './image'
 import {ArticleTeaser} from './article'
 
 export enum BlockType {
@@ -32,12 +32,13 @@ export interface RichTextBlock extends BaseBlock {
 
 export interface ImageBlock extends BaseBlock {
   readonly type: BlockType.Image
-  readonly image: ImageEdge
+  readonly caption: string
+  readonly imageID: string
 }
 
 export interface ImageGalleryBlock extends BaseBlock {
   readonly type: BlockType.ImageGallery
-  readonly images: ImageEdge[]
+  readonly images: ImageCaptionEdge[]
 }
 
 export interface FacebookPostBlock extends BaseBlock {
@@ -93,13 +94,13 @@ export interface LinkPageBreakBlock extends BaseBlock {
 export interface TitleBlock extends BaseBlock {
   readonly type: BlockType.Title
   readonly title: string
-  readonly subtitle: string
+  readonly lead?: string
 }
 
 export interface QuoteBlock extends BaseBlock {
   readonly type: BlockType.Quote
   readonly text: string
-  readonly author?: string
+  readonly source?: string
 }
 
 export interface ArticleTeaserGridBlock extends BaseBlock {

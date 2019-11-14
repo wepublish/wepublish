@@ -11,8 +11,7 @@ import {
   MaterialIconLooksTwoOutlined,
   MaterialIconLooks3Outlined,
   MaterialIconFormatListBulleted,
-  MaterialIconFormatListNumbered,
-  MaterialIconLink
+  MaterialIconFormatListNumbered
 } from '@karma.run/icons'
 
 import {
@@ -131,9 +130,10 @@ function hasBlock(value: Value, label: string) {
   })
 }
 
-function hasInlines(editor: Editor, value: Value, label: string) {
-  return value.inlines.some(inline => inline!.type === label)
-}
+// TODO: Link
+// function hasInlines(editor: Editor, value: Value, label: string) {
+//   return value.inlines.some(inline => inline!.type === label)
+// }
 
 function isListOfType(editor: Editor, val: Value, label: string) {
   const {blocks} = val

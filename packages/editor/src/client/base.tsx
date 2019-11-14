@@ -14,7 +14,7 @@ import {
   RouteMenuIconLinkButton,
   LogoutRoute,
   ArticleListRoute,
-  FrontListRoute,
+  PageListRoute,
   ImageListRoute
 } from './route'
 
@@ -29,14 +29,14 @@ export function Base({children}: BaseProps) {
         <>
           <RouteMenuIconLinkButton
             icon={MaterialIconTextFields}
-            label="Article"
+            label="Articles"
             route={ArticleListRoute.create({})}
           />
 
           <RouteMenuIconLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
-            label="Page"
-            route={FrontListRoute.create({})}
+            label="Pages"
+            route={PageListRoute.create({})}
           />
 
           <RouteMenuIconLinkButton
@@ -45,11 +45,12 @@ export function Base({children}: BaseProps) {
             route={ImageListRoute.create({})}
           />
 
-          <RouteMenuIconLinkButton
+          {/* TODO */}
+          {/* <RouteMenuIconLinkButton
             icon={MaterialIconNavigationOutlined}
             label="Navigation"
             route={ImageListRoute.create({})}
-          />
+          /> */}
 
           <RouteMenuIconLinkButton
             icon={MaterialIconPowerSettingsNew}

@@ -19,6 +19,7 @@ import gql from 'graphql-tag'
 export enum RouteType {
   Login = 'login',
   Logout = 'logout',
+
   Index = 'index',
   NotFound = 'notFound',
 
@@ -26,29 +27,34 @@ export enum RouteType {
   ArticleEdit = 'articleEdit',
   ArticleCreate = 'articleCreate',
 
-  FrontList = 'frontList',
+  PageList = 'pageList',
+  PageEdit = 'pageEdit',
+  PageCreate = 'pageCreate',
 
   ImageList = 'imageList',
   ImageUpload = 'imageUpload',
   ImageEdit = 'imageEdit'
 }
 
-export const IndexRoute = route(RouteType.Index, routePath`/`, null)
-export const LoginRoute = route(RouteType.Login, routePath`/login`, null)
-export const LogoutRoute = route(RouteType.Logout, routePath`/logout`, null)
-export const ArticleListRoute = route(RouteType.ArticleList, routePath`/article/list`, null)
-export const FrontListRoute = route(RouteType.FrontList, routePath`/front/list`, null)
+export const IndexRoute = route(RouteType.Index, routePath`/`)
+export const LoginRoute = route(RouteType.Login, routePath`/login`)
+export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
+
+export const ArticleListRoute = route(RouteType.ArticleList, routePath`/articles`)
 
 export const ArticleEditRoute = route(
   RouteType.ArticleEdit,
-  routePath`/article/edit/${required('id')}`,
-  null
+  routePath`/article/edit/${required('id')}`
 )
 
-export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`, null)
+export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`)
 
-export const ImageListRoute = route(RouteType.ImageList, routePath`/image/list`, null)
-export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`, null)
+export const PageListRoute = route(RouteType.PageList, routePath`/pages`)
+export const PageCreateRoute = route(RouteType.PageCreate, routePath`/page/create`)
+export const PageEditRoute = route(RouteType.PageEdit, routePath`/page/${required('id')}`)
+
+export const ImageListRoute = route(RouteType.ImageList, routePath`/images`)
+export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`)
 
 export const ImageEditRoute = route(
   RouteType.ImageEdit,
@@ -62,7 +68,9 @@ export const routes = [
   IndexRoute,
   LoginRoute,
   LogoutRoute,
-  FrontListRoute,
+  PageListRoute,
+  PageEditRoute,
+  PageCreateRoute,
   ArticleListRoute,
   ArticleEditRoute,
   ArticleCreateRoute,
@@ -107,7 +115,7 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         if (next.type === RouteType.Logout) {
           if (session) {
-            logout({variables: {token: session!.sessionToken}})
+            logout({variables: {token: session.sessionToken}})
             localStorage.removeItem(LocalStorageKey.SessionToken)
             authDispatch({type: AuthDispatchActionType.Logout})
           }

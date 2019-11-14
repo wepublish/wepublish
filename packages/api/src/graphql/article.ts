@@ -7,7 +7,8 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLUnionType,
-  GraphQLBoolean
+  GraphQLBoolean,
+  GraphQLInt
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -31,7 +32,9 @@ import {
   GraphQLListicleBlock,
   GraphQLLinkPageBreakBlock,
   GraphQLQuoteBlock,
-  GraphQLTitleBlock
+  GraphQLTitleBlock,
+  GraphQLInputImageBlock,
+  GraphQLInputTitleBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
@@ -43,7 +46,9 @@ import {Author} from '../adapter/author'
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
   fields: {
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock}
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
+    [BlockType.Image]: {type: GraphQLInputImageBlock},
+    [BlockType.Title]: {type: GraphQLInputTitleBlock}
   }
 })
 
@@ -122,12 +127,12 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
 
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
+    version: {type: GraphQLNonNull(GraphQLInt)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    slug: {type: GraphQLNonNull(GraphQLString)},
 
+    slug: {type: GraphQLNonNull(GraphQLString)},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLNonNull(GraphQLString)},
@@ -145,6 +150,9 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
         return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
       }
     },
+
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),

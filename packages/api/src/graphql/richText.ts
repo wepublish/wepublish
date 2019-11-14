@@ -1,6 +1,7 @@
 import {createRichTextScalar} from '@karma.run/graphql'
 
 export const GraphQLRichText = createRichTextScalar({
+  name: 'RichText',
   validation: {
     block: {
       'heading-one': null,

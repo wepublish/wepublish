@@ -89,10 +89,7 @@ export function ImageList() {
           ))}
         </Grid>
       </Box>
-      <Box paddingTop={Spacing.Medium} paddingBottom={Spacing.Medium}>
-        <Divider />
-      </Box>
-      <Box flexDirection="row" flex>
+      <Box marginTop={Spacing.Medium} flexDirection="row" flex>
         <RouteLinkButton
           variant="outlined"
           label="Previous"
