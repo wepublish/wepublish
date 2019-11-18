@@ -18,7 +18,7 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
         {/* TODO: Allow layer position, don't fill by default */}
         <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
           {/* TODO: Meta sync */}
-          {/* <OptionButtonSmall
+          {/* <IconButton
             icon={MaterialIconSyncAlt}
             title="Use as Meta Title &amp; Lead"
             onClick={() => {}}

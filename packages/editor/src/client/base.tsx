@@ -6,12 +6,11 @@ import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPowerSettingsNew,
   MaterialIconTextFields,
-  MaterialIconPhotoLibraryOutlined,
-  MaterialIconNavigationOutlined
+  MaterialIconPhotoLibraryOutlined
 } from '@karma.run/icons'
 
 import {
-  RouteMenuIconLinkButton,
+  RouteMenuLinkButton,
   LogoutRoute,
   ArticleListRoute,
   PageListRoute,
@@ -27,19 +26,19 @@ export function Base({children}: BaseProps) {
     <NavigationTemplate
       navigationChildren={
         <>
-          <RouteMenuIconLinkButton
+          <RouteMenuLinkButton
             icon={MaterialIconTextFields}
             label="Articles"
             route={ArticleListRoute.create({})}
           />
 
-          <RouteMenuIconLinkButton
+          <RouteMenuLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
             label="Pages"
             route={PageListRoute.create({})}
           />
 
-          <RouteMenuIconLinkButton
+          <RouteMenuLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
             label="Image Library"
             route={ImageListRoute.create({})}
@@ -52,7 +51,7 @@ export function Base({children}: BaseProps) {
             route={ImageListRoute.create({})}
           /> */}
 
-          <RouteMenuIconLinkButton
+          <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}
             label="Logout"
             route={LogoutRoute.create({})}

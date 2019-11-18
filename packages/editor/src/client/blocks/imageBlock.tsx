@@ -9,7 +9,7 @@ import {
   Layer,
   LayerContainer,
   Spacing,
-  OptionButtonSmall,
+  IconButton,
   TypograpyTextArea
 } from '@karma.run/ui'
 
@@ -48,14 +48,14 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
               {/* TODO: Allow layer position, don't fill by default */}
               <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
                 <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
-                  <OptionButtonSmall
+                  <IconButton
                     icon={MaterialIconImageOutlined}
                     title="Choose Image"
                     onClick={() => setChooseModalOpen(true)}
                   />
                 </Box>
                 <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
-                  <OptionButtonSmall
+                  <IconButton
                     icon={MaterialIconEditOutlined}
                     title="Edit Image"
                     onClick={() => setEditModalOpen(true)}
@@ -63,7 +63,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 </Box>
                 <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
                   {/* TODO: Meta sync */}
-                  {/* <OptionButtonSmall
+                  {/* <IconButton
                     icon={MaterialIconSyncAlt}
                     title="Use as Meta Image"
                     onClick={() => setChooseModalOpen(true)}

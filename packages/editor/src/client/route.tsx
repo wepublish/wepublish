@@ -10,7 +10,7 @@ import {
   required
 } from '@karma.run/react'
 
-import {MenuIconButton, LinkButton, NavigationLinkButton} from '@karma.run/ui'
+import {MenuButton, LinkButton, NavigationLinkButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation} from '@apollo/react-hooks'
 import {LocalStorageKey} from './utility'
@@ -90,7 +90,7 @@ export const {
 } = createRouteContext(routes)
 
 export const RouteLinkButton = routeLink(LinkButton)
-export const RouteMenuIconLinkButton = routeLink(MenuIconButton)
+export const RouteMenuLinkButton = routeLink(MenuButton)
 export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>

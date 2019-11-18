@@ -16,7 +16,7 @@ import {
   Drawer,
   LayerContainer,
   Layer,
-  OptionButtonSmall,
+  IconButton,
   Image
 } from '@karma.run/ui'
 
@@ -125,7 +125,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         flexDirection="row"
                         justifyContent="flex-end"
                         flex>
-                        <OptionButtonSmall
+                        <IconButton
                           icon={MaterialIconImageOutlined}
                           title="Choose Image"
                           onClick={() => setChooseModalOpen(true)}
@@ -136,7 +136,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         flexDirection="row"
                         justifyContent="flex-end"
                         flex>
-                        <OptionButtonSmall
+                        <IconButton
                           icon={MaterialIconEditOutlined}
                           title="Edit Image"
                           onClick={() => setEditModalOpen(true)}
@@ -147,7 +147,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         flexDirection="row"
                         justifyContent="flex-end"
                         flex>
-                        <OptionButtonSmall
+                        <IconButton
                           icon={MaterialIconDeleteOutlined}
                           title="Remove Image"
                           onClick={() => onChange?.({...value, image: null})}

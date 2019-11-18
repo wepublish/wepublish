@@ -758,6 +758,13 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-transform-typescript" "^7.6.0"
 
+"@babel/runtime@^7.4.5":
+  version "7.7.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.2.tgz#111a78002a5c25fc8e3361bedc9529c696b85a6a"
+  integrity sha512-JONRbXbTXc9WQE2mAZd1p0Z3DZ/6vaQIkgYMSTP3KjRCyd7rCZCcfhCyX+YjwcKxcZ82UrxbRD358bpExNgrjw==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/runtime@^7.5.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3":
   version "7.6.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
@@ -853,29 +860,31 @@
     pino-pretty "^3.2.0"
     pump "^3.0.0"
 
-"@karma.run/react@^0.0.21":
+"@karma.run/react@^0.0.21", "@karma.run/react@file:../karma.run-packages/packages/react":
   version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.0.21.tgz#ec0513ef00193c56d5a6a6e9199cc6d3d3633ecb"
-  integrity sha512-OzRetkgVvQTSz7IHKr22+s68FioAt/9KCajvwO5qmicP7b4CBloTiNrRwsoV6xztw2g+krgYC23svjb3eg5JCg==
   dependencies:
     "@karma.run/utility" "^0.0.1"
     csstype "^2.6.6"
     fela "^10.6.1"
     fela-dom "^10.6.1"
-    fela-plugin-fallback-value "^10.6.1"
-    fela-plugin-prefixer "^10.6.1"
     path-to-regexp "^3.0.0"
 
-"@karma.run/ui@^0.0.7":
+"@karma.run/ui@file:../karma.run-packages/packages/ui":
   version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.0.7.tgz#25865635cf79e272755895f7f71313987436b4e0"
-  integrity sha512-3nNtYhtLAPolvBTpBPW/7b3lL8GuB1SPm0qxqFK9ZGPV2imv01Yc2T2083sUo8z26liMKMP8wIbmAZgx6B3New==
   dependencies:
     "@karma.run/icons" "^0.0.0"
     "@karma.run/react" "^0.0.21"
     "@karma.run/utility" "^0.0.1"
     "@types/slate" "^0.47.3"
     "@types/slate-react" "^0.22.5"
+    csstype "^2.6.6"
+    downshift "^3.3.4"
+    fela "^10.6.1"
+    fela-dom "^10.6.1"
+    fela-plugin-expand-shorthand "^11.0.2"
+    fela-plugin-fallback-value "^10.6.1"
+    fela-plugin-prefixer "^10.6.1"
+    fela-plugin-unit "^10.8.2"
     find-my-way "^2.1.0"
     immutable "^4.0.0-rc.12"
     nanoid "^2.0.3"
@@ -2499,6 +2508,11 @@ compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
+compute-scroll-into-view@^1.0.9:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.11.tgz#7ff0a57f9aeda6314132d8994cce7aeca794fecf"
+  integrity sha512-uUnglJowSe0IPmWOdDtrlHXof5CTIJitfJEyITHBW6zDVOGu9Pjk5puaLM73SLcwak0L4hEjO7Td88/a6P5i7A==
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -2986,6 +3000,16 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
+downshift@^3.3.4:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.4.1.tgz#2de8c4865181eb6762f70478ae8c15495b5df32b"
+  integrity sha512-VD0PjXpDVQH7bQd9vtRj/4KK4aS00O0SDGtKRauQ946nmP1UmmfOc6byG0Njd5wMDgRtEZiHXKYC7vXRZeI40w==
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+    compute-scroll-into-view "^1.0.9"
+    prop-types "^15.7.2"
+    react-is "^16.9.0"
+
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
@@ -3455,6 +3479,13 @@ fela-dom@^10.6.1:
     fast-loops "^1.0.1"
     fela-utils "^10.8.0"
 
+fela-plugin-expand-shorthand@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/fela-plugin-expand-shorthand/-/fela-plugin-expand-shorthand-11.0.2.tgz#23a90f6a5d794c7ad30db7ebbee515b22f6267f1"
+  integrity sha512-BG5ssfp/lPjyB+lFG3ZVQ4dSLp3Ylw479+uhdy2lc8Ii7DkIWLSUov3Yf7XalLmBm6CfUhli4vmQaiymJg9ZzA==
+  dependencies:
+    inline-style-expand-shorthand "^1.2.0"
+
 fela-plugin-fallback-value@^10.6.1, fela-plugin-fallback-value@^10.8.0:
   version "10.8.0"
   resolved "https://registry.yarnpkg.com/fela-plugin-fallback-value/-/fela-plugin-fallback-value-10.8.0.tgz#e16584065449cb34db51b7be1edf3f8b2ca12ad7"
@@ -3472,6 +3503,14 @@ fela-plugin-prefixer@^10.6.1:
     fast-loops "^1.0.0"
     fela-plugin-fallback-value "^10.8.0"
     inline-style-prefixer "^5.1.0"
+    isobject "^3.0.1"
+
+fela-plugin-unit@^10.8.2:
+  version "10.8.2"
+  resolved "https://registry.yarnpkg.com/fela-plugin-unit/-/fela-plugin-unit-10.8.2.tgz#c24c15d4e435d19d2f493db4018a948de11fe4ca"
+  integrity sha512-a7Ay8CJ8AHpWzYMoCFSMU74f/H/pWT8UxV1MnWJ9GSqzrvKdm10Fcxjhybgejc3rceRJT5BotUuqUCau8aeBrw==
+  dependencies:
+    css-in-js-utils "^3.0.0"
     isobject "^3.0.1"
 
 fela-utils@^10.8.0:
@@ -4225,6 +4264,11 @@ ini@^1.3.4, ini@^1.3.5, ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+
+inline-style-expand-shorthand@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/inline-style-expand-shorthand/-/inline-style-expand-shorthand-1.2.0.tgz#951ed9918ba9fe87af0e11c20fd2fb1f5075cae2"
+  integrity sha512-YdteDMlG1StHeEXF7opaVfPMCIVO8B4TPjE6kZLwdhZdgjH3Q7lxwSe+89sMhdPN77F3quOYhBbqBE0+KXuHpA==
 
 inline-style-prefixer@^5.1.0:
   version "5.1.0"
@@ -5934,7 +5978,7 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6135,6 +6179,11 @@ react-is@^16.7.0, react-is@^16.8.1:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.10.2.tgz#984120fd4d16800e9a738208ab1fba422d23b5ab"
   integrity sha512-INBT1QEgtcCCgvccr5/86CfD71fw9EPmDxgiJX4I2Ddr6ZsV6iFXsuby+qWJPtmNuMY0zByTsG4468P7nHuNWA==
+
+react-is@^16.9.0:
+  version "16.12.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
+  integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"

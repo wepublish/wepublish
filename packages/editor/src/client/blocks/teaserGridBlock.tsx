@@ -10,7 +10,7 @@ import {
   LayerContainer,
   Layer,
   Spacing,
-  OptionButtonSmall,
+  IconButton,
   Image,
   Typography
 } from '@karma.run/ui'
@@ -62,7 +62,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                     {/* TODO: Allow layer position, don't fill by default */}
                     <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
                       <Box margin={Spacing.ExtraSmall}>
-                        <OptionButtonSmall
+                        <IconButton
                           icon={MaterialIconEditOutlined}
                           title="Choose Article"
                           onClick={() => {
@@ -72,7 +72,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                         />
                       </Box>
                       <Box margin={Spacing.ExtraSmall}>
-                        <OptionButtonSmall
+                        <IconButton
                           icon={MaterialIconDeleteOutlined}
                           title="Remove Article"
                           onClick={() => {
