@@ -85,6 +85,12 @@ export class MemoryStorageAdapter implements StorageAdapter {
     this._peers.push(...peers)
   }
 
+  async createUser(id: string, email: string, password: string): Promise<User> {
+    const user = {id, email, password}
+    this._users.push(user)
+    return {id, email}
+  }
+
   async getUserForCredentials(email: string, password: string): Promise<User | null> {
     const user = this._users.find(user => user.email === email && user.password === password)
     return user ? {id: user.id, email: user.email} : null

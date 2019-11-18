@@ -8,7 +8,7 @@ export enum BlockType {
   Title = 'title',
   Image = 'image',
   ArticleTeaserGrid1 = 'articleTeaserGrid1',
-  ArticleTeaserGrid3 = 'articleTeaserGrid3'
+  ArticleTeaserGrid6 = 'articleTeaserGrid6'
 }
 
 export interface ImageTransformation {

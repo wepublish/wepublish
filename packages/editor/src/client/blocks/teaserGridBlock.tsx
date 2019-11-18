@@ -26,19 +26,20 @@ export interface ArticleTeaser {
 
 export interface TeaserGridBlockValue {
   readonly teasers: Array<ArticleTeaser | null>
+  readonly numColumns: number
 }
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [choosingIndex, setChoosingIndex] = useState(0)
 
-  const {teasers} = value
-  const numColumns = teasers.length
+  const {teasers, numColumns} = value
 
   function handleArticleChange(index: number, article: ArticleReference | null) {
     const currentValue = teasers[index] || {}
 
     onChange({
+      numColumns,
       teasers: Object.assign([], teasers, {
         [index]: article ? {...currentValue, article} : null
       })
@@ -50,7 +51,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
       <Grid spacing={Spacing.ExtraSmall}>
         {teasers.map((value, index) => (
           // NOTE: Using index as a key here should be fine.
-          <Column key={index} ratio={1 / teasers.length}>
+          <Column key={index} ratio={1 / numColumns}>
             <Box height={numColumns === 1 ? 400 : 300}>
               <PlaceholderInput
                 onAddClick={() => {

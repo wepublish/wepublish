@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import {contextFromRequest, generateIDSync, GraphQLWepublishSchema} from '@wepublish/api'
 import {MemoryStorageAdapter} from '@wepublish/api-storage-memory'
+
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
+import {KarmaStorageAdapter} from '@wepublish/api-storage-karma'
 
 import startMediaServer from '@karma.run/media'
 import LocalStorageBackend from '@karma.run/media-storage-local'
@@ -23,9 +25,25 @@ async function asyncMain() {
   const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
 
-  const storageAdapter = new MemoryStorageAdapter({
-    users: [{id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'}]
-  })
+  const karmaURL = process.env.KARMA_URL
+  const karmaUser = process.env.KARMA_USER
+  const karmaPassword = process.env.KARMA_PASSWORD
+  const shouldUseKarmaAdapter = karmaURL && karmaUser && karmaPassword
+
+  const storageAdapter = shouldUseKarmaAdapter
+    ? new KarmaStorageAdapter({
+        url: karmaURL!,
+        user: karmaUser!,
+        password: karmaPassword!
+      })
+    : new MemoryStorageAdapter({
+        users: [{id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'}]
+      })
+
+  if (storageAdapter instanceof KarmaStorageAdapter) {
+    await storageAdapter.initialize()
+    await storageAdapter.createUser(generateIDSync(), 'dev@wepublish.ch', '123')
+  }
 
   const server = new ApolloServer({
     cors: {

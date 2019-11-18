@@ -43,7 +43,7 @@ export type ArticleTeaserGridBlock1ListValue = BlockListValue<
 >
 
 export type ArticleTeaserGridBlock3ListValue = BlockListValue<
-  BlockType.ArticleTeaserGrid3,
+  BlockType.ArticleTeaserGrid6,
   TeaserGridBlockValue
 >
 
@@ -221,15 +221,15 @@ export function PageEditor({id}: PageEditorProps) {
             {{
               [BlockType.ArticleTeaserGrid1]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {teasers: [null]},
+                defaultValue: {numColumns: 1, teasers: [null]},
                 label: '1 Col',
                 icon: IconColumn1
               },
 
-              [BlockType.ArticleTeaserGrid3]: {
+              [BlockType.ArticleTeaserGrid6]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {teasers: [null, null, null]},
-                label: '3 Cols',
+                defaultValue: {numColumns: 3, teasers: [null, null, null, null, null, null]},
+                label: '6 Cols',
                 icon: IconColumn6
               }
             }}
@@ -278,13 +278,13 @@ export function PageEditor({id}: PageEditorProps) {
 function unionMapForBlock(block: PageBlockValue): PageBlockUnionMap {
   switch (block.type) {
     case BlockType.ArticleTeaserGrid1:
-    case BlockType.ArticleTeaserGrid3:
+    case BlockType.ArticleTeaserGrid6:
       return {
         articleTeaserGrid: {
           teasers: block.value.teasers.map(value =>
             value ? {type: value.type, articleID: value.article.id} : null
           ),
-          numColumns: block.value.teasers.length
+          numColumns: block.value.numColumns
         }
       }
   }
@@ -298,8 +298,9 @@ function blockForQueryBlock(block: any): PageBlockValue | null {
     case 'ArticleTeaserGridBlock':
       return {
         key,
-        type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid3,
+        type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid6,
         value: {
+          numColumns: block.numColumns,
           teasers: block.teasers.map(
             (teaser: any) =>
               teaser && {

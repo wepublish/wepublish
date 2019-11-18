@@ -10,6 +10,7 @@ import {PageInfo, Pagination} from './pageInfo'
 
 export interface StorageAdapter {
   // User
+  createUser(id: string, email: string, password: string): Promise<User>
   getUserForCredentials(email: string, password: string): Promise<User | null>
 
   // Session
