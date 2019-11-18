@@ -59,35 +59,31 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                 }}>
                 {value && (
                   <LayerContainer>
-                    {/* TODO: Allow layer position, don't fill by default */}
-                    <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
-                      <Box margin={Spacing.ExtraSmall}>
-                        <IconButton
-                          icon={MaterialIconEditOutlined}
-                          title="Choose Article"
-                          onClick={() => {
-                            setChoosingIndex(index)
-                            setChooseModalOpen(true)
-                          }}
-                        />
-                      </Box>
-                      <Box margin={Spacing.ExtraSmall}>
-                        <IconButton
-                          icon={MaterialIconDeleteOutlined}
-                          title="Remove Article"
-                          onClick={() => {
-                            handleArticleChange(index, null)
-                          }}
-                        />
-                      </Box>
+                    <Layer right={0} top={0}>
+                      <IconButton
+                        icon={MaterialIconEditOutlined}
+                        title="Choose Article"
+                        onClick={() => {
+                          setChoosingIndex(index)
+                          setChooseModalOpen(true)
+                        }}
+                        margin={Spacing.ExtraSmall}
+                      />
+                      <IconButton
+                        icon={MaterialIconDeleteOutlined}
+                        title="Remove Article"
+                        onClick={() => {
+                          handleArticleChange(index, null)
+                        }}
+                        margin={Spacing.ExtraSmall}
+                      />
                     </Layer>
 
                     <Layer
+                      bottom={0}
+                      width={'100%'}
+                      height={numColumns === 1 ? 'auto' : '150px'}
                       style={{
-                        bottom: 0,
-                        top: 'unset',
-                        left: 'unset',
-                        height: numColumns === 1 ? 'auto' : '150px',
                         backgroundColor: numColumns === 1 ? 'rgba(34,34,34,0.6)' : 'white'
                       }}>
                       <Box padding={numColumns === 1 ? Spacing.Small : Spacing.ExtraSmall}>

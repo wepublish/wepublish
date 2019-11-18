@@ -118,8 +118,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
                   <LayerContainer>
-                    {/* TODO: Allow layer position, don't fill by default */}
-                    <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
+                    <Layer right={0} top={0}>
                       <Box
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"

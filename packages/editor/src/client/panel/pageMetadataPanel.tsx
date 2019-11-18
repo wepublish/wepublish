@@ -96,41 +96,25 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
                   <LayerContainer>
-                    {/* TODO: Allow layer position, don't fill by default */}
-                    <Layer style={{right: 0, top: 0, left: 'unset', height: 'auto', width: 'auto'}}>
-                      <Box
+                    <Layer right={0} top={0}>
+                      <IconButton
+                        icon={MaterialIconImageOutlined}
+                        title="Choose Image"
+                        onClick={() => setChooseModalOpen(true)}
                         margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        flex>
-                        <IconButton
-                          icon={MaterialIconImageOutlined}
-                          title="Choose Image"
-                          onClick={() => setChooseModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
+                      />
+                      <IconButton
+                        icon={MaterialIconEditOutlined}
+                        title="Edit Image"
+                        onClick={() => setEditModalOpen(true)}
                         margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        flex>
-                        <IconButton
-                          icon={MaterialIconEditOutlined}
-                          title="Edit Image"
-                          onClick={() => setEditModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
+                      />
+                      <IconButton
+                        icon={MaterialIconDeleteOutlined}
+                        title="Remove Image"
+                        onClick={() => onChange?.({...value, image: null})}
                         margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        flex>
-                        <IconButton
-                          icon={MaterialIconDeleteOutlined}
-                          title="Remove Image"
-                          onClick={() => onChange?.({...value, image: null})}
-                        />
-                      </Box>
+                      />
                     </Layer>
                     <Image src={image.url} height={300} />
                   </LayerContainer>
