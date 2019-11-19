@@ -78,7 +78,13 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
       },
       async resolve(_root, {token}, {authenticate, storageAdapter}) {
         const user = await authenticate()
-        await storageAdapter.deleteSession(user, token)
+        const session = await storageAdapter.getSession(token)
+
+        if (user.id !== session?.user.id) {
+          return false
+        }
+
+        await storageAdapter.deleteSession(token)
         return true
       }
     },
@@ -211,7 +217,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         title: {type: GraphQLNonNull(GraphQLString)},
         description: {type: GraphQLNonNull(GraphQLString)},
-        tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+        tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
         focalPoint: {type: GraphQLInputPoint}
       },
       resolve(root, args, {storageAdapter}) {

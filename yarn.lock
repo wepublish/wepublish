@@ -869,10 +869,10 @@
     fela-dom "^10.6.1"
     path-to-regexp "^3.0.0"
 
-"@karma.run/sdk@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@karma.run/sdk/-/sdk-0.6.0.tgz#345eee9d8a8e2dc8556620a732e06e24c51fb0eb"
-  integrity sha512-uNX7Q0Vv7D8huuqtp5+XBz+Kk/nFnnwPIe07a1oN+qnGSmbkHPGGrkpExEomM02RPWawmuLiGS+Pcat5rpvVJw==
+"@karma.run/sdk@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/sdk/-/sdk-0.7.0.tgz#b5bb9a5d192de3e3a2467c3f23a7414304e9f78f"
+  integrity sha512-6f63wPNsDOvuLTfW0baeyjEYbv0/Xx5P3mBa2eC662psSMF3MR7hk2wvwNT/KMxHSXwFm2xKnWDcgtKmTvmjZg==
   dependencies:
     axios "^0.18.0"
 

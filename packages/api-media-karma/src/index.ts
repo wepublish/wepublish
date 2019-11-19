@@ -15,10 +15,10 @@ export class KarmaMediaAdapter implements MediaAdapter {
   }
 
   async uploadImage(file: Promise<FileUpload>): Promise<UploadImage> {
-    const {filename, mimetype, createReadStream}: FileUpload = await file
+    const {filename: inputFilename, mimetype, createReadStream}: FileUpload = await file
     const form = new FormData()
 
-    form.append('file', createReadStream(), {filename, contentType: mimetype})
+    form.append('file', createReadStream(), {filename: inputFilename, contentType: mimetype})
 
     // The form-data module reports a known length for the stream returned by createReadStream,
     // which is wrong, override it and always set it to false.
@@ -37,7 +37,18 @@ export class KarmaMediaAdapter implements MediaAdapter {
       throw new ApolloError(`Received error from media server: ${JSON.stringify(json)}`)
     }
 
-    return {...json, url: `${this.url}${json.id}/${json.filename}${json.extension}`}
+    const {id, filename, fileSize, extension, mimeType, format, width, height} = json
+
+    return {
+      id,
+      filename,
+      fileSize,
+      extension,
+      mimeType,
+      format,
+      width,
+      height
+    }
   }
 
   async getImageURL(

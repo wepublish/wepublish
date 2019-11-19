@@ -65,7 +65,7 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
 })
 
 export const GraphQLExternalNavigationLink = new GraphQLObjectType({
-  name: 'ArticleExternalLink',
+  name: 'ExternalNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
@@ -78,7 +78,7 @@ export const GraphQLExternalNavigationLink = new GraphQLObjectType({
 
 export const GraphQLNavigationLink = new GraphQLUnionType({
   name: 'NavigationLink',
-  types: [GraphQLPageNavigationLink, GraphQLArticleNavigationLink]
+  types: [GraphQLPageNavigationLink, GraphQLArticleNavigationLink, GraphQLExternalNavigationLink]
 })
 
 export const GraphQLNavigation = new GraphQLObjectType({

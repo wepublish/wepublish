@@ -2,7 +2,7 @@ import {User, Session} from './user'
 import {Navigation} from './navigation'
 import {PageInput, Page, PageVersion} from './page'
 import {ArticleInput, Article, ArticlesArguments, ArticleVersion} from './article'
-import {PageBlock, ArticleBlock} from './blocks'
+import {PageBlock} from './blocks'
 import {Peer, PeerArguments, PeersArguments} from './peer'
 import {Image, ImageUpdate} from './image'
 import {Author} from './author'
@@ -15,8 +15,8 @@ export interface StorageAdapter {
 
   // Session
   createSession(user: User, token: string, expiryDate: Date): Promise<Session>
-  deleteSession(user: User, token: string): Promise<Session | null>
   getSession(token: string): Promise<Session | null>
+  deleteSession(token: string): Promise<void>
 
   // Navigation
   createNavigation(navigation: Navigation): Promise<Navigation>
@@ -44,7 +44,7 @@ export interface StorageAdapter {
 
   getArticleVersion(id: string, version: number): Promise<ArticleVersion | null>
   getArticleVersions(id: string): Promise<ArticleVersion[]>
-  getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]>
+  // getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]>
 
   // Author
   createAuthor(author: Author): Promise<Author>

@@ -156,10 +156,10 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
     shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      resolve({id, version}, _args, {storageAdapter}) {
-        return storageAdapter.getArticleVersionBlocks(id, version)
-      }
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))
+      // resolve({id, version}, _args, {storageAdapter}) {
+      //   return storageAdapter.getArticleVersionBlocks(id, version)
+      // }
     }
   }
 })

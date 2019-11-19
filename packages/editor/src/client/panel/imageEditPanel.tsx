@@ -35,6 +35,7 @@ const EditImageFragment = gql`
     fileSize
     title
     description
+    tags
     focalPoint {
       x
       y
@@ -54,8 +55,20 @@ const ImageQuery = gql`
 `
 
 const ImageMutation = gql`
-  mutation($id: ID!, $title: String!, $description: String!, $focalPoint: InputPoint!) {
-    updateImage(id: $id, title: $title, description: $description, focalPoint: $focalPoint) {
+  mutation(
+    $id: ID!
+    $title: String!
+    $description: String!
+    $tags: [String!]!
+    $focalPoint: InputPoint!
+  ) {
+    updateImage(
+      id: $id
+      title: $title
+      description: $description
+      tags: $tags
+      focalPoint: $focalPoint
+    ) {
       ...EditImage
     }
   }
@@ -95,7 +108,11 @@ export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanel
   const [description, setDescription] = useState('')
   const [focalPoint, setFocalPoint] = useState<Point | null>(null)
 
-  const {data, loading, error: loadingError} = useQuery(ImageQuery, {variables: {id}})
+  const {data, loading, error: loadingError} = useQuery(ImageQuery, {
+    variables: {id},
+    fetchPolicy: 'network-only'
+  })
+
   const [editImage, {loading: saving, error: savingError}] = useMutation(ImageMutation)
 
   const disabled = loading || saving

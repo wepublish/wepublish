@@ -31,9 +31,7 @@ interface MemoryPeer {
   url: string
 }
 
-interface MemoryArticleVersion extends Writeable<ArticleVersion> {
-  blocks: ArticleBlock[]
-}
+interface MemoryArticleVersion extends Writeable<ArticleVersion> {}
 
 type MemoryImage = Writeable<Image>
 
@@ -101,17 +99,10 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return {user, token, expiryDate}
   }
 
-  async deleteSession(user: User, revokeToken: string): Promise<Session | null> {
-    const index = this._sessions.findIndex(
-      ({userID, token}) => userID === user.id && token === revokeToken
-    )
-
-    if (index === -1) return null
-
-    const {expiryDate} = this._sessions[index]
+  async deleteSession(revokeToken: string): Promise<void> {
+    const index = this._sessions.findIndex(({token}) => token === revokeToken)
+    if (index === -1) return
     this._sessions.splice(index, 1)
-
-    return {user, token: revokeToken, expiryDate}
   }
 
   async getSession(verifyToken: string): Promise<Session | null> {

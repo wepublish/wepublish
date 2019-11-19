@@ -28,8 +28,8 @@ const AuthWithCredentialsMutation = gql`
 `
 
 export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('dev@wepublish.ch')
+  const [password, setPassword] = useState('123')
 
   const {current} = useRoute()
 
@@ -79,7 +79,7 @@ export function Login() {
 
   return (
     <>
-      <LoginTemplate backgroundChildren={<Background focus />}>
+      <LoginTemplate backgroundChildren={<Background />}>
         <LoginForm onSubmit={login}>
           <Box marginBottom={Spacing.Small}>
             <TextInput

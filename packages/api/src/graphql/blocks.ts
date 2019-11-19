@@ -121,6 +121,7 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {storageAdapter}) {
+        if (!imageID) return null
         return storageAdapter.getImage(imageID)
       }
     },

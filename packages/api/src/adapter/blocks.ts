@@ -32,8 +32,8 @@ export interface RichTextBlock extends BaseBlock {
 
 export interface ImageBlock extends BaseBlock {
   readonly type: BlockType.Image
-  readonly caption: string
-  readonly imageID: string
+  readonly caption?: string
+  readonly imageID?: string
 }
 
 export interface ImageGalleryBlock extends BaseBlock {
@@ -93,7 +93,7 @@ export interface LinkPageBreakBlock extends BaseBlock {
 
 export interface TitleBlock extends BaseBlock {
   readonly type: BlockType.Title
-  readonly title: string
+  readonly title?: string
   readonly lead?: string
 }
 
