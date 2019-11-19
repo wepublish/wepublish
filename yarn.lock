@@ -828,12 +828,10 @@
     "@karma.run/utility" "0.0.1"
     "@types/slate" "^0.47.1"
 
-"@karma.run/icons@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@karma.run/icons/-/icons-0.0.0.tgz#26ec21c128d7553a931c5b5ed15b70d4dfee5e88"
-  integrity sha512-Xyr+j9hCCrZ30ItiNIsbiuZBaJ0xwpY7y6rDYAmajEu1fH2y6J5IKSp6fW5E4dlcHqK/cP6myvHMjCg99KS2hA==
-  dependencies:
-    react "^16.10.1"
+"@karma.run/icons@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/icons/-/icons-1.0.0.tgz#b39f5e8aa13c3b159727489635beaa95728cf849"
+  integrity sha512-aJ2JV5+BukAkqJwGoEhyLBxavHoF/OpCwi/8+1+bIyVRGZQQ/KeUIwq7bQRl6xu4H4akENIfBdetPLk6xXusMw==
 
 "@karma.run/media-image-sharp@^0.0.0":
   version "0.0.0"
@@ -860,8 +858,10 @@
     pino-pretty "^3.2.0"
     pump "^3.0.0"
 
-"@karma.run/react@^0.0.21", "@karma.run/react@file:../karma.run-packages/packages/react":
-  version "0.0.21"
+"@karma.run/react@0.1.0", "@karma.run/react@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/react/-/react-0.1.0.tgz#1e964f8dec35b40c4589b858b06fa93cb755fa45"
+  integrity sha512-aZly5JJ0Cu9SlujEwLDRLH8fsfU/G2VGkyBeJOh+9Gg2CvtDFztnBerwjQ57Tybzc33wq0OAtxu1t7bnn35eiA==
   dependencies:
     "@karma.run/utility" "^0.0.1"
     csstype "^2.6.6"
@@ -876,12 +876,14 @@
   dependencies:
     axios "^0.18.0"
 
-"@karma.run/ui@file:../karma.run-packages/packages/ui":
-  version "0.0.7"
+"@karma.run/ui@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.1.1.tgz#32c4047afaadfbb698f0e57d06a8c38b53caac9b"
+  integrity sha512-Yeswx+jPJEdQlYPV+ZHKbJ2LBvaFRsfMOXoXAo1Jv5kbm3i+NKbRo9Cgy4cpurDMIpEPpHDkK6iqDsV1fTinEA==
   dependencies:
-    "@karma.run/icons" "^0.0.0"
-    "@karma.run/react" "^0.0.21"
-    "@karma.run/utility" "^0.0.1"
+    "@karma.run/icons" "^1.0.0"
+    "@karma.run/react" "^0.1.0"
+    "@karma.run/utility" "^0.1.0"
     "@types/slate" "^0.47.3"
     "@types/slate-react" "^0.22.5"
     csstype "^2.6.6"
@@ -903,6 +905,11 @@
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@karma.run/utility/-/utility-0.0.1.tgz#eddbc4668d1209a5b852195ec472725a06817632"
   integrity sha512-tlNtuuFz1L84iBXULi9DgB4Jk23t9j1evUutzegif0FYo341DicDPcuwkav8/syCUKA+e+tjFl03EFwdC/rY1Q==
+
+"@karma.run/utility@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/utility/-/utility-0.1.0.tgz#9aba35783d41b07871d94c079c245152cb2023d5"
+  integrity sha512-nyFGE5wdvPZvnkmtuiRrHXz2pqXmBVd0s4uWWQ6P2GLX8hOAdEHXmET7tBkWFcO1aj548RU33+Ulzilo5A7bGw==
 
 "@karma.run/webpack@^0.0.3":
   version "0.0.3"
@@ -6244,7 +6251,7 @@ react-transition-group@4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@^16.10.1, react@^16.10.2:
+react@^16.10.2:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.10.2.tgz#a5ede5cdd5c536f745173c8da47bda64797a4cf0"
   integrity sha512-MFVIq0DpIhrHFyqLU0S3+4dIcBhhOvBE8bJ/5kHPVOVaGdo0KuiQzpcjCPsf585WvhypqtrMILyoE2th6dT+Lw==

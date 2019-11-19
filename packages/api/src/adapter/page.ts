@@ -10,7 +10,6 @@ export interface Page {
 
   readonly latestVersion: number
   readonly publishedVersion?: number
-  readonly draftVersion?: number
 }
 
 export interface PageVersion {
@@ -26,6 +25,8 @@ export interface PageVersion {
   readonly description: string
   readonly tags: string[]
   readonly imageID?: string
+
+  readonly blocks: PageBlock[]
 }
 
 export interface PageInput {
@@ -35,6 +36,7 @@ export interface PageInput {
   readonly description: string
   readonly slug: string
   readonly tags: string[]
+  readonly imageID?: string
 
   readonly blocks: PageBlock[]
 }

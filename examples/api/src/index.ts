@@ -1,10 +1,5 @@
 #!/usr/bin/env node
-import {
-  contextFromRequest,
-  generateIDSync,
-  GraphQLWepublishSchema,
-  NavigationLinkType
-} from '@wepublish/api'
+import {contextFromRequest, generateIDSync, GraphQLWepublishSchema} from '@wepublish/api'
 import {MemoryStorageAdapter} from '@wepublish/api-storage-memory'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -46,24 +41,9 @@ async function asyncMain() {
       })
 
   if (storageAdapter instanceof KarmaStorageAdapter) {
-    await storageAdapter.initialize()
-    await storageAdapter.createUser(generateIDSync(), 'dev@wepublish.ch', '123')
-    await storageAdapter.createAuthor({id: '123', name: 'Test', imageID: '123'})
-    await storageAdapter.createNavigation({
-      key: '123',
-      name: 'Test',
-      links: [
-        {type: NavigationLinkType.Article, articleID: '123', label: 'Test'},
-        {type: NavigationLinkType.Page, pageID: '123', label: 'Test 2'},
-        {type: NavigationLinkType.External, url: '123', label: 'Test 3'}
-      ]
-    })
-
-    await storageAdapter.createNavigation({
-      key: '321',
-      name: 'Test',
-      links: []
-    })
+    if (await storageAdapter.initialize()) {
+      await storageAdapter.createUser(generateIDSync(), 'dev@wepublish.ch', '123')
+    }
   }
 
   const server = new ApolloServer({

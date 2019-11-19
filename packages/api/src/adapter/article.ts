@@ -29,7 +29,6 @@ export interface Article {
 
   readonly latestVersion: number
   readonly publishedVersion?: number
-  readonly draftVersion?: number // TODO: Consider removing this, doesn't seem to server any purpose
 }
 
 export interface ArticleVersion {

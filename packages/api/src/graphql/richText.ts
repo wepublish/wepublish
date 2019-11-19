@@ -17,7 +17,9 @@ export const GraphQLRichText = createRichTextScalar({
     },
     marks: {
       bold: null,
-      italic: null
+      italic: null,
+      underline: null,
+      strikethrough: null
     }
   }
 })

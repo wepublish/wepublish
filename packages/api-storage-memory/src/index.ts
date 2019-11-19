@@ -224,7 +224,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       publishedAt:
         articleVersion.state === VersionState.Published ? articleVersion.createdAt : undefined,
 
-      draftVersion: 0,
       latestVersion: 0
     }
   }
@@ -272,8 +271,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
         version => version.state === VersionState.Published
       )
 
-      const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
-
       return {
         id: article.id,
         peer: article.peer,
@@ -284,7 +281,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
         publishedAt: publishedVersion && publishedVersion.updatedAt,
 
         publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
-        draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined,
         latestVersion: article.versions.length - 1
       }
     })
@@ -306,8 +302,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       version => version.state === VersionState.Published
     )
 
-    const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
-
     return {
       id: article.id,
       peer: article.peer,
@@ -317,7 +311,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       publishedAt: publishedVersion && publishedVersion.updatedAt,
 
       publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
-      draftVersion: draftVersion ? article.versions.indexOf(draftVersion) : undefined,
       latestVersion: article.versions.length - 1
     }
   }
@@ -369,7 +362,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       publishedAt: pageVersion.state === VersionState.Published ? pageVersion.createdAt : undefined,
 
       publishedVersion: pageVersion.state === VersionState.Published ? 0 : undefined,
-      draftVersion: pageVersion.state === VersionState.Draft ? 0 : undefined,
       latestVersion: 0
     }
   }
@@ -415,8 +407,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
         version => version.state === VersionState.Published
       )
 
-      const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
-
       return {
         id: page.id,
         peer: page.peer,
@@ -427,7 +417,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
         publishedAt: publishedVersion && publishedVersion.updatedAt,
 
         publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
-        draftVersion: draftVersion ? page.versions.indexOf(draftVersion) : undefined,
         latestVersion: page.versions.length - 1
       }
     })
@@ -466,8 +455,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
       version => version.state === VersionState.Published
     )
 
-    const draftVersion = reverseVersions.find(version => version.state === VersionState.Draft)
-
     return {
       id: page.id,
 
@@ -476,7 +463,6 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
       publishedAt: publishedVersion && publishedVersion.updatedAt,
       publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
-      draftVersion: draftVersion ? page.versions.indexOf(draftVersion) : undefined,
       latestVersion: page.versions.length - 1
     }
   }

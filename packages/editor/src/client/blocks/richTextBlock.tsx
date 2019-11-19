@@ -11,7 +11,8 @@ import {
   MaterialIconLooksTwoOutlined,
   MaterialIconLooks3Outlined,
   MaterialIconFormatListBulleted,
-  MaterialIconFormatListNumbered
+  MaterialIconFormatListNumbered,
+  MaterialIconLooksOneOutlined
 } from '@karma.run/icons'
 
 import {
@@ -22,6 +23,7 @@ import {
 } from '@karma.run/ui'
 
 enum BlockType {
+  Heading1 = 'heading-one',
   Heading2 = 'heading-two',
   Heading3 = 'heading-three',
   Paragraph = 'paragraph',
@@ -70,24 +72,34 @@ function renderBlock(
   next: () => any
 ) {
   switch (node.type) {
+    case BlockType.Heading1:
+      return (
+        <Typography variant="h1" spacing="small" {...attributes}>
+          {children}
+        </Typography>
+      )
+
     case BlockType.Heading2:
       return (
         <Typography variant="h2" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
+
     case BlockType.Heading3:
       return (
         <Typography variant="h3" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
+
     case BlockType.Paragraph:
       return (
         <Typography variant="body1" spacing="large" {...attributes}>
           {children}
         </Typography>
       )
+
     case BlockType.BulletedList:
       return <ul {...attributes}>{children}</ul>
 
@@ -158,8 +170,7 @@ function toggleMark(editor: Editor, value: Value, label: string) {
   editor.toggleMark(label)
 }
 
-function toggleTitle(editor: Editor, value: Value, isH2: boolean) {
-  const type = isH2 ? BlockType.Heading2 : BlockType.Heading3
+function toggleBlock(editor: Editor, value: Value, type: BlockType) {
   const isActive = hasBlock(value, type)
   const isList = hasBlock(value, BlockType.ListItem)
 
@@ -224,15 +235,21 @@ const standardRichTextEditItems = [
     isActive: hasMark
   },
   {
+    icon: MaterialIconLooksOneOutlined,
+    label: BlockType.Heading1,
+    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading1),
+    isActive: hasType
+  },
+  {
     icon: MaterialIconLooksTwoOutlined,
     label: BlockType.Heading2,
-    onApply: (editor: Editor, value: Value) => toggleTitle(editor, value, true),
+    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading2),
     isActive: hasType
   },
   {
     icon: MaterialIconLooks3Outlined,
     label: BlockType.Heading3,
-    onApply: (editor: Editor, value: Value) => toggleTitle(editor, value, false),
+    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading3),
     isActive: hasType
   },
   {
@@ -266,6 +283,7 @@ const schema: SchemaProperties = {
     nodes: [
       {
         match: [
+          {type: BlockType.Heading1},
           {type: BlockType.Heading2},
           {type: BlockType.Heading3},
           {type: BlockType.Paragraph},

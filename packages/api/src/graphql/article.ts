@@ -171,8 +171,8 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLDateTime},
 
     published: {
@@ -180,15 +180,6 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
       resolve(root: Article, _args, {storageAdapter}: Context) {
         if (root.publishedVersion == undefined) return undefined
         return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
-      }
-    },
-
-    draft: {
-      type: GraphQLArticleVersion,
-      async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
-        await authenticate()
-        if (root.draftVersion == undefined) return undefined
-        return storageAdapter.getArticleVersion(root.id, root.draftVersion)
       }
     },
 

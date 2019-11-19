@@ -29,7 +29,6 @@ import {
 import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify} from '../utility'
 
 export interface PageMetadata {
   readonly slug: string
@@ -47,7 +46,7 @@ export interface PageMetadataPanelProps {
 }
 
 export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
-  const {title, description, image} = value
+  const {title, description, slug, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -66,13 +65,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           }
         />
         <PanelSection>
+          <Box marginBottom={Spacing.Small}>
+            <TextInput
+              label="Slug"
+              value={slug}
+              onChange={e => onChange?.({...value, slug: e.target.value})}
+            />
+          </Box>
+
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
               label="Title"
               value={title}
-              onChange={e =>
-                onChange?.({...value, title: e.target.value, slug: slugify(e.target.value)})
-              }
+              onChange={e => onChange?.({...value, title: e.target.value})}
             />
           </Box>
 

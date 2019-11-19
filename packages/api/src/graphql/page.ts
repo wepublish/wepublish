@@ -19,7 +19,7 @@ import {
   GraphQLArticleTeaserGridBlockInput
 } from './blocks'
 
-import {Page, PageVersion} from '../adapter/page'
+import {Page} from '../adapter/page'
 import {GraphQLVersionState} from './article'
 import {BlockType} from '../adapter/blocks'
 import {GraphQLImage} from './image'
@@ -61,9 +61,10 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    slug: {type: GraphQLString},
-    title: {type: GraphQLString},
-    description: {type: GraphQLString},
+    slug: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLNonNull(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     image: {
       type: GraphQLImage,
@@ -72,14 +73,7 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
       }
     },
 
-    tags: {type: GraphQLList(GraphQLString)},
-
-    blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock))),
-      resolve(root: PageVersion, _args, {storageAdapter}) {
-        return storageAdapter.getPageVersionBlocks(root.id, root.version)
-      }
-    }
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock)))}
   }
 })
 
@@ -90,8 +84,8 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLDateTime},
 
     published: {
@@ -99,14 +93,6 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
       resolve(root: Page, _args, {storageAdapter}: Context) {
         if (root.publishedVersion == undefined) return undefined
         return storageAdapter.getPageVersion(root.id, root.publishedVersion)
-      }
-    },
-
-    draft: {
-      type: GraphQLPageVersion,
-      resolve(root: Page, _args, {storageAdapter}: Context) {
-        if (root.draftVersion == undefined) return undefined
-        return storageAdapter.getPageVersion(root.id, root.draftVersion)
       }
     },
 

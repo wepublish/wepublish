@@ -2,7 +2,6 @@ import {User, Session} from './user'
 import {Navigation} from './navigation'
 import {PageInput, Page, PageVersion} from './page'
 import {ArticleInput, Article, ArticlesArguments, ArticleVersion} from './article'
-import {PageBlock} from './blocks'
 import {Peer, PeerArguments, PeersArguments} from './peer'
 import {Image, ImageUpdate} from './image'
 import {Author} from './author'
@@ -32,7 +31,6 @@ export interface StorageAdapter {
 
   getPageVersion(id: string, version: number): Promise<PageVersion | null>
   getPageVersions(id: string): Promise<PageVersion[]>
-  getPageVersionBlocks(id: string, version: number): Promise<PageBlock[]>
 
   // Articles
   createArticle(id: string, input: ArticleInput): Promise<Article>
@@ -44,7 +42,6 @@ export interface StorageAdapter {
 
   getArticleVersion(id: string, version: number): Promise<ArticleVersion | null>
   getArticleVersions(id: string): Promise<ArticleVersion[]>
-  // getArticleVersionBlocks(id: string, version: number): Promise<ArticleBlock[]>
 
   // Author
   createAuthor(author: Author): Promise<Author>
