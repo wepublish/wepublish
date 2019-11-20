@@ -364,6 +364,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
               'updatedAt',
               data(d => d.dateTime(updateDate))
             )
+            // TODO: Fix overriding original publishedAt date.
             .setField(
               'publishedAt',
               data(d =>
@@ -400,8 +401,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
         all(tag(ModelTag.Page))
           .filterList((index, value) =>
             and(
-              id ? value.field('id').equal(string(id)) : bool(true),
-              slug ? value.field('publishedSlug').equal(string(slug)) : bool(true)
+              id != undefined ? value.field('id').equal(string(id)) : bool(true),
+              slug != undefined ? value.field('publishedSlug').equal(string(slug)) : bool(true)
             )
           )
           .first()
@@ -650,6 +651,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
               'updatedAt',
               data(d => d.dateTime(updateDate))
             )
+            // TODO: Fix overriding original publishedAt date.
             .setField(
               'publishedAt',
               data(d =>

@@ -28,8 +28,8 @@ const AuthWithCredentialsMutation = gql`
 `
 
 export function Login() {
-  const [email, setEmail] = useState('dev@wepublish.ch')
-  const [password, setPassword] = useState('123')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const {current} = useRoute()
 
