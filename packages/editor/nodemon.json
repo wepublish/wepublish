@@ -4,8 +4,10 @@
     "../../node_modules/@karma.run/react/lib/**/*.js",
     "./dist/**/*.js"
   ],
+  "delay": 250,
   "ignoreRoot": [".git"],
   "env": {
-    "STATIC_HOST": "http://localhost:3002"
+    "API_URL": "http://localhost:3000",
+    "ASSET_HOST": "http://localhost:3002"
   }
 }

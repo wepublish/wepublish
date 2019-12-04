@@ -8,34 +8,35 @@ export interface Page {
   readonly updatedAt: Date
   readonly publishedAt?: Date
 
+  readonly latestVersion: number
   readonly publishedVersion?: number
-  readonly draftVersion?: number
 }
 
 export interface PageVersion {
-  readonly articleID: string
-
+  readonly id: string
   readonly version: number
   readonly state: VersionState
 
   readonly createdAt: Date
   readonly updatedAt: Date
 
-  readonly preTitle?: string
+  readonly slug: string
   readonly title: string
   readonly description: string
-  readonly slug: string
+  readonly tags: string[]
+  readonly imageID?: string
+
+  readonly blocks: PageBlock[]
 }
 
 export interface PageInput {
-  readonly id: string
   readonly state: VersionState
 
   readonly title: string
   readonly description: string
   readonly slug: string
-
-  readonly publishDate?: Date
+  readonly tags: string[]
+  readonly imageID?: string
 
   readonly blocks: PageBlock[]
 }

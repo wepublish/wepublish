@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "0.0.18",
+  "version": "0.1.0",
   "module": "./lib/esm/client/",
   "license": "MIT",
   "scripts": {
@@ -14,7 +14,7 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@karma.run/graphql": "^0.0.1",
+    "@karma.run/graphql": "^0.0.2",
     "@karma.run/utility": "^0.0.1",
     "apollo-client": "^2.6.4",
     "apollo-server": "^2.9.7",
@@ -37,6 +37,6 @@
     "@types/node": "^12.6.8",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "^3.6.4"
+    "typescript": "^3.7.2"
   }
 }

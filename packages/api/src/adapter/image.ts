@@ -1,10 +1,12 @@
-export interface FocusPoint {
+export interface Point {
   readonly x: number
   readonly y: number
 }
 
 export interface Image {
   readonly id: string
+  readonly createdAt: Date
+  readonly updatedAt: Date
   readonly filename: string
   readonly fileSize: number
   readonly extension: string
@@ -12,15 +14,22 @@ export interface Image {
   readonly title: string
   readonly description: string
   readonly tags: string[]
-  readonly url: string
   readonly format: string
   readonly width: number
   readonly height: number
-  readonly focusPoint?: FocusPoint
+  readonly focalPoint: Point | null
 }
 
-export interface ImageEdge {
+export interface ImageUpdate {
+  readonly id: string
+  readonly title: string
   readonly description: string
+  readonly tags: string[]
+  readonly focalPoint: Point | null
+}
+
+export interface ImageCaptionEdge {
+  readonly caption: string
   readonly imageID: string
 }
 
@@ -30,7 +39,6 @@ export interface UploadImage {
   readonly fileSize: number
   readonly extension: string
   readonly mimeType: string
-  readonly url: string
   readonly format: string
   readonly width: number
   readonly height: number

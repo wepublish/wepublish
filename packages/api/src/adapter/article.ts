@@ -9,7 +9,7 @@ export interface ArticleArguments {
 }
 
 export interface ArticlesArguments {
-  readonly limit: number
+  readonly limit?: number
 
   readonly publishedBetween: DateRange
   readonly updatedBetween: DateRange
@@ -27,13 +27,12 @@ export interface Article {
   readonly updatedAt: Date
   readonly publishedAt?: Date
 
+  readonly latestVersion: number
   readonly publishedVersion?: number
-  readonly draftVersion?: number
 }
 
 export interface ArticleVersion {
-  readonly articleID: string
-
+  readonly id: string
   readonly version: number
   readonly state: VersionState
 
@@ -44,9 +43,15 @@ export interface ArticleVersion {
   readonly title: string
   readonly lead: string
   readonly slug: string
+  readonly tags: string[]
 
   readonly imageID?: string
   readonly authorIDs: string[]
+
+  readonly shared: boolean
+  readonly breaking: boolean
+
+  readonly blocks: ArticleBlock[]
 }
 
 export interface ArticleTeaserOverrides {
@@ -57,22 +62,23 @@ export interface ArticleTeaserOverrides {
 }
 
 export interface ArticleTeaser {
-  readonly type: string
-  readonly overrides: ArticleTeaserOverrides
+  readonly type?: string
+  readonly overrides?: ArticleTeaserOverrides
   readonly articleID: string
 }
 
 export interface ArticleInput {
-  readonly id: string
   readonly state: VersionState
 
   readonly preTitle?: string
   readonly title: string
   readonly lead: string
   readonly slug: string
+  readonly tags: string[]
   readonly imageID?: string
 
-  readonly publishDate?: Date
+  readonly breaking: boolean
+  readonly shared: boolean
   readonly blocks: ArticleBlock[]
   readonly authorIDs: string[]
 }

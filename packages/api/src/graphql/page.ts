@@ -5,40 +5,75 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLString,
-  GraphQLUnionType
+  GraphQLUnionType,
+  GraphQLInputObjectType
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 
-import {GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock} from './blocks'
-import {ArticleVersion} from '../adapter/article'
+import {
+  GraphQLRichTextBlock,
+  GraphQLImageBlock,
+  GraphQLArticleTeaserGridBlock,
+  GraphQLArticleTeaserGridBlockInput
+} from './blocks'
+
 import {Page} from '../adapter/page'
+import {GraphQLVersionState} from './article'
+import {BlockType} from '../adapter/blocks'
+import {GraphQLImage} from './image'
+
+export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
+  name: 'PageBlockUnionMap',
+  fields: {
+    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
+  }
+})
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
   types: [GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
 })
 
+export const GraphQLPageInput = new GraphQLInputObjectType({
+  name: 'PageInput',
+  fields: {
+    slug: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLNonNull(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    imageID: {type: GraphQLID},
+    blocks: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlockUnionMap)))
+    }
+  }
+})
+
 export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
   name: 'PageVersion',
 
   fields: {
-    version: {type: GraphQLInt},
-    createdAt: {type: GraphQLDateTime},
+    id: {type: GraphQLNonNull(GraphQLString)},
+    version: {type: GraphQLNonNull(GraphQLInt)},
+    state: {type: GraphQLNonNull(GraphQLVersionState)},
 
-    slug: {type: GraphQLString},
-    title: {type: GraphQLString},
-    description: {type: GraphQLString},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    tags: {type: GraphQLList(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLNonNull(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
-    blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock))),
-      resolve(root: ArticleVersion, _args, {storageAdapter}) {
-        return storageAdapter.getPageVersionBlocks(root.articleID, root.version)
+    image: {
+      type: GraphQLImage,
+      resolve({imageID}, args, {storageAdapter}) {
+        return imageID ? storageAdapter.getImage(imageID) : null
       }
-    }
+    },
+
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock)))}
   }
 })
 
@@ -49,8 +84,8 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLDateTime},
 
     published: {
@@ -61,19 +96,28 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
       }
     },
 
-    draft: {
+    latest: {
       type: GraphQLPageVersion,
-      resolve(root: Page, _args, {storageAdapter}: Context) {
-        if (root.draftVersion == undefined) return undefined
-        return storageAdapter.getPageVersion(root.id, root.draftVersion)
+      async resolve(root: Page, _args, {storageAdapter, authenticate}: Context) {
+        await authenticate()
+        return storageAdapter.getPageVersion(root.id, root.latestVersion)
       }
     },
 
     versions: {
       type: GraphQLList(GraphQLPageVersion),
-      resolve(root: Page, _args, {storageAdapter}: Context) {
+      async resolve(root: Page, _args, {storageAdapter, authenticate}: Context) {
+        await authenticate()
         return storageAdapter.getPageVersions(root.id)
       }
     }
   })
+})
+
+export const GraphQLPageConnection = new GraphQLObjectType({
+  name: 'PageConnection',
+  fields: {
+    nodes: {type: GraphQLList(GraphQLPage)}
+    // pageInfo: {type: GraphQLPageInfo} // TODO
+  }
 })

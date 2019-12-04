@@ -10,18 +10,18 @@ import {
   GraphQLID
 } from 'graphql'
 
-import graphQLFields from 'graphql-fields'
-
 import {GraphQLDateRangeInput} from './dateRange'
 import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
-import {GraphQLPage} from './page'
+import {GraphQLPage, GraphQLPageConnection} from './page'
 import {PageNavigationLink, NavigationLinkType, ArticleNavigationLink} from '../adapter/navigation'
 import {ArticlesArguments} from '../adapter/article'
 import {PeerArguments, PeersArguments} from '../adapter/peer'
-import {GraphQLImageConnection} from './image'
+import {GraphQLImageConnection, GraphQLImage} from './image'
+import {GraphQLUser} from './session'
+import {UserInputError} from 'apollo-server'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -65,7 +65,7 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
 })
 
 export const GraphQLExternalNavigationLink = new GraphQLObjectType({
-  name: 'ArticleExternalLink',
+  name: 'ExternalNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
@@ -78,7 +78,7 @@ export const GraphQLExternalNavigationLink = new GraphQLObjectType({
 
 export const GraphQLNavigationLink = new GraphQLUnionType({
   name: 'NavigationLink',
-  types: [GraphQLPageNavigationLink, GraphQLArticleNavigationLink]
+  types: [GraphQLPageNavigationLink, GraphQLArticleNavigationLink, GraphQLExternalNavigationLink]
 })
 
 export const GraphQLNavigation = new GraphQLObjectType({
@@ -93,11 +93,18 @@ export const GraphQLNavigation = new GraphQLObjectType({
 export const GraphQLQuery = new GraphQLObjectType<any, Context>({
   name: 'Query',
   fields: {
+    me: {
+      type: GraphQLUser,
+      resolve(root, {}, {authenticate, storageAdapter}) {
+        return authenticate()
+      }
+    },
+
     navigation: {
       type: GraphQLNavigation,
       args: {key: {type: GraphQLNonNull(GraphQLString)}},
-      async resolve(_root, {key}, {storageAdapter}) {
-        return await storageAdapter.getNavigation(key)
+      resolve(root, {key}, {storageAdapter}) {
+        return storageAdapter.getNavigation(key)
       }
     },
     article: {
@@ -117,26 +124,27 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       args: {
         id: {
           description: 'ID of the Page.',
-          type: GraphQLString
-        }
-      },
-      resolve(_root, {id}, {storageAdapter}) {
-        return storageAdapter.getPage(id)
-      }
-    },
-
-    pageBySlug: {
-      type: GraphQLPage,
-      args: {
+          type: GraphQLID
+        },
         slug: {
           description: 'Slug of the Page.',
           type: GraphQLString
         }
       },
-      resolve(_root, {slug}, {storageAdapter}) {
-        return storageAdapter.getPageBySlug(slug)
+      resolve(_root, {id, slug}, {storageAdapter}) {
+        return storageAdapter.getPage(id, slug)
       }
     },
+
+    pages: {
+      type: GraphQLNonNull(GraphQLPageConnection),
+      async resolve(_root, args, context: Context, info) {
+        return {
+          nodes: await context.storageAdapter.getPages()
+        }
+      }
+    },
+
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       description: 'Request articles based on a date range.',
@@ -202,9 +210,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
 
         if (includePeers) {
-          console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
-
           // TODO: Fetch peers aswell
+          // console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
           // const peers = await context.adapter.getPeers({})
           // const peerArticles: any[] = []
           // for (const peer of peers) {
@@ -226,21 +233,48 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       }
     },
 
+    image: {
+      type: GraphQLImage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {storageAdapter}) {
+        return storageAdapter.getImage(id)
+      }
+    },
+
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
-        offset: {type: GraphQLNonNull(GraphQLInt)},
-        limit: {type: GraphQLNonNull(GraphQLInt)}
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
       },
-      async resolve(_root, {offset, limit}, {storageAdapter}) {
-        const [total, nodes] = await storageAdapter.getImages(offset, limit)
+      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        const [
+          nodes,
+          {startCursor, endCursor, hasNextPage, hasPreviousPage},
+          totalCount
+        ] = await storageAdapter.getImages({
+          after: after && Buffer.from(after, 'base64').toString(),
+          before: before && Buffer.from(before, 'base64').toString(),
+          first,
+          last
+        })
 
         return {
           nodes,
+          totalCount,
           pageInfo: {
-            total,
-            offset,
-            limit
+            startCursor: startCursor && Buffer.from(startCursor).toString('base64'),
+            endCursor: endCursor && Buffer.from(endCursor).toString('base64'),
+            hasNextPage,
+            hasPreviousPage
           }
         }
       }

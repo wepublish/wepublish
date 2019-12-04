@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react'
 import {createContext, Dispatch, useReducer, ReactNode} from 'react'
 import {LocalStorageKey} from './utility'
+import gql from 'graphql-tag'
+import {useQuery, useMutation} from '@apollo/react-hooks'
 
 export interface AuthContextState {
   readonly session?: {
@@ -50,23 +52,35 @@ export function authReducer(
   }
 }
 
+const MeQuery = gql`
+  {
+    me {
+      email
+    }
+  }
+`
+
 export interface AuthProviderProps {
   readonly children?: ReactNode
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
+  const {data, loading} = useQuery(MeQuery)
   const [state, dispatch] = useReducer(authReducer, {})
-  const {sessionToken} = state.session || {}
 
   useEffect(() => {
-    if (sessionToken) {
-      localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
-    } else {
-      localStorage.removeItem(LocalStorageKey.SessionToken)
-    }
-  }, [sessionToken])
+    if (data) {
+      const {email} = data.me
 
-  return (
+      dispatch({
+        type: AuthDispatchActionType.Login,
+        email,
+        sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
+      })
+    }
+  }, [data])
+
+  return loading ? null : (
     <AuthDispatchContext.Provider value={dispatch}>
       {<AuthContext.Provider value={state}>{children}</AuthContext.Provider>}
     </AuthDispatchContext.Provider>

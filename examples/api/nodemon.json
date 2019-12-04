@@ -2,6 +2,7 @@
   "watch": [
     "../../node_modules/@wepublish/api/lib/**/*.js",
     "../../node_modules/@wepublish/api-storage-memory/lib/**/*.js",
+    "../../node_modules/@wepublish/api-storage-karma/lib/**/*.js",
     "../../node_modules/@wepublish/api-media-karma/lib/**/*.js",
     "./lib/**/*.js"
   ],

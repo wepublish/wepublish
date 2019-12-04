@@ -1,9 +1,21 @@
 import React, {ReactNode} from 'react'
 
 import {NavigationTemplate} from '@karma.run/ui'
-import {MaterialIconInsertDriveFileOutlined, MaterialIconPowerSettingsNew} from '@karma.run/icons'
 
-import {LinkMenuIconButton, LogoutRoute, ArticleListRoute, FrontListRoute} from './route'
+import {
+  MaterialIconInsertDriveFileOutlined,
+  MaterialIconPowerSettingsNew,
+  MaterialIconTextFields,
+  MaterialIconPhotoLibraryOutlined
+} from '@karma.run/icons'
+
+import {
+  RouteMenuLinkButton,
+  LogoutRoute,
+  ArticleListRoute,
+  PageListRoute,
+  ImageListRoute
+} from './route'
 
 export interface BaseProps {
   readonly children?: ReactNode
@@ -14,19 +26,32 @@ export function Base({children}: BaseProps) {
     <NavigationTemplate
       navigationChildren={
         <>
-          <LinkMenuIconButton
-            icon={MaterialIconInsertDriveFileOutlined}
-            label="Article"
+          <RouteMenuLinkButton
+            icon={MaterialIconTextFields}
+            label="Articles"
             route={ArticleListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <RouteMenuLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
-            label="Front"
-            route={FrontListRoute.create({})}
+            label="Pages"
+            route={PageListRoute.create({})}
           />
 
-          <LinkMenuIconButton
+          <RouteMenuLinkButton
+            icon={MaterialIconPhotoLibraryOutlined}
+            label="Image Library"
+            route={ImageListRoute.create({})}
+          />
+
+          {/* TODO */}
+          {/* <RouteMenuIconLinkButton
+            icon={MaterialIconNavigationOutlined}
+            label="Navigation"
+            route={ImageListRoute.create({})}
+          /> */}
+
+          <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}
             label="Logout"
             route={LogoutRoute.create({})}

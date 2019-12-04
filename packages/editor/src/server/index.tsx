@@ -11,7 +11,9 @@ import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
 async function asyncMain() {
-  const staticHost = process.env.STATIC_HOST || '/static'
+  if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
+
+  const assetHost = process.env.ASSET_HOST || '/assets'
 
   const assetList = JSON.parse(
     await fs.promises.readFile(path.resolve(__dirname, '../assetList.json'), 'utf-8')
@@ -21,9 +23,13 @@ async function asyncMain() {
 
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
+  const clientSettings = {
+    apiURL: process.env.API_URL
+  }
+
   const app = express()
 
-  app.use(express.static(joinPath(__dirname, '../../static'), {index: false}))
+  app.use('/assets', express.static(joinPath(__dirname, '../../assets'), {index: false}))
 
   app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
@@ -34,7 +40,14 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <script async src={`${staticHost}/${entry}`} crossOrigin=""></script>
+
+          <script
+            type="application/json"
+            id={ElementID.Settings}
+            dangerouslySetInnerHTML={{__html: JSON.stringify(clientSettings)}}
+          />
+
+          <script async src={`${assetHost}/${entry}`} crossOrigin="" />
         </head>
         <body>
           <div id={ElementID.ReactRoot}></div>

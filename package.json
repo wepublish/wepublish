@@ -6,7 +6,7 @@
   },
   "scripts": {
     "clean": "run-p clean:**",
-    "build": "run-s --print-label build:api build:api-adapter-memory build:editor",
+    "build": "run-s --print-label build:api build:api-storage-memory build:api-media-karma build:editor",
     "watch": "run-p --print-label watch:*",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
@@ -16,6 +16,10 @@
     "build:api-storage-memory": "yarn workspace @wepublish/api-storage-memory build",
     "watch:api-storage-memory": "yarn workspace @wepublish/api-storage-memory watch",
     "publish:api-storage-memory": "yarn workspace @wepublish/api-storage-memory publish --access public --no-git-tag-version",
+    "clean:api-storage-karma": "yarn workspace @wepublish/api-storage-karma clean",
+    "build:api-storage-karma": "yarn workspace @wepublish/api-storage-karma build",
+    "watch:api-storage-karma": "yarn workspace @wepublish/api-storage-karma watch",
+    "publish:api-storage-karma": "yarn workspace @wepublish/api-storage-karma publish --access public --no-git-tag-version",
     "clean:api-media-karma": "yarn workspace @wepublish/api-media-karma clean",
     "build:api-media-karma": "yarn workspace @wepublish/api-media-karma build",
     "watch:api-media-karma": "yarn workspace @wepublish/api-media-karma watch",
@@ -39,7 +43,7 @@
   "devDependencies": {
     "husky": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1"
   },
   "husky": {

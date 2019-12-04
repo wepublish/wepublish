@@ -2,10 +2,11 @@
 .idea/
 lib/
 dist/
-static/
+assets/
 examples/**/LICENSE
 packages/**/LICENSE
 node_modules
 npm-debug.log
 yarn-error.log
 .tsbuildinfo
+.media

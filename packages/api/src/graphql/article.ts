@@ -3,11 +3,12 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLList,
-  GraphQLInt,
   GraphQLString,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLUnionType
+  GraphQLUnionType,
+  GraphQLBoolean,
+  GraphQLInt
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -31,18 +32,23 @@ import {
   GraphQLListicleBlock,
   GraphQLLinkPageBreakBlock,
   GraphQLQuoteBlock,
-  GraphQLTitleBlock
+  GraphQLTitleBlock,
+  GraphQLInputImageBlock,
+  GraphQLInputTitleBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
 import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
 import {ArticleVersion, Article} from '../adapter/article'
+import {Author} from '../adapter/author'
 
-export const GraphQLInputArticleBlockUnionMap = new GraphQLInputObjectType({
-  name: 'InputBlockUnionMap',
+export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
+  name: 'ArticleBlockUnionMap',
   fields: {
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock}
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
+    [BlockType.Image]: {type: GraphQLInputImageBlock},
+    [BlockType.Title]: {type: GraphQLInputTitleBlock}
   }
 })
 
@@ -65,12 +71,11 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
   ]
 })
 
-export const GraphQLArticleVersionState = new GraphQLEnumType({
-  name: 'ArticleVersionState',
-  description: 'Current state of the article version.',
+export const GraphQLVersionState = new GraphQLEnumType({
+  name: 'VersionState',
+  description: 'Current state of the article/page version.',
   values: {
     DRAFT: {value: VersionState.Draft},
-    DRAFT_REVIEW: {value: VersionState.DraftReview},
     PUBLISHED: {value: VersionState.Published}
   }
 })
@@ -78,17 +83,17 @@ export const GraphQLArticleVersionState = new GraphQLEnumType({
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
   fields: {
-    state: {
-      type: GraphQLNonNull(GraphQLArticleVersionState)
-    },
-    title: {
-      type: GraphQLNonNull(GraphQLString)
-    },
-    lead: {
-      type: GraphQLNonNull(GraphQLString)
-    },
+    slug: {type: GraphQLNonNull(GraphQLString)},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLNonNull(GraphQLString)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    imageID: {type: GraphQLID},
+    authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLID))},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInputArticleBlockUnionMap)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlockUnionMap)))
     }
   }
 })
@@ -102,13 +107,18 @@ export const GraphQLArticlePageInfo = new GraphQLObjectType({
   }
 })
 
-export const GraphQLAuthor = new GraphQLObjectType({
+export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
 
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
-    image: {type: GraphQLImage}
+    image: {
+      type: GraphQLImage,
+      resolve({imageID}, args, {storageAdapter}) {
+        return imageID ? storageAdapter.getImage(imageID) : null
+      }
+    }
   })
 })
 
@@ -116,15 +126,23 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
   name: 'ArticleVersion',
 
   fields: {
+    id: {type: GraphQLNonNull(GraphQLString)},
     version: {type: GraphQLNonNull(GraphQLInt)},
+    state: {type: GraphQLNonNull(GraphQLVersionState)},
+
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     slug: {type: GraphQLNonNull(GraphQLString)},
-
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLNonNull(GraphQLString)},
-    image: {type: GraphQLImage},
+    image: {
+      type: GraphQLImage,
+      resolve({imageID}, args, {storageAdapter}) {
+        return imageID ? storageAdapter.getImage(imageID) : null
+      }
+    },
 
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     authors: {
@@ -134,11 +152,14 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
       }
     },
 
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock))),
-      resolve({articleID, version}, _args, {storageAdapter}) {
-        return storageAdapter.getArticleVersionBlocks(articleID, version)
-      }
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))
+      // resolve({id, version}, _args, {storageAdapter}) {
+      //   return storageAdapter.getArticleVersionBlocks(id, version)
+      // }
     }
   }
 })
@@ -150,8 +171,8 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLDateTime},
 
     published: {
@@ -162,13 +183,11 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
       }
     },
 
-    draft: {
+    latest: {
       type: GraphQLArticleVersion,
       async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
         await authenticate()
-        if (root.draftVersion == undefined) return undefined
-
-        return storageAdapter.getArticleVersion(root.id, root.draftVersion)
+        return storageAdapter.getArticleVersion(root.id, root.latestVersion)
       }
     },
 
