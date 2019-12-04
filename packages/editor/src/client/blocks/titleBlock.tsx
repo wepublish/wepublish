@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {BlockProps, TypograpyTextArea, Layer, LayerContainer} from '@karma.run/ui'
+import {BlockProps, TypographicTextArea, Layer, LayerContainer} from '@karma.run/ui'
 
 export interface TitleBlockValue {
   readonly title: string
@@ -23,14 +23,14 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
             onClick={() => {}}
           /> */}
         </Layer>
-        <TypograpyTextArea
+        <TypographicTextArea
           variant="title"
           align="center"
           placeholder="Title"
           value={title}
           onChange={e => onChange({...value, title: e.target.value})}
         />
-        <TypograpyTextArea
+        <TypographicTextArea
           variant="body1"
           align="center"
           placeholder="Lead Text"

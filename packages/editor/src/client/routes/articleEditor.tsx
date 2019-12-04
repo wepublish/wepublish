@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import {Value, Block, Document} from 'slate'
 
 import {
   EditorTemplate,
@@ -22,6 +21,9 @@ import {
   MaterialIconTitle
 } from '@karma.run/icons'
 
+import {RouteActionType} from '@karma.run/react'
+import {Node} from 'slate'
+
 import {
   RouteNavigationLinkButton,
   ArticleListRoute,
@@ -43,10 +45,9 @@ import {
   ArticleInput
 } from '../api/article'
 
-import {RouteActionType} from '@karma.run/react'
 import {BlockType, VersionState} from '../api/types'
 
-export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Value>
+export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Node[]>
 export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
 export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
@@ -242,7 +243,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
               [BlockType.RichText]: {
                 field: props => <RichTextBlock {...props} />,
-                defaultValue: Value.create({document: Document.create([Block.create('')])}),
+                defaultValue: [{children: [{text: '', marks: []}]}],
                 label: 'Rich Text',
                 icon: MaterialIconTextFormat
               },
@@ -313,7 +314,7 @@ function unionMapForBlock(block: BlockValue): ArticleBlockUnionMap {
 
     case BlockType.RichText:
       return {
-        [BlockType.RichText]: {richText: block.value.document.toJSON()}
+        [BlockType.RichText]: {richText: block.value}
       }
   }
 }
@@ -354,7 +355,7 @@ function blockForQueryBlock(block: any): BlockValue | null {
       return {
         key,
         type: BlockType.RichText,
-        value: Value.create({document: Document.fromJSON(block.richText)})
+        value: block.richText
       }
 
     default:

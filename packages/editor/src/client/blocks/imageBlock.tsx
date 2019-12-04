@@ -10,7 +10,7 @@ import {
   LayerContainer,
   Spacing,
   IconButton,
-  TypograpyTextArea
+  TypographicTextArea
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
@@ -75,7 +75,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         </PlaceholderInput>
       </Box>
       <Box marginTop={Spacing.ExtraSmall}>
-        <TypograpyTextArea
+        <TypographicTextArea
           variant="subtitle2"
           align="center"
           placeholder="Caption"

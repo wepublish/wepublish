@@ -11,7 +11,7 @@ export function ArticleList() {
 
   return (
     <>
-      <Box marginBottom={Spacing.Large} flexDirection="row" flex>
+      <Box marginBottom={Spacing.Large} flexDirection="row" display="flex">
         <Typography variant="h1">Articles</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
@@ -37,13 +37,17 @@ export function ArticleList() {
                   </Typography>
                 </Link>
               </Box>
-              <Box marginBottom={Spacing.ExtraSmall} flexDirection="row" alignItems="center" flex>
+              <Box
+                marginBottom={Spacing.ExtraSmall}
+                flexDirection="row"
+                alignItems="center"
+                display="flex">
                 <Typography element="div" variant="body1" color="grayDark">
                   <Box
                     marginRight={Spacing.ExtraSmall}
                     flexDirection="row"
                     alignItems="center"
-                    flex>
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
                     </Box>
@@ -51,7 +55,11 @@ export function ArticleList() {
                   </Box>
                 </Typography>
                 <Typography element="div" variant="body1" color="grayDark">
-                  <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                  <Box
+                    marginRight={Spacing.Small}
+                    flexDirection="row"
+                    alignItems="center"
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                     </Box>
@@ -60,7 +68,11 @@ export function ArticleList() {
                 </Typography>
                 {state === VersionState.Draft && (
                   <Typography element="div" variant="subtitle1" color="gray">
-                    <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                    <Box
+                      marginRight={Spacing.Small}
+                      flexDirection="row"
+                      alignItems="center"
+                      display="flex">
                       Draft
                     </Box>
                   </Typography>
