@@ -78,13 +78,17 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                   </div>
                 )}
               </Box>
-              <Box marginBottom={Spacing.ExtraSmall} flexDirection="row" alignItems="center" flex>
+              <Box
+                marginBottom={Spacing.ExtraSmall}
+                flexDirection="row"
+                alignItems="center"
+                display="flex">
                 <Typography element="div" variant="subtitle1" color="grayDark">
                   <Box
                     marginRight={Spacing.ExtraSmall}
                     flexDirection="row"
                     alignItems="center"
-                    flex>
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
                     </Box>
@@ -92,7 +96,11 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                   </Box>
                 </Typography>
                 <Typography element="div" variant="subtitle1" color="grayDark">
-                  <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                  <Box
+                    marginRight={Spacing.Small}
+                    flexDirection="row"
+                    alignItems="center"
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                     </Box>
@@ -101,7 +109,11 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                 </Typography>
                 {state === VersionState.Draft && (
                   <Typography element="div" variant="subtitle1" color="gray">
-                    <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                    <Box
+                      marginRight={Spacing.Small}
+                      flexDirection="row"
+                      alignItems="center"
+                      display="flex">
                       Draft
                     </Box>
                   </Typography>

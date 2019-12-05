@@ -112,7 +112,8 @@ export function Login() {
 const BackgroundWrapper = styled('div', () => ({
   position: 'relative',
   width: 340,
-  transform: 'translateY(-40px)'
+  height: 40,
+  transform: 'translateY(-0px)'
 }))
 
 const RedCircle = styled('div', () => ({

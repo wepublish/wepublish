@@ -9,15 +9,14 @@ export interface ImageUploadAndEditPanelProps {
 }
 
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
-  const [id, setID] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null)
 
-  function handleUpload(ids: string[]) {
-    setID(ids[0])
-    onUpload(ids)
+  function handleUpload(file: File) {
+    setFile(file)
   }
 
-  return id ? (
-    <ImagedEditPanel id={id} onClose={onClose} />
+  return file ? (
+    <ImagedEditPanel file={file} onClose={onClose} />
   ) : (
     <ImageUploadPanel onClose={onClose} onUpload={handleUpload} />
   )

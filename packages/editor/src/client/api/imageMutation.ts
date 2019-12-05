@@ -3,15 +3,20 @@ import {useMutation} from '@apollo/react-hooks'
 import {ImageTransformation} from './types'
 
 const ImageUploadMutation = gql`
-  mutation($images: [Upload!]!, $transformations: [ImageTransformation!]) {
-    uploadImages(images: $images) {
+  mutation($input: UploadImageInput!, $transformations: [ImageTransformation!]) {
+    uploadImage(input: $input) {
       id
       width
       height
-      transform(transformations: $transformations)
+      transform(input: $transformations)
     }
   }
 `
+
+export interface InputPoint {
+  readonly x: number
+  readonly y: number
+}
 
 export interface ImageUploadMutationData {
   readonly uploadImages: Array<{
@@ -22,8 +27,18 @@ export interface ImageUploadMutationData {
   }>
 }
 
+export interface UploadImageInput {
+  readonly file: File
+  readonly filename?: string
+  readonly title?: string
+  readonly description?: string
+  readonly source?: string
+  readonly tags?: string[]
+  readonly focalPoint?: InputPoint
+}
+
 export interface ImageUploadMutationVariables {
-  readonly images: File[]
+  readonly input: UploadImageInput
   readonly transformations: ImageTransformation[]
 }
 

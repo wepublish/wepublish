@@ -191,12 +191,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
       },
       async resolve(_root, args, context: Context, info) {
-        const {
-          publishedBetween,
-          createdBetween,
-          updatedBetween,
-          includePeers
-        } = args as ArticlesArguments
+        const {publishedBetween, createdBetween, updatedBetween} = args
 
         if (
           (publishedBetween && createdBetween && updatedBetween) ||
@@ -207,17 +202,6 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           throw new Error(
             '`publishedBetween`, `createdBetween` and `updatedBetween` are mutally exclusive.'
           )
-        }
-
-        if (includePeers) {
-          // TODO: Fetch peers aswell
-          // console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
-          // const peers = await context.adapter.getPeers({})
-          // const peerArticles: any[] = []
-          // for (const peer of peers) {
-          // const result = await queryArticles(peer.url)
-          // peerArticles.push(...result.data.nodes.map((article: any) => ({...article, peer})))
-          // }
         }
 
         const articles = context.storageAdapter.getArticles(args as ArticlesArguments)
@@ -256,23 +240,27 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           throw new UserInputError('You must provide either `first` or `last`.')
         }
 
-        const [
-          nodes,
-          {startCursor, endCursor, hasNextPage, hasPreviousPage},
-          totalCount
-        ] = await storageAdapter.getImages({
-          after: after && Buffer.from(after, 'base64').toString(),
-          before: before && Buffer.from(before, 'base64').toString(),
+        const decodedAfter = after && Buffer.from(after, 'base64').toString()
+        const decodedBefore = before && Buffer.from(before, 'base64').toString()
+
+        const result = await storageAdapter.getImages({
+          after: decodedAfter,
+          before: decodedBefore,
           first,
           last
         })
+
+        const [nodes, {startCursor, endCursor, hasNextPage, hasPreviousPage}, totalCount] = result
+
+        const encodedStartCursor = startCursor && Buffer.from(startCursor).toString('base64')
+        const encodedEndCursor = endCursor && Buffer.from(endCursor).toString('base64')
 
         return {
           nodes,
           totalCount,
           pageInfo: {
-            startCursor: startCursor && Buffer.from(startCursor).toString('base64'),
-            endCursor: endCursor && Buffer.from(endCursor).toString('base64'),
+            startCursor: encodedStartCursor,
+            endCursor: encodedEndCursor,
             hasNextPage,
             hasPreviousPage
           }

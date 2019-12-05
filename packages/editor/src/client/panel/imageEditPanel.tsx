@@ -15,13 +15,16 @@ import {
   PanelSectionHeader,
   TextInput,
   Point,
-  Link
+  Link,
+  TagInput
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 
 import {useMutation, useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import {read} from 'fs'
+import {useImageUploadMutation} from '../api/imageMutation'
 
 const EditImageFragment = gql`
   fragment EditImage on Image {
@@ -77,46 +80,102 @@ const ImageMutation = gql`
 `
 
 interface EditImage {
-  readonly id: string
-  readonly filename: string
+  readonly id?: string
+
   readonly extension: string
   readonly width: number
   readonly height: number
-  readonly createdAt: string
+
+  readonly createdAt?: string
   readonly fileSize: number
-  readonly url: string
-  readonly transform: string[]
-  readonly focalPoint: Point | null
-  readonly title: string
-  readonly description: string
+
+  readonly dataURL?: string
+  readonly url?: string
+  readonly transform?: string[]
+
+  readonly title?: string
+  readonly description?: string
+  readonly source?: string
+  readonly tags: string[]
+
+  readonly focalPoint?: Point
 }
 
 export interface ImageEditPanelProps {
-  readonly id: string
+  readonly id?: string
+  readonly file?: File
+
   readonly saveLabel?: string
 
   onClose?(): void
   onSave?(): void
 }
 
-export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, saveLabel, onClose, onSave}: ImageEditPanelProps) {
   const [isSavedToastOpen, setSavedToastOpen] = useState(false)
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>()
 
+  const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [focalPoint, setFocalPoint] = useState<Point | null>(null)
+  const [source, setSource] = useState('')
+  const [tags, setTags] = useState<string[]>([])
+
+  const [focalPoint, setFocalPoint] = useState<Point>()
 
   const {data, loading, error: loadingError} = useQuery(ImageQuery, {
     variables: {id},
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
+    skip: id == undefined
   })
 
   const [editImage, {loading: saving, error: savingError}] = useMutation(ImageMutation)
+  const [uploadImage, {loading: uploadLoading, error: uploadError}] = useImageUploadMutation()
 
   const disabled = loading || saving
-  const image: EditImage | null = data?.image ?? null
+
+  const [image, setImage] = useState<EditImage | null>(null)
+  const isUpload = file != undefined
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader()
+      const [filename, ...extensions] = file.name.split('.')
+      const extension = `.${extensions.join('.')}`
+      const image = new Image()
+
+      function handleReaderLoad() {
+        image.src = reader.result as string
+      }
+
+      function handleImageLoad() {
+        setFilename(filename)
+
+        setImage({
+          fileSize: file!.size,
+          extension,
+          width: image.width,
+          height: image.height,
+          dataURL: reader.result as string,
+          tags: [],
+          focalPoint: {x: 0.5, y: 0.5}
+        })
+      }
+
+      reader.addEventListener('load', handleReaderLoad)
+      image.addEventListener('load', handleImageLoad)
+
+      reader.readAsDataURL(file)
+
+      return () => {
+        reader.removeEventListener('load', handleReaderLoad)
+        image.removeEventListener('load', handleImageLoad)
+      }
+    }
+
+    return () => {}
+  }, [id, file])
 
   useEffect(() => {
     if (loadingError) {
@@ -132,27 +191,43 @@ export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanel
 
   useEffect(() => {
     if (image) {
-      setTitle(image.title)
-      setDescription(image.description)
+      setTitle(image.title ?? '')
+      setDescription(image.description ?? '')
       setFocalPoint(image.focalPoint)
     }
   }, [image])
 
   async function handleSave() {
-    await editImage({variables: {id, title, description, tags: [], focalPoint}})
-    setSavedToastOpen(true)
-    onSave?.()
+    if (isUpload) {
+      await uploadImage({
+        variables: {
+          input: {
+            file: file!,
+            filename: filename || undefined,
+            title: title || undefined,
+            description: description || undefined,
+            source: source || undefined,
+            tags
+          },
+          transformations: []
+        }
+      })
+    } else {
+      await editImage({variables: {id, title, description, tags: [], focalPoint}})
+      setSavedToastOpen(true)
+      onSave?.()
+    }
   }
 
   return (
     <>
       <Panel>
         <PanelHeader
-          title="Edit Image"
+          title={isUpload ? 'Upload Image' : 'Edit Image'}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label="Close"
+              label={isUpload ? 'Cancel' : 'Close'}
               onClick={() => onClose?.()}
               disabled={disabled}
             />
@@ -160,7 +235,7 @@ export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanel
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label={saveLabel ?? 'Save'}
+              label={isUpload ? 'Upload' : saveLabel ?? 'Save'}
               onClick={() => handleSave()}
               disabled={disabled}
             />
@@ -171,7 +246,7 @@ export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanel
             <PanelSection dark>
               <Box marginBottom={Spacing.Medium}>
                 <FocalPointInput
-                  imageURL={image.transform[0]}
+                  imageURL={image.transform?.[0] ?? image.url ?? image.dataURL!}
                   imageWidth={image.width}
                   imageHeight={image.height}
                   maxHeight={300}
@@ -181,43 +256,60 @@ export function ImagedEditPanel({id, saveLabel, onClose, onSave}: ImageEditPanel
               </Box>
               <DescriptionList>
                 <DescriptionListItem label="Filename">
-                  {image.filename}
+                  {filename}
                   {image.extension}
                 </DescriptionListItem>
                 <DescriptionListItem label="Dimension">
                   {image.width} x {image.height}
                 </DescriptionListItem>
-                <DescriptionListItem label="Created">
-                  {new Date(image.createdAt).toLocaleString()}
-                </DescriptionListItem>
+                {image.createdAt && (
+                  <DescriptionListItem label="Created">
+                    {new Date(image.createdAt).toLocaleString()}
+                  </DescriptionListItem>
+                )}
                 <DescriptionListItem label="File Size">
                   {prettyBytes(image.fileSize)}
                 </DescriptionListItem>
-                <DescriptionListItem label="Link">
-                  <Link href={image.url} target="_blank">
-                    {image.url}
-                  </Link>
-                </DescriptionListItem>
+                {image.url && (
+                  <DescriptionListItem label="Link">
+                    <Link href={image.url} target="_blank">
+                      {image.url}
+                    </Link>
+                  </DescriptionListItem>
+                )}
               </DescriptionList>
             </PanelSection>
             <PanelSectionHeader title="Information" />
             <PanelSection>
-              <Box marginBottom={Spacing.Small}>
-                <TextInput
-                  label="Title"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  disabled={disabled}
-                />
-              </Box>
-              <Box marginBottom={Spacing.Small}>
-                <TextInput
-                  label="Description"
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  disabled={disabled}
-                />
-              </Box>
+              <TextInput
+                label="Filename"
+                value={filename}
+                onChange={e => setFilename(e.target.value)}
+                disabled={disabled}
+                marginBottom={Spacing.Small}
+              />
+              <TextInput
+                label="Title"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                disabled={disabled}
+                marginBottom={Spacing.Small}
+              />
+              <TextInput
+                label="Description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                disabled={disabled}
+                marginBottom={Spacing.Small}
+              />
+              <TextInput
+                label="Source"
+                value={source}
+                onChange={e => setSource(e.target.value)}
+                disabled={disabled}
+                marginBottom={Spacing.Small}
+              />
+              <TagInput label="Tags" value={tags} onChange={tags => setTags(tags ?? [])} />
             </PanelSection>
           </>
         )}

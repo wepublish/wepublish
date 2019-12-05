@@ -13,6 +13,7 @@ export interface Image {
   readonly mimeType: string
   readonly title: string
   readonly description: string
+  readonly source: string
   readonly tags: string[]
   readonly format: string
   readonly width: number

@@ -90,8 +90,10 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLID))},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    isShared: {type: GraphQLNonNull(GraphQLBoolean)},
+    isBreaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlockUnionMap)))
     }
@@ -152,8 +154,8 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
       }
     },
 
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+    isBreaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    isShared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))

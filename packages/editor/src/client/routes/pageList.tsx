@@ -11,7 +11,7 @@ export function PageList() {
 
   return (
     <>
-      <Box marginBottom={Spacing.Large} flexDirection="row" flex>
+      <Box marginBottom={Spacing.Large} flexDirection="row" display="flex">
         <Typography variant="h1">Pages</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton color="primary" label="New Page" route={PageCreateRoute.create({})} />
@@ -33,13 +33,17 @@ export function PageList() {
                   </Typography>
                 </Link>
               </Box>
-              <Box marginBottom={Spacing.ExtraSmall} flexDirection="row" alignItems="center" flex>
+              <Box
+                marginBottom={Spacing.ExtraSmall}
+                flexDirection="row"
+                alignItems="center"
+                display="flex">
                 <Typography element="div" variant="body1" color="grayDark">
                   <Box
                     marginRight={Spacing.ExtraSmall}
                     flexDirection="row"
                     alignItems="center"
-                    flex>
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
                     </Box>
@@ -47,7 +51,11 @@ export function PageList() {
                   </Box>
                 </Typography>
                 <Typography element="div" variant="body1" color="grayDark">
-                  <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                  <Box
+                    marginRight={Spacing.Small}
+                    flexDirection="row"
+                    alignItems="center"
+                    display="flex">
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                     </Box>
@@ -56,7 +64,11 @@ export function PageList() {
                 </Typography>
                 {state === VersionState.Draft && (
                   <Typography element="div" variant="subtitle1" color="gray">
-                    <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" flex>
+                    <Box
+                      marginRight={Spacing.Small}
+                      flexDirection="row"
+                      alignItems="center"
+                      display="flex">
                       Draft
                     </Box>
                   </Typography>

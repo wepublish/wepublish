@@ -58,7 +58,7 @@ export function ImageList() {
 
   return (
     <>
-      <Box flexDirection="row" marginBottom={Spacing.Medium} flex>
+      <Box flexDirection="row" marginBottom={Spacing.Medium} display="flex">
         <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
@@ -71,25 +71,19 @@ export function ImageList() {
         <Grid spacing={Spacing.Small}>
           {images.map(({id, transform: [url]}) => (
             <Column key={id} ratio={1 / 3}>
-              <Box height={200}>
-                <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
-                  <Card>
-                    <Image src={url} />
-                  </Card>
-                </Link>
-              </Box>
+              <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
+                <Card height={200} overflow="hidden">
+                  <Image src={url} width="100%" height="100%" />
+                </Card>
+              </Link>
             </Column>
           ))}
           {missingColumns.map((value, index) => (
-            <Column key={index} ratio={1 / 3}>
-              <Box height={200}>
-                <Card />
-              </Box>
-            </Column>
+            <Column key={index} ratio={1 / 3}></Column>
           ))}
         </Grid>
       </Box>
-      <Box marginTop={Spacing.Medium} flexDirection="row" flex>
+      <Box marginTop={Spacing.Medium} flexDirection="row" display="flex">
         <RouteLinkButton
           variant="outlined"
           label="Previous"

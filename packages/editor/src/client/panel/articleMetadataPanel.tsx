@@ -123,7 +123,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
                           title="Choose Image"
@@ -134,7 +134,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
                           title="Edit Image"
@@ -145,7 +145,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
                           icon={MaterialIconDeleteOutlined}
                           title="Remove Image"

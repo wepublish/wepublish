@@ -46,21 +46,33 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           {image && (
             <LayerContainer>
               <Layer right={0} top={0}>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
+                <Box
+                  margin={Spacing.ExtraSmall}
+                  flexDirection="row"
+                  justifyContent="flex-end"
+                  display="flex">
                   <IconButton
                     icon={MaterialIconImageOutlined}
                     title="Choose Image"
                     onClick={() => setChooseModalOpen(true)}
                   />
                 </Box>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
+                <Box
+                  margin={Spacing.ExtraSmall}
+                  flexDirection="row"
+                  justifyContent="flex-end"
+                  display="flex">
                   <IconButton
                     icon={MaterialIconEditOutlined}
                     title="Edit Image"
                     onClick={() => setEditModalOpen(true)}
                   />
                 </Box>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
+                <Box
+                  margin={Spacing.ExtraSmall}
+                  flexDirection="row"
+                  justifyContent="flex-end"
+                  display="flex">
                   {/* TODO: Meta sync */}
                   {/* <IconButton
                     icon={MaterialIconSyncAlt}

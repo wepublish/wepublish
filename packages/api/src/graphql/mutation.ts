@@ -1,13 +1,5 @@
-import {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLNonNull,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLID
-} from 'graphql'
+import {GraphQLObjectType, GraphQLString, GraphQLNonNull, GraphQLBoolean, GraphQLID} from 'graphql'
 
-import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
 import {
@@ -20,13 +12,13 @@ import {
 import {Context} from '../context'
 import {generateID, generateTokenID} from '../utility'
 
-import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
-import {GraphQLImage, GraphQLInputPoint} from './image'
-import {BlockMap, ArticleBlock} from '../adapter/blocks'
-import {ImageUpdate} from '../adapter/image'
-import {VersionState} from '../adapter/versionState'
 import {GraphQLPage, GraphQLPageInput} from './page'
+import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
+import {InvalidCredentialsError} from '../error'
+
+import {VersionState} from '../adapter/versionState'
+import {BlockMap, ArticleBlock} from '../adapter/blocks'
 
 async function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -47,7 +39,7 @@ async function mapBlockUnionMap(value: any) {
   return {type: key, key: await generateID(), ...value[key]} as ArticleBlock
 }
 
-export const GraphQLMutation = new GraphQLObjectType<any, Context>({
+export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
   name: 'Mutation',
   fields: {
     createSession: {
@@ -71,6 +63,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         }
       }
     },
+
     revokeSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {
@@ -88,6 +81,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         return true
       }
     },
+
     createArticle: {
       type: GraphQLArticle,
       args: {
@@ -103,6 +97,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         })
       }
     },
+
     updateArticle: {
       type: GraphQLArticle,
       args: {
@@ -134,6 +129,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         }
       }
     },
+
     createPage: {
       type: GraphQLPage,
       args: {
@@ -149,6 +145,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         })
       }
     },
+
     updatePage: {
       type: GraphQLPage,
       args: {
@@ -180,49 +177,53 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         }
       }
     },
-    uploadImages: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage))),
-      args: {
-        images: {
-          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUpload)))
-        }
-      },
-      async resolve(_root, {images}, {authenticate, storageAdapter, mediaAdapter}) {
+
+    uploadImage: {
+      type: GraphQLImage,
+      args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
+      async resolve(root, {input}, {authenticate, storageAdapter, mediaAdapter}) {
         await authenticate()
 
-        for (const image of images) {
-          if (!(image instanceof Promise)) throw new UserInputError('Invalid image')
-        }
+        const {file, filename, title, description, source, tags, focalPoint} = input
 
-        return Promise.all(
-          images.map(async (image: Promise<FileUpload>) => {
-            const uploadImage = await mediaAdapter.uploadImage(image)
+        if (!(file instanceof Promise)) throw new UserInputError('Invalid image')
 
-            return storageAdapter.createImage({
-              ...uploadImage,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              title: '',
-              description: '',
-              focalPoint: {x: 0.5, y: 0.5}, // TODO: Focal Point might be optional in the future to allow auto focus
-              tags: []
-            })
-          })
-        )
+        const uploadImage = await mediaAdapter.uploadImage(file)
+
+        return storageAdapter.createImage({
+          ...uploadImage,
+
+          createdAt: new Date(),
+          updatedAt: new Date(),
+
+          filename: filename ? uploadImage.filename : filename,
+          title,
+          description,
+          source,
+          tags,
+          focalPoint
+        })
       }
     },
+
     updateImage: {
       type: GraphQLImage,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        title: {type: GraphQLNonNull(GraphQLString)},
-        description: {type: GraphQLNonNull(GraphQLString)},
-        tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-        focalPoint: {type: GraphQLInputPoint}
-      },
+      args: {input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}},
       resolve(root, args, {storageAdapter}) {
-        return storageAdapter.updateImage(args as ImageUpdate)
+        return storageAdapter.updateImage(args)
       }
+    },
+
+    archiveImage: {
+      type: GraphQLImage,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve() {} // TODO
+    },
+
+    unarchiveImage: {
+      type: GraphQLImage,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve() {} // TODO
     }
   }
 })

@@ -19,7 +19,7 @@ import {
 } from '@karma.run/ui'
 
 import {useImageListQuery} from '../api/imageListQuery'
-import {useImageUploadMutation} from '../api/imageUploadMutation'
+import {useImageUploadMutation} from '../api/imageMutation'
 import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 
@@ -139,7 +139,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
           <Box paddingTop={Spacing.Medium} paddingBottom={Spacing.Medium}>
             <Divider />
           </Box>
-          <Box flexDirection="row" flex>
+          <Box flexDirection="row" display="flex">
             <Button
               variant="outlined"
               label="Previous"

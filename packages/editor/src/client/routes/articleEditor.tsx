@@ -83,8 +83,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     image: null
   })
 
-  const [blocks, setBlocks] = useState<BlockValue[]>([])
-  const [isNew] = useState(id == undefined)
+  const isNew = id == undefined
+  const [blocks, setBlocks] = useState<BlockValue[]>(
+    isNew
+      ? [
+          {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
+          {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
+        ]
+      : []
+  )
 
   const articleID = id || createData?.createArticle.id
 

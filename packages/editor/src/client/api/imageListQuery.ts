@@ -15,7 +15,7 @@ const ImageListQuery = gql`
         id
         width
         height
-        transform(transformations: $transformations)
+        transform(input: $transformations)
       }
       pageInfo {
         startCursor
