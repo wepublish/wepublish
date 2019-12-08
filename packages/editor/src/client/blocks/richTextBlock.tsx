@@ -1,18 +1,18 @@
-import React, {useState, useMemo, useCallback, useRef, memo} from 'react'
+import React, {useState, useRef, memo, useCallback} from 'react'
 
-import {Editor, Node, createEditor} from 'slate'
+import {Editor, Node, createEditor, Range} from 'slate'
 
 import {
-  RenderMarkProps,
   useSlate,
   Editable,
   RenderElementProps,
   Slate,
-  withReact
+  withReact,
+  RenderLeafProps
 } from 'slate-react'
 
 import {withHistory} from 'slate-history'
-import {SchemaRule, withSchema} from 'slate-schema'
+import {defineSchema} from 'slate-schema'
 import {jsx} from 'slate-hyperscript'
 
 import {
@@ -25,7 +25,10 @@ import {
   MaterialIconFormatListBulleted,
   MaterialIconFormatListNumbered,
   MaterialIconLooksOneOutlined,
-  MaterialIconLink
+  MaterialIconLink,
+  MaterialIconLinkOff,
+  MaterialIconClose,
+  MaterialIconCheck
 } from '@karma.run/icons'
 
 import {
@@ -35,49 +38,74 @@ import {
   ToolbarDivider,
   Link,
   BlockProps,
-  Toolbar
+  Toolbar,
+  Dialog,
+  Panel,
+  PanelHeader,
+  NavigationButton,
+  PanelSection,
+  TextInput,
+  Spacing,
+  Box
 } from '@karma.run/ui'
 
-enum RichtextNodeType {
+enum BlockFormat {
   H1 = 'heading-one',
   H2 = 'heading-two',
   H3 = 'heading-three',
   Paragraph = 'paragraph',
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
-  ListItem = 'list-item',
+  ListItem = 'list-item'
+}
+
+enum InlineFormat {
   Link = 'link'
 }
 
-enum RichtextMarkType {
+enum TextFormat {
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
   Strikethrough = 'strikethrough'
 }
 
-const elementTags = {
-  A: (el: Element) => ({type: 'link', url: el.getAttribute('href')}),
-  H1: () => ({type: 'heading-one'}),
-  H2: () => ({type: 'heading-two'}),
-  H3: () => ({type: 'heading-three'}),
-  LI: () => ({type: 'list-item'}),
-  OL: () => ({type: 'numbered-list'}),
-  P: () => ({type: 'paragraph'}),
-  PRE: () => ({type: 'code'}),
-  UL: () => ({type: 'bulleted-list'})
+const BlockFormats: string[] = Object.values(BlockFormat)
+const InlineFormats: string[] = Object.values(InlineFormat)
+const TextFormats: string[] = Object.values(TextFormat)
+const ListFormats: string[] = [BlockFormat.UnorderedList, BlockFormat.OrderedList]
+
+enum CommandType {
+  ToggleFormat = 'toggle_format',
+  InsertData = 'insert_data',
+  InsertText = 'insert_text',
+  InsertLink = 'insert_link',
+  RemoveLink = 'remove_link'
 }
 
-const markTags = {
-  DEL: () => ({type: 'strikethrough'}),
-  EM: () => ({type: 'italic'}),
-  I: () => ({type: 'italic'}),
-  S: () => ({type: 'strikethrough'}),
-  STRONG: () => ({type: 'bold'}),
-  U: () => ({type: 'underline'})
+const ElementTags: any = {
+  A: (el: Element) => ({type: InlineFormat.Link, url: el.getAttribute('href')}),
+  H1: () => ({type: BlockFormat.H1}),
+  H2: () => ({type: BlockFormat.H2}),
+  H3: () => ({type: BlockFormat.H3}),
+  P: () => ({type: BlockFormat.Paragraph}),
+  LI: () => ({type: BlockFormat.ListItem}),
+  OL: () => ({type: BlockFormat.OrderedList}),
+  UL: () => ({type: BlockFormat.UnorderedList})
 }
 
-function deserialize(el: Element) {
+const TextTags: any = {
+  S: () => ({[TextFormat.Strikethrough]: true}),
+  DEL: () => ({[TextFormat.Strikethrough]: true}),
+  EM: () => ({[TextFormat.Italic]: true}),
+  I: () => ({[TextFormat.Italic]: true}),
+  STRONG: () => ({[TextFormat.Bold]: true}),
+  B: () => ({[TextFormat.Bold]: true}),
+  U: () => ({[TextFormat.Underline]: true})
+}
+
+// TODO: Fix paste issues
+function deserialize(el: any) {
   if (el.nodeType === 3) {
     return el.textContent
   } else if (el.nodeType !== 1) {
@@ -86,29 +114,29 @@ function deserialize(el: Element) {
     return '\n'
   }
 
+  const {nodeName} = el
   let parent: any = el
 
-  if (el.nodeName === 'PRE' && el.childNodes[0] && el.childNodes[0].nodeName === 'CODE') {
+  if (el.nodeNode === 'PRE' && el.childNodes[0] && el.childNodes[0].nodeName === 'CODE') {
     parent = el.childNodes[0]
   }
 
-  const children: any = Array.from(parent.childNodes).map(deserialize as any)
+  const children = (Array.from(parent.childNodes) as any)
+    .map((element: any) => deserialize(element))
+    .flat()
 
   if (el.nodeName === 'BODY') {
     return jsx('fragment', {}, children)
   }
 
-  const elementFn = elementTags[el.nodeName as keyof typeof elementTags]
-  const markFn = markTags[el.nodeName as keyof typeof markTags]
-
-  if (elementFn) {
-    const attrs = elementFn(el)
+  if (ElementTags[nodeName]) {
+    const attrs = ElementTags[nodeName](el)
     return jsx('element', attrs, children)
   }
 
-  if (markFn) {
-    const attrs = markFn()
-    return jsx('mark', attrs, children)
+  if (TextTags[nodeName]) {
+    const attrs = TextTags[nodeName](el)
+    return children.map((child: any) => jsx('text', attrs, child))
   }
 
   return children
@@ -116,66 +144,75 @@ function deserialize(el: Element) {
 
 function renderElement({attributes, children, element}: RenderElementProps) {
   switch (element.type) {
-    case RichtextNodeType.H1:
+    case BlockFormat.H1:
       return (
         <Typography variant="h1" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case RichtextNodeType.H2:
+    case BlockFormat.H2:
       return (
         <Typography variant="h2" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case RichtextNodeType.H3:
+    case BlockFormat.H3:
       return (
         <Typography variant="h3" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case RichtextNodeType.UnorderedList:
+    case BlockFormat.UnorderedList:
       return <ul {...attributes}>{children}</ul>
 
-    case RichtextNodeType.OrderedList:
+    case BlockFormat.OrderedList:
       return <ol {...attributes}>{children}</ol>
 
-    case RichtextNodeType.ListItem:
+    case BlockFormat.ListItem:
       return <li {...attributes}>{children}</li>
 
-    case RichtextNodeType.Link:
-      return <Link {...attributes}>{children}</Link>
-  }
+    case InlineFormat.Link:
+      const title = element.title ? `${element.title}:\n${element.url}` : element.url
 
-  return (
-    <Typography variant="body1" spacing="large" {...attributes}>
-      {children}
-    </Typography>
-  )
+      return (
+        <Link title={title} {...attributes}>
+          {children}
+        </Link>
+      )
+
+    default:
+      return (
+        <Typography variant="body1" spacing="large" {...attributes}>
+          {children}
+        </Typography>
+      )
+  }
 }
 
-function renderMark({attributes, children, mark}: RenderMarkProps) {
-  switch (mark.type) {
-    case RichtextMarkType.Bold:
-      return <strong {...attributes}>{children}</strong>
+function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
+  if (leaf[TextFormat.Bold]) {
+    children = <strong {...attributes}>{children}</strong>
+  }
 
-    case RichtextMarkType.Italic:
-      return <em {...attributes}>{children}</em>
+  if (leaf[TextFormat.Italic]) {
+    children = <em {...attributes}>{children}</em>
+  }
 
-    case RichtextMarkType.Underline:
-      return <u {...attributes}>{children}</u>
+  if (leaf[TextFormat.Underline]) {
+    children = <u {...attributes}>{children}</u>
+  }
 
-    case RichtextMarkType.Strikethrough:
-      return <del {...attributes}>{children}</del>
+  if (leaf[TextFormat.Strikethrough]) {
+    children = <del {...attributes}>{children}</del>
   }
 
   return <span {...attributes}>{children}</span>
 }
 
-const schema: SchemaRule[] = [
+const withSchema = defineSchema([
   {
     for: 'node',
     match: 'editor',
@@ -184,12 +221,13 @@ const schema: SchemaRule[] = [
         {
           match: [
             ([node]) =>
-              node.type === RichtextNodeType.H1 ||
-              node.type === RichtextNodeType.H2 ||
-              node.type === RichtextNodeType.H3 ||
-              node.type === RichtextNodeType.UnorderedList ||
-              node.type === RichtextNodeType.OrderedList ||
-              node.type === RichtextNodeType.Paragraph
+              node.type === BlockFormat.H1 ||
+              node.type === BlockFormat.H2 ||
+              node.type === BlockFormat.H3 ||
+              node.type === BlockFormat.UnorderedList ||
+              node.type === BlockFormat.OrderedList ||
+              node.type === BlockFormat.Paragraph ||
+              node.type === InlineFormat.Link
           ]
         }
       ]
@@ -199,7 +237,7 @@ const schema: SchemaRule[] = [
 
       switch (code) {
         case 'child_invalid':
-          Editor.setNodes(editor, {type: RichtextNodeType.Paragraph}, {at: path})
+          Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
           break
       }
     }
@@ -208,92 +246,83 @@ const schema: SchemaRule[] = [
   {
     for: 'node',
     match: ([node]) =>
-      node.type === RichtextNodeType.UnorderedList || node.type === RichtextNodeType.OrderedList,
+      node.type === BlockFormat.UnorderedList || node.type === BlockFormat.OrderedList,
     validate: {
-      children: [{match: [([node]) => node.type === RichtextNodeType.ListItem]}]
+      children: [{match: [([node]) => node.type === BlockFormat.ListItem]}]
     },
     normalize: (editor, error) => {
       const {code, path} = error
 
       switch (code) {
         case 'child_invalid':
-          Editor.setNodes(editor, {type: RichtextNodeType.ListItem}, {at: path})
+          Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
           break
       }
     }
   }
-]
+])
 
-export interface RichTextBlockProps extends BlockProps<Node[]> {}
-
-export function RichTextBlock({value, onChange}: RichTextBlockProps) {
-  const onChangeRef = useRef<((nodes: Node[]) => void) | null>(null)
-
-  onChangeRef.current = onChange
-
-  const initalValue = useMemo(() => value, [])
-  const memoOnChange = useCallback((nodes: Node[]) => {
-    onChangeRef.current?.(nodes)
-  }, [])
-
-  return <SlateMemoWorkaround initalValue={initalValue} onChange={memoOnChange} />
+export interface RichTextValue {
+  readonly value: Node[]
+  readonly selection: Range | null
 }
 
-interface SlateMemoWorkaroundProps {
-  readonly initalValue: Node[]
-  onChange(nodes: Node[]): void
-}
+export interface RichTextBlockProps extends BlockProps<RichTextValue> {}
 
-// TODO: Hacky workaround remove once Slate allows being a controlled component.
-// See: https://github.com/ianstormtaylor/slate/pull/3216
-const SlateMemoWorkaround = memo(function SlateMemoWorkaround({
-  initalValue,
+export const RichTextBlock = memo(function RichTextBlock({
+  value: {value, selection},
   onChange
-}: SlateMemoWorkaroundProps) {
+}: RichTextBlockProps) {
   const [hasFocus, setFocus] = useState(false)
-
   const editorRef = useRef<Editor | null>(null)
 
   if (!editorRef.current) {
-    editorRef.current = withSchema(withRichText(withHistory(withReact(createEditor()))), schema)
+    editorRef.current = withSchema(withRichText(withHistory(withReact(createEditor()))))
   }
 
+  const handleChange = useCallback(
+    (newValue: Node[], newSelection: Range | null) => {
+      onChange(richTextValue => {
+        const {value, selection} = richTextValue
+
+        if (value === newValue && selection === newSelection) return richTextValue
+        return {value: newValue, selection: newSelection}
+      })
+    },
+    [onChange]
+  )
+
   return (
-    <Slate editor={editorRef.current} defaultValue={initalValue} onChange={onChange}>
+    <Slate editor={editorRef.current!} value={value} selection={selection} onChange={handleChange}>
       <>
         <Toolbar fadeOut={!hasFocus}>
-          <SlateBlockButton icon={MaterialIconLooksOneOutlined} blockType={RichtextNodeType.H1} />
-          <SlateBlockButton icon={MaterialIconLooksTwoOutlined} blockType={RichtextNodeType.H2} />
-          <SlateBlockButton icon={MaterialIconLooks3Outlined} blockType={RichtextNodeType.H3} />
+          <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
+          <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
+          <FormatButton icon={MaterialIconLooks3Outlined} format={BlockFormat.H3} />
+
           <ToolbarDivider />
-          <SlateBlockButton
-            icon={MaterialIconFormatListBulleted}
-            blockType={RichtextNodeType.UnorderedList}
-          />
-          <SlateBlockButton
-            icon={MaterialIconFormatListNumbered}
-            blockType={RichtextNodeType.OrderedList}
-          />
+
+          <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
+          <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
+
           <ToolbarDivider />
-          <SlateMarkButton icon={MaterialIconFormatBold} markType={RichtextMarkType.Bold} />
-          <SlateMarkButton icon={MaterialIconFormatItalic} markType={RichtextMarkType.Italic} />
-          <SlateMarkButton
-            icon={MaterialIconFormatStrikethrough}
-            markType={RichtextMarkType.Strikethrough}
-          />
-          <SlateMarkButton
-            icon={MaterialIconFormatUnderlined}
-            markType={RichtextMarkType.Underline}
-          />
+
+          <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
+          <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
+          <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
+          <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
+
           <ToolbarDivider />
-          <SlateLinkButton />
+
+          <LinkFormatButton />
+          <RemoveLinkFormatButton />
         </Toolbar>
         <Editable
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           placeholder="Start writing..."
           renderElement={renderElement}
-          renderMark={renderMark}
+          renderLeaf={renderLeaf}
         />
       </>
     </Slate>
@@ -301,159 +330,266 @@ const SlateMemoWorkaround = memo(function SlateMemoWorkaround({
 })
 
 interface SlateBlockButtonProps extends ToolbarButtonProps {
-  readonly blockType: RichtextNodeType
+  readonly format: BlockFormat | InlineFormat | TextFormat
 }
 
-function SlateBlockButton({icon, blockType}: SlateBlockButtonProps) {
+function FormatButton({icon, format}: SlateBlockButtonProps) {
   const editor = useSlate()
+  const [, forceRender] = useState({})
 
   return (
     <ToolbarButton
       icon={icon}
-      active={isBlockActive(editor, blockType)}
+      active={isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
-        editor.exec({type: 'toggle_block', block: blockType})
+        editor.exec({type: CommandType.ToggleFormat, format})
+
+        // TODO: ToggleFormat doesn't fire an onChange when pendingFormats gets updated
+        forceRender({})
       }}
     />
   )
 }
 
-function SlateLinkButton() {
+function LinkFormatButton() {
+  const editor = useSlate()
+  const [isLinkDialogOpen, setLinkDialogOpen] = useState(false)
+
+  const [title, setTitle] = useState('')
+  const [url, setURL] = useState('')
+
+  const validatedURL = validateURL(url)
+  const isDisabled = !validatedURL
+
+  return (
+    <>
+      <ToolbarButton
+        icon={MaterialIconLink}
+        active={isFormatActive(editor, InlineFormat.Link)}
+        onMouseDown={e => {
+          e.preventDefault()
+
+          setTitle('')
+          setURL('')
+
+          setLinkDialogOpen(true)
+        }}
+      />
+      <Dialog open={isLinkDialogOpen}>
+        {() => (
+          <Panel>
+            <PanelHeader
+              leftChildren={
+                <NavigationButton
+                  icon={MaterialIconClose}
+                  label="Cancel"
+                  onClick={() => setLinkDialogOpen(false)}
+                />
+              }
+              rightChildren={
+                <NavigationButton
+                  icon={MaterialIconCheck}
+                  disabled={isDisabled}
+                  label="Apply"
+                  onClick={() => {
+                    editor.exec({
+                      type: CommandType.InsertLink,
+                      url: validatedURL,
+                      title: title || undefined
+                    })
+                    setLinkDialogOpen(false)
+                  }}
+                />
+              }
+            />
+            <PanelSection>
+              <Box width={300}>
+                <TextInput
+                  label="Link"
+                  errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
+                  value={url}
+                  onChange={e => setURL(e.target.value)}
+                  marginBottom={Spacing.ExtraSmall}
+                />
+                <TextInput
+                  label="Title"
+                  description="Optional description for the link"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                />
+              </Box>
+            </PanelSection>
+          </Panel>
+        )}
+      </Dialog>
+    </>
+  )
+}
+
+function validateURL(url: string): string | null {
+  try {
+    url = url.match(/^https?:\/\//) ? url : `http://${url}`
+    return new URL(url).toString()
+  } catch (err) {
+    return null
+  }
+}
+
+function RemoveLinkFormatButton() {
   const editor = useSlate()
 
   return (
     <ToolbarButton
-      icon={MaterialIconLink}
-      active={isBlockActive(editor, RichtextNodeType.Link)}
+      icon={MaterialIconLinkOff}
+      active={isFormatActive(editor, InlineFormat.Link)}
+      disabled={!isFormatActive(editor, InlineFormat.Link)}
       onMouseDown={e => {
         e.preventDefault()
-
-        if (isBlockActive(editor, RichtextNodeType.Link)) {
-          editor.exec({type: 'remove_link'})
-        } else {
-          const url = window.prompt('Enter the URL of the link:')
-          if (!url) return
-          editor.exec({type: 'insert_link', url})
-        }
+        editor.exec({type: CommandType.RemoveLink})
       }}
     />
   )
 }
 
-interface SlateMarkButtonProps extends ToolbarButtonProps {
-  readonly markType: RichtextMarkType
-}
+function isFormatActive(editor: Editor, format: BlockFormat | InlineFormat | TextFormat) {
+  if (TextFormats.includes(format)) {
+    if (editor.pendingFormats && editor.pendingFormats.hasOwnProperty(format)) {
+      return editor.pendingFormats[format] ? true : false
+    } else if (editor.selection) {
+      const matches = Array.from(
+        Editor.nodes(editor, {
+          at: editor.selection!,
+          match: 'text',
+          mode: 'all'
+        })
+      )
 
-function SlateMarkButton({icon, markType}: SlateMarkButtonProps) {
-  const editor = useSlate()
-
-  return (
-    <ToolbarButton
-      icon={icon}
-      active={isMarkActive(editor, markType)}
-      onMouseDown={e => {
-        e.preventDefault()
-        editor.exec({type: 'toggle_mark', mark: markType})
-      }}
-    />
-  )
-}
-
-function isBlockActive(editor: Editor, type: RichtextNodeType) {
-  const {selection} = editor
-  if (!selection) return false
-  const match = Editor.match(editor, selection, {type})
-  return !!match
-}
-
-function isMarkActive(editor: Editor, type: RichtextMarkType) {
-  const marks = Array.from(Editor.marks(editor))
-  const isActive = marks.some(([mark]) => mark.type === type)
-  return isActive
-}
-
-function unwrapLink(editor: Editor) {
-  Editor.unwrapNodes(editor, {match: {type: RichtextNodeType.Link}})
-}
-
-function wrapLink(editor: Editor, url: string) {
-  if (isBlockActive(editor, RichtextNodeType.Link)) {
-    unwrapLink(editor)
+      return matches.every(([match]) => match[format] === true)
+    }
   }
 
-  const link = {type: 'link', url, children: []}
-  Editor.wrapNodes(editor, link, {split: true})
-  Editor.collapse(editor, {edge: 'end'})
+  if (BlockFormats.includes(format) || InlineFormats.includes(format)) {
+    const [match] = Editor.nodes(editor, {
+      match: {type: format},
+      mode: 'all'
+    })
+
+    return !!match
+  }
+
+  return false
 }
 
 function withRichText(editor: Editor): Editor {
   const {exec, isInline} = editor
 
-  editor.isInline = node => (node.type === RichtextNodeType.Link ? true : isInline(node))
+  // See: https://github.com/ianstormtaylor/slate/issues/3144#issuecomment-562395538
+  editor.pendingFormats = null
+  editor.isInline = node => (InlineFormats.includes(node.type) ? true : isInline(node))
 
   editor.exec = command => {
-    if (command.type === 'insert_link') {
-      const {url} = command
+    switch (command.type) {
+      case CommandType.InsertText: {
+        if (editor.pendingFormats) {
+          Editor.insertNodes(editor, {
+            ...editor.pendingFormats,
+            text: command.text
+          })
 
-      if (editor.selection) {
-        wrapLink(editor, url)
+          editor.pendingFormats = null
+        } else {
+          exec(command)
+        }
+        break
       }
 
-      return
-    }
+      case CommandType.ToggleFormat: {
+        const {format} = command
 
-    if (command.type === 'remove_link') {
-      unwrapLink(editor)
-    }
+        const isActive = isFormatActive(editor, format)
+        const isList = ListFormats.includes(format)
 
-    if (command.type === 'toggle_block') {
-      const {block: type} = command
-      const isActive = isBlockActive(editor, type)
+        if (TextFormats.includes(format)) {
+          if (editor.selection && Range.isExpanded(editor.selection)) {
+            Editor.setNodes(
+              editor,
+              {[format]: isActive ? null : true},
+              {match: 'text', split: true}
+            )
+          } else if (editor.selection) {
+            const [[active]] = Editor.nodes(editor, {
+              match: 'text',
+              mode: 'all'
+            })
 
-      const isListType =
-        type === RichtextNodeType.UnorderedList || type === RichtextNodeType.OrderedList
+            const activeFormats = TextFormats.reduce(
+              (acc, key) => ({...acc, [key]: active[key]}),
+              {} as Record<string, boolean | undefined>
+            )
 
-      Editor.unwrapNodes(editor, {match: {type: RichtextNodeType.UnorderedList}})
-      Editor.unwrapNodes(editor, {match: {type: RichtextNodeType.OrderedList}})
+            editor.pendingFormats = {
+              ...activeFormats,
+              ...(editor.pendingFormats || {}),
+              [format]: isActive ? undefined : true
+            }
+          }
+        }
 
-      const newType = isActive
-        ? RichtextNodeType.Paragraph
-        : isListType
-        ? RichtextNodeType.ListItem
-        : type
+        if (BlockFormats.includes(format)) {
+          for (const format of ListFormats) {
+            Editor.unwrapNodes(editor, {match: {type: format}, split: true})
+          }
 
-      Editor.setNodes(editor, {type: newType})
+          Editor.setNodes(editor, {
+            type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
+          })
 
-      if (!isActive && isListType) {
-        Editor.wrapNodes(editor, {type, children: []})
+          if (!isActive && isList) {
+            Editor.wrapNodes(editor, {type: format, children: []})
+          }
+        }
+
+        break
       }
 
-      return
-    }
+      case CommandType.InsertData: {
+        const {data} = command
+        const html = data.getData('text/html')
 
-    if (command.type === 'toggle_mark') {
-      const {mark: type} = command
-      const isActive = isMarkActive(editor, type)
-      const cmd = isActive ? 'remove_mark' : 'add_mark'
-      editor.exec({type: cmd, mark: {type}})
-      return
-    }
+        if (html) {
+          const parsed = new DOMParser().parseFromString(html, 'text/html')
+          const fragment = deserialize(parsed.body)
+          Editor.insertFragment(editor, fragment)
+        }
 
-    if (command.type === 'insert_data') {
-      const {data} = command
-      const html = data.getData('text/html')
+        break
+      }
 
-      if (html) {
-        const parsed = new DOMParser().parseFromString(html, 'text/html')
-        const fragment = deserialize(parsed.body)
-        Editor.insertFragment(editor, fragment)
-        return
+      case CommandType.InsertLink: {
+        const {url, title} = command
+
+        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
+        Editor.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
+        Editor.collapse(editor, {edge: 'end'})
+        break
+      }
+
+      case CommandType.RemoveLink: {
+        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
+        break
+      }
+
+      default: {
+        exec(command)
+        break
       }
     }
-
-    exec(command)
   }
 
   return editor
+}
+
+export function createDefaultValue(): RichTextValue {
+  return {value: [{type: BlockFormat.Paragraph, children: [{text: ''}]}], selection: null}
 }

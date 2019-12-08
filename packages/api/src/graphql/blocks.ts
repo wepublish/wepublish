@@ -3,7 +3,6 @@ import {
   GraphQLInputObjectType,
   GraphQLNonNull,
   GraphQLString,
-  GraphQLInterfaceType,
   GraphQLID,
   GraphQLInt,
   GraphQLList
@@ -29,27 +28,19 @@ import {
   ListicleBlock,
   LinkPageBreakBlock,
   TitleBlock,
-  QuoteBlock
+  QuoteBlock,
+  EmbedBlock
 } from '../adapter/blocks'
 
 import {ImageCaptionEdge} from '../adapter/image'
 import {ArticleTeaser, ArticleTeaserOverrides} from '../adapter/article'
 import {GraphQLArticle} from './article'
 
-export const GraphQLBaseBlock = new GraphQLInterfaceType({
-  name: 'BaseBlock',
-  fields: {
-    key: {type: GraphQLNonNull(GraphQLID)}
-  }
-})
-
 export const GraphQLRichTextBlock = new GraphQLObjectType({
   name: 'RichTextBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     richText: {type: GraphQLNonNull(GraphQLRichText)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.RichText
   }
@@ -90,11 +81,9 @@ export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaser
   {
     name: 'ArticleTeaserGridBlock',
     fields: {
-      key: {type: GraphQLNonNull(GraphQLID)},
       teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaser))},
       numColumns: {type: GraphQLNonNull(GraphQLInt)}
     },
-    interfaces: [GraphQLBaseBlock],
     isTypeOf(value) {
       return value.type === BlockType.ArticleTeaserGrid
     }
@@ -117,7 +106,6 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
 export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
   name: 'ImageBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {storageAdapter}) {
@@ -128,7 +116,6 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
 
     caption: {type: GraphQLString}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.Image
   }
@@ -137,12 +124,10 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
 export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock, Context>({
   name: 'ImageGalleryBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     images: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLGalleryImageEdge)))
     }
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.ImageGallery
   }
@@ -151,11 +136,9 @@ export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock,
 export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock, Context>({
   name: 'FacebookPostBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     userID: {type: GraphQLNonNull(GraphQLString)},
     postID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.FacebookPost
   }
@@ -164,10 +147,8 @@ export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock,
 export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBlock, Context>({
   name: 'InstagramPostBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     postID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.InstagramPost
   }
@@ -176,11 +157,9 @@ export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBloc
 export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock, Context>({
   name: 'TwitterTweetBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     userID: {type: GraphQLNonNull(GraphQLString)},
     tweetID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.TwitterTweet
   }
@@ -189,10 +168,8 @@ export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock,
 export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Context>({
   name: 'VimeoVideoBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     videoID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.VimeoVideo
   }
@@ -201,10 +178,8 @@ export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Con
 export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock, Context>({
   name: 'YouTubeVideoBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     videoID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.YouTubeVideo
   }
@@ -213,12 +188,23 @@ export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock,
 export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrackBlock, Context>({
   name: 'SoundCloudTrackBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     trackID: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.SoundCloudTrack
+  }
+})
+
+export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
+  name: 'EmbedBlock',
+  fields: {
+    url: {type: GraphQLString},
+    title: {type: GraphQLString},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt}
+  },
+  isTypeOf(value) {
+    return value.type === BlockType.Embed
   }
 })
 
@@ -239,10 +225,8 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
 export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context>({
   name: 'ListicleBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     listicle: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLListicleItem)))}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.Listicle
   }
@@ -251,12 +235,10 @@ export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context
 export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBlock, Context>({
   name: 'LinkPageBreakBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
     text: {type: GraphQLNonNull(GraphQLString)},
     linkURL: {type: GraphQLNonNull(GraphQLString)},
     linkText: {type: GraphQLNonNull(GraphQLString)}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.LinkPageBreak
   }
@@ -265,11 +247,9 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
 export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
   name: 'TitleBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
     lead: {type: GraphQLString}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.Title
   }
@@ -278,11 +258,9 @@ export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
 export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
   name: 'QuoteBlock',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLID)},
-    text: {type: GraphQLNonNull(GraphQLString)},
-    source: {type: GraphQLString}
+    quote: {type: GraphQLString},
+    author: {type: GraphQLString}
   },
-  interfaces: [GraphQLBaseBlock],
   isTypeOf(value) {
     return value.type === BlockType.Quote
   }
@@ -300,7 +278,7 @@ export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
 export const GraphQLInputTitleBlock = new GraphQLInputObjectType({
   name: 'InputTitleBlock',
   fields: {
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
     lead: {type: GraphQLString}
   }
 })
@@ -310,6 +288,68 @@ export const GraphQLInputImageBlock = new GraphQLInputObjectType({
   fields: {
     caption: {type: GraphQLString},
     imageID: {type: GraphQLID}
+  }
+})
+
+export const GraphQLInputQuoteBlock = new GraphQLInputObjectType({
+  name: 'InputQuoteBlock',
+  fields: {
+    quote: {type: GraphQLString},
+    author: {type: GraphQLString}
+  }
+})
+
+export const GraphQLInputFacebookPostBlock = new GraphQLInputObjectType({
+  name: 'InputFacebookPostBlock',
+  fields: {
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    postID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputInstagramPostBlock = new GraphQLInputObjectType({
+  name: 'InputInstagramPostBlock',
+  fields: {
+    postID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputTwitterTweetBlock = new GraphQLInputObjectType({
+  name: 'InputTwitterTweetBlock',
+  fields: {
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    tweetID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputVimeoVideoBlock = new GraphQLInputObjectType({
+  name: 'InputVimeoVideoBlock',
+  fields: {
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputYouTubeVideoBlock = new GraphQLInputObjectType({
+  name: 'InputYouTubeVideoBlock',
+  fields: {
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputSoundCloudTrackBlock = new GraphQLInputObjectType({
+  name: 'InputSoundCloudTrackBlock',
+  fields: {
+    trackID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLInputEmbedBlock = new GraphQLInputObjectType({
+  name: 'InputEmbedBlock',
+  fields: {
+    url: {type: GraphQLString},
+    title: {type: GraphQLString},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt}
   }
 })
 

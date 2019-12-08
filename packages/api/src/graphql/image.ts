@@ -73,8 +73,11 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    source: {type: GraphQLString},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}
   }
@@ -83,12 +86,16 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
 export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
   name: 'UpdateImageInput',
   fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
     filename: {type: GraphQLString},
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    source: {type: GraphQLString},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
 
     focalPoint: {type: GraphQLInputPoint}
   }
@@ -105,17 +112,19 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
 
     isArchived: {type: GraphQLNonNull(GraphQLBoolean)},
 
-    filename: {type: GraphQLNonNull(GraphQLString)},
+    filename: {type: GraphQLString},
+    title: {type: GraphQLString},
+    description: {type: GraphQLString},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
+
     fileSize: {type: GraphQLNonNull(GraphQLInt)},
     extension: {type: GraphQLNonNull(GraphQLString)},
     mimeType: {type: GraphQLNonNull(GraphQLString)},
     format: {type: GraphQLNonNull(GraphQLString)},
-
-    title: {type: GraphQLString},
-    description: {type: GraphQLString},
-    source: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-
     width: {type: GraphQLNonNull(GraphQLInt)},
     height: {type: GraphQLNonNull(GraphQLInt)},
     focalPoint: {type: GraphQLPoint},

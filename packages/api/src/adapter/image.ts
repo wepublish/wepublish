@@ -7,14 +7,19 @@ export interface Image {
   readonly id: string
   readonly createdAt: Date
   readonly updatedAt: Date
-  readonly filename: string
+
+  readonly filename?: string
+  readonly title?: string
+  readonly description?: string
+  readonly tags: string[]
+
+  readonly author?: string
+  readonly source?: string
+  readonly license?: string
+
   readonly fileSize: number
   readonly extension: string
   readonly mimeType: string
-  readonly title: string
-  readonly description: string
-  readonly source: string
-  readonly tags: string[]
   readonly format: string
   readonly width: number
   readonly height: number
@@ -23,9 +28,17 @@ export interface Image {
 
 export interface ImageUpdate {
   readonly id: string
-  readonly title: string
-  readonly description: string
+  readonly updatedAt: Date
+
+  readonly filename?: string
+  readonly title?: string
+  readonly description?: string
   readonly tags: string[]
+
+  readonly author?: string
+  readonly source?: string
+  readonly license?: string
+
   readonly focalPoint: Point | null
 }
 

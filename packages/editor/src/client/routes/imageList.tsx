@@ -110,7 +110,14 @@ export function ImageList() {
                 route: ImageListRoute.create({}, current ?? undefined)
               })
             }}
-            onUpload={() => refetch()}
+            onUpload={() => {
+              refetch()
+              setUploadModalOpen(false)
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: ImageListRoute.create({}, current ?? undefined)
+              })
+            }}
           />
         )}
       </Drawer>

@@ -97,7 +97,9 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                       </Box>
                     </Layer>
 
-                    {value.article.image && <Image src={value.article.image.url} />}
+                    {value.article.image && (
+                      <Image src={value.article.image.url} width="100%" height="100%" />
+                    )}
                   </LayerContainer>
                 )}
               </PlaceholderInput>

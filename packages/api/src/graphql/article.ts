@@ -34,7 +34,16 @@ import {
   GraphQLQuoteBlock,
   GraphQLTitleBlock,
   GraphQLInputImageBlock,
-  GraphQLInputTitleBlock
+  GraphQLInputTitleBlock,
+  GraphQLInputQuoteBlock,
+  GraphQLInputFacebookPostBlock,
+  GraphQLInputInstagramPostBlock,
+  GraphQLInputTwitterTweetBlock,
+  GraphQLInputVimeoVideoBlock,
+  GraphQLInputYouTubeVideoBlock,
+  GraphQLInputSoundCloudTrackBlock,
+  GraphQLInputEmbedBlock,
+  GraphQLEmbedBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
@@ -48,7 +57,15 @@ export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   fields: {
     [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
     [BlockType.Image]: {type: GraphQLInputImageBlock},
-    [BlockType.Title]: {type: GraphQLInputTitleBlock}
+    [BlockType.Title]: {type: GraphQLInputTitleBlock},
+    [BlockType.Quote]: {type: GraphQLInputQuoteBlock},
+    [BlockType.FacebookPost]: {type: GraphQLInputFacebookPostBlock},
+    [BlockType.InstagramPost]: {type: GraphQLInputInstagramPostBlock},
+    [BlockType.TwitterTweet]: {type: GraphQLInputTwitterTweetBlock},
+    [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
+    [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
+    [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
+    [BlockType.Embed]: {type: GraphQLInputEmbedBlock}
   }
 })
 
@@ -64,6 +81,7 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
     GraphQLVimeoVideoBlock,
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
+    GraphQLEmbedBlock,
     GraphQLListicleBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
@@ -91,8 +109,8 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLID))},
 
-    isShared: {type: GraphQLNonNull(GraphQLBoolean)},
-    isBreaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlockUnionMap)))
@@ -154,15 +172,10 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
       }
     },
 
-    isBreaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    isShared: {type: GraphQLNonNull(GraphQLBoolean)},
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
-    blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))
-      // resolve({id, version}, _args, {storageAdapter}) {
-      //   return storageAdapter.getArticleVersionBlocks(id, version)
-      // }
-    }
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
   }
 })
 

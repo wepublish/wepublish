@@ -55,6 +55,8 @@ export class KarmaMediaAdapter implements MediaAdapter {
     {id, filename, extension, focalPoint}: Image,
     transformation?: ImageTransformation
   ): Promise<string> {
+    filename = filename || 'untitled'
+
     if (transformation) {
       const {width, height, rotation, output, quality} = transformation
       const fullFilename = encodeURIComponent(`${filename}${output ? `.${output}` : extension}`)

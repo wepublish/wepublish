@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import nanoid from 'nanoid'
 
 import {
   EditorTemplate,
@@ -8,7 +9,8 @@ import {
   BlockList,
   Drawer,
   Toast,
-  Dialog
+  Dialog,
+  useBlockMap
 } from '@karma.run/ui'
 
 import {
@@ -18,11 +20,12 @@ import {
   MaterialIconPublishOutlined,
   MaterialIconSaveOutlined,
   MaterialIconImage,
-  MaterialIconTitle
+  MaterialIconTitle,
+  MaterialIconFormatQuote,
+  MaterialIconCode
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
-import {Node} from 'slate'
 
 import {
   RouteNavigationLinkButton,
@@ -31,7 +34,7 @@ import {
   ArticleEditRoute
 } from '../route'
 
-import {RichTextBlock} from '../blocks/richTextBlock'
+import {RichTextBlock, RichTextValue, createDefaultValue} from '../blocks/richTextBlock'
 import {ImageBlock, ImageBlockValue} from '../blocks/imageBlock'
 import {TitleBlockValue, TitleBlock} from '../blocks/titleBlock'
 import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
@@ -46,11 +49,21 @@ import {
 } from '../api/article'
 
 import {BlockType, VersionState} from '../api/types'
+import {QuoteBlockValue, QuoteBlock} from '../blocks/quoteBlock'
+import {EmbedBlockValue, EmbedBlock, EmbedType} from '../blocks/embedBlock'
 
-export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Node[]>
-export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
+export type RichTextBlockListValue = BlockListValue<BlockType.RichText, RichTextValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
-export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
+export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
+export type QuoteBlockListValue = BlockListValue<BlockType.Quote, QuoteBlockValue>
+export type EmbedBlockListValue = BlockListValue<BlockType.Embed, EmbedBlockValue>
+
+export type BlockValue =
+  | TitleBlockListValue
+  | RichTextBlockListValue
+  | ImageBlockListValue
+  | QuoteBlockListValue
+  | EmbedBlockListValue
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -106,6 +119,45 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   const isDisabled = isArticleLoading
+  const blockMap = useBlockMap<BlockValue>(
+    () => ({
+      [BlockType.Title]: {
+        field: props => <TitleBlock {...props} />,
+        defaultValue: {title: '', lead: ''},
+        label: 'Title',
+        icon: MaterialIconTitle
+      },
+
+      [BlockType.RichText]: {
+        field: props => <RichTextBlock {...props} />,
+        defaultValue: createDefaultValue,
+        label: 'Rich Text',
+        icon: MaterialIconTextFormat
+      },
+
+      [BlockType.Image]: {
+        field: props => <ImageBlock {...props} />,
+        defaultValue: {image: null, caption: ''},
+        label: 'Image',
+        icon: MaterialIconImage
+      },
+
+      [BlockType.Quote]: {
+        field: props => <QuoteBlock {...props} />,
+        defaultValue: {quote: '', author: ''},
+        label: 'Quote',
+        icon: MaterialIconFormatQuote
+      },
+
+      [BlockType.Embed]: {
+        field: props => <EmbedBlock {...props} />,
+        defaultValue: {type: EmbedType.Other},
+        label: 'Embed',
+        icon: MaterialIconCode
+      }
+    }),
+    []
+  )
 
   useEffect(() => {
     if (articleData?.article) {
@@ -122,11 +174,17 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         breaking,
         authors,
         image: image
-          ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
+          ? {
+              id: image.id,
+              width: image.width,
+              height: image.height,
+              url: image.url,
+              transform: image.transform
+            }
           : null
       })
 
-      setBlocks(blocks.map(blockForQueryBlock).filter((block: any) => block != null))
+      setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [articleData])
 
@@ -239,29 +297,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           />
         }>
         {isArticleLoading ? null : ( // TODO: Loading indicator
-          <BlockList value={blocks} onChange={blocks => setBlocks(blocks)}>
-            {{
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
-              },
-
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: [{children: [{text: '', marks: []}]}],
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
-              }
-            }}
+          <BlockList value={blocks} onChange={setBlocks}>
+            {blockMap}
           </BlockList>
         )}
       </EditorTemplate>
@@ -316,19 +353,90 @@ function unionMapForBlock(block: BlockValue): ArticleBlockUnionMap {
 
     case BlockType.Title:
       return {
-        [BlockType.Title]: {title: block.value.title, lead: block.value.lead}
+        [BlockType.Title]: {
+          title: block.value.title || undefined,
+          lead: block.value.lead || undefined
+        }
       }
 
     case BlockType.RichText:
       return {
-        [BlockType.RichText]: {richText: block.value}
+        [BlockType.RichText]: {richText: block.value.value}
       }
+
+    case BlockType.Quote:
+      return {
+        [BlockType.Quote]: {
+          quote: block.value.quote || undefined,
+          author: block.value.author || undefined
+        }
+      }
+
+    case BlockType.Embed: {
+      const {value} = block
+
+      switch (value.type) {
+        case EmbedType.FacebookPost:
+          return {
+            [EmbedType.FacebookPost]: {
+              userID: value.userID,
+              postID: value.postID
+            }
+          }
+
+        case EmbedType.InstagramPost:
+          return {
+            [EmbedType.InstagramPost]: {
+              postID: value.postID
+            }
+          }
+
+        case EmbedType.TwitterTweet:
+          return {
+            [EmbedType.TwitterTweet]: {
+              userID: value.userID,
+              tweetID: value.tweetID
+            }
+          }
+
+        case EmbedType.VimeoVideo:
+          return {
+            [EmbedType.VimeoVideo]: {
+              videoID: value.videoID
+            }
+          }
+
+        case EmbedType.YouTubeVideo:
+          return {
+            [EmbedType.YouTubeVideo]: {
+              videoID: value.videoID
+            }
+          }
+
+        case EmbedType.SoundCloudTrack:
+          return {
+            [EmbedType.SoundCloudTrack]: {
+              trackID: value.trackID
+            }
+          }
+
+        case EmbedType.Other:
+          return {
+            [BlockType.Embed]: {
+              title: value.title,
+              url: value.url,
+              width: value.width,
+              height: value.height
+            }
+          }
+      }
+    }
   }
 }
 
 function blockForQueryBlock(block: any): BlockValue | null {
   const type: string = block.__typename
-  const key: string = block.key
+  const key: string = nanoid()
 
   switch (type) {
     case 'ImageBlock':
@@ -342,7 +450,8 @@ function blockForQueryBlock(block: any): BlockValue | null {
                 id: block.image.id,
                 width: block.image.width,
                 height: block.image.height,
-                url: block.image.transform[0]
+                url: block.image.url,
+                transform: block.image.transform
               }
             : null
         }
@@ -353,7 +462,7 @@ function blockForQueryBlock(block: any): BlockValue | null {
         key,
         type: BlockType.Title,
         value: {
-          title: block.title,
+          title: block.title ?? '',
           lead: block.lead ?? ''
         }
       }
@@ -362,10 +471,72 @@ function blockForQueryBlock(block: any): BlockValue | null {
       return {
         key,
         type: BlockType.RichText,
-        value: block.richText
+        value: {value: block.richText, selection: null}
+      }
+
+    case 'QuoteBlock':
+      return {
+        key,
+        type: BlockType.Quote,
+        value: {quote: block.quote ?? '', author: block.author ?? ''}
+      }
+
+    case 'FacebookPostBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.FacebookPost, userID: block.userID, postID: block.postID}
+      }
+
+    case 'InstagramPostBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.InstagramPost, postID: block.postID}
+      }
+
+    case 'TwitterTweetBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.TwitterTweet, userID: block.userID, tweetID: block.tweetID}
+      }
+
+    case 'VimeoVideoBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.VimeoVideo, videoID: block.videoID}
+      }
+
+    case 'YouTubeVideoBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.YouTubeVideo, videoID: block.videoID}
+      }
+
+    case 'SoundCloudTrackBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.SoundCloudTrack, trackID: block.trackID}
+      }
+
+    case 'EmbedBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {
+          type: EmbedType.Other,
+          url: block.url,
+          title: block.title,
+          width: block.width,
+          height: block.height
+        }
       }
 
     default:
-      return null // TODO: Throw error
+      throw new Error('Invalid Block')
   }
 }

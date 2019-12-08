@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {BlockProps, TypographicTextArea, Layer, LayerContainer} from '@karma.run/ui'
+import {BlockProps, TypographicTextArea, LayerContainer} from '@karma.run/ui'
 
 export interface TitleBlockValue {
   readonly title: string
@@ -15,14 +15,14 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
   return (
     <>
       <LayerContainer>
-        <Layer right={0} top={0}>
-          {/* TODO: Meta sync */}
-          {/* <IconButton
+        {/* TODO: Meta sync */}
+        {/* <Layer right={0} top={0}>
+          <IconButton
             icon={MaterialIconSyncAlt}
             title="Use as Meta Title &amp; Lead"
             onClick={() => {}}
-          /> */}
-        </Layer>
+          />
+        </Layer> */}
         <TypographicTextArea
           variant="title"
           align="center"

@@ -46,42 +46,26 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           {image && (
             <LayerContainer>
               <Layer right={0} top={0}>
-                <Box
+                <IconButton
+                  icon={MaterialIconImageOutlined}
+                  title="Choose Image"
+                  onClick={() => setChooseModalOpen(true)}
                   margin={Spacing.ExtraSmall}
-                  flexDirection="row"
-                  justifyContent="flex-end"
-                  display="flex">
-                  <IconButton
-                    icon={MaterialIconImageOutlined}
-                    title="Choose Image"
-                    onClick={() => setChooseModalOpen(true)}
-                  />
-                </Box>
-                <Box
+                />
+                <IconButton
+                  icon={MaterialIconEditOutlined}
+                  title="Edit Image"
+                  onClick={() => setEditModalOpen(true)}
                   margin={Spacing.ExtraSmall}
-                  flexDirection="row"
-                  justifyContent="flex-end"
-                  display="flex">
-                  <IconButton
-                    icon={MaterialIconEditOutlined}
-                    title="Edit Image"
-                    onClick={() => setEditModalOpen(true)}
-                  />
-                </Box>
-                <Box
-                  margin={Spacing.ExtraSmall}
-                  flexDirection="row"
-                  justifyContent="flex-end"
-                  display="flex">
-                  {/* TODO: Meta sync */}
-                  {/* <IconButton
+                />
+                {/* TODO: Meta sync */}
+                {/* <IconButton
                     icon={MaterialIconSyncAlt}
                     title="Use as Meta Image"
                     onClick={() => setChooseModalOpen(true)}
                   /> */}
-                </Box>
               </Layer>
-              <Image src={image.url} height={300} contain />
+              <Image src={image.transform[0]} width="100%" height={300} contain />
             </LayerContainer>
           )}
         </PlaceholderInput>
@@ -100,6 +84,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
+            transformations={[{height: 300}]}
             onClose={() => setChooseModalOpen(false)}
             onSelect={value => {
               setChooseModalOpen(false)

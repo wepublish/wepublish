@@ -34,13 +34,19 @@ export const ImageModel = struct({
   id: unique(string),
   createdAt: dateTime,
   updatedAt: dateTime,
-  filename: string,
+
+  filename: optional(string),
+  title: optional(string),
+  description: optional(string),
+  tags: list(string),
+
+  author: optional(string),
+  source: optional(string),
+  license: optional(string),
+
   fileSize: int32,
   extension: string,
   mimeType: string,
-  title: string,
-  description: string,
-  tags: list(string),
   format: string,
   width: int32,
   height: int32,
@@ -92,40 +98,36 @@ export const SessionModel = struct({
 })
 
 export const RichTextModel = recursion('node', recursion =>
-  struct({
-    object: string,
-    key: optional(string),
-    type: optional(string),
-    data: optional(
-      struct({
-        url: optional(string)
-      })
-    ),
-    text: optional(string),
-    nodes: optional(list(recursion)),
-    marks: optional(list(recursion))
-  })
+  list(
+    struct({
+      type: optional(string),
+      url: optional(string),
+      title: optional(string),
+      bold: optional(bool),
+      italic: optional(bool),
+      underline: optional(bool),
+      strikethrough: optional(bool),
+      text: optional(string),
+      children: optional(recursion)
+    })
+  )
 )
 
 export const TitleBlockModel = struct({
-  key: string,
   title: optional(string),
   lead: optional(string)
 })
 
 export const RichTextBlockModel = struct({
-  key: string,
   richText: RichTextModel
 })
 
 export const ImageBlockModel = struct({
-  key: string,
   caption: optional(string),
   imageID: optional(string)
 })
 
 export const ImageGalleryBlockModel = struct({
-  key: string,
   images: list(
     struct({
       caption: optional(string),
@@ -135,39 +137,39 @@ export const ImageGalleryBlockModel = struct({
 })
 
 export const FacebookPostBlockModel = struct({
-  key: string,
   userID: string,
   postID: string
 })
 
 export const InstagramPostBlockModel = struct({
-  key: string,
   postID: string
 })
 
 export const TwitterTweetBlockModel = struct({
-  key: string,
   userID: string,
   tweetID: string
 })
 
 export const VimeoVideoBlockModel = struct({
-  key: string,
   videoID: string
 })
 
 export const YouTubeVideoBlockModel = struct({
-  key: string,
   videoID: string
 })
 
 export const SoundCloudTrackBlockModel = struct({
-  key: string,
   trackID: string
 })
 
+export const EmbedBlockModel = struct({
+  url: optional(string),
+  title: optional(string),
+  width: optional(int32),
+  height: optional(int32)
+})
+
 export const ListicleBlockModel = struct({
-  key: string,
   listicle: list(
     struct({
       title: string,
@@ -178,20 +180,17 @@ export const ListicleBlockModel = struct({
 })
 
 export const LinkPageBreakBlockModel = struct({
-  key: string,
   text: string,
   linkURL: string,
   linkText: string
 })
 
 export const QuoteBlockModel = struct({
-  key: string,
-  text: string,
-  source: optional(string)
+  quote: optional(string),
+  author: optional(string)
 })
 
 export const ArticleTeaserGridBlockModel = struct({
-  key: string,
   teasers: list(
     optional(
       struct({
@@ -223,6 +222,7 @@ export const ArticleBlocksModel = list(
     [BlockType.VimeoVideo]: VimeoVideoBlockModel,
     [BlockType.YouTubeVideo]: YouTubeVideoBlockModel,
     [BlockType.SoundCloudTrack]: SoundCloudTrackBlockModel,
+    [BlockType.Embed]: EmbedBlockModel,
     [BlockType.Listicle]: ListicleBlockModel,
     [BlockType.LinkPageBreak]: LinkPageBreakBlockModel,
     [BlockType.Quote]: QuoteBlockModel

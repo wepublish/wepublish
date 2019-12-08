@@ -5,7 +5,7 @@ import {ImageUploadPanel} from './imageUploadPanel'
 
 export interface ImageUploadAndEditPanelProps {
   onClose(): void
-  onUpload(ids: string[]): void
+  onUpload(): void
 }
 
 export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditPanelProps) {
@@ -16,7 +16,7 @@ export function ImageUploadAndEditPanel({onClose, onUpload}: ImageUploadAndEditP
   }
 
   return file ? (
-    <ImagedEditPanel file={file} onClose={onClose} />
+    <ImagedEditPanel file={file} onClose={onClose} onSave={onUpload} />
   ) : (
     <ImageUploadPanel onClose={onClose} onUpload={handleUpload} />
   )

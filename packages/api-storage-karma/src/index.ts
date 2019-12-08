@@ -77,7 +77,11 @@ export class KarmaStorageAdapter implements StorageAdapter {
   }
 
   async initialize(): Promise<boolean> {
-    const session = await this.getKarmaSession()
+    let session = await this.getKarmaSession()
+
+    // TEMP
+    // session.resetDatabase()
+    // session = await this.getKarmaSession()
 
     const tagStructs = await session.do(all(tag(BuiltInTag.Tag)))
     const tags: string[] = tagStructs.map(({tag}: any) => tag)
@@ -95,7 +99,11 @@ export class KarmaStorageAdapter implements StorageAdapter {
   async getKarmaSession() {
     // TODO: Persistent / Refresh session
     // if (this.session) return this.session
-    return await this.remote.login(this.user, this.password)
+
+    // TEMP
+    this.user
+    return await this.remote.adminLogin(this.password)
+    // return await this.remote.login(this.user, this.password)
   }
 
   async getArticle(id: string): Promise<Article | null> {
@@ -698,9 +706,14 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
   async updateImage({
     id,
+    updatedAt,
+    filename,
     title,
     description,
     tags,
+    author,
+    source,
+    license,
     focalPoint
   }: ImageUpdate): Promise<Image | null> {
     const session = await this.getKarmaSession()
@@ -719,9 +732,14 @@ export class KarmaStorageAdapter implements StorageAdapter {
             data(
               ImageModel.decode({
                 ...image,
+                updatedAt,
+                filename,
                 title,
                 description,
                 tags,
+                author,
+                source,
+                license,
                 focalPoint
               }).toDataConstructor()
             )

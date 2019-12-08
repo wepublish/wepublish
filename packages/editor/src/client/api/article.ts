@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
+import {Node} from 'slate'
 
-import {DocumentJSON} from 'slate'
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 import {ImageTransformation, BlockType, VersionState} from './types'
 
@@ -22,7 +22,7 @@ const ListArticlesQuery = gql`
             id
             width
             height
-            transform(transformations: [{width: 800}]) # TODO: Input as variable
+            transform(input: [{width: 800}]) # TODO: Input as variable
           }
         }
       }
@@ -47,8 +47,18 @@ export function useListArticlesQuery(
 
 export interface ArticleBlockUnionMap {
   readonly [BlockType.Image]?: {caption?: string; imageID?: string}
-  readonly [BlockType.Title]?: {title: string; lead?: string}
-  readonly [BlockType.RichText]?: {richText: DocumentJSON}
+  readonly [BlockType.Title]?: {title?: string; lead?: string}
+  readonly [BlockType.RichText]?: {richText: Node[]}
+  readonly [BlockType.Quote]?: {quote?: string; author?: string}
+
+  readonly [BlockType.FacebookPost]?: {userID: string; postID: string}
+  readonly [BlockType.InstagramPost]?: {postID: string}
+  readonly [BlockType.TwitterTweet]?: {userID: string; tweetID: string}
+  readonly [BlockType.VimeoVideo]?: {videoID: string}
+  readonly [BlockType.YouTubeVideo]?: {videoID: string}
+  readonly [BlockType.SoundCloudTrack]?: {trackID: string}
+
+  readonly [BlockType.Embed]?: {url?: string; title?: string; width?: number; height?: number}
 }
 
 export interface ArticleInput {
@@ -128,7 +138,8 @@ const GetArticleQuery = gql`
           id
           width
           height
-          transform(transformations: [$metaImageTransformation])
+          url
+          transform(input: [$metaImageTransformation])
         }
         tags
         authors {
@@ -140,10 +151,6 @@ const GetArticleQuery = gql`
         blocks {
           __typename
 
-          ... on BaseBlock {
-            key
-          }
-
           ... on TitleBlock {
             title
             lead
@@ -153,12 +160,50 @@ const GetArticleQuery = gql`
             richText
           }
 
+          ... on QuoteBlock {
+            quote
+            author
+          }
+
           ... on ImageBlock {
             caption
             image {
               id
-              transform(transformations: [$blockImageTransformation])
+              transform(input: [$blockImageTransformation])
             }
+          }
+
+          ... on FacebookPostBlock {
+            userID
+            postID
+          }
+
+          ... on InstagramPostBlock {
+            postID
+          }
+
+          ... on TwitterTweetBlock {
+            userID
+            tweetID
+          }
+
+          ... on VimeoVideoBlock {
+            videoID
+          }
+
+          ... on YouTubeVideoBlock {
+            videoID
+          }
+
+          ... on SoundCloudTrackBlock {
+            trackID
+          }
+
+          ... on EmbedBlock {
+            url
+            title
+            width
+            height
           }
         }
       }

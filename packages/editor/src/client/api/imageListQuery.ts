@@ -15,6 +15,7 @@ const ImageListQuery = gql`
         id
         width
         height
+        url
         transform(input: $transformations)
       }
       pageInfo {
@@ -31,6 +32,7 @@ export interface ImageListQueryData {
   readonly images: {
     readonly nodes: Array<{
       readonly id: string
+      readonly url: string
       readonly transform: string[]
       readonly width: number
       readonly height: number

@@ -36,7 +36,7 @@ async function mapBlockUnionMap(value: any) {
   }
 
   const key = Object.keys(value)[0] as keyof BlockMap
-  return {type: key, key: await generateID(), ...value[key]} as ArticleBlock
+  return {type: key, ...value[key]} as ArticleBlock
 }
 
 export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
@@ -184,7 +184,17 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       async resolve(root, {input}, {authenticate, storageAdapter, mediaAdapter}) {
         await authenticate()
 
-        const {file, filename, title, description, source, tags, focalPoint} = input
+        const {
+          file,
+          filename,
+          title,
+          description,
+          tags,
+          author,
+          source,
+          license,
+          focalPoint
+        } = input
 
         if (!(file instanceof Promise)) throw new UserInputError('Invalid image')
 
@@ -199,8 +209,12 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
           filename: filename ? uploadImage.filename : filename,
           title,
           description,
-          source,
           tags,
+
+          author,
+          source,
+          license,
+
           focalPoint
         })
       }
@@ -209,8 +223,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     updateImage: {
       type: GraphQLImage,
       args: {input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}},
-      resolve(root, args, {storageAdapter}) {
-        return storageAdapter.updateImage(args)
+      resolve(root, {input}, {storageAdapter}) {
+        return storageAdapter.updateImage({...input, updatedAt: new Date()})
       }
     },
 

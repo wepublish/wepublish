@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
 
 import {
@@ -19,29 +19,29 @@ import {
 } from '@karma.run/ui'
 
 import {useImageListQuery} from '../api/imageListQuery'
-import {useImageUploadMutation} from '../api/imageMutation'
-import {ImageReference} from '../api/types'
+import {ImageReference, ImageTransformation} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
+  readonly transformations?: ImageTransformation[]
+
   onClose(): void
   onSelect(image: ImageReference): void
 }
 
-export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
+export function ImageSelectPanel({onClose, transformations = [], onSelect}: ImageSelectPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [upload, {loading, error}] = useImageUploadMutation()
 
-  const [image, setImage] = useState<ImageReference | null>(null)
   const [after, setAfter] = useState<string | undefined>(undefined)
   const [before, setBefore] = useState<string | undefined>(undefined)
 
-  const {data, refetch} = useImageListQuery({
+  const [file, setFile] = useState<File | null>(null)
+  const {data, loading: isLoading} = useImageListQuery({
     after,
     before,
     pageLimit: 20,
-    transformations: [{width: 220, height: 140}, {height: 300}]
+    transformations: [{width: 220, height: 140}, ...transformations]
   })
 
   const images = data?.images.nodes ?? []
@@ -61,37 +61,15 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       return
     }
 
-    const response = await upload({
-      variables: {images: [file], transformations: [{height: 300}]}
-    })
-
-    const {
-      id,
-      width,
-      height,
-      transform: [url]
-    } = response.data!.uploadImages[0]
-
-    setImage({id, width, height, url})
+    setFile(file)
   }
 
-  useEffect(() => {
-    if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
-    }
-  }, [error])
-
-  if (image?.id) {
+  if (file) {
     return (
       <ImagedEditPanel
-        id={image.id}
-        saveLabel="Confirm"
-        onClose={() => {
-          setImage(null)
-          refetch()
-        }}
-        onSave={() => onSelect(image)}
+        file={file}
+        transformations={transformations}
+        onSave={image => onSelect(image)}
       />
     )
   }
@@ -106,7 +84,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               icon={MaterialIconClose}
               label="Close"
               onClick={() => onClose()}
-              disabled={loading}
+              disabled={isLoading}
             />
           }
         />
@@ -116,18 +94,28 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               icon={MaterialIconCloudUploadOutlined}
               text="Drop Image Here"
               onDrop={handleDrop}
-              disabled={loading}
+              disabled={isLoading}
             />
           </Box>
           <Grid>
-            {images.map(({id, width, height, transform: [url, hdURL]}) => (
+            {images.map(({id, width, height, url, transform}) => (
               <Column key={id} ratio={1 / 2}>
                 <Box height={140}>
                   <Card
-                    onClick={() => onSelect({id, width, height, url: hdURL})}
+                    onClick={() =>
+                      onSelect({
+                        id,
+                        width,
+                        height,
+                        url,
+                        transform: transform.slice(1)
+                      })
+                    }
+                    width="100%"
+                    overflow="hidden"
                     style={{cursor: 'pointer'}}>
                     {/* TODO: Add Clickable */}
-                    <Image src={url} />
+                    <Image width="100%" height="100%" src={transform[0]} />
                   </Card>
                 </Box>
               </Column>

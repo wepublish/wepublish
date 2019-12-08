@@ -820,14 +820,6 @@
     prop-types "^15.6.2"
     scheduler "^0.16.2"
 
-"@karma.run/graphql@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@karma.run/graphql/-/graphql-0.0.2.tgz#ac9f9081b758ddaf2f93859b4c59be16510e4d66"
-  integrity sha512-ffeeHqyuLMby8t+BYNX2rprwFEFxuHiGdyCbj7KEAni/gF2SlMQtEDV6afhNsJvJ5GCUF3YdVhAw2Sf8pVy0Zw==
-  dependencies:
-    "@karma.run/utility" "0.0.1"
-    "@types/slate" "^0.47.1"
-
 "@karma.run/icons@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@karma.run/icons/-/icons-1.0.0.tgz#b39f5e8aa13c3b159727489635beaa95728cf849"
@@ -876,10 +868,10 @@
   dependencies:
     axios "^0.18.0"
 
-"@karma.run/ui@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.2.3.tgz#9976b65cbfdb142735ab1c12f5caface0eeed1a9"
-  integrity sha512-i5SwYMQTpCTcZaClrbYNWv+sp1+fbdIFks3jUuvdN1jlPl1m05LShCkDqlchXOpeyS/PkzQ/N668eFjkOD5jbA==
+"@karma.run/ui@0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.2.5.tgz#cb44ed179aa1baf0c297e94b8b1bc0fda466a36a"
+  integrity sha512-Pq0RCrkKRXRE6MXP87Q54qveF1kmugmVAaY4yRvlUEat9QEj3Zz5xRV7ch7LGFQ6GQWmdq0V7l1jGD60lCLihg==
   dependencies:
     "@karma.run/icons" "^1.0.0"
     "@karma.run/react" "^0.1.1"
@@ -895,7 +887,7 @@
     nanoid "^2.0.3"
     react-transition-group "4.3.0"
 
-"@karma.run/utility@0.0.1", "@karma.run/utility@^0.0.1":
+"@karma.run/utility@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@karma.run/utility/-/utility-0.0.1.tgz#eddbc4668d1209a5b852195ec472725a06817632"
   integrity sha512-tlNtuuFz1L84iBXULi9DgB4Jk23t9j1evUutzegif0FYo341DicDPcuwkav8/syCUKA+e+tjFl03EFwdC/rY1Q==
@@ -1259,7 +1251,7 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@^16.9.13", "@types/react@^16.9.14":
+"@types/react@^16.9.14":
   version "16.9.14"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.14.tgz#7f1158ce450b4b5aa83b1c5e1324fa75f348bdd1"
   integrity sha512-Q4tW4RGmR+u/CgzR8VqZcsUWjP4Pz/LcHfs9AzSG+aBnwq8As3Bid3vG1eGGsXg/xuR2k2tqNlI8pzyV8kxe0g==
@@ -1274,14 +1266,6 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
-
-"@types/slate@^0.47.1":
-  version "0.47.2"
-  resolved "https://registry.yarnpkg.com/@types/slate/-/slate-0.47.2.tgz#54c57c223919bb70b3047600ab6b0ccf800bff77"
-  integrity sha512-1qwuAtuJ2Tnhewr2tz3OsDeM9xIC1ttTkBuSuf2P4Dy7K9I/I8HVeVowpo8k2vzVX7UMkc3OHo0RpC7V6pWCBw==
-  dependencies:
-    "@types/react" "*"
-    immutable "^3.8.2"
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -4239,11 +4223,6 @@ immer@^5.0.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-5.0.0.tgz#07f462b7d95f7e86c214a861ecacd766d42b8c0a"
   integrity sha512-G7gRqKbi9NE025XVyqyTV98dxUOtdKvu/P1QRaVZfA55aEcXgjbxPdm+TlWdcSMNPKijlaHNz61DGPyelouRlA==
 
-immutable@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
-  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
-
 import-fresh@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-2.0.0.tgz#d81355c15612d386c61f9ddd3922d4304822a546"
@@ -6786,46 +6765,45 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-slate-history@^0.50.10:
-  version "0.50.10"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.50.10.tgz#1910406ce5546a4ab8a2ac5837bdfb9697a43844"
-  integrity sha512-fxaBgQA4pCa9GNGa1ra4x10rosPMM+26TeLH6NBHW+YwNFmGW7OptB0+EBgi4ZWX2pSIKay8tBMA7ZzVcGdjAA==
+slate-history@^0.52.5:
+  version "0.52.5"
+  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.52.5.tgz#93a5b4994ebb6e32b413f2b7b353b0b1a37f989a"
+  integrity sha512-p+z4wTr+3H+2OhpSaLXFmONuJ9UgKQ805+y8otvniQP0vJEv86tFcydjboNNvjxuDeW8AKRnDuNUXazbirPPKA==
   dependencies:
     immer "^5.0.0"
     is-plain-object "^3.0.0"
 
-slate-hyperscript@^0.50.8:
-  version "0.50.8"
-  resolved "https://registry.yarnpkg.com/slate-hyperscript/-/slate-hyperscript-0.50.8.tgz#a9dbc19d624980f08cee9d0c6351c82ac83fb8c0"
-  integrity sha512-psdBsKOHgD0IaKiDWh+Ur/9HRYVcz9nBpskwETJr9AyWJRfuKTrs8bAMLaCBpviWKQW4tza3WnH86j1tUFssFg==
+slate-hyperscript@^0.52.5:
+  version "0.52.5"
+  resolved "https://registry.yarnpkg.com/slate-hyperscript/-/slate-hyperscript-0.52.5.tgz#533912f9971bc90fbf5c90a6265ce7fb2d4e04d5"
+  integrity sha512-wi6TPRiNjpkyjbIFeLkyuqLN3cRQlVy/26vUZeaX0GajLn3fTi8Dgt1svfP4E6xk94BtM2P5zle/mPVXwcqDHA==
   dependencies:
     is-plain-object "^3.0.0"
 
-slate-react@^0.50.11:
-  version "0.50.11"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.50.11.tgz#619249ab651c92494d9f419bacbaf06db879f9b4"
-  integrity sha512-DcbyFGIYRQBc2OUQWBuB6D1EGg+D8ThuiJKUsSpeWwjAugwyBBFuzQ4D18ScL5wtdG6qFTUYpTU+tCroiO3Uew==
+slate-react@^0.52.5:
+  version "0.52.5"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.52.5.tgz#f2f51411d7ba5c6ceb1f7e4c2febd34314e87b3a"
+  integrity sha512-46HBBfu+mV01dSn1YA2Cb+LC0VIJ41pJ8z2B0KhH5WIHKKT8u2YeUz+xfE5zvT1FvXfyTsayK1fX4q7lzZVXVA==
   dependencies:
     "@types/debounce" "^1.2.0"
     "@types/debug" "^4.1.5"
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
-    "@types/react" "^16.9.13"
     debounce "^1.2.0"
     direction "^1.0.3"
     is-hotkey "^0.1.6"
     is-plain-object "^3.0.0"
     scroll-into-view-if-needed "^2.2.20"
 
-slate-schema@^0.50.13:
-  version "0.50.13"
-  resolved "https://registry.yarnpkg.com/slate-schema/-/slate-schema-0.50.13.tgz#187da5f049dee430bf96fb5d9fdc017235c1c104"
-  integrity sha512-NdlKg/JTQvJAyU0p3breA5bcK5NX0nAvpxJFvpsJB6pCQiYFPjcWO36kdWb1bddqPdnIJoXcKhH8wy3pFqePIw==
+slate-schema@^0.52.5:
+  version "0.52.5"
+  resolved "https://registry.yarnpkg.com/slate-schema/-/slate-schema-0.52.5.tgz#c2b9390e66539056ca6db1c239739565429c24e3"
+  integrity sha512-8KScsfnh6hRidy6/TSlCbBDZoyyGUHUFOVdwu7r4mJbX6ylKJBQvARDbONLZk7cFcBVHoD19hG8SR4TJQ9PhwA==
 
-slate@^0.50.8:
-  version "0.50.8"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.50.8.tgz#e2fbf69ffa234082e5c538c1dade059076eb1745"
-  integrity sha512-z4YZrHa+a3G0JUf4wbln2Klvd/15uHO2oHbTkDwTjdm1qH5IjumQmKOSw3vOFYy9KYI6FUh2QxHgu5Vl651R7Q==
+slate@^0.52.5:
+  version "0.52.5"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.52.5.tgz#f299dbbcbc2db223568382195eeab18094310dc9"
+  integrity sha512-dXRccfUnrz/vEW5sriRIa1xxBCIrjli1aLMAqxqf4PjG+X6Mr0MD74sjU2YpJE+h10Nzd8WbVIK2YYQMd1Z+pg==
   dependencies:
     "@types/esrever" "^0.2.0"
     esrever "^0.2.0"

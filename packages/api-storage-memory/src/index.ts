@@ -130,18 +130,28 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
   async updateImage({
     id,
+    updatedAt,
+    filename,
     title,
     description,
+    author,
+    source,
+    license,
     focalPoint,
     tags
   }: ImageUpdate): Promise<Image | null> {
     const image = this._images.find(({id: imageID}) => imageID === id) ?? null
 
     if (image) {
+      image.updatedAt = updatedAt
+      image.filename = filename
       image.title = title
       image.description = description
-      image.focalPoint = focalPoint
       image.tags = tags
+      image.author = author
+      image.source = source
+      image.license = license
+      image.focalPoint = focalPoint
     }
 
     return image

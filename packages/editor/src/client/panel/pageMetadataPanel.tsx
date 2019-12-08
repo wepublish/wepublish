@@ -16,7 +16,8 @@ import {
   LayerContainer,
   Layer,
   IconButton,
-  Image
+  Image,
+  TagInput
 } from '@karma.run/ui'
 
 import {
@@ -46,7 +47,7 @@ export interface PageMetadataPanelProps {
 }
 
 export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
-  const {title, description, slug, image} = value
+  const {title, description, slug, tags, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -65,7 +66,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           }
         />
         <PanelSection>
-          <Box marginBottom={Spacing.Small}>
+          <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
               label="Slug"
               value={slug}
@@ -81,18 +82,22 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             />
           </Box>
 
-          <Box marginBottom={Spacing.Small}>
+          <Box marginBottom={Spacing.ExtraSmall}>
             <TextArea
               label="Description"
-              description=""
-              placeholder="Description"
               value={description}
-              onValueChange={description => onChange?.({...value, description})}
+              onChange={e => onChange?.({...value, description: e.target.value})}
             />
           </Box>
 
-          {/* TODO: Authors */}
-          {/* TODO: Tags */}
+          <Box marginBottom={Spacing.Small}>
+            <TagInput
+              label="Tags"
+              description="Press enter to add tag"
+              value={tags}
+              onChange={tags => onChange?.({...value, tags: tags ?? []})}
+            />
+          </Box>
         </PanelSection>
         <PanelSectionHeader title="Image" />
         <PanelSection dark>

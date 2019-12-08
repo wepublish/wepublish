@@ -115,15 +115,11 @@ const GetPageQuery = gql`
           id
           width
           height
-          transform(transformations: [$metaImageTransformation])
+          transform(input: [$metaImageTransformation])
         }
         tags
         blocks {
           __typename
-
-          ... on BaseBlock {
-            key
-          }
 
           ... on ArticleTeaserGridBlock {
             teasers {
@@ -136,7 +132,7 @@ const GetPageQuery = gql`
                     id
                     width
                     height
-                    transform(transformations: [$blockImageTransformation])
+                    transform(input: [$blockImageTransformation])
                   }
                 }
               }

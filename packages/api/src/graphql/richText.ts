@@ -1,25 +1,17 @@
-import {createRichTextScalar} from '@karma.run/graphql'
+import {GraphQLScalarType} from 'graphql'
 
-export const GraphQLRichText = createRichTextScalar({
+// TODO: Validation / Normalization
+export const GraphQLRichText = new GraphQLScalarType({
   name: 'RichText',
-  validation: {
-    block: {
-      'heading-one': null,
-      'heading-two': null,
-      'heading-three': null,
-      'bulleted-list': null,
-      'numbered-list': null,
-      'list-item': null,
-      paragraph: null
-    },
-    inline: {
-      link: null
-    },
-    marks: {
-      bold: null,
-      italic: null,
-      underline: null,
-      strikethrough: null
-    }
+  serialize(value) {
+    return value
+  },
+
+  parseValue(value) {
+    return value
+  },
+
+  parseLiteral(value) {
+    return value
   }
 })

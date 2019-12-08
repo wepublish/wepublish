@@ -17,7 +17,8 @@ import {
   LayerContainer,
   Layer,
   IconButton,
-  Image
+  Image,
+  TagInput
 } from '@karma.run/ui'
 
 import {
@@ -52,7 +53,7 @@ export interface ArticleMetadataPanelProps {
 }
 
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, shared, breaking, image} = value
+  const {preTitle, title, lead, tags, shared, breaking, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -90,13 +91,20 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             />
           </Box>
 
-          <Box marginBottom={Spacing.Small}>
+          <Box marginBottom={Spacing.ExtraSmall}>
             <TextArea
               label="Lead"
-              description=""
-              placeholder="Lead"
               value={lead}
-              onValueChange={lead => onChange?.({...value, lead: lead})}
+              onChange={e => onChange?.({...value, lead: e.target.value})}
+            />
+          </Box>
+
+          <Box marginBottom={Spacing.Small}>
+            <TagInput
+              label="Tags"
+              description="Press enter to add tag"
+              value={tags}
+              onChange={tags => onChange?.({...value, tags: tags ?? []})}
             />
           </Box>
 
@@ -109,7 +117,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           </Box>
 
           {/* TODO: Authors */}
-          {/* TODO: Tags */}
         </PanelSection>
         <PanelSectionHeader title="Image" />
         <PanelSection dark>
@@ -153,7 +160,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         />
                       </Box>
                     </Layer>
-                    <Image src={image.url} height={300} />
+                    <Image src={image.transform[0]} width="100%" height={200} />
                   </LayerContainer>
                 )}
               </PlaceholderInput>
@@ -164,7 +171,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
         <PanelSection>
           <Toggle
             label="Share with peers"
-            description="Allow peers to publish this Article."
+            description="Allow peers to publish this article."
             checked={shared}
             onChange={e => onChange?.({...value, shared: e.target.checked})}
           />
@@ -173,6 +180,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
+            transformations={[{height: 200}]}
             onClose={() => setChooseModalOpen(false)}
             onSelect={value => {
               setChooseModalOpen(false)

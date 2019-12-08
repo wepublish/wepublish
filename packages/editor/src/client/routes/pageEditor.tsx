@@ -104,7 +104,13 @@ export function PageEditor({id}: PageEditorProps) {
         description,
         tags,
         image: image
-          ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
+          ? {
+              id: image.id,
+              width: image.width,
+              height: image.height,
+              url: image.url,
+              transform: image.transform
+            }
           : null
       })
 
