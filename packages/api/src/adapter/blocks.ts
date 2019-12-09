@@ -125,7 +125,7 @@ export interface EmbedBlock extends BaseBlock {
 export interface ListicleItem {
   readonly title: string
   readonly imageID?: string
-  readonly richText: RichTextNode
+  readonly richText: RichTextNode[]
 }
 
 export interface ListicleBlock extends BaseBlock {
