@@ -77,22 +77,24 @@ export class KarmaStorageAdapter implements StorageAdapter {
   }
 
   async initialize(): Promise<boolean> {
-    let session = await this.getKarmaSession()
+    try {
+      const session = await this.getKarmaSession()
+      const tagStructs = await session.do(all(tag(BuiltInTag.Tag)))
+      const tags: string[] = tagStructs.map(({tag}: any) => tag)
 
-    // TEMP
-    // session.resetDatabase()
-    // session = await this.getKarmaSession()
+      if (tags.includes(ModelTag.Meta)) {
+        return false
+      } else {
+        await session.do(createModelsAndTags(ModelTagMap))
+        await session.do(
+          create(tag(ModelTag.Meta), () => data(d => d.struct({version: d.int32(0)})))
+        )
 
-    const tagStructs = await session.do(all(tag(BuiltInTag.Tag)))
-    const tags: string[] = tagStructs.map(({tag}: any) => tag)
-
-    if (tags.includes(ModelTag.Meta)) {
+        return true
+      }
+    } catch (err) {
+      console.log(err)
       return false
-    } else {
-      await session.do(createModelsAndTags(ModelTagMap))
-      await session.do(create(tag(ModelTag.Meta), () => data(d => d.struct({version: d.int32(0)}))))
-
-      return true
     }
   }
 
@@ -100,10 +102,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
     // TODO: Persistent / Refresh session
     // if (this.session) return this.session
 
-    // TEMP
-    this.user
-    return await this.remote.adminLogin(this.password)
-    // return await this.remote.login(this.user, this.password)
+    return await this.remote.login(this.user, this.password)
   }
 
   async getArticle(id: string): Promise<Article | null> {

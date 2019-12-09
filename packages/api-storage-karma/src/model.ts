@@ -266,6 +266,7 @@ export const ArticleVersionModel = struct({
 export const PageBlocksModel = list(
   union({
     [BlockType.Title]: TitleBlockModel,
+    [BlockType.Image]: ImageBlockModel,
     [BlockType.RichText]: RichTextBlockModel,
     [BlockType.LinkPageBreak]: LinkPageBreakBlockModel,
     [BlockType.ArticleTeaserGrid]: ArticleTeaserGridBlockModel
