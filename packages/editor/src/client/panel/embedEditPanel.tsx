@@ -23,7 +23,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   useEffect(() => {
     setErrorMessage(undefined)
 
-    const faceBookMatch = input.match(/facebook.com\/([0-9]+)\/posts\/([0-9]+)/)
+    const faceBookMatch = input.match(/facebook.com\/(.+)\/posts\/([0-9]+)/)
     const instagramMatch = input.match(/instagram.com\/p\/([0-9a-zA-Z-_]+)/)
     const twitterMatch = input.match(/twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/)
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
