@@ -46,14 +46,14 @@ export enum TextFormat {
 
 export interface RichTextBlockNode {
   readonly type: BlockFormat
-  readonly children: RichTextValue
+  readonly children: RichTextNode[]
 }
 
 export interface RichTextLinkNode {
   readonly type: InlineFormat.Link
   readonly url: string
   readonly title?: string
-  readonly children: RichTextValue
+  readonly children: RichTextNode[]
 }
 
 export interface RichTextTextNode {
@@ -64,11 +64,11 @@ export interface RichTextTextNode {
   readonly text: string
 }
 
-export type RichTextValue = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
+export type RichTextNode = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
 
 export interface RichTextBlock extends BaseBlock {
   readonly type: BlockType.RichText
-  readonly richText: RichTextValue
+  readonly richText: RichTextNode[]
 }
 
 export interface ImageBlock extends BaseBlock {
@@ -125,7 +125,7 @@ export interface EmbedBlock extends BaseBlock {
 export interface ListicleItem {
   readonly title: string
   readonly imageID?: string
-  readonly richText: RichTextValue
+  readonly richText: RichTextNode
 }
 
 export interface ListicleBlock extends BaseBlock {
