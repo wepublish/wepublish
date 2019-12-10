@@ -13,7 +13,9 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
   const {quote, author} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => focusRef.current?.focus(), [])
+  useEffect(() => {
+    if (autofocus) focusRef.current?.focus()
+  }, [])
 
   return (
     <>
@@ -22,6 +24,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
         variant="h1"
         placeholder="Quote"
         value={quote}
+        disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}
       />
       <Box display="flex" flexDirection="row" alignItems="center">
@@ -30,6 +33,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
           variant="body1"
           placeholder="Author"
           value={author}
+          disabled={disabled}
           onChange={e => onChange({...value, author: e.target.value})}
         />
       </Box>

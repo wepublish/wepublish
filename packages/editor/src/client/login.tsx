@@ -84,6 +84,7 @@ export function Login() {
           <TextInput
             label="Email"
             value={email}
+            autoComplete="username"
             onChange={event => setEmail(event.target.value)}
             marginBottom={Spacing.Small}
           />
@@ -91,6 +92,7 @@ export function Login() {
             type="password"
             label="Password"
             value={password}
+            autoComplete="current-password"
             onChange={event => setPassword(event.target.value)}
             marginBottom={Spacing.Small}
           />

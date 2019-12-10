@@ -110,14 +110,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, loading: isArticleLoading} = useGetArticleQuery({
+  const {data: articleData, loading: isLoading} = useGetArticleQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
   })
 
-  const isDisabled =
-    isArticleLoading || isCreating || isUpdating || (articleData && !articleData.article)
+  const isNotFound = articleData && !articleData.article
+  const isDisabled = isLoading || isCreating || isUpdating || isNotFound
 
   useEffect(() => {
     if (articleData?.article) {
@@ -197,11 +197,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   useEffect(() => {
-    if (articleData && !articleData.article) {
+    if (isNotFound) {
       setErrorMessage('Article Not Found')
       setErrorToastOpen(true)
     }
-  }, [articleData])
+  }, [isNotFound])
 
   return (
     <>
@@ -251,7 +251,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        <BlockList value={blocks} onChange={setBlocks} disabled={isArticleLoading || isDisabled}>
+        <BlockList value={blocks} onChange={setBlocks} disabled={isLoading || isDisabled}>
           {useBlockMap<BlockValue>(
             () => ({
               [BlockType.Title]: {

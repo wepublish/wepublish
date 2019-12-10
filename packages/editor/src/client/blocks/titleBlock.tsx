@@ -9,11 +9,13 @@ export interface TitleBlockValue {
 
 export interface TitleBlockProps extends BlockProps<TitleBlockValue> {}
 
-export function TitleBlock({value, onChange}: TitleBlockProps) {
+export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
   const {title, lead} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => focusRef.current?.focus(), [])
+  useEffect(() => {
+    if (autofocus) focusRef.current?.focus()
+  }, [])
 
   return (
     <>
@@ -32,6 +34,7 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
           align="center"
           placeholder="Title"
           value={title}
+          disabled={disabled}
           onChange={e => onChange({...value, title: e.target.value})}
         />
         <TypographicTextArea
@@ -39,6 +42,7 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
           align="center"
           placeholder="Lead Text"
           value={lead}
+          disabled={disabled}
           onChange={e => onChange({...value, lead: e.target.value})}
         />
       </LayerContainer>

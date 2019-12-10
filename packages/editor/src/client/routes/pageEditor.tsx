@@ -9,7 +9,8 @@ import {
   BlockList,
   Drawer,
   Toast,
-  Dialog
+  Dialog,
+  useBlockMap
 } from '@karma.run/ui'
 
 import {
@@ -43,12 +44,12 @@ export type ArticleTeaserGridBlock1ListValue = BlockListValue<
   TeaserGridBlockValue
 >
 
-export type ArticleTeaserGridBlock3ListValue = BlockListValue<
+export type ArticleTeaserGridBlock6ListValue = BlockListValue<
   BlockType.ArticleTeaserGrid6,
   TeaserGridBlockValue
 >
 
-export type PageBlockValue = ArticleTeaserGridBlock1ListValue | ArticleTeaserGridBlock3ListValue
+export type PageBlockValue = ArticleTeaserGridBlock1ListValue | ArticleTeaserGridBlock6ListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -57,8 +58,11 @@ export interface PageEditorProps {
 export function PageEditor({id}: PageEditorProps) {
   const dispatch = useRouteDispatch()
 
-  const [createPage, {data: createData, error: createError}] = useCreatePageMutation()
-  const [updatePage, {error: updateError}] = useUpdatePageMutation()
+  const [
+    createPage,
+    {data: createData, loading: isCreating, error: createError}
+  ] = useCreatePageMutation()
+  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -82,13 +86,14 @@ export function PageEditor({id}: PageEditorProps) {
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, loading: isPageLoading} = useGetPageQuery({
+  const {data: pageData, loading: isLoading} = useGetPageQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
   })
 
-  const isDisabled = isPageLoading
+  const isNotFound = pageData && !pageData.page
+  const isDisabled = isLoading || isCreating || isUpdating || isNotFound
 
   useEffect(() => {
     if (pageData?.page) {
@@ -159,9 +164,12 @@ export function PageEditor({id}: PageEditorProps) {
     setSuccessMessage('Page Published')
   }
 
-  if (pageData && !pageData.page) {
-    return <div>Not Found</div> // TODO
-  }
+  useEffect(() => {
+    if (isNotFound) {
+      setErrorMessage('Page Not Found')
+      setErrorToastOpen(true)
+    }
+  }, [isNotFound])
 
   return (
     <>
@@ -211,9 +219,9 @@ export function PageEditor({id}: PageEditorProps) {
             }
           />
         }>
-        {isPageLoading ? null : ( // TODO: Loading indicator
-          <BlockList value={blocks} onChange={blocks => setBlocks(blocks)}>
-            {{
+        <BlockList value={blocks} onChange={blocks => setBlocks(blocks)} disabled={isDisabled}>
+          {useBlockMap<PageBlockValue>(
+            () => ({
               [BlockType.ArticleTeaserGrid1]: {
                 field: props => <TeaserGridBlock {...props} />,
                 defaultValue: {numColumns: 1, teasers: [null]},
@@ -227,9 +235,10 @@ export function PageEditor({id}: PageEditorProps) {
                 label: '6 Cols',
                 icon: IconColumn6
               }
-            }}
-          </BlockList>
-        )}
+            }),
+            []
+          )}
+        </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
         {() => (

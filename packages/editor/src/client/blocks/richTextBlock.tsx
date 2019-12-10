@@ -271,6 +271,7 @@ export interface RichTextBlockProps extends BlockProps<RichTextValue> {}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value: {value, selection},
+  autofocus,
   disabled,
   onChange
 }: RichTextBlockProps) {
@@ -284,8 +285,11 @@ export const RichTextBlock = memo(function RichTextBlock({
   }
 
   useEffect(() => {
-    // NOTE: Slate's `Editable` doesn't expose a ref so we have to get it manually.
-    focusRef.current?.querySelector?.<HTMLElement>('div[contenteditable="true"]')?.focus()
+    if (autofocus) {
+      // NOTE: Slate's `Editable` doesn't expose a ref so we have to get it manually.
+      // TODO: Doesn't seem to work
+      focusRef.current?.querySelector<HTMLDivElement>('div[contenteditable="true"]')?.focus()
+    }
   }, [])
 
   const handleChange = useCallback(
