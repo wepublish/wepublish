@@ -16,7 +16,9 @@ import {
 
 import {RouteActionType} from '@karma.run/react'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {useImageListQuery} from '../api/imageListQuery'
+import {useImageListQuery} from '../api/image'
+
+const ImagesPerPage = 24
 
 export function ImageList() {
   const {current} = useRoute()
@@ -33,10 +35,12 @@ export function ImageList() {
   const before = current?.query?.before
 
   const {data, refetch} = useImageListQuery({
-    after,
-    before,
-    pageLimit: 12,
-    transformations: [{width: 300, height: 200}]
+    variables: {
+      after,
+      before,
+      first: before ? undefined : ImagesPerPage,
+      last: before ? ImagesPerPage : undefined
+    }
   })
 
   const images = data?.images.nodes ?? []
@@ -69,11 +73,11 @@ export function ImageList() {
       </Box>
       <Box>
         <Grid spacing={Spacing.Small}>
-          {images.map(({id, transform: [url]}) => (
+          {images.map(({id, thumbURL}) => (
             <Column key={id} ratio={1 / 3}>
               <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
                 <Card height={200} overflow="hidden">
-                  <Image src={url} width="100%" height="100%" />
+                  <Image src={thumbURL} width="100%" height="100%" />
                 </Card>
               </Link>
             </Column>

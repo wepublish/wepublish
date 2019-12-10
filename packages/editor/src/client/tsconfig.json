@@ -6,7 +6,7 @@
     "outDir": "../../dist/client",
     "module": "esnext",
     "types": [],
-    "lib": ["dom", "dom.iterable", "es2017"]
+    "lib": ["DOM", "DOM.Iterable", "ES2017", "ESNext.Array"]
   },
   "references": [{"path": "../shared"}]
 }

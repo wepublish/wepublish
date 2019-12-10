@@ -69,11 +69,20 @@ export interface ArticleEditorProps {
   readonly id?: string
 }
 
+const InitialArticleBlocks: BlockValue[] = [
+  {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
+  {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
+]
+
 export function ArticleEditor({id}: ArticleEditorProps) {
   const dispatch = useRouteDispatch()
 
-  const [createArticle, {data: createData, error: createError}] = useCreateArticleMutation()
-  const [updateArticle, {error: updateError}] = useUpdateArticleMutation()
+  const [
+    createArticle,
+    {loading: isCreating, data: createData, error: createError}
+  ] = useCreateArticleMutation()
+
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -93,71 +102,22 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     tags: [],
     shared: false,
     breaking: false,
-    image: null
+    image: undefined
   })
 
   const isNew = id == undefined
-  const [blocks, setBlocks] = useState<BlockValue[]>(
-    isNew
-      ? [
-          {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
-          {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
-        ]
-      : []
-  )
+  const [blocks, setBlocks] = useState<BlockValue[]>(isNew ? InitialArticleBlocks : [])
 
   const articleID = id || createData?.createArticle.id
 
   const {data: articleData, loading: isArticleLoading} = useGetArticleQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
-    variables: {
-      id: articleID!,
-      metaImageTransformation: {height: 200},
-      blockImageTransformation: {height: 300}
-    }
+    variables: {id: articleID!}
   })
 
-  const isDisabled = isArticleLoading
-  const blockMap = useBlockMap<BlockValue>(
-    () => ({
-      [BlockType.Title]: {
-        field: props => <TitleBlock {...props} />,
-        defaultValue: {title: '', lead: ''},
-        label: 'Title',
-        icon: MaterialIconTitle
-      },
-
-      [BlockType.RichText]: {
-        field: props => <RichTextBlock {...props} />,
-        defaultValue: createDefaultValue,
-        label: 'Rich Text',
-        icon: MaterialIconTextFormat
-      },
-
-      [BlockType.Image]: {
-        field: props => <ImageBlock {...props} />,
-        defaultValue: {image: null, caption: ''},
-        label: 'Image',
-        icon: MaterialIconImage
-      },
-
-      [BlockType.Quote]: {
-        field: props => <QuoteBlock {...props} />,
-        defaultValue: {quote: '', author: ''},
-        label: 'Quote',
-        icon: MaterialIconFormatQuote
-      },
-
-      [BlockType.Embed]: {
-        field: props => <EmbedBlock {...props} />,
-        defaultValue: {type: EmbedType.Other},
-        label: 'Embed',
-        icon: MaterialIconCode
-      }
-    }),
-    []
-  )
+  const isDisabled =
+    isArticleLoading || isCreating || isUpdating || (articleData && !articleData.article)
 
   useEffect(() => {
     if (articleData?.article) {
@@ -173,15 +133,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         shared,
         breaking,
         authors,
-        image: image
-          ? {
-              id: image.id,
-              width: image.width,
-              height: image.height,
-              url: image.url,
-              transform: image.transform
-            }
-          : null
+        image: image ? image : undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -244,9 +196,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setSuccessMessage('Article Published')
   }
 
-  if (articleData && !articleData.article) {
-    return <div>Not Found</div> // TODO
-  }
+  useEffect(() => {
+    if (articleData && !articleData.article) {
+      setErrorMessage('Article Not Found')
+      setErrorToastOpen(true)
+    }
+  }, [articleData])
 
   return (
     <>
@@ -296,11 +251,47 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        {isArticleLoading ? null : ( // TODO: Loading indicator
-          <BlockList value={blocks} onChange={setBlocks}>
-            {blockMap}
-          </BlockList>
-        )}
+        <BlockList value={blocks} onChange={setBlocks} disabled={isArticleLoading || isDisabled}>
+          {useBlockMap<BlockValue>(
+            () => ({
+              [BlockType.Title]: {
+                field: props => <TitleBlock {...props} />,
+                defaultValue: {title: '', lead: ''},
+                label: 'Title',
+                icon: MaterialIconTitle
+              },
+
+              [BlockType.RichText]: {
+                field: props => <RichTextBlock {...props} />,
+                defaultValue: createDefaultValue,
+                label: 'Rich Text',
+                icon: MaterialIconTextFormat
+              },
+
+              [BlockType.Image]: {
+                field: props => <ImageBlock {...props} />,
+                defaultValue: {image: null, caption: ''},
+                label: 'Image',
+                icon: MaterialIconImage
+              },
+
+              [BlockType.Quote]: {
+                field: props => <QuoteBlock {...props} />,
+                defaultValue: {quote: '', author: ''},
+                label: 'Quote',
+                icon: MaterialIconFormatQuote
+              },
+
+              [BlockType.Embed]: {
+                field: props => <EmbedBlock {...props} />,
+                defaultValue: {type: EmbedType.Other},
+                label: 'Embed',
+                icon: MaterialIconCode
+              }
+            }),
+            []
+          )}
+        </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
         {() => (
@@ -445,15 +436,7 @@ function blockForQueryBlock(block: any): BlockValue | null {
         type: BlockType.Image,
         value: {
           caption: block.caption ?? '',
-          image: block.image
-            ? {
-                id: block.image.id,
-                width: block.image.width,
-                height: block.image.height,
-                url: block.image.url,
-                transform: block.image.transform
-              }
-            : null
+          image: block.image ? block.image : null
         }
       }
 

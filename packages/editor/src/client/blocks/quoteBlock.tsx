@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
 
 import {BlockProps, TypographicTextArea, Box, Spacing} from '@karma.run/ui'
 
@@ -9,12 +9,16 @@ export interface QuoteBlockValue {
 
 export interface QuoteBlockProps extends BlockProps<QuoteBlockValue> {}
 
-export function QuoteBlock({value, onChange}: QuoteBlockProps) {
+export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockProps) {
   const {quote, author} = value
+  const focusRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => focusRef.current?.focus(), [])
 
   return (
     <>
       <TypographicTextArea
+        ref={focusRef}
         variant="h1"
         placeholder="Quote"
         value={quote}

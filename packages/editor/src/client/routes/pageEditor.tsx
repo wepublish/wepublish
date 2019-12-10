@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import nanoid from 'nanoid'
 
 import {
   EditorTemplate,
@@ -20,9 +21,9 @@ import {
   IconColumn1
 } from '@karma.run/icons'
 
-import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
-
 import {RouteActionType} from '@karma.run/react'
+
+import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
 import {TeaserGridBlockValue, TeaserGridBlock} from '../blocks/teaserGridBlock'
 import {BlockType, VersionState} from '../api/types'
 
@@ -73,7 +74,7 @@ export function PageEditor({id}: PageEditorProps) {
     title: '',
     description: '',
     tags: [],
-    image: null
+    image: undefined
   })
 
   const [blocks, setBlocks] = useState<PageBlockValue[]>([])
@@ -84,11 +85,7 @@ export function PageEditor({id}: PageEditorProps) {
   const {data: pageData, loading: isPageLoading} = useGetPageQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
-    variables: {
-      id: pageID!,
-      metaImageTransformation: {height: 200},
-      blockImageTransformation: {height: 300}
-    }
+    variables: {id: pageID!}
   })
 
   const isDisabled = isPageLoading
@@ -103,15 +100,7 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description,
         tags,
-        image: image
-          ? {
-              id: image.id,
-              width: image.width,
-              height: image.height,
-              url: image.url,
-              transform: image.transform
-            }
-          : null
+        image: image ? image : null
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -298,7 +287,7 @@ function unionMapForBlock(block: PageBlockValue): PageBlockUnionMap {
 
 function blockForQueryBlock(block: any): PageBlockValue | null {
   const type: string = block.__typename
-  const key: string = block.key
+  const key: string = nanoid()
 
   switch (type) {
     case 'ArticleTeaserGridBlock':
@@ -314,12 +303,7 @@ function blockForQueryBlock(block: any): PageBlockValue | null {
                 article: teaser.article && {
                   id: teaser.article.id,
                   title: teaser.article.latest.title,
-                  image: teaser.article.latest.image && {
-                    id: teaser.article.latest.image.id,
-                    width: teaser.article.latest.image.width,
-                    height: teaser.article.latest.image.height,
-                    url: teaser.article.latest.image.transform[0]
-                  }
+                  image: teaser.article.latest.image
                 }
               }
           )

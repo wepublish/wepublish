@@ -75,6 +75,7 @@ export type EmbedBlockValue =
   | SoundCloudTrackEmbed
   | OtherEmbed
 
+// TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
   const isEmpty = value.type === EmbedType.Other && value.url == undefined

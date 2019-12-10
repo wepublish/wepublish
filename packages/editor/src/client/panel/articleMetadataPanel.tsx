@@ -28,10 +28,10 @@ import {
   MaterialIconDeleteOutlined
 } from '@karma.run/icons'
 
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
+import {ImageRefData} from '../api/image'
 
 export interface ArticleMetadata {
   readonly slug: string
@@ -40,7 +40,7 @@ export interface ArticleMetadata {
   readonly lead: string
   readonly authors: string[]
   readonly tags: string[]
-  readonly image: ImageReference | null
+  readonly image?: ImageRefData
   readonly shared: boolean
   readonly breaking: boolean
 }
@@ -58,7 +58,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData) {
     onChange?.({...value, image})
   }
 
@@ -156,11 +156,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         <IconButton
                           icon={MaterialIconDeleteOutlined}
                           title="Remove Image"
-                          onClick={() => onChange?.({...value, image: null})}
+                          onClick={() => onChange?.({...value, image: undefined})}
                         />
                       </Box>
                     </Layer>
-                    <Image src={image.transform[0]} width="100%" height={200} />
+                    <Image src={image.mediumURL} width="100%" height={200} />
                   </LayerContainer>
                 )}
               </PlaceholderInput>
@@ -180,7 +180,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
-            transformations={[{height: 200}]}
             onClose={() => setChooseModalOpen(false)}
             onSelect={value => {
               setChooseModalOpen(false)

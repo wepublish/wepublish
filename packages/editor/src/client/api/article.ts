@@ -2,7 +2,27 @@ import gql from 'graphql-tag'
 import {Node} from 'slate'
 
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
-import {ImageTransformation, BlockType, VersionState} from './types'
+
+import {BlockType, VersionState} from './types'
+import {ImageRefFragment} from './image'
+
+export const ArticleRefFragment = gql`
+  fragment ArticleRefFragment on Article {
+    id
+    createdAt
+    updatedAt
+
+    latest {
+      state
+      title
+      image {
+        ...ImageRefFragment
+      }
+    }
+  }
+
+  ${ImageRefFragment}
+`
 
 // Query
 // =====
@@ -11,23 +31,12 @@ const ListArticlesQuery = gql`
   query ListArticles {
     articles {
       nodes {
-        id
-        createdAt
-        updatedAt
-
-        latest {
-          state
-          title
-          image {
-            id
-            width
-            height
-            transform(input: [{width: 800}]) # TODO: Input as variable
-          }
-        }
+        ...ArticleRefFragment
       }
     }
   }
+
+  ${ArticleRefFragment}
 `
 
 export interface ListArticlesData {
@@ -121,11 +130,7 @@ export function useUpdateArticleMutation() {
 }
 
 const GetArticleQuery = gql`
-  query GetArticle(
-    $id: ID!
-    $metaImageTransformation: ImageTransformation!
-    $blockImageTransformation: ImageTransformation!
-  ) {
+  query GetArticle($id: ID!) {
     article(id: $id) {
       id
       latest {
@@ -135,11 +140,7 @@ const GetArticleQuery = gql`
         title
         lead
         image {
-          id
-          width
-          height
-          url
-          transform(input: [$metaImageTransformation])
+          ...ImageRefFragment
         }
         tags
         authors {
@@ -168,8 +169,7 @@ const GetArticleQuery = gql`
           ... on ImageBlock {
             caption
             image {
-              id
-              transform(input: [$blockImageTransformation])
+              ...ImageRefFragment
             }
           }
 
@@ -209,6 +209,8 @@ const GetArticleQuery = gql`
       }
     }
   }
+
+  ${ImageRefFragment}
 `
 
 export interface GetArticleData {
@@ -217,8 +219,6 @@ export interface GetArticleData {
 
 export interface GetArticleVariables {
   readonly id: string
-  readonly metaImageTransformation: ImageTransformation
-  readonly blockImageTransformation: ImageTransformation
 }
 
 export function useGetArticleQuery(opts: QueryHookOptions<GetArticleData, GetArticleVariables>) {

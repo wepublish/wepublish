@@ -16,14 +16,15 @@ import {
 import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageRefData} from '../api/image'
 
 export interface ImageBlockValue {
-  readonly image: ImageReference | null
+  readonly image: ImageRefData | null
   readonly caption: string
 }
 
+// TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -35,7 +36,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData | null) {
     onChange({...value, image})
   }
 
@@ -65,7 +66,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                     onClick={() => setChooseModalOpen(true)}
                   /> */}
               </Layer>
-              <Image src={image.transform[0]} width="100%" height={300} contain />
+              <Image src={image.largeURL} width="100%" height={300} contain />
             </LayerContainer>
           )}
         </PlaceholderInput>
@@ -84,7 +85,6 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
-            transformations={[{height: 300}]}
             onClose={() => setChooseModalOpen(false)}
             onSelect={value => {
               setChooseModalOpen(false)

@@ -42,6 +42,9 @@ async function mapBlockUnionMap(value: any) {
 export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
   name: 'Mutation',
   fields: {
+    // Session
+    // =======
+
     createSession: {
       type: GraphQLNonNull(GraphQLSession),
       args: {
@@ -54,6 +57,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         if (!user) throw new InvalidCredentialsError()
 
         const token = await generateTokenID()
+
+        await storageAdapter.cleanSessions()
         await storageAdapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
 
         return {
@@ -81,6 +86,9 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         return true
       }
     },
+
+    // Article
+    // =======
 
     createArticle: {
       type: GraphQLArticle,
@@ -130,6 +138,22 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       }
     },
 
+    // TODO
+    // archiveArticle: {
+    //   type: GraphQLArticle,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {} // TODO
+    // },
+
+    // unarchiveArticle: {
+    //   type: GraphQLArticle,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // Page
+    // ====
+
     createPage: {
       type: GraphQLPage,
       args: {
@@ -177,6 +201,22 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
         }
       }
     },
+
+    // TODO
+    // archivePage: {
+    //   type: GraphQLPage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // unarchivePage: {
+    //   type: GraphQLPage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // Image
+    // =====
 
     uploadImage: {
       type: GraphQLImage,
@@ -226,19 +266,23 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       resolve(root, {input}, {storageAdapter}) {
         return storageAdapter.updateImage({...input, updatedAt: new Date()})
       }
-    },
-
-    archiveImage: {
-      type: GraphQLImage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve() {} // TODO
-    },
-
-    unarchiveImage: {
-      type: GraphQLImage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve() {} // TODO
     }
+
+    // TODO
+    // archiveImage: {
+    //   type: GraphQLImage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)}},
+    //   resolve() {}
+    // },
+
+    // unarchiveImage: {
+    //   type: GraphQLImage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)}},
+    //   resolve() {}
+    // }
+
+    // TODO: Author
+    // TODO: Navigation
   }
 })
 

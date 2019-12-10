@@ -18,18 +18,17 @@ import {
   Divider
 } from '@karma.run/ui'
 
-import {useImageListQuery} from '../api/imageListQuery'
-import {ImageReference, ImageTransformation} from '../api/types'
+import {useImageListQuery, ImageRefData} from '../api/image'
 import {ImagedEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
-  readonly transformations?: ImageTransformation[]
-
   onClose(): void
-  onSelect(image: ImageReference): void
+  onSelect(image: ImageRefData): void
 }
 
-export function ImageSelectPanel({onClose, transformations = [], onSelect}: ImageSelectPanelProps) {
+const ImagesPerPage = 20
+
+export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -38,10 +37,12 @@ export function ImageSelectPanel({onClose, transformations = [], onSelect}: Imag
 
   const [file, setFile] = useState<File | null>(null)
   const {data, loading: isLoading} = useImageListQuery({
-    after,
-    before,
-    pageLimit: 20,
-    transformations: [{width: 220, height: 140}, ...transformations]
+    variables: {
+      after,
+      before,
+      first: before ? undefined : ImagesPerPage,
+      last: before ? ImagesPerPage : undefined
+    }
   })
 
   const images = data?.images.nodes ?? []
@@ -65,13 +66,7 @@ export function ImageSelectPanel({onClose, transformations = [], onSelect}: Imag
   }
 
   if (file) {
-    return (
-      <ImagedEditPanel
-        file={file}
-        transformations={transformations}
-        onSave={image => onSelect(image)}
-      />
-    )
+    return <ImagedEditPanel file={file} onSave={image => onSelect(image)} />
   }
 
   return (
@@ -98,24 +93,16 @@ export function ImageSelectPanel({onClose, transformations = [], onSelect}: Imag
             />
           </Box>
           <Grid>
-            {images.map(({id, width, height, url, transform}) => (
-              <Column key={id} ratio={1 / 2}>
+            {images.map(image => (
+              <Column key={image.id} ratio={1 / 2}>
                 <Box height={140}>
                   <Card
-                    onClick={() =>
-                      onSelect({
-                        id,
-                        width,
-                        height,
-                        url,
-                        transform: transform.slice(1)
-                      })
-                    }
+                    onClick={() => onSelect(image)}
                     width="100%"
                     overflow="hidden"
                     style={{cursor: 'pointer'}}>
                     {/* TODO: Add Clickable */}
-                    <Image width="100%" height="100%" src={transform[0]} />
+                    <Image width="100%" height="100%" src={image.thumbURL} />
                   </Card>
                 </Box>
               </Column>

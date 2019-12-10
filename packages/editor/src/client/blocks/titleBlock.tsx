@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
 
 import {BlockProps, TypographicTextArea, LayerContainer} from '@karma.run/ui'
 
@@ -11,6 +11,9 @@ export interface TitleBlockProps extends BlockProps<TitleBlockValue> {}
 
 export function TitleBlock({value, onChange}: TitleBlockProps) {
   const {title, lead} = value
+  const focusRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => focusRef.current?.focus(), [])
 
   return (
     <>
@@ -24,6 +27,7 @@ export function TitleBlock({value, onChange}: TitleBlockProps) {
           />
         </Layer> */}
         <TypographicTextArea
+          ref={focusRef}
           variant="title"
           align="center"
           placeholder="Title"

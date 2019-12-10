@@ -16,6 +16,7 @@ export interface StorageAdapter {
   createSession(user: User, token: string, expiryDate: Date): Promise<Session>
   getSession(token: string): Promise<Session | null>
   deleteSession(token: string): Promise<void>
+  cleanSessions(): Promise<void>
 
   // Navigation
   createNavigation(navigation: Navigation): Promise<Navigation>

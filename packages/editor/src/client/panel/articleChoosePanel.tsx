@@ -60,18 +60,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                   <div
                     {...props}
                     style={{cursor: 'pointer'}}
-                    onClick={() =>
-                      onSelect({
-                        id,
-                        title,
-                        image: image && {
-                          id: image.id,
-                          width: image.width,
-                          height: image.height,
-                          url: image.transform[0]
-                        }
-                      })
-                    }>
+                    onClick={() => onSelect({id, title, image})}>
                     <Typography variant="body2" color={title ? 'dark' : 'gray'}>
                       {title || 'Untitled'}
                     </Typography>

@@ -20,92 +20,23 @@ import {
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
-import {useMutation, useQuery} from '@apollo/react-hooks'
 
-import gql from 'graphql-tag'
-
-import {useImageUploadMutation} from '../api/image'
-import {ImageReference, ImageTransformation} from '../api/types'
-
-const ImageQuery = gql`
-  query($id: ID!) {
-    image(id: $id) {
-      id
-      createdAt
-      updatedAt
-
-      filename
-      extension
-      width
-      height
-      url
-      fileSize
-
-      title
-      description
-      tags
-
-      author
-      source
-      license
-
-      focalPoint {
-        x
-        y
-      }
-      transform(input: [{height: 300}])
-    }
-  }
-`
-
-const ImageMutation = gql`
-  mutation($input: UpdateImageInput!, $transformations: [ImageTransformation!]) {
-    updateImage(input: $input) {
-      id
-      createdAt
-      updatedAt
-
-      filename
-      extension
-      width
-      height
-      url
-      fileSize
-
-      title
-      description
-      tags
-
-      author
-      source
-      license
-
-      focalPoint {
-        x
-        y
-      }
-
-      transform(input: $transformations)
-    }
-  }
-`
+import {
+  useImageUploadMutation,
+  useImageUpdateMutation,
+  useImageQuery,
+  ImageRefData
+} from '../api/image'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
-  readonly transformations?: ImageTransformation[]
 
   onClose?(): void
-  onSave?(image: ImageReference): void
+  onSave?(image: ImageRefData): void
 }
 
-export function ImagedEditPanel({
-  id,
-  file,
-  transformations = [],
-  onClose,
-  onSave
-}: ImageEditPanelProps) {
+export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
   const [isSavedToastOpen, setSavedToastOpen] = useState(false)
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -128,18 +59,18 @@ export function ImagedEditPanel({
   const [imageWidth, setImageWidth] = useState(0)
   const [imageHeight, setImageHeight] = useState(0)
 
-  const [createdAt, setCreatedAt] = useState<Date>()
-  const [updatedAt, setUpdatedAt] = useState<Date>()
+  const [createdAt, setCreatedAt] = useState<string>()
+  const [updatedAt, setUpdatedAt] = useState<string>()
 
   const [focalPoint, setFocalPoint] = useState<Point>()
 
-  const {data, error: loadingError} = useQuery(ImageQuery, {
-    variables: {id},
+  const {data, error: loadingError} = useImageQuery({
+    variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id == undefined
   })
 
-  const [updateImage, {loading: isUpdating, error: savingError}] = useMutation(ImageMutation)
+  const [updateImage, {loading: isUpdating, error: savingError}] = useImageUpdateMutation()
   const [uploadImage, {loading: isUploading, error: uploadError}] = useImageUploadMutation()
 
   const [isLoading, setLoading] = useState(true)
@@ -190,7 +121,7 @@ export function ImagedEditPanel({
         setCreatedAt(image.createdAt)
         setUpdatedAt(image.updatedAt)
 
-        setFilename(image.filename)
+        setFilename(image.filename || '')
         setFileSize(image.fileSize)
         setExtension(image.extension)
 
@@ -203,7 +134,7 @@ export function ImagedEditPanel({
         setLicense(image.license ?? '')
 
         setOriginalImageURL(image.url)
-        setImageURL(image.transform[0])
+        setImageURL(image.mediumURL)
         setImageWidth(image.width)
         setImageHeight(image.height)
         setFocalPoint(image.focalPoint)
@@ -252,8 +183,7 @@ export function ImagedEditPanel({
     if (isUpload) {
       const {data} = await uploadImage({
         variables: {
-          input: {file: file!, ...commonInput},
-          transformations
+          input: {file: file!, ...commonInput}
         }
       })
 
@@ -262,19 +192,13 @@ export function ImagedEditPanel({
       }
     } else {
       const {data} = await updateImage({
-        variables: {input: {id, ...commonInput}, transformations}
+        variables: {input: {id: id!, ...commonInput}}
       })
 
       setSavedToastOpen(true)
 
       if (data?.updateImage) {
-        onSave?.({
-          id: data.updateImage.id,
-          width: data.updateImage.width,
-          height: data.updateImage.height,
-          url: data.updateImage.url,
-          transform: data.updateImage.transform
-        })
+        onSave?.(data.updateImage)
       }
     }
   }
@@ -387,6 +311,7 @@ export function ImagedEditPanel({
               />
               <TextInput
                 label="Source"
+                description="Link to original source of the image."
                 value={source}
                 onChange={e => setSource(e.target.value)}
                 disabled={isDisabled}

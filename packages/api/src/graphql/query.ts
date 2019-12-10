@@ -93,12 +93,18 @@ export const GraphQLNavigation = new GraphQLObjectType({
 export const GraphQLQuery = new GraphQLObjectType<any, Context>({
   name: 'Query',
   fields: {
+    // User
+    // ====
+
     me: {
       type: GraphQLUser,
       resolve(root, {}, {authenticate, storageAdapter}) {
         return authenticate()
       }
     },
+
+    // Navigation
+    // ==========
 
     navigation: {
       type: GraphQLNavigation,
@@ -107,6 +113,10 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         return storageAdapter.getNavigation(key)
       }
     },
+
+    // Article
+    // =======
+
     article: {
       type: GraphQLArticle,
       args: {
@@ -117,31 +127,6 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       },
       resolve(_root, {id}, {storageAdapter}) {
         return storageAdapter.getArticle(id)
-      }
-    },
-    page: {
-      type: GraphQLPage,
-      args: {
-        id: {
-          description: 'ID of the Page.',
-          type: GraphQLID
-        },
-        slug: {
-          description: 'Slug of the Page.',
-          type: GraphQLString
-        }
-      },
-      resolve(_root, {id, slug}, {storageAdapter}) {
-        return storageAdapter.getPage(id, slug)
-      }
-    },
-
-    pages: {
-      type: GraphQLNonNull(GraphQLPageConnection),
-      async resolve(_root, args, context: Context, info) {
-        return {
-          nodes: await context.storageAdapter.getPages()
-        }
       }
     },
 
@@ -217,6 +202,38 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       }
     },
 
+    // Page
+    // ====
+
+    page: {
+      type: GraphQLPage,
+      args: {
+        id: {
+          description: 'ID of the Page.',
+          type: GraphQLID
+        },
+        slug: {
+          description: 'Slug of the Page.',
+          type: GraphQLString
+        }
+      },
+      resolve(_root, {id, slug}, {storageAdapter}) {
+        return storageAdapter.getPage(id, slug)
+      }
+    },
+
+    pages: {
+      type: GraphQLNonNull(GraphQLPageConnection),
+      async resolve(_root, args, context: Context, info) {
+        return {
+          nodes: await context.storageAdapter.getPages()
+        }
+      }
+    },
+
+    // Image
+    // =====
+
     image: {
       type: GraphQLImage,
       args: {
@@ -267,6 +284,9 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
       }
     },
+
+    // Peer
+    // ====
 
     peer: {
       type: GraphQLNonNull(GraphQLPeer),

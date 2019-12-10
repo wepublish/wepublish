@@ -1,4 +1,4 @@
-import React, {useState, useRef, memo, useCallback} from 'react'
+import React, {useState, useRef, memo, useCallback, useEffect} from 'react'
 
 import {Editor, Node, createEditor, Range} from 'slate'
 
@@ -271,14 +271,22 @@ export interface RichTextBlockProps extends BlockProps<RichTextValue> {}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value: {value, selection},
+  disabled,
   onChange
 }: RichTextBlockProps) {
   const [hasFocus, setFocus] = useState(false)
+
+  const focusRef = useRef<HTMLElement>(null)
   const editorRef = useRef<Editor | null>(null)
 
   if (!editorRef.current) {
     editorRef.current = withSchema(withRichText(withHistory(withReact(createEditor()))))
   }
+
+  useEffect(() => {
+    // NOTE: Slate's `Editable` doesn't expose a ref so we have to get it manually.
+    focusRef.current?.querySelector?.<HTMLElement>('div[contenteditable="true"]')?.focus()
+  }, [])
 
   const handleChange = useCallback(
     (newValue: Node[], newSelection: Range | null) => {
@@ -293,8 +301,12 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
 
   return (
-    <Slate editor={editorRef.current!} value={value} selection={selection} onChange={handleChange}>
-      <>
+    <Box ref={focusRef} width="100%">
+      <Slate
+        editor={editorRef.current!}
+        value={value}
+        selection={selection}
+        onChange={handleChange}>
         <Toolbar fadeOut={!hasFocus}>
           <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
           <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
@@ -318,14 +330,15 @@ export const RichTextBlock = memo(function RichTextBlock({
           <RemoveLinkFormatButton />
         </Toolbar>
         <Editable
+          readOnly={disabled}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           placeholder="Start writing..."
           renderElement={renderElement}
           renderLeaf={renderLeaf}
         />
-      </>
-    </Slate>
+      </Slate>
+    </Box>
   )
 })
 
@@ -345,7 +358,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
         e.preventDefault()
         editor.exec({type: CommandType.ToggleFormat, format})
 
-        // TODO: ToggleFormat doesn't fire an onChange when pendingFormats gets updated
+        // NOTE: ToggleFormat doesn't fire an onChange when pendingFormats gets updated
         forceRender({})
       }}
     />

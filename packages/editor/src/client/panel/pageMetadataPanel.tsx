@@ -27,16 +27,16 @@ import {
   MaterialIconDeleteOutlined
 } from '@karma.run/icons'
 
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {ImageRefData} from '../api/image'
 
 export interface PageMetadata {
   readonly slug: string
   readonly title: string
   readonly description: string
   readonly tags: string[]
-  readonly image: ImageReference | null
+  readonly image?: ImageRefData
 }
 
 export interface PageMetadataPanelProps {
@@ -52,7 +52,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData) {
     onChange?.({...value, image})
   }
 
@@ -122,7 +122,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                       <IconButton
                         icon={MaterialIconDeleteOutlined}
                         title="Remove Image"
-                        onClick={() => onChange?.({...value, image: null})}
+                        onClick={() => onChange?.({...value, image: undefined})}
                         margin={Spacing.ExtraSmall}
                       />
                     </Layer>

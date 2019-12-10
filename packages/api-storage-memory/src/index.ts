@@ -114,6 +114,10 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return {user, token: verifyToken, expiryDate}
   }
 
+  async cleanSessions(): Promise<void> {
+    this._sessions = this._sessions.filter(session => new Date() < session.expiryDate)
+  }
+
   async createNavigation(navigation: Navigation): Promise<Navigation> {
     this._navigations.push(navigation)
     return navigation

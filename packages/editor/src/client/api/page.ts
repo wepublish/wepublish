@@ -1,7 +1,9 @@
 import gql from 'graphql-tag'
 
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
-import {ImageTransformation, VersionState} from './types'
+
+import {VersionState} from './types'
+import {ArticleRefFragment} from './article'
 
 // Query
 // =====
@@ -99,11 +101,7 @@ export function useUpdatePageMutation() {
 }
 
 const GetPageQuery = gql`
-  query GetPage(
-    $id: ID!
-    $metaImageTransformation: ImageTransformation!
-    $blockImageTransformation: ImageTransformation!
-  ) {
+  query GetPage($id: ID!) {
     page(id: $id) {
       id
       latest {
@@ -112,10 +110,7 @@ const GetPageQuery = gql`
         title
         description
         image {
-          id
-          width
-          height
-          transform(input: [$metaImageTransformation])
+          ...ImageRefFragment
         }
         tags
         blocks {
@@ -125,16 +120,7 @@ const GetPageQuery = gql`
             teasers {
               type
               article {
-                id
-                latest {
-                  title
-                  image {
-                    id
-                    width
-                    height
-                    transform(input: [$blockImageTransformation])
-                  }
-                }
+                ...ArticleRefFragment
               }
             }
             numColumns
@@ -143,6 +129,8 @@ const GetPageQuery = gql`
       }
     }
   }
+
+  ${ArticleRefFragment}
 `
 
 export interface GetPageData {
@@ -151,8 +139,6 @@ export interface GetPageData {
 
 export interface GetPageVariables {
   readonly id: string
-  readonly metaImageTransformation: ImageTransformation
-  readonly blockImageTransformation: ImageTransformation
 }
 
 export function useGetPageQuery(opts: QueryHookOptions<GetPageData, GetPageVariables>) {
