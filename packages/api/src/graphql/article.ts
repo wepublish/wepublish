@@ -51,6 +51,7 @@ import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
 import {ArticleVersion, Article} from '../adapter/article'
 import {Author} from '../adapter/author'
+import {GraphQLPageInfo} from './pageInfo'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
@@ -142,6 +143,15 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   })
 })
 
+export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
+  name: 'AuthorConnection',
+  fields: {
+    nodes: {type: GraphQLList(GraphQLAuthor)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
+  }
+})
+
 export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
   name: 'ArticleVersion',
 
@@ -151,7 +161,7 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
     state: {type: GraphQLNonNull(GraphQLVersionState)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLDateTime},
 
     slug: {type: GraphQLNonNull(GraphQLString)},
     preTitle: {type: GraphQLString},
@@ -180,19 +190,22 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
 })
 
 // NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
-export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
+export const GraphQLArticle: GraphQLObjectType<Article, Context> = new GraphQLObjectType<
+  Article,
+  Context
+>({
   name: 'Article',
 
   fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
 
     published: {
       type: GraphQLArticleVersion,
-      resolve(root: Article, _args, {storageAdapter}: Context) {
+      resolve(root, _args, {storageAdapter}) {
         if (root.publishedVersion == undefined) return undefined
         return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
       }
@@ -200,7 +213,7 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
 
     latest: {
       type: GraphQLArticleVersion,
-      async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
+      async resolve(root, _args, {storageAdapter, authenticate}) {
         await authenticate()
         return storageAdapter.getArticleVersion(root.id, root.latestVersion)
       }
@@ -208,13 +221,13 @@ export const GraphQLArticle: GraphQLObjectType = new GraphQLObjectType({
 
     versions: {
       type: GraphQLList(GraphQLArticleVersion),
-      async resolve(root: Article, _args, {storageAdapter, authenticate}: Context) {
+      async resolve(root, _args, {storageAdapter, authenticate}) {
         await authenticate()
         return storageAdapter.getArticleVersions(root.id)
       }
     },
 
-    peer: {type: GraphQLPeer}
+    peer: {type: GraphQLPeer} // TODO: Remove
   })
 })
 

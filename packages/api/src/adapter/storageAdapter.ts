@@ -47,6 +47,7 @@ export interface StorageAdapter {
   // Author
   createAuthor(author: Author): Promise<Author>
   getAuthor(id: string): Promise<Author | null>
+  getAuthors(pagination: Pagination): Promise<[Image[], PageInfo, number]>
 
   // Image
   createImage(image: Image): Promise<Image>

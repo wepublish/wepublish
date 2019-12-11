@@ -48,6 +48,7 @@ import {
   Spacing,
   Box
 } from '@karma.run/ui'
+import {RichTextBlockValue} from '../api/blocks'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -262,12 +263,7 @@ const withSchema = defineSchema([
   }
 ])
 
-export interface RichTextValue {
-  readonly value: Node[]
-  readonly selection: Range | null
-}
-
-export interface RichTextBlockProps extends BlockProps<RichTextValue> {}
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value: {value, selection},
@@ -607,6 +603,6 @@ function withRichText(editor: Editor): Editor {
   return editor
 }
 
-export function createDefaultValue(): RichTextValue {
+export function createDefaultValue(): RichTextBlockValue {
   return {value: [{type: BlockFormat.Paragraph, children: [{text: ''}]}], selection: null}
 }

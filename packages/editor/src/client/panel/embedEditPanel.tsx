@@ -3,7 +3,8 @@ import {MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
 import {NavigationButton, Panel, PanelHeader, PanelSection, TextArea, Spacing} from '@karma.run/ui'
 
-import {EmbedBlockValue, EmbedType, EmbedPreview} from '../blocks/embedBlock'
+import {EmbedPreview} from '../blocks/embedBlock'
+import {EmbedBlockValue, EmbedType} from '../api/blocks'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue

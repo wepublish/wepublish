@@ -3,8 +3,8 @@ import {Node} from 'slate'
 
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 
-import {BlockType, VersionState} from './types'
-import {ImageRefFragment} from './image'
+import {BlockType, VersionState} from './common'
+import {ImageRefFragment, ImageRefData} from './image'
 
 export const ArticleRefFragment = gql`
   fragment ArticleRefFragment on Article {
@@ -24,6 +24,19 @@ export const ArticleRefFragment = gql`
   ${ImageRefFragment}
 `
 
+export interface ArticleReference {
+  readonly id: string
+
+  readonly createdAt: string
+  readonly updatedAt?: string
+
+  readonly latest: {
+    readonly state: VersionState
+    readonly title?: string
+    readonly image?: ImageRefData
+  }
+}
+
 // Query
 // =====
 
@@ -40,7 +53,9 @@ const ListArticlesQuery = gql`
 `
 
 export interface ListArticlesData {
-  readonly articles: any
+  readonly articles: {
+    readonly nodes: ArticleReference[]
+  }
 }
 
 export interface ListArticlesVariables {}

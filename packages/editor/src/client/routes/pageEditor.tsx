@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import nanoid from 'nanoid'
 
 import {
   EditorTemplate,
   NavigationBar,
   NavigationButton,
-  BlockListValue,
   BlockList,
   Drawer,
   Toast,
@@ -25,29 +23,20 @@ import {
 import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
-import {TeaserGridBlockValue, TeaserGridBlock} from '../blocks/teaserGridBlock'
-import {BlockType, VersionState} from '../api/types'
+import {TeaserGridBlock} from '../blocks/teaserGridBlock'
+import {BlockType, VersionState} from '../api/common'
 
-import {
-  PageInput,
-  useCreatePageMutation,
-  useUpdatePageMutation,
-  useGetPageQuery,
-  PageBlockUnionMap
-} from '../api/page'
+import {PageInput, useCreatePageMutation, useUpdatePageMutation, useGetPageQuery} from '../api/page'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
-export type ArticleTeaserGridBlock1ListValue = BlockListValue<
-  BlockType.ArticleTeaserGrid1,
-  TeaserGridBlockValue
->
-
-export type ArticleTeaserGridBlock6ListValue = BlockListValue<
-  BlockType.ArticleTeaserGrid6,
-  TeaserGridBlockValue
->
+import {
+  blockForQueryBlock,
+  unionMapForBlock,
+  ArticleTeaserGridBlock1ListValue,
+  ArticleTeaserGridBlock6ListValue
+} from '../api/blocks'
 
 export type PageBlockValue = ArticleTeaserGridBlock1ListValue | ArticleTeaserGridBlock6ListValue
 
@@ -277,49 +266,4 @@ export function PageEditor({id}: PageEditorProps) {
       </Toast>
     </>
   )
-}
-
-function unionMapForBlock(block: PageBlockValue): PageBlockUnionMap {
-  switch (block.type) {
-    case BlockType.ArticleTeaserGrid1:
-    case BlockType.ArticleTeaserGrid6:
-      return {
-        articleTeaserGrid: {
-          teasers: block.value.teasers.map(value =>
-            value ? {type: value.type, articleID: value.article.id} : null
-          ),
-          numColumns: block.value.numColumns
-        }
-      }
-  }
-}
-
-function blockForQueryBlock(block: any): PageBlockValue | null {
-  const type: string = block.__typename
-  const key: string = nanoid()
-
-  switch (type) {
-    case 'ArticleTeaserGridBlock':
-      return {
-        key,
-        type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid6,
-        value: {
-          numColumns: block.numColumns,
-          teasers: block.teasers.map(
-            (teaser: any) =>
-              teaser && {
-                type: teaser.type,
-                article: teaser.article && {
-                  id: teaser.article.id,
-                  title: teaser.article.latest.title,
-                  image: teaser.article.latest.image
-                }
-              }
-          )
-        }
-      }
-
-    default:
-      return null // TODO: Throw error
-  }
 }

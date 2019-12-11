@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 
+import {MaterialIconEditOutlined, MaterialIconDeleteOutlined} from '@karma.run/icons'
+
 import {
   PlaceholderInput,
   Drawer,
@@ -15,19 +17,10 @@ import {
   Typography
 } from '@karma.run/ui'
 
+import {ArticleReference} from '../api/article'
+import {TeaserGridBlockValue} from '../api/blocks'
+
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
-import {ArticleReference} from '../api/types'
-import {MaterialIconEditOutlined, MaterialIconDeleteOutlined} from '@karma.run/icons'
-
-export interface ArticleTeaser {
-  readonly type: string
-  readonly article: ArticleReference
-}
-
-export interface TeaserGridBlockValue {
-  readonly teasers: Array<ArticleTeaser | null>
-  readonly numColumns: number
-}
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -92,14 +85,12 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                           variant="h2"
                           align={numColumns === 1 ? 'center' : 'left'}
                           color={numColumns === 1 ? 'white' : 'dark'}>
-                          {value.article.title || 'Untitled'}
+                          {value.article.latest.title || 'Untitled'}
                         </Typography>
                       </Box>
                     </Layer>
 
-                    {value.article.image && (
-                      <Image src={value.article.image.url} width="100%" height="100%" />
-                    )}
+                    <Image src={value.article.latest.image?.url} width="100%" height="100%" />
                   </LayerContainer>
                 )}
               </PlaceholderInput>

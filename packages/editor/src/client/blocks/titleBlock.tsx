@@ -1,11 +1,7 @@
 import React, {useRef, useEffect} from 'react'
-
 import {BlockProps, TypographicTextArea, LayerContainer} from '@karma.run/ui'
 
-export interface TitleBlockValue {
-  readonly title: string
-  readonly lead: string
-}
+import {TitleBlockValue} from '../api/blocks'
 
 export interface TitleBlockProps extends BlockProps<TitleBlockValue> {}
 

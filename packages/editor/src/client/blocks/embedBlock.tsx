@@ -15,65 +15,7 @@ import {
 
 import {MaterialIconEditOutlined} from '@karma.run/icons'
 import {EmbedEditPanel} from '../panel/embedEditPanel'
-
-export enum EmbedType {
-  FacebookPost = 'facebookPost',
-  InstagramPost = 'instagramPost',
-  TwitterTweet = 'twitterTweet',
-  VimeoVideo = 'vimeoVideo',
-  YouTubeVideo = 'youTubeVideo',
-  SoundCloudTrack = 'soundCloudTrack',
-  Other = 'other'
-}
-
-export interface FacebookPostEmbed {
-  readonly type: EmbedType.FacebookPost
-  readonly userID: string
-  readonly postID: string
-}
-
-export interface InstagramPostEmbed {
-  readonly type: EmbedType.InstagramPost
-  readonly postID: string
-}
-
-export interface TwitterTweetEmbed {
-  readonly type: EmbedType.TwitterTweet
-  readonly userID: string
-  readonly tweetID: string
-}
-
-export interface VimeoVideoEmbed {
-  readonly type: EmbedType.VimeoVideo
-  readonly videoID: string
-}
-
-export interface YouTubeVideoEmbed {
-  readonly type: EmbedType.YouTubeVideo
-  readonly videoID: string
-}
-
-export interface SoundCloudTrackEmbed {
-  readonly type: EmbedType.SoundCloudTrack
-  readonly trackID: string
-}
-
-export interface OtherEmbed {
-  readonly type: EmbedType.Other
-  readonly url?: string
-  readonly title?: string
-  readonly width?: number
-  readonly height?: number
-}
-
-export type EmbedBlockValue =
-  | FacebookPostEmbed
-  | InstagramPostEmbed
-  | TwitterTweetEmbed
-  | VimeoVideoEmbed
-  | YouTubeVideoEmbed
-  | SoundCloudTrackEmbed
-  | OtherEmbed
+import {EmbedBlockValue, EmbedType} from '../api/blocks'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {

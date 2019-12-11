@@ -11,7 +11,12 @@ import {
 } from 'graphql'
 
 import {GraphQLDateRangeInput} from './dateRange'
-import {GraphQLArticle, GraphQLArticleConnection} from './article'
+import {
+  GraphQLArticle,
+  GraphQLArticleConnection,
+  GraphQLAuthor,
+  GraphQLAuthorConnection
+} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
@@ -175,7 +180,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           defaultValue: true
         }
       },
-      async resolve(_root, args, context: Context, info) {
+      async resolve(_root, args, context) {
         const {publishedBetween, createdBetween, updatedBetween} = args
 
         if (
@@ -261,6 +266,63 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         const decodedBefore = before && Buffer.from(before, 'base64').toString()
 
         const result = await storageAdapter.getImages({
+          after: decodedAfter,
+          before: decodedBefore,
+          first,
+          last
+        })
+
+        const [nodes, {startCursor, endCursor, hasNextPage, hasPreviousPage}, totalCount] = result
+
+        const encodedStartCursor = startCursor && Buffer.from(startCursor).toString('base64')
+        const encodedEndCursor = endCursor && Buffer.from(endCursor).toString('base64')
+
+        return {
+          nodes,
+          totalCount,
+          pageInfo: {
+            startCursor: encodedStartCursor,
+            endCursor: encodedEndCursor,
+            hasNextPage,
+            hasPreviousPage
+          }
+        }
+      }
+    },
+
+    // Author
+    // ======
+
+    author: {
+      type: GraphQLAuthor,
+      args: {
+        id: {
+          description: 'ID of the author.',
+          type: GraphQLNonNull(GraphQLString)
+        }
+      },
+      resolve(_root, {id}, context) {
+        return context.storageAdapter.getAuthor(id)
+      }
+    },
+
+    authors: {
+      type: GraphQLNonNull(GraphQLAuthorConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
+      },
+      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        const decodedAfter = after && Buffer.from(after, 'base64').toString()
+        const decodedBefore = before && Buffer.from(before, 'base64').toString()
+
+        const result = await storageAdapter.getAuthors({
           after: decodedAfter,
           before: decodedBefore,
           first,

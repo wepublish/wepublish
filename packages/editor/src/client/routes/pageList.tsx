@@ -4,7 +4,7 @@ import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
 import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
 import {useListPagesQuery} from '../api/page'
-import {VersionState} from '../api/types'
+import {VersionState} from '../api/common'
 
 export function PageList() {
   const {data} = useListPagesQuery({fetchPolicy: 'no-cache'})

@@ -1,11 +1,7 @@
 import React, {useRef, useEffect} from 'react'
 
 import {BlockProps, TypographicTextArea, Box, Spacing} from '@karma.run/ui'
-
-export interface QuoteBlockValue {
-  readonly quote: string
-  readonly author: string
-}
+import {QuoteBlockValue} from '../api/blocks'
 
 export interface QuoteBlockProps extends BlockProps<QuoteBlockValue> {}
 

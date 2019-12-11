@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 
-import {VersionState} from './types'
+import {VersionState} from './common'
 import {ArticleRefFragment} from './article'
 
 // Query

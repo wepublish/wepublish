@@ -15,8 +15,8 @@ import {
   IconScale
 } from '@karma.run/ui'
 
-import {ArticleReference, VersionState} from '../api/types'
-import {useListArticlesQuery} from '../api/article'
+import {VersionState} from '../api/common'
+import {useListArticlesQuery, ArticleReference} from '../api/article'
 
 export interface ArticleChoosePanelProps {
   onClose(): void
@@ -52,17 +52,14 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
           }
         />
         <PanelSection>
-          {articles.map(({id, createdAt, updatedAt, latest: {title, state, image}}: any) => (
-            <Box key={id} marginBottom={Spacing.Small}>
+          {articles.map(article => (
+            <Box key={article.id} marginBottom={Spacing.Small}>
               <Box marginBottom={Spacing.Tiny}>
                 {props => (
                   // TODO: Clickable
-                  <div
-                    {...props}
-                    style={{cursor: 'pointer'}}
-                    onClick={() => onSelect({id, title, image})}>
-                    <Typography variant="body2" color={title ? 'dark' : 'gray'}>
-                      {title || 'Untitled'}
+                  <div {...props} style={{cursor: 'pointer'}} onClick={() => onSelect(article)}>
+                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
+                      {article.latest.title || 'Untitled'}
                     </Typography>
                   </div>
                 )}
@@ -81,7 +78,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
                     </Box>
-                    {new Date(createdAt).toLocaleString()}
+                    {new Date(article.createdAt).toLocaleString()}
                   </Box>
                 </Typography>
                 <Typography element="div" variant="subtitle1" color="grayDark">
@@ -93,10 +90,10 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                     </Box>
-                    {new Date(updatedAt).toLocaleString()}
+                    {article.updatedAt && new Date(article.updatedAt).toLocaleString()}
                   </Box>
                 </Typography>
-                {state === VersionState.Draft && (
+                {article.latest.state === VersionState.Draft && (
                   <Typography element="div" variant="subtitle1" color="gray">
                     <Box
                       marginRight={Spacing.Small}
