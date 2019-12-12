@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react'
-import {createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {LocalStorageKey} from './utility'
+import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
+import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import {useQuery, useMutation} from '@apollo/react-hooks'
+
+import {LocalStorageKey} from './utility'
 
 export interface AuthContextState {
   readonly session?: {

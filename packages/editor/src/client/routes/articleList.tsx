@@ -1,21 +1,22 @@
 import React from 'react'
 
+import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
 import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
+
 import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
 import {useListArticlesQuery} from '../api/article'
-import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
 import {VersionState} from '../api/common'
 
 export function ArticleList() {
   const {data} = useListArticlesQuery({fetchPolicy: 'no-cache'})
   const articles = data?.articles.nodes
-    .sort((a: any, b: any) => {
+    .sort((a, b) => {
       const dateA = new Date(a.updatedAt)
       const dateB = new Date(b.updatedAt)
 
       return dateA > dateB ? -1 : 1
     })
-    .map(({id, createdAt, updatedAt, latest: {title, state}}: any) => (
+    .map(({id, createdAt, updatedAt, latest: {title, state}}) => (
       <Box key={id} marginBottom={Spacing.Small}>
         <Box marginBottom={Spacing.ExtraSmall}>
           <Link route={ArticleEditRoute.create({id})}>
@@ -46,7 +47,7 @@ export function ArticleList() {
               <Box marginRight={Spacing.Tiny}>
                 <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
               </Box>
-              {new Date(updatedAt).toLocaleString()}
+              {updatedAt && new Date(updatedAt).toLocaleString()}
             </Box>
           </Typography>
           {state === VersionState.Draft && (

@@ -1,9 +1,7 @@
 import gql from 'graphql-tag'
-import {Node} from 'slate'
-
 import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 
-import {BlockType, VersionState} from './common'
+import {VersionState} from './common'
 import {ImageRefFragment, ImageRefData} from './image'
 
 export const ArticleRefFragment = gql`
@@ -25,15 +23,15 @@ export const ArticleRefFragment = gql`
 `
 
 export interface ArticleReference {
-  readonly id: string
+  id: string
 
-  readonly createdAt: string
-  readonly updatedAt?: string
+  createdAt: string
+  updatedAt: string
 
-  readonly latest: {
-    readonly state: VersionState
-    readonly title?: string
-    readonly image?: ImageRefData
+  latest: {
+    state: VersionState
+    title?: string
+    image?: ImageRefData
   }
 }
 
@@ -53,8 +51,8 @@ const ListArticlesQuery = gql`
 `
 
 export interface ListArticlesData {
-  readonly articles: {
-    readonly nodes: ArticleReference[]
+  articles: {
+    nodes: ArticleReference[]
   }
 }
 
@@ -69,37 +67,21 @@ export function useListArticlesQuery(
 // Mutation
 // ========
 
-export interface ArticleBlockUnionMap {
-  readonly [BlockType.Image]?: {caption?: string; imageID?: string}
-  readonly [BlockType.Title]?: {title?: string; lead?: string}
-  readonly [BlockType.RichText]?: {richText: Node[]}
-  readonly [BlockType.Quote]?: {quote?: string; author?: string}
-
-  readonly [BlockType.FacebookPost]?: {userID: string; postID: string}
-  readonly [BlockType.InstagramPost]?: {postID: string}
-  readonly [BlockType.TwitterTweet]?: {userID: string; tweetID: string}
-  readonly [BlockType.VimeoVideo]?: {videoID: string}
-  readonly [BlockType.YouTubeVideo]?: {videoID: string}
-  readonly [BlockType.SoundCloudTrack]?: {trackID: string}
-
-  readonly [BlockType.Embed]?: {url?: string; title?: string; width?: number; height?: number}
-}
-
 export interface ArticleInput {
-  readonly slug: string
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead: string
-  readonly tags: string[]
-  readonly imageID?: string
-  readonly authorIDs: string[]
-  readonly shared: boolean
-  readonly breaking: boolean
-  readonly blocks: any[]
+  slug: string
+  preTitle?: string
+  title: string
+  lead: string
+  tags: string[]
+  imageID?: string
+  authorIDs: string[]
+  shared: boolean
+  breaking: boolean
+  blocks: any[]
 }
 
 export interface ArticleMutationData {
-  readonly id: string
+  id: string
 }
 
 const CreateArticleMutation = gql`
@@ -111,11 +93,11 @@ const CreateArticleMutation = gql`
 `
 
 export interface CreateArticleMutationData {
-  readonly createArticle: ArticleMutationData
+  createArticle: ArticleMutationData
 }
 
 export interface CreateArticleVariables {
-  readonly input: ArticleInput
+  input: ArticleInput
 }
 
 export function useCreateArticleMutation() {
@@ -131,13 +113,13 @@ const UpdateArticleMutation = gql`
 `
 
 export interface UpdateArticleMutationData {
-  readonly updateArticle: ArticleMutationData
+  updateArticle: ArticleMutationData
 }
 
 export interface UpdateArticleVariables {
-  readonly id: string
-  readonly state: VersionState
-  readonly input: ArticleInput
+  id: string
+  state: VersionState
+  input: ArticleInput
 }
 
 export function useUpdateArticleMutation() {
@@ -229,11 +211,11 @@ const GetArticleQuery = gql`
 `
 
 export interface GetArticleData {
-  readonly article?: any // TODO: Type query
+  article?: any // TODO: Type query
 }
 
 export interface GetArticleVariables {
-  readonly id: string
+  id: string
 }
 
 export function useGetArticleQuery(opts: QueryHookOptions<GetArticleData, GetArticleVariables>) {

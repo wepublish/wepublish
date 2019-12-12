@@ -210,14 +210,90 @@ export class MemoryStorageAdapter implements StorageAdapter {
     }
   }
 
+  // Author
+  // ======
+
   async createAuthor(author: Author): Promise<Author> {
     this._authors.push(author)
     return author
   }
 
+  async updateAuthor({id: updateID, name, imageID}: Author): Promise<Author | null> {
+    const author = this._authors.find(({id}) => id === updateID) ?? null
+
+    if (author) {
+      author.name = name
+      author.imageID = imageID
+    }
+
+    return author
+  }
+
+  async deleteAuthor(deleteID: string): Promise<Author | null> {
+    const index = this._authors.findIndex(({id}) => id === deleteID)
+
+    if (index !== -1) {
+      const [author] = this._authors.splice(index, 1)
+      return author
+    }
+
+    return null
+  }
+
   async getAuthor(id: string): Promise<Author | null> {
     return this._authors.find(author => author.id === id) ?? null
   }
+
+  async getAuthors({
+    after,
+    before,
+    first,
+    last
+  }: Pagination): Promise<[Author[], PageInfo, number]> {
+    const sorted = this._authors.slice().sort((a, b) => b.name.localeCompare(a.name))
+
+    let afterIndex: number | undefined = after
+      ? sorted.findIndex(({id}) => id === after)
+      : undefined
+
+    let beforeIndex: number | undefined = before
+      ? sorted.findIndex(({id}) => id === before)
+      : undefined
+
+    if (afterIndex === -1) afterIndex = undefined
+    if (beforeIndex === -1) beforeIndex = undefined
+
+    const paginated = sorted.slice(
+      afterIndex != undefined ? Math.min(afterIndex + 1, sorted.length) : undefined,
+      beforeIndex != undefined ? Math.max(beforeIndex, 0) : undefined
+    )
+
+    if (paginated.length) {
+      const limited = paginated.slice(last ? -last : 0, first)
+      const startCursor = limited[0].id
+      const endCursor = limited[limited.length - 1].id
+
+      return [
+        limited,
+        {
+          startCursor,
+          endCursor,
+          hasNextPage: endCursor !== sorted[sorted.length - 1].id,
+          hasPreviousPage: startCursor !== sorted[0].id
+        },
+        this._authors.length
+      ]
+    } else {
+      return [
+        paginated,
+        {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
+        this._authors.length
+      ]
+    }
+  }
+
+  // Article
+  // =======
 
   async createArticle(id: string, input: ArticleInput): Promise<Article> {
     const articleVersion: MemoryArticleVersion = {

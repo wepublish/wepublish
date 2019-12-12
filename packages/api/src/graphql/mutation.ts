@@ -19,6 +19,7 @@ import {InvalidCredentialsError} from '../error'
 
 import {VersionState} from '../adapter/versionState'
 import {BlockMap, ArticleBlock} from '../adapter/blocks'
+import {GraphQLAuthor, GraphQLCreateAuthorInput, GraphQLUpdateAuthorInput} from './author'
 
 async function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -266,7 +267,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
       resolve(root, {input}, {storageAdapter}) {
         return storageAdapter.updateImage({...input, updatedAt: new Date()})
       }
-    }
+    },
 
     // TODO
     // archiveImage: {
@@ -281,9 +282,33 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     //   resolve() {}
     // }
 
-    // TODO: Author
+    // Author
+    // ======
+
+    createAuthor: {
+      type: GraphQLAuthor,
+      args: {input: {type: GraphQLNonNull(GraphQLCreateAuthorInput)}},
+      async resolve(root, {input}, {storageAdapter}) {
+        return storageAdapter.createAuthor({...input, id: await generateID()})
+      }
+    },
+
+    updateAuthor: {
+      type: GraphQLAuthor,
+      args: {input: {type: GraphQLNonNull(GraphQLUpdateAuthorInput)}},
+      resolve(root, {input}, {storageAdapter}) {
+        return storageAdapter.updateAuthor(input)
+      }
+    },
+
+    deleteAuthor: {
+      type: GraphQLAuthor,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {storageAdapter}) {
+        return storageAdapter.deleteAuthor(id)
+      }
+    }
+
     // TODO: Navigation
   }
 })
-
-export default GraphQLMutation

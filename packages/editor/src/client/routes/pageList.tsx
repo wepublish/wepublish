@@ -1,8 +1,9 @@
 import React from 'react'
 
-import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
-import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
+import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
+
+import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 import {useListPagesQuery} from '../api/page'
 import {VersionState} from '../api/common'
 
@@ -18,13 +19,13 @@ export function PageList() {
       </Box>
       <Box>
         {data?.pages.nodes
-          .sort((a: any, b: any) => {
+          .sort((a, b) => {
             const dateA = new Date(a.updatedAt)
             const dateB = new Date(b.updatedAt)
 
             return dateA > dateB ? -1 : 1
           })
-          .map(({id, createdAt, updatedAt, latest: {title, state}}: any) => (
+          .map(({id, createdAt, updatedAt, latest: {title, state}}) => (
             <Box key={id} marginBottom={Spacing.Small}>
               <Box marginBottom={Spacing.ExtraSmall}>
                 <Link route={PageEditRoute.create({id})}>

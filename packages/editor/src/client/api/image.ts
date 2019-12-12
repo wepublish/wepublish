@@ -142,7 +142,7 @@ export function useImageUploadMutation(
 }
 
 const ImageListQuery = gql`
-  query($after: ID, $before: ID, $first: Int, $last: Int) {
+  query($after: String, $before: String, $first: Int, $last: Int) {
     images(after: $after, before: $before, first: $first, last: $last) {
       nodes {
         ...ImageRefFragment

@@ -1,5 +1,5 @@
 export interface Author {
-  readonly id: string
-  readonly name: string
-  readonly imageID?: string
+  id: string
+  name: string
+  imageID?: string
 }

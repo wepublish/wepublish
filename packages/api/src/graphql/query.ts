@@ -11,12 +11,7 @@ import {
 } from 'graphql'
 
 import {GraphQLDateRangeInput} from './dateRange'
-import {
-  GraphQLArticle,
-  GraphQLArticleConnection,
-  GraphQLAuthor,
-  GraphQLAuthorConnection
-} from './article'
+import {GraphQLArticle, GraphQLArticleConnection} from './article'
 import {GraphQLPeer, GraphQLPeerConnection} from './peer'
 
 import {Context} from '../context'
@@ -27,6 +22,7 @@ import {PeerArguments, PeersArguments} from '../adapter/peer'
 import {GraphQLImageConnection, GraphQLImage} from './image'
 import {GraphQLUser} from './session'
 import {UserInputError} from 'apollo-server'
+import {GraphQLAuthorConnection, GraphQLAuthor} from './author'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -252,8 +248,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt}
       },
@@ -309,8 +305,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     authors: {
       type: GraphQLNonNull(GraphQLAuthorConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt}
       },
@@ -371,5 +367,3 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     }
   }
 })
-
-export default GraphQLQuery

@@ -50,8 +50,7 @@ import {GraphQLImage} from './image'
 import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
 import {ArticleVersion, Article} from '../adapter/article'
-import {Author} from '../adapter/author'
-import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLAuthor} from './author'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
@@ -128,30 +127,6 @@ export const GraphQLArticlePageInfo = new GraphQLObjectType({
   }
 })
 
-export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
-  name: 'Author',
-
-  fields: () => ({
-    id: {type: GraphQLNonNull(GraphQLID)},
-    name: {type: GraphQLNonNull(GraphQLString)},
-    image: {
-      type: GraphQLImage,
-      resolve({imageID}, args, {storageAdapter}) {
-        return imageID ? storageAdapter.getImage(imageID) : null
-      }
-    }
-  })
-})
-
-export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
-  name: 'AuthorConnection',
-  fields: {
-    nodes: {type: GraphQLList(GraphQLAuthor)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
-  }
-})
-
 export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
   name: 'ArticleVersion',
 
@@ -161,7 +136,7 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
     state: {type: GraphQLNonNull(GraphQLVersionState)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLDateTime},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     slug: {type: GraphQLNonNull(GraphQLString)},
     preTitle: {type: GraphQLString},
@@ -200,7 +175,7 @@ export const GraphQLArticle: GraphQLObjectType<Article, Context> = new GraphQLOb
     id: {type: GraphQLNonNull(GraphQLID)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLDateTime},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLDateTime},
 
     published: {

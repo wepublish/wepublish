@@ -4,6 +4,20 @@ import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 
 import {VersionState} from './common'
 import {ArticleRefFragment} from './article'
+import {ImageRefData} from './image'
+
+export interface PageReference {
+  id: string
+
+  createdAt: string
+  updatedAt: string
+
+  latest: {
+    state: VersionState
+    title?: string
+    image?: ImageRefData
+  }
+}
 
 // Query
 // =====
@@ -26,7 +40,9 @@ const ListPagesQuery = gql`
 `
 
 export interface ListPagesData {
-  readonly pages: any
+  pages: {
+    nodes: PageReference[]
+  }
 }
 
 export interface ListPagesVariables {}
@@ -39,23 +55,23 @@ export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPag
 // ========
 
 export interface PageBlockUnionMap {
-  readonly articleTeaserGrid?: {
+  articleTeaserGrid?: {
     teasers: Array<{type: string; articleID: string} | null>
     numColumns: number
   }
 }
 
 export interface PageInput {
-  readonly slug: string
-  readonly title: string
-  readonly description: string
-  readonly tags: string[]
-  readonly imageID?: string
-  readonly blocks: any[]
+  slug: string
+  title: string
+  description: string
+  tags: string[]
+  imageID?: string
+  blocks: any[]
 }
 
 export interface PageMutationData {
-  readonly id: string
+  id: string
 }
 
 const CreatePageMutation = gql`
@@ -67,11 +83,11 @@ const CreatePageMutation = gql`
 `
 
 export interface CreatePageMutationData {
-  readonly createPage: PageMutationData
+  createPage: PageMutationData
 }
 
 export interface CreatePageVariables {
-  readonly input: PageInput
+  input: PageInput
 }
 
 export function useCreatePageMutation() {
@@ -87,13 +103,13 @@ const UpdatePageMutation = gql`
 `
 
 export interface UpdatePageMutationData {
-  readonly updatePage: PageMutationData
+  updatePage: PageMutationData
 }
 
 export interface UpdatePageVariables {
-  readonly id: string
-  readonly state: VersionState
-  readonly input: PageInput
+  id: string
+  state: VersionState
+  input: PageInput
 }
 
 export function useUpdatePageMutation() {
@@ -134,11 +150,11 @@ const GetPageQuery = gql`
 `
 
 export interface GetPageData {
-  readonly page?: any // TODO: Type query
+  page?: any // TODO: Type query
 }
 
 export interface GetPageVariables {
-  readonly id: string
+  id: string
 }
 
 export function useGetPageQuery(opts: QueryHookOptions<GetPageData, GetPageVariables>) {
