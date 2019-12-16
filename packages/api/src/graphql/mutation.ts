@@ -264,7 +264,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     updateImage: {
       type: GraphQLImage,
       args: {input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}},
-      resolve(root, {input}, {storageAdapter}) {
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
         return storageAdapter.updateImage({...input, updatedAt: new Date()})
       }
     },
@@ -288,7 +289,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     createAuthor: {
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLCreateAuthorInput)}},
-      async resolve(root, {input}, {storageAdapter}) {
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
         return storageAdapter.createAuthor({...input, id: await generateID()})
       }
     },
@@ -296,7 +298,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     updateAuthor: {
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLUpdateAuthorInput)}},
-      resolve(root, {input}, {storageAdapter}) {
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
         return storageAdapter.updateAuthor(input)
       }
     },
@@ -304,7 +307,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
     deleteAuthor: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {storageAdapter}) {
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
         return storageAdapter.deleteAuthor(id)
       }
     }

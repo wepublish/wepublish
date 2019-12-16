@@ -37,6 +37,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
   const [file, setFile] = useState<File | null>(null)
   const {data, loading: isLoading} = useImageListQuery({
+    fetchPolicy: 'network-only',
     variables: {
       after,
       before,

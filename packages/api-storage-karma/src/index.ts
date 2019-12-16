@@ -858,6 +858,39 @@ export class KarmaStorageAdapter implements StorageAdapter {
     return author
   }
 
+  async updateAuthor(author: Author): Promise<Author | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      update(
+        refTo(
+          all(tag(ModelTag.Author)).filterList((index, value) =>
+            value.field('id').equal(string(author.id))
+          )
+        ),
+        data(AuthorModel.decode(author).toDataConstructor())
+      )
+    )
+
+    return author
+  }
+
+  async deleteAuthor(id: string): Promise<Author | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      delete_(
+        refTo(
+          all(tag(ModelTag.Author)).filterList((index, value) =>
+            value.field('id').equal(string(id))
+          )
+        )
+      )
+    )
+
+    return null
+  }
+
   async getAuthor(id: string): Promise<Author | null> {
     const session = await this.getKarmaSession()
 
@@ -869,6 +902,57 @@ export class KarmaStorageAdapter implements StorageAdapter {
       )
     } catch {
       return null
+    }
+  }
+
+  async getAuthors(
+    filter: string,
+    {after, before, first, last}: Pagination
+  ): Promise<[Author[], PageInfo, number]> {
+    const session = await this.getKarmaSession()
+    const authors: Author[] = await session.do(all(tag(ModelTag.Author)))
+
+    const sorted = authors
+      .filter(({name}) => (filter ? name.toLowerCase().includes(filter.toLowerCase()) : true))
+      .sort((a, b) => b.name.localeCompare(a.name))
+
+    let afterIndex: number | undefined = after
+      ? sorted.findIndex(({id}) => id === after)
+      : undefined
+
+    let beforeIndex: number | undefined = before
+      ? sorted.findIndex(({id}) => id === before)
+      : undefined
+
+    if (afterIndex === -1) afterIndex = undefined
+    if (beforeIndex === -1) beforeIndex = undefined
+
+    const paginated = sorted.slice(
+      afterIndex != undefined ? Math.min(afterIndex + 1, sorted.length) : undefined,
+      beforeIndex != undefined ? Math.max(beforeIndex, 0) : undefined
+    )
+
+    if (paginated.length) {
+      const limited = paginated.slice(last ? -last : 0, first)
+      const startCursor = limited[0].id
+      const endCursor = limited[limited.length - 1].id
+
+      return [
+        limited,
+        {
+          startCursor,
+          endCursor,
+          hasNextPage: endCursor !== sorted[sorted.length - 1].id,
+          hasPreviousPage: startCursor !== sorted[0].id
+        },
+        authors.length
+      ]
+    } else {
+      return [
+        paginated,
+        {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
+        authors.length
+      ]
     }
   }
 
@@ -940,6 +1024,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
     return {user, token, expiryDate}
   }
+
+  async cleanSessions() {}
 
   async getSession(inputToken: string): Promise<Session | null> {
     const session = await this.getKarmaSession()

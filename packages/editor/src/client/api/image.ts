@@ -2,21 +2,26 @@ import gql from 'graphql-tag'
 import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
 
 export interface FocalPoint {
-  readonly x: number
-  readonly y: number
+  x: number
+  y: number
 }
 
 export interface ImageRefData {
-  readonly id: string
+  id: string
 
-  readonly title?: string
-  readonly width: number
-  readonly height: number
+  title?: string
+  width: number
+  height: number
 
-  readonly url: string
-  readonly largeURL: string
-  readonly mediumURL: string
-  readonly thumbURL: string
+  url: string
+  largeURL: string
+  mediumURL: string
+  thumbURL: string
+
+  column1URL: string
+  column6URL: string
+  previewURL: string
+  squareURL: string
 }
 
 export interface ImageData extends ImageRefData {
@@ -71,7 +76,11 @@ export const ImageURLFragment = gql`
     url
     largeURL: transformURL(input: {width: 500})
     mediumURL: transformURL(input: {width: 300})
-    thumbURL: transformURL(input: {height: 200})
+    thumbURL: transformURL(input: {width: 280, height: 200})
+    squareURL: transformURL(input: {width: 100, height: 100})
+    previewURL: transformURL(input: {width: 400, height: 200})
+    column1URL: transformURL(input: {width: 800, height: 400})
+    column6URL: transformURL(input: {width: 260, height: 150})
   }
 `
 

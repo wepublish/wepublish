@@ -151,7 +151,7 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
 
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
+      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
       resolve({authorIDs}, args, {storageAdapter}) {
         return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
       }

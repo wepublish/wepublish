@@ -73,24 +73,43 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                       />
                     </Layer>
 
-                    <Layer
-                      bottom={0}
-                      width={'100%'}
-                      height={numColumns === 1 ? 'auto' : '150px'}
-                      style={{
-                        backgroundColor: numColumns === 1 ? 'rgba(34,34,34,0.6)' : 'white'
-                      }}>
-                      <Box padding={numColumns === 1 ? Spacing.Small : Spacing.ExtraSmall}>
-                        <Typography
-                          variant="h2"
-                          align={numColumns === 1 ? 'center' : 'left'}
-                          color={numColumns === 1 ? 'white' : 'dark'}>
-                          {value.article.latest.title || 'Untitled'}
-                        </Typography>
-                      </Box>
-                    </Layer>
+                    {numColumns === 1 ? (
+                      <>
+                        <Layer
+                          bottom={0}
+                          width={'100%'}
+                          height={'auto'}
+                          style={{backgroundColor: 'rgba(34,34,34,0.6)'}}>
+                          <Box padding={Spacing.Small}>
+                            <Typography variant="h2" align="center" color="white">
+                              {value.article.latest.title || 'Untitled'}
+                            </Typography>
+                          </Box>
+                        </Layer>
 
-                    <Image src={value.article.latest.image?.url} width="100%" height="100%" />
+                        {value.article.latest.image && (
+                          <Image
+                            src={value.article.latest.image.column1URL}
+                            width="100%"
+                            height="100%"
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <Box display="flex" flexDirection="column">
+                        <Image
+                          src={value.article.latest.image?.column6URL}
+                          width="100%"
+                          height={150}
+                        />
+
+                        <Box height={150} padding={Spacing.ExtraSmall}>
+                          <Typography variant="h2" align="left" color="dark">
+                            {value.article.latest.title || 'Untitled'}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
                   </LayerContainer>
                 )}
               </PlaceholderInput>

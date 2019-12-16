@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import {useQuery, QueryHookOptions} from '@apollo/react-hooks'
+import {useQuery, QueryHookOptions, useMutation, MutationHookOptions} from '@apollo/react-hooks'
 
 import {ImageRefFragment, ImageRefData} from './image'
 
@@ -25,8 +25,8 @@ export interface Author {
 // =====
 
 const ListAuthorsQuery = gql`
-  query ListArticles($after: String, $before: String, $first: Int, $last: Int) {
-    authors(after: $after, before: $before, first: $first, last: $last) {
+  query ListArticles($filter: String, $after: String, $before: String, $first: Int, $last: Int) {
+    authors(filter: $filter, after: $after, before: $before, first: $first, last: $last) {
       nodes {
         ...AuthorFragment
       }
@@ -42,7 +42,8 @@ export interface ListAuthorsData {
   }
 }
 
-export interface ListArticlesVariables {
+export interface ListAuthorsVariables {
+  filter?: string
   after?: string
   before?: string
   first?: number
@@ -50,165 +51,91 @@ export interface ListArticlesVariables {
 }
 
 export function useListAuthorsQuery(
-  opts?: QueryHookOptions<ListAuthorsData, ListArticlesVariables>
+  opts?: QueryHookOptions<ListAuthorsData, ListAuthorsVariables>
 ) {
-  return useQuery<ListAuthorsData, ListArticlesVariables>(ListAuthorsQuery, opts)
+  return useQuery<ListAuthorsData, ListAuthorsVariables>(ListAuthorsQuery, opts)
+}
+
+const AuthorQuery = gql`
+  query Author($id: ID!) {
+    author(id: $id) {
+      ...AuthorFragment
+    }
+  }
+
+  ${AuthorFragment}
+`
+
+export interface AuthorsData {
+  author?: Author
+}
+
+export interface AuthorVariables {
+  id: string
+}
+
+export function useAuthorQuery(opts?: QueryHookOptions<AuthorsData, AuthorVariables>) {
+  return useQuery<AuthorsData, AuthorVariables>(AuthorQuery, opts)
 }
 
 // Mutation
 // ========
 
-// export interface ArticleInput {
-//   slug: string
-//   preTitle?: string
-//   title: string
-//   lead: string
-//   tags: string[]
-//   imageID?: string
-//   authorIDs: string[]
-//   shared: boolean
-//   breaking: boolean
-//   blocks: any[]
-// }
+export interface CreateAuthorInput {
+  name?: string
+  imageID?: string
+}
 
-// export interface ArticleMutationData {
-//   id: string
-// }
+const CreateAuthorMutation = gql`
+  mutation CreateAuthor($input: CreateAuthorInput!) {
+    createAuthor(input: $input) {
+      ...AuthorFragment
+    }
+  }
 
-// const CreateArticleMutation = gql`
-//   mutation CreateArticle($input: ArticleInput!) {
-//     createArticle(input: $input) {
-//       id
-//     }
-//   }
-// `
+  ${AuthorFragment}
+`
 
-// export interface CreateArticleMutationData {
-//   createArticle: ArticleMutationData
-// }
+export interface CreateAuthorMutationData {
+  createAuthor: Author
+}
 
-// export interface CreateArticleVariables {
-//   input: ArticleInput
-// }
+export interface CreateAuthorVariables {
+  input: CreateAuthorInput
+}
 
-// export function useCreateArticleMutation() {
-//   return useMutation<CreateArticleMutationData, CreateArticleVariables>(CreateArticleMutation)
-// }
+export function useCreateAuthorMutation(
+  opts?: MutationHookOptions<CreateAuthorMutationData, CreateAuthorVariables>
+) {
+  return useMutation<CreateAuthorMutationData, CreateAuthorVariables>(CreateAuthorMutation, opts)
+}
 
-// const UpdateArticleMutation = gql`
-//   mutation UpdateArticle($id: ID!, $state: VersionState!, $input: ArticleInput!) {
-//     updateArticle(id: $id, state: $state, input: $input) {
-//       id
-//     }
-//   }
-// `
+export interface UpdateAuthorInput {
+  id: string
+  name?: string
+  imageID?: string
+}
 
-// export interface UpdateArticleMutationData {
-//   updateArticle: ArticleMutationData
-// }
+const UpdateAuthorMutation = gql`
+  mutation UpdateAuthor($input: UpdateAuthorInput!) {
+    updateAuthor(input: $input) {
+      ...AuthorFragment
+    }
+  }
 
-// export interface UpdateArticleVariables {
-//   id: string
-//   state: VersionState
-//   input: ArticleInput
-// }
+  ${AuthorFragment}
+`
 
-// export function useUpdateArticleMutation() {
-//   return useMutation<UpdateArticleMutationData, UpdateArticleVariables>(UpdateArticleMutation)
-// }
+export interface UpdateAuthorMutationData {
+  updateAuthor: Author
+}
 
-// const GetArticleQuery = gql`
-//   query GetArticle($id: ID!) {
-//     article(id: $id) {
-//       id
-//       latest {
-//         id
-//         slug
-//         preTitle
-//         title
-//         lead
-//         image {
-//           ...ImageRefFragment
-//         }
-//         tags
-//         authors {
-//           id
-//           name
-//         }
-//         breaking
-//         shared
-//         blocks {
-//           __typename
+export interface UpdateAuthorVariables {
+  input: UpdateAuthorInput
+}
 
-//           ... on TitleBlock {
-//             title
-//             lead
-//           }
-
-//           ... on RichTextBlock {
-//             richText
-//           }
-
-//           ... on QuoteBlock {
-//             quote
-//             author
-//           }
-
-//           ... on ImageBlock {
-//             caption
-//             image {
-//               ...ImageRefFragment
-//             }
-//           }
-
-//           ... on FacebookPostBlock {
-//             userID
-//             postID
-//           }
-
-//           ... on InstagramPostBlock {
-//             postID
-//           }
-
-//           ... on TwitterTweetBlock {
-//             userID
-//             tweetID
-//           }
-
-//           ... on VimeoVideoBlock {
-//             videoID
-//           }
-
-//           ... on YouTubeVideoBlock {
-//             videoID
-//           }
-
-//           ... on SoundCloudTrackBlock {
-//             trackID
-//           }
-
-//           ... on EmbedBlock {
-//             url
-//             title
-//             width
-//             height
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   ${ImageRefFragment}
-// `
-
-// export interface GetArticleData {
-//   article?: any // TODO: Type query
-// }
-
-// export interface GetArticleVariables {
-//   id: string
-// }
-
-// export function useGetArticleQuery(opts: QueryHookOptions<GetArticleData, GetArticleVariables>) {
-//   return useQuery<GetArticleData, GetArticleVariables>(GetArticleQuery, opts)
-// }
+export function useUpdateAuthorMutation(
+  opts?: MutationHookOptions<UpdateAuthorMutationData, UpdateAuthorVariables>
+) {
+  return useMutation<UpdateAuthorMutationData, UpdateAuthorVariables>(UpdateAuthorMutation, opts)
+}

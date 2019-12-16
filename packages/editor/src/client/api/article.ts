@@ -3,6 +3,7 @@ import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
 
 import {VersionState} from './common'
 import {ImageRefFragment, ImageRefData} from './image'
+import {AuthorFragment} from './author'
 
 export const ArticleRefFragment = gql`
   fragment ArticleRefFragment on Article {
@@ -141,8 +142,7 @@ const GetArticleQuery = gql`
         }
         tags
         authors {
-          id
-          name
+          ...AuthorFragment
         }
         breaking
         shared
@@ -208,6 +208,7 @@ const GetArticleQuery = gql`
   }
 
   ${ImageRefFragment}
+  ${AuthorFragment}
 `
 
 export interface GetArticleData {

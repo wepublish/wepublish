@@ -61,7 +61,7 @@ export interface StorageAdapter {
   updateAuthor(author: Author): Promise<Author | null>
   deleteAuthor(id: string): Promise<Author | null>
   getAuthor(id: string): Promise<Author | null>
-  getAuthors(pagination: Pagination): Promise<[Author[], PageInfo, number]>
+  getAuthors(filter: string, pagination: Pagination): Promise<[Author[], PageInfo, number]>
 
   // Image
   // =====

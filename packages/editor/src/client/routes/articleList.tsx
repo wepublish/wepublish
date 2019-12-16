@@ -8,7 +8,7 @@ import {useListArticlesQuery} from '../api/article'
 import {VersionState} from '../api/common'
 
 export function ArticleList() {
-  const {data} = useListArticlesQuery({fetchPolicy: 'no-cache'})
+  const {data, loading: isLoading} = useListArticlesQuery({fetchPolicy: 'no-cache'})
   const articles = data?.articles.nodes
     .sort((a, b) => {
       const dateA = new Date(a.updatedAt)
@@ -77,7 +77,15 @@ export function ArticleList() {
           route={ArticleCreateRoute.create({})}
         />
       </Box>
-      <Box>{articles}</Box>
+      <Box>
+        {articles?.length ? (
+          articles
+        ) : !isLoading ? (
+          <Typography variant="body1" color="gray" align="center">
+            No Articles found
+          </Typography>
+        ) : null}
+      </Box>
     </>
   )
 }

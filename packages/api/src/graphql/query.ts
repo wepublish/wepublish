@@ -294,7 +294,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       args: {
         id: {
           description: 'ID of the author.',
-          type: GraphQLNonNull(GraphQLString)
+          type: GraphQLNonNull(GraphQLID)
         }
       },
       resolve(_root, {id}, context) {
@@ -305,12 +305,13 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     authors: {
       type: GraphQLNonNull(GraphQLAuthorConnection),
       args: {
+        filter: {type: GraphQLString},
         after: {type: GraphQLString},
         before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt}
       },
-      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+      async resolve(_root, {filter, after, before, first, last}, {storageAdapter}) {
         if ((first == null && last == null) || (first != null && last != null)) {
           throw new UserInputError('You must provide either `first` or `last`.')
         }
@@ -318,7 +319,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         const decodedAfter = after && Buffer.from(after, 'base64').toString()
         const decodedBefore = before && Buffer.from(before, 'base64').toString()
 
-        const result = await storageAdapter.getAuthors({
+        const result = await storageAdapter.getAuthors(filter, {
           after: decodedAfter,
           before: decodedBefore,
           first,

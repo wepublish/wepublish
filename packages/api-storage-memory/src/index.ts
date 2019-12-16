@@ -244,13 +244,13 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this._authors.find(author => author.id === id) ?? null
   }
 
-  async getAuthors({
-    after,
-    before,
-    first,
-    last
-  }: Pagination): Promise<[Author[], PageInfo, number]> {
-    const sorted = this._authors.slice().sort((a, b) => b.name.localeCompare(a.name))
+  async getAuthors(
+    filter: string,
+    {after, before, first, last}: Pagination
+  ): Promise<[Author[], PageInfo, number]> {
+    const sorted = this._authors
+      .filter(({name}) => (filter ? name.toLowerCase().includes(filter.toLowerCase()) : true))
+      .sort((a, b) => b.name.localeCompare(a.name))
 
     let afterIndex: number | undefined = after
       ? sorted.findIndex(({id}) => id === after)

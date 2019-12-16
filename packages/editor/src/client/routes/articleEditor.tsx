@@ -157,7 +157,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
       lead: metadata.lead,
-      authorIDs: [], // TODO
+      authorIDs: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,

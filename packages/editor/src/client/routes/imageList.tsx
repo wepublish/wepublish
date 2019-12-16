@@ -34,7 +34,8 @@ export function ImageList() {
   const after = current?.query?.after
   const before = current?.query?.before
 
-  const {data, refetch} = useImageListQuery({
+  const {data, refetch, loading: isLoading} = useImageListQuery({
+    fetchPolicy: 'network-only',
     variables: {
       after,
       before,
@@ -62,7 +63,7 @@ export function ImageList() {
 
   return (
     <>
-      <Box flexDirection="row" marginBottom={Spacing.Medium} display="flex">
+      <Box flexDirection="row" marginBottom={Spacing.Large} display="flex">
         <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
@@ -72,20 +73,26 @@ export function ImageList() {
         />
       </Box>
       <Box>
-        <Grid spacing={Spacing.Small}>
-          {images.map(({id, thumbURL}) => (
-            <Column key={id} ratio={1 / 3}>
-              <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
-                <Card height={200} overflow="hidden">
-                  <Image src={thumbURL} width="100%" height="100%" />
-                </Card>
-              </Link>
-            </Column>
-          ))}
-          {missingColumns.map((value, index) => (
-            <Column key={index} ratio={1 / 3}></Column>
-          ))}
-        </Grid>
+        {images.length ? (
+          <Grid spacing={Spacing.Small}>
+            {images.map(({id, thumbURL}) => (
+              <Column key={id} ratio={1 / 3}>
+                <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
+                  <Card height={200} overflow="hidden">
+                    <Image src={thumbURL} width="100%" height="100%" />
+                  </Card>
+                </Link>
+              </Column>
+            ))}
+            {missingColumns.map((value, index) => (
+              <Column key={index} ratio={1 / 3}></Column>
+            ))}
+          </Grid>
+        ) : !isLoading ? (
+          <Typography variant="body1" color="gray" align="center">
+            No Images found
+          </Typography>
+        ) : null}
       </Box>
       <Box marginTop={Spacing.Medium} flexDirection="row" display="flex">
         <RouteLinkButton
