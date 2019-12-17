@@ -165,7 +165,10 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this._images.find(({id: imageID}) => imageID === id) ?? null
   }
 
-  async getImages({after, before, first, last}: Pagination): Promise<[Image[], PageInfo, number]> {
+  async getImages(
+    filter: string | undefined,
+    {after, before, first, last}: Pagination
+  ): Promise<[Image[], PageInfo, number]> {
     const sorted = this._images
       .slice()
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
@@ -350,7 +353,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this.getArticle(id)
   }
 
-  async getArticles(args: ArticlesArguments): Promise<Article[]> {
+  async getArticles(filter: string | undefined, args: ArticlesArguments): Promise<Article[]> {
     const articles = this._articles.map(article => {
       const reverseVersions = article.versions.slice().reverse()
 
