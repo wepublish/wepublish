@@ -1,14 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
-import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
+import {Typography, Box, Spacing, Divider, Icon, IconScale, SearchInput} from '@karma.run/ui'
 
 import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
 import {useListArticlesQuery} from '../api/article'
 import {VersionState} from '../api/common'
 
 export function ArticleList() {
-  const {data, loading: isLoading} = useListArticlesQuery({fetchPolicy: 'no-cache'})
+  const [filter, setFilter] = useState('')
+
+  const {data, loading: isLoading} = useListArticlesQuery({
+    variables: {filter: filter || undefined},
+    fetchPolicy: 'no-cache'
+  })
+
   const articles = data?.articles.nodes
     .sort((a, b) => {
       const dateA = new Date(a.updatedAt)
@@ -68,13 +74,20 @@ export function ArticleList() {
 
   return (
     <>
-      <Box marginBottom={Spacing.Large} flexDirection="row" display="flex">
+      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
         <Typography variant="h1">Articles</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
           label="New Article"
           route={ArticleCreateRoute.create({})}
+        />
+      </Box>
+      <Box marginBottom={Spacing.Large}>
+        <SearchInput
+          placeholder="Search"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
         />
       </Box>
       <Box>

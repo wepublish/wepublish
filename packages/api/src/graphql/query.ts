@@ -136,6 +136,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       description: 'Request articles based on a date range.',
 
       args: {
+        filter: {type: GraphQLString},
+
         limit: {
           type: GraphQLInt,
           description:
@@ -177,7 +179,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
       },
       async resolve(_root, args, context) {
-        const {publishedBetween, createdBetween, updatedBetween} = args
+        const {filter, publishedBetween, createdBetween, updatedBetween} = args
 
         if (
           (publishedBetween && createdBetween && updatedBetween) ||
@@ -190,7 +192,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           )
         }
 
-        const articles = context.storageAdapter.getArticles(args as ArticlesArguments)
+        const articles = context.storageAdapter.getArticles(filter, args as ArticlesArguments)
 
         return {
           nodes: articles,
@@ -225,9 +227,12 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
 
     pages: {
       type: GraphQLNonNull(GraphQLPageConnection),
-      async resolve(_root, args, context: Context, info) {
+      args: {
+        filter: {type: GraphQLString}
+      },
+      async resolve(_root, {filter}, context: Context, info) {
         return {
-          nodes: await context.storageAdapter.getPages()
+          nodes: await context.storageAdapter.getPages(filter)
         }
       }
     },
@@ -248,12 +253,13 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
+        filter: {type: GraphQLString},
         after: {type: GraphQLString},
         before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt}
       },
-      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+      async resolve(_root, {filter, after, before, first, last}, {storageAdapter}) {
         if ((first == null && last == null) || (first != null && last != null)) {
           throw new UserInputError('You must provide either `first` or `last`.')
         }
@@ -261,7 +267,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         const decodedAfter = after && Buffer.from(after, 'base64').toString()
         const decodedBefore = before && Buffer.from(before, 'base64').toString()
 
-        const result = await storageAdapter.getImages({
+        const result = await storageAdapter.getImages(filter, {
           after: decodedAfter,
           before: decodedBefore,
           first,

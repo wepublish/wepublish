@@ -17,7 +17,10 @@ import {
   MaterialIconPublishOutlined,
   MaterialIconSaveOutlined,
   IconColumn6,
-  IconColumn1
+  IconColumn1,
+  MaterialIconTitle,
+  MaterialIconTextFormat,
+  MaterialIconImage
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
@@ -35,10 +38,21 @@ import {
   blockForQueryBlock,
   unionMapForBlock,
   ArticleTeaserGridBlock1ListValue,
-  ArticleTeaserGridBlock6ListValue
+  ArticleTeaserGridBlock6ListValue,
+  TitleBlockListValue,
+  RichTextBlockListValue,
+  ImageBlockListValue
 } from '../api/blocks'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
+import {TitleBlock} from '../blocks/titleBlock'
+import {ImageBlock} from '../blocks/imageBlock'
 
-export type PageBlockValue = ArticleTeaserGridBlock1ListValue | ArticleTeaserGridBlock6ListValue
+export type PageBlockValue =
+  | TitleBlockListValue
+  | RichTextBlockListValue
+  | ImageBlockListValue
+  | ArticleTeaserGridBlock1ListValue
+  | ArticleTeaserGridBlock6ListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -223,6 +237,27 @@ export function PageEditor({id}: PageEditorProps) {
                 defaultValue: {numColumns: 3, teasers: [null, null, null, null, null, null]},
                 label: '6 Cols',
                 icon: IconColumn6
+              },
+
+              [BlockType.Title]: {
+                field: props => <TitleBlock {...props} />,
+                defaultValue: {title: '', lead: ''},
+                label: 'Title',
+                icon: MaterialIconTitle
+              },
+
+              [BlockType.RichText]: {
+                field: props => <RichTextBlock {...props} />,
+                defaultValue: createDefaultValue,
+                label: 'Rich Text',
+                icon: MaterialIconTextFormat
+              },
+
+              [BlockType.Image]: {
+                field: props => <ImageBlock {...props} />,
+                defaultValue: {image: null, caption: ''},
+                label: 'Image',
+                icon: MaterialIconImage
               }
             }),
             []

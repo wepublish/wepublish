@@ -16,7 +16,11 @@ import {
   GraphQLRichTextBlock,
   GraphQLImageBlock,
   GraphQLArticleTeaserGridBlock,
-  GraphQLArticleTeaserGridBlockInput
+  GraphQLArticleTeaserGridBlockInput,
+  GraphQLInputTitleBlock,
+  GraphQLInputImageBlock,
+  GraphQLInputRichTextBlock,
+  GraphQLTitleBlock
 } from './blocks'
 
 import {Page} from '../adapter/page'
@@ -27,13 +31,16 @@ import {GraphQLImage} from './image'
 export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
   name: 'PageBlockUnionMap',
   fields: {
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
+    [BlockType.Image]: {type: GraphQLInputImageBlock},
+    [BlockType.Title]: {type: GraphQLInputTitleBlock},
     [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
   }
 })
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
-  types: [GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
+  types: [GraphQLRichTextBlock, GraphQLTitleBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
 })
 
 export const GraphQLPageInput = new GraphQLInputObjectType({

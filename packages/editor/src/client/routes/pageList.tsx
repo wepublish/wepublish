@@ -1,14 +1,18 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {MaterialIconQueryBuilder, MaterialIconUpdate} from '@karma.run/icons'
-import {Typography, Box, Spacing, Divider, Icon, IconScale} from '@karma.run/ui'
+import {Typography, Box, Spacing, Divider, Icon, IconScale, SearchInput} from '@karma.run/ui'
 
 import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 import {useListPagesQuery} from '../api/page'
 import {VersionState} from '../api/common'
 
 export function PageList() {
-  const {data, loading: isLoading} = useListPagesQuery({fetchPolicy: 'no-cache'})
+  const [filter, setFilter] = useState('')
+  const {data, loading: isLoading} = useListPagesQuery({
+    variables: {filter: filter || undefined},
+    fetchPolicy: 'no-cache'
+  })
   const pages = data?.pages.nodes
     .sort((a, b) => {
       const dateA = new Date(a.updatedAt)
@@ -68,10 +72,17 @@ export function PageList() {
 
   return (
     <>
-      <Box marginBottom={Spacing.Large} flexDirection="row" display="flex">
+      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
         <Typography variant="h1">Pages</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton color="primary" label="New Page" route={PageCreateRoute.create({})} />
+      </Box>
+      <Box marginBottom={Spacing.Large}>
+        <SearchInput
+          placeholder="Search"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+        />
       </Box>
       <Box>
         {pages?.length ? (

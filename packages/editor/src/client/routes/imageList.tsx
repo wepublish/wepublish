@@ -1,6 +1,16 @@
 import React, {useState, useEffect} from 'react'
 
-import {Typography, Box, Spacing, Grid, Column, Drawer, Image, Card} from '@karma.run/ui'
+import {
+  Typography,
+  Box,
+  Spacing,
+  Grid,
+  Column,
+  Drawer,
+  Image,
+  Card,
+  SearchInput
+} from '@karma.run/ui'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {
@@ -31,12 +41,15 @@ export function ImageList() {
     current?.type === RouteType.ImageEdit ? current.params.id : null
   )
 
+  const [filter, setFilter] = useState('')
+
   const after = current?.query?.after
   const before = current?.query?.before
 
   const {data, refetch, loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: {
+      filter: filter || undefined,
       after,
       before,
       first: before ? undefined : ImagesPerPage,
@@ -63,13 +76,20 @@ export function ImageList() {
 
   return (
     <>
-      <Box flexDirection="row" marginBottom={Spacing.Large} display="flex">
+      <Box flexDirection="row" marginBottom={Spacing.Small} display="flex">
         <Typography variant="h1">Image Library</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           label="Upload Image"
           color="primary"
           route={ImageUploadRoute.create({}, current ?? undefined)}
+        />
+      </Box>
+      <Box marginBottom={Spacing.Large}>
+        <SearchInput
+          placeholder="Search"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
         />
       </Box>
       <Box>

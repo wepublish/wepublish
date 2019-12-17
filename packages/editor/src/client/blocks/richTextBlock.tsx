@@ -1,6 +1,6 @@
 import React, {useState, useRef, memo, useCallback, useEffect} from 'react'
 
-import {Editor, Node, createEditor, Range} from 'slate'
+import {Editor, Node as SlateNode, createEditor, Range} from 'slate'
 
 import {
   useSlate,
@@ -105,39 +105,44 @@ const TextTags: any = {
   U: () => ({[TextFormat.Underline]: true})
 }
 
-// TODO: Fix paste issues
-function deserialize(el: any) {
-  if (el.nodeType === 3) {
-    return el.textContent
-  } else if (el.nodeType !== 1) {
+function deserialize(element: Element): any {
+  const {nodeName, nodeType} = element
+
+  if (nodeType === Node.TEXT_NODE) {
+    return element.textContent
+  } else if (nodeType !== Node.ELEMENT_NODE) {
     return null
-  } else if (el.nodeName === 'BR') {
+  } else if (nodeName === 'BR') {
     return '\n'
   }
 
-  const {nodeName} = el
-  let parent: any = el
+  let parent: Element = element
 
-  if (el.nodeNode === 'PRE' && el.childNodes[0] && el.childNodes[0].nodeName === 'CODE') {
-    parent = el.childNodes[0]
+  if (nodeName === 'PRE' && element.childNodes[0] && element.childNodes[0].nodeName === 'CODE') {
+    parent = element.childNodes[0] as Element
   }
 
-  const children = (Array.from(parent.childNodes) as any)
-    .map((element: any) => deserialize(element))
+  const children = Array.from(parent.childNodes)
+    .map(element => deserialize(element as Element))
     .flat()
 
-  if (el.nodeName === 'BODY') {
+  if (nodeName === 'BODY') {
     return jsx('fragment', {}, children)
   }
 
   if (ElementTags[nodeName]) {
-    const attrs = ElementTags[nodeName](el)
+    const attrs = ElementTags[nodeName](element)
     return jsx('element', attrs, children)
   }
 
   if (TextTags[nodeName]) {
-    const attrs = TextTags[nodeName](el)
-    return children.map((child: any) => jsx('text', attrs, child))
+    const attrs = TextTags[nodeName](element)
+
+    if (!children.some(child => child.children != undefined)) {
+      return children.map(child => {
+        return jsx('text', attrs, child)
+      })
+    }
   }
 
   return children
@@ -289,7 +294,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   }, [])
 
   const handleChange = useCallback(
-    (newValue: Node[], newSelection: Range | null) => {
+    (newValue: SlateNode[], newSelection: Range | null) => {
       onChange(richTextValue => {
         const {value, selection} = richTextValue
 
@@ -383,8 +388,24 @@ function LinkFormatButton() {
         onMouseDown={e => {
           e.preventDefault()
 
-          setTitle('')
-          setURL('')
+          const nodes = Array.from(
+            Editor.nodes(editor, {
+              at: editor.selection ?? undefined,
+              match: {type: InlineFormat.Link}
+            })
+          )
+
+          const tuple = nodes[0]
+
+          if (tuple) {
+            const [node] = tuple
+
+            setTitle(node.title ?? '')
+            setURL(node.url ?? '')
+          } else {
+            setTitle('')
+            setURL('')
+          }
 
           setLinkDialogOpen(true)
         }}
@@ -574,6 +595,8 @@ function withRichText(editor: Editor): Editor {
           const parsed = new DOMParser().parseFromString(html, 'text/html')
           const fragment = deserialize(parsed.body)
           Editor.insertFragment(editor, fragment)
+        } else {
+          exec(command)
         }
 
         break
@@ -581,6 +604,22 @@ function withRichText(editor: Editor): Editor {
 
       case CommandType.InsertLink: {
         const {url, title} = command
+
+        if (editor.selection && Range.isCollapsed(editor.selection)) {
+          const nodes = Array.from(
+            Editor.nodes(editor, {
+              at: editor.selection,
+              match: {type: InlineFormat.Link}
+            })
+          )
+
+          const tuple = nodes[0]
+
+          if (tuple) {
+            const [, path] = tuple
+            Editor.select(editor, path)
+          }
+        }
 
         Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
         Editor.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})

@@ -23,8 +23,8 @@ export interface PageReference {
 // =====
 
 const ListPagesQuery = gql`
-  query ListPages {
-    pages {
+  query ListPages($filter: String) {
+    pages(filter: $filter) {
       nodes {
         id
         createdAt
@@ -45,7 +45,9 @@ export interface ListPagesData {
   }
 }
 
-export interface ListPagesVariables {}
+export interface ListPagesVariables {
+  filter?: string
+}
 
 export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPagesVariables>) {
   return useQuery<ListPagesData, ListPagesVariables>(ListPagesQuery, opts)
@@ -131,6 +133,22 @@ const GetPageQuery = gql`
         tags
         blocks {
           __typename
+
+          ... on TitleBlock {
+            title
+            lead
+          }
+
+          ... on RichTextBlock {
+            richText
+          }
+
+          ... on ImageBlock {
+            caption
+            image {
+              ...ImageRefFragment
+            }
+          }
 
           ... on ArticleTeaserGridBlock {
             teasers {

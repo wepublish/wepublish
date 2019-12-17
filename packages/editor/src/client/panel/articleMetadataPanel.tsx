@@ -238,8 +238,6 @@ function AuthorInputList({
     setItems(data?.authors.nodes ?? [])
   }, [data])
 
-  console.log(isOpen)
-
   return (
     <SelectList {...getMenuProps()}>
       {isOpen && inputValue ? (

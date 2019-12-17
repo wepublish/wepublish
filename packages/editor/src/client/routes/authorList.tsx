@@ -42,7 +42,7 @@ export function AuthorList() {
 
   const {data, refetch, loading: isLoading} = useListAuthorsQuery({
     variables: {
-      filter,
+      filter: filter || undefined,
       first: 200 // TODO: Pagination
     },
     fetchPolicy: 'network-only'

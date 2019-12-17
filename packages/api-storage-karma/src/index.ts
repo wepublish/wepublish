@@ -162,12 +162,29 @@ export class KarmaStorageAdapter implements StorageAdapter {
     }
   }
 
-  async getArticles(args: ArticlesArguments): Promise<Article[]> {
+  async getArticles(filter: string | undefined, args: ArticlesArguments): Promise<Article[]> {
     const session = await this.getKarmaSession()
 
     // TODO: Filter and Pagination
     try {
-      return await session.do(all(tag(ModelTag.Article)))
+      const articles: Article[] = await session.do(all(tag(ModelTag.Article)))
+
+      if (filter) {
+        const tuples = await Promise.all(
+          articles.map(
+            async article =>
+              [await this.getArticleVersion(article.id, article.latestVersion), article] as const
+          )
+        )
+
+        return tuples
+          .filter(
+            ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
+          )
+          .map(([_, article]) => article)
+      } else {
+        return articles
+      }
     } catch {
       return []
     }
@@ -329,6 +346,12 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
     const updateDate = new Date()
 
+    const oldArticle = await session.do(
+      all(tag(ModelTag.Article))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()
+    )
+
     const article = await session.do(
       define('article', all(tag(ModelTag.Article))
         .filterList((index, value) => value.field('id').equal(string(id)))
@@ -371,11 +394,12 @@ export class KarmaStorageAdapter implements StorageAdapter {
               'updatedAt',
               data(d => d.dateTime(updateDate))
             )
-            // TODO: Fix overriding original publishedAt date.
             .setField(
               'publishedAt',
               data(d =>
-                input.state === VersionState.Published
+                oldArticle.publishedAt
+                  ? d.dateTime(new Date(oldArticle.publishedAt))
+                  : input.state === VersionState.Published
                   ? d.dateTime(updateDate)
                   : d.expr(scope('article').field('publishedAt'))
               )
@@ -462,12 +486,28 @@ export class KarmaStorageAdapter implements StorageAdapter {
     }
   }
 
-  async getPages(): Promise<Page[]> {
+  async getPages(filter: string | undefined): Promise<Page[]> {
     const session = await this.getKarmaSession()
 
     // TODO: Filter and Pagination
     try {
-      return await session.do(all(tag(ModelTag.Page)))
+      const pages: Page[] = await session.do(all(tag(ModelTag.Page)))
+
+      if (filter) {
+        const tuples = await Promise.all(
+          pages.map(
+            async page => [await this.getPageVersion(page.id, page.latestVersion), page] as const
+          )
+        )
+
+        return tuples
+          .filter(
+            ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
+          )
+          .map(([_, page]) => page)
+      } else {
+        return pages
+      }
     } catch {
       return []
     }
@@ -622,6 +662,12 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
     const updateDate = new Date()
 
+    const oldPage = await session.do(
+      all(tag(ModelTag.Page))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()
+    )
+
     const article = await session.do(
       define('page', all(tag(ModelTag.Page))
         .filterList((index, value) => value.field('id').equal(string(id)))
@@ -658,11 +704,12 @@ export class KarmaStorageAdapter implements StorageAdapter {
               'updatedAt',
               data(d => d.dateTime(updateDate))
             )
-            // TODO: Fix overriding original publishedAt date.
             .setField(
               'publishedAt',
               data(d =>
-                input.state === VersionState.Published
+                oldPage.publishedAt
+                  ? d.dateTime(new Date(oldPage.publishedAt))
+                  : input.state === VersionState.Published
                   ? d.dateTime(updateDate)
                   : d.expr(scope('page').field('publishedAt'))
               )
@@ -766,12 +813,19 @@ export class KarmaStorageAdapter implements StorageAdapter {
     }
   }
 
-  async getImages(pagination: Pagination): Promise<[Image[], PageInfo, number]> {
+  async getImages(
+    filter: string | undefined,
+    pagination: Pagination
+  ): Promise<[Image[], PageInfo, number]> {
     const session = await this.getKarmaSession()
 
     try {
       // TODO: Pagination
-      const images = await session.do(all(tag(ModelTag.Image)))
+      let images: Image[] = await session.do(all(tag(ModelTag.Image)))
+
+      if (filter) {
+        images = images.filter(({title}) => title?.toLowerCase().includes(filter.toLowerCase()))
+      }
 
       return [
         images,

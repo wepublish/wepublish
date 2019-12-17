@@ -12,7 +12,8 @@ import {
   Divider,
   Typography,
   Icon,
-  IconScale
+  IconScale,
+  SearchInput
 } from '@karma.run/ui'
 
 import {VersionState} from '../api/common'
@@ -27,7 +28,12 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const {data, error, loading} = useListArticlesQuery({fetchPolicy: 'no-cache'})
+  const [filter, setFilter] = useState('')
+
+  const {data, error, loading} = useListArticlesQuery({
+    variables: {filter: filter || undefined},
+    fetchPolicy: 'no-cache'
+  })
   const articles = data?.articles.nodes ?? []
 
   useEffect(() => {
@@ -52,6 +58,13 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
           }
         />
         <PanelSection>
+          <Box marginBottom={Spacing.Medium}>
+            <SearchInput
+              placeholder="Search"
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+            />
+          </Box>
           {articles.map(article => (
             <Box key={article.id} marginBottom={Spacing.Small}>
               <Box marginBottom={Spacing.Tiny}>

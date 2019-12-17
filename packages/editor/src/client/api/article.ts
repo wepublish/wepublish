@@ -40,8 +40,8 @@ export interface ArticleReference {
 // =====
 
 const ListArticlesQuery = gql`
-  query ListArticles {
-    articles {
+  query ListArticles($filter: String) {
+    articles(filter: $filter) {
       nodes {
         ...ArticleRefFragment
       }
@@ -57,7 +57,9 @@ export interface ListArticlesData {
   }
 }
 
-export interface ListArticlesVariables {}
+export interface ListArticlesVariables {
+  filter?: string
+}
 
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>

@@ -69,7 +69,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
     type: {type: GraphQLString},
     overrides: {type: GraphQLArticleTeaserOverrides},
     article: {
-      type: GraphQLNonNull(GraphQLArticle),
+      type: GraphQLArticle,
       async resolve({articleID}, args, {storageAdapter}) {
         return storageAdapter.getArticle(articleID)
       }
