@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
@@ -18,8 +18,7 @@
     "clean": "shx rm -rf ./dist ./assets",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
-    "prepare": "run-s clean copy-license sync-package-info build"
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
