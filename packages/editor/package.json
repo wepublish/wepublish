@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
