@@ -610,7 +610,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     if (id == null && slug == null) return null
 
     const page = this._pages.find(page => {
-      if (slug != null && page.publishedVersion) {
+      if (slug != undefined && page.publishedVersion != undefined) {
         const publishedVersion = page.versions[page.publishedVersion]
 
         if (publishedVersion) {

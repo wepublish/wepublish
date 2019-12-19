@@ -121,11 +121,20 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
 
     try {
-      return await session.do(
+      const article = await session.do(
         all(tag(ModelTag.Article))
           .filterList((index, value) => value.field('id').equal(string(id)))
           .first()
       )
+
+      return {
+        id: article.id,
+        createdAt: new Date(article.createdAt),
+        updatedAt: new Date(article.updatedAt),
+        publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+        latestVersion: article.latestVersion,
+        publishedVersion: article.publishedVersion
+      }
     } catch (err) {
       console.error(err)
       return null
@@ -196,9 +205,23 @@ export class KarmaStorageAdapter implements StorageAdapter {
           .filter(
             ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
           )
-          .map(([_, article]) => article)
+          .map(([_, article]) => ({
+            id: article.id,
+            createdAt: new Date(article.createdAt),
+            updatedAt: new Date(article.updatedAt),
+            publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+            latestVersion: article.latestVersion,
+            publishedVersion: article.publishedVersion
+          }))
       } else {
-        return articles
+        return articles.map(article => ({
+          id: article.id,
+          createdAt: new Date(article.createdAt),
+          updatedAt: new Date(article.updatedAt),
+          publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+          latestVersion: article.latestVersion,
+          publishedVersion: article.publishedVersion
+        }))
       }
     } catch (err) {
       console.error(err)
@@ -499,7 +522,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
 
     try {
-      return await session.do(
+      const page = await session.do(
         all(tag(ModelTag.Page))
           .filterList((index, value) =>
             and(
@@ -509,6 +532,15 @@ export class KarmaStorageAdapter implements StorageAdapter {
           )
           .first()
       )
+
+      return {
+        id: page.id,
+        createdAt: new Date(page.createdAt),
+        updatedAt: new Date(page.updatedAt),
+        publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+        latestVersion: page.latestVersion,
+        publishedVersion: page.publishedVersion
+      }
     } catch (err) {
       console.error(err)
       return null
@@ -578,9 +610,23 @@ export class KarmaStorageAdapter implements StorageAdapter {
           .filter(
             ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
           )
-          .map(([_, page]) => page)
+          .map(([_, page]) => ({
+            id: page.id,
+            createdAt: new Date(page.createdAt),
+            updatedAt: new Date(page.updatedAt),
+            publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+            latestVersion: page.latestVersion,
+            publishedVersion: page.publishedVersion
+          }))
       } else {
-        return pages
+        return pages.map((page) => ({
+          id: page.id,
+          createdAt: new Date(page.createdAt),
+          updatedAt: new Date(page.updatedAt),
+          publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+          latestVersion: page.latestVersion,
+          publishedVersion: page.publishedVersion
+        }))
       }
     } catch (err) {
       console.error(err)
@@ -966,6 +1012,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
       if (filter) {
         images = images.filter(({title}) => title?.toLowerCase().includes(filter.toLowerCase()))
       }
+
+      images.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 
       return [
         images,

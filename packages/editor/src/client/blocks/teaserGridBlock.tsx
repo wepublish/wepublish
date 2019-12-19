@@ -77,20 +77,20 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                       <>
                         <Box
                           position="absolute"
+                          zIndex={ZIndex.Default}
                           bottom={0}
                           width={'100%'}
-                          height={'auto'}
                           style={{backgroundColor: 'rgba(34,34,34,0.6)'}}>
                           <Box padding={Spacing.Small}>
-                            <Typography variant="h2" align="center" color="white">
-                              {value.article.latest.title || 'Untitled'}
-                            </Typography>
                             <Typography variant="subtitle1" align="center" color="gray">
                               {value.article.publishedAt != undefined && 'Published'}
                               {value.article.publishedAt != undefined &&
                                 value.article.latest.state === VersionState.Draft &&
                                 ' / '}
                               {value.article.latest.state === VersionState.Draft && 'Draft'}
+                            </Typography>
+                            <Typography variant="h2" align="center" color="white">
+                              {value.article.latest.title || 'Untitled'}
                             </Typography>
                           </Box>
                         </Box>
@@ -111,10 +111,11 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                           height={150}
                         />
 
-                        <Box height={150} padding={Spacing.ExtraSmall}>
-                          <Typography variant="h2" color="dark">
-                            {value.article.latest.title || 'Untitled'}
-                          </Typography>
+                        <Box
+                          position="relative"
+                          overflow="hidden"
+                          height={150}
+                          padding={Spacing.ExtraSmall}>
                           <Typography variant="subtitle1" color="gray">
                             {value.article.publishedAt != undefined && 'Published'}
                             {value.article.latest.state === VersionState.Draft &&
@@ -122,6 +123,20 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                               ' / '}
                             {value.article.latest.state === VersionState.Draft && 'Draft'}
                           </Typography>
+                          <Typography variant="body2" color="dark">
+                            {value.article.latest.title || 'Untitled'}
+                          </Typography>
+                          <Box
+                            position="absolute"
+                            zIndex={ZIndex.Default}
+                            bottom={0}
+                            width="100%"
+                            height={50}
+                            style={{
+                              background:
+                                'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))'
+                            }}
+                          />
                         </Box>
                       </Box>
                     )}
