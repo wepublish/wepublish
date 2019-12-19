@@ -34,6 +34,14 @@ export interface StorageAdapter {
   createPage(id: string, input: PageInput): Promise<Page>
   createPageVersion(id: string, input: PageInput): Promise<Page | null>
   updatePageVersion(id: string, version: number, input: PageInput): Promise<Page | null>
+  publishPageVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Page | null>
+  unpublishPage(id: string): Promise<Page | null>
+  deletePage(id: string): Promise<boolean | null>
 
   getPages(filter: string | undefined): Promise<Page[]>
   getPage(id: string | undefined, slug?: string): Promise<Page | null>
@@ -47,6 +55,14 @@ export interface StorageAdapter {
   createArticle(id: string, input: ArticleInput): Promise<Article>
   createArticleVersion(id: string, input: ArticleInput): Promise<Article | null>
   updateArticleVersion(id: string, version: number, input: ArticleInput): Promise<Article | null>
+  publishArticleVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Article | null>
+  unpublishArticle(id: string): Promise<Article | null>
+  deleteArticle(id: string): Promise<boolean | null>
 
   getArticles(filter: string | undefined, args: ArticlesArguments): Promise<Article[]>
   getArticle(id: string): Promise<Article | null>
@@ -59,7 +75,7 @@ export interface StorageAdapter {
 
   createAuthor(author: Author): Promise<Author>
   updateAuthor(author: Author): Promise<Author | null>
-  deleteAuthor(id: string): Promise<Author | null>
+  deleteAuthor(id: string): Promise<boolean | null>
 
   getAuthor(id: string): Promise<Author | null>
   getAuthors(
@@ -72,6 +88,7 @@ export interface StorageAdapter {
 
   createImage(image: Image): Promise<Image>
   updateImage(image: ImageUpdate): Promise<Image | null>
+  deleteImage(id: string): Promise<boolean | null>
   getImage(id: string): Promise<Image | null>
   getImages(
     filter: string | undefined,

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {MaterialIconEditOutlined, MaterialIconDeleteOutlined} from '@karma.run/icons'
+import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
 
 import {
   PlaceholderInput,
@@ -9,18 +9,18 @@ import {
   Box,
   Grid,
   Column,
-  LayerContainer,
-  Layer,
   Spacing,
   IconButton,
   Image,
-  Typography
+  Typography,
+  ZIndex
 } from '@karma.run/ui'
 
 import {ArticleReference} from '../api/article'
 import {TeaserGridBlockValue} from '../api/blocks'
 
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
+import {VersionState} from '../api/common'
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -51,11 +51,11 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                   setChoosingIndex(index)
                   setChooseModalOpen(true)
                 }}>
-                {value && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                {value && value.article && (
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
-                        icon={MaterialIconEditOutlined}
+                        icon={MaterialIconInsertDriveFileOutlined}
                         title="Choose Article"
                         onClick={() => {
                           setChoosingIndex(index)
@@ -64,18 +64,19 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
-                        icon={MaterialIconDeleteOutlined}
+                        icon={MaterialIconClose}
                         title="Remove Article"
                         onClick={() => {
                           handleArticleChange(index, null)
                         }}
                         margin={Spacing.ExtraSmall}
                       />
-                    </Layer>
+                    </Box>
 
                     {numColumns === 1 ? (
                       <>
-                        <Layer
+                        <Box
+                          position="absolute"
                           bottom={0}
                           width={'100%'}
                           height={'auto'}
@@ -84,8 +85,15 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                             <Typography variant="h2" align="center" color="white">
                               {value.article.latest.title || 'Untitled'}
                             </Typography>
+                            <Typography variant="subtitle1" align="center" color="gray">
+                              {value.article.publishedAt != undefined && 'Published'}
+                              {value.article.publishedAt != undefined &&
+                                value.article.latest.state === VersionState.Draft &&
+                                ' / '}
+                              {value.article.latest.state === VersionState.Draft && 'Draft'}
+                            </Typography>
                           </Box>
-                        </Layer>
+                        </Box>
 
                         {value.article.latest.image && (
                           <Image
@@ -104,13 +112,20 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                         />
 
                         <Box height={150} padding={Spacing.ExtraSmall}>
-                          <Typography variant="h2" align="left" color="dark">
+                          <Typography variant="h2" color="dark">
                             {value.article.latest.title || 'Untitled'}
+                          </Typography>
+                          <Typography variant="subtitle1" color="gray">
+                            {value.article.publishedAt != undefined && 'Published'}
+                            {value.article.latest.state === VersionState.Draft &&
+                              value.article.publishedAt != undefined &&
+                              ' / '}
+                            {value.article.latest.state === VersionState.Draft && 'Draft'}
                           </Typography>
                         </Box>
                       </Box>
                     )}
-                  </LayerContainer>
+                  </Box>
                 )}
               </PlaceholderInput>
             </Box>
@@ -118,7 +133,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
         ))}
       </Grid>
 
-      <Drawer open={isChooseModalOpen} width={480}>
+      <Drawer open={isChooseModalOpen} width={500}>
         {() => (
           <ArticleChoosePanel
             onClose={() => setChooseModalOpen(false)}

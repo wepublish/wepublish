@@ -39,10 +39,9 @@ import {
   useCreateArticleMutation,
   useGetArticleQuery,
   useUpdateArticleMutation,
-  ArticleInput
+  ArticleInput,
+  usePublishArticleMutation
 } from '../api/article'
-
-import {VersionState} from '../api/common'
 
 import {
   BlockType,
@@ -61,6 +60,7 @@ import {QuoteBlock} from '../blocks/quoteBlock'
 import {EmbedBlock} from '../blocks/embedBlock'
 import {ImageBlock} from '../blocks/imageBlock'
 import {TitleBlock} from '../blocks/titleBlock'
+import {Author} from '../api/author'
 
 export type ArticleBlockValue =
   | TitleBlockListValue
@@ -87,6 +87,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   ] = useCreateArticleMutation()
 
   const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
+  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -97,6 +98,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
     preTitle: '',
@@ -121,12 +123,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   const isNotFound = articleData && !articleData.article
-  const isDisabled = isLoading || isCreating || isUpdating || isNotFound
+  const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest} = articleData.article
+      const {latest, publishedAt} = articleData.article
       const {slug, preTitle, title, lead, tags, shared, breaking, authors, image, blocks} = latest
+
+      if (publishedAt) setPublishedAt(new Date(publishedAt))
 
       setMetadata({
         slug,
@@ -136,7 +140,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         tags,
         shared,
         breaking,
-        authors,
+        authors: authors.filter((author: Author | null) => author != null),
         image: image ? image : undefined
       })
 
@@ -145,11 +149,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [articleData])
 
   useEffect(() => {
-    if (createError || updateError) {
+    if (createError || updateError || publishError) {
       setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError!.message)
+      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
     }
-  }, [createError, updateError])
+  }, [createError, updateError, publishError])
 
   function createInput(): ArticleInput {
     return {
@@ -170,7 +174,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     const input = createInput()
 
     if (articleID) {
-      await updateArticle({variables: {id: articleID, state: VersionState.Draft, input}})
+      await updateArticle({variables: {id: articleID, input}})
 
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
@@ -189,15 +193,30 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish() {
+  async function handlePublish(publishDate: Date, updateDate: Date) {
     if (articleID) {
-      await updateArticle({
-        variables: {id: articleID, state: VersionState.Published, input: createInput()}
+      const {data} = await updateArticle({
+        variables: {id: articleID, input: createInput()}
       })
-    }
 
-    setSuccessToastOpen(true)
-    setSuccessMessage('Article Published')
+      if (data) {
+        const {data: publishData} = await publishArticle({
+          variables: {
+            id: articleID,
+            version: data.updateArticle.latest.version,
+            publishedAt: publishDate.toISOString(),
+            updatedAt: updateDate.toISOString()
+          }
+        })
+
+        if (publishData?.publishArticle?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishArticle?.publishedAt))
+        }
+      }
+
+      setSuccessToastOpen(true)
+      setSuccessMessage('Article Published')
+    }
   }
 
   useEffect(() => {
@@ -309,10 +328,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
         {() => (
           <PublishArticlePanel
+            initialPublishDate={publishedAt}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
-            onConfirm={() => {
-              handlePublish()
+            onConfirm={(publishDate, updateDate) => {
+              handlePublish(publishDate, updateDate)
               setPublishDialogOpen(false)
             }}
           />

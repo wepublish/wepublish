@@ -14,8 +14,6 @@ import {
   PanelSectionHeader,
   Card,
   Drawer,
-  LayerContainer,
-  Layer,
   IconButton,
   Image,
   TagInput,
@@ -25,14 +23,14 @@ import {
   SelectListItem,
   MarginProps,
   Avatar,
-  ImagePlaceholder
+  ImagePlaceholder,
+  ZIndex
 } from '@karma.run/ui'
 
 import {
   MaterialIconClose,
   MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconDeleteOutlined
+  MaterialIconEditOutlined
 } from '@karma.run/icons'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -133,8 +131,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             <Card>
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <Box
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
@@ -163,14 +161,14 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         justifyContent="flex-end"
                         display="flex">
                         <IconButton
-                          icon={MaterialIconDeleteOutlined}
+                          icon={MaterialIconClose}
                           title="Remove Image"
                           onClick={() => onChange?.({...value, image: undefined})}
                         />
                       </Box>
-                    </Layer>
+                    </Box>
                     <Image src={image.previewURL} width="100%" height={200} />
-                  </LayerContainer>
+                  </Box>
                 )}
               </PlaceholderInput>
             </Card>

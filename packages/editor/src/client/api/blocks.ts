@@ -103,7 +103,7 @@ export type EmbedBlockValue =
 
 export interface ArticleTeaser {
   readonly type: string
-  readonly article: ArticleReference
+  readonly article?: ArticleReference
 }
 
 export interface TeaserGridBlockValue {
@@ -291,7 +291,7 @@ export function unionMapForBlock(block: BlockValue): BlockUnionMap {
       return {
         articleTeaserGrid: {
           teasers: block.value.teasers.map(value =>
-            value ? {type: value.type, articleID: value.article.id} : null
+            value && value.article ? {type: value.type, articleID: value.article.id} : null
           ),
           numColumns: block.value.numColumns
         }

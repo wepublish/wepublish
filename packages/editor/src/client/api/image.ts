@@ -9,7 +9,11 @@ export interface FocalPoint {
 export interface ImageRefData {
   id: string
 
+  filename?: string
+  extension: string
   title?: string
+  description?: string
+
   width: number
   height: number
 
@@ -87,7 +91,10 @@ export const ImageURLFragment = gql`
 export const ImageRefFragment = gql`
   fragment ImageRefFragment on Image {
     id
+    filename
+    extension
     title
+    description
     width
     height
     ...ImageURLFragment
@@ -233,4 +240,24 @@ export function useImageUpdateMutation(
   opts?: MutationHookOptions<ImageUpdateMutationData, ImageUpdateMutationVariables>
 ) {
   return useMutation(ImageUpdateMutation, opts)
+}
+
+const DeleteImageMutation = gql`
+  mutation DeleteImage($id: ID!) {
+    deleteImage(id: $id)
+  }
+`
+
+export interface DeleteImageMutationData {
+  deleteImage?: boolean
+}
+
+export interface DeleteImageVariables {
+  id: string
+}
+
+export function useDeleteImageMutation(
+  opts?: MutationHookOptions<DeleteImageMutationData, DeleteImageVariables>
+) {
+  return useMutation<DeleteImageMutationData, DeleteImageVariables>(DeleteImageMutation, opts)
 }

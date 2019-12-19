@@ -37,18 +37,23 @@ type MemoryImage = Writeable<Image>
 
 interface MemoryArticle {
   id: string
+  createdAt: Date
+  updatedAt: Date
+  publishedAt?: Date
+  publishedVersion?: number
   versions: MemoryArticleVersion[]
   peer?: MemoryPeer
 }
 
-interface MemoryPageVersion extends Writeable<PageVersion> {
-  blocks: PageBlock[]
-}
+interface MemoryPageVersion extends Writeable<PageVersion> {}
 
 interface MemoryPage {
   id: string
+  createdAt: Date
+  updatedAt: Date
+  publishedAt?: Date
+  publishedVersion?: number
   versions: MemoryPageVersion[]
-  peer?: MemoryPeer
 }
 
 interface MemoryUser {
@@ -130,6 +135,17 @@ export class MemoryStorageAdapter implements StorageAdapter {
   async createImage(image: Image): Promise<Image> {
     this._images.push(image)
     return image
+  }
+
+  async deleteImage(deleteID: string): Promise<boolean | null> {
+    const index = this._images.findIndex(({id}) => id === deleteID)
+
+    if (index !== -1) {
+      this._images.splice(index, 1)
+      return true
+    }
+
+    return null
   }
 
   async updateImage({
@@ -232,12 +248,12 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return author
   }
 
-  async deleteAuthor(deleteID: string): Promise<Author | null> {
+  async deleteAuthor(deleteID: string): Promise<boolean | null> {
     const index = this._authors.findIndex(({id}) => id === deleteID)
 
     if (index !== -1) {
-      const [author] = this._authors.splice(index, 1)
-      return author
+      this._authors.splice(index, 1)
+      return true
     }
 
     return null
@@ -302,21 +318,23 @@ export class MemoryStorageAdapter implements StorageAdapter {
     const articleVersion: MemoryArticleVersion = {
       ...input,
       id,
+      state: VersionState.Draft,
       version: 0,
       createdAt: new Date(),
       updatedAt: new Date()
     }
 
-    this._articles.push({id, versions: [articleVersion]})
+    this._articles.push({
+      id,
+      createdAt: articleVersion.createdAt,
+      updatedAt: articleVersion.updatedAt,
+      versions: [articleVersion]
+    })
 
     return {
       id,
-
       createdAt: articleVersion.createdAt,
       updatedAt: articleVersion.updatedAt,
-      publishedAt:
-        articleVersion.state === VersionState.Published ? articleVersion.createdAt : undefined,
-
       latestVersion: 0
     }
   }
@@ -328,6 +346,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     article.versions.push({
       ...input,
       id,
+      state: VersionState.Draft,
       version: article.versions.length,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -341,6 +360,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     if (!article) return null
 
     const articleVersion = article.versions[version]
+    if (!articleVersion) return null
 
     article.versions[version] = {
       ...articleVersion,
@@ -353,27 +373,65 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this.getArticle(id)
   }
 
+  async publishArticleVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Article | null> {
+    const article = this._articles.find(article => article.id === id)
+    if (!article) return null
+
+    const articleVersion = article.versions[version]
+
+    if (!articleVersion) return null
+
+    article.publishedVersion = version
+    article.publishedAt = publishedAt
+    article.updatedAt = updatedAt
+
+    article.versions[version] = {
+      ...articleVersion,
+      id,
+      version,
+      state: VersionState.Published,
+      updatedAt: new Date()
+    }
+
+    return this.getArticle(id)
+  }
+
+  async unpublishArticle(id: string): Promise<Article | null> {
+    const article = this._articles.find(article => article.id === id)
+    if (!article) return null
+
+    article.publishedAt = undefined
+    article.publishedVersion = undefined
+
+    return this.getArticle(id)
+  }
+
+  async deleteArticle(deleteID: string): Promise<boolean | null> {
+    const index = this._articles.findIndex(({id}) => id === deleteID)
+
+    if (index !== -1) {
+      this._articles.splice(index, 1)
+      return true
+    }
+
+    return null
+  }
+
   async getArticles(filter: string | undefined, args: ArticlesArguments): Promise<Article[]> {
     const articles = this._articles.map(article => {
-      const reverseVersions = article.versions.slice().reverse()
-
-      const oldestVersion = article.versions[0]
-      const latestVersion = article.versions[article.versions.length - 1]
-
-      const publishedVersion = reverseVersions.find(
-        version => version.state === VersionState.Published
-      )
-
       return {
         id: article.id,
         peer: article.peer,
 
-        createdAt: oldestVersion.createdAt,
-        updatedAt: latestVersion.updatedAt,
-
-        publishedAt: publishedVersion && publishedVersion.updatedAt,
-
-        publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+        publishedAt: article.publishedAt,
+        publishedVersion: article.publishedVersion,
         latestVersion: article.versions.length - 1
       }
     })
@@ -386,24 +444,15 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
     if (!article) return null
 
-    const reverseVersions = article.versions.slice().reverse()
-
-    const oldestVersion = article.versions[0]
-    const latestVersion = article.versions[article.versions.length - 1]
-
-    const publishedVersion = reverseVersions.find(
-      version => version.state === VersionState.Published
-    )
-
     return {
       id: article.id,
       peer: article.peer,
 
-      createdAt: oldestVersion.createdAt,
-      updatedAt: latestVersion.updatedAt,
-      publishedAt: publishedVersion && publishedVersion.updatedAt,
+      createdAt: article.createdAt,
+      updatedAt: article.updatedAt,
+      publishedAt: article.publishedAt,
 
-      publishedVersion: publishedVersion ? article.versions.indexOf(publishedVersion) : undefined,
+      publishedVersion: article.publishedVersion,
       latestVersion: article.versions.length - 1
     }
   }
@@ -414,6 +463,8 @@ export class MemoryStorageAdapter implements StorageAdapter {
     if (!article) return null
 
     const articleVersion = article.versions[version]
+    if (!articleVersion) return null
+
     return {...articleVersion, id, version}
   }
 
@@ -441,20 +492,22 @@ export class MemoryStorageAdapter implements StorageAdapter {
       ...input,
       id,
       version: 0,
+      state: VersionState.Draft,
       createdAt: new Date(),
       updatedAt: new Date()
     }
 
-    this._pages.push({id, versions: [pageVersion]})
+    this._pages.push({
+      id,
+      createdAt: pageVersion.createdAt,
+      updatedAt: pageVersion.updatedAt,
+      versions: [pageVersion]
+    })
 
     return {
       id,
-
       createdAt: pageVersion.createdAt,
       updatedAt: pageVersion.updatedAt,
-      publishedAt: pageVersion.state === VersionState.Published ? pageVersion.createdAt : undefined,
-
-      publishedVersion: pageVersion.state === VersionState.Published ? 0 : undefined,
       latestVersion: 0
     }
   }
@@ -466,6 +519,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
     page.versions.push({
       ...input,
       id,
+      state: VersionState.Draft,
       version: page.versions.length,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -489,43 +543,75 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return this.getPage(id)
   }
 
+  async publishPageVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Page | null> {
+    const page = this._pages.find(page => page.id === id)
+    if (!page) return null
+
+    const pageVersion = page.versions[version]
+    if (!pageVersion) return null
+
+    page.publishedVersion = version
+    page.publishedAt = publishedAt
+    page.updatedAt = updatedAt
+
+    page.versions[version] = {
+      ...pageVersion,
+      id,
+      version,
+      state: VersionState.Published,
+      updatedAt: new Date()
+    }
+
+    return this.getPage(id)
+  }
+
+  async unpublishPage(id: string): Promise<Page | null> {
+    const page = this._pages.find(page => page.id === id)
+    if (!page) return null
+
+    page.publishedAt = undefined
+    page.publishedVersion = undefined
+
+    return this.getPage(id)
+  }
+
+  async deletePage(deleteID: string): Promise<boolean | null> {
+    const index = this._pages.findIndex(({id}) => id === deleteID)
+
+    if (index !== -1) {
+      this._pages.splice(index, 1)
+      return true
+    }
+
+    return null
+  }
+
   async getPages(): Promise<Page[]> {
-    const page = this._pages.map(page => {
-      const reverseVersions = page.versions.slice().reverse()
-
-      const oldestVersion = page.versions[0]
-      const latestVersion = page.versions[page.versions.length - 1]
-
-      const publishedVersion = reverseVersions.find(
-        version => version.state === VersionState.Published
-      )
-
+    const pages = this._pages.map(page => {
       return {
         id: page.id,
-        peer: page.peer,
-
-        createdAt: oldestVersion.createdAt,
-        updatedAt: latestVersion.updatedAt,
-
-        publishedAt: publishedVersion && publishedVersion.updatedAt,
-
-        publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
+        createdAt: page.createdAt,
+        updatedAt: page.updatedAt,
+        publishedAt: page.publishedAt,
+        publishedVersion: page.publishedVersion,
         latestVersion: page.versions.length - 1
       }
     })
 
-    return page
+    return pages
   }
 
   async getPage(id: string | undefined, slug?: string): Promise<Page | null> {
     if (id == null && slug == null) return null
 
     const page = this._pages.find(page => {
-      if (slug != null) {
-        const reverseVersions = page.versions.slice().reverse()
-        const publishedVersion = reverseVersions.find(
-          version => version.state === VersionState.Published
-        )
+      if (slug != null && page.publishedVersion) {
+        const publishedVersion = page.versions[page.publishedVersion]
 
         if (publishedVersion) {
           return (id != null ? page.id === id : true) && publishedVersion.slug === slug
@@ -539,23 +625,14 @@ export class MemoryStorageAdapter implements StorageAdapter {
 
     if (!page) return null
 
-    const reverseVersions = page.versions.slice().reverse()
-
-    const oldestVersion = page.versions[0]
-    const latestVersion = page.versions[page.versions.length - 1]
-
-    const publishedVersion = reverseVersions.find(
-      version => version.state === VersionState.Published
-    )
-
     return {
       id: page.id,
 
-      createdAt: oldestVersion.createdAt,
-      updatedAt: latestVersion.updatedAt,
+      createdAt: page.createdAt,
+      updatedAt: page.updatedAt,
+      publishedAt: page.publishedAt,
 
-      publishedAt: publishedVersion && publishedVersion.updatedAt,
-      publishedVersion: publishedVersion ? page.versions.indexOf(publishedVersion) : undefined,
+      publishedVersion: page.publishedVersion,
       latestVersion: page.versions.length - 1
     }
   }

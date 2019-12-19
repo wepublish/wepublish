@@ -107,7 +107,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     lead: {type: GraphQLNonNull(GraphQLString)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     imageID: {type: GraphQLID},
-    authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLID))},
+    authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
 
     shared: {type: GraphQLNonNull(GraphQLBoolean)},
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
@@ -181,7 +181,9 @@ export const GraphQLArticle: GraphQLObjectType<Article, Context> = new GraphQLOb
     published: {
       type: GraphQLArticleVersion,
       resolve(root, _args, {storageAdapter}) {
-        if (root.publishedVersion == undefined) return undefined
+        if (root.publishedAt == undefined || root.publishedVersion == undefined) return null
+        if (new Date().getTime() < root.publishedAt.getTime()) return null
+
         return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
       }
     },

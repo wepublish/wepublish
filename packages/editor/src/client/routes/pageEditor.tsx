@@ -27,9 +27,15 @@ import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
 import {TeaserGridBlock} from '../blocks/teaserGridBlock'
-import {BlockType, VersionState} from '../api/common'
+import {BlockType} from '../api/common'
 
-import {PageInput, useCreatePageMutation, useUpdatePageMutation, useGetPageQuery} from '../api/page'
+import {
+  PageInput,
+  useCreatePageMutation,
+  useUpdatePageMutation,
+  useGetPageQuery,
+  usePublishPageMutation
+} from '../api/page'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
@@ -43,6 +49,7 @@ import {
   RichTextBlockListValue,
   ImageBlockListValue
 } from '../api/blocks'
+
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {ImageBlock} from '../blocks/imageBlock'
@@ -65,7 +72,9 @@ export function PageEditor({id}: PageEditorProps) {
     createPage,
     {data: createData, loading: isCreating, error: createError}
   ] = useCreatePageMutation()
+
   const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation()
+  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -76,6 +85,7 @@ export function PageEditor({id}: PageEditorProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<PageMetadata>({
     slug: '',
     title: '',
@@ -84,8 +94,8 @@ export function PageEditor({id}: PageEditorProps) {
     image: undefined
   })
 
+  const isNew = id == undefined
   const [blocks, setBlocks] = useState<PageBlockValue[]>([])
-  const [isNew] = useState(id == undefined)
 
   const pageID = id || createData?.createPage.id
 
@@ -96,12 +106,14 @@ export function PageEditor({id}: PageEditorProps) {
   })
 
   const isNotFound = pageData && !pageData.page
-  const isDisabled = isLoading || isCreating || isUpdating || isNotFound
+  const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
 
   useEffect(() => {
     if (pageData?.page) {
-      const latest = pageData.page.latest
+      const {latest, publishedAt} = pageData.page
       const {slug, title, description, tags, image, blocks} = latest
+
+      if (publishedAt) setPublishedAt(new Date(publishedAt))
 
       setMetadata({
         slug,
@@ -116,11 +128,11 @@ export function PageEditor({id}: PageEditorProps) {
   }, [pageData])
 
   useEffect(() => {
-    if (createError || updateError) {
+    if (createError || updateError || publishError) {
       setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError!.message)
+      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
     }
-  }, [createError, updateError])
+  }, [createError, updateError, publishError])
 
   function createInput(): PageInput {
     return {
@@ -137,7 +149,7 @@ export function PageEditor({id}: PageEditorProps) {
     const input = createInput()
 
     if (pageID) {
-      await updatePage({variables: {id: pageID, state: VersionState.Draft, input}})
+      await updatePage({variables: {id: pageID, input}})
 
       setSuccessToastOpen(true)
       setSuccessMessage('Page Draft Saved')
@@ -156,11 +168,26 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }
 
-  async function handlePublish() {
+  async function handlePublish(publishDate: Date, updateDate: Date) {
     if (pageID) {
-      await updatePage({
-        variables: {id: pageID, state: VersionState.Published, input: createInput()}
+      const {data} = await updatePage({
+        variables: {id: pageID, input: createInput()}
       })
+
+      if (data) {
+        const {data: publishData} = await publishPage({
+          variables: {
+            id: pageID,
+            version: data.updatePage.latest.version,
+            publishedAt: publishDate.toISOString(),
+            updatedAt: updateDate.toISOString()
+          }
+        })
+
+        if (publishData?.publishPage?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishPage?.publishedAt))
+        }
+      }
     }
 
     setSuccessToastOpen(true)
@@ -276,10 +303,11 @@ export function PageEditor({id}: PageEditorProps) {
       <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
         {() => (
           <PublishPagePanel
+            initialPublishDate={publishedAt}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
-            onConfirm={() => {
-              handlePublish()
+            onConfirm={(publishDate, updateDate) => {
+              handlePublish(publishDate, updateDate)
               setPublishDialogOpen(false)
             }}
           />

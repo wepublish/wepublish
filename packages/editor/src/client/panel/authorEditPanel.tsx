@@ -12,18 +12,16 @@ import {
   PanelSectionHeader,
   Card,
   Drawer,
-  LayerContainer,
-  Layer,
   IconButton,
   Image,
-  Toast
+  Toast,
+  ZIndex
 } from '@karma.run/ui'
 
 import {
   MaterialIconClose,
   MaterialIconImageOutlined,
   MaterialIconEditOutlined,
-  MaterialIconDeleteOutlined,
   MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
@@ -150,8 +148,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             <Card>
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
                         icon={MaterialIconImageOutlined}
                         title="Choose Image"
@@ -165,14 +163,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                         onClick={() => setEditModalOpen(true)}
                       />
                       <IconButton
-                        icon={MaterialIconDeleteOutlined}
+                        icon={MaterialIconClose}
                         title="Remove Image"
                         margin={Spacing.ExtraSmall}
                         onClick={() => setImage(undefined)}
                       />
-                    </Layer>
+                    </Box>
                     <Image src={image.previewURL} width="100%" height={200} />
-                  </LayerContainer>
+                  </Box>
                 )}
               </PlaceholderInput>
             </Card>

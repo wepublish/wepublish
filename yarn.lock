@@ -845,15 +845,15 @@
   dependencies:
     sharp "^0.22.1"
 
-"@karma.run/media-storage-local@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@karma.run/media-storage-local/-/media-storage-local-0.1.1.tgz#6993fc0c3174887413f95ce63e031153e1a90193"
-  integrity sha512-PKdt89zPWxDmnL7aSfU6IPUBKm9uFdLUycOyD3I0CBIWieai94Vz9fEBs0TYFeZA77vXiEw9zC6U1odGpMAkDA==
+"@karma.run/media-storage-local@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@karma.run/media-storage-local/-/media-storage-local-0.1.4.tgz#e2331840c602c268bffc0180cbed7c227c315c4e"
+  integrity sha512-Ne0EF6gTEnsqM3cPJLXdwLasNo/rDtUDx6S1GbBR8E0ICyLlbBSRAMJVLHJ/XZeoETAOCSYzEZ6MyYylpN/+Tw==
 
-"@karma.run/media@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@karma.run/media/-/media-0.1.0.tgz#a881f8bc1452ccde8ed2e2a20a72c96d6aae8f37"
-  integrity sha512-Ame7fJbrMJgkAhDOisNhNQtUBGsMQnqyGcLoQO1MlGVxPtAoW09Vtb5XabaaXFgrlxURRqQq8tsPkedA5SxiIA==
+"@karma.run/media@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@karma.run/media/-/media-0.1.2.tgz#5c25cb2b25115d3136fc201d672bf9b16ea20d16"
+  integrity sha512-SrDVB0Q391IGYMlmCBk/jWVkAK0VVtB6pIVhkgkBz8Sq99ng/hyfrLFIGPC2MdOqVnXH4JWt0y+B093OBxY7Vw==
   dependencies:
     buffer-peek-stream "^1.0.1"
     fastify "^2.5.0"
@@ -881,10 +881,10 @@
   dependencies:
     axios "^0.18.0"
 
-"@karma.run/ui@0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.2.9.tgz#35add67a1bc3fb276afb79f787b307491a75d325"
-  integrity sha512-ElHKohnyTMJi+qI8OSDSpqZ4k7H0JAzmBN4hPBSsXuXWEXBwQ17zgSvrnUhMTpsA2ij9+F7d+WZDFEtiF7IVwA==
+"@karma.run/ui@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.3.1.tgz#e5f4ddefdb0202fec764959955c2e193d75b8b75"
+  integrity sha512-eM4kTrOzzyRSPSzWnCXKeMlDAYGcwX6rF8oID36u3FTFwEziDNg79ajl14JATuxpGjapOmuskYvb3WolmnR5pQ==
   dependencies:
     "@karma.run/icons" "^1.0.0"
     "@karma.run/react" "^0.1.1"
@@ -2798,6 +2798,14 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+crlf@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/crlf/-/crlf-1.1.1.tgz#24172841b4c83529a6aa4489df7eed958b2ed16f"
+  integrity sha1-JBcoQbTINSmmqkSJ337tlYsu0W8=
+  dependencies:
+    glub "^1.0.0"
+    transform-file "^1.0.1"
+
 cross-spawn@6.0.5, cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
@@ -3925,6 +3933,17 @@ glob-parent@~5.1.0:
   dependencies:
     is-glob "^4.0.1"
 
+glob@^5.0.5:
+  version "5.0.15"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-5.0.15.tgz#1bc936b9e02f4a603fcc222ecf7633d30b8b93b1"
+  integrity sha1-G8k2ueAvSmA/zCIuz3Yz0wuLk7E=
+  dependencies:
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "2 || 3"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 glob@^7.0.0, glob@^7.0.3, glob@^7.1.3, glob@^7.1.4:
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.4.tgz#aa608a2f6c577ad357e1ae5a5c26d9a8d1969255"
@@ -4003,6 +4022,14 @@ globby@^6.1.0:
     object-assign "^4.0.1"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
+
+glub@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/glub/-/glub-1.0.3.tgz#56c1643298ae25065c6315003337bba69d2fb866"
+  integrity sha1-VsFkMpiuJQZcYxUAMze7pp0vuGY=
+  dependencies:
+    glob "^5.0.5"
+    minimist "^1.1.1"
 
 got@^6.7.1:
   version "6.7.1"
@@ -5218,7 +5245,7 @@ minimalistic-crypto-utils@^1.0.0, minimalistic-crypto-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
   integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
 
-minimatch@^3.0.4:
+"minimatch@2 || 3", minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
@@ -5230,7 +5257,7 @@ minimist@0.0.8:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
   integrity sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0=
 
-minimist@^1.2.0:
+minimist@^1.1.1, minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
   integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
@@ -7489,6 +7516,13 @@ touch@^3.1.0:
   integrity sha512-WBx8Uy5TLtOSRtIq+M03/sKDrXCLHxwDcquSP2c43Le03/9serjQBIztjRz6FkJez9D/hleyAXTBGLwwZUw9lA==
   dependencies:
     nopt "~1.0.10"
+
+transform-file@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/transform-file/-/transform-file-1.0.1.tgz#7f95984acd23d4ebf8abb47ee9d83be166d12687"
+  integrity sha1-f5WYSs0j1Ov4q7R+6dg74WbRJoc=
+  dependencies:
+    os-tmpdir "^1.0.0"
 
 ts-invariant@^0.4.0, ts-invariant@^0.4.4:
   version "0.4.4"

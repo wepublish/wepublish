@@ -103,20 +103,17 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                     <Box marginRight={Spacing.Tiny}>
                       <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                     </Box>
-                    {article.updatedAt && new Date(article.updatedAt).toLocaleString()}
+                    {article.latest.updatedAt &&
+                      new Date(article.latest.updatedAt).toLocaleString()}
                   </Box>
                 </Typography>
-                {article.latest.state === VersionState.Draft && (
-                  <Typography element="div" variant="subtitle1" color="gray">
-                    <Box
-                      marginRight={Spacing.Small}
-                      flexDirection="row"
-                      alignItems="center"
-                      display="flex">
-                      Draft
-                    </Box>
-                  </Typography>
-                )}
+                <Typography element="div" variant="subtitle1" color="gray">
+                  {article.publishedAt != undefined && 'Published'}
+                  {article.publishedAt != undefined &&
+                    article.latest.state === VersionState.Draft &&
+                    ' / '}
+                  {article.latest.state === VersionState.Draft && 'Draft'}
+                </Typography>
               </Box>
               <Divider />
             </Box>

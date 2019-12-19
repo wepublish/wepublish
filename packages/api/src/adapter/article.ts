@@ -68,8 +68,6 @@ export interface ArticleTeaser {
 }
 
 export interface ArticleInput {
-  readonly state: VersionState
-
   readonly preTitle?: string
   readonly title: string
   readonly lead: string

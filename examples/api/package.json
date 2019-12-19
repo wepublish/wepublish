@@ -22,8 +22,9 @@
   "dependencies": {
     "@wepublish/api": "*",
     "@wepublish/api-storage-memory": "*",
-    "@karma.run/media": "^0.1.0",
-    "@karma.run/media-storage-local": "^0.1.1",
+    "@wepublish/api-media-karma": "*",
+    "@karma.run/media": "^0.1.2",
+    "@karma.run/media-storage-local": "^0.1.4",
     "@karma.run/media-image-sharp": "^0.1.1",
     "apollo-server": "^2.9.7",
     "graphql": "^14.5.8"

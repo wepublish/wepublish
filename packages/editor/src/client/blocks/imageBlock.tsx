@@ -6,11 +6,10 @@ import {
   BlockProps,
   Image,
   Box,
-  Layer,
-  LayerContainer,
   Spacing,
   IconButton,
-  TypographicTextArea
+  TypographicTextArea,
+  ZIndex
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
@@ -41,8 +40,8 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       <Box height={300}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <LayerContainer>
-              <Layer right={0} top={0}>
+            <Box position="relative" width="100%" height="100%">
+              <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                 <IconButton
                   icon={MaterialIconImageOutlined}
                   title="Choose Image"
@@ -61,9 +60,9 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                     title="Use as Meta Image"
                     onClick={() => setChooseModalOpen(true)}
                   /> */}
-              </Layer>
+              </Box>
               <Image src={image.largeURL} width="100%" height={300} contain />
-            </LayerContainer>
+            </Box>
           )}
         </PlaceholderInput>
       </Box>

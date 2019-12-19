@@ -5,12 +5,11 @@ import {
   Drawer,
   BlockProps,
   Box,
-  Layer,
-  LayerContainer,
   Spacing,
   IconButton,
   DescriptionList,
-  DescriptionListItem
+  DescriptionListItem,
+  ZIndex
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined} from '@karma.run/icons'
@@ -33,15 +32,15 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
       <Box height={300}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <LayerContainer>
-              <Layer right={0} top={0}>
+            <Box position="relative" width="100%" height="100%">
+              <Box position="absolute" zIndex={ZIndex.Default} top={0} right={0}>
                 <IconButton
                   icon={MaterialIconEditOutlined}
                   title="Edit Embed"
                   onClick={() => setEmbedDialogOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />
-              </Layer>
+              </Box>
               <Box
                 display="flex"
                 alignItems="center"
@@ -50,7 +49,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
                 height="100%">
                 <EmbedPreview value={value} />
               </Box>
-            </LayerContainer>
+            </Box>
           )}
         </PlaceholderInput>
       </Box>

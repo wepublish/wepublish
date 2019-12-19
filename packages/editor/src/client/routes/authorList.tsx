@@ -8,7 +8,15 @@ import {
   ImagePlaceholder,
   Drawer,
   Image,
-  SearchInput
+  SearchInput,
+  OptionButton,
+  Dialog,
+  Panel,
+  PanelHeader,
+  NavigationButton,
+  PanelSection,
+  DescriptionList,
+  DescriptionListItem
 } from '@karma.run/ui'
 
 import {
@@ -22,9 +30,14 @@ import {
   AuthorCreateRoute
 } from '../route'
 
-import {useListAuthorsQuery} from '../api/author'
+import {useListAuthorsQuery, Author, useDeleteAuthorMutation} from '../api/author'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@karma.run/react'
+import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
+
+enum ConfirmAction {
+  Delete = 'delete'
+}
 
 export function AuthorList() {
   const {current} = useRoute()
@@ -40,6 +53,10 @@ export function AuthorList() {
 
   const [filter, setFilter] = useState('')
 
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [currentAuthor, setCurrentAuthor] = useState<Author>()
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+
   const {data, refetch, loading: isLoading} = useListAuthorsQuery({
     variables: {
       filter: filter || undefined,
@@ -47,6 +64,8 @@ export function AuthorList() {
     },
     fetchPolicy: 'network-only'
   })
+
+  const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
   useEffect(() => {
     if (current?.type === RouteType.AuthorCreate) {
@@ -60,33 +79,48 @@ export function AuthorList() {
     }
   }, [current])
 
-  const authors = data?.authors.nodes.map(({id, name, image}) => (
-    <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-      {props => (
-        <Link {...props} route={AuthorEditRoute.create({id})}>
-          <Box
-            key={id}
-            marginBottom={Spacing.ExtraSmall}
-            display="flex"
-            flexDirection="row"
-            alignItems="center">
-            <Avatar width={50} height={50} marginRight={Spacing.Small}>
-              {image ? (
-                <Image src={image.squareURL} width="100%" height="100%" />
-              ) : (
-                <ImagePlaceholder width="100%" height="100%" />
-              )}
-            </Avatar>
+  const authors = data?.authors.nodes.map(author => {
+    const {id, name, image} = author
 
+    return (
+      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
+        <Box
+          key={id}
+          marginBottom={Spacing.ExtraSmall}
+          display="flex"
+          flexDirection="row"
+          alignItems="center">
+          <Avatar width={50} height={50} marginRight={Spacing.Small}>
+            {image ? (
+              <Image src={image.squareURL} width="100%" height="100%" />
+            ) : (
+              <ImagePlaceholder width="100%" height="100%" />
+            )}
+          </Avatar>
+
+          <Link route={AuthorEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
               {name || 'Unknown'}
             </Typography>
-          </Box>
-          <Divider />
-        </Link>
-      )}
-    </Box>
-  ))
+          </Link>
+
+          <Box flexGrow={1} />
+          <OptionButton
+            position="left"
+            menuItems={[
+              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+            ]}
+            onMenuItemClick={item => {
+              setCurrentAuthor(author)
+              setConfirmationDialogOpen(true)
+              setConfirmAction(item.id as ConfirmAction)
+            }}
+          />
+        </Box>
+        <Divider />
+      </Box>
+    )
+  })
 
   return (
     <>
@@ -133,6 +167,50 @@ export function AuthorList() {
           />
         )}
       </Drawer>
+      <Dialog open={isConfirmationDialogOpen} width={340}>
+        {() => (
+          <Panel>
+            <PanelHeader
+              title="Delete Author?"
+              leftChildren={
+                <NavigationButton
+                  icon={MaterialIconClose}
+                  label="Cancel"
+                  onClick={() => setConfirmationDialogOpen(false)}
+                />
+              }
+              rightChildren={
+                <NavigationButton
+                  icon={MaterialIconCheck}
+                  label="Confirm"
+                  disabled={isDeleting}
+                  onClick={async () => {
+                    if (!currentAuthor) return
+
+                    switch (confirmAction) {
+                      case ConfirmAction.Delete:
+                        await deleteAuthor({
+                          variables: {id: currentAuthor.id}
+                        })
+                        break
+                    }
+
+                    setConfirmationDialogOpen(false)
+                    refetch()
+                  }}
+                />
+              }
+            />
+            <PanelSection>
+              <DescriptionList>
+                <DescriptionListItem label="Name">
+                  {currentAuthor?.name || 'Unknown'}
+                </DescriptionListItem>
+              </DescriptionList>
+            </PanelSection>
+          </Panel>
+        )}
+      </Dialog>
     </>
   )
 }

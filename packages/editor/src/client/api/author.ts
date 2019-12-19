@@ -139,3 +139,23 @@ export function useUpdateAuthorMutation(
 ) {
   return useMutation<UpdateAuthorMutationData, UpdateAuthorVariables>(UpdateAuthorMutation, opts)
 }
+
+const DeleteAuthorMutation = gql`
+  mutation DeleteAuthor($id: ID!) {
+    deleteAuthor(id: $id)
+  }
+`
+
+export interface DeleteAuthorMutationData {
+  deleteAuthor?: boolean
+}
+
+export interface DeleteAuthorVariables {
+  id: string
+}
+
+export function useDeleteAuthorMutation(
+  opts?: MutationHookOptions<DeleteAuthorMutationData, DeleteAuthorVariables>
+) {
+  return useMutation<DeleteAuthorMutationData, DeleteAuthorVariables>(DeleteAuthorMutation, opts)
+}

@@ -9,8 +9,18 @@ import {
   Drawer,
   Image,
   Card,
-  SearchInput
+  SearchInput,
+  Dialog,
+  Panel,
+  PanelHeader,
+  NavigationButton,
+  PanelSection,
+  DescriptionList,
+  DescriptionListItem,
+  ZIndex,
+  IconButton
 } from '@karma.run/ui'
+
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {
@@ -26,7 +36,12 @@ import {
 
 import {RouteActionType} from '@karma.run/react'
 import {ImageUploadAndEditPanel} from '../panel/imageUploadAndEditPanel'
-import {useImageListQuery} from '../api/image'
+import {useImageListQuery, ImageRefData, useDeleteImageMutation} from '../api/image'
+import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
+
+enum ConfirmAction {
+  Delete = 'delete'
+}
 
 const ImagesPerPage = 24
 
@@ -43,6 +58,10 @@ export function ImageList() {
 
   const [filter, setFilter] = useState('')
 
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [currentImage, setCurrentImage] = useState<ImageRefData>()
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+
   const after = current?.query?.after
   const before = current?.query?.before
 
@@ -56,6 +75,8 @@ export function ImageList() {
       last: before ? ImagesPerPage : undefined
     }
   })
+
+  const [deleteImage, {loading: isDeleting}] = useDeleteImageMutation()
 
   const images = data?.images.nodes ?? []
   const {startCursor, endCursor, hasPreviousPage, hasNextPage} = data?.images.pageInfo ?? {}
@@ -95,15 +116,36 @@ export function ImageList() {
       <Box>
         {images.length ? (
           <Grid spacing={Spacing.Small}>
-            {images.map(({id, thumbURL}) => (
-              <Column key={id} ratio={1 / 3}>
-                <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
-                  <Card height={200} overflow="hidden">
-                    <Image src={thumbURL} width="100%" height="100%" />
-                  </Card>
-                </Link>
-              </Column>
-            ))}
+            {images.map(image => {
+              const {id, thumbURL} = image
+
+              return (
+                <Column key={id} ratio={1 / 3}>
+                  <Box position="relative" height={200} flexGrow={1}>
+                    <Box
+                      position="absolute"
+                      zIndex={ZIndex.Default}
+                      right={0}
+                      top={0}
+                      padding={Spacing.ExtraSmall}>
+                      <IconButton
+                        icon={MaterialIconDeleteOutlined}
+                        onClick={item => {
+                          setCurrentImage(image)
+                          setConfirmationDialogOpen(true)
+                          setConfirmAction(ConfirmAction.Delete)
+                        }}
+                      />
+                    </Box>
+                    <Card overflow="hidden" width="100%" height="100%">
+                      <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
+                        <Image src={thumbURL} width="100%" height="100%" />
+                      </Link>
+                    </Card>
+                  </Box>
+                </Column>
+              )
+            })}
             {missingColumns.map((value, index) => (
               <Column key={index} ratio={1 / 3}></Column>
             ))}
@@ -167,6 +209,56 @@ export function ImageList() {
           />
         )}
       </Drawer>
+      <Dialog open={isConfirmationDialogOpen} width={340}>
+        {() => (
+          <Panel>
+            <PanelHeader
+              title="Delete Image?"
+              leftChildren={
+                <NavigationButton
+                  icon={MaterialIconClose}
+                  label="Cancel"
+                  onClick={() => setConfirmationDialogOpen(false)}
+                />
+              }
+              rightChildren={
+                <NavigationButton
+                  icon={MaterialIconCheck}
+                  label="Confirm"
+                  disabled={isDeleting}
+                  onClick={async () => {
+                    if (!currentImage) return
+
+                    switch (confirmAction) {
+                      case ConfirmAction.Delete:
+                        await deleteImage({
+                          variables: {id: currentImage.id}
+                        })
+                        break
+                    }
+
+                    setConfirmationDialogOpen(false)
+                    refetch()
+                  }}
+                />
+              }
+            />
+            <PanelSection>
+              <DescriptionList>
+                <DescriptionListItem label="Filename">
+                  {`${currentImage?.filename || 'untitled'}${currentImage?.extension}` || '-'}
+                </DescriptionListItem>
+                <DescriptionListItem label="Title">
+                  {currentImage?.title || 'Untitled'}
+                </DescriptionListItem>
+                <DescriptionListItem label="Description">
+                  {currentImage?.description || '-'}
+                </DescriptionListItem>
+              </DescriptionList>
+            </PanelSection>
+          </Panel>
+        )}
+      </Dialog>
     </>
   )
 }

@@ -98,7 +98,9 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
     published: {
       type: GraphQLPageVersion,
       resolve(root: Page, _args, {storageAdapter}: Context) {
-        if (root.publishedVersion == undefined) return undefined
+        if (root.publishedAt == undefined || root.publishedVersion == undefined) return undefined
+        if (new Date().getTime() < root.publishedAt.getTime()) return null
+
         return storageAdapter.getPageVersion(root.id, root.publishedVersion)
       }
     },
