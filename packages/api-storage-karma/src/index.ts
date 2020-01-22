@@ -70,7 +70,6 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
   private readonly remote: Remote
 
-  // TODO: Persistent / Refresh session
   private lastSessionRefresh?: Date
   private session?: UserSession
 
@@ -619,7 +618,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
             publishedVersion: page.publishedVersion
           }))
       } else {
-        return pages.map((page) => ({
+        return pages.map(page => ({
           id: page.id,
           createdAt: new Date(page.createdAt),
           updatedAt: new Date(page.updatedAt),
