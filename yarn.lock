@@ -881,10 +881,10 @@
   dependencies:
     axios "^0.18.0"
 
-"@karma.run/ui@0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.3.3.tgz#ac0fb318bb8af4766640dadfe2f7c12a2077dcf1"
-  integrity sha512-StUo0C/gZjlzZJmEGdZ/Go/aN4bLcVDWG3JOGdyvD30AJ9FB0w5b9fjULGCBU5La2W81WSXOgkW/QTzktf7ILw==
+"@karma.run/ui@0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.3.5.tgz#4860875634e9d73255d147aa20666780bb3f8a64"
+  integrity sha512-1i46THbHO7E05i3xhtLP07uUqOg+5Qcssu1wK4viJp55QD3RSUPWBl4EDmEnkcL9HS7C5WWctXeWF+MgDFh/WQ==
   dependencies:
     "@karma.run/icons" "^1.0.0"
     "@karma.run/react" "^0.1.1"

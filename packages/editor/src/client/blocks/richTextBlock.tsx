@@ -85,7 +85,11 @@ enum CommandType {
 }
 
 const ElementTags: any = {
-  A: (el: Element) => ({type: InlineFormat.Link, url: el.getAttribute('href')}),
+  A: (el: Element) => ({
+    type: InlineFormat.Link,
+    url: el.getAttribute('data-href') || el.getAttribute('href'),
+    title: el.getAttribute('data-title') || el.getAttribute('title')
+  }),
   H1: () => ({type: BlockFormat.H1}),
   H2: () => ({type: BlockFormat.H2}),
   H3: () => ({type: BlockFormat.H3}),
@@ -181,10 +185,10 @@ function renderElement({attributes, children, element}: RenderElementProps) {
       return <li {...attributes}>{children}</li>
 
     case InlineFormat.Link:
-      const title = element.title ? `${element.title}:\n${element.url}` : element.url
+      const title = element.title ? `${element.title}: ${element.url}` : element.url
 
       return (
-        <Link title={title} {...attributes}>
+        <Link title={title} data-title={element.title} data-href={element.url} {...attributes}>
           {children}
         </Link>
       )
@@ -463,10 +467,13 @@ function LinkFormatButton() {
 
 function validateURL(url: string): string | null {
   try {
-    url = url.match(/^https?:\/\//) ? url : `http://${url}`
     return new URL(url).toString()
   } catch (err) {
-    return null
+    try {
+      return new URL(`https://${url}`).toString()
+    } catch (err) {
+      return null
+    }
   }
 }
 

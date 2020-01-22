@@ -74,6 +74,7 @@ async function asyncMain() {
   await startMediaServer({
     storageBackend: new LocalStorageBackend(mediaStoragePath),
     imageBackend: new SharpImageBackend(),
+    maxUploadSize: 1024 * 1024 * 10,
     port: mediaServerPort,
     address: mediaServerAddress,
     token: mediaServerToken
