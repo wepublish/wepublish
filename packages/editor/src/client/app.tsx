@@ -10,6 +10,7 @@ import {ArticleEditor} from './routes/articleEditor'
 import {ImageList} from './routes/imageList'
 import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
+import {AuthorList} from './routes/authorList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -28,8 +29,13 @@ export function contentForRoute(route: Route) {
     case RouteType.ImageEdit:
       return <ImageList />
 
+    case RouteType.AuthorList:
+    case RouteType.AuthorCreate:
+    case RouteType.AuthorEdit:
+      return <AuthorList />
+
     case RouteType.NotFound:
-      return null
+      return <ArticleList />
   }
 
   return null
@@ -42,15 +48,6 @@ export function App() {
     switch (current.type) {
       case RouteType.Login:
         return <Login />
-
-      case RouteType.Index:
-      case RouteType.ArticleList:
-      case RouteType.PageList:
-      case RouteType.ImageList:
-      case RouteType.ImageUpload:
-      case RouteType.ImageEdit:
-      case RouteType.NotFound:
-        return <Base>{contentForRoute(current)}</Base>
 
       case RouteType.ArticleCreate:
       case RouteType.ArticleEdit:
@@ -65,6 +62,9 @@ export function App() {
         return (
           <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
         )
+
+      default:
+        return <Base>{contentForRoute(current)}</Base>
     }
   }
 

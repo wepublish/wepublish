@@ -1,7 +1,19 @@
-import React from 'react'
+import React, {useState, useRef, memo, useCallback, useEffect} from 'react'
 
-import {Value, Editor, SchemaProperties} from 'slate'
-import {RenderMarkProps, RenderInlineProps, RenderBlockProps, Plugin} from 'slate-react'
+import {Editor, Node as SlateNode, createEditor, Range} from 'slate'
+
+import {
+  useSlate,
+  Editable,
+  RenderElementProps,
+  Slate,
+  withReact,
+  RenderLeafProps
+} from 'slate-react'
+
+import {withHistory} from 'slate-history'
+import {defineSchema} from 'slate-schema'
+import {jsx} from 'slate-hyperscript'
 
 import {
   MaterialIconFormatBold,
@@ -12,315 +24,624 @@ import {
   MaterialIconLooks3Outlined,
   MaterialIconFormatListBulleted,
   MaterialIconFormatListNumbered,
-  MaterialIconLooksOneOutlined
+  MaterialIconLooksOneOutlined,
+  MaterialIconLink,
+  MaterialIconLinkOff,
+  MaterialIconClose,
+  MaterialIconCheck
 } from '@karma.run/icons'
 
 import {
-  RichTextInputBlock,
-  RichTextInputBlockProps,
   Typography,
-  RichTextMenuPlugin
+  ToolbarButtonProps,
+  ToolbarButton,
+  ToolbarDivider,
+  Link,
+  BlockProps,
+  Toolbar,
+  Dialog,
+  Panel,
+  PanelHeader,
+  NavigationButton,
+  PanelSection,
+  TextInput,
+  Spacing,
+  Box
 } from '@karma.run/ui'
+import {RichTextBlockValue} from '../api/blocks'
 
-enum BlockType {
-  Heading1 = 'heading-one',
-  Heading2 = 'heading-two',
-  Heading3 = 'heading-three',
+enum BlockFormat {
+  H1 = 'heading-one',
+  H2 = 'heading-two',
+  H3 = 'heading-three',
   Paragraph = 'paragraph',
-  BulletedList = 'bulleted-list',
-  NumberedList = 'numbered-list',
+  UnorderedList = 'unordered-list',
+  OrderedList = 'ordered-list',
   ListItem = 'list-item'
 }
 
-enum InlineType {
+enum InlineFormat {
   Link = 'link'
 }
 
-enum MarkType {
+enum TextFormat {
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
   Strikethrough = 'strikethrough'
 }
 
-const DEFAULT_NODE = 'paragraph'
+const BlockFormats: string[] = Object.values(BlockFormat)
+const InlineFormats: string[] = Object.values(InlineFormat)
+const TextFormats: string[] = Object.values(TextFormat)
+const ListFormats: string[] = [BlockFormat.UnorderedList, BlockFormat.OrderedList]
 
-function renderMark(props: RenderMarkProps, editor: Editor, next: () => any) {
-  const {children, mark, attributes} = props
-
-  switch (mark.type) {
-    case MarkType.Bold:
-      return <strong {...attributes}>{children}</strong>
-
-    case MarkType.Italic:
-      return <em {...attributes}>{children}</em>
-
-    case MarkType.Underline:
-      return <u {...attributes}>{children}</u>
-
-    case MarkType.Strikethrough:
-      return <del {...attributes}>{children}</del>
-
-    default:
-      return next()
-  }
+enum CommandType {
+  ToggleFormat = 'toggle_format',
+  InsertData = 'insert_data',
+  InsertText = 'insert_text',
+  InsertLink = 'insert_link',
+  RemoveLink = 'remove_link'
 }
 
-function renderBlock(
-  {children, node, attributes}: RenderBlockProps,
-  editor: Editor,
-  next: () => any
-) {
-  switch (node.type) {
-    case BlockType.Heading1:
+const ElementTags: any = {
+  A: (el: Element) => ({type: InlineFormat.Link, url: el.getAttribute('href')}),
+  H1: () => ({type: BlockFormat.H1}),
+  H2: () => ({type: BlockFormat.H2}),
+  H3: () => ({type: BlockFormat.H3}),
+  P: () => ({type: BlockFormat.Paragraph}),
+  LI: () => ({type: BlockFormat.ListItem}),
+  OL: () => ({type: BlockFormat.OrderedList}),
+  UL: () => ({type: BlockFormat.UnorderedList})
+}
+
+const TextTags: any = {
+  S: () => ({[TextFormat.Strikethrough]: true}),
+  DEL: () => ({[TextFormat.Strikethrough]: true}),
+  EM: () => ({[TextFormat.Italic]: true}),
+  I: () => ({[TextFormat.Italic]: true}),
+  STRONG: () => ({[TextFormat.Bold]: true}),
+  B: () => ({[TextFormat.Bold]: true}),
+  U: () => ({[TextFormat.Underline]: true})
+}
+
+function deserialize(element: Element): any {
+  const {nodeName, nodeType} = element
+
+  if (nodeType === Node.TEXT_NODE) {
+    return element.textContent
+  } else if (nodeType !== Node.ELEMENT_NODE) {
+    return null
+  } else if (nodeName === 'BR') {
+    return '\n'
+  }
+
+  let parent: Element = element
+
+  if (nodeName === 'PRE' && element.childNodes[0] && element.childNodes[0].nodeName === 'CODE') {
+    parent = element.childNodes[0] as Element
+  }
+
+  const children = Array.from(parent.childNodes)
+    .map(element => deserialize(element as Element))
+    .flat()
+
+  if (nodeName === 'BODY') {
+    return jsx('fragment', {}, children)
+  }
+
+  if (ElementTags[nodeName]) {
+    const attrs = ElementTags[nodeName](element)
+    return jsx('element', attrs, children)
+  }
+
+  if (TextTags[nodeName]) {
+    const attrs = TextTags[nodeName](element)
+
+    if (!children.some(child => child.children != undefined)) {
+      return children.map(child => {
+        return jsx('text', attrs, child)
+      })
+    }
+  }
+
+  return children
+}
+
+function renderElement({attributes, children, element}: RenderElementProps) {
+  switch (element.type) {
+    case BlockFormat.H1:
       return (
         <Typography variant="h1" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case BlockType.Heading2:
+    case BlockFormat.H2:
       return (
         <Typography variant="h2" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case BlockType.Heading3:
+    case BlockFormat.H3:
       return (
         <Typography variant="h3" spacing="small" {...attributes}>
           {children}
         </Typography>
       )
 
-    case BlockType.Paragraph:
+    case BlockFormat.UnorderedList:
+      return <ul {...attributes}>{children}</ul>
+
+    case BlockFormat.OrderedList:
+      return <ol {...attributes}>{children}</ol>
+
+    case BlockFormat.ListItem:
+      return <li {...attributes}>{children}</li>
+
+    case InlineFormat.Link:
+      const title = element.title ? `${element.title}:\n${element.url}` : element.url
+
+      return (
+        <Link title={title} {...attributes}>
+          {children}
+        </Link>
+      )
+
+    default:
       return (
         <Typography variant="body1" spacing="large" {...attributes}>
           {children}
         </Typography>
       )
-
-    case BlockType.BulletedList:
-      return <ul {...attributes}>{children}</ul>
-
-    case BlockType.NumberedList:
-      return <ol {...attributes}>{children}</ol>
-
-    case BlockType.ListItem:
-      return <li {...attributes}>{children}</li>
-
-    default:
-      return next()
   }
 }
 
-function renderInline(
-  {children, node, attributes}: RenderInlineProps,
-  editor: Editor,
-  next: () => any
-) {
-  switch (node.type) {
-    case InlineType.Link:
-      return <a {...attributes}>{children}</a>
-
-    default:
-      return next()
+function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
+  if (leaf[TextFormat.Bold]) {
+    children = <strong {...attributes}>{children}</strong>
   }
-}
 
-function hasMark(editor: Editor, value: Value, label: string) {
-  return value.activeMarks.some(mark => mark!.type === label)
-}
-
-function hasType(editor: Editor, value: Value, label: string) {
-  return hasBlock(value, label)
-}
-
-function hasBlock(value: Value, label: string) {
-  return value.blocks.some(block => {
-    return block!.type === label
-  })
-}
-
-// TODO: Link
-// function hasInlines(editor: Editor, value: Value, label: string) {
-//   return value.inlines.some(inline => inline!.type === label)
-// }
-
-function isListOfType(editor: Editor, val: Value, label: string) {
-  const {blocks} = val
-  const first = blocks.first()
-  const isListItem = blocks.some(blocks => blocks!.type === BlockType.ListItem)
-
-  return editor.value.blocks.some(() => {
-    if (isListItem) {
-      const parent = val.document.getClosest(
-        first.key,
-        parent => parent.object == 'block' && parent.type == label
-      )
-
-      return parent != undefined
-    }
-
-    return false
-  })
-}
-
-function toggleMark(editor: Editor, value: Value, label: string) {
-  editor.toggleMark(label)
-}
-
-function toggleBlock(editor: Editor, value: Value, type: BlockType) {
-  const isActive = hasBlock(value, type)
-  const isList = hasBlock(value, BlockType.ListItem)
-
-  if (isList) {
-    editor
-      .setBlocks(isActive ? DEFAULT_NODE : type)
-      .unwrapBlock(BlockType.BulletedList)
-      .unwrapBlock(BlockType.NumberedList)
-  } else {
-    editor.setBlocks(isActive ? DEFAULT_NODE : type)
+  if (leaf[TextFormat.Italic]) {
+    children = <em {...attributes}>{children}</em>
   }
+
+  if (leaf[TextFormat.Underline]) {
+    children = <u {...attributes}>{children}</u>
+  }
+
+  if (leaf[TextFormat.Strikethrough]) {
+    children = <del {...attributes}>{children}</del>
+  }
+
+  return <span {...attributes}>{children}</span>
 }
 
-function toggleList(editor: Editor, value: Value, listType: string) {
-  const isList = hasBlock(value, BlockType.ListItem)
-  const isType = value.blocks.some(block => {
-    return !!value.document.getClosest(
-      block!.key,
-      parent => parent.object == 'block' && parent.type === listType
-    )
-  })
-
-  if (isList && isType) {
-    editor
-      .setBlocks(DEFAULT_NODE)
-      .unwrapBlock(BlockType.BulletedList)
-      .unwrapBlock(BlockType.NumberedList)
-  } else if (isList) {
-    editor
-      .unwrapBlock(
-        listType === BlockType.BulletedList ? BlockType.NumberedList : BlockType.BulletedList
-      )
-      .wrapBlock(listType)
-  } else {
-    editor.setBlocks(BlockType.ListItem).wrapBlock(listType)
-  }
-}
-
-const standardRichTextEditItems = [
+const withSchema = defineSchema([
   {
-    icon: MaterialIconFormatBold,
-    label: MarkType.Bold,
-    onApply: toggleMark,
-    isActive: hasMark
-  },
-  {
-    icon: MaterialIconFormatItalic,
-    label: MarkType.Italic,
-    onApply: toggleMark,
-    isActive: hasMark
-  },
-  {
-    icon: MaterialIconFormatUnderlined,
-    label: MarkType.Underline,
-    onApply: toggleMark,
-    isActive: hasMark
-  },
-  {
-    icon: MaterialIconFormatStrikethrough,
-    label: MarkType.Strikethrough,
-    onApply: toggleMark,
-    isActive: hasMark
-  },
-  {
-    icon: MaterialIconLooksOneOutlined,
-    label: BlockType.Heading1,
-    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading1),
-    isActive: hasType
-  },
-  {
-    icon: MaterialIconLooksTwoOutlined,
-    label: BlockType.Heading2,
-    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading2),
-    isActive: hasType
-  },
-  {
-    icon: MaterialIconLooks3Outlined,
-    label: BlockType.Heading3,
-    onApply: (editor: Editor, value: Value) => toggleBlock(editor, value, BlockType.Heading3),
-    isActive: hasType
-  },
-  {
-    icon: MaterialIconFormatListBulleted,
-    label: BlockType.BulletedList,
-    onApply: (editor: Editor, value: Value) => toggleList(editor, value, BlockType.BulletedList),
-    isActive: isListOfType
-  },
-  {
-    icon: MaterialIconFormatListNumbered,
-    label: BlockType.NumberedList,
-    onApply: (editor: Editor, value: Value) => toggleList(editor, value, BlockType.NumberedList),
-    isActive: isListOfType
-  }
-  // TODO: Link
-  // {
-  //   icon: MaterialIconLink,
-  //   label: InlineType.Link,
-  //   onApply: (editor: Editor, value: Value) => {},
-  //   isActive: hasInlines
-  // }
-]
-
-const plugins: Plugin[] = [
-  RichTextMenuPlugin(standardRichTextEditItems),
-  {renderBlock, renderInline, renderMark}
-]
-
-const schema: SchemaProperties = {
-  document: {
-    nodes: [
-      {
-        match: [
-          {type: BlockType.Heading1},
-          {type: BlockType.Heading2},
-          {type: BlockType.Heading3},
-          {type: BlockType.Paragraph},
-          {type: BlockType.BulletedList},
-          {type: BlockType.NumberedList},
-          {type: BlockType.ListItem}
-        ]
-      }
-    ],
+    for: 'node',
+    match: 'editor',
+    validate: {
+      children: [
+        {
+          match: [
+            ([node]) =>
+              node.type === BlockFormat.H1 ||
+              node.type === BlockFormat.H2 ||
+              node.type === BlockFormat.H3 ||
+              node.type === BlockFormat.UnorderedList ||
+              node.type === BlockFormat.OrderedList ||
+              node.type === BlockFormat.Paragraph ||
+              node.type === InlineFormat.Link
+          ]
+        }
+      ]
+    },
     normalize: (editor, error) => {
-      if (error.code === 'child_type_invalid') {
-        editor.setNodeByKey(error.child.key, {type: BlockType.Paragraph})
+      const {code, path} = error
+
+      switch (code) {
+        case 'child_invalid':
+          Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
+          break
+      }
+    }
+  },
+
+  {
+    for: 'node',
+    match: ([node]) =>
+      node.type === BlockFormat.UnorderedList || node.type === BlockFormat.OrderedList,
+    validate: {
+      children: [{match: [([node]) => node.type === BlockFormat.ListItem]}]
+    },
+    normalize: (editor, error) => {
+      const {code, path} = error
+
+      switch (code) {
+        case 'child_invalid':
+          Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
+          break
       }
     }
   }
+])
 
-  // TODO: Block validation?
-  // blocks: {
-  //   [BlockType.BulletedList]: {
-  //     nodes: [{match: {type: BlockType.ListItem}}]
-  //   },
-  //   [BlockType.NumberedList]: {
-  //     nodes: [{match: {type: BlockType.ListItem}}]
-  //   },
-  //   [BlockType.ListItem]: {
-  //     parent: [{type: BlockType.BulletedList}, {type: BlockType.NumberedList}]
-  //   }
-  // }
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {}
+
+export const RichTextBlock = memo(function RichTextBlock({
+  value: {value, selection},
+  autofocus,
+  disabled,
+  onChange
+}: RichTextBlockProps) {
+  const [hasFocus, setFocus] = useState(false)
+
+  const focusRef = useRef<HTMLElement>(null)
+  const editorRef = useRef<Editor | null>(null)
+
+  if (!editorRef.current) {
+    editorRef.current = withSchema(withRichText(withHistory(withReact(createEditor()))))
+  }
+
+  useEffect(() => {
+    if (autofocus) {
+      // NOTE: Slate's `Editable` doesn't expose a ref so we have to get it manually.
+      // TODO: Doesn't seem to work
+      focusRef.current?.querySelector<HTMLDivElement>('div[contenteditable="true"]')?.focus()
+    }
+  }, [])
+
+  const handleChange = useCallback(
+    (newValue: SlateNode[], newSelection: Range | null) => {
+      onChange(richTextValue => {
+        const {value, selection} = richTextValue
+
+        if (value === newValue && selection === newSelection) return richTextValue
+        return {value: newValue, selection: newSelection}
+      })
+    },
+    [onChange]
+  )
+
+  return (
+    <Box ref={focusRef} width="100%">
+      <Slate
+        editor={editorRef.current!}
+        value={value}
+        selection={selection}
+        onChange={handleChange}>
+        <Toolbar fadeOut={!hasFocus}>
+          <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
+          <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
+          <FormatButton icon={MaterialIconLooks3Outlined} format={BlockFormat.H3} />
+
+          <ToolbarDivider />
+
+          <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
+          <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
+
+          <ToolbarDivider />
+
+          <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
+          <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
+          <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
+          <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
+
+          <ToolbarDivider />
+
+          <LinkFormatButton />
+          <RemoveLinkFormatButton />
+        </Toolbar>
+        <Editable
+          readOnly={disabled}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          placeholder="Start writing..."
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+        />
+      </Slate>
+    </Box>
+  )
+})
+
+interface SlateBlockButtonProps extends ToolbarButtonProps {
+  readonly format: BlockFormat | InlineFormat | TextFormat
 }
 
-export function RichTextBlock(props: RichTextInputBlockProps) {
+function FormatButton({icon, format}: SlateBlockButtonProps) {
+  const editor = useSlate()
+  const [, forceRender] = useState({})
+
   return (
-    <RichTextInputBlock
-      {...props}
-      plugins={plugins}
-      schema={schema}
-      placeholder="Start writing..."
+    <ToolbarButton
+      icon={icon}
+      active={isFormatActive(editor, format)}
+      onMouseDown={e => {
+        e.preventDefault()
+        editor.exec({type: CommandType.ToggleFormat, format})
+
+        // NOTE: ToggleFormat doesn't fire an onChange when pendingFormats gets updated
+        forceRender({})
+      }}
     />
   )
+}
+
+function LinkFormatButton() {
+  const editor = useSlate()
+  const [isLinkDialogOpen, setLinkDialogOpen] = useState(false)
+
+  const [title, setTitle] = useState('')
+  const [url, setURL] = useState('')
+
+  const validatedURL = validateURL(url)
+  const isDisabled = !validatedURL
+
+  return (
+    <>
+      <ToolbarButton
+        icon={MaterialIconLink}
+        active={isFormatActive(editor, InlineFormat.Link)}
+        onMouseDown={e => {
+          e.preventDefault()
+
+          const nodes = Array.from(
+            Editor.nodes(editor, {
+              at: editor.selection ?? undefined,
+              match: {type: InlineFormat.Link}
+            })
+          )
+
+          const tuple = nodes[0]
+
+          if (tuple) {
+            const [node] = tuple
+
+            setTitle(node.title ?? '')
+            setURL(node.url ?? '')
+          } else {
+            setTitle('')
+            setURL('')
+          }
+
+          setLinkDialogOpen(true)
+        }}
+      />
+      <Dialog open={isLinkDialogOpen}>
+        {() => (
+          <Panel>
+            <PanelHeader
+              leftChildren={
+                <NavigationButton
+                  icon={MaterialIconClose}
+                  label="Cancel"
+                  onClick={() => setLinkDialogOpen(false)}
+                />
+              }
+              rightChildren={
+                <NavigationButton
+                  icon={MaterialIconCheck}
+                  disabled={isDisabled}
+                  label="Apply"
+                  onClick={() => {
+                    editor.exec({
+                      type: CommandType.InsertLink,
+                      url: validatedURL,
+                      title: title || undefined
+                    })
+                    setLinkDialogOpen(false)
+                  }}
+                />
+              }
+            />
+            <PanelSection>
+              <Box width={300}>
+                <TextInput
+                  label="Link"
+                  errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
+                  value={url}
+                  onChange={e => setURL(e.target.value)}
+                  marginBottom={Spacing.ExtraSmall}
+                />
+                <TextInput
+                  label="Title"
+                  description="Optional description for the link"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                />
+              </Box>
+            </PanelSection>
+          </Panel>
+        )}
+      </Dialog>
+    </>
+  )
+}
+
+function validateURL(url: string): string | null {
+  try {
+    url = url.match(/^https?:\/\//) ? url : `http://${url}`
+    return new URL(url).toString()
+  } catch (err) {
+    return null
+  }
+}
+
+function RemoveLinkFormatButton() {
+  const editor = useSlate()
+
+  return (
+    <ToolbarButton
+      icon={MaterialIconLinkOff}
+      active={isFormatActive(editor, InlineFormat.Link)}
+      disabled={!isFormatActive(editor, InlineFormat.Link)}
+      onMouseDown={e => {
+        e.preventDefault()
+        editor.exec({type: CommandType.RemoveLink})
+      }}
+    />
+  )
+}
+
+function isFormatActive(editor: Editor, format: BlockFormat | InlineFormat | TextFormat) {
+  if (TextFormats.includes(format)) {
+    if (editor.pendingFormats && editor.pendingFormats.hasOwnProperty(format)) {
+      return editor.pendingFormats[format] ? true : false
+    } else if (editor.selection) {
+      const matches = Array.from(
+        Editor.nodes(editor, {
+          at: editor.selection!,
+          match: 'text',
+          mode: 'all'
+        })
+      )
+
+      return matches.every(([match]) => match[format] === true)
+    }
+  }
+
+  if (BlockFormats.includes(format) || InlineFormats.includes(format)) {
+    const [match] = Editor.nodes(editor, {
+      match: {type: format},
+      mode: 'all'
+    })
+
+    return !!match
+  }
+
+  return false
+}
+
+function withRichText(editor: Editor): Editor {
+  const {exec, isInline} = editor
+
+  // See: https://github.com/ianstormtaylor/slate/issues/3144#issuecomment-562395538
+  editor.pendingFormats = null
+  editor.isInline = node => (InlineFormats.includes(node.type) ? true : isInline(node))
+
+  editor.exec = command => {
+    switch (command.type) {
+      case CommandType.InsertText: {
+        if (editor.pendingFormats) {
+          Editor.insertNodes(editor, {
+            ...editor.pendingFormats,
+            text: command.text
+          })
+
+          editor.pendingFormats = null
+        } else {
+          exec(command)
+        }
+        break
+      }
+
+      case CommandType.ToggleFormat: {
+        const {format} = command
+
+        const isActive = isFormatActive(editor, format)
+        const isList = ListFormats.includes(format)
+
+        if (TextFormats.includes(format)) {
+          if (editor.selection && Range.isExpanded(editor.selection)) {
+            Editor.setNodes(
+              editor,
+              {[format]: isActive ? null : true},
+              {match: 'text', split: true}
+            )
+          } else if (editor.selection) {
+            const [[active]] = Editor.nodes(editor, {
+              match: 'text',
+              mode: 'all'
+            })
+
+            const activeFormats = TextFormats.reduce(
+              (acc, key) => ({...acc, [key]: active[key]}),
+              {} as Record<string, boolean | undefined>
+            )
+
+            editor.pendingFormats = {
+              ...activeFormats,
+              ...(editor.pendingFormats || {}),
+              [format]: isActive ? undefined : true
+            }
+          }
+        }
+
+        if (BlockFormats.includes(format)) {
+          for (const format of ListFormats) {
+            Editor.unwrapNodes(editor, {match: {type: format}, split: true})
+          }
+
+          Editor.setNodes(editor, {
+            type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
+          })
+
+          if (!isActive && isList) {
+            Editor.wrapNodes(editor, {type: format, children: []})
+          }
+        }
+
+        break
+      }
+
+      case CommandType.InsertData: {
+        const {data} = command
+        const html = data.getData('text/html')
+
+        if (html) {
+          const parsed = new DOMParser().parseFromString(html, 'text/html')
+          const fragment = deserialize(parsed.body)
+          Editor.insertFragment(editor, fragment)
+        } else {
+          exec(command)
+        }
+
+        break
+      }
+
+      case CommandType.InsertLink: {
+        const {url, title} = command
+
+        if (editor.selection && Range.isCollapsed(editor.selection)) {
+          const nodes = Array.from(
+            Editor.nodes(editor, {
+              at: editor.selection,
+              match: {type: InlineFormat.Link}
+            })
+          )
+
+          const tuple = nodes[0]
+
+          if (tuple) {
+            const [, path] = tuple
+            Editor.select(editor, path)
+          }
+        }
+
+        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
+        Editor.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
+        Editor.collapse(editor, {edge: 'end'})
+        break
+      }
+
+      case CommandType.RemoveLink: {
+        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
+        break
+      }
+
+      default: {
+        exec(command)
+        break
+      }
+    }
+  }
+
+  return editor
+}
+
+export function createDefaultValue(): RichTextBlockValue {
+  return {value: [{type: BlockFormat.Paragraph, children: [{text: ''}]}], selection: null}
 }

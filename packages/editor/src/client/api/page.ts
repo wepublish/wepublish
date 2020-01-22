@@ -1,33 +1,89 @@
 import gql from 'graphql-tag'
 
-import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
-import {ImageTransformation, VersionState} from './types'
+import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
+
+import {VersionState} from './common'
+import {ArticleRefFragment} from './article'
+import {ImageRefData, ImageRefFragment} from './image'
+
+export const PageMutationFragment = gql`
+  fragment PageMutationFragment on Page {
+    id
+    publishedAt
+    latest {
+      version
+    }
+  }
+`
+
+export interface PageMutationData {
+  id: string
+  publishedAt?: string
+  latest: {
+    version: number
+  }
+}
+
+export const PageRefFragment = gql`
+  fragment PageRefFragment on Page {
+    id
+    createdAt
+    publishedAt
+
+    latest {
+      updatedAt
+
+      state
+      title
+      description
+      image {
+        ...ImageRefFragment
+      }
+    }
+  }
+
+  ${ImageRefFragment}
+`
+
+export interface PageReference {
+  id: string
+
+  createdAt: string
+  publishedAt: string
+
+  latest: {
+    updatedAt: string
+    state: VersionState
+    title?: string
+    description?: string
+    image?: ImageRefData
+  }
+}
 
 // Query
 // =====
 
 const ListPagesQuery = gql`
-  query ListPages {
-    pages {
+  query ListPages($filter: String) {
+    pages(filter: $filter) {
       nodes {
-        id
-        createdAt
-        updatedAt
-
-        latest {
-          state
-          title
-        }
+        ...PageRefFragment
       }
     }
   }
+
+  ${PageRefFragment}
 `
 
 export interface ListPagesData {
-  readonly pages: any
+  pages: {
+    nodes: PageReference[]
+  }
 }
 
-export interface ListPagesVariables {}
+export interface ListPagesVariables {
+  filter?: string
+}
 
 export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPagesVariables>) {
   return useQuery<ListPagesData, ListPagesVariables>(ListPagesQuery, opts)
@@ -37,39 +93,37 @@ export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPag
 // ========
 
 export interface PageBlockUnionMap {
-  readonly articleTeaserGrid?: {
+  articleTeaserGrid?: {
     teasers: Array<{type: string; articleID: string} | null>
     numColumns: number
   }
 }
 
 export interface PageInput {
-  readonly slug: string
-  readonly title: string
-  readonly description: string
-  readonly tags: string[]
-  readonly imageID?: string
-  readonly blocks: any[]
-}
-
-export interface PageMutationData {
-  readonly id: string
+  slug: string
+  title: string
+  description: string
+  tags: string[]
+  imageID?: string
+  blocks: any[]
 }
 
 const CreatePageMutation = gql`
   mutation CreatePage($input: PageInput!) {
     createPage(input: $input) {
-      id
+      ...PageMutationFragment
     }
   }
+
+  ${PageMutationFragment}
 `
 
 export interface CreatePageMutationData {
-  readonly createPage: PageMutationData
+  createPage: PageMutationData
 }
 
 export interface CreatePageVariables {
-  readonly input: PageInput
+  input: PageInput
 }
 
 export function useCreatePageMutation() {
@@ -77,68 +131,137 @@ export function useCreatePageMutation() {
 }
 
 const UpdatePageMutation = gql`
-  mutation UpdatePage($id: ID!, $state: VersionState!, $input: PageInput!) {
-    updatePage(id: $id, state: $state, input: $input) {
-      id
+  mutation UpdatePage($id: ID!, $input: PageInput!) {
+    updatePage(id: $id, input: $input) {
+      ...PageMutationFragment
     }
   }
+
+  ${PageMutationFragment}
 `
 
 export interface UpdatePageMutationData {
-  readonly updatePage: PageMutationData
+  updatePage: PageMutationData
 }
 
 export interface UpdatePageVariables {
-  readonly id: string
-  readonly state: VersionState
-  readonly input: PageInput
+  id: string
+  input: PageInput
 }
 
 export function useUpdatePageMutation() {
   return useMutation<UpdatePageMutationData, UpdatePageVariables>(UpdatePageMutation)
 }
 
+const PublishPageMutation = gql`
+  mutation PublishPage($id: ID!, $version: Int!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
+    publishPage(id: $id, version: $version, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+      ...PageMutationFragment
+    }
+  }
+
+  ${PageMutationFragment}
+`
+
+export interface PublishPageMutationData {
+  publishPage: PageMutationData
+}
+
+export interface PublishPageVariables {
+  id: string
+  version: number
+  publishedAt: string
+  updatedAt: string
+}
+
+export function usePublishPageMutation(
+  opts?: MutationHookOptions<PublishPageMutationData, PublishPageVariables>
+) {
+  return useMutation<PublishPageMutationData, PublishPageVariables>(PublishPageMutation, opts)
+}
+
+const UnpublishPageMutation = gql`
+  mutation PublishPage($id: ID!) {
+    unpublishPage(id: $id) {
+      ...PageMutationFragment
+    }
+  }
+
+  ${PageMutationFragment}
+`
+
+export interface UnpublishPageMutationData {
+  unpublishPage: PageMutationData
+}
+
+export interface UnpublishPageVariables {
+  id: string
+}
+
+export function useUnpublishPageMutation(
+  opts?: MutationHookOptions<UnpublishPageMutationData, UnpublishPageVariables>
+) {
+  return useMutation<UnpublishPageMutationData, UnpublishPageVariables>(UnpublishPageMutation, opts)
+}
+
+const DeletePageMutation = gql`
+  mutation DeletePage($id: ID!) {
+    deletePage(id: $id)
+  }
+`
+
+export interface DeletePageMutationData {
+  deletePage?: boolean
+}
+
+export interface DeletePageVariables {
+  id: string
+}
+
+export function useDeletePageMutation(
+  opts?: MutationHookOptions<DeletePageMutationData, DeletePageVariables>
+) {
+  return useMutation<DeletePageMutationData, DeletePageVariables>(DeletePageMutation, opts)
+}
+
 const GetPageQuery = gql`
-  query GetPage(
-    $id: ID!
-    $metaImageTransformation: ImageTransformation!
-    $blockImageTransformation: ImageTransformation!
-  ) {
+  query GetPage($id: ID!) {
     page(id: $id) {
       id
+      publishedAt
       latest {
         id
         slug
         title
         description
         image {
-          id
-          width
-          height
-          transform(transformations: [$metaImageTransformation])
+          ...ImageRefFragment
         }
         tags
         blocks {
           __typename
 
-          ... on BaseBlock {
-            key
+          ... on TitleBlock {
+            title
+            lead
+          }
+
+          ... on RichTextBlock {
+            richText
+          }
+
+          ... on ImageBlock {
+            caption
+            image {
+              ...ImageRefFragment
+            }
           }
 
           ... on ArticleTeaserGridBlock {
             teasers {
               type
               article {
-                id
-                latest {
-                  title
-                  image {
-                    id
-                    width
-                    height
-                    transform(transformations: [$blockImageTransformation])
-                  }
-                }
+                ...ArticleRefFragment
               }
             }
             numColumns
@@ -147,16 +270,16 @@ const GetPageQuery = gql`
       }
     }
   }
+
+  ${ArticleRefFragment}
 `
 
 export interface GetPageData {
-  readonly page?: any // TODO: Type query
+  page?: any // TODO: Type query
 }
 
 export interface GetPageVariables {
-  readonly id: string
-  readonly metaImageTransformation: ImageTransformation
-  readonly blockImageTransformation: ImageTransformation
+  id: string
 }
 
 export function useGetPageQuery(opts: QueryHookOptions<GetPageData, GetPageVariables>) {

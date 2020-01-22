@@ -13,29 +13,28 @@ import {
   PanelSectionHeader,
   Card,
   Drawer,
-  LayerContainer,
-  Layer,
   IconButton,
-  Image
+  Image,
+  TagInput,
+  ZIndex
 } from '@karma.run/ui'
 
 import {
   MaterialIconClose,
   MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconDeleteOutlined
+  MaterialIconEditOutlined
 } from '@karma.run/icons'
 
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
+import {ImageRefData} from '../api/image'
 
 export interface PageMetadata {
   readonly slug: string
   readonly title: string
   readonly description: string
   readonly tags: string[]
-  readonly image: ImageReference | null
+  readonly image?: ImageRefData
 }
 
 export interface PageMetadataPanelProps {
@@ -46,12 +45,12 @@ export interface PageMetadataPanelProps {
 }
 
 export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
-  const {title, description, slug, image} = value
+  const {title, description, slug, tags, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData) {
     onChange?.({...value, image})
   }
 
@@ -65,7 +64,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           }
         />
         <PanelSection>
-          <Box marginBottom={Spacing.Small}>
+          <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
               label="Slug"
               value={slug}
@@ -81,18 +80,22 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             />
           </Box>
 
-          <Box marginBottom={Spacing.Small}>
+          <Box marginBottom={Spacing.ExtraSmall}>
             <TextArea
               label="Description"
-              description=""
-              placeholder="Description"
               value={description}
-              onValueChange={description => onChange?.({...value, description})}
+              onChange={e => onChange?.({...value, description: e.target.value})}
             />
           </Box>
 
-          {/* TODO: Authors */}
-          {/* TODO: Tags */}
+          <Box marginBottom={Spacing.Small}>
+            <TagInput
+              label="Tags"
+              description="Press enter to add tag"
+              value={tags}
+              onChange={tags => onChange?.({...value, tags: tags ?? []})}
+            />
+          </Box>
         </PanelSection>
         <PanelSectionHeader title="Image" />
         <PanelSection dark>
@@ -100,8 +103,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             <Card>
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
                         icon={MaterialIconImageOutlined}
                         title="Choose Image"
@@ -115,14 +118,14 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
-                        icon={MaterialIconDeleteOutlined}
+                        icon={MaterialIconClose}
                         title="Remove Image"
-                        onClick={() => onChange?.({...value, image: null})}
+                        onClick={() => onChange?.({...value, image: undefined})}
                         margin={Spacing.ExtraSmall}
                       />
-                    </Layer>
-                    <Image src={image.url} height={300} />
-                  </LayerContainer>
+                    </Box>
+                    <Image src={image.url} width="100%" height="100%" />
+                  </Box>
                 )}
               </PlaceholderInput>
             </Card>

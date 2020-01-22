@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
 
 import {
@@ -18,30 +18,32 @@ import {
   Divider
 } from '@karma.run/ui'
 
-import {useImageListQuery} from '../api/imageListQuery'
-import {useImageUploadMutation} from '../api/imageUploadMutation'
-import {ImageReference} from '../api/types'
+import {useImageListQuery, ImageRefData} from '../api/image'
 import {ImagedEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
-  onSelect(image: ImageReference): void
+  onSelect(image: ImageRefData): void
 }
+
+const ImagesPerPage = 20
 
 export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [upload, {loading, error}] = useImageUploadMutation()
 
-  const [image, setImage] = useState<ImageReference | null>(null)
   const [after, setAfter] = useState<string | undefined>(undefined)
   const [before, setBefore] = useState<string | undefined>(undefined)
 
-  const {data, refetch} = useImageListQuery({
-    after,
-    before,
-    pageLimit: 20,
-    transformations: [{width: 220, height: 140}, {height: 300}]
+  const [file, setFile] = useState<File | null>(null)
+  const {data, loading: isLoading} = useImageListQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      after,
+      before,
+      first: before ? undefined : ImagesPerPage,
+      last: before ? ImagesPerPage : undefined
+    }
   })
 
   const images = data?.images.nodes ?? []
@@ -61,39 +63,11 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       return
     }
 
-    const response = await upload({
-      variables: {images: [file], transformations: [{height: 300}]}
-    })
-
-    const {
-      id,
-      width,
-      height,
-      transform: [url]
-    } = response.data!.uploadImages[0]
-
-    setImage({id, width, height, url})
+    setFile(file)
   }
 
-  useEffect(() => {
-    if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
-    }
-  }, [error])
-
-  if (image?.id) {
-    return (
-      <ImagedEditPanel
-        id={image.id}
-        saveLabel="Confirm"
-        onClose={() => {
-          setImage(null)
-          refetch()
-        }}
-        onSave={() => onSelect(image)}
-      />
-    )
+  if (file) {
+    return <ImagedEditPanel file={file} onSave={image => onSelect(image)} />
   }
 
   return (
@@ -106,7 +80,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               icon={MaterialIconClose}
               label="Close"
               onClick={() => onClose()}
-              disabled={loading}
+              disabled={isLoading}
             />
           }
         />
@@ -116,18 +90,20 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               icon={MaterialIconCloudUploadOutlined}
               text="Drop Image Here"
               onDrop={handleDrop}
-              disabled={loading}
+              disabled={isLoading}
             />
           </Box>
           <Grid>
-            {images.map(({id, width, height, transform: [url, hdURL]}) => (
-              <Column key={id} ratio={1 / 2}>
+            {images.map(image => (
+              <Column key={image.id} ratio={1 / 2}>
                 <Box height={140}>
                   <Card
-                    onClick={() => onSelect({id, width, height, url: hdURL})}
+                    onClick={() => onSelect(image)}
+                    width="100%"
+                    overflow="hidden"
                     style={{cursor: 'pointer'}}>
                     {/* TODO: Add Clickable */}
-                    <Image src={url} />
+                    <Image width="100%" height="100%" src={image.thumbURL} />
                   </Card>
                 </Box>
               </Column>
@@ -139,7 +115,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
           <Box paddingTop={Spacing.Medium} paddingBottom={Spacing.Medium}>
             <Divider />
           </Box>
-          <Box flexDirection="row" flex>
+          <Box flexDirection="row" display="flex">
             <Button
               variant="outlined"
               label="Previous"

@@ -1,43 +1,45 @@
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
+import {BlockProps, TypographicTextArea} from '@karma.run/ui'
 
-import {BlockProps, TypograpyTextArea, Layer, LayerContainer} from '@karma.run/ui'
-
-export interface TitleBlockValue {
-  readonly title: string
-  readonly lead: string
-}
+import {TitleBlockValue} from '../api/blocks'
 
 export interface TitleBlockProps extends BlockProps<TitleBlockValue> {}
 
-export function TitleBlock({value, onChange}: TitleBlockProps) {
+export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
   const {title, lead} = value
+  const focusRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (autofocus) focusRef.current?.focus()
+  }, [])
 
   return (
     <>
-      <LayerContainer>
-        <Layer right={0} top={0}>
-          {/* TODO: Meta sync */}
-          {/* <IconButton
+      {/* TODO: Meta sync */}
+      {/* <Layer right={0} top={0}>
+          <IconButton
             icon={MaterialIconSyncAlt}
             title="Use as Meta Title &amp; Lead"
             onClick={() => {}}
-          /> */}
-        </Layer>
-        <TypograpyTextArea
-          variant="title"
-          align="center"
-          placeholder="Title"
-          value={title}
-          onChange={e => onChange({...value, title: e.target.value})}
-        />
-        <TypograpyTextArea
-          variant="body1"
-          align="center"
-          placeholder="Lead Text"
-          value={lead}
-          onChange={e => onChange({...value, lead: e.target.value})}
-        />
-      </LayerContainer>
+          />
+        </Layer> */}
+      <TypographicTextArea
+        ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder="Title"
+        value={title}
+        disabled={disabled}
+        onChange={e => onChange({...value, title: e.target.value})}
+      />
+      <TypographicTextArea
+        variant="body1"
+        align="center"
+        placeholder="Lead Text"
+        value={lead}
+        disabled={disabled}
+        onChange={e => onChange({...value, lead: e.target.value})}
+      />
     </>
   )
 }

@@ -21,7 +21,7 @@ import {
   PageVersion
 } from '@wepublish/api'
 
-import {Remote} from '@karma.run/sdk'
+import {Remote, UserSession} from '@karma.run/sdk'
 import {createModelsAndTags, BuiltInTag} from '@karma.run/sdk/utility'
 
 import {
@@ -30,6 +30,7 @@ import {
   create,
   data,
   string,
+  int32,
   delete_,
   update,
   refTo,
@@ -50,6 +51,7 @@ import {
   NavigationModel,
   ArticleBlocksModel,
   PageBlocksModel
+  // PageBlocksModel
 } from './model'
 
 export interface KarmaStorageAdapterOptions {
@@ -59,6 +61,8 @@ export interface KarmaStorageAdapterOptions {
   readonly hashCostFactor?: number
 }
 
+const SessionRefreshInterval = 1000 * 60 * 10 // 5m
+
 export class KarmaStorageAdapter implements StorageAdapter {
   private readonly user: string
   private readonly password: string
@@ -66,8 +70,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
   private readonly remote: Remote
 
-  // TODO: Persistent / Refresh session
-  // private session?: UserSession
+  private lastSessionRefresh?: Date
+  private session?: UserSession
 
   constructor({url, user, password, hashCostFactor = 10}: KarmaStorageAdapterOptions) {
     this.remote = new Remote(url)
@@ -77,37 +81,61 @@ export class KarmaStorageAdapter implements StorageAdapter {
   }
 
   async initialize(): Promise<boolean> {
-    const session = await this.getKarmaSession()
+    try {
+      const session = await this.getKarmaSession()
+      const tagStructs = await session.do(all(tag(BuiltInTag.Tag)))
+      const tags: string[] = tagStructs.map(({tag}: any) => tag)
 
-    const tagStructs = await session.do(all(tag(BuiltInTag.Tag)))
-    const tags: string[] = tagStructs.map(({tag}: any) => tag)
+      if (tags.includes(ModelTag.Meta)) {
+        return false
+      } else {
+        await session.do(createModelsAndTags(ModelTagMap))
+        await session.do(
+          create(tag(ModelTag.Meta), () => data(d => d.struct({version: d.int32(0)})))
+        )
 
-    if (tags.includes(ModelTag.Meta)) {
+        return true
+      }
+    } catch (err) {
+      console.error(err)
       return false
-    } else {
-      await session.do(createModelsAndTags(ModelTagMap))
-      await session.do(create(tag(ModelTag.Meta), () => data(d => d.struct({version: d.int32(0)}))))
-
-      return true
     }
   }
 
   async getKarmaSession() {
-    // TODO: Persistent / Refresh session
-    // if (this.session) return this.session
-    return await this.remote.login(this.user, this.password)
+    if (this.session) {
+      if (this.lastSessionRefresh) {
+        const delta = new Date().getTime() - this.lastSessionRefresh.getTime()
+        if (delta < SessionRefreshInterval) return this.session
+      }
+    }
+
+    this.session = await this.remote.login(this.user, this.password)
+    this.lastSessionRefresh = new Date()
+
+    return this.session
   }
 
   async getArticle(id: string): Promise<Article | null> {
     const session = await this.getKarmaSession()
 
     try {
-      return await session.do(
+      const article = await session.do(
         all(tag(ModelTag.Article))
           .filterList((index, value) => value.field('id').equal(string(id)))
           .first()
       )
-    } catch {
+
+      return {
+        id: article.id,
+        createdAt: new Date(article.createdAt),
+        updatedAt: new Date(article.updatedAt),
+        publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+        latestVersion: article.latestVersion,
+        publishedVersion: article.publishedVersion
+      }
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -127,7 +155,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
       )
 
       return {...articleVersion, id, version, blocks: articleVersion.blocks.map(unionToBlock)}
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -150,18 +179,51 @@ export class KarmaStorageAdapter implements StorageAdapter {
         index,
         blocks: articleVersion.blocks.map(unionToBlock)
       }))
-    } catch {
+    } catch (err) {
+      console.error(err)
       return []
     }
   }
 
-  async getArticles(args: ArticlesArguments): Promise<Article[]> {
+  async getArticles(filter: string | undefined, args: ArticlesArguments): Promise<Article[]> {
     const session = await this.getKarmaSession()
 
     // TODO: Filter and Pagination
     try {
-      return await session.do(all(tag(ModelTag.Article)))
-    } catch {
+      const articles: Article[] = await session.do(all(tag(ModelTag.Article)))
+
+      if (filter) {
+        const tuples = await Promise.all(
+          articles.map(
+            async article =>
+              [await this.getArticleVersion(article.id, article.latestVersion), article] as const
+          )
+        )
+
+        return tuples
+          .filter(
+            ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
+          )
+          .map(([_, article]) => ({
+            id: article.id,
+            createdAt: new Date(article.createdAt),
+            updatedAt: new Date(article.updatedAt),
+            publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+            latestVersion: article.latestVersion,
+            publishedVersion: article.publishedVersion
+          }))
+      } else {
+        return articles.map(article => ({
+          id: article.id,
+          createdAt: new Date(article.createdAt),
+          updatedAt: new Date(article.updatedAt),
+          publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+          latestVersion: article.latestVersion,
+          publishedVersion: article.publishedVersion
+        }))
+      }
+    } catch (err) {
+      console.error(err)
       return []
     }
   }
@@ -179,17 +241,17 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
               createdAt: d.dateTime(date),
               updatedAt: d.dateTime(date),
-              publishedAt: input.state === VersionState.Published ? d.dateTime(date) : d.null(),
+              publishedAt: d.null(),
 
               latestVersion: d.int32(0),
-              publishedVersion: input.state === VersionState.Published ? d.int32(0) : d.null(),
+              publishedVersion: d.null(),
 
               versions: d.list([
                 d.expr(
                   create(tag(ModelTag.ArticleVersion), () =>
                     data(d =>
                       d.struct({
-                        state: d.symbol(input.state),
+                        state: d.symbol(VersionState.Draft),
 
                         createdAt: d.dateTime(date),
                         updatedAt: d.dateTime(date),
@@ -222,11 +284,9 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
     return {
       id: article.id,
-      createdAt: date,
-      updatedAt: date,
-      publishedAt: input.state === VersionState.Published ? date : undefined,
-      latestVersion: article.latestVersion,
-      publishedVersion: article.publishedVersion
+      createdAt: new Date(article.createdAt),
+      updatedAt: new Date(article.updatedAt),
+      latestVersion: article.latestVersion
     }
   }
 
@@ -245,70 +305,57 @@ export class KarmaStorageAdapter implements StorageAdapter {
       define('article', all(tag(ModelTag.Article))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
+      define('newVersions', data(d =>
+        d.list([
+          ...article.versions.map((version: any) => d.ref(version)),
+          d.expr(
+            create(tag(ModelTag.ArticleVersion), () =>
+              data(d =>
+                d.struct({
+                  state: d.symbol(VersionState.Draft),
+
+                  createdAt: d.dateTime(date),
+                  updatedAt: d.dateTime(date),
+
+                  preTitle: input.preTitle ? d.string(input.preTitle) : d.null(),
+                  title: d.string(input.title),
+                  lead: d.string(input.lead),
+                  slug: d.string(input.slug),
+                  tags: d.list(input.tags.map(tag => d.string(tag))),
+
+                  imageID: input.imageID ? d.string(input.imageID) : d.null(),
+                  authorIDs: d.list(input.authorIDs.map(authorID => d.string(authorID))),
+
+                  shared: d.bool(input.shared),
+                  breaking: d.bool(input.breaking),
+
+                  blocks: ArticleBlocksModel.decode(
+                    input.blocks.map(blockToUnion)
+                  ).toDataConstructor()
+                })
+              )
+            )
+          )
+        ])
+      )),
       get(
         update(
           refTo(scope('article')),
-          data(d =>
-            d.struct({
-              id: d.string(id),
-
-              createdAt: d.dateTime(new Date(article.createdAt)),
-              updatedAt: d.dateTime(date),
-
-              publishedAt: article.publishedAt
-                ? d.dateTime(new Date(article.publishedAt))
-                : input.state === VersionState.Published
-                ? d.dateTime(date)
-                : d.null(),
-
-              latestVersion: d.int32(newVersionIndex),
-
-              publishedVersion: d.int32(
-                input.state === VersionState.Published ? newVersionIndex : article.publishedVersion
-              ),
-
-              versions: d.list([
-                ...article.versions.map((version: any) => d.ref(version)),
-                d.expr(
-                  create(tag(ModelTag.ArticleVersion), () =>
-                    data(d =>
-                      d.struct({
-                        state: d.symbol(input.state),
-
-                        createdAt: d.dateTime(date),
-                        updatedAt: d.dateTime(date),
-
-                        preTitle: input.preTitle ? d.string(input.preTitle) : d.null(),
-                        title: d.string(input.title),
-                        lead: d.string(input.lead),
-                        slug: d.string(input.slug),
-                        tags: d.list(input.tags.map(tag => d.string(tag))),
-
-                        imageID: input.imageID ? d.string(input.imageID) : d.null(),
-                        authorIDs: d.list(input.authorIDs.map(authorID => d.string(authorID))),
-
-                        shared: d.bool(input.shared),
-                        breaking: d.bool(input.breaking),
-
-                        blocks: ArticleBlocksModel.decode(
-                          input.blocks.map(blockToUnion)
-                        ).toDataConstructor()
-                      })
-                    )
-                  )
-                )
-              ])
-            })
-          )
+          scope('article')
+            .setField(
+              'latestVersion',
+              data(d => d.int32(newVersionIndex))
+            )
+            .setField('versions', scope('newVersions'))
         )
       )
     )
 
     return {
       id: updatedArticle.id,
-      createdAt: updatedArticle.createdAt,
-      updatedAt: updatedArticle.updatedAt,
-      publishedAt: updatedArticle.publishedAt,
+      createdAt: new Date(updatedArticle.createdAt),
+      updatedAt: new Date(updatedArticle.updatedAt),
+      publishedAt: updatedArticle.publishedAt ? new Date(updatedArticle.publishedAt) : undefined,
       latestVersion: updatedArticle.latestVersion,
       publishedVersion: updatedArticle.publishedVersion
     }
@@ -320,7 +367,6 @@ export class KarmaStorageAdapter implements StorageAdapter {
     input: ArticleInput
   ): Promise<Article | null> {
     const session = await this.getKarmaSession()
-    const updateDate = new Date()
 
     const article = await session.do(
       define('article', all(tag(ModelTag.Article))
@@ -335,10 +381,10 @@ export class KarmaStorageAdapter implements StorageAdapter {
         refTo(scope('articleVersion')),
         data(d =>
           d.struct({
-            state: d.symbol(input.state),
+            state: d.symbol(VersionState.Draft),
 
             createdAt: d.expr(scope('articleVersion').field('createdAt')),
-            updatedAt: d.dateTime(updateDate),
+            updatedAt: d.dateTime(new Date()),
 
             preTitle: input.preTitle ? d.string(input.preTitle) : d.null(),
             title: d.string(input.title),
@@ -356,48 +402,126 @@ export class KarmaStorageAdapter implements StorageAdapter {
           })
         )
       ),
+      get(refTo(scope('article')))
+    )
+
+    return {
+      id: article.id,
+      createdAt: new Date(article.createdAt),
+      updatedAt: new Date(article.updatedAt),
+      publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+      latestVersion: article.latestVersion,
+      publishedVersion: article.publishedVersion
+    }
+  }
+
+  async publishArticleVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Article | null> {
+    const session = await this.getKarmaSession()
+
+    const articleVersion = await this.getArticleVersion(id, version)
+    if (!articleVersion) return null
+
+    const updatedArticle = await session.do(
+      define('article', all(tag(ModelTag.Article))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()),
+      define('articleVersion', scope('article')
+        .field('versions')
+        .slice(version, 1)
+        .first()
+        .get()),
+      update(
+        refTo(scope('articleVersion')),
+        scope('articleVersion').setField(
+          'state',
+          data(d => d.symbol(VersionState.Published))
+        )
+      ),
       get(
         update(
           refTo(scope('article')),
           scope('article')
-            .setField(
-              'updatedAt',
-              data(d => d.dateTime(updateDate))
-            )
-            // TODO: Fix overriding original publishedAt date.
+            .setField('publishedVersion', int32(articleVersion.version))
             .setField(
               'publishedAt',
-              data(d =>
-                input.state === VersionState.Published
-                  ? d.dateTime(updateDate)
-                  : d.expr(scope('article').field('publishedAt'))
-              )
+              data(d => d.dateTime(publishedAt))
             )
             .setField(
-              'publishedVersion',
-              input.state === VersionState.Published
-                ? scope('article').field('latestVersion')
-                : scope('article').field('publishedVersion')
+              'updatedAt',
+              data(d => d.dateTime(updatedAt))
             )
         )
       )
     )
 
     return {
-      id: article.id,
-      createdAt: updateDate,
-      updatedAt: updateDate,
-      publishedAt: input.state === VersionState.Published ? updateDate : undefined,
-      latestVersion: article.latestVersion,
-      publishedVersion: article.publishedVersion
+      id: updatedArticle.id,
+      createdAt: new Date(updatedArticle.createdAt),
+      updatedAt: new Date(updatedArticle.updatedAt),
+      publishedAt: updatedArticle.publishedAt ? new Date(updatedArticle.publishedAt) : undefined,
+      latestVersion: updatedArticle.latestVersion,
+      publishedVersion: updatedArticle.publishedVersion
     }
+  }
+
+  async unpublishArticle(id: string): Promise<Article | null> {
+    const session = await this.getKarmaSession()
+    const updatedArticle = await session.do(
+      define('article', all(tag(ModelTag.Article))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()),
+      get(
+        update(
+          refTo(scope('article')),
+          scope('article')
+            .setField(
+              'publishedVersion',
+              data(d => d.null())
+            )
+            .setField(
+              'publishedAt',
+              data(d => d.null())
+            )
+        )
+      )
+    )
+
+    return {
+      id: updatedArticle.id,
+      createdAt: new Date(updatedArticle.createdAt),
+      updatedAt: new Date(updatedArticle.updatedAt),
+      publishedAt: updatedArticle.publishedAt ? new Date(updatedArticle.publishedAt) : undefined,
+      latestVersion: updatedArticle.latestVersion,
+      publishedVersion: updatedArticle.publishedVersion
+    }
+  }
+
+  async deleteArticle(deleteID: string): Promise<boolean | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      define('article', all(tag(ModelTag.Article))
+        .filterList((index, value) => value.field('id').equal(string(deleteID)))
+        .first()),
+      delete_(refTo(scope('article'))),
+      scope('article')
+        .field('versions')
+        .mapList((index, value) => delete_(value))
+    )
+
+    return true
   }
 
   async getPage(id: string | undefined, slug?: string): Promise<Page | null> {
     const session = await this.getKarmaSession()
 
     try {
-      return await session.do(
+      const page = await session.do(
         all(tag(ModelTag.Page))
           .filterList((index, value) =>
             and(
@@ -407,7 +531,17 @@ export class KarmaStorageAdapter implements StorageAdapter {
           )
           .first()
       )
-    } catch {
+
+      return {
+        id: page.id,
+        createdAt: new Date(page.createdAt),
+        updatedAt: new Date(page.updatedAt),
+        publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+        latestVersion: page.latestVersion,
+        publishedVersion: page.publishedVersion
+      }
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -427,7 +561,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
       )
 
       return {...articleVersion, id, version, blocks: articleVersion.blocks.map(unionToBlock)}
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -450,18 +585,50 @@ export class KarmaStorageAdapter implements StorageAdapter {
         index,
         blocks: articleVersion.blocks.map(unionToBlock)
       }))
-    } catch {
+    } catch (err) {
+      console.error(err)
       return []
     }
   }
 
-  async getPages(): Promise<Page[]> {
+  async getPages(filter: string | undefined): Promise<Page[]> {
     const session = await this.getKarmaSession()
 
     // TODO: Filter and Pagination
     try {
-      return await session.do(all(tag(ModelTag.Page)))
-    } catch {
+      const pages: Page[] = await session.do(all(tag(ModelTag.Page)))
+
+      if (filter) {
+        const tuples = await Promise.all(
+          pages.map(
+            async page => [await this.getPageVersion(page.id, page.latestVersion), page] as const
+          )
+        )
+
+        return tuples
+          .filter(
+            ([version]) => version?.title?.toLowerCase().includes(filter.toLowerCase()) ?? false
+          )
+          .map(([_, page]) => ({
+            id: page.id,
+            createdAt: new Date(page.createdAt),
+            updatedAt: new Date(page.updatedAt),
+            publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+            latestVersion: page.latestVersion,
+            publishedVersion: page.publishedVersion
+          }))
+      } else {
+        return pages.map(page => ({
+          id: page.id,
+          createdAt: new Date(page.createdAt),
+          updatedAt: new Date(page.updatedAt),
+          publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+          latestVersion: page.latestVersion,
+          publishedVersion: page.publishedVersion
+        }))
+      }
+    } catch (err) {
+      console.error(err)
       return []
     }
   }
@@ -470,7 +637,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
     const date = new Date()
 
-    const article = await session.do(
+    const page = await session.do(
       get(
         create(tag(ModelTag.Page), () =>
           data(d =>
@@ -479,19 +646,19 @@ export class KarmaStorageAdapter implements StorageAdapter {
 
               createdAt: d.dateTime(date),
               updatedAt: d.dateTime(date),
-              publishedAt: input.state === VersionState.Published ? d.dateTime(date) : d.null(),
-              publishedSlug:
-                input.state === VersionState.Published ? d.string(input.slug) : d.null(),
+
+              publishedAt: d.null(),
+              publishedSlug: d.null(),
 
               latestVersion: d.int32(0),
-              publishedVersion: input.state === VersionState.Published ? d.int32(0) : d.null(),
+              publishedVersion: d.null(),
 
               versions: d.list([
                 d.expr(
                   create(tag(ModelTag.PageVersion), () =>
                     data(d =>
                       d.struct({
-                        state: d.symbol(input.state),
+                        state: d.symbol(VersionState.Draft),
 
                         createdAt: d.dateTime(date),
                         updatedAt: d.dateTime(date),
@@ -518,12 +685,10 @@ export class KarmaStorageAdapter implements StorageAdapter {
     )
 
     return {
-      id: article.id,
-      createdAt: date,
-      updatedAt: date,
-      publishedAt: input.state === VersionState.Published ? date : undefined,
-      latestVersion: article.latestVersion,
-      publishedVersion: article.publishedVersion
+      id: page.id,
+      createdAt: new Date(page.createdAt),
+      updatedAt: new Date(page.updatedAt),
+      latestVersion: page.latestVersion
     }
   }
 
@@ -538,76 +703,56 @@ export class KarmaStorageAdapter implements StorageAdapter {
     )
 
     const newVersionIndex: number = page.latestVersion + 1
-    const updatedArticle = await session.do(
+    const updatedPage = await session.do(
       define('page', all(tag(ModelTag.Page))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
+      define('newVersion', data(d =>
+        d.list([
+          ...page.versions.map((version: any) => d.ref(version)),
+          d.expr(
+            create(tag(ModelTag.PageVersion), () =>
+              data(d =>
+                d.struct({
+                  state: d.symbol(VersionState.Draft),
+
+                  createdAt: d.dateTime(date),
+                  updatedAt: d.dateTime(date),
+
+                  title: d.string(input.title),
+                  description: d.string(input.description),
+                  slug: d.string(input.slug),
+                  tags: d.list(input.tags.map(tag => d.string(tag))),
+
+                  imageID: input.imageID ? d.string(input.imageID) : d.null(),
+
+                  blocks: PageBlocksModel.decode(input.blocks.map(blockToUnion)).toDataConstructor()
+                })
+              )
+            )
+          )
+        ])
+      )),
       get(
         update(
           refTo(scope('page')),
-          data(d =>
-            d.struct({
-              id: d.string(id),
-
-              createdAt: d.dateTime(new Date(page.createdAt)),
-              updatedAt: d.dateTime(date),
-
-              publishedAt: page.publishedAt
-                ? d.dateTime(new Date(page.publishedAt))
-                : input.state === VersionState.Published
-                ? d.dateTime(date)
-                : d.null(),
-
-              publishedSlug:
-                input.state === VersionState.Published
-                  ? d.string(input.slug)
-                  : d.string(page.publishedSlug),
-
-              latestVersion: d.int32(newVersionIndex),
-
-              publishedVersion: d.int32(
-                input.state === VersionState.Published ? newVersionIndex : page.publishedVersion
-              ),
-
-              versions: d.list([
-                ...page.versions.map((version: any) => d.ref(version)),
-                d.expr(
-                  create(tag(ModelTag.PageVersion), () =>
-                    data(d =>
-                      d.struct({
-                        state: d.symbol(input.state),
-
-                        createdAt: d.dateTime(date),
-                        updatedAt: d.dateTime(date),
-
-                        title: d.string(input.title),
-                        description: d.string(input.description),
-                        slug: d.string(input.slug),
-                        tags: d.list(input.tags.map(tag => d.string(tag))),
-
-                        imageID: input.imageID ? d.string(input.imageID) : d.null(),
-
-                        blocks: PageBlocksModel.decode(
-                          input.blocks.map(blockToUnion)
-                        ).toDataConstructor()
-                      })
-                    )
-                  )
-                )
-              ])
-            })
-          )
+          scope('page')
+            .setField(
+              'latestVersion',
+              data(d => d.int32(newVersionIndex))
+            )
+            .setField('versions', scope('newVersion'))
         )
       )
     )
 
     return {
-      id: updatedArticle.id,
-      createdAt: updatedArticle.createdAt,
-      updatedAt: updatedArticle.updatedAt,
-      publishedAt: updatedArticle.publishedAt,
-      latestVersion: updatedArticle.latestVersion,
-      publishedVersion: updatedArticle.publishedVersion
+      id: updatedPage.id,
+      createdAt: new Date(updatedPage.createdAt),
+      updatedAt: new Date(updatedPage.updatedAt),
+      publishedAt: updatedPage.publishedAt ? new Date(updatedPage.publishedAt) : undefined,
+      latestVersion: updatedPage.latestVersion,
+      publishedVersion: updatedPage.publishedVersion
     }
   }
 
@@ -615,7 +760,61 @@ export class KarmaStorageAdapter implements StorageAdapter {
     const session = await this.getKarmaSession()
     const updateDate = new Date()
 
-    const article = await session.do(
+    const page = await session.do(
+      define('page', all(tag(ModelTag.Page))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()),
+      define('pageVersion', scope('page')
+        .field('versions')
+        .slice(version, 1)
+        .first()
+        .get()),
+      get(
+        update(
+          refTo(scope('pageVersion')),
+          data(d =>
+            d.struct({
+              state: d.symbol(VersionState.Draft),
+
+              createdAt: d.expr(scope('pageVersion').field('createdAt')),
+              updatedAt: d.dateTime(updateDate),
+
+              title: d.string(input.title),
+              description: d.string(input.description),
+              slug: d.string(input.slug),
+              tags: d.list(input.tags.map(tag => d.string(tag))),
+
+              imageID: input.imageID ? d.string(input.imageID) : d.null(),
+              blocks: PageBlocksModel.decode(input.blocks.map(blockToUnion)).toDataConstructor()
+            })
+          )
+        )
+      ),
+      get(refTo(scope('page')))
+    )
+
+    return {
+      id: page.id,
+      createdAt: new Date(page.createdAt),
+      updatedAt: new Date(page.updatedAt),
+      publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+      latestVersion: page.latestVersion,
+      publishedVersion: page.publishedVersion
+    }
+  }
+
+  async publishPageVersion(
+    id: string,
+    version: number,
+    publishedAt: Date,
+    updatedAt: Date
+  ): Promise<Page | null> {
+    const session = await this.getKarmaSession()
+
+    const pageVersion = await this.getPageVersion(id, version)
+    if (!pageVersion) return null
+
+    const page = await session.do(
       define('page', all(tag(ModelTag.Page))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
@@ -626,64 +825,89 @@ export class KarmaStorageAdapter implements StorageAdapter {
         .get()),
       update(
         refTo(scope('pageVersion')),
-        data(d =>
-          d.struct({
-            state: d.symbol(input.state),
-
-            createdAt: d.expr(scope('pageVersion').field('createdAt')),
-            updatedAt: d.dateTime(updateDate),
-
-            title: d.string(input.title),
-            description: d.string(input.description),
-            slug: d.string(input.slug),
-            tags: d.list(input.tags.map(tag => d.string(tag))),
-
-            imageID: input.imageID ? d.string(input.imageID) : d.null(),
-            blocks: PageBlocksModel.decode(input.blocks.map(blockToUnion)).toDataConstructor()
-          })
+        scope('pageVersion').setField(
+          'state',
+          data(d => d.symbol(VersionState.Published))
         )
       ),
       get(
         update(
           refTo(scope('page')),
           scope('page')
-            .setField(
-              'updatedAt',
-              data(d => d.dateTime(updateDate))
-            )
-            // TODO: Fix overriding original publishedAt date.
+            .setField('publishedVersion', int32(pageVersion.version))
+            .setField('publishedSlug', string(pageVersion.slug))
             .setField(
               'publishedAt',
-              data(d =>
-                input.state === VersionState.Published
-                  ? d.dateTime(updateDate)
-                  : d.expr(scope('page').field('publishedAt'))
-              )
+              data(d => d.dateTime(publishedAt))
             )
             .setField(
-              'publishedVersion',
-              input.state === VersionState.Published
-                ? scope('page').field('latestVersion')
-                : scope('page').field('publishedVersion')
-            )
-            .setField(
-              'publishedSlug',
-              input.state === VersionState.Published
-                ? string(input.slug)
-                : scope('page').field('publishedSlug')
+              'updatedAt',
+              data(d => d.dateTime(updatedAt))
             )
         )
       )
     )
 
     return {
-      id: article.id,
-      createdAt: updateDate,
-      updatedAt: updateDate,
-      publishedAt: input.state === VersionState.Published ? updateDate : undefined,
-      latestVersion: article.latestVersion,
-      publishedVersion: article.publishedVersion
+      id: page.id,
+      createdAt: new Date(page.createdAt),
+      updatedAt: new Date(page.updatedAt),
+      publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+      latestVersion: page.latestVersion,
+      publishedVersion: page.publishedVersion
     }
+  }
+
+  async unpublishPage(id: string): Promise<Page | null> {
+    const session = await this.getKarmaSession()
+    const page = await session.do(
+      define('page', all(tag(ModelTag.Page))
+        .filterList((index, value) => value.field('id').equal(string(id)))
+        .first()),
+      get(
+        update(
+          refTo(scope('page')),
+          scope('page')
+            .setField(
+              'publishedVersion',
+              data(d => d.null())
+            )
+            .setField(
+              'publishedSlug',
+              data(d => d.null())
+            )
+            .setField(
+              'publishedAt',
+              data(d => d.null())
+            )
+        )
+      )
+    )
+
+    return {
+      id: page.id,
+      createdAt: new Date(page.createdAt),
+      updatedAt: new Date(page.updatedAt),
+      publishedAt: page.publishedAt ? new Date(page.publishedAt) : undefined,
+      latestVersion: page.latestVersion,
+      publishedVersion: page.publishedVersion
+    }
+  }
+
+  async deletePage(deleteID: string): Promise<boolean | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      define('page', all(tag(ModelTag.Page))
+        .filterList((index, value) => value.field('id').equal(string(deleteID)))
+        .first()),
+      delete_(refTo(scope('page'))),
+      scope('page')
+        .field('versions')
+        .mapList((index, value) => delete_(value))
+    )
+
+    return true
   }
 
   async createImage(image: Image): Promise<Image> {
@@ -696,11 +920,29 @@ export class KarmaStorageAdapter implements StorageAdapter {
     return image
   }
 
+  async deleteImage(deleteID: string): Promise<boolean | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      define('image', all(tag(ModelTag.Image))
+        .filterList((index, value) => value.field('id').equal(string(deleteID)))
+        .first()),
+      delete_(refTo(scope('image')))
+    )
+
+    return true
+  }
+
   async updateImage({
     id,
+    updatedAt,
+    filename,
     title,
     description,
     tags,
+    author,
+    source,
+    license,
     focalPoint
   }: ImageUpdate): Promise<Image | null> {
     const session = await this.getKarmaSession()
@@ -719,9 +961,14 @@ export class KarmaStorageAdapter implements StorageAdapter {
             data(
               ImageModel.decode({
                 ...image,
+                updatedAt,
+                filename,
                 title,
                 description,
                 tags,
+                author,
+                source,
+                license,
                 focalPoint
               }).toDataConstructor()
             )
@@ -730,7 +977,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
       )
 
       return {...response, tags: response.tags ?? []}
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -744,24 +992,35 @@ export class KarmaStorageAdapter implements StorageAdapter {
           .filterList((index, value) => value.field('id').equal(string(id)))
           .first()
       )
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
 
-  async getImages(pagination: Pagination): Promise<[Image[], PageInfo, number]> {
+  async getImages(
+    filter: string | undefined,
+    pagination: Pagination
+  ): Promise<[Image[], PageInfo, number]> {
     const session = await this.getKarmaSession()
 
     try {
       // TODO: Pagination
-      const images = await session.do(all(tag(ModelTag.Image)))
+      let images: Image[] = await session.do(all(tag(ModelTag.Image)))
+
+      if (filter) {
+        images = images.filter(({title}) => title?.toLowerCase().includes(filter.toLowerCase()))
+      }
+
+      images.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 
       return [
         images,
         {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
         images.length
       ]
-    } catch {
+    } catch (err) {
+      console.error(err)
       return [
         [],
         {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
@@ -826,7 +1085,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
           }
         })
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -841,6 +1101,36 @@ export class KarmaStorageAdapter implements StorageAdapter {
     return author
   }
 
+  async updateAuthor(author: Author): Promise<Author | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      update(
+        refTo(
+          all(tag(ModelTag.Author)).filterList((index, value) =>
+            value.field('id').equal(string(author.id))
+          )
+        ),
+        data(AuthorModel.decode(author).toDataConstructor())
+      )
+    )
+
+    return author
+  }
+
+  async deleteAuthor(deleteID: string): Promise<boolean | null> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      define('author', all(tag(ModelTag.Author))
+        .filterList((index, value) => value.field('id').equal(string(deleteID)))
+        .first()),
+      delete_(refTo(scope('author')))
+    )
+
+    return true
+  }
+
   async getAuthor(id: string): Promise<Author | null> {
     const session = await this.getKarmaSession()
 
@@ -850,8 +1140,60 @@ export class KarmaStorageAdapter implements StorageAdapter {
           .filterList((index, value) => value.field('id').equal(string(id)))
           .first()
       )
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
+    }
+  }
+
+  async getAuthors(
+    filter: string,
+    {after, before, first, last}: Pagination
+  ): Promise<[Author[], PageInfo, number]> {
+    const session = await this.getKarmaSession()
+    const authors: Author[] = await session.do(all(tag(ModelTag.Author)))
+
+    const sorted = authors
+      .filter(({name}) => (filter ? name.toLowerCase().includes(filter.toLowerCase()) : true))
+      .sort((a, b) => b.name.localeCompare(a.name))
+
+    let afterIndex: number | undefined = after
+      ? sorted.findIndex(({id}) => id === after)
+      : undefined
+
+    let beforeIndex: number | undefined = before
+      ? sorted.findIndex(({id}) => id === before)
+      : undefined
+
+    if (afterIndex === -1) afterIndex = undefined
+    if (beforeIndex === -1) beforeIndex = undefined
+
+    const paginated = sorted.slice(
+      afterIndex != undefined ? Math.min(afterIndex + 1, sorted.length) : undefined,
+      beforeIndex != undefined ? Math.max(beforeIndex, 0) : undefined
+    )
+
+    if (paginated.length) {
+      const limited = paginated.slice(last ? -last : 0, first)
+      const startCursor = limited[0].id
+      const endCursor = limited[limited.length - 1].id
+
+      return [
+        limited,
+        {
+          startCursor,
+          endCursor,
+          hasNextPage: endCursor !== sorted[sorted.length - 1].id,
+          hasPreviousPage: startCursor !== sorted[0].id
+        },
+        authors.length
+      ]
+    } else {
+      return [
+        paginated,
+        {startCursor: null, endCursor: null, hasNextPage: false, hasPreviousPage: false},
+        authors.length
+      ]
     }
   }
 
@@ -901,7 +1243,8 @@ export class KarmaStorageAdapter implements StorageAdapter {
       } else {
         return null
       }
-    } catch {
+    } catch (err) {
+      console.error(err)
       return null
     }
   }
@@ -924,6 +1267,18 @@ export class KarmaStorageAdapter implements StorageAdapter {
     return {user, token, expiryDate}
   }
 
+  async cleanSessions(): Promise<void> {
+    const session = await this.getKarmaSession()
+
+    await session.do(
+      all(tag(ModelTag.Session))
+        .filterList((index, value) =>
+          value.field('expiryDate').before(data(d => d.dateTime(new Date())))
+        )
+        .mapList((index, value) => delete_(refTo(value)))
+    )
+  }
+
   async getSession(inputToken: string): Promise<Session | null> {
     const session = await this.getKarmaSession()
 
@@ -941,9 +1296,10 @@ export class KarmaStorageAdapter implements StorageAdapter {
       )
 
       return {user: {id, email}, token: token, expiryDate: new Date(expiryDate)}
-    } catch {}
-
-    return null
+    } catch (err) {
+      console.error(err)
+      return null
+    }
   }
 
   async deleteSession(inputToken: string): Promise<void> {
@@ -959,7 +1315,9 @@ export class KarmaStorageAdapter implements StorageAdapter {
             .field('id')
         )
       )
-    } catch {}
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 

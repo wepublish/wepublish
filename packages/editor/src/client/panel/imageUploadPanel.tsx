@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 
-import {useImageUploadMutation} from '../api/imageUploadMutation'
 import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
 
 import {
@@ -15,13 +14,12 @@ import {
 
 export interface ImageUploadPanelProps {
   onClose(): void
-  onUpload(imageIDs: string[]): void
+  onUpload(file: File): void
 }
 
 export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [upload, {loading, error}] = useImageUploadMutation()
 
   async function handleDrop(files: File[]) {
     if (files.length === 0) return
@@ -34,18 +32,8 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
       return
     }
 
-    const response = await upload({variables: {images: [file], transformations: []}})
-    const imageIDs = response.data!.uploadImages.map(({id}) => id)
-
-    onUpload(imageIDs)
+    onUpload(file)
   }
-
-  useEffect(() => {
-    if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
-    }
-  }, [error])
 
   return (
     <>
@@ -53,12 +41,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
         <PanelHeader
           title="Upload Image"
           leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label="Close"
-              onClick={() => onClose()}
-              disabled={loading}
-            />
+            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
           }
         />
         <PanelSection>
@@ -67,7 +50,6 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
               icon={MaterialIconCloudUploadOutlined}
               text="Drop Image Here"
               onDrop={handleDrop}
-              disabled={loading}
             />
           </Box>
         </PanelSection>

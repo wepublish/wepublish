@@ -51,10 +51,26 @@ export class KarmaMediaAdapter implements MediaAdapter {
     }
   }
 
+  async deleteImage(id: string): Promise<boolean> {
+    const response = await fetch(`${this.url}${id}`, {
+      method: 'DELETE',
+      headers: {authorization: `Bearer ${this.token}`}
+    })
+
+    if (response.status !== 204) {
+      const json = await response.json()
+      throw new ApolloError(`Received error from media server: ${JSON.stringify(json)}`)
+    }
+
+    return true
+  }
+
   async getImageURL(
     {id, filename, extension, focalPoint}: Image,
     transformation?: ImageTransformation
   ): Promise<string> {
+    filename = filename || 'untitled'
+
     if (transformation) {
       const {width, height, rotation, output, quality} = transformation
       const fullFilename = encodeURIComponent(`${filename}${output ? `.${output}` : extension}`)

@@ -22,6 +22,7 @@ import {PeerArguments, PeersArguments} from '../adapter/peer'
 import {GraphQLImageConnection, GraphQLImage} from './image'
 import {GraphQLUser} from './session'
 import {UserInputError} from 'apollo-server'
+import {GraphQLAuthorConnection, GraphQLAuthor} from './author'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -93,12 +94,18 @@ export const GraphQLNavigation = new GraphQLObjectType({
 export const GraphQLQuery = new GraphQLObjectType<any, Context>({
   name: 'Query',
   fields: {
+    // User
+    // ====
+
     me: {
       type: GraphQLUser,
       resolve(root, {}, {authenticate, storageAdapter}) {
         return authenticate()
       }
     },
+
+    // Navigation
+    // ==========
 
     navigation: {
       type: GraphQLNavigation,
@@ -107,6 +114,10 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         return storageAdapter.getNavigation(key)
       }
     },
+
+    // Article
+    // =======
+
     article: {
       type: GraphQLArticle,
       args: {
@@ -119,37 +130,14 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         return storageAdapter.getArticle(id)
       }
     },
-    page: {
-      type: GraphQLPage,
-      args: {
-        id: {
-          description: 'ID of the Page.',
-          type: GraphQLID
-        },
-        slug: {
-          description: 'Slug of the Page.',
-          type: GraphQLString
-        }
-      },
-      resolve(_root, {id, slug}, {storageAdapter}) {
-        return storageAdapter.getPage(id, slug)
-      }
-    },
-
-    pages: {
-      type: GraphQLNonNull(GraphQLPageConnection),
-      async resolve(_root, args, context: Context, info) {
-        return {
-          nodes: await context.storageAdapter.getPages()
-        }
-      }
-    },
 
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       description: 'Request articles based on a date range.',
 
       args: {
+        filter: {type: GraphQLString},
+
         limit: {
           type: GraphQLInt,
           description:
@@ -190,13 +178,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           defaultValue: true
         }
       },
-      async resolve(_root, args, context: Context, info) {
-        const {
-          publishedBetween,
-          createdBetween,
-          updatedBetween,
-          includePeers
-        } = args as ArticlesArguments
+      async resolve(_root, args, context) {
+        const {filter, publishedBetween, createdBetween, updatedBetween} = args
 
         if (
           (publishedBetween && createdBetween && updatedBetween) ||
@@ -209,18 +192,7 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
           )
         }
 
-        if (includePeers) {
-          // TODO: Fetch peers aswell
-          // console.log(JSON.stringify(graphQLFields(info, {}, {processArguments: true})))
-          // const peers = await context.adapter.getPeers({})
-          // const peerArticles: any[] = []
-          // for (const peer of peers) {
-          // const result = await queryArticles(peer.url)
-          // peerArticles.push(...result.data.nodes.map((article: any) => ({...article, peer})))
-          // }
-        }
-
-        const articles = context.storageAdapter.getArticles(args as ArticlesArguments)
+        const articles = context.storageAdapter.getArticles(filter, args as ArticlesArguments)
 
         return {
           nodes: articles,
@@ -232,6 +204,41 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
         }
       }
     },
+
+    // Page
+    // ====
+
+    page: {
+      type: GraphQLPage,
+      args: {
+        id: {
+          description: 'ID of the Page.',
+          type: GraphQLID
+        },
+        slug: {
+          description: 'Slug of the Page.',
+          type: GraphQLString
+        }
+      },
+      resolve(_root, {id, slug}, {storageAdapter}) {
+        return storageAdapter.getPage(id, slug)
+      }
+    },
+
+    pages: {
+      type: GraphQLNonNull(GraphQLPageConnection),
+      args: {
+        filter: {type: GraphQLString}
+      },
+      async resolve(_root, {filter}, context: Context, info) {
+        return {
+          nodes: await context.storageAdapter.getPages(filter)
+        }
+      }
+    },
+
+    // Image
+    // =====
 
     image: {
       type: GraphQLImage,
@@ -246,39 +253,105 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     images: {
       type: GraphQLNonNull(GraphQLImageConnection),
       args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
+        filter: {type: GraphQLString},
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt}
       },
-      async resolve(_root, {after, before, first, last}, {storageAdapter}) {
+      async resolve(_root, {filter, after, before, first, last}, {storageAdapter}) {
         if ((first == null && last == null) || (first != null && last != null)) {
           throw new UserInputError('You must provide either `first` or `last`.')
         }
 
-        const [
-          nodes,
-          {startCursor, endCursor, hasNextPage, hasPreviousPage},
-          totalCount
-        ] = await storageAdapter.getImages({
-          after: after && Buffer.from(after, 'base64').toString(),
-          before: before && Buffer.from(before, 'base64').toString(),
+        const decodedAfter = after && Buffer.from(after, 'base64').toString()
+        const decodedBefore = before && Buffer.from(before, 'base64').toString()
+
+        const result = await storageAdapter.getImages(filter, {
+          after: decodedAfter,
+          before: decodedBefore,
           first,
           last
         })
+
+        const [nodes, {startCursor, endCursor, hasNextPage, hasPreviousPage}, totalCount] = result
+
+        const encodedStartCursor = startCursor && Buffer.from(startCursor).toString('base64')
+        const encodedEndCursor = endCursor && Buffer.from(endCursor).toString('base64')
 
         return {
           nodes,
           totalCount,
           pageInfo: {
-            startCursor: startCursor && Buffer.from(startCursor).toString('base64'),
-            endCursor: endCursor && Buffer.from(endCursor).toString('base64'),
+            startCursor: encodedStartCursor,
+            endCursor: encodedEndCursor,
             hasNextPage,
             hasPreviousPage
           }
         }
       }
     },
+
+    // Author
+    // ======
+
+    author: {
+      type: GraphQLAuthor,
+      args: {
+        id: {
+          description: 'ID of the author.',
+          type: GraphQLNonNull(GraphQLID)
+        }
+      },
+      resolve(_root, {id}, context) {
+        return context.storageAdapter.getAuthor(id)
+      }
+    },
+
+    authors: {
+      type: GraphQLNonNull(GraphQLAuthorConnection),
+      args: {
+        filter: {type: GraphQLString},
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
+      },
+      async resolve(_root, {filter, after, before, first, last}, {storageAdapter}) {
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        const decodedAfter = after && Buffer.from(after, 'base64').toString()
+        const decodedBefore = before && Buffer.from(before, 'base64').toString()
+
+        const result = await storageAdapter.getAuthors(filter, {
+          after: decodedAfter,
+          before: decodedBefore,
+          first,
+          last
+        })
+
+        const [nodes, {startCursor, endCursor, hasNextPage, hasPreviousPage}, totalCount] = result
+
+        const encodedStartCursor = startCursor && Buffer.from(startCursor).toString('base64')
+        const encodedEndCursor = endCursor && Buffer.from(endCursor).toString('base64')
+
+        return {
+          nodes,
+          totalCount,
+          pageInfo: {
+            startCursor: encodedStartCursor,
+            endCursor: encodedEndCursor,
+            hasNextPage,
+            hasPreviousPage
+          }
+        }
+      }
+    },
+
+    // Peer
+    // ====
 
     peer: {
       type: GraphQLNonNull(GraphQLPeer),
@@ -301,5 +374,3 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
     }
   }
 })
-
-export default GraphQLQuery

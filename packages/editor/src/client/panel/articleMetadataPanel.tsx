@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {
   Panel,
@@ -14,32 +14,39 @@ import {
   PanelSectionHeader,
   Card,
   Drawer,
-  LayerContainer,
-  Layer,
   IconButton,
-  Image
+  Image,
+  TagInput,
+  AutocompleteInput,
+  AutocompleteInputListProps,
+  SelectList,
+  SelectListItem,
+  MarginProps,
+  Avatar,
+  ImagePlaceholder,
+  ZIndex
 } from '@karma.run/ui'
 
 import {
   MaterialIconClose,
   MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconDeleteOutlined
+  MaterialIconEditOutlined
 } from '@karma.run/icons'
 
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
+import {ImageRefData} from '../api/image'
+import {Author, useListAuthorsQuery} from '../api/author'
 
 export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
   readonly title: string
   readonly lead: string
-  readonly authors: string[]
+  readonly authors: Author[]
   readonly tags: string[]
-  readonly image: ImageReference | null
+  readonly image?: ImageRefData
   readonly shared: boolean
   readonly breaking: boolean
 }
@@ -52,12 +59,12 @@ export interface ArticleMetadataPanelProps {
 }
 
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, shared, breaking, image} = value
+  const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData) {
     onChange?.({...value, image})
   }
 
@@ -72,33 +79,43 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
         />
 
         <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Pre-title"
-              value={preTitle}
-              onChange={e => onChange?.({...value, preTitle: e.target.value})}
-            />
-          </Box>
+          <TextInput
+            label="Pre-title"
+            value={preTitle}
+            marginBottom={Spacing.ExtraSmall}
+            onChange={e => onChange?.({...value, preTitle: e.target.value})}
+          />
 
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Title"
-              value={title}
-              onChange={e =>
-                onChange?.({...value, title: e.target.value, slug: slugify(e.target.value)})
-              }
-            />
-          </Box>
+          <TextInput
+            label="Title"
+            value={title}
+            marginBottom={Spacing.ExtraSmall}
+            onChange={e =>
+              onChange?.({...value, title: e.target.value, slug: slugify(e.target.value)})
+            }
+          />
 
-          <Box marginBottom={Spacing.Small}>
-            <TextArea
-              label="Lead"
-              description=""
-              placeholder="Lead"
-              value={lead}
-              onValueChange={lead => onChange?.({...value, lead: lead})}
-            />
-          </Box>
+          <TextArea
+            label="Lead"
+            value={lead}
+            marginBottom={Spacing.ExtraSmall}
+            onChange={e => onChange?.({...value, lead: e.target.value})}
+          />
+
+          <AuthorInput
+            label="Authors"
+            value={authors}
+            marginBottom={Spacing.ExtraSmall}
+            onChange={authors => onChange?.({...value, authors})}
+          />
+
+          <TagInput
+            label="Tags"
+            description="Press enter to add tag"
+            value={tags}
+            marginBottom={Spacing.Small}
+            onChange={tags => onChange?.({...value, tags: tags ?? []})}
+          />
 
           <Box>
             <Toggle
@@ -107,9 +124,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               onChange={e => onChange?.({...value, breaking: e.target.checked})}
             />
           </Box>
-
-          {/* TODO: Authors */}
-          {/* TODO: Tags */}
         </PanelSection>
         <PanelSectionHeader title="Image" />
         <PanelSection dark>
@@ -117,13 +131,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             <Card>
               <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
                 {image && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <Box
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
                           title="Choose Image"
@@ -134,7 +148,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
                           title="Edit Image"
@@ -145,16 +159,16 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         margin={Spacing.ExtraSmall}
                         flexDirection="row"
                         justifyContent="flex-end"
-                        flex>
+                        display="flex">
                         <IconButton
-                          icon={MaterialIconDeleteOutlined}
+                          icon={MaterialIconClose}
                           title="Remove Image"
-                          onClick={() => onChange?.({...value, image: null})}
+                          onClick={() => onChange?.({...value, image: undefined})}
                         />
                       </Box>
-                    </Layer>
-                    <Image src={image.url} height={300} />
-                  </LayerContainer>
+                    </Box>
+                    <Image src={image.previewURL} width="100%" height={200} />
+                  </Box>
                 )}
               </PlaceholderInput>
             </Card>
@@ -164,7 +178,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
         <PanelSection>
           <Toggle
             label="Share with peers"
-            description="Allow peers to publish this Article."
+            description="Allow peers to publish this article."
             checked={shared}
             onChange={e => onChange?.({...value, shared: e.target.checked})}
           />
@@ -185,5 +199,72 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
         {() => <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />}
       </Drawer>
     </>
+  )
+}
+
+export interface AuthorInputProps extends MarginProps {
+  label?: string
+  description?: string
+  value: Author[]
+  onChange(author: Author[]): void
+}
+
+export function AuthorInput(props: AuthorInputProps) {
+  return (
+    <AutocompleteInput
+      {...props}
+      valueToChipData={author => ({label: author.name, imageURL: author.image?.squareURL})}>
+      {props => <AuthorInputList {...props} />}
+    </AutocompleteInput>
+  )
+}
+
+function AuthorInputList({
+  isOpen,
+  inputValue,
+  highlightedIndex,
+  getItemProps,
+  getMenuProps
+}: AutocompleteInputListProps) {
+  const [items, setItems] = useState<Author[]>([])
+  const {data, loading: isLoading} = useListAuthorsQuery({
+    variables: {filter: inputValue || undefined, first: 10},
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    setItems(data?.authors.nodes ?? [])
+  }, [data])
+
+  return (
+    <SelectList {...getMenuProps()}>
+      {isOpen && inputValue ? (
+        !isLoading ? (
+          items.length ? (
+            items.map((item, index) => (
+              <SelectListItem
+                key={item.id}
+                highlighted={index === highlightedIndex}
+                {...getItemProps({item, index})}>
+                <Box display="flex">
+                  <Avatar marginRight={Spacing.Tiny}>
+                    {item.image ? (
+                      <Image src={item.image.squareURL} width={20} height={20} />
+                    ) : (
+                      <ImagePlaceholder width={20} height={20} />
+                    )}
+                  </Avatar>
+                  {item.name}
+                </Box>
+              </SelectListItem>
+            ))
+          ) : (
+            <SelectListItem>No Authors found</SelectListItem>
+          )
+        ) : (
+          <SelectListItem>Loading...</SelectListItem>
+        )
+      ) : null}
+    </SelectList>
   )
 }

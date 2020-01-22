@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {LoginTemplate, TextInput, Button, Box, Spacing, InputType, Toast} from '@karma.run/ui'
+import {LoginTemplate, TextInput, Button, Spacing, Toast} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
 import {useMutation} from '@apollo/react-hooks'
 
@@ -81,21 +81,21 @@ export function Login() {
     <>
       <LoginTemplate backgroundChildren={<Background />}>
         <LoginForm onSubmit={login}>
-          <Box marginBottom={Spacing.Small}>
-            <TextInput
-              label="Email"
-              value={email}
-              onChange={event => setEmail(event.target.value)}
-            />
-          </Box>
-          <Box marginBottom={Spacing.Small}>
-            <TextInput
-              type={InputType.Password}
-              label="Password"
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-            />
-          </Box>
+          <TextInput
+            label="Email"
+            value={email}
+            autoComplete="username"
+            onChange={event => setEmail(event.target.value)}
+            marginBottom={Spacing.Small}
+          />
+          <TextInput
+            type="password"
+            label="Password"
+            value={password}
+            autoComplete="current-password"
+            onChange={event => setPassword(event.target.value)}
+            marginBottom={Spacing.Small}
+          />
           <Button color="primary" label="Login" disabled={loading} />
         </LoginForm>
       </LoginTemplate>
@@ -114,7 +114,8 @@ export function Login() {
 const BackgroundWrapper = styled('div', () => ({
   position: 'relative',
   width: 340,
-  transform: 'translateY(-180px)'
+  height: 40,
+  transform: 'translateY(-0px)'
 }))
 
 const RedCircle = styled('div', () => ({

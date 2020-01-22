@@ -1,4 +1,3 @@
-import {RichTextValue} from '@karma.run/graphql'
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 
 import {ImageCaptionEdge} from './image'
@@ -13,6 +12,7 @@ export enum BlockType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  Embed = 'embed',
   Quote = 'quote',
   Image = 'image',
   ImageGallery = 'imageGallery',
@@ -21,13 +21,54 @@ export enum BlockType {
   ArticleTeaserGrid = 'articleTeaserGrid'
 }
 
-export interface BaseBlock {
-  readonly key: string
+export interface BaseBlock {}
+
+export enum BlockFormat {
+  H1 = 'heading-one',
+  H2 = 'heading-two',
+  H3 = 'heading-three',
+  Paragraph = 'paragraph',
+  UnorderedList = 'unordered-list',
+  OrderedList = 'ordered-list',
+  ListItem = 'list-item'
 }
+
+export enum InlineFormat {
+  Link = 'link'
+}
+
+export enum TextFormat {
+  Bold = 'bold',
+  Italic = 'italic',
+  Underline = 'underline',
+  Strikethrough = 'strikethrough'
+}
+
+export interface RichTextBlockNode {
+  readonly type: BlockFormat
+  readonly children: RichTextNode[]
+}
+
+export interface RichTextLinkNode {
+  readonly type: InlineFormat.Link
+  readonly url: string
+  readonly title?: string
+  readonly children: RichTextNode[]
+}
+
+export interface RichTextTextNode {
+  readonly [TextFormat.Bold]?: boolean
+  readonly [TextFormat.Italic]?: boolean
+  readonly [TextFormat.Underline]?: boolean
+  readonly [TextFormat.Strikethrough]?: boolean
+  readonly text: string
+}
+
+export type RichTextNode = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
 
 export interface RichTextBlock extends BaseBlock {
   readonly type: BlockType.RichText
-  readonly richText: RichTextValue
+  readonly richText: RichTextNode[]
 }
 
 export interface ImageBlock extends BaseBlock {
@@ -73,10 +114,18 @@ export interface SoundCloudTrackBlock extends BaseBlock {
   readonly trackID: string
 }
 
+export interface EmbedBlock extends BaseBlock {
+  readonly type: BlockType.Embed
+  readonly url?: string
+  readonly title?: string
+  readonly width?: number
+  readonly height?: number
+}
+
 export interface ListicleItem {
   readonly title: string
   readonly imageID?: string
-  readonly richText: RichTextValue
+  readonly richText: RichTextNode[]
 }
 
 export interface ListicleBlock extends BaseBlock {
@@ -99,8 +148,8 @@ export interface TitleBlock extends BaseBlock {
 
 export interface QuoteBlock extends BaseBlock {
   readonly type: BlockType.Quote
-  readonly text: string
-  readonly source?: string
+  readonly quote?: string
+  readonly author?: string
 }
 
 export interface ArticleTeaserGridBlock extends BaseBlock {

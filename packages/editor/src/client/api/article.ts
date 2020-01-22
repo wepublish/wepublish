@@ -1,40 +1,88 @@
 import gql from 'graphql-tag'
+import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
 
-import {DocumentJSON} from 'slate'
-import {useMutation, useQuery, QueryHookOptions} from '@apollo/react-hooks'
-import {ImageTransformation, BlockType, VersionState} from './types'
+import {VersionState} from './common'
+import {ImageRefFragment, ImageRefData} from './image'
+import {AuthorFragment} from './author'
+
+export const ArticleMutationFragment = gql`
+  fragment ArticleMutationFragment on Article {
+    id
+    publishedAt
+    latest {
+      version
+    }
+  }
+`
+
+export interface ArticleMutationData {
+  id: string
+  publishedAt?: string
+  latest: {
+    version: number
+  }
+}
+
+export const ArticleRefFragment = gql`
+  fragment ArticleRefFragment on Article {
+    id
+    createdAt
+    publishedAt
+
+    latest {
+      updatedAt
+
+      state
+      title
+      lead
+      image {
+        ...ImageRefFragment
+      }
+    }
+  }
+
+  ${ImageRefFragment}
+`
+
+export interface ArticleReference {
+  id: string
+
+  createdAt: string
+  publishedAt?: string
+
+  latest: {
+    updatedAt: string
+    state: VersionState
+    title?: string
+    lead?: string
+    image?: ImageRefData
+  }
+}
 
 // Query
 // =====
 
 const ListArticlesQuery = gql`
-  query ListArticles {
-    articles {
+  query ListArticles($filter: String) {
+    articles(filter: $filter) {
       nodes {
-        id
-        createdAt
-        updatedAt
-
-        latest {
-          state
-          title
-          image {
-            id
-            width
-            height
-            transform(transformations: [{width: 800}]) # TODO: Input as variable
-          }
-        }
+        ...ArticleRefFragment
       }
     }
   }
+
+  ${ArticleRefFragment}
 `
 
 export interface ListArticlesData {
-  readonly articles: any
+  articles: {
+    nodes: ArticleReference[]
+  }
 }
 
-export interface ListArticlesVariables {}
+export interface ListArticlesVariables {
+  filter?: string
+}
 
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
@@ -45,43 +93,35 @@ export function useListArticlesQuery(
 // Mutation
 // ========
 
-export interface ArticleBlockUnionMap {
-  readonly [BlockType.Image]?: {caption?: string; imageID?: string}
-  readonly [BlockType.Title]?: {title: string; lead?: string}
-  readonly [BlockType.RichText]?: {richText: DocumentJSON}
-}
-
 export interface ArticleInput {
-  readonly slug: string
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead: string
-  readonly tags: string[]
-  readonly imageID?: string
-  readonly authorIDs: string[]
-  readonly shared: boolean
-  readonly breaking: boolean
-  readonly blocks: any[]
-}
-
-export interface ArticleMutationData {
-  readonly id: string
+  slug: string
+  preTitle?: string
+  title: string
+  lead: string
+  tags: string[]
+  imageID?: string
+  authorIDs: string[]
+  shared: boolean
+  breaking: boolean
+  blocks: any[]
 }
 
 const CreateArticleMutation = gql`
   mutation CreateArticle($input: ArticleInput!) {
     createArticle(input: $input) {
-      id
+      ...ArticleMutationFragment
     }
   }
+
+  ${ArticleMutationFragment}
 `
 
 export interface CreateArticleMutationData {
-  readonly createArticle: ArticleMutationData
+  createArticle: ArticleMutationData
 }
 
 export interface CreateArticleVariables {
-  readonly input: ArticleInput
+  input: ArticleInput
 }
 
 export function useCreateArticleMutation() {
@@ -89,60 +129,133 @@ export function useCreateArticleMutation() {
 }
 
 const UpdateArticleMutation = gql`
-  mutation UpdateArticle($id: ID!, $state: VersionState!, $input: ArticleInput!) {
-    updateArticle(id: $id, state: $state, input: $input) {
-      id
+  mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
+    updateArticle(id: $id, input: $input) {
+      ...ArticleMutationFragment
     }
   }
+
+  ${ArticleMutationFragment}
 `
 
 export interface UpdateArticleMutationData {
-  readonly updateArticle: ArticleMutationData
+  updateArticle: ArticleMutationData
 }
 
 export interface UpdateArticleVariables {
-  readonly id: string
-  readonly state: VersionState
-  readonly input: ArticleInput
+  id: string
+  input: ArticleInput
 }
 
 export function useUpdateArticleMutation() {
   return useMutation<UpdateArticleMutationData, UpdateArticleVariables>(UpdateArticleMutation)
 }
 
-const GetArticleQuery = gql`
-  query GetArticle(
+const PublishArticleMutation = gql`
+  mutation PublishArticle(
     $id: ID!
-    $metaImageTransformation: ImageTransformation!
-    $blockImageTransformation: ImageTransformation!
+    $version: Int!
+    $publishedAt: DateTime!
+    $updatedAt: DateTime!
   ) {
+    publishArticle(id: $id, version: $version, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+      ...ArticleMutationFragment
+    }
+  }
+
+  ${ArticleMutationFragment}
+`
+
+export interface PublishArticleMutationData {
+  publishArticle: ArticleMutationData
+}
+
+export interface PublishArticleVariables {
+  id: string
+  version: number
+  publishedAt: string
+  updatedAt: string
+}
+
+export function usePublishArticleMutation(
+  opts?: MutationHookOptions<PublishArticleMutationData, PublishArticleVariables>
+) {
+  return useMutation<PublishArticleMutationData, PublishArticleVariables>(
+    PublishArticleMutation,
+    opts
+  )
+}
+
+const UnpublishArticleMutation = gql`
+  mutation PublishArticle($id: ID!) {
+    unpublishArticle(id: $id) {
+      ...ArticleMutationFragment
+    }
+  }
+
+  ${ArticleMutationFragment}
+`
+
+export interface UnpublishArticleMutationData {
+  unpublishArticle: ArticleMutationData
+}
+
+export interface UnpublishArticleVariables {
+  id: string
+}
+
+export function useUnpublishArticleMutation(
+  opts?: MutationHookOptions<UnpublishArticleMutationData, UnpublishArticleVariables>
+) {
+  return useMutation<UnpublishArticleMutationData, UnpublishArticleVariables>(
+    UnpublishArticleMutation,
+    opts
+  )
+}
+
+const DeleteArticleMutation = gql`
+  mutation DeleteArticle($id: ID!) {
+    deleteArticle(id: $id)
+  }
+`
+
+export interface DeleteArticleMutationData {
+  deleteArticle?: boolean
+}
+
+export interface DeleteArticleVariables {
+  id: string
+}
+
+export function useDeleteArticleMutation(
+  opts?: MutationHookOptions<DeleteArticleMutationData, DeleteArticleVariables>
+) {
+  return useMutation<DeleteArticleMutationData, DeleteArticleVariables>(DeleteArticleMutation, opts)
+}
+
+const GetArticleQuery = gql`
+  query GetArticle($id: ID!) {
     article(id: $id) {
       id
+      publishedAt
       latest {
         id
+        version
         slug
         preTitle
         title
         lead
         image {
-          id
-          width
-          height
-          transform(transformations: [$metaImageTransformation])
+          ...ImageRefFragment
         }
         tags
         authors {
-          id
-          name
+          ...AuthorFragment
         }
         breaking
         shared
         blocks {
           __typename
-
-          ... on BaseBlock {
-            key
-          }
 
           ... on TitleBlock {
             title
@@ -153,27 +266,65 @@ const GetArticleQuery = gql`
             richText
           }
 
+          ... on QuoteBlock {
+            quote
+            author
+          }
+
           ... on ImageBlock {
             caption
             image {
-              id
-              transform(transformations: [$blockImageTransformation])
+              ...ImageRefFragment
             }
+          }
+
+          ... on FacebookPostBlock {
+            userID
+            postID
+          }
+
+          ... on InstagramPostBlock {
+            postID
+          }
+
+          ... on TwitterTweetBlock {
+            userID
+            tweetID
+          }
+
+          ... on VimeoVideoBlock {
+            videoID
+          }
+
+          ... on YouTubeVideoBlock {
+            videoID
+          }
+
+          ... on SoundCloudTrackBlock {
+            trackID
+          }
+
+          ... on EmbedBlock {
+            url
+            title
+            width
+            height
           }
         }
       }
     }
   }
+
+  ${ImageRefFragment}
+  ${AuthorFragment}
 `
 
 export interface GetArticleData {
-  readonly article?: any // TODO: Type query
+  article?: any // TODO: Type query
 }
 
 export interface GetArticleVariables {
-  readonly id: string
-  readonly metaImageTransformation: ImageTransformation
-  readonly blockImageTransformation: ImageTransformation
+  id: string
 }
 
 export function useGetArticleQuery(opts: QueryHookOptions<GetArticleData, GetArticleVariables>) {

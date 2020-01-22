@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 
+import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
+
 import {
   PlaceholderInput,
   Drawer,
@@ -7,27 +9,18 @@ import {
   Box,
   Grid,
   Column,
-  LayerContainer,
-  Layer,
   Spacing,
   IconButton,
   Image,
-  Typography
+  Typography,
+  ZIndex
 } from '@karma.run/ui'
 
+import {ArticleReference} from '../api/article'
+import {TeaserGridBlockValue} from '../api/blocks'
+
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
-import {ArticleReference} from '../api/types'
-import {MaterialIconEditOutlined, MaterialIconDeleteOutlined} from '@karma.run/icons'
-
-export interface ArticleTeaser {
-  readonly type: string
-  readonly article: ArticleReference
-}
-
-export interface TeaserGridBlockValue {
-  readonly teasers: Array<ArticleTeaser | null>
-  readonly numColumns: number
-}
+import {VersionState} from '../api/common'
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -58,11 +51,11 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                   setChoosingIndex(index)
                   setChooseModalOpen(true)
                 }}>
-                {value && (
-                  <LayerContainer>
-                    <Layer right={0} top={0}>
+                {value && value.article && (
+                  <Box position="relative" width="100%" height="100%">
+                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
-                        icon={MaterialIconEditOutlined}
+                        icon={MaterialIconInsertDriveFileOutlined}
                         title="Choose Article"
                         onClick={() => {
                           setChoosingIndex(index)
@@ -71,34 +64,83 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
-                        icon={MaterialIconDeleteOutlined}
+                        icon={MaterialIconClose}
                         title="Remove Article"
                         onClick={() => {
                           handleArticleChange(index, null)
                         }}
                         margin={Spacing.ExtraSmall}
                       />
-                    </Layer>
+                    </Box>
 
-                    <Layer
-                      bottom={0}
-                      width={'100%'}
-                      height={numColumns === 1 ? 'auto' : '150px'}
-                      style={{
-                        backgroundColor: numColumns === 1 ? 'rgba(34,34,34,0.6)' : 'white'
-                      }}>
-                      <Box padding={numColumns === 1 ? Spacing.Small : Spacing.ExtraSmall}>
-                        <Typography
-                          variant="h2"
-                          align={numColumns === 1 ? 'center' : 'left'}
-                          color={numColumns === 1 ? 'white' : 'dark'}>
-                          {value.article.title || 'Untitled'}
-                        </Typography>
+                    {numColumns === 1 ? (
+                      <>
+                        <Box
+                          position="absolute"
+                          zIndex={ZIndex.Default}
+                          bottom={0}
+                          width={'100%'}
+                          style={{backgroundColor: 'rgba(34,34,34,0.6)'}}>
+                          <Box padding={Spacing.Small}>
+                            <Typography variant="subtitle1" align="center" color="gray">
+                              {value.article.publishedAt != undefined && 'Published'}
+                              {value.article.publishedAt != undefined &&
+                                value.article.latest.state === VersionState.Draft &&
+                                ' / '}
+                              {value.article.latest.state === VersionState.Draft && 'Draft'}
+                            </Typography>
+                            <Typography variant="h2" align="center" color="white">
+                              {value.article.latest.title || 'Untitled'}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        {value.article.latest.image && (
+                          <Image
+                            src={value.article.latest.image.column1URL}
+                            width="100%"
+                            height="100%"
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <Box display="flex" flexDirection="column">
+                        <Image
+                          src={value.article.latest.image?.column6URL}
+                          width="100%"
+                          height={150}
+                        />
+
+                        <Box
+                          position="relative"
+                          overflow="hidden"
+                          height={150}
+                          padding={Spacing.ExtraSmall}>
+                          <Typography variant="subtitle1" color="gray">
+                            {value.article.publishedAt != undefined && 'Published'}
+                            {value.article.latest.state === VersionState.Draft &&
+                              value.article.publishedAt != undefined &&
+                              ' / '}
+                            {value.article.latest.state === VersionState.Draft && 'Draft'}
+                          </Typography>
+                          <Typography variant="body2" color="dark">
+                            {value.article.latest.title || 'Untitled'}
+                          </Typography>
+                          <Box
+                            position="absolute"
+                            zIndex={ZIndex.Default}
+                            bottom={0}
+                            width="100%"
+                            height={50}
+                            style={{
+                              background:
+                                'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))'
+                            }}
+                          />
+                        </Box>
                       </Box>
-                    </Layer>
-
-                    {value.article.image && <Image src={value.article.image.url} />}
-                  </LayerContainer>
+                    )}
+                  </Box>
                 )}
               </PlaceholderInput>
             </Box>
@@ -106,7 +148,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
         ))}
       </Grid>
 
-      <Drawer open={isChooseModalOpen} width={480}>
+      <Drawer open={isChooseModalOpen} width={500}>
         {() => (
           <ArticleChoosePanel
             onClose={() => setChooseModalOpen(false)}

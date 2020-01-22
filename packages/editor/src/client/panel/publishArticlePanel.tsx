@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {
   PanelHeader,
@@ -6,20 +6,49 @@ import {
   PanelSection,
   DescriptionList,
   DescriptionListItem,
-  NavigationButton
+  NavigationButton,
+  TextInput,
+  PanelSectionHeader,
+  Spacing
 } from '@karma.run/ui'
 
 import {ArticleMetadata} from './articleMetadataPanel'
-import {MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
+import {
+  MaterialIconClose,
+  MaterialIconCheck,
+  MaterialIconUpdate,
+  MaterialIconQueryBuilder
+} from '@karma.run/icons'
+import {dateTimeLocalString} from '../utility'
 
 export interface PublishArticlePanelProps {
-  readonly metadata: ArticleMetadata
+  initialPublishDate?: Date
+  metadata: ArticleMetadata
 
   onClose(): void
-  onConfirm(): void
+  onConfirm(publishDate: Date, updateDate: Date): void
 }
 
-export function PublishArticlePanel({metadata, onClose, onConfirm}: PublishArticlePanelProps) {
+export function PublishArticlePanel({
+  initialPublishDate,
+  metadata,
+  onClose,
+  onConfirm
+}: PublishArticlePanelProps) {
+  const now = new Date()
+
+  const [publishDateString, setPublishDateString] = useState(
+    initialPublishDate ? dateTimeLocalString(initialPublishDate) : dateTimeLocalString(now)
+  )
+
+  const [updateDateString, setUpdateDateString] = useState(dateTimeLocalString(now))
+
+  const [publishDateError, setPublishDateError] = useState<string>()
+  const [updateDateError, setUpdateDateError] = useState<string>()
+
+  const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
+  const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
+
   return (
     <Panel>
       <PanelHeader
@@ -28,9 +57,61 @@ export function PublishArticlePanel({metadata, onClose, onConfirm}: PublishArtic
           <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
         }
         rightChildren={
-          <NavigationButton icon={MaterialIconCheck} label="Confirm" onClick={() => onConfirm()} />
+          <NavigationButton
+            icon={MaterialIconCheck}
+            label="Confirm"
+            disabled={!publishDate || !updateDate}
+            onClick={() => onConfirm(publishDate!, updateDate!)}
+          />
         }
       />
+      <PanelSection>
+        <TextInput
+          type="datetime-local"
+          label="Publish Date"
+          errorMessage={publishDateError}
+          icon={MaterialIconQueryBuilder}
+          marginBottom={Spacing.Small}
+          value={publishDateString}
+          onChange={e => {
+            const value = e.target.value
+            const publishDate = new Date(value)
+
+            if (!isNaN(publishDate.getTime())) {
+              setPublishDateError('')
+              setPublishDate(publishDate)
+            } else {
+              setPublishDateError('Invalid Date')
+              setPublishDate(undefined)
+            }
+
+            setPublishDateString(value)
+          }}
+        />
+        <TextInput
+          type="datetime-local"
+          label="Update Date"
+          errorMessage={updateDateError}
+          icon={MaterialIconUpdate}
+          value={updateDateString}
+          onChange={e => {
+            const value = e.target.value
+            const updateDate = new Date(value)
+
+            if (!isNaN(updateDate.getTime())) {
+              setPublishDateError('')
+              setUpdateDate(updateDate)
+            } else {
+              setUpdateDateError('Invalid Date')
+              setUpdateDate(undefined)
+            }
+
+            setUpdateDateString(value)
+          }}
+        />
+      </PanelSection>
+
+      <PanelSectionHeader title="Metadata" />
       <PanelSection>
         <DescriptionList>
           <DescriptionListItem label="Pre-title">{metadata.preTitle || '-'}</DescriptionListItem>

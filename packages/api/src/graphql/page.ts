@@ -16,7 +16,11 @@ import {
   GraphQLRichTextBlock,
   GraphQLImageBlock,
   GraphQLArticleTeaserGridBlock,
-  GraphQLArticleTeaserGridBlockInput
+  GraphQLArticleTeaserGridBlockInput,
+  GraphQLInputTitleBlock,
+  GraphQLInputImageBlock,
+  GraphQLInputRichTextBlock,
+  GraphQLTitleBlock
 } from './blocks'
 
 import {Page} from '../adapter/page'
@@ -27,13 +31,16 @@ import {GraphQLImage} from './image'
 export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
   name: 'PageBlockUnionMap',
   fields: {
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
+    [BlockType.Image]: {type: GraphQLInputImageBlock},
+    [BlockType.Title]: {type: GraphQLInputTitleBlock},
     [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
   }
 })
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
-  types: [GraphQLRichTextBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
+  types: [GraphQLRichTextBlock, GraphQLTitleBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
 })
 
 export const GraphQLPageInput = new GraphQLInputObjectType({
@@ -91,7 +98,9 @@ export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
     published: {
       type: GraphQLPageVersion,
       resolve(root: Page, _args, {storageAdapter}: Context) {
-        if (root.publishedVersion == undefined) return undefined
+        if (root.publishedAt == undefined || root.publishedVersion == undefined) return null
+        if (new Date().getTime() < root.publishedAt.getTime()) return null
+
         return storageAdapter.getPageVersion(root.id, root.publishedVersion)
       }
     },

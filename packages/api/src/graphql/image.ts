@@ -6,13 +6,17 @@ import {
   GraphQLString,
   GraphQLFloat,
   GraphQLEnumType,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLBoolean,
+  GraphQLID
 } from 'graphql'
+
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 import {Context} from '../context'
 import {Image, ImageRotation, ImageOutput} from '../adapter/image'
 import {GraphQLPageInfo} from './pageInfo'
-import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLUpload} from 'graphql-upload'
 
 export const GraphQLInputPoint = new GraphQLInputObjectType({
   name: 'InputPoint',
@@ -61,40 +65,82 @@ export const GraphQLImageTransformation = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLUploadImageInput = new GraphQLInputObjectType({
+  name: 'UploadImageInput',
+  fields: {
+    file: {type: GraphQLNonNull(GraphQLUpload)},
+    filename: {type: GraphQLString},
+
+    title: {type: GraphQLString},
+    description: {type: GraphQLString},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
+
+    focalPoint: {type: GraphQLInputPoint}
+  }
+})
+
+export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
+  name: 'UpdateImageInput',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    filename: {type: GraphQLString},
+
+    title: {type: GraphQLString},
+    description: {type: GraphQLString},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
+
+    focalPoint: {type: GraphQLInputPoint}
+  }
+})
+
 export const GraphQLImage = new GraphQLObjectType<Image, Context>({
   name: 'Image',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
+    id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLDateTime},
-    updatedAt: {type: GraphQLDateTime},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    archivedAt: {type: GraphQLDateTime},
 
-    filename: {type: GraphQLNonNull(GraphQLString)},
+    isArchived: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    filename: {type: GraphQLString},
+    title: {type: GraphQLString},
+    description: {type: GraphQLString},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    source: {type: GraphQLString},
+    author: {type: GraphQLString},
+    license: {type: GraphQLString},
+
     fileSize: {type: GraphQLNonNull(GraphQLInt)},
     extension: {type: GraphQLNonNull(GraphQLString)},
     mimeType: {type: GraphQLNonNull(GraphQLString)},
     format: {type: GraphQLNonNull(GraphQLString)},
-    title: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     width: {type: GraphQLNonNull(GraphQLInt)},
     height: {type: GraphQLNonNull(GraphQLInt)},
     focalPoint: {type: GraphQLPoint},
+
     url: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       resolve(image, {}, {mediaAdapter}) {
         return mediaAdapter.getImageURL(image)
       }
     },
-    transform: {
-      type: GraphQLNonNull(GraphQLList(GraphQLString)),
-      args: {transformations: {type: GraphQLList(GraphQLImageTransformation)}}, // TODO: Consider renaming transformations to input
-      resolve(image, {transformations}, {mediaAdapter}) {
-        return Promise.all(
-          transformations.map((transformation: any) =>
-            mediaAdapter.getImageURL(image, transformation)
-          )
-        )
+
+    transformURL: {
+      type: GraphQLString,
+      args: {input: {type: GraphQLImageTransformation}},
+      resolve(image, {input}, {mediaAdapter}) {
+        return mediaAdapter.getImageURL(image, input)
       }
     }
   }
@@ -103,7 +149,7 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
 export const GraphQLImageConnection = new GraphQLObjectType<any, Context>({
   name: 'ImageConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage)))},
+    nodes: {type: GraphQLList(GraphQLImage)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
   }

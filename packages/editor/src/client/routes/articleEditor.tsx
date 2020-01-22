@@ -1,15 +1,14 @@
 import React, {useState, useEffect} from 'react'
-import {Value, Block, Document} from 'slate'
 
 import {
   EditorTemplate,
   NavigationBar,
   NavigationButton,
-  BlockListValue,
   BlockList,
   Drawer,
   Toast,
-  Dialog
+  Dialog,
+  useBlockMap
 } from '@karma.run/ui'
 
 import {
@@ -19,8 +18,12 @@ import {
   MaterialIconPublishOutlined,
   MaterialIconSaveOutlined,
   MaterialIconImage,
-  MaterialIconTitle
+  MaterialIconTitle,
+  MaterialIconFormatQuote,
+  MaterialIconCode
 } from '@karma.run/icons'
+
+import {RouteActionType} from '@karma.run/react'
 
 import {
   RouteNavigationLinkButton,
@@ -29,37 +32,62 @@ import {
   ArticleEditRoute
 } from '../route'
 
-import {RichTextBlock} from '../blocks/richTextBlock'
-import {ImageBlock, ImageBlockValue} from '../blocks/imageBlock'
-import {TitleBlockValue, TitleBlock} from '../blocks/titleBlock'
 import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
   useCreateArticleMutation,
   useGetArticleQuery,
-  ArticleBlockUnionMap,
   useUpdateArticleMutation,
-  ArticleInput
+  ArticleInput,
+  usePublishArticleMutation
 } from '../api/article'
 
-import {RouteActionType} from '@karma.run/react'
-import {BlockType, VersionState} from '../api/types'
+import {
+  BlockType,
+  TitleBlockListValue,
+  RichTextBlockListValue,
+  ImageBlockListValue,
+  QuoteBlockListValue,
+  EmbedBlockListValue,
+  blockForQueryBlock,
+  unionMapForBlock,
+  EmbedType
+} from '../api/blocks'
 
-export type RichTextBlockListValue = BlockListValue<BlockType.RichText, Value>
-export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
-export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
-export type BlockValue = TitleBlockListValue | RichTextBlockListValue | ImageBlockListValue
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
+import {QuoteBlock} from '../blocks/quoteBlock'
+import {EmbedBlock} from '../blocks/embedBlock'
+import {ImageBlock} from '../blocks/imageBlock'
+import {TitleBlock} from '../blocks/titleBlock'
+import {Author} from '../api/author'
+
+export type ArticleBlockValue =
+  | TitleBlockListValue
+  | RichTextBlockListValue
+  | ImageBlockListValue
+  | QuoteBlockListValue
+  | EmbedBlockListValue
 
 export interface ArticleEditorProps {
   readonly id?: string
 }
 
+const InitialArticleBlocks: ArticleBlockValue[] = [
+  {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
+  {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
+]
+
 export function ArticleEditor({id}: ArticleEditorProps) {
   const dispatch = useRouteDispatch()
 
-  const [createArticle, {data: createData, error: createError}] = useCreateArticleMutation()
-  const [updateArticle, {error: updateError}] = useUpdateArticleMutation()
+  const [
+    createArticle,
+    {loading: isCreating, data: createData, error: createError}
+  ] = useCreateArticleMutation()
+
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
+  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation()
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -70,6 +98,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<ArticleMetadata>({
     slug: '',
     preTitle: '',
@@ -79,30 +108,29 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     tags: [],
     shared: false,
     breaking: false,
-    image: null
+    image: undefined
   })
 
-  const [blocks, setBlocks] = useState<BlockValue[]>([])
-  const [isNew] = useState(id == undefined)
+  const isNew = id == undefined
+  const [blocks, setBlocks] = useState<ArticleBlockValue[]>(isNew ? InitialArticleBlocks : [])
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, loading: isArticleLoading} = useGetArticleQuery({
+  const {data: articleData, loading: isLoading} = useGetArticleQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
-    variables: {
-      id: articleID!,
-      metaImageTransformation: {height: 200},
-      blockImageTransformation: {height: 300}
-    }
+    variables: {id: articleID!}
   })
 
-  const isDisabled = isArticleLoading
+  const isNotFound = articleData && !articleData.article
+  const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest} = articleData.article
+      const {latest, publishedAt} = articleData.article
       const {slug, preTitle, title, lead, tags, shared, breaking, authors, image, blocks} = latest
+
+      if (publishedAt) setPublishedAt(new Date(publishedAt))
 
       setMetadata({
         slug,
@@ -112,22 +140,20 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         tags,
         shared,
         breaking,
-        authors,
-        image: image
-          ? {id: image.id, width: image.width, height: image.height, url: image.transform[0]}
-          : null
+        authors: authors.filter((author: Author | null) => author != null),
+        image: image ? image : undefined
       })
 
-      setBlocks(blocks.map(blockForQueryBlock).filter((block: any) => block != null))
+      setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [articleData])
 
   useEffect(() => {
-    if (createError || updateError) {
+    if (createError || updateError || publishError) {
       setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError!.message)
+      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
     }
-  }, [createError, updateError])
+  }, [createError, updateError, publishError])
 
   function createInput(): ArticleInput {
     return {
@@ -135,7 +161,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
       lead: metadata.lead,
-      authorIDs: [], // TODO
+      authorIDs: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
@@ -148,7 +174,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     const input = createInput()
 
     if (articleID) {
-      await updateArticle({variables: {id: articleID, state: VersionState.Draft, input}})
+      await updateArticle({variables: {id: articleID, input}})
 
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
@@ -167,20 +193,38 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish() {
+  async function handlePublish(publishDate: Date, updateDate: Date) {
     if (articleID) {
-      await updateArticle({
-        variables: {id: articleID, state: VersionState.Published, input: createInput()}
+      const {data} = await updateArticle({
+        variables: {id: articleID, input: createInput()}
       })
+
+      if (data) {
+        const {data: publishData} = await publishArticle({
+          variables: {
+            id: articleID,
+            version: data.updateArticle.latest.version,
+            publishedAt: publishDate.toISOString(),
+            updatedAt: updateDate.toISOString()
+          }
+        })
+
+        if (publishData?.publishArticle?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishArticle?.publishedAt))
+        }
+      }
+
+      setSuccessToastOpen(true)
+      setSuccessMessage('Article Published')
     }
-
-    setSuccessToastOpen(true)
-    setSuccessMessage('Article Published')
   }
 
-  if (articleData && !articleData.article) {
-    return <div>Not Found</div> // TODO
-  }
+  useEffect(() => {
+    if (isNotFound) {
+      setErrorMessage('Article Not Found')
+      setErrorToastOpen(true)
+    }
+  }, [isNotFound])
 
   return (
     <>
@@ -230,9 +274,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        {isArticleLoading ? null : ( // TODO: Loading indicator
-          <BlockList value={blocks} onChange={blocks => setBlocks(blocks)}>
-            {{
+        <BlockList value={blocks} onChange={setBlocks} disabled={isLoading || isDisabled}>
+          {useBlockMap<ArticleBlockValue>(
+            () => ({
               [BlockType.Title]: {
                 field: props => <TitleBlock {...props} />,
                 defaultValue: {title: '', lead: ''},
@@ -242,7 +286,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
               [BlockType.RichText]: {
                 field: props => <RichTextBlock {...props} />,
-                defaultValue: Value.create({document: Document.create([Block.create('')])}),
+                defaultValue: createDefaultValue,
                 label: 'Rich Text',
                 icon: MaterialIconTextFormat
               },
@@ -252,10 +296,25 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 defaultValue: {image: null, caption: ''},
                 label: 'Image',
                 icon: MaterialIconImage
+              },
+
+              [BlockType.Quote]: {
+                field: props => <QuoteBlock {...props} />,
+                defaultValue: {quote: '', author: ''},
+                label: 'Quote',
+                icon: MaterialIconFormatQuote
+              },
+
+              [BlockType.Embed]: {
+                field: props => <EmbedBlock {...props} />,
+                defaultValue: {type: EmbedType.Other},
+                label: 'Embed',
+                icon: MaterialIconCode
               }
-            }}
-          </BlockList>
-        )}
+            }),
+            []
+          )}
+        </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
         {() => (
@@ -269,10 +328,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
         {() => (
           <PublishArticlePanel
+            initialPublishDate={publishedAt}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
-            onConfirm={() => {
-              handlePublish()
+            onConfirm={(publishDate, updateDate) => {
+              handlePublish(publishDate, updateDate)
               setPublishDialogOpen(false)
             }}
           />
@@ -294,70 +354,4 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       </Toast>
     </>
   )
-}
-
-function unionMapForBlock(block: BlockValue): ArticleBlockUnionMap {
-  switch (block.type) {
-    case BlockType.Image:
-      return {
-        [BlockType.Image]: {
-          imageID: block.value.image?.id,
-          caption: block.value.caption || undefined
-        }
-      }
-
-    case BlockType.Title:
-      return {
-        [BlockType.Title]: {title: block.value.title, lead: block.value.lead}
-      }
-
-    case BlockType.RichText:
-      return {
-        [BlockType.RichText]: {richText: block.value.document.toJSON()}
-      }
-  }
-}
-
-function blockForQueryBlock(block: any): BlockValue | null {
-  const type: string = block.__typename
-  const key: string = block.key
-
-  switch (type) {
-    case 'ImageBlock':
-      return {
-        key,
-        type: BlockType.Image,
-        value: {
-          caption: block.caption ?? '',
-          image: block.image
-            ? {
-                id: block.image.id,
-                width: block.image.width,
-                height: block.image.height,
-                url: block.image.transform[0]
-              }
-            : null
-        }
-      }
-
-    case 'TitleBlock':
-      return {
-        key,
-        type: BlockType.Title,
-        value: {
-          title: block.title,
-          lead: block.lead ?? ''
-        }
-      }
-
-    case 'RichTextBlock':
-      return {
-        key,
-        type: BlockType.RichText,
-        value: Value.create({document: Document.fromJSON(block.richText)})
-      }
-
-    default:
-      return null // TODO: Throw error
-  }
 }

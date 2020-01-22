@@ -3,30 +3,26 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLBoolean,
-  GraphQLList,
-  GraphQLID
+  GraphQLID,
+  GraphQLInt
 } from 'graphql'
 
-import {GraphQLUpload, FileUpload} from 'graphql-upload'
 import {UserInputError} from 'apollo-server'
 
-import {
-  GraphQLArticleInput,
-  GraphQLArticle,
-  GraphQLArticleBlockUnionMap,
-  GraphQLVersionState
-} from './article'
+import {GraphQLArticleInput, GraphQLArticle, GraphQLArticleBlockUnionMap} from './article'
 
 import {Context} from '../context'
 import {generateID, generateTokenID} from '../utility'
 
-import {InvalidCredentialsError} from '../error'
 import {GraphQLSession} from './session'
-import {GraphQLImage, GraphQLInputPoint} from './image'
-import {BlockMap, ArticleBlock} from '../adapter/blocks'
-import {ImageUpdate} from '../adapter/image'
-import {VersionState} from '../adapter/versionState'
 import {GraphQLPage, GraphQLPageInput} from './page'
+import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
+import {InvalidCredentialsError} from '../error'
+
+import {VersionState} from '../adapter/versionState'
+import {BlockMap, ArticleBlock} from '../adapter/blocks'
+import {GraphQLAuthor, GraphQLCreateAuthorInput, GraphQLUpdateAuthorInput} from './author'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 async function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -44,12 +40,15 @@ async function mapBlockUnionMap(value: any) {
   }
 
   const key = Object.keys(value)[0] as keyof BlockMap
-  return {type: key, key: await generateID(), ...value[key]} as ArticleBlock
+  return {type: key, ...value[key]} as ArticleBlock
 }
 
-export const GraphQLMutation = new GraphQLObjectType<any, Context>({
+export const GraphQLMutation = new GraphQLObjectType<any, Context, any>({
   name: 'Mutation',
   fields: {
+    // Session
+    // =======
+
     createSession: {
       type: GraphQLNonNull(GraphQLSession),
       args: {
@@ -62,6 +61,8 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         if (!user) throw new InvalidCredentialsError()
 
         const token = await generateTokenID()
+
+        await storageAdapter.cleanSessions()
         await storageAdapter.createSession(user, token, new Date(Date.now() + sessionExpiry))
 
         return {
@@ -71,6 +72,7 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         }
       }
     },
+
     revokeSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {
@@ -88,6 +90,10 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         return true
       }
     },
+
+    // Article
+    // =======
+
     createArticle: {
       type: GraphQLArticle,
       args: {
@@ -103,14 +109,14 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         })
       }
     },
+
     updateArticle: {
       type: GraphQLArticle,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        state: {type: GraphQLNonNull(GraphQLVersionState)},
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
-      async resolve(_root, {id, state, input}, {authenticate, storageAdapter}) {
+      async resolve(root, {id, input}, {authenticate, storageAdapter}) {
         await authenticate()
 
         const article = await storageAdapter.getArticle(id)
@@ -122,18 +128,75 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         if (version.state === VersionState.Published) {
           return storageAdapter.createArticleVersion(id, {
             ...input,
-            state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         } else {
           return storageAdapter.updateArticleVersion(id, article.latestVersion, {
             ...input,
-            state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         }
       }
     },
+
+    publishArticle: {
+      type: GraphQLArticle,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        version: {type: GraphQLNonNull(GraphQLInt)},
+        publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+        updatedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+      },
+      async resolve(root, {id, version, publishedAt, updatedAt}, {authenticate, storageAdapter}) {
+        await authenticate()
+
+        return storageAdapter.publishArticleVersion(
+          id,
+          version,
+          new Date(publishedAt),
+          new Date(updatedAt)
+        )
+      }
+    },
+
+    unpublishArticle: {
+      type: GraphQLArticle,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.unpublishArticle(id)
+      }
+    },
+
+    deleteArticle: {
+      type: GraphQLBoolean,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.deleteArticle(id)
+      }
+    },
+
+    // TODO
+    // archiveArticle: {
+    //   type: GraphQLArticle,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {} // TODO
+    // },
+
+    // unarchiveArticle: {
+    //   type: GraphQLArticle,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // Page
+    // ====
+
     createPage: {
       type: GraphQLPage,
       args: {
@@ -149,14 +212,14 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         })
       }
     },
+
     updatePage: {
       type: GraphQLPage,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        state: {type: GraphQLNonNull(GraphQLVersionState)},
         input: {type: GraphQLNonNull(GraphQLPageInput)}
       },
-      async resolve(_root, {id, state, input}, {authenticate, storageAdapter}) {
+      async resolve(_root, {id, input}, {authenticate, storageAdapter}) {
         await authenticate()
 
         const page = await storageAdapter.getPage(id)
@@ -168,63 +231,180 @@ export const GraphQLMutation = new GraphQLObjectType<any, Context>({
         if (version.state === VersionState.Published) {
           return storageAdapter.createPageVersion(id, {
             ...input,
-            state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         } else {
           return storageAdapter.updatePageVersion(id, page.latestVersion, {
             ...input,
-            state: state,
             blocks: await Promise.all(input.blocks.map(mapBlockUnionMap))
           })
         }
       }
     },
-    uploadImages: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLImage))),
+
+    publishPage: {
+      type: GraphQLPage,
       args: {
-        images: {
-          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUpload)))
-        }
+        id: {type: GraphQLNonNull(GraphQLID)},
+        version: {type: GraphQLNonNull(GraphQLInt)},
+        publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+        updatedAt: {type: GraphQLNonNull(GraphQLDateTime)}
       },
-      async resolve(_root, {images}, {authenticate, storageAdapter, mediaAdapter}) {
+      async resolve(root, {id, version, publishedAt, updatedAt}, {authenticate, storageAdapter}) {
         await authenticate()
 
-        for (const image of images) {
-          if (!(image instanceof Promise)) throw new UserInputError('Invalid image')
-        }
-
-        return Promise.all(
-          images.map(async (image: Promise<FileUpload>) => {
-            const uploadImage = await mediaAdapter.uploadImage(image)
-
-            return storageAdapter.createImage({
-              ...uploadImage,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              title: '',
-              description: '',
-              focalPoint: {x: 0.5, y: 0.5}, // TODO: Focal Point might be optional in the future to allow auto focus
-              tags: []
-            })
-          })
+        return storageAdapter.publishPageVersion(
+          id,
+          version,
+          new Date(publishedAt),
+          new Date(updatedAt)
         )
       }
     },
+
+    unpublishPage: {
+      type: GraphQLPage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.unpublishPage(id)
+      }
+    },
+
+    deletePage: {
+      type: GraphQLBoolean,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.deletePage(id)
+      }
+    },
+
+    // TODO
+    // archivePage: {
+    //   type: GraphQLPage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // unarchivePage: {
+    //   type: GraphQLPage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)},
+    //   resolve() {}
+    // },
+
+    // Image
+    // =====
+
+    uploadImage: {
+      type: GraphQLImage,
+      args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
+      async resolve(root, {input}, {authenticate, storageAdapter, mediaAdapter}) {
+        await authenticate()
+
+        const {
+          file,
+          filename,
+          title,
+          description,
+          tags,
+          author,
+          source,
+          license,
+          focalPoint
+        } = input
+
+        if (!(file instanceof Promise)) throw new UserInputError('Invalid image')
+
+        const uploadImage = await mediaAdapter.uploadImage(file)
+
+        return storageAdapter.createImage({
+          ...uploadImage,
+
+          createdAt: new Date(),
+          updatedAt: new Date(),
+
+          filename: filename ? uploadImage.filename : filename,
+          title,
+          description,
+          tags,
+
+          author,
+          source,
+          license,
+
+          focalPoint
+        })
+      }
+    },
+
     updateImage: {
       type: GraphQLImage,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        title: {type: GraphQLNonNull(GraphQLString)},
-        description: {type: GraphQLNonNull(GraphQLString)},
-        tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-        focalPoint: {type: GraphQLInputPoint}
-      },
-      resolve(root, args, {storageAdapter}) {
-        return storageAdapter.updateImage(args as ImageUpdate)
+      args: {input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}},
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.updateImage({...input, updatedAt: new Date()})
+      }
+    },
+
+    deleteImage: {
+      type: GraphQLBoolean,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, mediaAdapter, storageAdapter}) {
+        await authenticate()
+
+        await mediaAdapter.deleteImage(id)
+        return storageAdapter.deleteImage(id)
+      }
+    },
+
+    // TODO
+    // archiveImage: {
+    //   type: GraphQLImage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)}},
+    //   resolve() {}
+    // },
+
+    // unarchiveImage: {
+    //   type: GraphQLImage,
+    //   args: {id: {type: GraphQLNonNull(GraphQLID)}},
+    //   resolve() {}
+    // }
+
+    // Author
+    // ======
+
+    createAuthor: {
+      type: GraphQLAuthor,
+      args: {input: {type: GraphQLNonNull(GraphQLCreateAuthorInput)}},
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.createAuthor({...input, id: await generateID()})
+      }
+    },
+
+    updateAuthor: {
+      type: GraphQLAuthor,
+      args: {input: {type: GraphQLNonNull(GraphQLUpdateAuthorInput)}},
+      async resolve(root, {input}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.updateAuthor(input)
+      }
+    },
+
+    deleteAuthor: {
+      type: GraphQLBoolean,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, storageAdapter}) {
+        await authenticate()
+        return storageAdapter.deleteAuthor(id)
       }
     }
+
+    // TODO: Navigation
   }
 })
-
-export default GraphQLMutation

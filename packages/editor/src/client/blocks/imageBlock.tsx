@@ -6,24 +6,20 @@ import {
   BlockProps,
   Image,
   Box,
-  Layer,
-  LayerContainer,
   Spacing,
   IconButton,
-  TypograpyTextArea
+  TypographicTextArea,
+  ZIndex
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImageReference} from '../api/types'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageRefData} from '../api/image'
+import {ImageBlockValue} from '../api/blocks'
 
-export interface ImageBlockValue {
-  readonly image: ImageReference | null
-  readonly caption: string
-}
-
+// TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -35,7 +31,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageReference | null) {
+  function handleImageChange(image: ImageRefData | null) {
     onChange({...value, image})
   }
 
@@ -44,38 +40,34 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       <Box height={300}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <LayerContainer>
-              <Layer right={0} top={0}>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
-                  <IconButton
-                    icon={MaterialIconImageOutlined}
-                    title="Choose Image"
-                    onClick={() => setChooseModalOpen(true)}
-                  />
-                </Box>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
-                  <IconButton
-                    icon={MaterialIconEditOutlined}
-                    title="Edit Image"
-                    onClick={() => setEditModalOpen(true)}
-                  />
-                </Box>
-                <Box margin={Spacing.ExtraSmall} flexDirection="row" justifyContent="flex-end" flex>
-                  {/* TODO: Meta sync */}
-                  {/* <IconButton
+            <Box position="relative" width="100%" height="100%">
+              <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
+                <IconButton
+                  icon={MaterialIconImageOutlined}
+                  title="Choose Image"
+                  onClick={() => setChooseModalOpen(true)}
+                  margin={Spacing.ExtraSmall}
+                />
+                <IconButton
+                  icon={MaterialIconEditOutlined}
+                  title="Edit Image"
+                  onClick={() => setEditModalOpen(true)}
+                  margin={Spacing.ExtraSmall}
+                />
+                {/* TODO: Meta sync */}
+                {/* <IconButton
                     icon={MaterialIconSyncAlt}
                     title="Use as Meta Image"
                     onClick={() => setChooseModalOpen(true)}
                   /> */}
-                </Box>
-              </Layer>
-              <Image src={image.url} height={300} contain />
-            </LayerContainer>
+              </Box>
+              <Image src={image.largeURL} width="100%" height={300} contain />
+            </Box>
           )}
         </PlaceholderInput>
       </Box>
       <Box marginTop={Spacing.ExtraSmall}>
-        <TypograpyTextArea
+        <TypographicTextArea
           variant="subtitle2"
           align="center"
           placeholder="Caption"

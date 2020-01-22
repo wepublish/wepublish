@@ -50,6 +50,7 @@ async function asyncMain() {
           <script async src={`${assetHost}/${entry}`} crossOrigin="" />
         </head>
         <body>
+          <noscript>Please enable JavaScript!</noscript>
           <div id={ElementID.ReactRoot}></div>
         </body>
       </html>

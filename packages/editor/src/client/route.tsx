@@ -10,7 +10,7 @@ import {
   required
 } from '@karma.run/react'
 
-import {MenuButton, LinkButton, NavigationLinkButton} from '@karma.run/ui'
+import {LinkButton, NavigationLinkButton, MenuLinkButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation} from '@apollo/react-hooks'
 import {LocalStorageKey} from './utility'
@@ -33,7 +33,11 @@ export enum RouteType {
 
   ImageList = 'imageList',
   ImageUpload = 'imageUpload',
-  ImageEdit = 'imageEdit'
+  ImageEdit = 'imageEdit',
+
+  AuthorList = 'authorList',
+  AuthorEdit = 'authorEdit',
+  AuthorCreate = 'authorCreate'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -55,12 +59,18 @@ export const PageEditRoute = route(RouteType.PageEdit, routePath`/page/edit/${re
 
 export const ImageListRoute = route(RouteType.ImageList, routePath`/images`)
 export const ImageUploadRoute = route(RouteType.ImageUpload, routePath`/image/upload`)
-
 export const ImageEditRoute = route(
   RouteType.ImageEdit,
   routePath`/image/edit/${required('id')}`,
   null
 )
+
+export const AuthorListRoute = route(RouteType.AuthorList, routePath`/authors`)
+export const AuthorEditRoute = route(
+  RouteType.AuthorEdit,
+  routePath`/author/edit/${required('id')}`
+)
+export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
@@ -77,6 +87,9 @@ export const routes = [
   ImageListRoute,
   ImageUploadRoute,
   ImageEditRoute,
+  AuthorListRoute,
+  AuthorEditRoute,
+  AuthorCreateRoute,
   NotFoundRoute
 ] as const
 
@@ -90,7 +103,7 @@ export const {
 } = createRouteContext(routes)
 
 export const RouteLinkButton = routeLink(LinkButton)
-export const RouteMenuLinkButton = routeLink(MenuButton)
+export const RouteMenuLinkButton = routeLink(MenuLinkButton)
 export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>

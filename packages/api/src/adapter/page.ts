@@ -30,8 +30,6 @@ export interface PageVersion {
 }
 
 export interface PageInput {
-  readonly state: VersionState
-
   readonly title: string
   readonly description: string
   readonly slug: string
