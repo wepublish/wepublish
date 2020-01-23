@@ -185,10 +185,12 @@ function renderElement({attributes, children, element}: RenderElementProps) {
       return <li {...attributes}>{children}</li>
 
     case InlineFormat.Link:
-      const title = element.title ? `${element.title}: ${element.url}` : element.url
+      // TODO: Implement custom tooltip
+      // const title = element.title ? `${element.title}: ${element.url}` : element.url
+      // title={title}
 
       return (
-        <Link title={title} data-title={element.title} data-href={element.url} {...attributes}>
+        <Link data-title={element.title} data-href={element.url} {...attributes}>
           {children}
         </Link>
       )
