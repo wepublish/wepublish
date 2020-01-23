@@ -838,10 +838,10 @@
   resolved "https://registry.yarnpkg.com/@karma.run/icons/-/icons-1.0.0.tgz#b39f5e8aa13c3b159727489635beaa95728cf849"
   integrity sha512-aJ2JV5+BukAkqJwGoEhyLBxavHoF/OpCwi/8+1+bIyVRGZQQ/KeUIwq7bQRl6xu4H4akENIfBdetPLk6xXusMw==
 
-"@karma.run/media-image-sharp@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@karma.run/media-image-sharp/-/media-image-sharp-0.1.1.tgz#73335bab56784f6d5ae64060a08fcf3d26a91e7a"
-  integrity sha512-/YN+1CC8AK4/A8sZCjB/OOqECcmry16j0O6pAxoA5DY6j9M4SnkfnRmZ/AWxEkVO0FbvIzmEKrCrFW9TBI6iSw==
+"@karma.run/media-image-sharp@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/media-image-sharp/-/media-image-sharp-0.2.0.tgz#b57232e0284c8beee9eeb01066a430a6d1d102b1"
+  integrity sha512-dVSGCDMD0v59fuwDzeBGQSIh6KmjpxuRqaU04wFNUE+TLaZfvcLpQ37SLDgZUYJO+TYlSoTad4xU4/RznxDDZg==
   dependencies:
     sharp "^0.22.1"
 
@@ -850,10 +850,10 @@
   resolved "https://registry.yarnpkg.com/@karma.run/media-storage-local/-/media-storage-local-0.1.4.tgz#e2331840c602c268bffc0180cbed7c227c315c4e"
   integrity sha512-Ne0EF6gTEnsqM3cPJLXdwLasNo/rDtUDx6S1GbBR8E0ICyLlbBSRAMJVLHJ/XZeoETAOCSYzEZ6MyYylpN/+Tw==
 
-"@karma.run/media@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@karma.run/media/-/media-0.1.2.tgz#5c25cb2b25115d3136fc201d672bf9b16ea20d16"
-  integrity sha512-SrDVB0Q391IGYMlmCBk/jWVkAK0VVtB6pIVhkgkBz8Sq99ng/hyfrLFIGPC2MdOqVnXH4JWt0y+B093OBxY7Vw==
+"@karma.run/media@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@karma.run/media/-/media-0.2.0.tgz#82464884ed90a8c6c0bf657c14e815d1828b3786"
+  integrity sha512-IMFQx6KExNdy22FJwc6dzx5uRbGqMpg4MhR4oTAdrldanlGLGkT8Mx3GU2REeOxb4q8aWLBupNa/sfGsTTonrw==
   dependencies:
     buffer-peek-stream "^1.0.1"
     fastify "^2.5.0"
