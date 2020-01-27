@@ -21,6 +21,7 @@
     "graphql-fields": "^2.0.3",
     "graphql-iso-date": "^3.6.1",
     "graphql-upload": "8.1.0",
+    "dataloader": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "ms": "^2.1.2",
     "nanoid": "^2.1.2"

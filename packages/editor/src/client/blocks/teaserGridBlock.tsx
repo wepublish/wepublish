@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 
 import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
 
@@ -13,11 +13,12 @@ import {
   IconButton,
   Image,
   Typography,
-  ZIndex
+  ZIndex,
+  ImagePlaceholder
 } from '@karma.run/ui'
 
 import {ArticleReference} from '../api/article'
-import {TeaserGridBlockValue} from '../api/blocks'
+import {TeaserGridBlockValue, ArticleTeaser} from '../api/blocks'
 
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
 import {VersionState} from '../api/common'
@@ -45,104 +46,17 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
         {teasers.map((value, index) => (
           // NOTE: Using index as a key here should be fine.
           <Column key={index} ratio={1 / numColumns}>
-            <Box height={numColumns === 1 ? 400 : 300}>
-              <PlaceholderInput
-                onAddClick={() => {
+            <Box height={300}>
+              <ArticleTeaserBlock
+                teaser={value}
+                onChooseArticle={() => {
                   setChoosingIndex(index)
                   setChooseModalOpen(true)
-                }}>
-                {value && value.article && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <IconButton
-                        icon={MaterialIconInsertDriveFileOutlined}
-                        title="Choose Article"
-                        onClick={() => {
-                          setChoosingIndex(index)
-                          setChooseModalOpen(true)
-                        }}
-                        margin={Spacing.ExtraSmall}
-                      />
-                      <IconButton
-                        icon={MaterialIconClose}
-                        title="Remove Article"
-                        onClick={() => {
-                          handleArticleChange(index, null)
-                        }}
-                        margin={Spacing.ExtraSmall}
-                      />
-                    </Box>
-
-                    {numColumns === 1 ? (
-                      <>
-                        <Box
-                          position="absolute"
-                          zIndex={ZIndex.Default}
-                          bottom={0}
-                          width={'100%'}
-                          style={{backgroundColor: 'rgba(34,34,34,0.6)'}}>
-                          <Box padding={Spacing.Small}>
-                            <Typography variant="subtitle1" align="center" color="gray">
-                              {value.article.publishedAt != undefined && 'Published'}
-                              {value.article.publishedAt != undefined &&
-                                value.article.latest.state === VersionState.Draft &&
-                                ' / '}
-                              {value.article.latest.state === VersionState.Draft && 'Draft'}
-                            </Typography>
-                            <Typography variant="h2" align="center" color="white">
-                              {value.article.latest.title || 'Untitled'}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {value.article.latest.image && (
-                          <Image
-                            src={value.article.latest.image.column1URL}
-                            width="100%"
-                            height="100%"
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <Box display="flex" flexDirection="column">
-                        <Image
-                          src={value.article.latest.image?.column6URL}
-                          width="100%"
-                          height={150}
-                        />
-
-                        <Box
-                          position="relative"
-                          overflow="hidden"
-                          height={150}
-                          padding={Spacing.ExtraSmall}>
-                          <Typography variant="subtitle1" color="gray">
-                            {value.article.publishedAt != undefined && 'Published'}
-                            {value.article.latest.state === VersionState.Draft &&
-                              value.article.publishedAt != undefined &&
-                              ' / '}
-                            {value.article.latest.state === VersionState.Draft && 'Draft'}
-                          </Typography>
-                          <Typography variant="body2" color="dark">
-                            {value.article.latest.title || 'Untitled'}
-                          </Typography>
-                          <Box
-                            position="absolute"
-                            zIndex={ZIndex.Default}
-                            bottom={0}
-                            width="100%"
-                            height={50}
-                            style={{
-                              background:
-                                'linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))'
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                )}
-              </PlaceholderInput>
+                }}
+                onRemoveArticle={() => {
+                  handleArticleChange(index, null)
+                }}
+              />
             </Box>
           </Column>
         ))}
@@ -160,5 +74,78 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
         )}
       </Drawer>
     </>
+  )
+}
+
+export interface ArticleTeaserBlockProps {
+  teaser: ArticleTeaser | null
+  onChooseArticle: () => void
+  onRemoveArticle: () => void
+}
+
+export function ArticleTeaserBlock({
+  teaser,
+  onChooseArticle,
+  onRemoveArticle
+}: ArticleTeaserBlockProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  function handleDragStart() {
+    containerRef.current!.style.transform = '0.5'
+  }
+
+  return (
+    <Box ref={containerRef} style={{cursor: 'move'}} onDragStart={handleDragStart}>
+      <PlaceholderInput onAddClick={onChooseArticle}>
+        {teaser && teaser.article && (
+          <Box position="relative" width="100%" height="100%">
+            <Box position="absolute" width="100%" height="100%">
+              {teaser.article.latest.image ? (
+                <Image src={teaser.article.latest.image.column6URL} width="100%" height="100%" />
+              ) : (
+                <ImagePlaceholder width="100%" height="100%" />
+              )}
+            </Box>
+
+            <Box
+              position="absolute"
+              zIndex={ZIndex.Default}
+              bottom={0}
+              width="100%"
+              padding={Spacing.ExtraSmall}
+              paddingTop={Spacing.Large}
+              style={{
+                background: `linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) ${Spacing.Large}px)`
+              }}>
+              <Typography variant="subtitle1" color="gray">
+                {teaser.article.publishedAt != undefined && 'Published'}
+                {teaser.article.latest.state === VersionState.Draft &&
+                  teaser.article.publishedAt != undefined &&
+                  ' / '}
+                {teaser.article.latest.state === VersionState.Draft && 'Draft'}
+              </Typography>
+              <Typography variant="body2" color="white">
+                {teaser.article.latest.title || 'Untitled'}
+              </Typography>
+            </Box>
+
+            <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
+              <IconButton
+                icon={MaterialIconInsertDriveFileOutlined}
+                title="Choose Article"
+                onClick={onChooseArticle}
+                margin={Spacing.ExtraSmall}
+              />
+              <IconButton
+                icon={MaterialIconClose}
+                title="Remove Article"
+                onClick={onRemoveArticle}
+                margin={Spacing.ExtraSmall}
+              />
+            </Box>
+          </Box>
+        )}
+      </PlaceholderInput>
+    </Box>
   )
 }

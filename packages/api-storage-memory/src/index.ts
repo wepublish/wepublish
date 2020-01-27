@@ -177,8 +177,9 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return image
   }
 
-  async getImage(id: string): Promise<Image | null> {
-    return this._images.find(({id: imageID}) => imageID === id) ?? null
+  async getImagesByID(ids: readonly string[]): Promise<Array<Image | null>> {
+    const images = this._images.filter(({id}) => ids.includes(id))
+    return ids.map(id => images.find(image => image.id === id) ?? null)
   }
 
   async getImages(

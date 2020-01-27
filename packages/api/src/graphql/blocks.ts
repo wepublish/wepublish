@@ -55,8 +55,8 @@ export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaser
       lead: {type: GraphQLString},
       image: {
         type: GraphQLImage,
-        resolve({imageID}, args, {storageAdapter}) {
-          return imageID ? storageAdapter.getImage(imageID) : null
+        resolve({imageID}, args, {loaders}) {
+          return imageID ? loaders.image.load(imageID) : null
         }
       }
     }
@@ -96,8 +96,8 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
     caption: {type: GraphQLString},
     node: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {storageAdapter}) {
-        return storageAdapter.getImage(imageID)
+      resolve({imageID}, _args, {loaders}) {
+        return imageID ? loaders.image.load(imageID) : null
       }
     }
   }
@@ -108,9 +108,8 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
   fields: {
     image: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {storageAdapter}) {
-        if (!imageID) return null
-        return storageAdapter.getImage(imageID)
+      resolve({imageID}, _args, {loaders}) {
+        return imageID ? loaders.image.load(imageID) : null
       }
     },
 
@@ -214,8 +213,8 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
     title: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {storageAdapter}) {
-        return imageID ? storageAdapter.getImage(imageID) : null
+      resolve({imageID}, _args, {loaders}) {
+        return imageID ? loaders.image.load(imageID) : null
       }
     },
     richText: {type: GraphQLNonNull(GraphQLRichText)}

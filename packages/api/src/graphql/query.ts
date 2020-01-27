@@ -245,8 +245,8 @@ export const GraphQLQuery = new GraphQLObjectType<any, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {storageAdapter}) {
-        return storageAdapter.getImage(id)
+      async resolve(root, {imageID}, {loaders}) {
+        return loaders.image.load(imageID)
       }
     },
 
