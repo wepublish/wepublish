@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 
 import {
   PlaceholderInput,
@@ -7,17 +7,25 @@ import {
   Box,
   Spacing,
   IconButton,
-  DescriptionList,
-  DescriptionListItem,
-  ZIndex
+  ZIndex,
+  Card,
+  ThemeContext
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined} from '@karma.run/icons'
 import {EmbedEditPanel} from '../panel/embedEditPanel'
 import {EmbedBlockValue, EmbedType} from '../api/blocks'
+import {YouTubeVideoEmbed} from './embeds/youtube'
+import {VimeoVideoEmbed} from './embeds/vimeo'
+import {SoundCloudTrackEmbed} from './embeds/soundCloud'
+import {InstagramPostEmbed} from './embeds/instagram'
+import {TwitterTweetEmbed} from './embeds/twitter'
+import {FacebookPostEmbed} from './embeds/facebook'
+import {IframeEmbed} from './embeds/iframe'
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
+  const theme = useContext(ThemeContext)
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
   const isEmpty = value.type === EmbedType.Other && value.url == undefined
 
@@ -29,11 +37,14 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
 
   return (
     <>
-      <Box height={300}>
+      <Card
+        height={isEmpty ? 300 : undefined}
+        overflow="hidden"
+        style={{backgroundColor: theme.colors.light}}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
             <Box position="relative" width="100%" height="100%">
-              <Box position="absolute" zIndex={ZIndex.Default} top={0} right={0}>
+              <Box position="absolute" zIndex={ZIndex.Default} height="100%" right={0}>
                 <IconButton
                   icon={MaterialIconEditOutlined}
                   title="Edit Embed"
@@ -41,18 +52,11 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
                   margin={Spacing.ExtraSmall}
                 />
               </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                height="100%">
-                <EmbedPreview value={value} />
-              </Box>
+              <EmbedPreview value={value} />
             </Box>
           )}
         </PlaceholderInput>
-      </Box>
+      </Card>
       <Drawer open={isEmbedDialogOpen} width={480}>
         {() => (
           <EmbedEditPanel
@@ -76,63 +80,31 @@ export interface EmbedPreviewProps {
 export function EmbedPreview({value}: EmbedPreviewProps) {
   switch (value.type) {
     case EmbedType.FacebookPost:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Facebook Post</DescriptionListItem>
-          <DescriptionListItem label="User ID">{value.userID}</DescriptionListItem>
-          <DescriptionListItem label="Post ID">{value.postID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <FacebookPostEmbed userID={value.userID} postID={value.postID} />
 
     case EmbedType.InstagramPost:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Instagram Post</DescriptionListItem>
-          <DescriptionListItem label="Post ID">{value.postID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <InstagramPostEmbed postID={value.postID} />
 
     case EmbedType.TwitterTweet:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Twitter Tweet</DescriptionListItem>
-          <DescriptionListItem label="Tweet ID">{value.tweetID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <TwitterTweetEmbed userID={value.userID} tweetID={value.tweetID} />
 
     case EmbedType.VimeoVideo:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Vimeo Video</DescriptionListItem>
-          <DescriptionListItem label="Video ID">{value.videoID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <VimeoVideoEmbed videoID={value.videoID} />
 
     case EmbedType.YouTubeVideo:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">YouTube</DescriptionListItem>
-          <DescriptionListItem label="User ID">{value.videoID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <YouTubeVideoEmbed videoID={value.videoID} />
 
     case EmbedType.SoundCloudTrack:
-      return (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Soundcloud Track</DescriptionListItem>
-          <DescriptionListItem label="Track ID">{value.trackID}</DescriptionListItem>
-        </DescriptionList>
-      )
+      return <SoundCloudTrackEmbed trackID={value.trackID} />
 
     default:
       return value.url ? (
-        <DescriptionList>
-          <DescriptionListItem label="Type">Other</DescriptionListItem>
-          {value.url && <DescriptionListItem label="URL">{value.url}</DescriptionListItem>}
-          {value.title && <DescriptionListItem label="Title">{value.title}</DescriptionListItem>}
-          {value.width && <DescriptionListItem label="Width">{value.width}</DescriptionListItem>}
-          {value.height && <DescriptionListItem label="Height">{value.height}</DescriptionListItem>}
-        </DescriptionList>
+        <IframeEmbed
+          title={value.title}
+          url={value.url}
+          width={value.width}
+          height={value.height}
+        />
       ) : null
   }
 }

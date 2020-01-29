@@ -23,7 +23,7 @@ import {
   SelectListItem,
   MarginProps,
   Avatar,
-  ImagePlaceholder,
+  PlaceholderImage,
   ZIndex
 } from '@karma.run/ui'
 
@@ -106,7 +106,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             label="Authors"
             value={authors}
             marginBottom={Spacing.ExtraSmall}
-            onChange={authors => onChange?.({...value, authors})}
+            onChange={authors => onChange?.({...value, authors: authors || []})}
           />
 
           <TagInput
@@ -206,7 +206,7 @@ export interface AuthorInputProps extends MarginProps {
   label?: string
   description?: string
   value: Author[]
-  onChange(author: Author[]): void
+  onChange(author?: Author[]): void
 }
 
 export function AuthorInput(props: AuthorInputProps) {
@@ -251,7 +251,7 @@ function AuthorInputList({
                     {item.image ? (
                       <Image src={item.image.squareURL} width={20} height={20} />
                     ) : (
-                      <ImagePlaceholder width={20} height={20} />
+                      <PlaceholderImage width={20} height={20} />
                     )}
                   </Avatar>
                   {item.name}

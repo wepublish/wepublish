@@ -5,7 +5,7 @@ import {
   Spacing,
   Divider,
   Avatar,
-  ImagePlaceholder,
+  PlaceholderImage,
   Drawer,
   Image,
   SearchInput,
@@ -94,7 +94,7 @@ export function AuthorList() {
             {image ? (
               <Image src={image.squareURL} width="100%" height="100%" />
             ) : (
-              <ImagePlaceholder width="100%" height="100%" />
+              <PlaceholderImage width="100%" height="100%" />
             )}
           </Avatar>
 

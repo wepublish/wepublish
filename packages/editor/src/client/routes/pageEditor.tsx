@@ -53,6 +53,7 @@ import {
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {ImageBlock} from '../blocks/imageBlock'
+import nanoid from 'nanoid'
 
 export type PageBlockValue =
   | TitleBlockListValue
@@ -254,14 +255,24 @@ export function PageEditor({id}: PageEditorProps) {
             () => ({
               [BlockType.ArticleTeaserGrid1]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 1, teasers: [null]},
+                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
                 label: '1 Col',
                 icon: IconColumn1
               },
 
               [BlockType.ArticleTeaserGrid6]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 3, teasers: [null, null, null, null, null, null]},
+                defaultValue: {
+                  numColumns: 3,
+                  teasers: [
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null]
+                  ]
+                },
                 label: '6 Cols',
                 icon: IconColumn6
               },

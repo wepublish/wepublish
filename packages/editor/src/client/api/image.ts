@@ -83,8 +83,8 @@ export const ImageURLFragment = gql`
     thumbURL: transformURL(input: {width: 280, height: 200})
     squareURL: transformURL(input: {width: 100, height: 100})
     previewURL: transformURL(input: {width: 400, height: 200})
-    column1URL: transformURL(input: {width: 800, height: 400})
-    column6URL: transformURL(input: {width: 260, height: 150})
+    column1URL: transformURL(input: {width: 800, height: 300})
+    column6URL: transformURL(input: {width: 260, height: 300})
   }
 `
 

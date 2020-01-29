@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, ReactNode} from 'react'
 
 import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
 
@@ -7,21 +7,51 @@ import {
   Drawer,
   BlockProps,
   Box,
-  Grid,
-  Column,
   Spacing,
   IconButton,
   Image,
   Typography,
   ZIndex,
-  ImagePlaceholder
+  PlaceholderImage,
+  Overlay,
+  Card
 } from '@karma.run/ui'
+
+import {styled} from '@karma.run/react'
+
+import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
+import arrayMove from 'array-move'
 
 import {ArticleReference} from '../api/article'
 import {TeaserGridBlockValue, ArticleTeaser} from '../api/blocks'
 
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
 import {VersionState} from '../api/common'
+import nanoid from 'nanoid'
+
+interface GridElementProps {
+  numColumns: number
+}
+
+const GridElement = styled('div', ({numColumns}: GridElementProps) => ({
+  display: 'grid',
+  gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+  gridGap: Spacing.Small,
+  userSelect: 'none'
+}))
+
+const GridItem = SortableElement((props: ArticleTeaserBlockProps) => {
+  return <ArticleTeaserBlock {...props} />
+})
+
+interface GridProps {
+  numColumns: number
+  children?: ReactNode
+}
+
+const Grid = SortableContainer(({children, numColumns}: GridProps) => {
+  return <GridElement styleProps={{numColumns}}>{children}</GridElement>
+})
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -35,33 +65,52 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
-        [index]: article ? {...currentValue, article} : null
+        [index]: [nanoid(), article ? {...currentValue, article} : null]
       })
+    })
+  }
+
+  function handleSortStart() {
+    document.documentElement.style.cursor = 'grabbing'
+    document.body.style.pointerEvents = 'none'
+  }
+
+  function handleSortEnd({oldIndex, newIndex}: SortEnd) {
+    document.documentElement.style.cursor = ''
+    document.body.style.pointerEvents = ''
+
+    onChange({
+      numColumns,
+      teasers: arrayMove(teasers, oldIndex, newIndex)
     })
   }
 
   return (
     <>
-      <Grid spacing={Spacing.ExtraSmall}>
-        {teasers.map((value, index) => (
-          // NOTE: Using index as a key here should be fine.
-          <Column key={index} ratio={1 / numColumns}>
-            <Box height={300}>
-              <ArticleTeaserBlock
-                teaser={value}
-                onChooseArticle={() => {
-                  setChoosingIndex(index)
-                  setChooseModalOpen(true)
-                }}
-                onRemoveArticle={() => {
-                  handleArticleChange(index, null)
-                }}
-              />
-            </Box>
-          </Column>
+      <Grid
+        numColumns={numColumns}
+        axis="xy"
+        distance={Spacing.ExtraSmall}
+        onSortStart={handleSortStart}
+        onSortEnd={handleSortEnd}>
+        {teasers.map(([key, teaser], index) => (
+          <GridItem
+            key={key}
+            index={index}
+            teaser={teaser}
+            numColumns={numColumns}
+            showGrabCursor={teasers.length !== 1}
+            disabled={teasers.length === 1}
+            onChooseArticle={() => {
+              setChoosingIndex(index)
+              setChooseModalOpen(true)
+            }}
+            onRemoveArticle={() => {
+              handleArticleChange(index, null)
+            }}
+          />
         ))}
       </Grid>
-
       <Drawer open={isChooseModalOpen} width={500}>
         {() => (
           <ArticleChoosePanel
@@ -79,44 +128,46 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
 
 export interface ArticleTeaserBlockProps {
   teaser: ArticleTeaser | null
+  showGrabCursor: boolean
+  numColumns: number
   onChooseArticle: () => void
   onRemoveArticle: () => void
 }
 
 export function ArticleTeaserBlock({
   teaser,
+  numColumns,
+  showGrabCursor,
   onChooseArticle,
   onRemoveArticle
 }: ArticleTeaserBlockProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  function handleDragStart() {
-    containerRef.current!.style.transform = '0.5'
-  }
-
   return (
-    <Box ref={containerRef} style={{cursor: 'move'}} onDragStart={handleDragStart}>
+    <Card
+      style={{cursor: showGrabCursor ? 'grab' : ''}}
+      height={300}
+      overflow="hidden"
+      zIndex={ZIndex.Default}>
       <PlaceholderInput onAddClick={onChooseArticle}>
         {teaser && teaser.article && (
           <Box position="relative" width="100%" height="100%">
             <Box position="absolute" width="100%" height="100%">
               {teaser.article.latest.image ? (
-                <Image src={teaser.article.latest.image.column6URL} width="100%" height="100%" />
+                <Image
+                  draggable={false}
+                  src={
+                    numColumns === 1
+                      ? teaser.article.latest.image.column1URL
+                      : teaser.article.latest.image.column6URL
+                  }
+                  width="100%"
+                  height="100%"
+                />
               ) : (
-                <ImagePlaceholder width="100%" height="100%" />
+                <PlaceholderImage width="100%" height="100%" />
               )}
             </Box>
 
-            <Box
-              position="absolute"
-              zIndex={ZIndex.Default}
-              bottom={0}
-              width="100%"
-              padding={Spacing.ExtraSmall}
-              paddingTop={Spacing.Large}
-              style={{
-                background: `linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) ${Spacing.Large}px)`
-              }}>
+            <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
               <Typography variant="subtitle1" color="gray">
                 {teaser.article.publishedAt != undefined && 'Published'}
                 {teaser.article.latest.state === VersionState.Draft &&
@@ -124,10 +175,10 @@ export function ArticleTeaserBlock({
                   ' / '}
                 {teaser.article.latest.state === VersionState.Draft && 'Draft'}
               </Typography>
-              <Typography variant="body2" color="white">
+              <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
                 {teaser.article.latest.title || 'Untitled'}
               </Typography>
-            </Box>
+            </Overlay>
 
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
@@ -146,6 +197,6 @@ export function ArticleTeaserBlock({
           </Box>
         )}
       </PlaceholderInput>
-    </Box>
+    </Card>
   )
 }

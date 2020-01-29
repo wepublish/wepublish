@@ -1,4 +1,5 @@
 import baseSlugify from 'slugify'
+import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -22,4 +23,41 @@ export function dateTimeLocalString(date: Date) {
   const seconds = prefix(date.getSeconds())
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+}
+
+export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
+  if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
+
+  const scriptRef = useRef<HTMLScriptElement | null>(null)
+
+  const [isLoading, setLoading] = useState(false)
+  const [isLoaded, setLoaded] = useState(() => checkIfLoaded())
+
+  useEffect(() => {
+    if (isLoading && !isLoaded && !scriptRef.current) {
+      const script = document.createElement('script')
+
+      script.src = src
+      script.async = true
+      script.defer = true
+      script.onload = () => setLoaded(true)
+      script.crossOrigin = crossOrigin ? 'anonymous' : null
+
+      document.head.appendChild(script)
+      scriptRef.current = script
+    }
+  }, [isLoading])
+
+  const load = useCallback(() => {
+    setLoading(true)
+  }, [])
+
+  return useMemo(
+    () => ({
+      isLoading,
+      isLoaded,
+      load
+    }),
+    [isLoading, isLoaded, load]
+  )
 }

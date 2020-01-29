@@ -107,7 +107,7 @@ export interface ArticleTeaser {
 }
 
 export interface TeaserGridBlockValue {
-  readonly teasers: Array<ArticleTeaser | null>
+  readonly teasers: Array<[string, ArticleTeaser | null]>
   readonly numColumns: number
 }
 
@@ -290,7 +290,7 @@ export function unionMapForBlock(block: BlockValue): BlockUnionMap {
     case BlockType.ArticleTeaserGrid6:
       return {
         articleTeaserGrid: {
-          teasers: block.value.teasers.map(value =>
+          teasers: block.value.teasers.map(([, value]) =>
             value && value.article ? {type: value.type, articleID: value.article.id} : null
           ),
           numColumns: block.value.numColumns
@@ -399,7 +399,7 @@ export function blockForQueryBlock(block: any): BlockValue | null {
         type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid6,
         value: {
           numColumns: block.numColumns,
-          teasers: block.teasers
+          teasers: block.teasers.map((teaser: any) => [nanoid(), teaser])
         }
       }
 

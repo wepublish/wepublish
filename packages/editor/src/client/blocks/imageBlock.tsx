@@ -9,7 +9,8 @@ import {
   Spacing,
   IconButton,
   TypographicTextArea,
-  ZIndex
+  ZIndex,
+  Card
 } from '@karma.run/ui'
 
 import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
@@ -37,7 +38,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
 
   return (
     <>
-      <Box height={300}>
+      <Card height={300} overflow="hidden">
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
             <Box position="relative" width="100%" height="100%">
@@ -65,7 +66,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
             </Box>
           )}
         </PlaceholderInput>
-      </Box>
+      </Card>
       <Box marginTop={Spacing.ExtraSmall}>
         <TypographicTextArea
           variant="subtitle2"
