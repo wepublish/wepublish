@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "module": "./lib/esm/client/",
   "license": "MIT",
   "scripts": {

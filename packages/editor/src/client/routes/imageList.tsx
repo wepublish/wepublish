@@ -146,11 +146,11 @@ export function ImageList() {
                     <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
                       <Image src={thumbURL} width="100%" height="100%" />
 
-                      <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
-                        <Typography variant="subtitle1" color="gray">
+                      <Overlay bottom={0} width="100%" maxHeight="50%" padding={Spacing.ExtraSmall}>
+                        <Typography variant="subtitle1" color="gray" ellipsize>
                           {`${filename || 'untitled'}${extension}`}
                         </Typography>
-                        <Typography variant="body2" color="white">
+                        <Typography variant="body2" color="white" ellipsize>
                           {title || 'Untitled'}
                         </Typography>
                       </Overlay>

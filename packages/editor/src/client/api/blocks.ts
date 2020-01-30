@@ -18,6 +18,7 @@ export enum BlockType {
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
   Embed = 'embed',
+  LinkPageBreak = 'linkPageBreak',
   ArticleTeaserGrid1 = 'articleTeaserGrid1',
   ArticleTeaserGrid6 = 'articleTeaserGrid6'
 }
@@ -40,6 +41,12 @@ export interface TitleBlockValue {
 export interface QuoteBlockValue {
   readonly quote: string
   readonly author: string
+}
+
+export interface LinkPageBreakBlockValue {
+  readonly text: string
+  readonly linkURL: string
+  readonly linkText: string
 }
 
 export enum EmbedType {
@@ -116,6 +123,10 @@ export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValu
 export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
 export type QuoteBlockListValue = BlockListValue<BlockType.Quote, QuoteBlockValue>
 export type EmbedBlockListValue = BlockListValue<BlockType.Embed, EmbedBlockValue>
+export type LinkPageBreakBlockListValue = BlockListValue<
+  BlockType.LinkPageBreak,
+  LinkPageBreakBlockValue
+>
 
 export type ArticleTeaserGridBlock1ListValue = BlockListValue<
   BlockType.ArticleTeaserGrid1,
@@ -133,6 +144,7 @@ export type BlockValue =
   | ImageBlockListValue
   | QuoteBlockListValue
   | EmbedBlockListValue
+  | LinkPageBreakBlockListValue
   | ArticleTeaserGridBlock1ListValue
   | ArticleTeaserGridBlock6ListValue
 
@@ -189,6 +201,12 @@ export interface BlockUnionMap {
     readonly height?: number
   }
 
+  readonly linkPageBreak?: {
+    readonly text?: string
+    readonly linkURL?: string
+    readonly linkText?: string
+  }
+
   readonly articleTeaserGrid?: {
     readonly teasers: Array<{type: string; articleID: string} | null>
     readonly numColumns: number
@@ -223,6 +241,15 @@ export function unionMapForBlock(block: BlockValue): BlockUnionMap {
         quote: {
           quote: block.value.quote || undefined,
           author: block.value.author || undefined
+        }
+      }
+
+    case BlockType.LinkPageBreak:
+      return {
+        linkPageBreak: {
+          text: block.value.text || undefined,
+          linkText: block.value.linkText || undefined,
+          linkURL: block.value.linkURL || undefined
         }
       }
 
@@ -400,6 +427,17 @@ export function blockForQueryBlock(block: any): BlockValue | null {
         value: {
           numColumns: block.numColumns,
           teasers: block.teasers.map((teaser: any) => [nanoid(), teaser])
+        }
+      }
+
+    case 'LinkPageBreakBlock':
+      return {
+        key,
+        type: BlockType.LinkPageBreak,
+        value: {
+          text: block.text ?? '',
+          linkText: block.linkText ?? '',
+          linkURL: block.linkURL ?? ''
         }
       }
 

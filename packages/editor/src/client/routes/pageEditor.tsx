@@ -20,14 +20,14 @@ import {
   IconColumn1,
   MaterialIconTitle,
   MaterialIconTextFormat,
-  MaterialIconImage
+  MaterialIconImage,
+  MaterialIconViewDay
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
 import {TeaserGridBlock} from '../blocks/teaserGridBlock'
-import {BlockType} from '../api/common'
 
 import {
   PageInput,
@@ -41,18 +41,22 @@ import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
 import {
+  BlockType,
   blockForQueryBlock,
   unionMapForBlock,
   ArticleTeaserGridBlock1ListValue,
   ArticleTeaserGridBlock6ListValue,
   TitleBlockListValue,
   RichTextBlockListValue,
-  ImageBlockListValue
+  ImageBlockListValue,
+  LinkPageBreakBlockListValue
 } from '../api/blocks'
 
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {ImageBlock} from '../blocks/imageBlock'
+import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
+
 import nanoid from 'nanoid'
 
 export type PageBlockValue =
@@ -61,6 +65,7 @@ export type PageBlockValue =
   | ImageBlockListValue
   | ArticleTeaserGridBlock1ListValue
   | ArticleTeaserGridBlock6ListValue
+  | LinkPageBreakBlockListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -296,6 +301,13 @@ export function PageEditor({id}: PageEditorProps) {
                 defaultValue: {image: null, caption: ''},
                 label: 'Image',
                 icon: MaterialIconImage
+              },
+
+              [BlockType.LinkPageBreak]: {
+                field: props => <LinkPageBreakBlock {...props} />,
+                defaultValue: {text: '', linkText: '', linkURL: ''},
+                label: 'Page Break',
+                icon: MaterialIconViewDay
               }
             }),
             []

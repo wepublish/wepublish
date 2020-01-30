@@ -234,9 +234,9 @@ export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context
 export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBlock, Context>({
   name: 'LinkPageBreakBlock',
   fields: {
-    text: {type: GraphQLNonNull(GraphQLString)},
-    linkURL: {type: GraphQLNonNull(GraphQLString)},
-    linkText: {type: GraphQLNonNull(GraphQLString)}
+    text: {type: GraphQLString},
+    linkURL: {type: GraphQLString},
+    linkText: {type: GraphQLString}
   },
   isTypeOf(value) {
     return value.type === BlockType.LinkPageBreak
@@ -295,6 +295,15 @@ export const GraphQLInputQuoteBlock = new GraphQLInputObjectType({
   fields: {
     quote: {type: GraphQLString},
     author: {type: GraphQLString}
+  }
+})
+
+export const GraphQLInputLinkPageBreakBlock = new GraphQLInputObjectType({
+  name: 'InputLinkPageBreakBlock',
+  fields: {
+    text: {type: GraphQLString},
+    linkURL: {type: GraphQLString},
+    linkText: {type: GraphQLString}
   }
 })
 

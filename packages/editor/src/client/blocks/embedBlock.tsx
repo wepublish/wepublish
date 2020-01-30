@@ -15,7 +15,7 @@ import {
 import {MaterialIconEditOutlined} from '@karma.run/icons'
 import {EmbedEditPanel} from '../panel/embedEditPanel'
 import {EmbedBlockValue, EmbedType} from '../api/blocks'
-import {YouTubeVideoEmbed} from './embeds/youtube'
+import {YouTubeVideoEmbed} from './embeds/youTube'
 import {VimeoVideoEmbed} from './embeds/vimeo'
 import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {InstagramPostEmbed} from './embeds/instagram'

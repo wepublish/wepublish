@@ -271,6 +271,12 @@ const GetArticleQuery = gql`
             author
           }
 
+          ... on LinkPageBreakBlock {
+            text
+            linkText
+            linkURL
+          }
+
           ... on ImageBlock {
             caption
             image {

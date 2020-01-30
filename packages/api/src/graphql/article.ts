@@ -43,7 +43,8 @@ import {
   GraphQLInputYouTubeVideoBlock,
   GraphQLInputSoundCloudTrackBlock,
   GraphQLInputEmbedBlock,
-  GraphQLEmbedBlock
+  GraphQLEmbedBlock,
+  GraphQLInputLinkPageBreakBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
@@ -65,7 +66,8 @@ export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
     [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
     [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
     [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
-    [BlockType.Embed]: {type: GraphQLInputEmbedBlock}
+    [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
+    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock}
   }
 })
 
