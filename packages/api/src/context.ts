@@ -10,6 +10,7 @@ import {MediaAdapter} from './adapter/mediaAdapter'
 
 import {TokenExpiredError} from './error'
 import {Image} from './adapter/image'
+import {Hooks} from './hooks'
 
 export interface DataLoaderContext {
   image: DataLoader<string, Image | null>
@@ -20,6 +21,7 @@ export interface Context {
   readonly storageAdapter: StorageAdapter
   readonly mediaAdapter: MediaAdapter
   readonly sessionExpiry: number
+  readonly hooks?: Hooks
 
   authenticate(): Promise<User>
 }
@@ -27,6 +29,8 @@ export interface Context {
 export interface ContextOptions {
   readonly storageAdapter: StorageAdapter
   readonly mediaAdapter: MediaAdapter
+  readonly hooks?: Hooks
+
   readonly sessionExpiry?: number | string
 }
 
@@ -41,7 +45,7 @@ export function tokenFromRequest(req: IncomingMessage) {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {storageAdapter, mediaAdapter, sessionExpiry = '1w'}: ContextOptions
+  {storageAdapter, mediaAdapter, hooks, sessionExpiry = '1w'}: ContextOptions
 ): Promise<Context> {
   return {
     loaders: {
@@ -50,6 +54,8 @@ export async function contextFromRequest(
 
     storageAdapter,
     mediaAdapter,
+    hooks,
+
     sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
 
     async authenticate() {

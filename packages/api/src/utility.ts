@@ -4,7 +4,7 @@ import generateNanoIDSync from 'nanoid/generate'
 export const idAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 export function generateID() {
-  return generateNanoID(idAlphabet, 10)
+  return generateNanoID(idAlphabet, 16)
 }
 
 export function generateTokenID() {
@@ -12,7 +12,7 @@ export function generateTokenID() {
 }
 
 export function generateIDSync() {
-  return generateNanoIDSync(idAlphabet, 10)
+  return generateNanoIDSync(idAlphabet, 16)
 }
 
 export function generateTokenIDSync() {

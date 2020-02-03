@@ -21,9 +21,12 @@ export * from './adapter/navigation'
 export * from './adapter/page'
 export * from './adapter/peer'
 export * from './adapter/storageAdapter'
-export * from './adapter/user'
+// export * from './adapter/user'
 export * from './adapter/versionState'
 export * from './adapter/pageInfo'
+
+export * from './db/user'
+export * from './db/adapter'
 
 export * from './context'
 export * from './utility'
