@@ -102,7 +102,6 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                     width="100%"
                     overflow="hidden"
                     style={{cursor: 'pointer'}}>
-                    {/* TODO: Add Clickable */}
                     <Image width="100%" height="100%" src={image.thumbURL} />
                   </Card>
                 </Box>

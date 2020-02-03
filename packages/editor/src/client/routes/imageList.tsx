@@ -18,7 +18,8 @@ import {
   DescriptionList,
   DescriptionListItem,
   ZIndex,
-  IconButton
+  IconButton,
+  Overlay
 } from '@karma.run/ui'
 
 import {ImagedEditPanel} from '../panel/imageEditPanel'
@@ -117,11 +118,16 @@ export function ImageList() {
         {images.length ? (
           <Grid spacing={Spacing.Small}>
             {images.map(image => {
-              const {id, thumbURL} = image
+              const {id, thumbURL, title, filename, extension} = image
 
               return (
                 <Column key={id} ratio={1 / 3}>
-                  <Box position="relative" height={200} flexGrow={1}>
+                  <Card
+                    position="relative"
+                    overflow="hidden"
+                    width="100%"
+                    height={200}
+                    flexGrow={1}>
                     <Box
                       position="absolute"
                       zIndex={ZIndex.Default}
@@ -137,12 +143,19 @@ export function ImageList() {
                         }}
                       />
                     </Box>
-                    <Card overflow="hidden" width="100%" height="100%">
-                      <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
-                        <Image src={thumbURL} width="100%" height="100%" />
-                      </Link>
-                    </Card>
-                  </Box>
+                    <Link route={ImageEditRoute.create({id}, current ?? undefined)}>
+                      <Image src={thumbURL} width="100%" height="100%" />
+
+                      <Overlay bottom={0} width="100%" maxHeight="50%" padding={Spacing.ExtraSmall}>
+                        <Typography variant="subtitle1" color="gray" ellipsize>
+                          {`${filename || 'untitled'}${extension}`}
+                        </Typography>
+                        <Typography variant="body2" color="white" ellipsize>
+                          {title || 'Untitled'}
+                        </Typography>
+                      </Overlay>
+                    </Link>
+                  </Card>
                 </Column>
               )
             })}

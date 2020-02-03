@@ -20,7 +20,8 @@ import {
   GraphQLInputTitleBlock,
   GraphQLInputImageBlock,
   GraphQLInputRichTextBlock,
-  GraphQLTitleBlock
+  GraphQLTitleBlock,
+  GraphQLInputLinkPageBreakBlock
 } from './blocks'
 
 import {Page} from '../adapter/page'
@@ -34,7 +35,8 @@ export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
     [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
     [BlockType.Image]: {type: GraphQLInputImageBlock},
     [BlockType.Title]: {type: GraphQLInputTitleBlock},
-    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
+    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput},
+    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock}
   }
 })
 
@@ -75,8 +77,8 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {storageAdapter}) {
-        return imageID ? storageAdapter.getImage(imageID) : null
+      resolve({imageID}, args, {loaders}) {
+        return imageID ? loaders.image.load(imageID) : null
       }
     },
 

@@ -266,6 +266,12 @@ const GetPageQuery = gql`
             }
             numColumns
           }
+
+          ... on LinkPageBreakBlock {
+            text
+            linkText
+            linkURL
+          }
         }
       }
     }

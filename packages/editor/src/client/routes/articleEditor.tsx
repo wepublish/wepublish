@@ -20,7 +20,8 @@ import {
   MaterialIconImage,
   MaterialIconTitle,
   MaterialIconFormatQuote,
-  MaterialIconCode
+  MaterialIconCode,
+  MaterialIconViewDay
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
@@ -52,7 +53,8 @@ import {
   EmbedBlockListValue,
   blockForQueryBlock,
   unionMapForBlock,
-  EmbedType
+  EmbedType,
+  LinkPageBreakBlockListValue
 } from '../api/blocks'
 
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
@@ -61,12 +63,14 @@ import {EmbedBlock} from '../blocks/embedBlock'
 import {ImageBlock} from '../blocks/imageBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {Author} from '../api/author'
+import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
 
 export type ArticleBlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
   | ImageBlockListValue
   | QuoteBlockListValue
+  | LinkPageBreakBlockListValue
   | EmbedBlockListValue
 
 export interface ArticleEditorProps {
@@ -303,6 +307,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 defaultValue: {quote: '', author: ''},
                 label: 'Quote',
                 icon: MaterialIconFormatQuote
+              },
+
+              [BlockType.LinkPageBreak]: {
+                field: props => <LinkPageBreakBlock {...props} />,
+                defaultValue: {text: '', linkText: '', linkURL: ''},
+                label: 'Page Break',
+                icon: MaterialIconViewDay
               },
 
               [BlockType.Embed]: {

@@ -89,7 +89,9 @@ export interface StorageAdapter {
   createImage(image: Image): Promise<Image>
   updateImage(image: ImageUpdate): Promise<Image | null>
   deleteImage(id: string): Promise<boolean | null>
-  getImage(id: string): Promise<Image | null>
+
+  getImagesByID(ids: readonly string[]): Promise<Array<Image | null>>
+
   getImages(
     filter: string | undefined,
     pagination: Pagination

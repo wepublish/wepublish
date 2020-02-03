@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-storage-karma",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {

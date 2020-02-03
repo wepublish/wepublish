@@ -20,14 +20,14 @@ import {
   IconColumn1,
   MaterialIconTitle,
   MaterialIconTextFormat,
-  MaterialIconImage
+  MaterialIconImage,
+  MaterialIconViewDay
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
 import {TeaserGridBlock} from '../blocks/teaserGridBlock'
-import {BlockType} from '../api/common'
 
 import {
   PageInput,
@@ -41,18 +41,23 @@ import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
 import {
+  BlockType,
   blockForQueryBlock,
   unionMapForBlock,
   ArticleTeaserGridBlock1ListValue,
   ArticleTeaserGridBlock6ListValue,
   TitleBlockListValue,
   RichTextBlockListValue,
-  ImageBlockListValue
+  ImageBlockListValue,
+  LinkPageBreakBlockListValue
 } from '../api/blocks'
 
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {ImageBlock} from '../blocks/imageBlock'
+import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
+
+import nanoid from 'nanoid'
 
 export type PageBlockValue =
   | TitleBlockListValue
@@ -60,6 +65,7 @@ export type PageBlockValue =
   | ImageBlockListValue
   | ArticleTeaserGridBlock1ListValue
   | ArticleTeaserGridBlock6ListValue
+  | LinkPageBreakBlockListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -254,14 +260,24 @@ export function PageEditor({id}: PageEditorProps) {
             () => ({
               [BlockType.ArticleTeaserGrid1]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 1, teasers: [null]},
+                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
                 label: '1 Col',
                 icon: IconColumn1
               },
 
               [BlockType.ArticleTeaserGrid6]: {
                 field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 3, teasers: [null, null, null, null, null, null]},
+                defaultValue: {
+                  numColumns: 3,
+                  teasers: [
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null]
+                  ]
+                },
                 label: '6 Cols',
                 icon: IconColumn6
               },
@@ -285,6 +301,13 @@ export function PageEditor({id}: PageEditorProps) {
                 defaultValue: {image: null, caption: ''},
                 label: 'Image',
                 icon: MaterialIconImage
+              },
+
+              [BlockType.LinkPageBreak]: {
+                field: props => <LinkPageBreakBlock {...props} />,
+                defaultValue: {text: '', linkText: '', linkURL: ''},
+                label: 'Page Break',
+                icon: MaterialIconViewDay
               }
             }),
             []

@@ -43,7 +43,8 @@ import {
   GraphQLInputYouTubeVideoBlock,
   GraphQLInputSoundCloudTrackBlock,
   GraphQLInputEmbedBlock,
-  GraphQLEmbedBlock
+  GraphQLEmbedBlock,
+  GraphQLInputLinkPageBreakBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
@@ -65,7 +66,8 @@ export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
     [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
     [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
     [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
-    [BlockType.Embed]: {type: GraphQLInputEmbedBlock}
+    [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
+    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock}
   }
 })
 
@@ -144,8 +146,8 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
     lead: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {storageAdapter}) {
-        return imageID ? storageAdapter.getImage(imageID) : null
+      resolve({imageID}, args, {loaders}) {
+        return imageID ? loaders.image.load(imageID) : null
       }
     },
 

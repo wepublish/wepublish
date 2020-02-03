@@ -998,6 +998,11 @@ export class KarmaStorageAdapter implements StorageAdapter {
     }
   }
 
+  async getImagesByID(ids: readonly string[]): Promise<Array<Image | null>> {
+    const images = await Promise.all(ids.map(id => this.getImage(id)))
+    return ids.map(id => images.find(image => image?.id === id) ?? null)
+  }
+
   async getImages(
     filter: string | undefined,
     pagination: Pagination

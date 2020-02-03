@@ -1,4 +1,6 @@
 import ms from 'ms'
+import DataLoader from 'dataloader'
+
 import {IncomingMessage} from 'http'
 import {AuthenticationError} from 'apollo-server'
 
@@ -7,8 +9,14 @@ import {StorageAdapter} from './adapter/storageAdapter'
 import {MediaAdapter} from './adapter/mediaAdapter'
 
 import {TokenExpiredError} from './error'
+import {Image} from './adapter/image'
+
+export interface DataLoaderContext {
+  image: DataLoader<string, Image | null>
+}
 
 export interface Context {
+  readonly loaders: DataLoaderContext
   readonly storageAdapter: StorageAdapter
   readonly mediaAdapter: MediaAdapter
   readonly sessionExpiry: number
@@ -36,6 +44,10 @@ export async function contextFromRequest(
   {storageAdapter, mediaAdapter, sessionExpiry = '1w'}: ContextOptions
 ): Promise<Context> {
   return {
+    loaders: {
+      image: new DataLoader<string, Image | null>(ids => storageAdapter.getImagesByID(ids))
+    },
+
     storageAdapter,
     mediaAdapter,
     sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
