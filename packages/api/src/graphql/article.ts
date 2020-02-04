@@ -146,7 +146,7 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
     lead: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}) {
+      resolve({imageID}, args, {loaders}, info) {
         return imageID ? loaders.image.load(imageID) : null
       }
     },

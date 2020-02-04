@@ -1,74 +1,77 @@
-import ms from 'ms'
 import DataLoader from 'dataloader'
 
 import {IncomingMessage} from 'http'
-import {AuthenticationError} from 'apollo-server'
-
-import {User} from './adapter/user'
-import {StorageAdapter} from './adapter/storageAdapter'
-import {MediaAdapter} from './adapter/mediaAdapter'
 
 import {TokenExpiredError} from './error'
-import {Image} from './adapter/image'
 import {Hooks} from './hooks'
 
+import {DBAdapter} from './db/adapter'
+import {OptionalSession} from './db/session'
+
+import {MediaAdapter} from './media/adapter'
+import {AuthenticationError} from 'apollo-server'
+import {OptionalImage} from './db/image'
+
 export interface DataLoaderContext {
-  image: DataLoader<string, Image | null>
+  readonly image: DataLoader<string, OptionalImage>
 }
 
 export interface Context {
+  readonly session: OptionalSession
   readonly loaders: DataLoaderContext
-  readonly storageAdapter: StorageAdapter
+
+  readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
-  readonly sessionExpiry: number
+
   readonly hooks?: Hooks
 
-  authenticate(): Promise<User>
+  readonly storageAdapter: any // TEMP: Remove me
+  authenticate(): void // TEMP: Remvoe me
 }
 
 export interface ContextOptions {
-  readonly storageAdapter: StorageAdapter
+  readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly hooks?: Hooks
-
-  readonly sessionExpiry?: number | string
 }
 
-export function tokenFromRequest(req: IncomingMessage) {
+export async function contextFromRequest(
+  req: IncomingMessage,
+  {dbAdapter, mediaAdapter, hooks}: ContextOptions
+): Promise<Context> {
+  const token = tokenFromRequest(req)
+  const session = token ? await dbAdapter.getSessionByToken(token) : null
+
+  if (token && !session) {
+    throw new AuthenticationError('Invalid session token!')
+  }
+
+  if (session && session.expiryDate < new Date()) {
+    throw new TokenExpiredError()
+  }
+
+  return {
+    session,
+    loaders: {
+      image: new DataLoader(ids => {
+        return dbAdapter.getImagesByID(ids)
+      })
+    },
+
+    dbAdapter,
+    mediaAdapter,
+    hooks,
+
+    storageAdapter: null, // TEMP: Remove me
+    authenticate() {} // TEMP: Remove me
+  }
+}
+
+export function tokenFromRequest(req: IncomingMessage): string | null {
   if (req.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
 
   return null
-}
-
-export async function contextFromRequest(
-  req: IncomingMessage,
-  {storageAdapter, mediaAdapter, hooks, sessionExpiry = '1w'}: ContextOptions
-): Promise<Context> {
-  return {
-    loaders: {
-      image: new DataLoader<string, Image | null>(ids => storageAdapter.getImagesByID(ids))
-    },
-
-    storageAdapter,
-    mediaAdapter,
-    hooks,
-
-    sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
-
-    async authenticate() {
-      const token = tokenFromRequest(req)
-      if (!token) throw new AuthenticationError('Missing token')
-
-      const session = await storageAdapter.getSession(token)
-      if (!session) throw new AuthenticationError('Invalid token')
-
-      const {user, expiryDate} = session
-      if (new Date() >= expiryDate) throw new TokenExpiredError()
-
-      return user
-    }
-  }
 }

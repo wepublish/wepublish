@@ -1,8 +1,5 @@
-import {GraphQLResolveInfo} from 'graphql'
 import {DBUserAdapter} from './user'
+import {DBImageAdapter} from './image'
+import {DBSessionAdapter} from './session'
 
-export interface QueryOpts {
-  readonly info: GraphQLResolveInfo
-}
-
-export interface DBAdapter extends DBUserAdapter {}
+export interface DBAdapter extends DBUserAdapter, DBImageAdapter, DBSessionAdapter {}

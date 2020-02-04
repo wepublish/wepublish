@@ -23,7 +23,7 @@ export interface Image {
   readonly format: string
   readonly width: number
   readonly height: number
-  readonly focalPoint: Point | null
+  readonly focalPoint?: Point
 }
 
 export interface ImageUpdate {
@@ -39,7 +39,7 @@ export interface ImageUpdate {
   readonly source?: string
   readonly license?: string
 
-  readonly focalPoint: Point | null
+  readonly focalPoint?: Point
 }
 
 export interface ImageCaptionEdge {
