@@ -2,6 +2,21 @@ import {GraphQLObjectType} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser} from './session'
 
+export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
+  name: 'Query',
+  fields: {
+    // User
+    // ====
+
+    me: {
+      type: GraphQLUser,
+      resolve(root, args, {session, authenticate}) {
+        return authenticate().user
+      }
+    }
+  }
+})
+
 // import {
 //   GraphQLObjectType,
 //   GraphQLString,
@@ -378,18 +393,3 @@ import {GraphQLUser} from './session'
 //     }
 //   }
 // })
-
-export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
-  name: 'Query',
-  fields: {
-    // User
-    // ====
-
-    me: {
-      type: GraphQLUser,
-      resolve(root, args, {session}) {
-        return session?.user
-      }
-    }
-  }
-})

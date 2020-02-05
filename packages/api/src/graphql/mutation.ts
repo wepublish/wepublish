@@ -1,7 +1,37 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
 import {GraphQLSession} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
+
+export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
+  name: 'Mutation',
+  fields: {
+    // Session
+    // =======
+
+    createSession: {
+      type: GraphQLNonNull(GraphQLSession),
+      args: {
+        email: {type: GraphQLNonNull(GraphQLString)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+
+      async resolve(root, {email, password}, {dbAdapter}) {
+        const user = await dbAdapter.getUserForCredentials({email, password})
+        if (!user) throw new InvalidCredentialsError()
+        return await dbAdapter.createSessionForUser(user)
+      }
+    },
+
+    revokeActiveSession: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      args: {},
+      async resolve(_root, {}, {session, dbAdapter}) {
+        return session ? await dbAdapter.deleteSessionByToken(session.token) : false
+      }
+    }
+  }
+})
 
 // import {
 //   GraphQLObjectType,
@@ -413,25 +443,3 @@ import {InvalidCredentialsError} from '../error'
 //     // TODO: Navigation
 //   }
 // })
-
-export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
-  name: 'Mutation',
-  fields: {
-    // Session
-    // =======
-
-    createSession: {
-      type: GraphQLNonNull(GraphQLSession),
-      args: {
-        email: {type: GraphQLNonNull(GraphQLString)},
-        password: {type: GraphQLNonNull(GraphQLString)}
-      },
-
-      async resolve(root, {email, password}, {dbAdapter}) {
-        const user = await dbAdapter.getUserForCredentials({email, password})
-        if (!user) throw new InvalidCredentialsError()
-        return await dbAdapter.createSessionForUser(user)
-      }
-    }
-  }
-})

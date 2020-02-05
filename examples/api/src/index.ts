@@ -23,9 +23,15 @@ async function asyncMain() {
   const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
 
-  const dbAdapter = await MongoDBAdapter.connect({url: process.env.MONGO_URL!, database: 'test'})
+  await MongoDBAdapter.initialize({
+    url: process.env.MONGO_URL!,
+    database: 'test',
+    seed: async adapter => {
+      adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
+    }
+  })
 
-  dbAdapter.createUser({email: 'dev@wepublish.ch', password: '123'})
+  const dbAdapter = await MongoDBAdapter.connect({url: process.env.MONGO_URL!, database: 'test'})
 
   const server = new WepublishServer({
     mediaAdapter,

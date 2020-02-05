@@ -1,6 +1,6 @@
 import nanoid from 'nanoid/generate'
 
-export const idAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+export const idAlphabet = 'IDAlphabet'
 
 export function generateID() {
   return nanoid(idAlphabet, 16)

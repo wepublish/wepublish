@@ -45,6 +45,5 @@ export interface DBImageAdapter {
   createImage(image: CreateImageArgs): Promise<OptionalImage>
   updateImage(image: UpdateImageArgs): Promise<OptionalImage>
   deleteImage(id: string): Promise<boolean>
-
   getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
 }

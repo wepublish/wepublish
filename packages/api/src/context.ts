@@ -6,7 +6,7 @@ import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
 import {DBAdapter} from './db/adapter'
-import {OptionalSession} from './db/session'
+import {OptionalSession, Session} from './db/session'
 
 import {MediaAdapter} from './media/adapter'
 import {AuthenticationError} from 'apollo-server'
@@ -25,8 +25,9 @@ export interface Context {
 
   readonly hooks?: Hooks
 
+  authenticate(): Session
+
   readonly storageAdapter: any // TEMP: Remove me
-  authenticate(): void // TEMP: Remvoe me
 }
 
 export interface ContextOptions {
@@ -41,17 +42,10 @@ export async function contextFromRequest(
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.getSessionByToken(token) : null
-
-  if (token && !session) {
-    throw new AuthenticationError('Invalid session token!')
-  }
-
-  if (session && session.expiryDate < new Date()) {
-    throw new TokenExpiredError()
-  }
+  const isSessionValid = session && session.expiresAt > new Date()
 
   return {
-    session,
+    session: isSessionValid ? session : null,
     loaders: {
       image: new DataLoader(ids => {
         return dbAdapter.getImagesByID(ids)
@@ -62,8 +56,19 @@ export async function contextFromRequest(
     mediaAdapter,
     hooks,
 
-    storageAdapter: null, // TEMP: Remove me
-    authenticate() {} // TEMP: Remove me
+    authenticate() {
+      if (!session) {
+        throw new AuthenticationError('Invalid session!')
+      }
+
+      if (!isSessionValid) {
+        throw new TokenExpiredError()
+      }
+
+      return session
+    },
+
+    storageAdapter: null // TEMP: Remove me
   }
 }
 
