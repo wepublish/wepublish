@@ -1,16 +1,25 @@
 import {User} from './user'
 
 export interface Session {
+  readonly id: string
   readonly user: User
-  readonly token: string
   readonly createdAt: Date
   readonly expiresAt: Date
 }
 
+export interface SessionWithToken extends Session {
+  readonly token: string
+}
+
 export type OptionalSession = Session | null
+export type OptionalSessionWithToken = SessionWithToken | null
 
 export interface DBSessionAdapter {
-  createSessionForUser(user: User): Promise<OptionalSession>
+  createSessionForUser(user: User): Promise<OptionalSessionWithToken>
+  deleteSessionByID(id: string): Promise<boolean>
   deleteSessionByToken(token: string): Promise<boolean>
-  getSessionByToken(token: string): Promise<OptionalSession>
+
+  getSessionsForUser(user: User): Promise<Session[]>
+  getSessionByID(id: string): Promise<OptionalSession>
+  getSessionByToken(token: string): Promise<OptionalSessionWithToken>
 }

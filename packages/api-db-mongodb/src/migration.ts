@@ -1,4 +1,4 @@
-import {CollectionName} from './adapter'
+import {CollectionName, MongoDBUser, MongoDBSession} from './adapter'
 import {Db} from 'mongodb'
 
 export enum MigrationName {
@@ -20,14 +20,18 @@ export const Migrations: Migration[] = [
 
       await migrations.createIndex({name: 1}, {unique: true})
 
-      const users = await db.createCollection(CollectionName.Users, {strict: true})
+      const users = await db.createCollection<MongoDBUser>(CollectionName.Users, {strict: true})
 
       await users.createIndex({email: 1}, {unique: true})
 
-      const sessions = await db.createCollection(CollectionName.Sessions, {strict: true})
+      const sessions = await db.createCollection<MongoDBSession>(CollectionName.Sessions, {
+        strict: true
+      })
 
       await sessions.createIndex({token: 1}, {unique: true})
       await sessions.createIndex({expiresAt: 1}, {expireAfterSeconds: SessionDocumentTTL})
+
+      await db.createCollection(CollectionName.Images, {strict: true})
     }
   }
 ]

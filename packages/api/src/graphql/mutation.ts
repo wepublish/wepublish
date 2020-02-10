@@ -1,4 +1,6 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLID} from 'graphql'
+import {UserInputError} from 'apollo-server'
+
 import {GraphQLSession} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
@@ -23,10 +25,25 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    revokeSession: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const session = authenticate()
+        const revokedSession = await dbAdapter.getSessionByID(id)
+
+        if (session.user.id === revokedSession?.user.id) {
+          throw new UserInputError('Session not found.')
+        }
+
+        return dbAdapter.deleteSessionByID(id)
+      }
+    },
+
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      async resolve(_root, {}, {session, dbAdapter}) {
+      async resolve(root, {}, {session, dbAdapter}) {
         return session ? await dbAdapter.deleteSessionByToken(session.token) : false
       }
     }

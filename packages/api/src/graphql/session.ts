@@ -1,4 +1,5 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString} from 'graphql'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
@@ -13,6 +14,7 @@ export const GraphQLSession = new GraphQLObjectType({
   fields: {
     user: {type: GraphQLNonNull(GraphQLUser)},
     token: {type: GraphQLNonNull(GraphQLString)},
-    expiresIn: {type: GraphQLNonNull(GraphQLInt)}
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })

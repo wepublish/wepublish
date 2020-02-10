@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@wepublish/api": "*",
-    "@wepublish/api-storage-memory": "*",
+    "@wepublish/api-db-memory": "*",
     "@wepublish/api-media-karma": "*",
     "@karma.run/media": "^0.2.0",
     "@karma.run/media-storage-local": "^0.1.4",

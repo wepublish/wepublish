@@ -4,9 +4,14 @@ export interface MutationHooks {
   delete?: () => void
 }
 
+export interface PublishMutationHooks extends MutationHooks {
+  publish?: () => void
+}
+
 export interface Hooks {
-  readonly article?: MutationHooks
-  readonly page?: MutationHooks
   readonly user?: MutationHooks
   readonly authors?: MutationHooks
+
+  readonly article?: PublishMutationHooks
+  readonly page?: PublishMutationHooks
 }

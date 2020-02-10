@@ -1,7 +1,7 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 
-import {ImageCaptionEdge} from './image'
-import {ArticleTeaser} from './article'
+import {ImageCaptionEdge} from '../adapter/image'
+import {ArticleTeaser} from '../adapter/article'
 
 export enum BlockType {
   Title = 'title',

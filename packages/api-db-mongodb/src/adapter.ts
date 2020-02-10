@@ -1,4 +1,3 @@
-import nanoid from 'nanoid/generate'
 import bcrypt from 'bcrypt'
 
 import {MongoClient, Db, Collection, MongoError} from 'mongodb'
@@ -16,33 +15,44 @@ import {
 } from '@wepublish/api'
 
 import {MigrationName, Migrations, LatestMigration} from './migration'
-
-export const IDAlphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-export function generateID() {
-  return nanoid(IDAlphabet, 16)
-}
-
-export function generateToken() {
-  return nanoid(IDAlphabet, 32)
-}
+import {generateID, generateToken} from './utility'
 
 export enum CollectionName {
   Migrations = 'migrations',
   Users = 'users',
-  Sessions = 'sessions'
+  Sessions = 'sessions',
+  Images = 'images'
 }
 
 export enum MongoErrorCode {
   DuplicateKey = 11000
 }
 
-export interface MongoDBAdapterConnectArgs {
+export interface MongoDBUser {
+  readonly _id: any
+  readonly email: string
+  readonly password: string
+}
+
+export interface MongoDBSession {
+  readonly _id: any
+  readonly userID: string
+  readonly token: string
+  readonly createdAt: Date
+  readonly expiresAt: Date
+}
+
+export interface MongoDBAdabterSharedArgs {
+  readonly sessionTTL?: number
+  readonly bcryptHashCostFactor?: number
+}
+
+export interface MongoDBAdapterConnectArgs extends MongoDBAdabterSharedArgs {
   readonly url: string
   readonly database: string
 }
 
-export interface MongoDBAdapterInitializeArgs {
+export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterSharedArgs {
   readonly url: string
   readonly database: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
@@ -60,14 +70,14 @@ export interface InitializationResult {
   }
 }
 
-const BcryptHashCostFactor = 11
-const SessionTTL = 1000 * 60 * 24 * 7 // 1w
+const DefaultSessionTTL = 1000 * 60 * 60 * 24 * 7 // 1w
+const DefaultBcryptHashCostFactor = 11
 
-interface MongoDBAdapterArgs {
+interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
   readonly client: MongoClient
   readonly db: Db
-  readonly users: Collection
-  readonly sessions: Collection
+  readonly users: Collection<MongoDBUser>
+  readonly sessions: Collection<MongoDBSession>
 }
 
 export class PKFactory {
@@ -77,12 +87,26 @@ export class PKFactory {
 }
 
 export class MongoDBAdapter implements DBAdapter {
+  readonly sessionTTL: number
+  readonly bcryptHashCostFactor: number
+
   readonly client: MongoClient
   readonly db: Db
-  readonly users: Collection
-  readonly sessions: Collection
 
-  private constructor({client, db, users, sessions}: MongoDBAdapterArgs) {
+  readonly users: Collection<MongoDBUser>
+  readonly sessions: Collection<MongoDBSession>
+
+  private constructor({
+    sessionTTL = DefaultSessionTTL,
+    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
+    client,
+    db,
+    users,
+    sessions
+  }: MongoDBAdapterArgs) {
+    this.sessionTTL = sessionTTL
+    this.bcryptHashCostFactor = bcryptHashCostFactor
+
     this.client = client
     this.db = db
     this.users = users
@@ -92,11 +116,17 @@ export class MongoDBAdapter implements DBAdapter {
   static async createMongoClient(url: string): Promise<MongoClient> {
     return MongoClient.connect(url, {
       pkFactory: new PKFactory(),
+      useNewUrlParser: true,
       useUnifiedTopology: true
     })
   }
 
-  static async connect({url, database}: MongoDBAdapterConnectArgs) {
+  static async connect({
+    sessionTTL = DefaultSessionTTL,
+    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
+    url,
+    database
+  }: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
     const db = client.db(database)
 
@@ -111,7 +141,14 @@ export class MongoDBAdapter implements DBAdapter {
     const users = db.collection(CollectionName.Users)
     const sessions = db.collection(CollectionName.Sessions)
 
-    const adapter = new MongoDBAdapter({client, db, users, sessions})
+    const adapter = new MongoDBAdapter({
+      sessionTTL,
+      bcryptHashCostFactor,
+      client,
+      db,
+      users,
+      sessions
+    })
 
     return adapter
   }
@@ -125,6 +162,8 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   static async initialize({
+    sessionTTL = DefaultSessionTTL,
+    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
     url,
     database,
     seed
@@ -151,7 +190,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({url, database})
+      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, database})
       await seed?.(adapter)
     }
 
@@ -165,7 +204,7 @@ export class MongoDBAdapter implements DBAdapter {
 
   async createUser({email, password}: CreateUserArgs): Promise<User> {
     try {
-      const passwordHash = await bcrypt.hash(password, BcryptHashCostFactor)
+      const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         email,
         password: passwordHash
@@ -181,8 +220,13 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  getUsersByID(ids: string[]): Promise<OptionalUser> {
-    throw new Error('Method not implemented.')
+  async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
+    const users = await this.users.find({_id: {$in: ids}}).toArray()
+
+    return users.map(user => ({
+      id: user._id,
+      email: user.email
+    }))
   }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
@@ -214,7 +258,7 @@ export class MongoDBAdapter implements DBAdapter {
   async createSessionForUser(user: User): Promise<OptionalSession> {
     const token = generateToken()
     const createdAt = new Date()
-    const expiresAt = new Date(Date.now() + SessionTTL)
+    const expiresAt = new Date(Date.now() + this.sessionTTL)
 
     await this.sessions.insertOne({
       token: token,
@@ -242,6 +286,7 @@ export class MongoDBAdapter implements DBAdapter {
 
     return {
       token: session.token,
+      createdAt: session.createdAt,
       expiresAt: session.expiresAt,
       user: {
         id: user._id,

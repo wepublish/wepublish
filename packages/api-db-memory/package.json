@@ -1,5 +1,5 @@
 {
-  "name": "@wepublish/api-storage-memory",
+  "name": "@wepublish/api-db-memory",
   "version": "0.4.2",
   "main": "./lib/",
   "license": "MIT",

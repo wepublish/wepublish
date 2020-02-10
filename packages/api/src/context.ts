@@ -6,7 +6,7 @@ import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
 import {DBAdapter} from './db/adapter'
-import {OptionalSession, Session} from './db/session'
+import {SessionWithToken, OptionalSessionWithToken} from './db/session'
 
 import {MediaAdapter} from './media/adapter'
 import {AuthenticationError} from 'apollo-server'
@@ -17,7 +17,7 @@ export interface DataLoaderContext {
 }
 
 export interface Context {
-  readonly session: OptionalSession
+  readonly session: OptionalSessionWithToken
   readonly loaders: DataLoaderContext
 
   readonly dbAdapter: DBAdapter
@@ -25,7 +25,7 @@ export interface Context {
 
   readonly hooks?: Hooks
 
-  authenticate(): Session
+  authenticate(): SessionWithToken
 
   readonly storageAdapter: any // TEMP: Remove me
 }
