@@ -28,10 +28,18 @@ export const Migrations: Migration[] = [
         strict: true
       })
 
+      await sessions.createIndex({userID: 1})
       await sessions.createIndex({token: 1}, {unique: true})
       await sessions.createIndex({expiresAt: 1}, {expireAfterSeconds: SessionDocumentTTL})
 
-      await db.createCollection(CollectionName.Images, {strict: true})
+      const images = await db.createCollection(CollectionName.Images, {strict: true})
+
+      await images.createIndex({title: 1})
+
+      const articles = await db.createCollection(CollectionName.Articles, {strict: true})
+
+      await articles.createIndex({articleID: 1, revision: 1}, {unique: true})
+      await articles.createIndex({articleID: 1, publishedAt: 1})
     }
   }
 ]

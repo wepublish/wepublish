@@ -9,19 +9,32 @@ import {
   User,
   OptionalUser,
   OptionalImage,
-  OptionalSession,
   CreateImageArgs,
-  UpdateImageArgs
+  UpdateImageArgs,
+  OptionalSessionWithToken,
+  Session,
+  OptionalSession,
+  Article,
+  CreateArticleArgs,
+  CreateArticleVersionArgs,
+  UpdateArticleVersionArgs,
+  PublishArticleArgs,
+  GetArticlesArgs,
+  ArticleBlock
 } from '@wepublish/api'
 
 import {MigrationName, Migrations, LatestMigration} from './migration'
 import {generateID, generateToken} from './utility'
 
+import {OptionalAuthor} from '@wepublish/api/lib/db/author'
+
 export enum CollectionName {
   Migrations = 'migrations',
   Users = 'users',
   Sessions = 'sessions',
-  Images = 'images'
+  Images = 'images',
+
+  Articles = 'articles'
 }
 
 export enum MongoErrorCode {
@@ -40,6 +53,29 @@ export interface MongoDBSession {
   readonly token: string
   readonly createdAt: Date
   readonly expiresAt: Date
+}
+
+export interface MongoDBArticle {
+  readonly _id: any
+
+  readonly articleID: string
+  readonly revision: number
+
+  readonly publishDate?: Date
+
+  readonly preTitle?: string
+  readonly title: string
+  readonly lead: string
+  readonly slug: string
+  readonly tags: string[]
+
+  readonly imageID?: string
+  readonly authorIDs: string[]
+
+  readonly shared: boolean
+  readonly breaking: boolean
+
+  readonly blocks: ArticleBlock[]
 }
 
 export interface MongoDBAdabterSharedArgs {
@@ -78,6 +114,7 @@ interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
   readonly db: Db
   readonly users: Collection<MongoDBUser>
   readonly sessions: Collection<MongoDBSession>
+  readonly articles: Collection<MongoDBArticle>
 }
 
 export class PKFactory {
@@ -95,6 +132,7 @@ export class MongoDBAdapter implements DBAdapter {
 
   readonly users: Collection<MongoDBUser>
   readonly sessions: Collection<MongoDBSession>
+  readonly articles: Collection<MongoDBArticle>
 
   private constructor({
     sessionTTL = DefaultSessionTTL,
@@ -102,7 +140,8 @@ export class MongoDBAdapter implements DBAdapter {
     client,
     db,
     users,
-    sessions
+    sessions,
+    articles
   }: MongoDBAdapterArgs) {
     this.sessionTTL = sessionTTL
     this.bcryptHashCostFactor = bcryptHashCostFactor
@@ -111,6 +150,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.db = db
     this.users = users
     this.sessions = sessions
+    this.articles = articles
   }
 
   static async createMongoClient(url: string): Promise<MongoClient> {
@@ -138,19 +178,15 @@ export class MongoDBAdapter implements DBAdapter {
       )
     }
 
-    const users = db.collection(CollectionName.Users)
-    const sessions = db.collection(CollectionName.Sessions)
-
-    const adapter = new MongoDBAdapter({
+    return new MongoDBAdapter({
       sessionTTL,
       bcryptHashCostFactor,
       client,
       db,
-      users,
-      sessions
+      users: db.collection(CollectionName.Users),
+      sessions: db.collection(CollectionName.Sessions),
+      articles: db.collection(CollectionName.Articles)
     })
-
-    return adapter
   }
 
   static async getDBMigrationState(db: Db): Promise<MigrationState | null> {
@@ -255,19 +291,22 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  async createSessionForUser(user: User): Promise<OptionalSession> {
+  // Session
+  // =======
+
+  async createSessionForUser(user: User): Promise<OptionalSessionWithToken> {
     const token = generateToken()
     const createdAt = new Date()
     const expiresAt = new Date(Date.now() + this.sessionTTL)
 
-    await this.sessions.insertOne({
+    const {insertedId: id} = await this.sessions.insertOne({
       token: token,
       userID: user.id,
       createdAt,
       expiresAt
     })
 
-    return {user, token, createdAt, expiresAt}
+    return {id, user, token, createdAt, expiresAt}
   }
 
   async deleteSessionByToken(token: string): Promise<boolean> {
@@ -275,7 +314,7 @@ export class MongoDBAdapter implements DBAdapter {
     return deletedCount === 1
   }
 
-  async getSessionByToken(token: string): Promise<OptionalSession> {
+  async getSessionByToken(token: string): Promise<OptionalSessionWithToken> {
     const session = await this.sessions.findOne({token})
 
     if (!session) return null
@@ -285,6 +324,7 @@ export class MongoDBAdapter implements DBAdapter {
     if (!user) return null
 
     return {
+      id: session._id,
       token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
@@ -293,5 +333,100 @@ export class MongoDBAdapter implements DBAdapter {
         email: user.email
       }
     }
+  }
+
+  async deleteSessionByID(user: User, id: string): Promise<boolean> {
+    const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
+    return deletedCount === 1
+  }
+
+  async getSessionsForUser(user: User): Promise<Session[]> {
+    const sessions = await this.sessions.find({userID: user.id}).toArray()
+
+    return sessions.map(session => ({
+      id: session._id,
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+      user: user
+    }))
+  }
+
+  async getSessionByID(user: User, id: string): Promise<OptionalSession> {
+    const session = await this.sessions.findOne({_id: id, userID: user.id})
+
+    if (!session) return null
+
+    return {
+      id: session._id,
+      createdAt: session.createdAt,
+      expiresAt: session.expiresAt,
+      user: user
+    }
+  }
+
+  // Article
+  // =======
+
+  async createArticle(article: CreateArticleArgs): Promise<Article> {
+    const {ops} = await this.articles.insertOne({
+      articleID: generateID(),
+      revision: 0,
+      publishDate: new Date(),
+      ...article
+    })
+
+    const result = ops[0]
+
+    // const test = await this.articles
+    //   .find({articleID: '03E0yDiuI4wtJS8q'})
+    //   .sort({publishDate: -1})
+    //   .limit(1)
+    //   .toArray()
+
+    // const test2 = await this.articles
+    //   .find({articleID: '03E0yDiuI4wtJS8q'})
+    //   .sort({revision: -1})
+    //   .limit(1)
+    //   .toArray()
+
+    // console.log(test, test2)
+
+    return {
+      id: result._id,
+      // articleID: generate
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  }
+
+  createArticleVersion(args: CreateArticleVersionArgs): Promise<Article> {
+    throw new Error('Method not implemented.')
+  }
+
+  updateArticleVersion(args: UpdateArticleVersionArgs): Promise<Article> {
+    throw new Error('Method not implemented.')
+  }
+
+  publishArticleVersion(args: PublishArticleArgs): Promise<Article> {
+    throw new Error('Method not implemented.')
+  }
+
+  getPublishedArticles(args: GetArticlesArgs): void {
+    throw new Error('Method not implemented.')
+  }
+
+  getPublishedArticle(args: GetArticlesArgs): void {
+    throw new Error('Method not implemented.')
+  }
+  getArticles(args: GetArticlesArgs): void {
+    throw new Error('Method not implemented.')
+  }
+
+  getArticle(args: GetArticlesArgs): void {
+    throw new Error('Method not implemented.')
+  }
+
+  getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
+    throw new Error('Method not implemented.')
   }
 }

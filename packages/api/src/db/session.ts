@@ -16,10 +16,11 @@ export type OptionalSessionWithToken = SessionWithToken | null
 
 export interface DBSessionAdapter {
   createSessionForUser(user: User): Promise<OptionalSessionWithToken>
-  deleteSessionByID(id: string): Promise<boolean>
-  deleteSessionByToken(token: string): Promise<boolean>
 
   getSessionsForUser(user: User): Promise<Session[]>
-  getSessionByID(id: string): Promise<OptionalSession>
+  getSessionByID(user: User, id: string): Promise<OptionalSession>
   getSessionByToken(token: string): Promise<OptionalSessionWithToken>
+
+  deleteSessionByID(user: User, id: string): Promise<boolean>
+  deleteSessionByToken(token: string): Promise<boolean>
 }

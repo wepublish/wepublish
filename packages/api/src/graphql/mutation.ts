@@ -1,9 +1,16 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLID} from 'graphql'
-import {UserInputError} from 'apollo-server'
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLID,
+  GraphQLList
+} from 'graphql'
 
-import {GraphQLSession} from './session'
+import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
+import {GraphQLArticle, GraphQLArticleInput} from './article'
 
 export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -12,12 +19,11 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createSession: {
-      type: GraphQLNonNull(GraphQLSession),
+      type: GraphQLNonNull(GraphQLSessionWithToken),
       args: {
         email: {type: GraphQLNonNull(GraphQLString)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
@@ -29,14 +35,8 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLBoolean),
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
       async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const session = authenticate()
-        const revokedSession = await dbAdapter.getSessionByID(id)
-
-        if (session.user.id === revokedSession?.user.id) {
-          throw new UserInputError('Session not found.')
-        }
-
-        return dbAdapter.deleteSessionByID(id)
+        const {user} = authenticate()
+        return dbAdapter.deleteSessionByID(user, id)
       }
     },
 
@@ -45,6 +45,26 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
       args: {},
       async resolve(root, {}, {session, dbAdapter}) {
         return session ? await dbAdapter.deleteSessionByToken(session.token) : false
+      }
+    },
+
+    sessions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
+      args: {},
+      async resolve(root, {}, {authenticate, dbAdapter}) {
+        const {user} = authenticate()
+        return dbAdapter.getSessionsForUser(user)
+      }
+    },
+
+    // Article
+    // =======
+
+    createArticle: {
+      type: GraphQLNonNull(GraphQLArticle),
+      args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
+      async resolve(root, {input}, {dbAdapter}) {
+        return dbAdapter.createArticle(input)
       }
     }
   }

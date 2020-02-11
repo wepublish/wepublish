@@ -172,6 +172,7 @@ export type ArticleBlock =
   | SoundCloudTrackBlock
 
 export type PageBlock = RichTextBlock | ImageBlock | ArticleTeaserGridBlock
+export type Block = ArticleBlock | PageBlock
 
-export type BaseBlockMap = MapDiscriminatedUnion<ArticleBlock, 'type'>
-export type BlockMap = {[K in ArticleBlock['type']]?: Omit<BaseBlockMap[K], 'type'>}
+export type BaseBlockMap = MapDiscriminatedUnion<Block, 'type'>
+export type BlockMap = {[K in Block['type']]?: Omit<BaseBlockMap[K], 'type'>}

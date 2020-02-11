@@ -42,8 +42,8 @@ export interface UpdateImageArgs extends EditableImageComponents, StaticImageCom
 export type OptionalImage = Image | null
 
 export interface DBImageAdapter {
-  createImage(image: CreateImageArgs): Promise<OptionalImage>
-  updateImage(image: UpdateImageArgs): Promise<OptionalImage>
+  createImage(args: CreateImageArgs): Promise<OptionalImage>
+  updateImage(args: UpdateImageArgs): Promise<OptionalImage>
   deleteImage(id: string): Promise<boolean>
   getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
 }

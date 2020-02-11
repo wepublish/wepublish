@@ -1,4 +1,4 @@
-import {GraphQLObjectType} from 'graphql'
+import {GraphQLObjectType, GraphQLList, GraphQLNonNull} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
 
@@ -9,8 +9,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // =======
 
     sessions: {
-      type: GraphQLSession,
-      resolve(root, args, {authenticate, dbAdapter}) {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
+      async resolve(root, args, {authenticate, dbAdapter}) {
         const session = authenticate()
         return dbAdapter.getSessionsForUser(session.user)
       }

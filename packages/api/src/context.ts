@@ -14,6 +14,7 @@ import {OptionalImage} from './db/image'
 
 export interface DataLoaderContext {
   readonly image: DataLoader<string, OptionalImage>
+  readonly authors: DataLoader<string, any>
 }
 
 export interface Context {
@@ -47,9 +48,8 @@ export async function contextFromRequest(
   return {
     session: isSessionValid ? session : null,
     loaders: {
-      image: new DataLoader(ids => {
-        return dbAdapter.getImagesByID(ids)
-      })
+      image: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
+      authors: new DataLoader(ids => dbAdapter.getAuthorsByID(ids))
     },
 
     dbAdapter,
