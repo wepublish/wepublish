@@ -377,19 +377,56 @@ export class MongoDBAdapter implements DBAdapter {
 
     const result = ops[0]
 
-    // const test = await this.articles
-    //   .find({articleID: '03E0yDiuI4wtJS8q'})
-    //   .sort({publishDate: -1})
-    //   .limit(1)
-    //   .toArray()
+    const test = await this.articles
+      .find({articleID: '03E0yDiuI4wtJS8q'})
+      .sort({publishDate: -1})
+      .limit(1)
+      .toArray()
 
-    // const test2 = await this.articles
-    //   .find({articleID: '03E0yDiuI4wtJS8q'})
-    //   .sort({revision: -1})
-    //   .limit(1)
-    //   .toArray()
+    const test2 = await this.articles
+      .find({articleID: '03E0yDiuI4wtJS8q'})
+      .sort({revision: -1})
+      .limit(1)
+      .toArray()
 
-    // console.log(test, test2)
+    const test3 = await this.articles
+      .aggregate([
+        {
+          $match: {
+            publishDate: {
+              $lte: new Date()
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$articleID',
+            revision: {$max: '$revision'},
+            originalDocuments: {$push: '$$ROOT'}
+          }
+        },
+        {
+          $project: {
+            originalDocument: {
+              $filter: {
+                input: '$originalDocuments',
+                as: 'doc',
+                cond: {
+                  $eq: ['$maxRevision', '$$doc.revision']
+                }
+              }
+            }
+          }
+        },
+        {
+          $unwind: '$originalDocument'
+        }
+      ])
+      .toArray()
+
+    console.log('1', test)
+    console.log('2', test2)
+    console.log('3', JSON.stringify(test3, undefined, 2))
 
     return {
       id: result._id,
