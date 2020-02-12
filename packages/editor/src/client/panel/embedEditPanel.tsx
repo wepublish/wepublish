@@ -121,8 +121,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>`}
           <br />
           <br />
-          {`Due to the validation, GDPR-compliant and separable, embedding blocks cannot be edited. It
-          is possible to add a new link to the block.`}
+          {`Due to validation, shareable peers and GDPR-compliant, embedding blocks cannot be edited. It is possible to add a new link to an existing block.`}
         </Typography>
         <EmbedPreview value={embed} />
       </PanelSection>
