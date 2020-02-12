@@ -99,7 +99,9 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       <PanelSection>
         <TextArea
           marginBottom={Spacing.Large}
-          description="Link to Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video or iframe embed code"
+          description='If you want to include a Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video you have to add a link ex. https://www.facebook.com/id/posts/id/.
+          In iframe embed codes the src="", width="" and height="" are validated ex. <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>
+          Due to the validation, GDPR-compliant and separable, embedding blocks cannot be edited. It is possible to add a new link to the block.'
           label="Embed"
           errorMessage={errorMessage}
           value={input}
