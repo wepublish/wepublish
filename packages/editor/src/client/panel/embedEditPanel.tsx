@@ -1,7 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import {MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
-import {NavigationButton, Panel, PanelHeader, PanelSection, TextArea, Spacing} from '@karma.run/ui'
+import {
+  NavigationButton,
+  Panel,
+  PanelHeader,
+  PanelSection,
+  TextArea,
+  Spacing,
+  Typography
+} from '@karma.run/ui'
 
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../api/blocks'
@@ -98,15 +106,24 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       />
       <PanelSection>
         <TextArea
-          marginBottom={Spacing.Large}
-          description='If you want to include a Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video you have to add a link ex. https://www.facebook.com/id/posts/id/.
-          In iframe embed codes the src="", width="" and height="" are validated ex. <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>
-          Due to the validation, GDPR-compliant and separable, embedding blocks cannot be edited. It is possible to add a new link to the block.'
+          marginBottom={Spacing.ExtraSmall}
           label="Embed"
           errorMessage={errorMessage}
           value={input}
           onChange={e => setInput(e.target.value)}
         />
+        <Typography variant="subtitle1">
+          {`If you want to include a Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video,
+          YouTube Video you have to add a link ex. https://www.facebook.com/id/posts/id/.`}
+          <br />
+          <br />
+          {`In iframe embed codes the src="", width="" and height="" are validated ex.
+          <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>`}
+          <br />
+          <br />
+          {`Due to the validation, GDPR-compliant and separable, embedding blocks cannot be edited. It
+          is possible to add a new link to the block.`}
+        </Typography>
         <EmbedPreview value={embed} />
       </PanelSection>
     </Panel>
