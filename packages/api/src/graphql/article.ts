@@ -49,9 +49,9 @@ import {
 import {GraphQLImage} from './image'
 import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
-import {ArticleVersion, Article} from '../adapter/article'
+import {ArticleVersion} from '../adapter/article'
 import {GraphQLAuthor} from './author'
-import {PublishedArticle} from '../db/article'
+import {PublishedArticle, Article} from '../db/article'
 import {GraphQLSlug} from './slug'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
@@ -106,6 +106,9 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
   fields: {
     slug: {type: GraphQLNonNull(GraphQLSlug)},
 
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
@@ -132,21 +135,21 @@ export const GraphQLArticlePageInfo = new GraphQLObjectType({
   }
 })
 
-export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
-  name: 'ArticleVersion',
+export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
+  name: 'Article',
 
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    version: {type: GraphQLNonNull(GraphQLInt)},
-    state: {type: GraphQLNonNull(GraphQLVersionState)},
+    id: {type: GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    lead: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}, info) {
@@ -154,7 +157,6 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
       }
     },
 
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
       resolve({authorIDs}, args, {storageAdapter}) {
@@ -169,52 +171,27 @@ export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Conte
   }
 })
 
-// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
-export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
-  name: 'Article',
+export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
+  name: 'ArticleVersion',
 
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: GraphQLNonNull(GraphQLString)},
+    revision: {type: GraphQLNonNull(GraphQLInt)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLDateTime},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishAt: {type: GraphQLDateTime},
 
-    published: {
-      type: GraphQLArticleVersion,
-      resolve(root, _args, {storageAdapter}) {
-        if (root.publishedAt == undefined || root.publishedVersion == undefined) return null
-        if (new Date().getTime() < root.publishedAt.getTime()) return null
-
-        return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
-      }
-    },
-
-    latest: {
-      type: GraphQLArticleVersion,
-      async resolve(root, _args, {storageAdapter, authenticate}) {
-        await authenticate()
-        return storageAdapter.getArticleVersion(root.id, root.latestVersion)
-      }
-    },
-
-    versions: {
-      type: GraphQLList(GraphQLArticleVersion),
-      async resolve(root, _args, {storageAdapter, authenticate}) {
-        await authenticate()
-        return storageAdapter.getArticleVersions(root.id)
-      }
-    }
+    article: {type: GraphQLNonNull(GraphQLArticle)}
   }
 })
 
 export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLArticle)},
-    pageInfo: {
-      type: GraphQLArticlePageInfo
-    }
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticle)))},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)},
+    pageInfo: {type: GraphQLNonNull(GraphQLArticlePageInfo)}
   }
 })
 

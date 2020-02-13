@@ -10,7 +10,27 @@ import {
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
-import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {GraphQLArticleInput, GraphQLArticleVersion, GraphQLArticleBlockUnionMap} from './article'
+import {BlockMap, Block} from '../db/block'
+
+function mapBlockUnionMap(value: any) {
+  const valueKeys = Object.keys(value)
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no block types in ${GraphQLArticleBlockUnionMap.name}.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
+        GraphQLArticleBlockUnionMap.name
+      }, they're mutually exclusive.`
+    )
+  }
+
+  const key = Object.keys(value)[0] as keyof BlockMap
+  return {type: key, ...value[key]} as Block
+}
 
 export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -61,10 +81,14 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createArticle: {
-      type: GraphQLNonNull(GraphQLArticle),
+      type: GraphQLNonNull(GraphQLArticleVersion),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      async resolve(root, {input}, {dbAdapter}) {
-        return dbAdapter.createArticle(input)
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        authenticate()
+
+        return dbAdapter.createArticle({
+          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
+        })
       }
     }
   }

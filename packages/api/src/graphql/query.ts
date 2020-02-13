@@ -1,6 +1,8 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull} from 'graphql'
+import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
+import {GraphQLArticleConnection} from './article'
+import {UserInputError} from 'apollo-server'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -10,7 +12,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     sessions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
-      async resolve(root, args, {authenticate, dbAdapter}) {
+      resolve(root, args, {authenticate, dbAdapter}) {
         const session = authenticate()
         return dbAdapter.getSessionsForUser(session.user)
       }
@@ -21,8 +23,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     me: {
       type: GraphQLUser,
-      resolve(root, args, {session, authenticate}) {
+      resolve(root, args, {authenticate}) {
         return authenticate().user
+      }
+    },
+
+    // Article
+    // =======
+
+    publishedArticles: {
+      type: GraphQLNonNull(GraphQLArticleConnection),
+      args: {
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
+      },
+      resolve(root, {after, before, first, last}, {dbAdapter}) {
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        return dbAdapter.getPublishedArticles({after, before, first, last})
       }
     }
   }

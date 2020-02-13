@@ -39,7 +39,8 @@ export const Migrations: Migration[] = [
       const articles = await db.createCollection(CollectionName.Articles, {strict: true})
 
       await articles.createIndex({articleID: 1, revision: 1}, {unique: true})
-      await articles.createIndex({articleID: 1, publishedAt: 1})
+      await articles.createIndex({articleID: 1, publishAt: 1})
+      // await articles.createIndex({'blocks.richText.$**': 'text'})
     }
   }
 ]

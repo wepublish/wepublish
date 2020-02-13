@@ -20,7 +20,9 @@ import {
   UpdateArticleVersionArgs,
   PublishArticleArgs,
   GetArticlesArgs,
-  ArticleBlock
+  ArticleBlock,
+  ArticleVersion,
+  ArticlesResult
 } from '@wepublish/api'
 
 import {MigrationName, Migrations, LatestMigration} from './migration'
@@ -61,7 +63,12 @@ export interface MongoDBArticle {
   readonly articleID: string
   readonly revision: number
 
-  readonly publishDate?: Date
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+
+  readonly updatedAt: Date
+  readonly publishedAt: Date
+  readonly publishAt?: Date
 
   readonly preTitle?: string
   readonly title: string
@@ -259,7 +266,7 @@ export class MongoDBAdapter implements DBAdapter {
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
     const users = await this.users.find({_id: {$in: ids}}).toArray()
 
-    return users.map(user => ({
+    return users.map<OptionalUser>(user => ({
       id: user._id,
       email: user.email
     }))
@@ -367,73 +374,35 @@ export class MongoDBAdapter implements DBAdapter {
   // Article
   // =======
 
-  async createArticle(article: CreateArticleArgs): Promise<Article> {
+  async createArticle({input}: CreateArticleArgs): Promise<ArticleVersion> {
+    console.log(JSON.stringify(input, undefined, 2))
+
     const {ops} = await this.articles.insertOne({
       articleID: generateID(),
       revision: 0,
-      publishDate: new Date(),
-      ...article
+
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+
+      ...input
     })
 
     const result = ops[0]
 
-    const test = await this.articles
-      .find({articleID: '03E0yDiuI4wtJS8q'})
-      .sort({publishDate: -1})
-      .limit(1)
-      .toArray()
+    // const test = await this.articles
+    //   .find({articleID: '03E0yDiuI4wtJS8q'})
+    //   .sort({publishDate: -1})
+    //   .limit(1)
+    //   .toArray()
 
-    const test2 = await this.articles
-      .find({articleID: '03E0yDiuI4wtJS8q'})
-      .sort({revision: -1})
-      .limit(1)
-      .toArray()
+    // const test2 = await this.articles
+    //   .find({articleID: '03E0yDiuI4wtJS8q'})
+    //   .sort({revision: -1})
+    //   .limit(1)
+    //   .toArray()
 
-    const test3 = await this.articles
-      .aggregate([
-        {
-          $match: {
-            publishDate: {
-              $lte: new Date()
-            }
-          }
-        },
-        {
-          $group: {
-            _id: '$articleID',
-            revision: {$max: '$revision'},
-            originalDocuments: {$push: '$$ROOT'}
-          }
-        },
-        {
-          $project: {
-            originalDocument: {
-              $filter: {
-                input: '$originalDocuments',
-                as: 'doc',
-                cond: {
-                  $eq: ['$maxRevision', '$$doc.revision']
-                }
-              }
-            }
-          }
-        },
-        {
-          $unwind: '$originalDocument'
-        }
-      ])
-      .toArray()
-
-    console.log('1', test)
-    console.log('2', test2)
-    console.log('3', JSON.stringify(test3, undefined, 2))
-
-    return {
-      id: result._id,
-      // articleID: generate
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
+    const {_id, articleID: id, revision, createdAt, modifiedAt, ...article} = result
+    return {id, revision, createdAt, modifiedAt, article: {id, ...article}}
   }
 
   createArticleVersion(args: CreateArticleVersionArgs): Promise<Article> {
@@ -448,18 +417,101 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  getPublishedArticles(args: GetArticlesArgs): void {
+  async getPublishedArticles({
+    after,
+    before,
+    first,
+    last
+  }: GetArticlesArgs): Promise<ArticlesResult> {
+    first = first ? Math.min(first, 100) : undefined
+    last = last ? Math.min(last, 100) : undefined
+
+    const sortDirection = first ? -1 : 1
+
+    const articles = await this.articles
+      .aggregate([
+        {
+          $match: {
+            publishAt: {
+              $lte: new Date()
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$articleID',
+            latestRevision: {$max: '$revision'},
+            documents: {$push: '$$ROOT'}
+          }
+        },
+        {
+          $project: {
+            document: {
+              $filter: {
+                input: '$documents',
+                as: 'doc',
+                cond: {
+                  $eq: ['$latestRevision', '$$doc.revision']
+                }
+              }
+            }
+          }
+        },
+        {
+          $unwind: '$document'
+        },
+        {
+          $replaceRoot: {newRoot: '$document'}
+        },
+        {
+          $addFields: {
+            totalCount: {$sum: 1}
+          }
+        },
+        {
+          $sort: {
+            publishedAt: sortDirection,
+            id: sortDirection
+          }
+        },
+        {
+          $limit: first || last
+        }
+      ])
+      .toArray()
+
+    console.log(articles)
+
+    return {
+      nodes: articles.map<Article>(article => ({
+        id: article.articleID,
+        updatedAt: article.updatedAt,
+        publishedAt: article.publishedAt,
+        preTitle: article.preTitle,
+        title: article.title,
+        lead: article.lead,
+        slug: article.slug,
+        tags: article.tags,
+        imageID: article.imageID,
+        authorIDs: article.authorIDs,
+        shared: article.shared,
+        breaking: article.breaking,
+        blocks: article.blocks
+      })),
+      pageInfo: {startCursor: '', endCursor: '', hasNextPage: true, hasPreviousPage: true},
+      totalCount: 1
+    }
+  }
+
+  async getPublishedArticle(args: GetArticlesArgs): Promise<Article[]> {
     throw new Error('Method not implemented.')
   }
 
-  getPublishedArticle(args: GetArticlesArgs): void {
-    throw new Error('Method not implemented.')
-  }
   getArticles(args: GetArticlesArgs): void {
     throw new Error('Method not implemented.')
   }
 
-  getArticle(args: GetArticlesArgs): void {
+  async getArticle(args: GetArticlesArgs): Promise<Article> {
     throw new Error('Method not implemented.')
   }
 
