@@ -36,7 +36,10 @@ export enum CollectionName {
   Sessions = 'sessions',
   Images = 'images',
 
-  Articles = 'articles'
+  ArticlesDraft = 'articles.draft',
+  ArticlesPublished = 'articles.published',
+  ArticlesHistory = 'articles.history',
+  ArticlesPending = 'articles.pending'
 }
 
 export enum MongoErrorCode {
@@ -426,22 +429,58 @@ export class MongoDBAdapter implements DBAdapter {
     first = first ? Math.min(first, 100) : undefined
     last = last ? Math.min(last, 100) : undefined
 
-    const sortDirection = first ? -1 : 1
+    // const sortDirection = first ? -1 : 1
+
+    // const articles = await this.articles
+    //   .aggregate([
+    //     {
+    //       $match: {
+    //         latest: {
+    //           $lte: new Date()
+    //         }
+    //       }
+    //     },
+    //     {
+    //       $project: {
+    //         document: {
+    //           $filter: {
+    //             input: '$documents',
+    //             as: 'doc',
+    //             cond: {
+    //               $eq: ['$latestRevision', '$$doc.revision']
+    //             }
+    //           }
+    //         }
+    //       }
+    //     },
+    //     {
+    //       $unwind: '$document'
+    //     },
+    //     {
+    //       $replaceRoot: {newRoot: '$document'}
+    //     },
+    //     {
+    //       $addFields: {
+    //         totalCount: {$sum: 1}
+    //       }
+    //     },
+    //     {
+    //       $sort: {
+    //         publishedAt: sortDirection,
+    //         id: sortDirection
+    //       }
+    //     },
+    //     {
+    //       $limit: first || last
+    //     }
+    //   ])
+    //   .toArray()
 
     const articles = await this.articles
       .aggregate([
         {
           $match: {
-            publishAt: {
-              $lte: new Date()
-            }
-          }
-        },
-        {
-          $group: {
-            _id: '$articleID',
-            latestRevision: {$max: '$revision'},
-            documents: {$push: '$$ROOT'}
+            latest: true
           }
         },
         {
@@ -480,7 +519,7 @@ export class MongoDBAdapter implements DBAdapter {
       ])
       .toArray()
 
-    console.log(articles)
+    // console.log(articles)
 
     return {
       nodes: articles.map<Article>(article => ({

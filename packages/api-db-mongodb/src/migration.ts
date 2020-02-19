@@ -36,10 +36,29 @@ export const Migrations: Migration[] = [
 
       await images.createIndex({title: 1})
 
-      const articles = await db.createCollection(CollectionName.Articles, {strict: true})
+      const articlesPublished = await db.createCollection(CollectionName.ArticlesPublished, {
+        strict: true
+      })
 
-      await articles.createIndex({articleID: 1, revision: 1}, {unique: true})
-      await articles.createIndex({articleID: 1, publishAt: 1})
+      await articlesPublished.createIndex({articleID: 1}, {unique: true})
+
+      const articlesDraft = await db.createCollection(CollectionName.ArticlesDraft, {
+        strict: true
+      })
+
+      await articlesDraft.createIndex({articleID: 1}, {unique: true})
+
+      const articlesHistory = await db.createCollection(CollectionName.ArticlesHistory, {
+        strict: true
+      })
+
+      await articlesHistory.createIndex({articleID: 1, revision: 1}, {unique: true})
+
+      const articlesPending = await db.createCollection(CollectionName.ArticlesPending, {
+        strict: true
+      })
+
+      await articlesPending.createIndex({articleID: 1, revision: 1}, {unique: true})
       // await articles.createIndex({'blocks.richText.$**': 'text'})
     }
   }
