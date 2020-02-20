@@ -31,6 +31,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Article
     // =======
 
+    articles: {
+      type: GraphQLNonNull(GraphQLArticleConnection),
+      args: {
+        after: {type: GraphQLString},
+        before: {type: GraphQLString},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt}
+      },
+      resolve(root, {after, before, first, last}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.getArticles({after, before, first, last})
+      }
+    },
+
     publishedArticles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       args: {

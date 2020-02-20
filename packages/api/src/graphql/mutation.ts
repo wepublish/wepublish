@@ -10,7 +10,7 @@ import {
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
-import {GraphQLArticleInput, GraphQLArticleVersion, GraphQLArticleBlockUnionMap} from './article'
+import {GraphQLArticleInput, GraphQLArticleBlockUnionMap, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
 
 function mapBlockUnionMap(value: any) {
@@ -81,7 +81,7 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createArticle: {
-      type: GraphQLNonNull(GraphQLArticleVersion),
+      type: GraphQLNonNull(GraphQLArticle),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
       async resolve(root, {input}, {authenticate, dbAdapter}) {
         authenticate()

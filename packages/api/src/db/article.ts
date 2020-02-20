@@ -1,49 +1,51 @@
 import {ArticleBlock} from './block'
 import {PageInfo} from '../adapter/pageInfo'
 
-// export interface Article {
-//   readonly id: string
-//   readonly createdAt: Date
-//   readonly updatedAt: Date
-// }
-
-export interface CommonArticleData {
+export interface ArticleData {
+  // NOTE: Can be set by user, that's why it not called modifiedAt.
   readonly updatedAt: Date
+
+  // NOTE: Can be set by user, that's why there's a separate publishAt for the actual publication management.
   readonly publishedAt: Date
 
   readonly preTitle?: string
   readonly title: string
-  readonly lead: string
+  readonly lead?: string
   readonly slug: string
   readonly tags: string[]
 
   readonly imageID?: string
   readonly authorIDs: string[]
 
-  readonly shared: boolean
   readonly breaking: boolean
-
   readonly blocks: ArticleBlock[]
 }
 
-export interface Article extends CommonArticleData {
+// Article State Flow:
+// Draft -> Pending -> Published -> History
+export interface Article {
   readonly id: string
+
+  readonly shared: boolean
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+
+  readonly draft?: ArticleRevision
+  readonly published?: ArticleRevision
+
+  readonly pending: ArticleRevision[]
+  readonly history: ArticleRevision[]
 }
 
-export interface ArticleVersion {
-  readonly id: string
+export interface ArticleRevision extends ArticleData {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly modifiedAt: Date
   readonly publishAt?: Date
-
-  readonly article: Article
 }
 
-export interface PublishedArticle extends CommonArticleData {
+export interface PublishedArticle extends ArticleData {
   readonly id: string
-  readonly peerID?: string
 
   readonly updatedAt: Date
   readonly publishedAt: Date
@@ -63,19 +65,23 @@ export interface GetArticlesArgs {
   readonly sort?: ArticleSort
 }
 
-export interface CreateArticleArgs {
-  readonly input: CommonArticleData
+export interface ArticleInput extends ArticleData {
+  readonly shared: boolean
 }
 
-export interface CreateArticleVersionArgs extends CommonArticleData {}
+export interface CreateArticleArgs {
+  readonly input: ArticleInput
+}
 
-export interface UpdateArticleVersionArgs extends CommonArticleData {
+export interface CreateArticleVersionArgs extends ArticleData {}
+
+export interface UpdateArticleVersionArgs extends ArticleData {
   readonly id: string
   readonly version: string
   readonly blocks: ArticleBlock[]
 }
 
-export interface PublishArticleArgs extends CommonArticleData {
+export interface PublishArticleArgs extends ArticleData {
   readonly id: string
   readonly version: string
   readonly publishedAt: Date
@@ -88,16 +94,20 @@ export interface ArticlesResult {
   readonly totalCount: number
 }
 
+export interface PublishedArticleResult {
+  readonly nodes: PublishedArticle[]
+  readonly pageInfo: PageInfo
+  readonly totalCount: number
+}
+
 export interface DBArticleAdapter {
-  createArticle(args: CreateArticleArgs): Promise<ArticleVersion>
+  createArticle(args: CreateArticleArgs): Promise<Article>
 
   createArticleVersion(args: CreateArticleVersionArgs): Promise<Article>
   updateArticleVersion(args: UpdateArticleVersionArgs): Promise<Article>
   publishArticleVersion(args: PublishArticleArgs): Promise<Article>
 
-  getPublishedArticles(args: GetArticlesArgs): Promise<ArticlesResult>
-  getPublishedArticle(args: GetArticlesArgs): void
-
-  getArticles(args: GetArticlesArgs): void
-  getArticle(args: GetArticlesArgs): void
+  getPublishedArticles(args: GetArticlesArgs): Promise<PublishedArticleResult>
+  getArticles(args: GetArticlesArgs): Promise<ArticlesResult>
+  getArticlesByID(args: GetArticlesArgs): Promise<Article[]>
 }

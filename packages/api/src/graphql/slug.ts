@@ -1,4 +1,4 @@
-import {GraphQLScalarType} from 'graphql'
+import {GraphQLScalarType, valueFromAST, GraphQLString} from 'graphql'
 
 // TODO: Validation / Normalization
 export const GraphQLSlug = new GraphQLScalarType({
@@ -12,6 +12,6 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseLiteral(value) {
-    return value
+    return valueFromAST(value, GraphQLString)
   }
 })

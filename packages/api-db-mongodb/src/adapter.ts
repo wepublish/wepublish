@@ -21,8 +21,8 @@ import {
   PublishArticleArgs,
   GetArticlesArgs,
   ArticleBlock,
-  ArticleVersion,
-  ArticlesResult
+  ArticlesResult,
+  PublishedArticleResult
 } from '@wepublish/api'
 
 import {MigrationName, Migrations, LatestMigration} from './migration'
@@ -36,10 +36,7 @@ export enum CollectionName {
   Sessions = 'sessions',
   Images = 'images',
 
-  ArticlesDraft = 'articles.draft',
-  ArticlesPublished = 'articles.published',
-  ArticlesHistory = 'articles.history',
-  ArticlesPending = 'articles.pending'
+  Articles = 'articles'
 }
 
 export enum MongoErrorCode {
@@ -63,28 +60,36 @@ export interface MongoDBSession {
 export interface MongoDBArticle {
   readonly _id: any
 
-  readonly articleID: string
-  readonly revision: number
-
+  readonly shared: boolean
   readonly createdAt: Date
   readonly modifiedAt: Date
 
+  readonly draft?: MongoDBArticleRevision
+  readonly published?: MongoDBArticleRevision
+
+  readonly pending: MongoDBArticleRevision[]
+  readonly history: MongoDBArticleRevision[]
+}
+
+export interface MongoDBArticleRevision {
+  readonly revision: number
+
+  readonly createdAt: Date
+  readonly publishAt?: Date
+
   readonly updatedAt: Date
   readonly publishedAt: Date
-  readonly publishAt?: Date
 
   readonly preTitle?: string
   readonly title: string
-  readonly lead: string
+  readonly lead?: string
   readonly slug: string
   readonly tags: string[]
 
   readonly imageID?: string
   readonly authorIDs: string[]
 
-  readonly shared: boolean
   readonly breaking: boolean
-
   readonly blocks: ArticleBlock[]
 }
 
@@ -118,6 +123,7 @@ export interface InitializationResult {
 
 const DefaultSessionTTL = 1000 * 60 * 60 * 24 * 7 // 1w
 const DefaultBcryptHashCostFactor = 11
+const MaxResultsPerPage = 100
 
 interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
   readonly client: MongoClient
@@ -377,35 +383,30 @@ export class MongoDBAdapter implements DBAdapter {
   // Article
   // =======
 
-  async createArticle({input}: CreateArticleArgs): Promise<ArticleVersion> {
-    console.log(JSON.stringify(input, undefined, 2))
+  async createArticle({input}: CreateArticleArgs): Promise<Article> {
+    const {shared, ...data} = input
+
+    console.log(data)
 
     const {ops} = await this.articles.insertOne({
-      articleID: generateID(),
-      revision: 0,
+      shared,
 
       createdAt: new Date(),
       modifiedAt: new Date(),
 
-      ...input
+      draft: {
+        revision: 0,
+        createdAt: new Date(),
+        ...data
+      },
+
+      pending: [],
+      history: []
     })
 
-    const result = ops[0]
+    const {_id: id, ...article} = ops[0]
 
-    // const test = await this.articles
-    //   .find({articleID: '03E0yDiuI4wtJS8q'})
-    //   .sort({publishDate: -1})
-    //   .limit(1)
-    //   .toArray()
-
-    // const test2 = await this.articles
-    //   .find({articleID: '03E0yDiuI4wtJS8q'})
-    //   .sort({revision: -1})
-    //   .limit(1)
-    //   .toArray()
-
-    const {_id, articleID: id, revision, createdAt, modifiedAt, ...article} = result
-    return {id, revision, createdAt, modifiedAt, article: {id, ...article}}
+    return {id, ...article}
   }
 
   createArticleVersion(args: CreateArticleVersionArgs): Promise<Article> {
@@ -425,136 +426,70 @@ export class MongoDBAdapter implements DBAdapter {
     before,
     first,
     last
-  }: GetArticlesArgs): Promise<ArticlesResult> {
+  }: GetArticlesArgs): Promise<PublishedArticleResult> {
     first = first ? Math.min(first, 100) : undefined
     last = last ? Math.min(last, 100) : undefined
 
-    // const sortDirection = first ? -1 : 1
-
-    // const articles = await this.articles
-    //   .aggregate([
-    //     {
-    //       $match: {
-    //         latest: {
-    //           $lte: new Date()
-    //         }
-    //       }
-    //     },
-    //     {
-    //       $project: {
-    //         document: {
-    //           $filter: {
-    //             input: '$documents',
-    //             as: 'doc',
-    //             cond: {
-    //               $eq: ['$latestRevision', '$$doc.revision']
-    //             }
-    //           }
-    //         }
-    //       }
-    //     },
-    //     {
-    //       $unwind: '$document'
-    //     },
-    //     {
-    //       $replaceRoot: {newRoot: '$document'}
-    //     },
-    //     {
-    //       $addFields: {
-    //         totalCount: {$sum: 1}
-    //       }
-    //     },
-    //     {
-    //       $sort: {
-    //         publishedAt: sortDirection,
-    //         id: sortDirection
-    //       }
-    //     },
-    //     {
-    //       $limit: first || last
-    //     }
-    //   ])
-    //   .toArray()
-
-    const articles = await this.articles
-      .aggregate([
-        {
-          $match: {
-            latest: true
-          }
-        },
-        {
-          $project: {
-            document: {
-              $filter: {
-                input: '$documents',
-                as: 'doc',
-                cond: {
-                  $eq: ['$latestRevision', '$$doc.revision']
-                }
-              }
-            }
-          }
-        },
-        {
-          $unwind: '$document'
-        },
-        {
-          $replaceRoot: {newRoot: '$document'}
-        },
-        {
-          $addFields: {
-            totalCount: {$sum: 1}
-          }
-        },
-        {
-          $sort: {
-            publishedAt: sortDirection,
-            id: sortDirection
-          }
-        },
-        {
-          $limit: first || last
-        }
-      ])
-      .toArray()
-
-    // console.log(articles)
-
-    return {
-      nodes: articles.map<Article>(article => ({
-        id: article.articleID,
-        updatedAt: article.updatedAt,
-        publishedAt: article.publishedAt,
-        preTitle: article.preTitle,
-        title: article.title,
-        lead: article.lead,
-        slug: article.slug,
-        tags: article.tags,
-        imageID: article.imageID,
-        authorIDs: article.authorIDs,
-        shared: article.shared,
-        breaking: article.breaking,
-        blocks: article.blocks
-      })),
-      pageInfo: {startCursor: '', endCursor: '', hasNextPage: true, hasPreviousPage: true},
-      totalCount: 1
-    }
+    return {} as any
   }
 
   async getPublishedArticle(args: GetArticlesArgs): Promise<Article[]> {
     throw new Error('Method not implemented.')
   }
 
-  getArticles(args: GetArticlesArgs): void {
-    throw new Error('Method not implemented.')
+  async getArticles({after, before, first, last}: GetArticlesArgs): Promise<ArticlesResult> {
+    after = after ? base64Decode(after) : undefined
+    before = before ? base64Decode(before) : undefined
+
+    first = first ? Math.min(first, MaxResultsPerPage) : undefined
+    last = last ? Math.min(last, MaxResultsPerPage) : undefined
+
+    if (!first && !last) throw new Error('Both `first` and `last` are undefined!')
+
+    const sortDirection = first != undefined ? -1 : 1
+    const articles = await this.articles
+      .find(
+        after || before
+          ? {
+              _id: {
+                ...(after ? {$gt: after} : {}),
+                ...(before ? {$lt: before} : {})
+              }
+            }
+          : undefined
+      )
+      .sort({modifiedAt: sortDirection, _id: 1})
+      .limit(first || last!)
+      .toArray()
+
+    const firstArticle = articles[0]
+    const lastArticle = articles[articles.length - 1]
+
+    return {
+      nodes: articles.map<Article>(({_id: id, ...article}) => ({id, ...article})),
+      pageInfo: {
+        startCursor: firstArticle ? base64Encode(firstArticle._id) : null,
+        endCursor: lastArticle ? base64Encode(lastArticle._id) : null,
+        hasNextPage: true,
+        hasPreviousPage: true
+      },
+      totalCount: 1
+    }
   }
 
-  async getArticle(args: GetArticlesArgs): Promise<Article> {
+  async getArticlesByID(args: GetArticlesArgs): Promise<Article[]> {
     throw new Error('Method not implemented.')
   }
 
   getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
     throw new Error('Method not implemented.')
   }
+}
+
+function base64Encode(str: string): string {
+  return Buffer.from(str).toString('base64')
+}
+
+function base64Decode(str: string): string {
+  return Buffer.from(str, 'base64').toString()
 }

@@ -8,7 +8,8 @@ import {
   GraphQLInputObjectType,
   GraphQLUnionType,
   GraphQLBoolean,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLInterfaceType
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -49,10 +50,10 @@ import {
 import {GraphQLImage} from './image'
 import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
-import {ArticleVersion} from '../adapter/article'
 import {GraphQLAuthor} from './author'
-import {PublishedArticle, Article} from '../db/article'
+import {PublishedArticle, ArticleRevision, Article} from '../db/article'
 import {GraphQLSlug} from './slug'
+import {GraphQLPageInfo} from './pageInfo'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
@@ -135,12 +136,37 @@ export const GraphQLArticlePageInfo = new GraphQLObjectType({
   }
 })
 
-export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
-  name: 'Article',
-
+export const GraphQLArticleData = new GraphQLInterfaceType({
+  name: 'ArticleData',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    // NOTE: See `ArticleData` interface regarding these two.
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    image: {type: GraphQLImage},
+    authors: {type: GraphQLNonNull(GraphQLList(GraphQLAuthor))},
+
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
+  }
+})
+
+export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Context>({
+  name: 'ArticleRevision',
+  interfaces: [GraphQLArticleData],
+  fields: {
+    revision: {type: GraphQLNonNull(GraphQLInt)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishAt: {type: GraphQLDateTime},
+
+    // NOTE: See `ArticleData` interface regarding these two.
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
@@ -159,30 +185,30 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve({authorIDs}, args, {storageAdapter}) {
-        return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
+      resolve({authorIDs}, args, {loaders}) {
+        return Promise.all(authorIDs.map(authorID => loaders.authors.load(authorID)))
       }
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
-
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
   }
 })
 
-export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
-  name: 'ArticleVersion',
-
+export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
+  name: 'Article',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    revision: {type: GraphQLNonNull(GraphQLInt)},
+    id: {type: GraphQLNonNull(GraphQLID)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishAt: {type: GraphQLDateTime},
 
-    article: {type: GraphQLNonNull(GraphQLArticle)}
+    draft: {type: GraphQLArticleRevision},
+    published: {type: GraphQLArticleRevision},
+
+    pending: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))},
+    history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
 })
 
@@ -190,8 +216,8 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
     nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticle)))},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)},
-    pageInfo: {type: GraphQLNonNull(GraphQLArticlePageInfo)}
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -200,6 +226,7 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
+    // TODO: Consider moving these into a GraphQLInterfaceType.
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
