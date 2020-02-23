@@ -22,7 +22,7 @@ export interface ArticleData {
 }
 
 // Article State Flow:
-// Draft -> Pending -> Published -> History
+// Draft -> Pending (Optional) -> Published -> History
 export interface Article {
   readonly id: string
 
@@ -32,8 +32,8 @@ export interface Article {
 
   readonly draft?: ArticleRevision
   readonly published?: ArticleRevision
+  readonly pending?: ArticleRevision
 
-  readonly pending: ArticleRevision[]
   readonly history: ArticleRevision[]
 }
 

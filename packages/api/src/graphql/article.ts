@@ -204,10 +204,10 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    draft: {type: GraphQLArticleRevision},
+    latest: {type: GraphQLNonNull(GraphQLArticleRevision)},
     published: {type: GraphQLArticleRevision},
+    pending: {type: GraphQLArticleRevision},
 
-    pending: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))},
     history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
 })

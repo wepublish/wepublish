@@ -64,10 +64,10 @@ export interface MongoDBArticle {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly draft?: MongoDBArticleRevision
+  readonly latest: MongoDBArticleRevision
   readonly published?: MongoDBArticleRevision
+  readonly pending?: MongoDBArticleRevision
 
-  readonly pending: MongoDBArticleRevision[]
   readonly history: MongoDBArticleRevision[]
 }
 
@@ -75,7 +75,6 @@ export interface MongoDBArticleRevision {
   readonly revision: number
 
   readonly createdAt: Date
-  readonly publishAt?: Date
 
   readonly updatedAt: Date
   readonly publishedAt: Date
@@ -386,21 +385,18 @@ export class MongoDBAdapter implements DBAdapter {
   async createArticle({input}: CreateArticleArgs): Promise<Article> {
     const {shared, ...data} = input
 
-    console.log(data)
-
     const {ops} = await this.articles.insertOne({
       shared,
 
       createdAt: new Date(),
       modifiedAt: new Date(),
 
-      draft: {
+      latest: {
         revision: 0,
         createdAt: new Date(),
         ...data
       },
 
-      pending: [],
       history: []
     })
 
