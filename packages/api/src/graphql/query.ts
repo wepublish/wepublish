@@ -41,6 +41,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       },
       resolve(root, {after, before, first, last}, {authenticate, dbAdapter}) {
         authenticate()
+
+        if ((first == null && last == null) || (first != null && last != null)) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
+        if (after != null && before != null) {
+          throw new UserInputError('You must provide either `first` or `last`.')
+        }
+
         return dbAdapter.getArticles({after, before, first, last})
       }
     },

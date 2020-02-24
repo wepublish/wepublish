@@ -1,12 +1,9 @@
-import {CollectionName, MongoDBUser, MongoDBSession} from './adapter'
 import {Db} from 'mongodb'
 
-export enum MigrationName {
-  Initial = 'initial'
-}
+import * as v0 from './schema/0'
 
 export interface Migration {
-  readonly name: MigrationName
+  readonly version: number
   migrate(adapter: Db): Promise<void>
 }
 
@@ -14,17 +11,23 @@ const SessionDocumentTTL = 60 * 60 * 24 // 24h
 
 export const Migrations: Migration[] = [
   {
-    name: MigrationName.Initial,
+    version: 0,
     async migrate(db) {
-      const migrations = await db.createCollection(CollectionName.Migrations, {strict: true})
+      const migrations = await db.createCollection(v0.CollectionName.Migrations, {strict: true})
 
       await migrations.createIndex({name: 1}, {unique: true})
 
-      const users = await db.createCollection<MongoDBUser>(CollectionName.Users, {strict: true})
+      const users = await db.createCollection<v0.MongoDBUser>(v0.CollectionName.Users, {
+        validator: {
+          $jsonSchema: v0.MongoDBUserSchema
+        },
+        strict: true
+      })
 
       await users.createIndex({email: 1}, {unique: true})
 
-      const sessions = await db.createCollection<MongoDBSession>(CollectionName.Sessions, {
+      // TODO: Create schema for all collections
+      const sessions = await db.createCollection<v0.MongoDBSession>(v0.CollectionName.Sessions, {
         strict: true
       })
 
@@ -32,15 +35,23 @@ export const Migrations: Migration[] = [
       await sessions.createIndex({token: 1}, {unique: true})
       await sessions.createIndex({expiresAt: 1}, {expireAfterSeconds: SessionDocumentTTL})
 
-      const images = await db.createCollection(CollectionName.Images, {strict: true})
+      const images = await db.createCollection(v0.CollectionName.Images, {strict: true})
 
       await images.createIndex({title: 1})
 
-      const articles = await db.createCollection(CollectionName.Articles, {
+      const articles = await db.createCollection<v0.MongoDBArticle>(v0.CollectionName.Articles, {
         strict: true
       })
 
-      articles
+      // TODO: Create required indicies
+      await articles.createIndex({'draft.createdAt': 1})
+
+      const articlesHistory = await db.createCollection<v0.MongoDBArticleHistoryRevision>(
+        v0.CollectionName.ArticlesHistory,
+        {strict: true}
+      )
+
+      await articlesHistory
     }
   }
 ]

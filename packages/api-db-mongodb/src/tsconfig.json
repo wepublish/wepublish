@@ -4,7 +4,7 @@
   "compilerOptions": {
     "outDir": "../lib/",
     "module": "commonjs",
-    "types": ["@types/node"],
+    // "types": ["@types/node"],
     "lib": ["es2017"]
   }
 }

@@ -6,11 +6,12 @@
   "scripts": {
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
+    "build:json-schema": "typescript-json-schema -out ./src/jsonSchema.ts ./src/tsconfig.json MongoDBUser",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean copy-license build sync-package-info",
+    "prepare": "run-s clean build",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
@@ -19,6 +20,8 @@
     "bcrypt": "^3.0.7"
   },
   "devDependencies": {
+    "@types/node": "^13.7.4",
+    "@types/bcrypt": "^3.0.0",
     "@types/mongodb": "^3.3.15",
     "@types/nanoid": "^2.1.0",
     "npm-run-all": "^4.1.5",

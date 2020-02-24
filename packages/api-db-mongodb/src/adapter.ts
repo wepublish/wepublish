@@ -20,76 +20,25 @@ import {
   UpdateArticleVersionArgs,
   PublishArticleArgs,
   GetArticlesArgs,
-  ArticleBlock,
   ArticlesResult,
-  PublishedArticleResult
+  PublishedArticleResult,
+  ArticleHistory
 } from '@wepublish/api'
 
-import {MigrationName, Migrations, LatestMigration} from './migration'
+import {Migrations, LatestMigration} from './migration'
 import {generateID, generateToken} from './utility'
 
 import {OptionalAuthor} from '@wepublish/api/lib/db/author'
-
-export enum CollectionName {
-  Migrations = 'migrations',
-  Users = 'users',
-  Sessions = 'sessions',
-  Images = 'images',
-
-  Articles = 'articles'
-}
+import {
+  MongoDBUser,
+  MongoDBSession,
+  MongoDBArticle,
+  CollectionName,
+  MongoDBMigration
+} from './schema'
 
 export enum MongoErrorCode {
   DuplicateKey = 11000
-}
-
-export interface MongoDBUser {
-  readonly _id: any
-  readonly email: string
-  readonly password: string
-}
-
-export interface MongoDBSession {
-  readonly _id: any
-  readonly userID: string
-  readonly token: string
-  readonly createdAt: Date
-  readonly expiresAt: Date
-}
-
-export interface MongoDBArticle {
-  readonly _id: any
-
-  readonly shared: boolean
-  readonly createdAt: Date
-  readonly modifiedAt: Date
-
-  readonly latest: MongoDBArticleRevision
-  readonly published?: MongoDBArticleRevision
-  readonly pending?: MongoDBArticleRevision
-
-  readonly history: MongoDBArticleRevision[]
-}
-
-export interface MongoDBArticleRevision {
-  readonly revision: number
-
-  readonly createdAt: Date
-
-  readonly updatedAt: Date
-  readonly publishedAt: Date
-
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead?: string
-  readonly slug: string
-  readonly tags: string[]
-
-  readonly imageID?: string
-  readonly authorIDs: string[]
-
-  readonly breaking: boolean
-  readonly blocks: ArticleBlock[]
 }
 
 export interface MongoDBAdabterSharedArgs {
@@ -109,14 +58,14 @@ export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterSharedArgs {
 }
 
 export interface MigrationState {
-  readonly name: MigrationName
+  readonly version: number
   readonly createdAt: Date
 }
 
 export interface InitializationResult {
   readonly migrated?: {
-    readonly from?: MigrationName
-    readonly to: MigrationName
+    readonly from?: number
+    readonly to: number
   }
 }
 
@@ -187,7 +136,7 @@ export class MongoDBAdapter implements DBAdapter {
 
     const migrationState = await this.getDBMigrationState(db)
 
-    if (migrationState?.name !== LatestMigration.name) {
+    if (migrationState?.version !== LatestMigration.version) {
       throw new Error(
         'Database is not initialized or out of date, call `initialize` to intialize/migrate database.'
       )
@@ -224,18 +173,18 @@ export class MongoDBAdapter implements DBAdapter {
 
     const migrationState = await this.getDBMigrationState(db)
 
-    if (migrationState?.name === LatestMigration.name) {
+    if (migrationState?.version === LatestMigration.version) {
       return {}
     }
 
-    const index = Migrations.findIndex(migration => migration.name === migrationState?.name)
+    const index = Migrations.findIndex(migration => migration.version === migrationState?.version)
     const remainingMigrations = Migrations.slice(index + 1)
 
     for (const migration of remainingMigrations) {
       await migration.migrate(db)
 
-      db.collection(CollectionName.Migrations).insertOne({
-        name: migration.name,
+      db.collection<MongoDBMigration>(CollectionName.Migrations).insertOne({
+        version: migration.version,
         createdAt: new Date()
       })
     }
@@ -247,8 +196,8 @@ export class MongoDBAdapter implements DBAdapter {
 
     return {
       migrated: {
-        from: migrationState?.name,
-        to: LatestMigration.name
+        from: migrationState?.version,
+        to: LatestMigration.version
       }
     }
   }
@@ -391,13 +340,11 @@ export class MongoDBAdapter implements DBAdapter {
       createdAt: new Date(),
       modifiedAt: new Date(),
 
-      latest: {
+      draft: {
         revision: 0,
         createdAt: new Date(),
         ...data
-      },
-
-      history: []
+      }
     })
 
     const {_id: id, ...article} = ops[0]
@@ -434,46 +381,83 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async getArticles({after, before, first, last}: GetArticlesArgs): Promise<ArticlesResult> {
+    console.assert(first || last, 'Both `first` and `last` are undefined!')
+
     after = after ? base64Decode(after) : undefined
     before = before ? base64Decode(before) : undefined
 
-    first = first ? Math.min(first, MaxResultsPerPage) : undefined
-    last = last ? Math.min(last, MaxResultsPerPage) : undefined
-
-    if (!first && !last) throw new Error('Both `first` and `last` are undefined!')
-
+    const limit = first ? Math.min(first, MaxResultsPerPage) : Math.min(last!, MaxResultsPerPage)
     const sortDirection = first != undefined ? -1 : 1
+
+    const cursor = after ? after.split(',') : before ? before.split(',') : undefined
+
+    let filter = undefined
+
+    if (cursor) {
+      const [dateStrCursor, idCursor] = cursor
+      const dateCursor = new Date(parseInt(dateStrCursor))
+
+      const direction = after ? '$lt' : '$gt'
+
+      filter = {
+        $or: [
+          {
+            modifiedAt: {[direction]: dateCursor}
+          },
+          {
+            _id: {[direction]: idCursor},
+            modifiedAt: dateCursor
+          }
+        ]
+      }
+    }
+
+    console.log(JSON.stringify(filter, undefined, 2))
+
+    const totalCount = await this.articles.estimatedDocumentCount()
     const articles = await this.articles
-      .find(
-        after || before
-          ? {
-              _id: {
-                ...(after ? {$gt: after} : {}),
-                ...(before ? {$lt: before} : {})
-              }
-            }
-          : undefined
-      )
-      .sort({modifiedAt: sortDirection, _id: 1})
-      .limit(first || last!)
+      .find(filter)
+      .sort({modifiedAt: sortDirection, _id: sortDirection})
+      .limit(limit + 1)
       .toArray()
 
-    const firstArticle = articles[0]
-    const lastArticle = articles[articles.length - 1]
+    const nodes = articles.slice(0, limit)
+
+    const hasNextPage = sortDirection == -1 ? articles.length > limit : before ? true : false
+    const hasPreviousPage = sortDirection == 1 ? articles.length > limit : after ? true : false
+
+    const firstArticle = sortDirection == -1 ? nodes[nodes.length - 1] : nodes[0]
+    const lastArticle = sortDirection == -1 ? nodes[0] : nodes[nodes.length - 1]
+
+    const startCursor = firstArticle
+      ? base64Encode(`${firstArticle.modifiedAt.getTime()},${firstArticle._id}`)
+      : null
+
+    const endCursor = lastArticle
+      ? base64Encode(`${lastArticle.modifiedAt.getTime()},${lastArticle._id}`)
+      : null
 
     return {
-      nodes: articles.map<Article>(({_id: id, ...article}) => ({id, ...article})),
+      nodes: nodes
+        .sort((a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime())
+        .map<Article>(({_id: id, ...article}) => ({id, ...article})),
+
       pageInfo: {
-        startCursor: firstArticle ? base64Encode(firstArticle._id) : null,
-        endCursor: lastArticle ? base64Encode(lastArticle._id) : null,
-        hasNextPage: true,
-        hasPreviousPage: true
+        startCursor,
+        endCursor,
+        hasNextPage,
+        hasPreviousPage
       },
-      totalCount: 1
+
+      totalCount
     }
   }
 
   async getArticlesByID(args: GetArticlesArgs): Promise<Article[]> {
+    throw new Error('Method not implemented.')
+  }
+
+  async getArticleHistory(): Promise<ArticleHistory> {
     throw new Error('Method not implemented.')
   }
 

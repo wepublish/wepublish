@@ -33,7 +33,10 @@ export interface Article {
   readonly draft?: ArticleRevision
   readonly published?: ArticleRevision
   readonly pending?: ArticleRevision
+}
 
+export interface ArticleHistory {
+  readonly id: string
   readonly history: ArticleRevision[]
 }
 
@@ -110,4 +113,5 @@ export interface DBArticleAdapter {
   getPublishedArticles(args: GetArticlesArgs): Promise<PublishedArticleResult>
   getArticles(args: GetArticlesArgs): Promise<ArticlesResult>
   getArticlesByID(args: GetArticlesArgs): Promise<Article[]>
+  getArticleHistory(args: GetArticlesArgs): Promise<ArticleHistory>
 }
