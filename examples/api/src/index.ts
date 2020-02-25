@@ -9,7 +9,10 @@ import startMediaServer from '@karma.run/media'
 import LocalStorageBackend from '@karma.run/media-storage-local'
 import SharpImageBackend from '@karma.run/media-image-sharp'
 
-import {ApolloServer} from 'apollo-server'
+import express from 'express'
+import cors from 'cors'
+
+import {ApolloServer, CorsOptions} from 'apollo-server-express'
 import {URL} from 'url'
 import {resolve as resolvePath} from 'path'
 
@@ -47,20 +50,8 @@ async function asyncMain() {
   }
 
   const server = new ApolloServer({
-    cors: {
-      origin: '*',
-      allowedHeaders: [
-        'authorization',
-        'content-type',
-        'content-length',
-        'accept',
-        'origin',
-        'user-agent'
-      ],
-      methods: ['POST', 'GET', 'OPTIONS']
-    },
-
     schema: GraphQLWepublishSchema,
+    playground: true,
     introspection: true,
     tracing: true,
 
@@ -80,8 +71,27 @@ async function asyncMain() {
     token: mediaServerToken
   })
 
-  const {url} = await server.listen(port, address)
-  console.log(`API server listening: ${url}`)
+  const app = express()
+  app.get('/hello', (req, res) => res.send('Hello World!'))
+  const corsOptions: CorsOptions = {
+    origin: '*',
+    allowedHeaders: [
+      'authorization',
+      'content-type',
+      'content-length',
+      'accept',
+      'origin',
+      'user-agent'
+    ],
+    methods: ['POST', 'GET', 'OPTIONS']
+  }
+  app.use(cors(corsOptions))
+
+  server.applyMiddleware({app})
+
+  app.listen(port, address, () =>
+    console.log(`API ready at http://${address}:${port}${server.graphqlPath}`)
+  )
 }
 
 asyncMain()

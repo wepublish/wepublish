@@ -20,13 +20,16 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "@wepublish/api": "*",
-    "@wepublish/api-storage-memory": "*",
-    "@wepublish/api-media-karma": "*",
     "@karma.run/media": "^0.2.0",
-    "@karma.run/media-storage-local": "^0.1.4",
     "@karma.run/media-image-sharp": "^0.2.0",
+    "@karma.run/media-storage-local": "^0.1.4",
+    "@wepublish/api": "*",
+    "@wepublish/api-media-karma": "*",
+    "@wepublish/api-storage-memory": "*",
     "apollo-server": "^2.9.7",
+    "apollo-server-express": "^2.10.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "graphql": "^14.5.8"
   },
   "devDependencies": {
