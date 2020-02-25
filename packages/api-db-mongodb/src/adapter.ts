@@ -434,8 +434,8 @@ export class MongoDBAdapter implements DBAdapter {
     if (filter?.authors) documentFilter['draft.authors'] = {$in: filter.authors}
 
     const [totalCount, articles] = await Promise.all([
-      await this.articles.countDocuments(documentFilter, {}),
-      await this.articles
+      this.articles.countDocuments(documentFilter, {}),
+      this.articles
         .aggregate()
         .match(documentFilter)
         .match(cursorFilter)
