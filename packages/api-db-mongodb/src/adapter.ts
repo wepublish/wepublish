@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-import {MongoClient, Db, Collection, MongoError} from 'mongodb'
+import {MongoClient, Db, Collection, MongoError, FilterQuery} from 'mongodb'
 
 import {
   DBAdapter,
@@ -22,24 +22,18 @@ import {
   GetArticlesArgs,
   ArticlesResult,
   PublishedArticleResult,
-  ArticleHistory
+  ArticleHistory,
+  ArticleSort,
+  SortOrder,
+  LimitType,
+  InputCursorType
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
-import {generateID, generateToken} from './utility'
+import {generateID, generateToken, MongoErrorCode} from './utility'
 
 import {OptionalAuthor} from '@wepublish/api/lib/db/author'
-import {
-  MongoDBUser,
-  MongoDBSession,
-  MongoDBArticle,
-  CollectionName,
-  MongoDBMigration
-} from './schema'
-
-export enum MongoErrorCode {
-  DuplicateKey = 11000
-}
+import {DBUser, DBSession, DBArticle, CollectionName, DBMigration} from './schema'
 
 export interface MongoDBAdabterSharedArgs {
   readonly sessionTTL?: number
@@ -57,28 +51,11 @@ export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterSharedArgs {
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
 }
 
-export interface MigrationState {
-  readonly version: number
-  readonly createdAt: Date
-}
-
 export interface InitializationResult {
   readonly migrated?: {
     readonly from?: number
     readonly to: number
   }
-}
-
-const DefaultSessionTTL = 1000 * 60 * 60 * 24 * 7 // 1w
-const DefaultBcryptHashCostFactor = 11
-const MaxResultsPerPage = 100
-
-interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
-  readonly client: MongoClient
-  readonly db: Db
-  readonly users: Collection<MongoDBUser>
-  readonly sessions: Collection<MongoDBSession>
-  readonly articles: Collection<MongoDBArticle>
 }
 
 export class PKFactory {
@@ -87,20 +64,60 @@ export class PKFactory {
   }
 }
 
+export class Cursor {
+  static Delimiter = '|'
+
+  readonly id: string
+  readonly date?: Date
+
+  constructor(id: string, date?: Date) {
+    this.id = id
+    this.date = date
+  }
+
+  toString() {
+    const components = []
+
+    components.push(this.id)
+    if (this.date) components.push(this.date.getTime())
+
+    return base64Encode(components.join(Cursor.Delimiter))
+  }
+
+  static from(encodedStr: string) {
+    const str = base64Decode(encodedStr)
+    const [id, dateStr] = str.split(Cursor.Delimiter)
+
+    return new Cursor(id, dateStr ? new Date(parseInt(dateStr)) : undefined)
+  }
+}
+
+interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
+  readonly client: MongoClient
+  readonly db: Db
+  readonly users: Collection<DBUser>
+  readonly sessions: Collection<DBSession>
+  readonly articles: Collection<DBArticle>
+}
+
 export class MongoDBAdapter implements DBAdapter {
+  static DefaultSessionTTL = 1000 * 60 * 60 * 24 * 7 // 1w
+  static DefaultBcryptHashCostFactor = 11
+  static MaxResultsPerPage = 100
+
   readonly sessionTTL: number
   readonly bcryptHashCostFactor: number
 
   readonly client: MongoClient
   readonly db: Db
 
-  readonly users: Collection<MongoDBUser>
-  readonly sessions: Collection<MongoDBSession>
-  readonly articles: Collection<MongoDBArticle>
+  readonly users: Collection<DBUser>
+  readonly sessions: Collection<DBSession>
+  readonly articles: Collection<DBArticle>
 
   private constructor({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
+    sessionTTL = MongoDBAdapter.DefaultSessionTTL,
+    bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     client,
     db,
     users,
@@ -126,8 +143,8 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   static async connect({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
+    sessionTTL = MongoDBAdapter.DefaultSessionTTL,
+    bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
     database
   }: MongoDBAdapterConnectArgs) {
@@ -153,17 +170,17 @@ export class MongoDBAdapter implements DBAdapter {
     })
   }
 
-  static async getDBMigrationState(db: Db): Promise<MigrationState | null> {
+  static async getDBMigrationState(db: Db): Promise<DBMigration | null> {
     const result = await db
-      .collection(CollectionName.Migrations)
-      .findOne({}, {sort: {createdAt: -1}})
+      .collection<DBMigration>(CollectionName.Migrations)
+      .findOne({}, {sort: {createdAt: SortOrder.Descending}})
 
     return result
   }
 
   static async initialize({
-    sessionTTL = DefaultSessionTTL,
-    bcryptHashCostFactor = DefaultBcryptHashCostFactor,
+    sessionTTL = MongoDBAdapter.DefaultSessionTTL,
+    bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
     database,
     seed
@@ -183,7 +200,7 @@ export class MongoDBAdapter implements DBAdapter {
     for (const migration of remainingMigrations) {
       await migration.migrate(db)
 
-      db.collection<MongoDBMigration>(CollectionName.Migrations).insertOne({
+      db.collection<DBMigration>(CollectionName.Migrations).insertOne({
         version: migration.version,
         createdAt: new Date()
       })
@@ -365,13 +382,12 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async getPublishedArticles({
-    after,
-    before,
-    first,
-    last
+    cursor,
+    limit,
+    sort
   }: GetArticlesArgs): Promise<PublishedArticleResult> {
-    first = first ? Math.min(first, 100) : undefined
-    last = last ? Math.min(last, 100) : undefined
+    // first = first ? Math.min(first, 100) : undefined
+    // last = last ? Math.min(last, 100) : undefined
 
     return {} as any
   }
@@ -380,67 +396,87 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  async getArticles({after, before, first, last}: GetArticlesArgs): Promise<ArticlesResult> {
-    console.assert(first || last, 'Both `first` and `last` are undefined!')
+  async getArticles({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetArticlesArgs): Promise<ArticlesResult> {
+    const limitCount = Math.min(limit.count, MongoDBAdapter.MaxResultsPerPage)
+    const sortDirection = limit.type === LimitType.First ? order : -order
 
-    after = after ? base64Decode(after) : undefined
-    before = before ? base64Decode(before) : undefined
+    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
-    const limit = first ? Math.min(first, MaxResultsPerPage) : Math.min(last!, MaxResultsPerPage)
-    const sortDirection = first != undefined ? -1 : 1
+    const expr =
+      order === SortOrder.Ascending
+        ? cursor.type === InputCursorType.After
+          ? '$gt'
+          : '$lt'
+        : cursor.type === InputCursorType.After
+        ? '$lt'
+        : '$gt'
 
-    const cursor = after ? after.split(',') : before ? before.split(',') : undefined
+    const sortField = sortFieldForSort(sort)
+    const cursorFilter = cursorData
+      ? {
+          $or: [
+            {[sortField]: {[expr]: cursorData.date}},
+            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
+          ]
+        }
+      : {}
 
-    let filter = undefined
+    let documentFilter: FilterQuery<any> = {}
 
-    if (cursor) {
-      const [dateStrCursor, idCursor] = cursor
-      const dateCursor = new Date(parseInt(dateStrCursor))
+    // TODO: Search
+    if (filter?.tags) documentFilter['draft.tags'] = {$in: filter.tags}
+    if (filter?.authors) documentFilter['draft.authors'] = {$in: filter.authors}
 
-      const direction = after ? '$lt' : '$gt'
+    const [totalCount, articles] = await Promise.all([
+      await this.articles.countDocuments(documentFilter, {}),
+      await this.articles
+        .aggregate()
+        .match(documentFilter)
+        .match(cursorFilter)
+        .sort({[sortField]: sortDirection, _id: sortDirection})
+        .limit(limitCount + 1)
+        .toArray()
+    ])
 
-      filter = {
-        $or: [
-          {
-            modifiedAt: {[direction]: dateCursor}
-          },
-          {
-            _id: {[direction]: idCursor},
-            modifiedAt: dateCursor
-          }
-        ]
-      }
+    const nodes = articles.slice(0, limitCount)
+
+    if (limit.type === LimitType.Last) {
+      nodes.reverse()
     }
 
-    console.log(JSON.stringify(filter, undefined, 2))
+    const hasNextPage =
+      limit.type === LimitType.First
+        ? articles.length > limitCount
+        : cursor.type === InputCursorType.Before
+        ? true
+        : false
 
-    const totalCount = await this.articles.estimatedDocumentCount()
-    const articles = await this.articles
-      .find(filter)
-      .sort({modifiedAt: sortDirection, _id: sortDirection})
-      .limit(limit + 1)
-      .toArray()
+    const hasPreviousPage =
+      limit.type === LimitType.Last
+        ? articles.length > limitCount
+        : cursor.type === InputCursorType.After
+        ? true
+        : false
 
-    const nodes = articles.slice(0, limit)
-
-    const hasNextPage = sortDirection == -1 ? articles.length > limit : before ? true : false
-    const hasPreviousPage = sortDirection == 1 ? articles.length > limit : after ? true : false
-
-    const firstArticle = sortDirection == -1 ? nodes[nodes.length - 1] : nodes[0]
-    const lastArticle = sortDirection == -1 ? nodes[0] : nodes[nodes.length - 1]
+    const firstArticle = nodes[0]
+    const lastArticle = nodes[nodes.length - 1]
 
     const startCursor = firstArticle
-      ? base64Encode(`${firstArticle.modifiedAt.getTime()},${firstArticle._id}`)
+      ? new Cursor(firstArticle._id, articleDateForSort(firstArticle, sort)).toString()
       : null
 
     const endCursor = lastArticle
-      ? base64Encode(`${lastArticle.modifiedAt.getTime()},${lastArticle._id}`)
+      ? new Cursor(lastArticle._id, articleDateForSort(lastArticle, sort)).toString()
       : null
 
     return {
-      nodes: nodes
-        .sort((a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime())
-        .map<Article>(({_id: id, ...article}) => ({id, ...article})),
+      nodes: nodes.map<Article>(({_id: id, ...article}) => ({id, ...article})),
 
       pageInfo: {
         startCursor,
@@ -472,4 +508,30 @@ function base64Encode(str: string): string {
 
 function base64Decode(str: string): string {
   return Buffer.from(str, 'base64').toString()
+}
+
+function sortFieldForSort(sort: ArticleSort) {
+  switch (sort) {
+    case ArticleSort.CreatedAt:
+      return 'createdAt'
+
+    case ArticleSort.ModifiedAt:
+      return 'modifiedAt'
+
+    case ArticleSort.PublishedAt:
+      return 'published.publishedAt'
+  }
+}
+
+function articleDateForSort(article: DBArticle, sort: ArticleSort): Date | undefined {
+  switch (sort) {
+    case ArticleSort.CreatedAt:
+      return article.createdAt
+
+    case ArticleSort.ModifiedAt:
+      return article.modifiedAt
+
+    case ArticleSort.PublishedAt:
+      return article.published?.publishedAt
+  }
 }

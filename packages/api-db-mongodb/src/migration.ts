@@ -13,13 +13,15 @@ export const Migrations: Migration[] = [
   {
     version: 0,
     async migrate(db) {
-      const migrations = await db.createCollection(v0.CollectionName.Migrations, {strict: true})
+      const migrations = await db.createCollection<v0.DBMigration>(v0.CollectionName.Migrations, {
+        strict: true
+      })
 
       await migrations.createIndex({name: 1}, {unique: true})
 
-      const users = await db.createCollection<v0.MongoDBUser>(v0.CollectionName.Users, {
+      const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
         validator: {
-          $jsonSchema: v0.MongoDBUserSchema
+          $jsonSchema: v0.DBUserSchema
         },
         strict: true
       })
@@ -27,7 +29,7 @@ export const Migrations: Migration[] = [
       await users.createIndex({email: 1}, {unique: true})
 
       // TODO: Create schema for all collections
-      const sessions = await db.createCollection<v0.MongoDBSession>(v0.CollectionName.Sessions, {
+      const sessions = await db.createCollection<v0.DBSession>(v0.CollectionName.Sessions, {
         strict: true
       })
 
@@ -39,14 +41,14 @@ export const Migrations: Migration[] = [
 
       await images.createIndex({title: 1})
 
-      const articles = await db.createCollection<v0.MongoDBArticle>(v0.CollectionName.Articles, {
+      const articles = await db.createCollection<v0.DBArticle>(v0.CollectionName.Articles, {
         strict: true
       })
 
       // TODO: Create required indicies
       await articles.createIndex({'draft.createdAt': 1})
 
-      const articlesHistory = await db.createCollection<v0.MongoDBArticleHistoryRevision>(
+      const articlesHistory = await db.createCollection<v0.DBArticleHistoryRevision>(
         v0.CollectionName.ArticlesHistory,
         {strict: true}
       )

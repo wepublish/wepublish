@@ -51,7 +51,7 @@ import {GraphQLImage} from './image'
 import {BlockType} from '../adapter/blocks'
 import {VersionState} from '../adapter/versionState'
 import {GraphQLAuthor} from './author'
-import {PublishedArticle, ArticleRevision, Article} from '../db/article'
+import {PublishedArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './pageInfo'
 
@@ -93,6 +93,25 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
   ]
 })
 
+export const GraphQLArticleFilter = new GraphQLInputObjectType({
+  name: 'ArticleFilter',
+  fields: {
+    search: {type: GraphQLString},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLArticleSort = new GraphQLEnumType({
+  name: 'ArticleSort',
+  values: {
+    CREATED_AT: {value: ArticleSort.CreatedAt},
+    MODIFIED_AT: {value: ArticleSort.ModifiedAt},
+    PUBLISHED_AT: {value: ArticleSort.PublishedAt}
+  }
+})
+
+// TODO: Remove this
 export const GraphQLVersionState = new GraphQLEnumType({
   name: 'VersionState',
   description: 'Current state of the article/page version.',

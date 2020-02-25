@@ -9,3 +9,7 @@ export function generateID() {
 export function generateToken() {
   return nanoid(IDAlphabet, 32)
 }
+
+export enum MongoErrorCode {
+  DuplicateKey = 11000
+}

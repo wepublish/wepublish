@@ -13,19 +13,19 @@ export enum CollectionName {
   PagesHistory = 'pages.history'
 }
 
-export interface MongoDBMigration {
+export interface DBMigration {
   readonly _id: any
   readonly version: number
   readonly createdAt: Date
 }
 
-export interface MongoDBUser {
+export interface DBUser {
   readonly _id: any
   readonly email: string
   readonly password: string
 }
 
-export const MongoDBUserSchema = {
+export const DBUserSchema = {
   bsonType: 'object',
   additionalProperties: false,
   required: ['_id', 'email', 'password'],
@@ -36,7 +36,7 @@ export const MongoDBUserSchema = {
   }
 }
 
-export interface MongoDBSession {
+export interface DBSession {
   readonly _id: any
   readonly userID: string
   readonly token: string
@@ -44,19 +44,19 @@ export interface MongoDBSession {
   readonly expiresAt: Date
 }
 
-export interface MongoDBArticle {
+export interface DBArticle {
   readonly _id: any
 
   readonly shared: boolean
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly draft: MongoDBArticleRevision
-  readonly published?: MongoDBArticleRevision
-  readonly pending?: MongoDBArticleRevision
+  readonly draft: DBArticleRevision
+  readonly published?: DBArticleRevision
+  readonly pending?: DBArticleRevision
 }
 
-export interface MongoDBArticleRevision {
+export interface DBArticleRevision {
   readonly revision: number
   readonly createdAt: Date
 
@@ -76,7 +76,7 @@ export interface MongoDBArticleRevision {
   readonly blocks: ArticleBlock[]
 }
 
-export interface MongoDBArticleHistoryRevision extends MongoDBArticleRevision {
+export interface DBArticleHistoryRevision extends DBArticleRevision {
   readonly _id: any
   readonly articleID: string
 }

@@ -1,8 +1,12 @@
 import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
-import {GraphQLArticleConnection} from './article'
+import {GraphQLArticleConnection, GraphQLArticleSort, GraphQLArticleFilter} from './article'
 import {UserInputError} from 'apollo-server'
+import {InputCursor, Limit} from '../db/pagination'
+import {ArticleSort} from '../db/article'
+import {GraphQLSortOrder} from './common'
+import {SortOrder} from '../db/common'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -37,20 +41,21 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         after: {type: GraphQLString},
         before: {type: GraphQLString},
         first: {type: GraphQLInt},
-        last: {type: GraphQLInt}
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLArticleFilter},
+        sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {after, before, first, last}, {authenticate, dbAdapter}) {
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
         authenticate()
 
-        if ((first == null && last == null) || (first != null && last != null)) {
-          throw new UserInputError('You must provide either `first` or `last`.')
-        }
-
-        if (after != null && before != null) {
-          throw new UserInputError('You must provide either `first` or `last`.')
-        }
-
-        return dbAdapter.getArticles({after, before, first, last})
+        return dbAdapter.getArticles({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
       }
     },
 
@@ -67,7 +72,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           throw new UserInputError('You must provide either `first` or `last`.')
         }
 
-        return dbAdapter.getPublishedArticles({after, before, first, last})
+        return {}
+        // return dbAdapter.getPublishedArticles({after, before, first, last})
       }
     }
   }

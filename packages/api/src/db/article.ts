@@ -1,5 +1,7 @@
 import {ArticleBlock} from './block'
 import {PageInfo} from '../adapter/pageInfo'
+import {Limit, InputCursor} from './pagination'
+import {SortOrder} from './common'
 
 export interface ArticleData {
   // NOTE: Can be set by user, that's why it not called modifiedAt.
@@ -56,16 +58,24 @@ export interface PublishedArticle extends ArticleData {
   readonly blocks: ArticleBlock[]
 }
 
-export interface ArticleFilter {}
-export interface ArticleSort {}
+export interface ArticleFilter {
+  readonly search?: string
+  readonly authors?: string[]
+  readonly tags?: string[]
+}
+
+export enum ArticleSort {
+  CreatedAt = 'modifiedAt',
+  ModifiedAt = 'modifiedAt',
+  PublishedAt = 'publishedAt'
+}
 
 export interface GetArticlesArgs {
-  readonly after?: string
-  readonly before?: string
-  readonly first?: number
-  readonly last?: number
+  readonly cursor: InputCursor
+  readonly limit: Limit
   readonly filter?: ArticleFilter
-  readonly sort?: ArticleSort
+  readonly sort: ArticleSort
+  readonly order: SortOrder
 }
 
 export interface ArticleInput extends ArticleData {

@@ -31,6 +31,8 @@ export * from './db/adapter'
 export * from './db/article'
 export * from './db/author'
 export * from './db/block'
+export * from './db/common'
+export * from './db/pagination'
 
 export * from './media/adapter'
 
