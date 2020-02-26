@@ -138,6 +138,8 @@ export interface DBArticleAdapter {
   createArticle(args: CreateArticleArgs): Promise<Article>
   updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
   publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
+  unpublishArticle(id: string): Promise<OptionalArticle>
+  deleteArticle(id: string): Promise<boolean | null>
 
   getArticlesByID(args: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(args: readonly string[]): Promise<OptionalPublishedArticle[]>
