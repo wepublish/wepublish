@@ -11,6 +11,7 @@ import SharpImageBackend from '@karma.run/media-image-sharp'
 
 import express from 'express'
 import cors from 'cors'
+import auth from './auth'
 
 import {ApolloServer, CorsOptions} from 'apollo-server-express'
 import {URL} from 'url'
@@ -40,7 +41,10 @@ async function asyncMain() {
         password: karmaPassword!
       })
     : new MemoryStorageAdapter({
-        users: [{id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'}]
+        users: [
+          {id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'},
+          {id: generateIDSync(), email: 'nico.roos@tsri.ch', password: ''}
+        ]
       })
 
   if (storageAdapter instanceof KarmaStorageAdapter) {
@@ -86,6 +90,7 @@ async function asyncMain() {
     methods: ['POST', 'GET', 'OPTIONS']
   }
   app.use(cors(corsOptions))
+  app.use('/auth', auth(storageAdapter))
 
   server.applyMiddleware({app})
 
