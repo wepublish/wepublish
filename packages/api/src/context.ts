@@ -11,9 +11,12 @@ import {SessionWithToken, OptionalSessionWithToken} from './db/session'
 import {MediaAdapter} from './media/adapter'
 import {AuthenticationError} from 'apollo-server'
 import {OptionalImage} from './db/image'
+import {OptionalArticle, OptionalPublishedArticle} from './db/article'
 
 export interface DataLoaderContext {
-  readonly image: DataLoader<string, OptionalImage>
+  readonly articles: DataLoader<string, OptionalArticle>
+  readonly publishedArticles: DataLoader<string, OptionalPublishedArticle>
+  readonly images: DataLoader<string, OptionalImage>
   readonly authors: DataLoader<string, any>
 }
 
@@ -48,6 +51,8 @@ export async function contextFromRequest(
   return {
     session: isSessionValid ? session : null,
     loaders: {
+      articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
+      publishedArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
       image: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
       authors: new DataLoader(ids => dbAdapter.getAuthorsByID(ids))
     },

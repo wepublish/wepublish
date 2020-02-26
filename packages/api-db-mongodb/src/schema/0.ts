@@ -25,16 +25,24 @@ export interface DBUser {
   readonly password: string
 }
 
-export const DBUserSchema = {
-  bsonType: 'object',
-  additionalProperties: false,
-  required: ['_id', 'email', 'password'],
-  properties: {
-    _id: {bsonType: 'string'},
-    email: {bsonType: 'string'},
-    password: {bsonType: 'string'}
-  }
-}
+// TODO: Consider using DB schema via $jsonSchema
+// export const DBUserSchema = {
+//   bsonType: 'object',
+//   additionalProperties: false,
+//   required: ['_id', 'email', 'password'],
+//   properties: {
+//     _id: {bsonType: 'string'},
+//     email: {bsonType: 'string'},
+//     password: {bsonType: 'string'}
+//   }
+// }
+//
+// const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
+//   validator: {
+//     $jsonSchema: v0.DBUserSchema
+//   },
+//   strict: true
+// })
 
 export interface DBSession {
   readonly _id: any
@@ -62,6 +70,7 @@ export interface DBArticleRevision {
 
   readonly updatedAt: Date
   readonly publishedAt: Date
+  readonly publishAt?: Date
 
   readonly preTitle?: string
   readonly title: string

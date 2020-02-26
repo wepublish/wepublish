@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-import {MongoClient, Db, Collection, MongoError, FilterQuery} from 'mongodb'
+import {MongoClient, Db, Collection, MongoError, FilterQuery, MongoCountPreferences} from 'mongodb'
 
 import {
   DBAdapter,
@@ -20,17 +20,20 @@ import {
   UpdateArticleVersionArgs,
   PublishArticleArgs,
   GetArticlesArgs,
+  GetPublishedArticlesArgs,
   ArticlesResult,
   PublishedArticleResult,
   ArticleHistory,
   ArticleSort,
   SortOrder,
   LimitType,
-  InputCursorType
+  InputCursorType,
+  GetArticlesByIDArgs,
+  PublishedArticle
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
-import {generateID, generateToken, MongoErrorCode} from './utility'
+import {generateID, generateToken, base64Encode, base64Decode, MongoErrorCode} from './utility'
 
 import {OptionalAuthor} from '@wepublish/api/lib/db/author'
 import {DBUser, DBSession, DBArticle, CollectionName, DBMigration} from './schema'
@@ -43,11 +46,13 @@ export interface MongoDBAdabterSharedArgs {
 export interface MongoDBAdapterConnectArgs extends MongoDBAdabterSharedArgs {
   readonly url: string
   readonly database: string
+  readonly locale: string
 }
 
 export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterSharedArgs {
   readonly url: string
   readonly database: string
+  readonly locale: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
 }
 
@@ -93,6 +98,7 @@ export class Cursor {
 }
 
 interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
+  readonly locale: string
   readonly client: MongoClient
   readonly db: Db
   readonly users: Collection<DBUser>
@@ -108,6 +114,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly sessionTTL: number
   readonly bcryptHashCostFactor: number
 
+  readonly locale: string
   readonly client: MongoClient
   readonly db: Db
 
@@ -118,6 +125,7 @@ export class MongoDBAdapter implements DBAdapter {
   private constructor({
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
+    locale,
     client,
     db,
     users,
@@ -127,6 +135,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.sessionTTL = sessionTTL
     this.bcryptHashCostFactor = bcryptHashCostFactor
 
+    this.locale = locale
     this.client = client
     this.db = db
     this.users = users
@@ -146,7 +155,8 @@ export class MongoDBAdapter implements DBAdapter {
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
-    database
+    database,
+    locale
   }: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
     const db = client.db(database)
@@ -164,6 +174,7 @@ export class MongoDBAdapter implements DBAdapter {
       bcryptHashCostFactor,
       client,
       db,
+      locale,
       users: db.collection(CollectionName.Users),
       sessions: db.collection(CollectionName.Sessions),
       articles: db.collection(CollectionName.Articles)
@@ -183,6 +194,7 @@ export class MongoDBAdapter implements DBAdapter {
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
     database,
+    locale,
     seed
   }: MongoDBAdapterInitializeArgs): Promise<InitializationResult> {
     const client = await this.createMongoClient(url)
@@ -198,7 +210,7 @@ export class MongoDBAdapter implements DBAdapter {
     const remainingMigrations = Migrations.slice(index + 1)
 
     for (const migration of remainingMigrations) {
-      await migration.migrate(db)
+      await migration.migrate(db, locale)
 
       db.collection<DBMigration>(CollectionName.Migrations).insertOne({
         version: migration.version,
@@ -207,7 +219,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, database})
+      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, database, locale})
       await seed?.(adapter)
     }
 
@@ -361,6 +373,13 @@ export class MongoDBAdapter implements DBAdapter {
         revision: 0,
         createdAt: new Date(),
         ...data
+      },
+
+      published: {
+        revision: 1,
+        createdAt: new Date(),
+        publishedAt: new Date(),
+        ...data
       }
     })
 
@@ -381,19 +400,34 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  async getPublishedArticles({
-    cursor,
-    limit,
-    sort
-  }: GetArticlesArgs): Promise<PublishedArticleResult> {
-    // first = first ? Math.min(first, 100) : undefined
-    // last = last ? Math.min(last, 100) : undefined
+  async getPublishedArticlesByID(args: GetArticlesByIDArgs): Promise<PublishedArticle[]> {
+    await this.updatePendingArticles()
 
-    return {} as any
+    throw new Error('Method not implemented.')
   }
 
-  async getPublishedArticle(args: GetArticlesArgs): Promise<Article[]> {
-    throw new Error('Method not implemented.')
+  async getPublishedArticles({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetPublishedArticlesArgs): Promise<PublishedArticleResult> {
+    await this.updatePendingArticles()
+
+    const {nodes, pageInfo, totalCount} = await this.getArticles({
+      filter: {...filter, published: true},
+      sort,
+      order,
+      cursor,
+      limit
+    })
+
+    return {
+      nodes: nodes.map(article => ({id: article.id, ...article.published!})),
+      pageInfo,
+      totalCount
+    }
   }
 
   async getArticles({
@@ -403,6 +437,8 @@ export class MongoDBAdapter implements DBAdapter {
     cursor,
     limit
   }: GetArticlesArgs): Promise<ArticlesResult> {
+    await this.updatePendingArticles()
+
     const limitCount = Math.min(limit.count, MongoDBAdapter.MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
 
@@ -430,13 +466,17 @@ export class MongoDBAdapter implements DBAdapter {
     let documentFilter: FilterQuery<any> = {}
 
     // TODO: Search
+    if (filter?.published) documentFilter['published'] = {$ne: null}
     if (filter?.tags) documentFilter['draft.tags'] = {$in: filter.tags}
     if (filter?.authors) documentFilter['draft.authors'] = {$in: filter.authors}
 
     const [totalCount, articles] = await Promise.all([
-      this.articles.countDocuments(documentFilter, {}),
+      this.articles.countDocuments(documentFilter, {
+        collation: {locale: this.locale, strength: 2}
+      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
+
       this.articles
-        .aggregate()
+        .aggregate([], {collation: {locale: this.locale, strength: 2}})
         .match(documentFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
@@ -489,25 +529,17 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  async getArticlesByID(args: GetArticlesArgs): Promise<Article[]> {
-    throw new Error('Method not implemented.')
-  }
-
   async getArticleHistory(): Promise<ArticleHistory> {
+    await this.updatePendingArticles()
     throw new Error('Method not implemented.')
   }
 
-  getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
+  async getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
     throw new Error('Method not implemented.')
   }
-}
-
-function base64Encode(str: string): string {
-  return Buffer.from(str).toString('base64')
-}
-
-function base64Decode(str: string): string {
-  return Buffer.from(str, 'base64').toString()
+  async updatePendingArticles(): Promise<void> {
+    // TODO
+  }
 }
 
 function sortFieldForSort(sort: ArticleSort) {
@@ -520,6 +552,12 @@ function sortFieldForSort(sort: ArticleSort) {
 
     case ArticleSort.PublishedAt:
       return 'published.publishedAt'
+
+    case ArticleSort.UpdatedAt:
+      return 'published.publishedAt'
+
+    case ArticleSort.PublishAt:
+      return 'pending.publishAt'
   }
 }
 
@@ -533,5 +571,11 @@ function articleDateForSort(article: DBArticle, sort: ArticleSort): Date | undef
 
     case ArticleSort.PublishedAt:
       return article.published?.publishedAt
+
+    case ArticleSort.UpdatedAt:
+      return article.published?.updatedAt
+
+    case ArticleSort.PublishAt:
+      return article.pending?.publishAt
   }
 }

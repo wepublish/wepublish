@@ -1,8 +1,15 @@
 import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
-import {GraphQLArticleConnection, GraphQLArticleSort, GraphQLArticleFilter} from './article'
-import {UserInputError} from 'apollo-server'
+import {
+  GraphQLArticleConnection,
+  GraphQLArticleSort,
+  GraphQLArticleFilter,
+  GraphQLPublishedArticleConnection,
+  GraphQLPublishedArticleSort,
+  GraphQLArticle,
+  GraphQLPublishedArticle
+} from './article'
 import {InputCursor, Limit} from '../db/pagination'
 import {ArticleSort} from '../db/article'
 import {GraphQLSortOrder} from './common'
@@ -35,6 +42,26 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Article
     // =======
 
+    article: {
+      type: GraphQLArticle,
+      args: {
+        id: {type: GraphQLString}
+      },
+      resolve(root, {}, {authenticate, dbAdapter}) {
+        authenticate()
+      }
+    },
+
+    publishedArticle: {
+      type: GraphQLPublishedArticle,
+      args: {
+        id: {type: GraphQLString}
+      },
+      resolve(root, {}, {authenticate, dbAdapter}) {
+        authenticate()
+      }
+    },
+
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       args: {
@@ -60,20 +87,24 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     publishedArticles: {
-      type: GraphQLNonNull(GraphQLArticleConnection),
+      type: GraphQLNonNull(GraphQLPublishedArticleConnection),
       args: {
         after: {type: GraphQLString},
         before: {type: GraphQLString},
         first: {type: GraphQLInt},
-        last: {type: GraphQLInt}
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLArticleFilter},
+        sort: {type: GraphQLPublishedArticleSort, defaultValue: ArticleSort.PublishedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {after, before, first, last}, {dbAdapter}) {
-        if ((first == null && last == null) || (first != null && last != null)) {
-          throw new UserInputError('You must provide either `first` or `last`.')
-        }
-
-        return {}
-        // return dbAdapter.getPublishedArticles({after, before, first, last})
+      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
+        return dbAdapter.getPublishedArticles({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
       }
     }
   }

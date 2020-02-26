@@ -26,12 +26,17 @@ async function asyncMain() {
   await MongoDBAdapter.initialize({
     url: process.env.MONGO_URL!,
     database: 'test',
+    locale: 'en',
     seed: async adapter => {
       adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
     }
   })
 
-  const dbAdapter = await MongoDBAdapter.connect({url: process.env.MONGO_URL!, database: 'test'})
+  const dbAdapter = await MongoDBAdapter.connect({
+    url: process.env.MONGO_URL!,
+    database: 'test',
+    locale: 'en'
+  })
 
   const server = new WepublishServer({
     mediaAdapter,

@@ -39,7 +39,7 @@ export interface Article {
 
 export interface ArticleHistory {
   readonly id: string
-  readonly history: ArticleRevision[]
+  readonly revisions: ArticleRevision[]
 }
 
 export interface ArticleRevision extends ArticleData {
@@ -59,7 +59,15 @@ export interface PublishedArticle extends ArticleData {
 }
 
 export interface ArticleFilter {
-  readonly search?: string
+  readonly title?: string
+  readonly published?: boolean
+  readonly pending?: boolean
+  readonly authors?: string[]
+  readonly tags?: string[]
+}
+
+export interface PublishedArticleFilter {
+  readonly title?: string
   readonly authors?: string[]
   readonly tags?: string[]
 }
@@ -67,7 +75,9 @@ export interface ArticleFilter {
 export enum ArticleSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt',
-  PublishedAt = 'publishedAt'
+  PublishedAt = 'publishedAt',
+  UpdatedAt = 'updatedAt',
+  PublishAt = 'publishAt'
 }
 
 export interface GetArticlesArgs {
@@ -78,6 +88,18 @@ export interface GetArticlesArgs {
   readonly order: SortOrder
 }
 
+export interface GetPublishedArticlesArgs {
+  readonly cursor: InputCursor
+  readonly limit: Limit
+  readonly filter?: PublishedArticleFilter
+  readonly sort: ArticleSort
+  readonly order: SortOrder
+}
+
+export interface GetArticleHistoryArgs {
+  readonly id: string
+}
+
 export interface ArticleInput extends ArticleData {
   readonly shared: boolean
 }
@@ -86,12 +108,9 @@ export interface CreateArticleArgs {
   readonly input: ArticleInput
 }
 
-export interface CreateArticleVersionArgs extends ArticleData {}
-
-export interface UpdateArticleVersionArgs extends ArticleData {
+export interface UpdateArticleArgs {
   readonly id: string
-  readonly version: string
-  readonly blocks: ArticleBlock[]
+  readonly input: ArticleInput
 }
 
 export interface PublishArticleArgs extends ArticleData {
@@ -113,15 +132,20 @@ export interface PublishedArticleResult {
   readonly totalCount: number
 }
 
+export type OptionalArticle = Article | null
+export type OptionalPublishedArticle = PublishedArticle | null
+export type OptionalArticleHistory = ArticleHistory | null
+
 export interface DBArticleAdapter {
   createArticle(args: CreateArticleArgs): Promise<Article>
+  updateArticle(args: UpdateArticleArgs): Promise<Article>
+  publishArticle(args: PublishArticleArgs): Promise<Article>
 
-  createArticleVersion(args: CreateArticleVersionArgs): Promise<Article>
-  updateArticleVersion(args: UpdateArticleVersionArgs): Promise<Article>
-  publishArticleVersion(args: PublishArticleArgs): Promise<Article>
+  getArticlesByID(args: readonly string[]): Promise<OptionalArticle[]>
+  getPublishedArticlesByID(args: readonly string[]): Promise<OptionalPublishedArticle[]>
 
-  getPublishedArticles(args: GetArticlesArgs): Promise<PublishedArticleResult>
   getArticles(args: GetArticlesArgs): Promise<ArticlesResult>
-  getArticlesByID(args: GetArticlesArgs): Promise<Article[]>
-  getArticleHistory(args: GetArticlesArgs): Promise<ArticleHistory>
+  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<PublishedArticleResult>
+
+  getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>
 }

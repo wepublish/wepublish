@@ -4,7 +4,7 @@ import * as v0 from './schema/0'
 
 export interface Migration {
   readonly version: number
-  migrate(adapter: Db): Promise<void>
+  migrate(adapter: Db, locale: string): Promise<void>
 }
 
 const SessionDocumentTTL = 60 * 60 * 24 // 24h
@@ -12,7 +12,7 @@ const SessionDocumentTTL = 60 * 60 * 24 // 24h
 export const Migrations: Migration[] = [
   {
     version: 0,
-    async migrate(db) {
+    async migrate(db, locale) {
       const migrations = await db.createCollection<v0.DBMigration>(v0.CollectionName.Migrations, {
         strict: true
       })
@@ -20,15 +20,11 @@ export const Migrations: Migration[] = [
       await migrations.createIndex({name: 1}, {unique: true})
 
       const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
-        validator: {
-          $jsonSchema: v0.DBUserSchema
-        },
         strict: true
       })
 
       await users.createIndex({email: 1}, {unique: true})
 
-      // TODO: Create schema for all collections
       const sessions = await db.createCollection<v0.DBSession>(v0.CollectionName.Sessions, {
         strict: true
       })
@@ -46,7 +42,15 @@ export const Migrations: Migration[] = [
       })
 
       // TODO: Create required indicies
-      await articles.createIndex({'draft.createdAt': 1})
+      await articles.createIndex({createdAt: -1})
+      await articles.createIndex({modifiedAt: -1})
+
+      await articles.createIndex({'published.publishedAt': -1})
+      await articles.createIndex({'published.updatedAt': -1})
+      await articles.createIndex({'pending.publishAt': -1})
+      await articles.createIndex({'pending.publishAt': -1})
+
+      await articles.createIndex({'draft.tags': 1}, {collation: {locale, strength: 2}})
 
       const articlesHistory = await db.createCollection<v0.DBArticleHistoryRevision>(
         v0.CollectionName.ArticlesHistory,

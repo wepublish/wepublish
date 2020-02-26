@@ -107,7 +107,17 @@ export const GraphQLArticleSort = new GraphQLEnumType({
   values: {
     CREATED_AT: {value: ArticleSort.CreatedAt},
     MODIFIED_AT: {value: ArticleSort.ModifiedAt},
-    PUBLISHED_AT: {value: ArticleSort.PublishedAt}
+    PUBLISH_AT: {value: ArticleSort.PublishAt},
+    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
+    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+  }
+})
+
+export const GraphQLPublishedArticleSort = new GraphQLEnumType({
+  name: 'PublishedArticleSort',
+  values: {
+    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
+    UPDATED_AT: {value: ArticleSort.UpdatedAt}
   }
 })
 
@@ -242,10 +252,10 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
 
 export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, Context>({
   name: 'PublishedArticle',
+  interfaces: [GraphQLArticleData],
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    // TODO: Consider moving these into a GraphQLInterfaceType.
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
@@ -273,5 +283,14 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
     shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
+  }
+})
+
+export const GraphQLPublishedArticleConnection = new GraphQLObjectType({
+  name: 'PublishedArticleConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublishedArticle)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
