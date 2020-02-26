@@ -122,6 +122,9 @@ export class MongoDBAdapter implements DBAdapter {
   readonly sessions: Collection<DBSession>
   readonly articles: Collection<DBArticle>
 
+  // Init
+  // ====
+
   private constructor({
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
@@ -231,6 +234,9 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
+  // User
+  // ====
+
   async createUser({email, password}: CreateUserArgs): Promise<User> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
@@ -266,22 +272,6 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     return null
-  }
-
-  createImage(image: CreateImageArgs): Promise<OptionalImage> {
-    throw new Error('Method not implemented.')
-  }
-
-  updateImage(image: UpdateImageArgs): Promise<OptionalImage> {
-    throw new Error('Method not implemented.')
-  }
-
-  deleteImage(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.')
-  }
-
-  getImagesByID(ids: readonly string[]): Promise<OptionalImage[]> {
-    throw new Error('Method not implemented.')
   }
 
   // Session
@@ -357,6 +347,32 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
+  // Image
+  // =====
+
+  createImage(image: CreateImageArgs): Promise<OptionalImage> {
+    throw new Error('Method not implemented.')
+  }
+
+  updateImage(image: UpdateImageArgs): Promise<OptionalImage> {
+    throw new Error('Method not implemented.')
+  }
+
+  deleteImage(id: string): Promise<boolean> {
+    throw new Error('Method not implemented.')
+  }
+
+  getImagesByID(ids: readonly string[]): Promise<OptionalImage[]> {
+    throw new Error('Method not implemented.')
+  }
+
+  // Author
+  // ======
+
+  async getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
+    throw new Error('Method not implemented.')
+  }
+
   // Article
   // =======
 
@@ -410,7 +426,7 @@ export class MongoDBAdapter implements DBAdapter {
             },
 
             'draft.createdAt': {
-              $cond: [{$ne: ['$draft', null]}, '$draft.createdAt', new Date()]
+              $ifNull: ['$draft.createdAt', new Date()]
             },
 
             'draft.title': data.title,
@@ -450,6 +466,7 @@ export class MongoDBAdapter implements DBAdapter {
         [
           {
             $set: {
+              modifiedAt: new Date(),
               pending: {
                 $cond: [
                   {$ne: ['$draft', null]},
@@ -534,41 +551,6 @@ export class MongoDBAdapter implements DBAdapter {
     )
 
     return ids.map(id => articleMap[id] ?? null)
-  }
-
-  async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]> {
-    await this.updatePendingArticles()
-
-    const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
-    const articleMap = Object.fromEntries(
-      articles.map(({_id: id, published: article}) => [id, {id, ...article!}])
-    )
-
-    return ids.map(id => (articleMap[id] as PublishedArticle) ?? null)
-  }
-
-  async getPublishedArticles({
-    filter,
-    sort,
-    order,
-    cursor,
-    limit
-  }: GetPublishedArticlesArgs): Promise<PublishedArticleResult> {
-    await this.updatePendingArticles()
-
-    const {nodes, pageInfo, totalCount} = await this.getArticles({
-      filter: {...filter, published: true},
-      sort,
-      order,
-      cursor,
-      limit
-    })
-
-    return {
-      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublishedArticle)),
-      pageInfo,
-      totalCount
-    }
   }
 
   async getArticles({
@@ -687,12 +669,53 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  async getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
-    throw new Error('Method not implemented.')
+  // TODO: Throttle or cron this function
+  async updatePendingArticles(): Promise<void> {
+    await this.articles.updateMany({'pending.publishAt': {$lte: new Date()}}, [
+      {
+        $set: {
+          modifiedAt: new Date(),
+          published: '$pending',
+          pending: null
+        }
+      }
+    ] as any)
   }
 
-  async updatePendingArticles(): Promise<void> {
-    // TODO
+  // Published Article
+  // =================
+
+  async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]> {
+    await this.updatePendingArticles()
+
+    const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
+    const articleMap = Object.fromEntries(
+      articles.map(({_id: id, published: article}) => [id, {id, ...article!}])
+    )
+
+    return ids.map(id => (articleMap[id] as PublishedArticle) ?? null)
+  }
+
+  async getPublishedArticles({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetPublishedArticlesArgs): Promise<PublishedArticleResult> {
+    const {nodes, pageInfo, totalCount} = await this.getArticles({
+      filter: {...filter, published: true},
+      sort,
+      order,
+      cursor,
+      limit
+    })
+
+    return {
+      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublishedArticle)),
+      pageInfo,
+      totalCount
+    }
   }
 }
 
