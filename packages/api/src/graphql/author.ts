@@ -23,7 +23,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     }
   }

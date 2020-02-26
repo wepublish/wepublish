@@ -8,7 +8,8 @@ import {
   GraphQLPublishedArticleConnection,
   GraphQLPublishedArticleSort,
   GraphQLArticle,
-  GraphQLPublishedArticle
+  GraphQLPublishedArticle,
+  GraphQLPublishedArticleFilter
 } from './article'
 import {InputCursor, Limit} from '../db/pagination'
 import {ArticleSort} from '../db/article'
@@ -47,8 +48,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLString}
       },
-      resolve(root, {}, {authenticate, dbAdapter}) {
+      resolve(root, {id}, {authenticate, loaders}) {
         authenticate()
+        return loaders.articles.load(id)
       }
     },
 
@@ -57,8 +59,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLString}
       },
-      resolve(root, {}, {authenticate, dbAdapter}) {
+      resolve(root, {id}, {authenticate, loaders}) {
         authenticate()
+        return loaders.publishedArticles.load(id)
       }
     },
 
@@ -93,7 +96,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLString},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
-        filter: {type: GraphQLArticleFilter},
+        filter: {type: GraphQLPublishedArticleFilter},
         sort: {type: GraphQLPublishedArticleSort, defaultValue: ArticleSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },

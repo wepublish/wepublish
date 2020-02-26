@@ -78,7 +78,7 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 

@@ -14,8 +14,6 @@ import {
 
 import {GraphQLDateTime} from 'graphql-iso-date'
 
-import {GraphQLDateRange} from './dateRange'
-
 import {Context} from '../context'
 
 import {
@@ -96,7 +94,19 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
-    search: {type: GraphQLString},
+    title: {type: GraphQLString},
+    draft: {type: GraphQLBoolean},
+    published: {type: GraphQLBoolean},
+    pending: {type: GraphQLBoolean},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLPublishedArticleFilter = new GraphQLInputObjectType({
+  name: 'PublishedArticleFilter',
+  fields: {
+    title: {type: GraphQLString},
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
@@ -136,9 +146,6 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
   fields: {
     slug: {type: GraphQLNonNull(GraphQLSlug)},
 
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
@@ -156,22 +163,9 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLArticlePageInfo = new GraphQLObjectType({
-  name: 'ArticlePageInfo',
-  fields: {
-    publishedBetween: {type: GraphQLDateRange},
-    updatedBetween: {type: GraphQLDateRange},
-    createdBetween: {type: GraphQLDateRange}
-  }
-})
-
 export const GraphQLArticleData = new GraphQLInterfaceType({
   name: 'ArticleData',
   fields: {
-    // NOTE: See `ArticleData` interface regarding these two.
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
@@ -195,9 +189,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishAt: {type: GraphQLDateTime},
 
-    // NOTE: See `ArticleData` interface regarding these two.
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: GraphQLDateTime},
+    publishedAt: {type: GraphQLDateTime},
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -208,7 +201,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}, info) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 
@@ -233,9 +226,16 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    draft: {type: GraphQLNonNull(GraphQLArticleRevision)},
+    draft: {type: GraphQLArticleRevision},
     published: {type: GraphQLArticleRevision},
     pending: {type: GraphQLArticleRevision},
+
+    latest: {
+      type: GraphQLNonNull(GraphQLArticleRevision),
+      resolve({draft, pending, published}) {
+        return draft ?? pending ?? published
+      }
+    },
 
     history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
@@ -268,7 +268,7 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}, info) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 

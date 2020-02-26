@@ -12,6 +12,7 @@ import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
 import {GraphQLArticleInput, GraphQLArticleBlockUnionMap, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -88,6 +89,42 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
 
         return dbAdapter.createArticle({
           input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
+        })
+      }
+    },
+
+    updateArticle: {
+      type: GraphQLArticle,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLString)},
+        input: {type: GraphQLNonNull(GraphQLArticleInput)}
+      },
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        authenticate()
+
+        return dbAdapter.updateArticle({
+          id,
+          input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
+        })
+      }
+    },
+
+    publishArticle: {
+      type: GraphQLArticle,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLString)},
+        publishAt: {type: GraphQLDateTime},
+        updatedAt: {type: GraphQLDateTime},
+        publishedAt: {type: GraphQLDateTime}
+      },
+      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
+        authenticate()
+
+        return dbAdapter.publishArticle({
+          id,
+          publishAt,
+          updatedAt,
+          publishedAt
         })
       }
     }

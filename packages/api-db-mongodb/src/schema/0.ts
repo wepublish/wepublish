@@ -59,17 +59,17 @@ export interface DBArticle {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly draft: DBArticleRevision
-  readonly published?: DBArticleRevision
-  readonly pending?: DBArticleRevision
+  readonly draft: DBArticleRevision | null
+  readonly published: DBArticleRevision | null
+  readonly pending: DBArticleRevision | null
 }
 
 export interface DBArticleRevision {
   readonly revision: number
   readonly createdAt: Date
 
-  readonly updatedAt: Date
-  readonly publishedAt: Date
+  readonly updatedAt?: Date
+  readonly publishedAt?: Date
   readonly publishAt?: Date
 
   readonly preTitle?: string

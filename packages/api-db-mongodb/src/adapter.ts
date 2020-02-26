@@ -16,8 +16,7 @@ import {
   OptionalSession,
   Article,
   CreateArticleArgs,
-  CreateArticleVersionArgs,
-  UpdateArticleVersionArgs,
+  UpdateArticleArgs,
   PublishArticleArgs,
   GetArticlesArgs,
   GetPublishedArticlesArgs,
@@ -28,7 +27,8 @@ import {
   SortOrder,
   LimitType,
   InputCursorType,
-  GetArticlesByIDArgs,
+  OptionalArticle,
+  OptionalPublishedArticle,
   PublishedArticle
 } from '@wepublish/api'
 
@@ -375,12 +375,8 @@ export class MongoDBAdapter implements DBAdapter {
         ...data
       },
 
-      published: {
-        revision: 1,
-        createdAt: new Date(),
-        publishedAt: new Date(),
-        ...data
-      }
+      pending: null,
+      published: null
     })
 
     const {_id: id, ...article} = ops[0]
@@ -388,22 +384,167 @@ export class MongoDBAdapter implements DBAdapter {
     return {id, ...article}
   }
 
-  createArticleVersion(args: CreateArticleVersionArgs): Promise<Article> {
-    throw new Error('Method not implemented.')
+  async updateArticle({id, input}: UpdateArticleArgs): Promise<OptionalArticle> {
+    const {shared, ...data} = input
+    const {value} = await this.articles.findOneAndUpdate(
+      {_id: id},
+      [
+        {
+          $set: {
+            shared,
+            modifiedAt: new Date(),
+
+            'draft.revision': {
+              $ifNull: [
+                '$draft.revision',
+                {
+                  $cond: [
+                    {$ne: ['$pending', null]},
+                    {$add: ['$pending.revision', 1]},
+                    {
+                      $cond: [{$ne: ['$published', null]}, {$add: ['$published.revision', 1]}, 0]
+                    }
+                  ]
+                }
+              ]
+            },
+
+            'draft.createdAt': {
+              $cond: [{$ne: ['$draft', null]}, '$draft.createdAt', new Date()]
+            },
+
+            'draft.title': data.title,
+            'draft.preTitle': data.preTitle,
+            'draft.lead': data.lead,
+
+            'draft.slug': data.slug,
+            'draft.imageID': data.imageID,
+            'draft.authorIDs': data.authorIDs,
+            'draft.tags': data.tags,
+            'draft.breaking': data.breaking,
+
+            'draft.blocks': data.blocks
+          }
+        }
+      ] as any,
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID, ...article} = value
+    return {id: outID, ...article}
   }
 
-  updateArticleVersion(args: UpdateArticleVersionArgs): Promise<Article> {
-    throw new Error('Method not implemented.')
+  async publishArticle({
+    id,
+    publishAt,
+    publishedAt,
+    updatedAt
+  }: PublishArticleArgs): Promise<OptionalArticle> {
+    publishAt = publishAt ?? new Date()
+
+    if (publishAt > new Date()) {
+      const {value} = await this.articles.findOneAndUpdate(
+        {_id: id},
+        [
+          {
+            $set: {
+              pending: {
+                $cond: [
+                  {$ne: ['$draft', null]},
+                  '$draft',
+                  {
+                    $cond: [
+                      {$ne: ['$pending', null]},
+                      '$pending',
+                      {$cond: [{$ne: ['$published', null]}, '$published', null]}
+                    ]
+                  }
+                ]
+              },
+              draft: null
+            }
+          },
+          {
+            $set: {
+              'pending.publishAt': publishAt,
+              'pending.publishedAt': publishedAt ?? {
+                $cond: [{$ne: ['$published', null]}, '$published.publishedAt', publishAt]
+              },
+
+              'pending.updatedAt': updatedAt ?? publishAt
+            }
+          }
+        ] as any,
+        {returnOriginal: false}
+      )
+
+      if (!value) return null
+
+      const {_id: outID, ...article} = value
+      return {id: outID, ...article}
+    } else {
+      const {value} = await this.articles.findOneAndUpdate(
+        {_id: id},
+        [
+          {
+            $set: {
+              tempPublishedAt: '$published.publishedAt'
+            }
+          },
+          {
+            $set: {
+              published: {
+                $ifNull: ['$draft', {$ifNull: ['$pending', '$published']}]
+              },
+              pending: null,
+              draft: null
+            }
+          },
+          {
+            $set: {
+              'published.publishedAt': publishedAt ?? {
+                $ifNull: ['$tempPublishedAt', publishAt]
+              },
+
+              'published.updatedAt': updatedAt ?? publishAt
+            }
+          },
+          {
+            $unset: ['tempPublishedAt', 'published.publishAt']
+          }
+        ] as any,
+        {returnOriginal: false}
+      )
+
+      if (!value) return null
+
+      const {_id: outID, ...article} = value
+      return {id: outID, ...article}
+    }
   }
 
-  publishArticleVersion(args: PublishArticleArgs): Promise<Article> {
-    throw new Error('Method not implemented.')
-  }
-
-  async getPublishedArticlesByID(args: GetArticlesByIDArgs): Promise<PublishedArticle[]> {
+  async getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]> {
     await this.updatePendingArticles()
 
-    throw new Error('Method not implemented.')
+    const articles = await this.articles.find({_id: {$in: ids}}).toArray()
+    const articleMap = Object.fromEntries(
+      articles.map(({_id: id, ...article}) => [id, {id, ...article}])
+    )
+
+    return ids.map(id => articleMap[id] ?? null)
+  }
+
+  async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]> {
+    await this.updatePendingArticles()
+
+    const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
+    const articleMap = Object.fromEntries(
+      articles.map(({_id: id, published: article}) => [id, {id, ...article!}])
+    )
+
+    return ids.map(id => (articleMap[id] as PublishedArticle) ?? null)
   }
 
   async getPublishedArticles({
@@ -424,7 +565,7 @@ export class MongoDBAdapter implements DBAdapter {
     })
 
     return {
-      nodes: nodes.map(article => ({id: article.id, ...article.published!})),
+      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublishedArticle)),
       pageInfo,
       totalCount
     }
@@ -465,8 +606,20 @@ export class MongoDBAdapter implements DBAdapter {
 
     let documentFilter: FilterQuery<any> = {}
 
-    // TODO: Search
-    if (filter?.published) documentFilter['published'] = {$ne: null}
+    // TODO: Title Filter
+
+    if (filter?.published != undefined) {
+      documentFilter['published'] = {[filter.published ? '$ne' : '$eq']: null}
+    }
+
+    if (filter?.draft != undefined) {
+      documentFilter['draft'] = {[filter.draft ? '$ne' : '$eq']: null}
+    }
+
+    if (filter?.pending != undefined) {
+      documentFilter['pending'] = {[filter.pending ? '$ne' : '$eq']: null}
+    }
+
     if (filter?.tags) documentFilter['draft.tags'] = {$in: filter.tags}
     if (filter?.authors) documentFilter['draft.authors'] = {$in: filter.authors}
 
@@ -537,6 +690,7 @@ export class MongoDBAdapter implements DBAdapter {
   async getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]> {
     throw new Error('Method not implemented.')
   }
+
   async updatePendingArticles(): Promise<void> {
     // TODO
   }

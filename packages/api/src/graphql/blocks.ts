@@ -56,7 +56,7 @@ export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaser
       image: {
         type: GraphQLImage,
         resolve({imageID}, args, {loaders}) {
-          return imageID ? loaders.image.load(imageID) : null
+          return imageID ? loaders.images.load(imageID) : null
         }
       }
     }
@@ -97,7 +97,7 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
     node: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     }
   }
@@ -109,7 +109,7 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 
@@ -214,7 +214,7 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
     richText: {type: GraphQLNonNull(GraphQLRichText)}

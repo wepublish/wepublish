@@ -53,7 +53,7 @@ export async function contextFromRequest(
     loaders: {
       articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
       publishedArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
-      image: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
+      images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
       authors: new DataLoader(ids => dbAdapter.getAuthorsByID(ids))
     },
 

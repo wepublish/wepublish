@@ -4,11 +4,8 @@ import {Limit, InputCursor} from './pagination'
 import {SortOrder} from './common'
 
 export interface ArticleData {
-  // NOTE: Can be set by user, that's why it not called modifiedAt.
-  readonly updatedAt: Date
-
-  // NOTE: Can be set by user, that's why there's a separate publishAt for the actual publication management.
-  readonly publishedAt: Date
+  readonly updatedAt?: Date
+  readonly publishedAt?: Date
 
   readonly preTitle?: string
   readonly title: string
@@ -32,9 +29,9 @@ export interface Article {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly draft?: ArticleRevision
-  readonly published?: ArticleRevision
-  readonly pending?: ArticleRevision
+  readonly draft: ArticleRevision | null
+  readonly published: ArticleRevision | null
+  readonly pending: ArticleRevision | null
 }
 
 export interface ArticleHistory {
@@ -60,6 +57,7 @@ export interface PublishedArticle extends ArticleData {
 
 export interface ArticleFilter {
   readonly title?: string
+  readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean
   readonly authors?: string[]
@@ -113,11 +111,11 @@ export interface UpdateArticleArgs {
   readonly input: ArticleInput
 }
 
-export interface PublishArticleArgs extends ArticleData {
+export interface PublishArticleArgs {
   readonly id: string
-  readonly version: string
-  readonly publishedAt: Date
-  readonly updatedAt: Date
+  readonly publishAt?: Date
+  readonly publishedAt?: Date
+  readonly updatedAt?: Date
 }
 
 export interface ArticlesResult {
@@ -138,8 +136,8 @@ export type OptionalArticleHistory = ArticleHistory | null
 
 export interface DBArticleAdapter {
   createArticle(args: CreateArticleArgs): Promise<Article>
-  updateArticle(args: UpdateArticleArgs): Promise<Article>
-  publishArticle(args: PublishArticleArgs): Promise<Article>
+  updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
+  publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
 
   getArticlesByID(args: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(args: readonly string[]): Promise<OptionalPublishedArticle[]>
