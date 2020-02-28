@@ -61,7 +61,7 @@ async function asyncMain() {
     res.send(markup)
   })
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 3001
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
   const address = process.env.ADDRESS || 'localhost'
 
   app.listen(port, address)

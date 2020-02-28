@@ -1,4 +1,4 @@
-import {Image, ImageTransformation, UploadImage} from '../adapter/image'
+import {Image, ImageTransformation, UploadImage} from '../db/image'
 import {FileUpload} from 'graphql-upload'
 
 export interface MediaAdapter {

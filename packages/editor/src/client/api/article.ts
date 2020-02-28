@@ -26,13 +26,16 @@ export interface ArticleMutationData {
 export const ArticleRefFragment = gql`
   fragment ArticleRefFragment on Article {
     id
+
     createdAt
-    publishedAt
+    modifiedAt
+
+    published {
+      publishedAt
+      updatedAt
+    }
 
     latest {
-      updatedAt
-
-      state
       title
       lead
       image {
@@ -63,8 +66,8 @@ export interface ArticleReference {
 // =====
 
 const ListArticlesQuery = gql`
-  query ListArticles($filter: String) {
-    articles(filter: $filter) {
+  query ListArticles {
+    articles(first: $first) {
       nodes {
         ...ArticleRefFragment
       }

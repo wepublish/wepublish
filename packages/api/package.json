@@ -16,7 +16,7 @@
   "dependencies": {
     "@karma.run/utility": "^0.0.1",
     "apollo-client": "^2.6.8",
-    "apollo-server": "^2.9.16",
+    "apollo-server": "^2.10.1",
     "dataloader": "^2.0.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",

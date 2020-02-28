@@ -1,4 +1,4 @@
-import {ArticleBlock} from '@wepublish/api'
+import {ArticleBlock, FocalPoint} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -88,4 +88,29 @@ export interface DBArticleRevision {
 export interface DBArticleHistoryRevision extends DBArticleRevision {
   readonly _id: any
   readonly articleID: string
+}
+
+export interface DBImage {
+  readonly _id: any
+
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+
+  readonly fileSize: number
+  readonly extension: string
+  readonly mimeType: string
+  readonly format: string
+  readonly width: number
+  readonly height: number
+
+  readonly filename?: string
+  readonly title?: string
+  readonly description?: string
+  readonly tags: string[]
+
+  readonly author?: string
+  readonly source?: string
+  readonly license?: string
+
+  readonly focalPoint?: FocalPoint
 }

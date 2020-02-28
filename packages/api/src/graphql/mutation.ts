@@ -13,6 +13,7 @@ import {InvalidCredentialsError} from '../error'
 import {GraphQLArticleInput, GraphQLArticleBlockUnionMap, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -78,6 +79,81 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    // User
+    // ====
+
+    // Author
+    // ======
+
+    // Navigation
+    // ==========
+
+    // Image
+    // =====
+
+    uploadImage: {
+      type: GraphQLImage,
+      args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
+      async resolve(root, {input}, {authenticate, mediaAdapter, dbAdapter}) {
+        authenticate()
+
+        const {
+          file,
+          filename,
+          title,
+          description,
+          tags,
+          author,
+          source,
+          license,
+          focalPoint
+        } = input
+
+        const {id, ...image} = await mediaAdapter.uploadImage(file)
+
+        return dbAdapter.createImage({
+          id,
+          input: {
+            ...image,
+
+            filename: filename ?? image.filename,
+            title,
+            description,
+            tags,
+
+            author,
+            source,
+            license,
+
+            focalPoint
+          }
+        })
+      }
+    },
+
+    updateImage: {
+      type: GraphQLImage,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.updateImage({id, input})
+      }
+    },
+
+    deleteImage: {
+      type: GraphQLBoolean,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, mediaAdapter, dbAdapter}) {
+        authenticate()
+
+        await mediaAdapter.deleteImage(id)
+        return dbAdapter.deleteImage(id)
+      }
+    },
+
     // Article
     // =======
 
@@ -96,7 +172,7 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
     updateArticle: {
       type: GraphQLArticle,
       args: {
-        id: {type: GraphQLNonNull(GraphQLString)},
+        id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
       async resolve(root, {id, input}, {authenticate, dbAdapter}) {
@@ -109,10 +185,19 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    deleteArticle: {
+      type: GraphQLBoolean,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.deleteArticle(id)
+      }
+    },
+
     publishArticle: {
       type: GraphQLArticle,
       args: {
-        id: {type: GraphQLNonNull(GraphQLString)},
+        id: {type: GraphQLNonNull(GraphQLID)},
         publishAt: {type: GraphQLDateTime},
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
@@ -127,7 +212,19 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
           publishedAt
         })
       }
+    },
+
+    unpublishArticle: {
+      type: GraphQLArticle,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.unpublishArticle(id)
+      }
     }
+
+    // Page
+    // ====
   }
 })
 

@@ -17,7 +17,7 @@ async function asyncMain() {
 
   const mediaStoragePath = process.env.MEDIA_STORAGE_PATH ?? resolvePath(__dirname, '../.media')
   const mediaServerToken = process.env.MEDIA_SERVER_TOKEN! || '123'
-  const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 3005
+  const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 4001
   const mediaServerAddress = process.env.MEDIA_ADDRESS ?? 'localhost'
 
   const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)

@@ -1,6 +1,32 @@
+import {InputCursor, Limit} from './pagination'
+import {SortOrder} from './common'
+import {PageInfo} from '../adapter/pageInfo'
+
 export interface FocalPoint {
   readonly x: number
   readonly y: number
+}
+
+export enum ImageRotation {
+  Auto = 'auto',
+  Rotate0 = '0',
+  Rotate90 = '90',
+  Rotate180 = '180',
+  Rotate270 = '270'
+}
+
+export enum ImageOutput {
+  PNG = 'png',
+  JPEG = 'jpeg',
+  WEBP = 'webp'
+}
+
+export interface ImageTransformation {
+  readonly width?: string
+  readonly height?: string
+  readonly rotation?: ImageRotation
+  readonly quality?: number
+  readonly output?: ImageOutput
 }
 
 export interface EditableImageComponents {
@@ -28,22 +54,54 @@ export interface StaticImageComponents {
 export interface Image extends EditableImageComponents, StaticImageComponents {
   readonly id: string
   readonly createdAt: Date
-  readonly updatedAt: Date
-}
-
-export interface CreateImageArgs extends EditableImageComponents, StaticImageComponents {
-  readonly id: string
-}
-
-export interface UpdateImageArgs extends EditableImageComponents, StaticImageComponents {
-  readonly id: string
+  readonly modifiedAt: Date
 }
 
 export type OptionalImage = Image | null
 
+export interface UploadImage extends StaticImageComponents {
+  readonly id: string
+  readonly filename: string
+}
+
+export interface CreateImageArgs {
+  readonly id: string
+  readonly input: EditableImageComponents & StaticImageComponents
+}
+
+export interface UpdateImageArgs {
+  readonly id: string
+  readonly input: EditableImageComponents
+}
+
+export enum ImageSort {
+  CreatedAt = 'modifiedAt',
+  ModifiedAt = 'modifiedAt'
+}
+
+export interface ImageFilter {
+  readonly title?: string
+  readonly tags?: string[]
+}
+
+export interface GetImagesArgs {
+  readonly cursor: InputCursor
+  readonly limit: Limit
+  readonly filter?: ImageFilter
+  readonly sort: ImageSort
+  readonly order: SortOrder
+}
+
+export interface ImagesResult {
+  readonly nodes: Image[]
+  readonly pageInfo: PageInfo
+  readonly totalCount: number
+}
+
 export interface DBImageAdapter {
   createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
-  deleteImage(id: string): Promise<boolean>
+  deleteImage(id: string): Promise<boolean | null>
   getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
+  getImages(args: GetImagesArgs): Promise<ImagesResult>
 }

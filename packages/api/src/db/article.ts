@@ -65,7 +65,6 @@ export interface ArticleFilter {
 }
 
 export interface PublishedArticleFilter {
-  readonly title?: string
   readonly authors?: string[]
   readonly tags?: string[]
 }

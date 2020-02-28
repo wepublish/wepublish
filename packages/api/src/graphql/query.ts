@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql'
+import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
 import {
@@ -15,10 +15,22 @@ import {InputCursor, Limit} from '../db/pagination'
 import {ArticleSort} from '../db/article'
 import {GraphQLSortOrder} from './common'
 import {SortOrder} from '../db/common'
+import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
+import {ImageSort} from '../db/image'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
+    // User
+    // ====
+
+    me: {
+      type: GraphQLUser,
+      resolve(root, args, {session}) {
+        return session?.user
+      }
+    },
+
     // Session
     // =======
 
@@ -30,13 +42,38 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    // User
-    // ====
+    // Image
+    // =====
 
-    me: {
-      type: GraphQLUser,
-      resolve(root, args, {authenticate}) {
-        return authenticate().user
+    image: {
+      type: GraphQLImage,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        return loaders.images.load(id)
+      }
+    },
+
+    images: {
+      type: GraphQLNonNull(GraphQLImageConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLImageFilter},
+        sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        authenticate()
+
+        return dbAdapter.getImages({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
       }
     },
 
@@ -46,7 +83,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {
-        id: {type: GraphQLString}
+        id: {type: GraphQLID}
       },
       resolve(root, {id}, {authenticate, loaders}) {
         authenticate()
@@ -57,7 +94,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     publishedArticle: {
       type: GraphQLPublishedArticle,
       args: {
-        id: {type: GraphQLString}
+        id: {type: GraphQLID}
       },
       resolve(root, {id}, {authenticate, loaders}) {
         authenticate()
@@ -68,8 +105,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       args: {
-        after: {type: GraphQLString},
-        before: {type: GraphQLString},
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
         filter: {type: GraphQLArticleFilter},
@@ -92,8 +129,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     publishedArticles: {
       type: GraphQLNonNull(GraphQLPublishedArticleConnection),
       args: {
-        after: {type: GraphQLString},
-        before: {type: GraphQLString},
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
         filter: {type: GraphQLPublishedArticleFilter},

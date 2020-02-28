@@ -106,7 +106,6 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 export const GraphQLPublishedArticleFilter = new GraphQLInputObjectType({
   name: 'PublishedArticleFilter',
   fields: {
-    title: {type: GraphQLString},
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
@@ -280,8 +279,6 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
-
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
   }
 })

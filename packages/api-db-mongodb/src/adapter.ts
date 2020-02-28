@@ -29,27 +29,31 @@ import {
   InputCursorType,
   OptionalArticle,
   OptionalPublishedArticle,
-  PublishedArticle
+  PublishedArticle,
+  ImagesResult,
+  GetImagesArgs,
+  Image,
+  ImageSort
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
 import {generateID, generateToken, base64Encode, base64Decode, MongoErrorCode} from './utility'
 
 import {OptionalAuthor} from '@wepublish/api/lib/db/author'
-import {DBUser, DBSession, DBArticle, CollectionName, DBMigration} from './schema'
+import {DBUser, DBSession, DBArticle, CollectionName, DBMigration, DBImage} from './schema'
 
-export interface MongoDBAdabterSharedArgs {
+export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
   readonly bcryptHashCostFactor?: number
 }
 
-export interface MongoDBAdapterConnectArgs extends MongoDBAdabterSharedArgs {
+export interface MongoDBAdapterConnectArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
   readonly database: string
   readonly locale: string
 }
 
-export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterSharedArgs {
+export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
   readonly database: string
   readonly locale: string
@@ -97,13 +101,14 @@ export class Cursor {
   }
 }
 
-interface MongoDBAdapterArgs extends MongoDBAdabterSharedArgs {
+interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
   readonly locale: string
   readonly client: MongoClient
   readonly db: Db
   readonly users: Collection<DBUser>
   readonly sessions: Collection<DBSession>
   readonly articles: Collection<DBArticle>
+  readonly images: Collection<DBImage>
 }
 
 export class MongoDBAdapter implements DBAdapter {
@@ -121,6 +126,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly users: Collection<DBUser>
   readonly sessions: Collection<DBSession>
   readonly articles: Collection<DBArticle>
+  readonly images: Collection<DBImage>
 
   // Init
   // ====
@@ -133,7 +139,8 @@ export class MongoDBAdapter implements DBAdapter {
     db,
     users,
     sessions,
-    articles
+    articles,
+    images
   }: MongoDBAdapterArgs) {
     this.sessionTTL = sessionTTL
     this.bcryptHashCostFactor = bcryptHashCostFactor
@@ -144,9 +151,10 @@ export class MongoDBAdapter implements DBAdapter {
     this.users = users
     this.sessions = sessions
     this.articles = articles
+    this.images = images
   }
 
-  static async createMongoClient(url: string): Promise<MongoClient> {
+  static createMongoClient(url: string): Promise<MongoClient> {
     return MongoClient.connect(url, {
       pkFactory: new PKFactory(),
       useNewUrlParser: true,
@@ -180,7 +188,8 @@ export class MongoDBAdapter implements DBAdapter {
       locale,
       users: db.collection(CollectionName.Users),
       sessions: db.collection(CollectionName.Sessions),
-      articles: db.collection(CollectionName.Articles)
+      articles: db.collection(CollectionName.Articles),
+      images: db.collection(CollectionName.Images)
     })
   }
 
@@ -350,20 +359,156 @@ export class MongoDBAdapter implements DBAdapter {
   // Image
   // =====
 
-  createImage(image: CreateImageArgs): Promise<OptionalImage> {
-    throw new Error('Method not implemented.')
+  async createImage({id, input}: CreateImageArgs): Promise<OptionalImage> {
+    const {ops} = await this.images.insertOne({
+      _id: id,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      ...input
+    })
+
+    const {_id: outID, ...image} = ops[0]
+    return {id: outID, ...image}
   }
 
-  updateImage(image: UpdateImageArgs): Promise<OptionalImage> {
-    throw new Error('Method not implemented.')
+  async updateImage({id, input}: UpdateImageArgs): Promise<OptionalImage> {
+    const {value} = await this.images.findOneAndUpdate(
+      {_id: id},
+      [
+        {
+          $set: {
+            modifiedAt: new Date(),
+            filename: input.filename,
+            title: input.title,
+            description: input.description,
+            tags: input.tags,
+            author: input.author,
+            source: input.source,
+            license: input.license,
+            focalPoint: input.focalPoint
+          }
+        }
+      ] as any,
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID, ...image} = value
+    return {id: outID, ...image}
   }
 
-  deleteImage(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.')
+  async deleteImage(id: string): Promise<boolean | null> {
+    const {deletedCount} = await this.images.deleteOne({_id: id})
+    return deletedCount !== 0 ? true : null
   }
 
-  getImagesByID(ids: readonly string[]): Promise<OptionalImage[]> {
-    throw new Error('Method not implemented.')
+  async getImagesByID(ids: readonly string[]): Promise<OptionalImage[]> {
+    const images = await this.images.find({_id: {$in: ids}}).toArray()
+    const imageMap = Object.fromEntries(
+      images.map(({_id: id, ...article}) => [id, {id, ...article}])
+    )
+
+    return ids.map(id => imageMap[id] ?? null)
+  }
+
+  async getImages({filter, sort, order, cursor, limit}: GetImagesArgs): Promise<ImagesResult> {
+    const limitCount = Math.min(limit.count, MongoDBAdapter.MaxResultsPerPage)
+    const sortDirection = limit.type === LimitType.First ? order : -order
+
+    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
+
+    const expr =
+      order === SortOrder.Ascending
+        ? cursor.type === InputCursorType.After
+          ? '$gt'
+          : '$lt'
+        : cursor.type === InputCursorType.After
+        ? '$lt'
+        : '$gt'
+
+    const sortField = imageSortFieldForSort(sort)
+    const cursorFilter = cursorData
+      ? {
+          $or: [
+            {[sortField]: {[expr]: cursorData.date}},
+            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
+          ]
+        }
+      : {}
+
+    let textFilter: FilterQuery<any> = {}
+    let metaFilters: FilterQuery<any> = []
+
+    if (filter?.title != undefined) {
+      textFilter['$or'] = [
+        {title: {$regex: filter.title, $options: 'i'}},
+        {filename: {$regex: filter.title, $options: 'i'}}
+      ]
+    }
+
+    if (filter?.tags) {
+      metaFilters.push({tags: {$in: filter.tags}})
+    }
+    const [totalCount, images] = await Promise.all([
+      this.images.countDocuments(
+        {$and: [metaFilters.length ? {$and: metaFilters} : {}, textFilter]} as any,
+        {collation: {locale: this.locale, strength: 2}} as MongoCountPreferences
+      ), // MongoCountPreferences doesn't include collation
+
+      this.images
+        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .match(metaFilters.length ? {$and: metaFilters} : {})
+        .match(textFilter)
+        .match(cursorFilter)
+        .sort({[sortField]: sortDirection, _id: sortDirection})
+        .limit(limitCount + 1)
+        .toArray()
+    ])
+
+    const nodes = images.slice(0, limitCount)
+
+    if (limit.type === LimitType.Last) {
+      nodes.reverse()
+    }
+
+    const hasNextPage =
+      limit.type === LimitType.First
+        ? images.length > limitCount
+        : cursor.type === InputCursorType.Before
+        ? true
+        : false
+
+    const hasPreviousPage =
+      limit.type === LimitType.Last
+        ? images.length > limitCount
+        : cursor.type === InputCursorType.After
+        ? true
+        : false
+
+    const firstImage = nodes[0]
+    const lastImage = nodes[nodes.length - 1]
+
+    const startCursor = firstImage
+      ? new Cursor(firstImage._id, imageDateForSort(firstImage, sort)).toString()
+      : null
+
+    const endCursor = lastImage
+      ? new Cursor(lastImage._id, imageDateForSort(lastImage, sort)).toString()
+      : null
+
+    return {
+      nodes: nodes.map<Image>(({_id: id, ...image}) => ({id, ...image})),
+
+      pageInfo: {
+        startCursor,
+        endCursor,
+        hasNextPage,
+        hasPreviousPage
+      },
+
+      totalCount
+    }
   }
 
   // Author
@@ -450,6 +595,11 @@ export class MongoDBAdapter implements DBAdapter {
 
     const {_id: outID, ...article} = value
     return {id: outID, ...article}
+  }
+
+  async deleteArticle(id: string): Promise<boolean | null> {
+    const {deletedCount} = await this.articles.deleteOne({_id: id})
+    return deletedCount !== 0 ? true : null
   }
 
   async publishArticle({
@@ -542,6 +692,32 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
+  async unpublishArticle(id: string): Promise<OptionalArticle> {
+    const {value} = await this.articles.findOneAndUpdate(
+      {_id: id},
+      [
+        {
+          $set: {
+            draft: {
+              $ifNull: ['$draft', {$ifNull: ['$pending', '$published']}]
+            },
+            pending: null,
+            published: null
+          }
+        },
+        {
+          $unset: ['draft.publishAt', 'draft.publishedAt', 'draft.updatedAt']
+        }
+      ] as any,
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID, ...article} = value
+    return {id: outID, ...article}
+  }
+
   async getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]> {
     await this.updatePendingArticles()
 
@@ -553,6 +729,7 @@ export class MongoDBAdapter implements DBAdapter {
     return ids.map(id => articleMap[id] ?? null)
   }
 
+  // TODO: Deduplicate getImages, getPages, getAuthors
   async getArticles({
     filter,
     sort,
@@ -576,7 +753,7 @@ export class MongoDBAdapter implements DBAdapter {
         ? '$lt'
         : '$gt'
 
-    const sortField = sortFieldForSort(sort)
+    const sortField = articleSortFieldForSort(sort)
     const cursorFilter = cursorData
       ? {
           $or: [
@@ -586,33 +763,66 @@ export class MongoDBAdapter implements DBAdapter {
         }
       : {}
 
-    let documentFilter: FilterQuery<any> = {}
+    let stateFilter: FilterQuery<any> = {}
+    let textFilter: FilterQuery<any> = {}
 
-    // TODO: Title Filter
+    let metaFilters: FilterQuery<any> = []
+
+    if (filter?.title != undefined) {
+      // TODO: Only match based on state filter
+      textFilter['$or'] = [
+        {'draft.title': {$regex: filter.title, $options: 'i'}},
+        {'pending.title': {$regex: filter.title, $options: 'i'}},
+        {'published.title': {$regex: filter.title, $options: 'i'}}
+      ]
+    }
 
     if (filter?.published != undefined) {
-      documentFilter['published'] = {[filter.published ? '$ne' : '$eq']: null}
+      stateFilter['published'] = {[filter.published ? '$ne' : '$eq']: null}
     }
 
     if (filter?.draft != undefined) {
-      documentFilter['draft'] = {[filter.draft ? '$ne' : '$eq']: null}
+      stateFilter['draft'] = {[filter.draft ? '$ne' : '$eq']: null}
     }
 
     if (filter?.pending != undefined) {
-      documentFilter['pending'] = {[filter.pending ? '$ne' : '$eq']: null}
+      stateFilter['pending'] = {[filter.pending ? '$ne' : '$eq']: null}
     }
 
-    if (filter?.tags) documentFilter['draft.tags'] = {$in: filter.tags}
-    if (filter?.authors) documentFilter['draft.authors'] = {$in: filter.authors}
+    if (filter?.tags) {
+      // TODO: Only match based on state filter
+      metaFilters.push({
+        $or: [
+          {'draft.tags': {$in: filter.tags}},
+          {'pending.tags': {$in: filter.tags}},
+          {'published.tags': {$in: filter.tags}}
+        ]
+      })
+    }
 
+    if (filter?.authors) {
+      // TODO: Only match based on state filter
+      metaFilters.push({
+        $or: [
+          {'draft.authors': {$in: filter.authors}},
+          {'pending.authors': {$in: filter.authors}},
+          {'published.authors': {$in: filter.authors}}
+        ]
+      })
+    }
+
+    // TODO: Check index usage
     const [totalCount, articles] = await Promise.all([
-      this.articles.countDocuments(documentFilter, {
-        collation: {locale: this.locale, strength: 2}
-      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
+      this.articles.countDocuments(
+        {$and: [stateFilter, metaFilters.length ? {$and: metaFilters} : {}, textFilter]} as any,
+        {collation: {locale: this.locale, strength: 2}} as MongoCountPreferences
+      ), // MongoCountPreferences doesn't include collation
 
       this.articles
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
-        .match(documentFilter)
+        .match(stateFilter)
+        .match(metaFilters.length ? {$and: metaFilters} : {})
+        .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
         .limit(limitCount + 1)
@@ -669,22 +879,6 @@ export class MongoDBAdapter implements DBAdapter {
     throw new Error('Method not implemented.')
   }
 
-  // TODO: Throttle or cron this function
-  async updatePendingArticles(): Promise<void> {
-    await this.articles.updateMany({'pending.publishAt': {$lte: new Date()}}, [
-      {
-        $set: {
-          modifiedAt: new Date(),
-          published: '$pending',
-          pending: null
-        }
-      }
-    ] as any)
-  }
-
-  // Published Article
-  // =================
-
   async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]> {
     await this.updatePendingArticles()
 
@@ -717,9 +911,56 @@ export class MongoDBAdapter implements DBAdapter {
       totalCount
     }
   }
+
+  // TODO: Throttle or cron this function
+  async updatePendingArticles(): Promise<void> {
+    await this.articles.updateMany({'pending.publishAt': {$lte: new Date()}}, [
+      {
+        $set: {
+          modifiedAt: new Date(),
+          published: '$pending',
+          pending: null
+        }
+      }
+    ] as any)
+  }
+
+  createAuthor(author: import('@wepublish/api').Author): Promise<import('@wepublish/api').Author> {
+    throw new Error('Method not implemented.')
+  }
+
+  updateAuthor(
+    author: import('@wepublish/api').Author
+  ): Promise<import('@wepublish/api').Author | null> {
+    throw new Error('Method not implemented.')
+  }
+
+  deleteAuthor(id: string): Promise<boolean | null> {
+    throw new Error('Method not implemented.')
+  }
 }
 
-function sortFieldForSort(sort: ArticleSort) {
+function imageSortFieldForSort(sort: ImageSort) {
+  switch (sort) {
+    case ImageSort.CreatedAt:
+      return 'createdAt'
+
+    case ImageSort.ModifiedAt:
+      return 'modifiedAt'
+  }
+}
+
+function imageDateForSort(image: DBImage, sort: ImageSort): Date {
+  switch (sort) {
+    case ImageSort.CreatedAt:
+      return image.createdAt
+
+    case ImageSort.ModifiedAt:
+      return image.modifiedAt
+  }
+}
+
+function articleSortFieldForSort(sort: ArticleSort) {
   switch (sort) {
     case ArticleSort.CreatedAt:
       return 'createdAt'
@@ -731,7 +972,7 @@ function sortFieldForSort(sort: ArticleSort) {
       return 'published.publishedAt'
 
     case ArticleSort.UpdatedAt:
-      return 'published.publishedAt'
+      return 'published.updatedAt'
 
     case ArticleSort.PublishAt:
       return 'pending.publishAt'

@@ -36,28 +36,28 @@ export const Migrations: Migration[] = [
       const images = await db.createCollection(v0.CollectionName.Images, {strict: true})
 
       await images.createIndex({title: 1})
+      await images.createIndex({createdAt: -1})
+      await images.createIndex({modifiedAt: -1})
+      await images.createIndex({tags: 1}, {collation: {locale, strength: 2}})
 
       const articles = await db.createCollection<v0.DBArticle>(v0.CollectionName.Articles, {
         strict: true
       })
 
-      // TODO: Create required indicies
       await articles.createIndex({createdAt: -1})
       await articles.createIndex({modifiedAt: -1})
 
       await articles.createIndex({'published.publishedAt': -1})
       await articles.createIndex({'published.updatedAt': -1})
       await articles.createIndex({'pending.publishAt': -1})
-      await articles.createIndex({'pending.publishAt': -1})
 
       await articles.createIndex({'draft.tags': 1}, {collation: {locale, strength: 2}})
+      await articles.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
+      await articles.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
-      const articlesHistory = await db.createCollection<v0.DBArticleHistoryRevision>(
-        v0.CollectionName.ArticlesHistory,
-        {strict: true}
-      )
-
-      await articlesHistory
+      await db.createCollection<v0.DBArticleHistoryRevision>(v0.CollectionName.ArticlesHistory, {
+        strict: true
+      })
     }
   }
 ]
