@@ -114,10 +114,10 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         />
         <Typography variant="subtitle1">
           {`If you want to include a Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video,
-          YouTube Video you have to add a link ex. https://www.facebook.com/id/posts/id/.`}
+          YouTube Video you have to add a link e.g. https://www.facebook.com/id/posts/id/.`}
           <br />
           <br />
-          {`In iframe embed codes the src="", width="" and height="" are validated ex.
+          {`In iframe embed codes the src="", width="" and height="" are validated e.g.
           <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>`}
           <br />
           <br />
