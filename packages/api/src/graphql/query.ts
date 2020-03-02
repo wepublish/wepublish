@@ -17,6 +17,13 @@ import {GraphQLSortOrder} from './common'
 import {SortOrder} from '../db/common'
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
 import {ImageSort} from '../db/image'
+import {
+  GraphQLAuthorConnection,
+  GraphQLAuthorFilter,
+  GraphQLAuthorSort,
+  GraphQLAuthor
+} from './author'
+import {AuthorSort} from '../db/author'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -39,6 +46,41 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, args, {authenticate, dbAdapter}) {
         const session = authenticate()
         return dbAdapter.getSessionsForUser(session.user)
+      }
+    },
+
+    // Author
+    // ======
+
+    author: {
+      type: GraphQLAuthor,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        return loaders.authors.load(id)
+      }
+    },
+
+    authors: {
+      type: GraphQLNonNull(GraphQLAuthorConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLAuthorFilter},
+        sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        authenticate()
+
+        return dbAdapter.getAuthors({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
       }
     },
 

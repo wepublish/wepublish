@@ -110,6 +110,14 @@ export interface UpdateArticleArgs {
   readonly input: ArticleInput
 }
 
+export interface DeleteArticleArgs {
+  readonly id: string
+}
+
+export interface UnpublishArticleArgs {
+  readonly id: string
+}
+
 export interface PublishArticleArgs {
   readonly id: string
   readonly publishAt?: Date
@@ -137,11 +145,11 @@ export interface DBArticleAdapter {
   createArticle(args: CreateArticleArgs): Promise<Article>
   updateArticle(args: UpdateArticleArgs): Promise<OptionalArticle>
   publishArticle(args: PublishArticleArgs): Promise<OptionalArticle>
-  unpublishArticle(id: string): Promise<OptionalArticle>
-  deleteArticle(id: string): Promise<boolean | null>
+  unpublishArticle(args: UnpublishArticleArgs): Promise<OptionalArticle>
+  deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
 
-  getArticlesByID(args: readonly string[]): Promise<OptionalArticle[]>
-  getPublishedArticlesByID(args: readonly string[]): Promise<OptionalPublishedArticle[]>
+  getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
+  getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]>
 
   getArticles(args: GetArticlesArgs): Promise<ArticlesResult>
   getPublishedArticles(args: GetPublishedArticlesArgs): Promise<PublishedArticleResult>

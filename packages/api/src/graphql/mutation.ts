@@ -14,6 +14,7 @@ import {GraphQLArticleInput, GraphQLArticleBlockUnionMap, GraphQLArticle} from '
 import {BlockMap, Block} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
+import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -87,6 +88,42 @@ export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
 
     // Navigation
     // ==========
+
+    // Author
+    // ======
+
+    createAuthor: {
+      type: GraphQLAuthor,
+      args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.createAuthor({input})
+      }
+    },
+
+    updateAuthor: {
+      type: GraphQLAuthor,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLAuthorInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.updateAuthor({id, input})
+      }
+    },
+
+    deleteAuthor: {
+      type: GraphQLString,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        authenticate()
+        await dbAdapter.deleteAuthor({id})
+        return id
+      }
+    },
 
     // Image
     // =====

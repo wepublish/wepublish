@@ -74,6 +74,10 @@ export interface UpdateImageArgs {
   readonly input: EditableImageComponents
 }
 
+export interface DeleteImageArgs {
+  readonly id: string
+}
+
 export enum ImageSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt'
@@ -92,7 +96,7 @@ export interface GetImagesArgs {
   readonly order: SortOrder
 }
 
-export interface ImagesResult {
+export interface ImageResult {
   readonly nodes: Image[]
   readonly pageInfo: PageInfo
   readonly totalCount: number
@@ -101,7 +105,7 @@ export interface ImagesResult {
 export interface DBImageAdapter {
   createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
-  deleteImage(id: string): Promise<boolean | null>
+  deleteImage(args: DeleteImageArgs): Promise<boolean | null>
   getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
-  getImages(args: GetImagesArgs): Promise<ImagesResult>
+  getImages(args: GetImagesArgs): Promise<ImageResult>
 }

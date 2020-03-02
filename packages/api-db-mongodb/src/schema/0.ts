@@ -5,6 +5,7 @@ export enum CollectionName {
   Users = 'users',
   Sessions = 'sessions',
   Images = 'images',
+  Authors = 'authors',
 
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
@@ -13,6 +14,7 @@ export enum CollectionName {
   PagesHistory = 'pages.history'
 }
 
+// NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
 export interface DBMigration {
   readonly _id: any
   readonly version: number
@@ -113,4 +115,15 @@ export interface DBImage {
   readonly license?: string
 
   readonly focalPoint?: FocalPoint
+}
+
+export interface DBAuthor {
+  readonly _id: any
+
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+
+  readonly slug: string
+  readonly name: string
+  readonly imageID?: string
 }

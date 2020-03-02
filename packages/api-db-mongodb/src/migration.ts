@@ -40,6 +40,13 @@ export const Migrations: Migration[] = [
       await images.createIndex({modifiedAt: -1})
       await images.createIndex({tags: 1}, {collation: {locale, strength: 2}})
 
+      const authors = await db.createCollection(v0.CollectionName.Authors, {strict: true})
+
+      await authors.createIndex({name: 1})
+      await authors.createIndex({slug: 1}, {unique: true})
+      await authors.createIndex({createdAt: -1})
+      await authors.createIndex({modifiedAt: -1})
+
       const articles = await db.createCollection<v0.DBArticle>(v0.CollectionName.Articles, {
         strict: true
       })
