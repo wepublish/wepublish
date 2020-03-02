@@ -15,7 +15,7 @@ import {GraphQLUpload} from 'apollo-server'
 
 import {Context} from '../context'
 import {Image, ImageRotation, ImageOutput, ImageSort} from '../db/image'
-import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLPageInfo} from './common'
 
 export const GraphQLInputPoint = new GraphQLInputObjectType({
   name: 'InputPoint',

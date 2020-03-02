@@ -1,7 +1,5 @@
 import {ArticleBlock} from './block'
-import {PageInfo} from '../adapter/pageInfo'
-import {Limit, InputCursor} from './pagination'
-import {SortOrder} from './common'
+import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
 
 export interface ArticleData {
   readonly updatedAt?: Date
@@ -70,7 +68,7 @@ export interface PublishedArticleFilter {
 }
 
 export enum ArticleSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
   PublishedAt = 'publishedAt',
   UpdatedAt = 'updatedAt',
@@ -125,18 +123,6 @@ export interface PublishArticleArgs {
   readonly updatedAt?: Date
 }
 
-export interface ArticlesResult {
-  readonly nodes: Article[]
-  readonly pageInfo: PageInfo
-  readonly totalCount: number
-}
-
-export interface PublishedArticleResult {
-  readonly nodes: PublishedArticle[]
-  readonly pageInfo: PageInfo
-  readonly totalCount: number
-}
-
 export type OptionalArticle = Article | null
 export type OptionalPublishedArticle = PublishedArticle | null
 export type OptionalArticleHistory = ArticleHistory | null
@@ -151,8 +137,9 @@ export interface DBArticleAdapter {
   getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]>
 
-  getArticles(args: GetArticlesArgs): Promise<ArticlesResult>
-  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<PublishedArticleResult>
+  getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
+  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublishedArticle>>
 
-  getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>
+  // TODO: Implement article history
+  // getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>
 }

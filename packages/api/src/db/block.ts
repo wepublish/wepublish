@@ -1,8 +1,5 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 
-import {ImageCaptionEdge} from '../adapter/image'
-import {ArticleTeaser} from '../adapter/article'
-
 export enum BlockType {
   Title = 'title',
   RichText = 'richText',
@@ -73,6 +70,11 @@ export interface ImageBlock {
   readonly type: BlockType.Image
   readonly caption?: string
   readonly imageID?: string
+}
+
+export interface ImageCaptionEdge {
+  readonly caption: string
+  readonly imageID: string
 }
 
 export interface ImageGalleryBlock {
@@ -148,6 +150,11 @@ export interface QuoteBlock {
   readonly type: BlockType.Quote
   readonly quote?: string
   readonly author?: string
+}
+
+export interface ArticleTeaser {
+  readonly type?: string
+  readonly articleID: string
 }
 
 export interface ArticleTeaserGridBlock {

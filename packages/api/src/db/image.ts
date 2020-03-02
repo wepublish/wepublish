@@ -1,6 +1,4 @@
-import {InputCursor, Limit} from './pagination'
-import {SortOrder} from './common'
-import {PageInfo} from '../adapter/pageInfo'
+import {SortOrder, InputCursor, Limit, ConnectionResult} from './common'
 
 export interface FocalPoint {
   readonly x: number
@@ -96,16 +94,10 @@ export interface GetImagesArgs {
   readonly order: SortOrder
 }
 
-export interface ImageResult {
-  readonly nodes: Image[]
-  readonly pageInfo: PageInfo
-  readonly totalCount: number
-}
-
 export interface DBImageAdapter {
   createImage(args: CreateImageArgs): Promise<OptionalImage>
   updateImage(args: UpdateImageArgs): Promise<OptionalImage>
   deleteImage(args: DeleteImageArgs): Promise<boolean | null>
   getImagesByID(ids: readonly string[]): Promise<OptionalImage[]>
-  getImages(args: GetImagesArgs): Promise<ImageResult>
+  getImages(args: GetImagesArgs): Promise<ConnectionResult<Image>>
 }

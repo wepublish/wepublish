@@ -33,19 +33,26 @@ export const Migrations: Migration[] = [
       await sessions.createIndex({token: 1}, {unique: true})
       await sessions.createIndex({expiresAt: 1}, {expireAfterSeconds: SessionDocumentTTL})
 
-      const images = await db.createCollection(v0.CollectionName.Images, {strict: true})
+      const navigations = await db.createCollection(v0.CollectionName.Navigations, {strict: true})
 
-      await images.createIndex({title: 1})
-      await images.createIndex({createdAt: -1})
-      await images.createIndex({modifiedAt: -1})
-      await images.createIndex({tags: 1}, {collation: {locale, strength: 2}})
+      await navigations.createIndex({createdAt: -1})
+      await navigations.createIndex({modifiedAt: -1})
+      await navigations.createIndex({name: 1})
+      await navigations.createIndex({key: 1}, {unique: true})
 
       const authors = await db.createCollection(v0.CollectionName.Authors, {strict: true})
 
-      await authors.createIndex({name: 1})
-      await authors.createIndex({slug: 1}, {unique: true})
       await authors.createIndex({createdAt: -1})
       await authors.createIndex({modifiedAt: -1})
+      await authors.createIndex({name: 1})
+      await authors.createIndex({slug: 1}, {unique: true})
+
+      const images = await db.createCollection(v0.CollectionName.Images, {strict: true})
+
+      await images.createIndex({createdAt: -1})
+      await images.createIndex({modifiedAt: -1})
+      await images.createIndex({title: 1})
+      await images.createIndex({tags: 1}, {collation: {locale, strength: 2}})
 
       const articles = await db.createCollection<v0.DBArticle>(v0.CollectionName.Articles, {
         strict: true
@@ -63,6 +70,27 @@ export const Migrations: Migration[] = [
       await articles.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
       await db.createCollection<v0.DBArticleHistoryRevision>(v0.CollectionName.ArticlesHistory, {
+        strict: true
+      })
+
+      const pages = await db.createCollection<v0.DBPage>(v0.CollectionName.Pages, {
+        strict: true
+      })
+
+      await pages.createIndex({createdAt: -1})
+      await pages.createIndex({modifiedAt: -1})
+
+      await pages.createIndex({'published.publishedAt': -1})
+      await pages.createIndex({'published.updatedAt': -1})
+      await pages.createIndex({'pending.publishAt': -1})
+
+      await pages.createIndex({'draft.tags': 1}, {collation: {locale, strength: 2}})
+      await pages.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
+      await pages.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
+
+      // TODO: Add unique index for slug
+
+      await db.createCollection<v0.DBPageHistoryRevision>(v0.CollectionName.PagesHistory, {
         strict: true
       })
     }

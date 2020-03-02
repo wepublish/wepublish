@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
+import {PageInfo} from './common'
 
 export interface FocalPoint {
   x: number
@@ -65,13 +66,6 @@ export interface UploadImageInput extends BaseImageInput {
 }
 
 export interface UpdateImageInput extends BaseImageInput {}
-
-export interface PageInfo {
-  readonly startCursor?: string
-  readonly endCursor?: string
-  readonly hasNextPage: boolean
-  readonly hasPreviousPage: boolean
-}
 
 export const ImageURLFragment = gql`
   fragment ImageURLFragment on Image {

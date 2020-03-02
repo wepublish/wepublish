@@ -12,12 +12,25 @@ import {MediaAdapter} from './media/adapter'
 import {AuthenticationError} from 'apollo-server'
 import {OptionalImage} from './db/image'
 import {OptionalArticle, OptionalPublishedArticle} from './db/article'
+import {OptionalAuthor} from './db/author'
+import {OptionalNavigation} from './db/navigation'
+import {OptionalPage, OptionalPublishedPage} from './db/page'
 
 export interface DataLoaderContext {
+  readonly navigationByID: DataLoader<string, OptionalNavigation>
+  readonly navigationByKey: DataLoader<string, OptionalNavigation>
+
+  readonly authorsByID: DataLoader<string, OptionalAuthor>
+  readonly authorsBySlug: DataLoader<string, OptionalAuthor>
+
+  readonly images: DataLoader<string, OptionalImage>
+
   readonly articles: DataLoader<string, OptionalArticle>
   readonly publishedArticles: DataLoader<string, OptionalPublishedArticle>
-  readonly images: DataLoader<string, OptionalImage>
-  readonly authors: DataLoader<string, any>
+
+  readonly pages: DataLoader<string, OptionalPage>
+  readonly publishedPagesByID: DataLoader<string, OptionalPublishedPage>
+  readonly publishedPagesBySlug: DataLoader<string, OptionalPublishedPage>
 }
 
 export interface Context {
@@ -30,8 +43,6 @@ export interface Context {
   readonly hooks?: Hooks
 
   authenticate(): SessionWithToken
-
-  readonly storageAdapter: any // TEMP: Remove me
 }
 
 export interface ContextOptions {
@@ -51,10 +62,20 @@ export async function contextFromRequest(
   return {
     session: isSessionValid ? session : null,
     loaders: {
+      navigationByID: new DataLoader(ids => dbAdapter.getNavigationsByID(ids)),
+      navigationByKey: new DataLoader(keys => dbAdapter.getNavigationsByKey(keys)),
+
+      authorsByID: new DataLoader(ids => dbAdapter.getAuthorsByID(ids)),
+      authorsBySlug: new DataLoader(slugs => dbAdapter.getAuthorsBySlug(slugs)),
+
+      images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
+
       articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
       publishedArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
-      images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
-      authors: new DataLoader(ids => dbAdapter.getAuthorsByID(ids))
+
+      pages: new DataLoader(ids => dbAdapter.getPagesByID(ids)),
+      publishedPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
+      publishedPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs))
     },
 
     dbAdapter,
@@ -71,9 +92,7 @@ export async function contextFromRequest(
       }
 
       return session
-    },
-
-    storageAdapter: null // TEMP: Remove me
+    }
   }
 }
 

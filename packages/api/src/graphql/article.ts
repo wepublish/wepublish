@@ -8,8 +8,7 @@ import {
   GraphQLInputObjectType,
   GraphQLUnionType,
   GraphQLBoolean,
-  GraphQLInt,
-  GraphQLInterfaceType
+  GraphQLInt
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -46,12 +45,11 @@ import {
 } from './blocks'
 
 import {GraphQLImage} from './image'
-import {BlockType} from '../adapter/blocks'
-import {VersionState} from '../adapter/versionState'
+import {BlockType} from '../db/block'
 import {GraphQLAuthor} from './author'
 import {PublishedArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
 import {GraphQLSlug} from './slug'
-import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLPageInfo} from './common'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
@@ -130,16 +128,6 @@ export const GraphQLPublishedArticleSort = new GraphQLEnumType({
   }
 })
 
-// TODO: Remove this
-export const GraphQLVersionState = new GraphQLEnumType({
-  name: 'VersionState',
-  description: 'Current state of the article/page version.',
-  values: {
-    DRAFT: {value: VersionState.Draft},
-    PUBLISHED: {value: VersionState.Published}
-  }
-})
-
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
   fields: {
@@ -162,26 +150,8 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLArticleData = new GraphQLInterfaceType({
-  name: 'ArticleData',
-  fields: {
-    preTitle: {type: GraphQLString},
-    title: {type: GraphQLNonNull(GraphQLString)},
-    lead: {type: GraphQLString},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-
-    image: {type: GraphQLImage},
-    authors: {type: GraphQLNonNull(GraphQLList(GraphQLAuthor))},
-
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
-  }
-})
-
 export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Context>({
   name: 'ArticleRevision',
-  interfaces: [GraphQLArticleData],
   fields: {
     revision: {type: GraphQLNonNull(GraphQLInt)},
 
@@ -207,7 +177,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
       resolve({authorIDs}, args, {loaders}) {
-        return Promise.all(authorIDs.map(authorID => loaders.authors.load(authorID)))
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
       }
     },
 
@@ -234,9 +204,10 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
       resolve({draft, pending, published}) {
         return draft ?? pending ?? published
       }
-    },
+    }
 
-    history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
+    // TODO: Implement article history
+    // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
   }
 })
 
@@ -251,7 +222,6 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
 
 export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, Context>({
   name: 'PublishedArticle',
-  interfaces: [GraphQLArticleData],
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
@@ -274,7 +244,7 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
       resolve({authorIDs}, args, {loaders}) {
-        return Promise.all(authorIDs.map(authorID => loaders.authors.load(authorID)))
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
       }
     },
 

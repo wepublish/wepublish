@@ -9,10 +9,10 @@ import {
   GraphQLEnumType
 } from 'graphql'
 
-import {Author} from '../adapter/author'
+import {Author} from '../db/author'
 import {Context} from '../context'
 
-import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
 import {GraphQLSlug} from './slug'
 import {AuthorSort} from '../db/author'

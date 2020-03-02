@@ -1,5 +1,4 @@
-import {ConnectionResult, SortOrder} from './common'
-import {InputCursor, Limit} from './pagination'
+import {ConnectionResult, SortOrder, InputCursor, Limit} from './common'
 
 export interface Author {
   readonly id: string
@@ -46,5 +45,7 @@ export interface DBAuthorAdapter {
   deleteAuthor(args: DeleteAuthorArgs): Promise<string | null>
 
   getAuthorsByID(ids: readonly string[]): Promise<OptionalAuthor[]>
+  getAuthorsBySlug(slugs: readonly string[]): Promise<OptionalAuthor[]>
+
   getAuthors(args: GetAuthorsArgs): Promise<ConnectionResult<Author>>
 }

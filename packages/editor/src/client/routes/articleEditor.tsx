@@ -131,8 +131,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, publishedAt} = articleData.article
-      const {slug, preTitle, title, lead, tags, shared, breaking, authors, image, blocks} = latest
+      const {latest, published, shared} = articleData.article
+      const {slug, preTitle, title, lead, tags, breaking, authors, image, blocks} = latest
+      const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
 
@@ -197,6 +198,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
+  // TODO: Support new API in UI
   async function handlePublish(publishDate: Date, updateDate: Date) {
     if (articleID) {
       const {data} = await updateArticle({
@@ -207,14 +209,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         const {data: publishData} = await publishArticle({
           variables: {
             id: articleID,
-            version: data.updateArticle.latest.version,
+            publishAt: publishDate.toISOString(),
             publishedAt: publishDate.toISOString(),
             updatedAt: updateDate.toISOString()
           }
         })
 
-        if (publishData?.publishArticle?.publishedAt) {
-          setPublishedAt(new Date(publishData?.publishArticle?.publishedAt))
+        if (publishData?.publishArticle?.published?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishArticle?.published.publishedAt))
         }
       }
 

@@ -1,11 +1,12 @@
-import {ArticleBlock, FocalPoint} from '@wepublish/api'
+import {ArticleBlock, FocalPoint, NavigationLink, PageBlock} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
   Users = 'users',
   Sessions = 'sessions',
-  Images = 'images',
+  Navigations = 'navigations',
   Authors = 'authors',
+  Images = 'images',
 
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
@@ -16,15 +17,51 @@ export enum CollectionName {
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
 export interface DBMigration {
-  readonly _id: any
-  readonly version: number
-  readonly createdAt: Date
+  _id: any
+  version: number
+  createdAt: Date
 }
 
 export interface DBUser {
-  readonly _id: any
-  readonly email: string
-  readonly password: string
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  email: string
+  password: string
+}
+
+export interface DBSession {
+  _id: any
+
+  createdAt: Date
+  expiresAt: Date
+
+  userID: string
+  token: string
+}
+
+export interface DBNavigation {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  key: string
+  name: string
+  links: NavigationLink[]
+}
+
+export interface DBAuthor {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  slug: string
+  name: string
+  imageID?: string
 }
 
 // TODO: Consider using DB schema via $jsonSchema
@@ -46,84 +83,102 @@ export interface DBUser {
 //   strict: true
 // })
 
-export interface DBSession {
-  readonly _id: any
-  readonly userID: string
-  readonly token: string
-  readonly createdAt: Date
-  readonly expiresAt: Date
+export interface DBImage {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  fileSize: number
+  extension: string
+  mimeType: string
+  format: string
+  width: number
+  height: number
+
+  filename?: string
+  title?: string
+  description?: string
+  tags: string[]
+
+  author?: string
+  source?: string
+  license?: string
+
+  focalPoint?: FocalPoint
 }
 
 export interface DBArticle {
-  readonly _id: any
+  _id: any
 
-  readonly shared: boolean
-  readonly createdAt: Date
-  readonly modifiedAt: Date
+  shared: boolean
+  createdAt: Date
+  modifiedAt: Date
 
-  readonly draft: DBArticleRevision | null
-  readonly published: DBArticleRevision | null
-  readonly pending: DBArticleRevision | null
+  draft: DBArticleRevision | null
+  published: DBArticleRevision | null
+  pending: DBArticleRevision | null
 }
 
 export interface DBArticleRevision {
-  readonly revision: number
-  readonly createdAt: Date
+  revision: number
+  createdAt: Date
 
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
-  readonly publishAt?: Date
+  updatedAt?: Date
+  publishedAt?: Date
+  publishAt?: Date
 
-  readonly preTitle?: string
-  readonly title: string
-  readonly lead?: string
-  readonly slug: string
-  readonly tags: string[]
+  slug: string
 
-  readonly imageID?: string
-  readonly authorIDs: string[]
+  preTitle?: string
+  title: string
+  lead?: string
+  tags: string[]
 
-  readonly breaking: boolean
-  readonly blocks: ArticleBlock[]
+  imageID?: string
+  authorIDs: string[]
+
+  breaking: boolean
+  blocks: ArticleBlock[]
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
-  readonly _id: any
-  readonly articleID: string
+  _id: any
+  articleID: string
 }
 
-export interface DBImage {
-  readonly _id: any
+export interface DBPage {
+  _id: any
 
-  readonly createdAt: Date
-  readonly modifiedAt: Date
+  shared: boolean
+  createdAt: Date
+  modifiedAt: Date
 
-  readonly fileSize: number
-  readonly extension: string
-  readonly mimeType: string
-  readonly format: string
-  readonly width: number
-  readonly height: number
-
-  readonly filename?: string
-  readonly title?: string
-  readonly description?: string
-  readonly tags: string[]
-
-  readonly author?: string
-  readonly source?: string
-  readonly license?: string
-
-  readonly focalPoint?: FocalPoint
+  draft: DBPageRevision | null
+  published: DBPageRevision | null
+  pending: DBPageRevision | null
 }
 
-export interface DBAuthor {
-  readonly _id: any
+export interface DBPageRevision {
+  revision: number
+  createdAt: Date
 
-  readonly createdAt: Date
-  readonly modifiedAt: Date
+  updatedAt?: Date
+  publishedAt?: Date
+  publishAt?: Date
 
-  readonly slug: string
-  readonly name: string
-  readonly imageID?: string
+  slug: string
+
+  title: string
+  description?: string
+  tags: string[]
+
+  imageID?: string
+
+  blocks: PageBlock[]
+}
+
+export interface DBPageHistoryRevision extends DBPageRevision {
+  _id: any
+  articleID: string
 }
