@@ -11,6 +11,7 @@ import SharpImageBackend from '@karma.run/media-image-sharp'
 
 import express from 'express'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 import auth from './auth'
 
 import {ApolloServer, CorsOptions} from 'apollo-server-express'
@@ -90,6 +91,7 @@ async function asyncMain() {
     methods: ['POST', 'GET', 'OPTIONS']
   }
   app.use(cors(corsOptions))
+  app.use(bodyParser.urlencoded({extended: true}))
   app.use('/auth', auth(storageAdapter))
 
   server.applyMiddleware({app})
