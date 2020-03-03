@@ -417,14 +417,14 @@ export class MongoDBAdapter implements DBAdapter {
       links: input.links
     })
 
-    const {_id: id, ...author} = ops[0]
-    return {id, ...author}
+    const {_id: id, ...navigation} = ops[0]
+    return {id, ...navigation}
   }
 
   async getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]> {
     const navigations = await this.navigations.find({_id: {$in: ids}}).toArray()
     const navigationMap = Object.fromEntries(
-      navigations.map(({_id: id, ...author}) => [id, {id, ...author}])
+      navigations.map(({_id: id, ...navigation}) => [id, {id, ...navigation}])
     )
 
     return ids.map(id => navigationMap[id] ?? null)
@@ -433,9 +433,8 @@ export class MongoDBAdapter implements DBAdapter {
   async getNavigationsByKey(keys: readonly string[]): Promise<OptionalNavigation[]> {
     const navigations = await this.navigations.find({key: {$in: keys as string[]}}).toArray()
     const navigationMap = Object.fromEntries(
-      navigations.map(({_id: id, ...author}) => [id, {id, ...author}])
+      navigations.map(({_id: id, ...navigation}) => [navigation.key, {id, ...navigation}])
     )
-
     return keys.map(key => navigationMap[key] ?? null)
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "0.4.2",
+  "version": "0.5.3",
   "typings": "./lib/index.d.ts",
   "license": "MIT",
   "scripts": {

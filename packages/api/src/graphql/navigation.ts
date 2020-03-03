@@ -4,7 +4,8 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLUnionType
+  GraphQLUnionType,
+  GraphQLID
 } from 'graphql'
 
 import {Context} from '../context'
@@ -74,6 +75,66 @@ export const GraphQLNavigationLink = new GraphQLUnionType({
 export const GraphQLNavigation = new GraphQLObjectType({
   name: 'Navigation',
   fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    key: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink)))}
+  }
+})
+
+export const GraphQLPublishedPageNavigationLink = new GraphQLObjectType<
+  PageNavigationLink,
+  Context
+>({
+  name: 'PublishedPageNavigationLink',
+  interfaces: [GraphQLBaseNavigationLink],
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    page: {
+      type: GraphQLPage,
+      resolve({pageID}, _args, {loaders}) {
+        return loaders.publishedPagesByID.load(pageID)
+      }
+    }
+  },
+  isTypeOf(value) {
+    return value.type === NavigationLinkType.Page
+  }
+})
+
+export const GraphQLPublishedArticleNavigationLink = new GraphQLObjectType<
+  ArticleNavigationLink,
+  Context
+>({
+  name: 'PublishedArticleNavigationLink',
+  interfaces: [GraphQLBaseNavigationLink],
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    article: {
+      type: GraphQLArticle,
+      resolve({articleID}, _args, {loaders}) {
+        return loaders.publishedArticles.load(articleID)
+      }
+    }
+  },
+  isTypeOf(value) {
+    return value.type === NavigationLinkType.Article
+  }
+})
+
+export const GraphQLPublicNavigationLink = new GraphQLUnionType({
+  name: 'PublicNavigationLink',
+  types: [
+    GraphQLPublishedPageNavigationLink,
+    GraphQLPublishedArticleNavigationLink,
+    GraphQLExternalNavigationLink
+  ]
+})
+
+export const GraphQLPublicNavigation = new GraphQLObjectType({
+  name: 'PublicNavigation',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
     key: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
     links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink)))}

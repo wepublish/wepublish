@@ -31,11 +31,16 @@ export interface Navigation {
   name: string
   links: NavigationLink[]
 }
-
 export type OptionalNavigation = Navigation | null
 
+export interface NavigationInput {
+  key: string
+  name: string
+  links: NavigationLink[]
+}
+
 export interface CreateNavigationArgs {
-  readonly input: Readonly<Navigation>
+  readonly input: Readonly<NavigationInput>
 }
 
 export interface DBNavigationAdapter {

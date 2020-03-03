@@ -63,6 +63,7 @@ export const GraphQLPublishedPageBlock = new GraphQLUnionType({
     GraphQLRichTextBlock,
     GraphQLTitleBlock,
     GraphQLImageBlock,
+    GraphQLLinkPageBreakBlock,
     GraphQLPublishedArticleTeaserGridBlock
   ]
 })

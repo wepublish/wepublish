@@ -15,6 +15,7 @@
     "clean:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb clean",
     "build:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb build",
     "watch:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb watch",
+    "publish:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb publish --access public --no-git-tag-version",
     "clean:api-db-memory": "exit 0",
     "build:api-db-memory": "exit 0",
     "watch:api-db-memory": "exit 0",

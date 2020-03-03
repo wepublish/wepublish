@@ -70,6 +70,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Navigation
     // ==========
 
+    // TODO: Add Public Navigation Query
+
     navigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},

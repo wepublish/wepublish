@@ -2,9 +2,6 @@ import {ArticleBlock} from './block'
 import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
 
 export interface ArticleData {
-  readonly updatedAt?: Date
-  readonly publishedAt?: Date
-
   readonly preTitle?: string
   readonly title: string
   readonly lead?: string
@@ -42,6 +39,8 @@ export interface ArticleRevision extends ArticleData {
 
   readonly createdAt: Date
   readonly publishAt?: Date
+  readonly updatedAt?: Date
+  readonly publishedAt?: Date
 }
 
 export interface PublishedArticle extends ArticleData {
