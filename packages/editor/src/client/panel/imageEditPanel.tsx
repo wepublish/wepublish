@@ -119,7 +119,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
       if (image) {
         setCreatedAt(image.createdAt)
-        setUpdatedAt(image.updatedAt)
+        setUpdatedAt(image.modifiedAt)
 
         setFilename(image.filename || '')
         setFileSize(image.fileSize)
@@ -192,7 +192,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       }
     } else {
       const {data} = await updateImage({
-        variables: {input: {id: id!, ...commonInput}}
+        variables: {id: id!, input: commonInput}
       })
 
       setSavedToastOpen(true)

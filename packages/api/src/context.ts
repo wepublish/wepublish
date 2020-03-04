@@ -1,68 +1,106 @@
-import ms from 'ms'
 import DataLoader from 'dataloader'
 
 import {IncomingMessage} from 'http'
-import {AuthenticationError} from 'apollo-server'
-
-import {User} from './adapter/user'
-import {StorageAdapter} from './adapter/storageAdapter'
-import {MediaAdapter} from './adapter/mediaAdapter'
 
 import {TokenExpiredError} from './error'
-import {Image} from './adapter/image'
+import {Hooks} from './hooks'
+
+import {DBAdapter} from './db/adapter'
+import {SessionWithToken, OptionalSessionWithToken} from './db/session'
+
+import {MediaAdapter} from './media/adapter'
+import {AuthenticationError} from 'apollo-server-express'
+import {OptionalImage} from './db/image'
+import {OptionalArticle, OptionalPublicArticle} from './db/article'
+import {OptionalAuthor} from './db/author'
+import {OptionalNavigation} from './db/navigation'
+import {OptionalPage, OptionalPublicPage} from './db/page'
 
 export interface DataLoaderContext {
-  image: DataLoader<string, Image | null>
+  readonly navigationByID: DataLoader<string, OptionalNavigation>
+  readonly navigationByKey: DataLoader<string, OptionalNavigation>
+
+  readonly authorsByID: DataLoader<string, OptionalAuthor>
+  readonly authorsBySlug: DataLoader<string, OptionalAuthor>
+
+  readonly images: DataLoader<string, OptionalImage>
+
+  readonly articles: DataLoader<string, OptionalArticle>
+  readonly publicArticles: DataLoader<string, OptionalPublicArticle>
+
+  readonly pages: DataLoader<string, OptionalPage>
+  readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
+  readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 }
 
 export interface Context {
+  readonly session: OptionalSessionWithToken
   readonly loaders: DataLoaderContext
-  readonly storageAdapter: StorageAdapter
-  readonly mediaAdapter: MediaAdapter
-  readonly sessionExpiry: number
 
-  authenticate(): Promise<User>
+  readonly dbAdapter: DBAdapter
+  readonly mediaAdapter: MediaAdapter
+
+  readonly hooks?: Hooks
+
+  authenticate(): SessionWithToken
 }
 
 export interface ContextOptions {
-  readonly storageAdapter: StorageAdapter
+  readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
-  readonly sessionExpiry?: number | string
+  readonly hooks?: Hooks
 }
 
-export function tokenFromRequest(req: IncomingMessage) {
+export async function contextFromRequest(
+  req: IncomingMessage,
+  {dbAdapter, mediaAdapter, hooks}: ContextOptions
+): Promise<Context> {
+  const token = tokenFromRequest(req)
+  const session = token ? await dbAdapter.getSessionByToken(token) : null
+  const isSessionValid = session && session.expiresAt > new Date()
+
+  return {
+    session: isSessionValid ? session : null,
+    loaders: {
+      navigationByID: new DataLoader(ids => dbAdapter.getNavigationsByID(ids)),
+      navigationByKey: new DataLoader(keys => dbAdapter.getNavigationsByKey(keys)),
+
+      authorsByID: new DataLoader(ids => dbAdapter.getAuthorsByID(ids)),
+      authorsBySlug: new DataLoader(slugs => dbAdapter.getAuthorsBySlug(slugs)),
+
+      images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
+
+      articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
+      publicArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
+
+      pages: new DataLoader(ids => dbAdapter.getPagesByID(ids)),
+      publicPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
+      publicPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs))
+    },
+
+    dbAdapter,
+    mediaAdapter,
+    hooks,
+
+    authenticate() {
+      if (!session) {
+        throw new AuthenticationError('Invalid session!')
+      }
+
+      if (!isSessionValid) {
+        throw new TokenExpiredError()
+      }
+
+      return session
+    }
+  }
+}
+
+export function tokenFromRequest(req: IncomingMessage): string | null {
   if (req.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
 
   return null
-}
-
-export async function contextFromRequest(
-  req: IncomingMessage,
-  {storageAdapter, mediaAdapter, sessionExpiry = '1w'}: ContextOptions
-): Promise<Context> {
-  return {
-    loaders: {
-      image: new DataLoader<string, Image | null>(ids => storageAdapter.getImagesByID(ids))
-    },
-
-    storageAdapter,
-    mediaAdapter,
-    sessionExpiry: typeof sessionExpiry === 'string' ? ms(sessionExpiry) : sessionExpiry,
-
-    async authenticate() {
-      const token = tokenFromRequest(req)
-      if (!token) throw new AuthenticationError('Missing token')
-
-      const session = await storageAdapter.getSession(token)
-      if (!session) throw new AuthenticationError('Invalid token')
-
-      const {user, expiryDate} = session
-      if (new Date() >= expiryDate) throw new TokenExpiredError()
-
-      return user
-    }
-  }
 }

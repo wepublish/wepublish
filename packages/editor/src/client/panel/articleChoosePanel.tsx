@@ -16,7 +16,6 @@ import {
   SearchInput
 } from '@karma.run/ui'
 
-import {VersionState} from '../api/common'
 import {useListArticlesQuery, ArticleReference} from '../api/article'
 
 export interface ArticleChoosePanelProps {
@@ -31,7 +30,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
   const [filter, setFilter] = useState('')
 
   const {data, error, loading} = useListArticlesQuery({
-    variables: {filter: filter || undefined},
+    variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })
   const articles = data?.articles.nodes ?? []
@@ -65,59 +64,63 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
               onChange={e => setFilter(e.target.value)}
             />
           </Box>
-          {articles.map(article => (
-            <Box key={article.id} marginBottom={Spacing.Small}>
-              <Box marginBottom={Spacing.Tiny}>
-                {props => (
-                  // TODO: Clickable
-                  <div {...props} style={{cursor: 'pointer'}} onClick={() => onSelect(article)}>
-                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                      {article.latest.title || 'Untitled'}
-                    </Typography>
-                  </div>
-                )}
-              </Box>
-              <Box
-                marginBottom={Spacing.ExtraSmall}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Typography element="div" variant="subtitle1" color="grayDark">
-                  <Box
-                    marginRight={Spacing.ExtraSmall}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Box marginRight={Spacing.Tiny}>
-                      <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+          {articles.map(article => {
+            const states = []
+
+            if (article.draft) states.push('Draft')
+            if (article.pending) states.push('Pending')
+            if (article.published) states.push('Published')
+
+            return (
+              <Box key={article.id} marginBottom={Spacing.Small}>
+                <Box marginBottom={Spacing.Tiny}>
+                  {props => (
+                    // TODO: Clickable
+                    <div {...props} style={{cursor: 'pointer'}} onClick={() => onSelect(article)}>
+                      <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
+                        {article.latest.title || 'Untitled'}
+                      </Typography>
+                    </div>
+                  )}
+                </Box>
+                <Box
+                  marginBottom={Spacing.ExtraSmall}
+                  flexDirection="row"
+                  alignItems="center"
+                  display="flex">
+                  <Typography element="div" variant="subtitle1" color="grayDark">
+                    <Box
+                      marginRight={Spacing.ExtraSmall}
+                      flexDirection="row"
+                      alignItems="center"
+                      display="flex">
+                      <Box marginRight={Spacing.Tiny}>
+                        <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+                      </Box>
+                      {new Date(article.createdAt).toLocaleString()}
                     </Box>
-                    {new Date(article.createdAt).toLocaleString()}
-                  </Box>
-                </Typography>
-                <Typography element="div" variant="subtitle1" color="grayDark">
-                  <Box
-                    marginRight={Spacing.Small}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Box marginRight={Spacing.Tiny}>
-                      <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+                  </Typography>
+                  <Typography element="div" variant="subtitle1" color="grayDark">
+                    <Box
+                      marginRight={Spacing.Small}
+                      flexDirection="row"
+                      alignItems="center"
+                      display="flex">
+                      <Box marginRight={Spacing.Tiny}>
+                        <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+                      </Box>
+                      {article.latest.updatedAt &&
+                        new Date(article.latest.updatedAt).toLocaleString()}
                     </Box>
-                    {article.latest.updatedAt &&
-                      new Date(article.latest.updatedAt).toLocaleString()}
-                  </Box>
-                </Typography>
-                <Typography element="div" variant="subtitle1" color="gray">
-                  {article.publishedAt != undefined && 'Published'}
-                  {article.publishedAt != undefined &&
-                    article.latest.state === VersionState.Draft &&
-                    ' / '}
-                  {article.latest.state === VersionState.Draft && 'Draft'}
-                </Typography>
+                  </Typography>
+                  <Typography element="div" variant="subtitle1" color="gray">
+                    {states.join(' / ')}
+                  </Typography>
+                </Box>
+                <Divider />
               </Box>
-              <Divider />
-            </Box>
-          ))}
+            )
+          })}
         </PanelSection>
       </Panel>
       <Toast

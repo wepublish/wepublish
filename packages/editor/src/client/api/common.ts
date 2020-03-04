@@ -1,4 +1,6 @@
-export enum VersionState {
-  Draft = 'DRAFT',
-  Published = 'PUBLISHED'
+export interface PageInfo {
+  readonly startCursor?: string
+  readonly endCursor?: string
+  readonly hasNextPage: boolean
+  readonly hasPreviousPage: boolean
 }

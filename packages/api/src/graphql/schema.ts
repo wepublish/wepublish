@@ -1,9 +1,13 @@
 import {GraphQLSchema} from 'graphql'
 
-import {GraphQLQuery} from './query'
-import {GraphQLMutation} from './mutation'
+import {GraphQLQuery, GraphQLPublicQuery} from './query'
+import {GraphQLAdminMutation} from './mutation'
 
 export const GraphQLWepublishSchema = new GraphQLSchema({
   query: GraphQLQuery,
-  mutation: GraphQLMutation
+  mutation: GraphQLAdminMutation
+})
+
+export const GraphQLWepublishPublicSchema = new GraphQLSchema({
+  query: GraphQLPublicQuery
 })

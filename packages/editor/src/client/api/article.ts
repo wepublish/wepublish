@@ -1,38 +1,61 @@
 import gql from 'graphql-tag'
 import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
 
-import {VersionState} from './common'
+import {PageInfo} from './common'
 import {ImageRefFragment, ImageRefData} from './image'
 import {AuthorFragment} from './author'
 
 export const ArticleMutationFragment = gql`
   fragment ArticleMutationFragment on Article {
     id
-    publishedAt
+
+    published {
+      publishedAt
+      revision
+    }
+
     latest {
-      version
+      revision
     }
   }
 `
 
 export interface ArticleMutationData {
   id: string
-  publishedAt?: string
+
+  published?: {
+    publishedAt: string
+    revision: number
+  }
+
   latest: {
-    version: number
+    revision: number
   }
 }
 
 export const ArticleRefFragment = gql`
   fragment ArticleRefFragment on Article {
     id
+
     createdAt
-    publishedAt
+    modifiedAt
+
+    draft {
+      revision
+    }
+
+    pending {
+      revision
+    }
+
+    published {
+      publishedAt
+      updatedAt
+      revision
+    }
 
     latest {
-      updatedAt
-
-      state
+      revision
       title
       lead
       image {
@@ -48,11 +71,17 @@ export interface ArticleReference {
   id: string
 
   createdAt: string
-  publishedAt?: string
+  modifiedAt: string
+
+  draft?: {revision: number}
+  pending?: {revision: number}
+  published?: {revision: number}
 
   latest: {
-    updatedAt: string
-    state: VersionState
+    revision: number
+    publishAt?: string
+    publishedAt?: string
+    updatedAt?: string
     title?: string
     lead?: string
     image?: ImageRefData
@@ -63,11 +92,20 @@ export interface ArticleReference {
 // =====
 
 const ListArticlesQuery = gql`
-  query ListArticles($filter: String) {
-    articles(filter: $filter) {
+  query ListArticles($filter: String, $after: ID, $first: Int) {
+    articles(first: $first, after: $after, filter: {title: $filter}) {
       nodes {
         ...ArticleRefFragment
       }
+
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      totalCount
     }
   }
 
@@ -77,10 +115,14 @@ const ListArticlesQuery = gql`
 export interface ListArticlesData {
   articles: {
     nodes: ArticleReference[]
+    pageInfo: PageInfo
+    totalCount: number
   }
 }
 
 export interface ListArticlesVariables {
+  first: number
+  after?: string
   filter?: string
 }
 
@@ -154,11 +196,16 @@ export function useUpdateArticleMutation() {
 const PublishArticleMutation = gql`
   mutation PublishArticle(
     $id: ID!
-    $version: Int!
+    $publishAt: DateTime!
     $publishedAt: DateTime!
     $updatedAt: DateTime!
   ) {
-    publishArticle(id: $id, version: $version, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+    publishArticle(
+      id: $id
+      publishAt: $publishAt
+      publishedAt: $publishedAt
+      updatedAt: $updatedAt
+    ) {
       ...ArticleMutationFragment
     }
   }
@@ -172,9 +219,9 @@ export interface PublishArticleMutationData {
 
 export interface PublishArticleVariables {
   id: string
-  version: number
-  publishedAt: string
-  updatedAt: string
+  publishAt?: string
+  publishedAt?: string
+  updatedAt?: string
 }
 
 export function usePublishArticleMutation(
@@ -187,7 +234,7 @@ export function usePublishArticleMutation(
 }
 
 const UnpublishArticleMutation = gql`
-  mutation PublishArticle($id: ID!) {
+  mutation UnpublishArticle($id: ID!) {
     unpublishArticle(id: $id) {
       ...ArticleMutationFragment
     }
@@ -237,10 +284,15 @@ const GetArticleQuery = gql`
   query GetArticle($id: ID!) {
     article(id: $id) {
       id
-      publishedAt
+      shared
+
+      published {
+        publishedAt
+        updatedAt
+      }
+
       latest {
-        id
-        version
+        revision
         slug
         preTitle
         title
@@ -253,7 +305,6 @@ const GetArticleQuery = gql`
           ...AuthorFragment
         }
         breaking
-        shared
         blocks {
           __typename
 

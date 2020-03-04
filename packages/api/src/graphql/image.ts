@@ -7,16 +7,15 @@ import {
   GraphQLFloat,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLBoolean,
   GraphQLID
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLUpload} from 'apollo-server-express'
 
 import {Context} from '../context'
-import {Image, ImageRotation, ImageOutput} from '../adapter/image'
-import {GraphQLPageInfo} from './pageInfo'
-import {GraphQLUpload} from 'graphql-upload'
+import {Image, ImageRotation, ImageOutput, ImageSort} from '../db/image'
+import {GraphQLPageInfo} from './common'
 
 export const GraphQLInputPoint = new GraphQLInputObjectType({
   name: 'InputPoint',
@@ -68,7 +67,7 @@ export const GraphQLImageTransformation = new GraphQLInputObjectType({
 export const GraphQLUploadImageInput = new GraphQLInputObjectType({
   name: 'UploadImageInput',
   fields: {
-    file: {type: GraphQLNonNull(GraphQLUpload)},
+    file: {type: GraphQLNonNull(GraphQLUpload!)},
     filename: {type: GraphQLString},
 
     title: {type: GraphQLString},
@@ -86,7 +85,6 @@ export const GraphQLUploadImageInput = new GraphQLInputObjectType({
 export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
   name: 'UpdateImageInput',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
     filename: {type: GraphQLString},
 
     title: {type: GraphQLString},
@@ -101,16 +99,29 @@ export const GraphQLUpdateImageInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLImageFilter = new GraphQLInputObjectType({
+  name: 'ImageFilter',
+  fields: {
+    title: {type: GraphQLString},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLImageSort = new GraphQLEnumType({
+  name: 'ImageSort',
+  values: {
+    CREATED_AT: {value: ImageSort.CreatedAt},
+    MODIFIED_AT: {value: ImageSort.ModifiedAt}
+  }
+})
+
 export const GraphQLImage = new GraphQLObjectType<Image, Context>({
   name: 'Image',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    archivedAt: {type: GraphQLDateTime},
-
-    isArchived: {type: GraphQLNonNull(GraphQLBoolean)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     filename: {type: GraphQLString},
     title: {type: GraphQLString},

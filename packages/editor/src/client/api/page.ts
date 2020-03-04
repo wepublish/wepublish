@@ -2,25 +2,35 @@ import gql from 'graphql-tag'
 
 import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
 
-import {VersionState} from './common'
+import {PageInfo} from './common'
 import {ArticleRefFragment} from './article'
 import {ImageRefData, ImageRefFragment} from './image'
 
 export const PageMutationFragment = gql`
   fragment PageMutationFragment on Page {
     id
-    publishedAt
+
+    published {
+      publishedAt
+      revision
+    }
+
     latest {
-      version
+      revision
     }
   }
 `
 
 export interface PageMutationData {
   id: string
-  publishedAt?: string
+
+  published?: {
+    publishedAt: string
+    revision: number
+  }
+
   latest: {
-    version: number
+    revision: number
   }
 }
 
@@ -28,12 +38,24 @@ export const PageRefFragment = gql`
   fragment PageRefFragment on Page {
     id
     createdAt
-    publishedAt
+    modifiedAt
+
+    draft {
+      revision
+    }
+
+    pending {
+      revision
+    }
+
+    published {
+      publishedAt
+      updatedAt
+      revision
+    }
 
     latest {
-      updatedAt
-
-      state
+      revision
       title
       description
       image {
@@ -49,11 +71,15 @@ export interface PageReference {
   id: string
 
   createdAt: string
-  publishedAt: string
+  modifiedAt: string
+
+  draft?: {revision: number}
+  pending?: {revision: number}
+  published?: {revision: number}
 
   latest: {
-    updatedAt: string
-    state: VersionState
+    publishedAt?: string
+    updatedAt?: string
     title?: string
     description?: string
     image?: ImageRefData
@@ -64,11 +90,20 @@ export interface PageReference {
 // =====
 
 const ListPagesQuery = gql`
-  query ListPages($filter: String) {
-    pages(filter: $filter) {
+  query ListPages($filter: String, $after: ID, $first: Int) {
+    pages(first: $first, after: $after, filter: {title: $filter}) {
       nodes {
         ...PageRefFragment
       }
+
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      totalCount
     }
   }
 
@@ -78,10 +113,14 @@ const ListPagesQuery = gql`
 export interface ListPagesData {
   pages: {
     nodes: PageReference[]
+    pageInfo: PageInfo
+    totalCount: number
   }
 }
 
 export interface ListPagesVariables {
+  first: number
+  after?: string
   filter?: string
 }
 
@@ -154,8 +193,13 @@ export function useUpdatePageMutation() {
 }
 
 const PublishPageMutation = gql`
-  mutation PublishPage($id: ID!, $version: Int!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
-    publishPage(id: $id, version: $version, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+  mutation PublishPage(
+    $id: ID!
+    $publishAt: DateTime
+    $publishedAt: DateTime
+    $updatedAt: DateTime
+  ) {
+    publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
       ...PageMutationFragment
     }
   }
@@ -169,9 +213,9 @@ export interface PublishPageMutationData {
 
 export interface PublishPageVariables {
   id: string
-  version: number
-  publishedAt: string
-  updatedAt: string
+  publishAt?: string
+  publishedAt?: string
+  updatedAt?: string
 }
 
 export function usePublishPageMutation(
@@ -228,9 +272,15 @@ const GetPageQuery = gql`
   query GetPage($id: ID!) {
     page(id: $id) {
       id
-      publishedAt
+
+      published {
+        publishedAt
+        updatedAt
+      }
+
       latest {
-        id
+        publishedAt
+        updatedAt
         slug
         title
         description

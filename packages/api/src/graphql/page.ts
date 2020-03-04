@@ -3,31 +3,37 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLList,
-  GraphQLInt,
   GraphQLString,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
   GraphQLUnionType,
-  GraphQLInputObjectType
+  GraphQLBoolean,
+  GraphQLInt
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
+
 import {Context} from '../context'
 
 import {
   GraphQLRichTextBlock,
   GraphQLImageBlock,
-  GraphQLArticleTeaserGridBlock,
-  GraphQLArticleTeaserGridBlockInput,
-  GraphQLInputTitleBlock,
-  GraphQLInputImageBlock,
   GraphQLInputRichTextBlock,
   GraphQLTitleBlock,
-  GraphQLInputLinkPageBreakBlock
+  GraphQLInputImageBlock,
+  GraphQLInputTitleBlock,
+  GraphQLInputLinkPageBreakBlock,
+  GraphQLArticleTeaserGridBlockInput,
+  GraphQLArticleTeaserGridBlock,
+  GraphQLPublicArticleTeaserGridBlock,
+  GraphQLLinkPageBreakBlock
 } from './blocks'
 
-import {Page} from '../adapter/page'
-import {GraphQLVersionState} from './article'
-import {BlockType} from '../adapter/blocks'
 import {GraphQLImage} from './image'
+import {BlockType} from '../db/block'
+import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
+import {GraphQLSlug} from './slug'
+import {GraphQLPageInfo} from './common'
 
 export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
   name: 'PageBlockUnionMap',
@@ -42,43 +48,101 @@ export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
 
 export const GraphQLPageBlock = new GraphQLUnionType({
   name: 'PageBlock',
-  types: [GraphQLRichTextBlock, GraphQLTitleBlock, GraphQLImageBlock, GraphQLArticleTeaserGridBlock]
+  types: [
+    GraphQLRichTextBlock,
+    GraphQLTitleBlock,
+    GraphQLImageBlock,
+    GraphQLLinkPageBreakBlock,
+    GraphQLArticleTeaserGridBlock
+  ]
+})
+
+export const GraphQLPublicPageBlock = new GraphQLUnionType({
+  name: 'PageBlock',
+  types: [
+    GraphQLRichTextBlock,
+    GraphQLTitleBlock,
+    GraphQLImageBlock,
+    GraphQLLinkPageBreakBlock,
+    GraphQLPublicArticleTeaserGridBlock
+  ]
+})
+
+export const GraphQLPageFilter = new GraphQLInputObjectType({
+  name: 'PageFilter',
+  fields: {
+    title: {type: GraphQLString},
+    draft: {type: GraphQLBoolean},
+    published: {type: GraphQLBoolean},
+    pending: {type: GraphQLBoolean},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLPublishedPageFilter = new GraphQLInputObjectType({
+  name: 'PublishedPageFilter',
+  fields: {
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLPageSort = new GraphQLEnumType({
+  name: 'PageSort',
+  values: {
+    CREATED_AT: {value: PageSort.CreatedAt},
+    MODIFIED_AT: {value: PageSort.ModifiedAt},
+    PUBLISH_AT: {value: PageSort.PublishAt},
+    PUBLISHED_AT: {value: PageSort.PublishedAt},
+    UPDATED_AT: {value: PageSort.UpdatedAt}
+  }
+})
+
+export const GraphQLPublishedPageSort = new GraphQLEnumType({
+  name: 'PublishedPageSort',
+  values: {
+    PUBLISHED_AT: {value: PageSort.PublishedAt},
+    UPDATED_AT: {value: PageSort.UpdatedAt}
+  }
 })
 
 export const GraphQLPageInput = new GraphQLInputObjectType({
   name: 'PageInput',
   fields: {
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
     title: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
     imageID: {type: GraphQLID},
+
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlockUnionMap)))
     }
   }
 })
 
-export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
-  name: 'PageVersion',
-
+export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>({
+  name: 'PageRevision',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    version: {type: GraphQLNonNull(GraphQLInt)},
-    state: {type: GraphQLNonNull(GraphQLVersionState)},
+    revision: {type: GraphQLNonNull(GraphQLInt)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishAt: {type: GraphQLDateTime},
 
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    updatedAt: {type: GraphQLDateTime},
+    publishedAt: {type: GraphQLDateTime},
+
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
     title: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+      resolve({imageID}, args, {loaders}, info) {
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 
@@ -86,49 +150,70 @@ export const GraphQLPageVersion = new GraphQLObjectType<any, Context>({
   }
 })
 
-// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
-export const GraphQLPage: GraphQLObjectType = new GraphQLObjectType({
+export const GraphQLPage = new GraphQLObjectType<Page, Context>({
   name: 'Page',
-
-  fields: () => ({
+  fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLDateTime},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    published: {
-      type: GraphQLPageVersion,
-      resolve(root: Page, _args, {storageAdapter}: Context) {
-        if (root.publishedAt == undefined || root.publishedVersion == undefined) return null
-        if (new Date().getTime() < root.publishedAt.getTime()) return null
-
-        return storageAdapter.getPageVersion(root.id, root.publishedVersion)
-      }
-    },
+    draft: {type: GraphQLPageRevision},
+    published: {type: GraphQLPageRevision},
+    pending: {type: GraphQLPageRevision},
 
     latest: {
-      type: GraphQLPageVersion,
-      async resolve(root: Page, _args, {storageAdapter, authenticate}: Context) {
-        await authenticate()
-        return storageAdapter.getPageVersion(root.id, root.latestVersion)
-      }
-    },
-
-    versions: {
-      type: GraphQLList(GraphQLPageVersion),
-      async resolve(root: Page, _args, {storageAdapter, authenticate}: Context) {
-        await authenticate()
-        return storageAdapter.getPageVersions(root.id)
+      type: GraphQLNonNull(GraphQLPageRevision),
+      resolve({draft, pending, published}) {
+        return draft ?? pending ?? published
       }
     }
-  })
+
+    // TODO: Implement page history
+    // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageRevision)))}
+  }
 })
 
 export const GraphQLPageConnection = new GraphQLObjectType({
   name: 'PageConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLPage)}
-    // pageInfo: {type: GraphQLPageInfo} // TODO
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPage)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
+  name: 'Page',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLString},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    image: {
+      type: GraphQLImage,
+      resolve({imageID}, args, {loaders}, info) {
+        return imageID ? loaders.images.load(imageID) : null
+      }
+    },
+
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPageBlock)))}
+  }
+})
+
+export const GraphQLPublicPageConnection = new GraphQLObjectType({
+  name: 'PageConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPage)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

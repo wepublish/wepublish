@@ -24,17 +24,18 @@ import {
   NavigationButton,
   PanelSection,
   DescriptionList,
-  DescriptionListItem
+  DescriptionListItem,
+  Button
 } from '@karma.run/ui'
 
 import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
+
 import {
   useListArticlesQuery,
   ArticleReference,
   useUnpublishArticleMutation,
   useDeleteArticleMutation
 } from '../api/article'
-import {VersionState} from '../api/common'
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -51,95 +52,109 @@ export function ArticleList() {
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
 
-  const {data, refetch, loading: isLoading} = useListArticlesQuery({
-    variables: {filter: filter || undefined},
-    fetchPolicy: 'no-cache'
+  const {data, refetch, fetchMore, loading: isLoading} = useListArticlesQuery({
+    variables: {filter: filter || undefined, first: 50},
+    fetchPolicy: 'network-only'
   })
 
-  const articles = data?.articles.nodes
-    .sort((a, b) => {
-      const dateA = new Date(a.latest.updatedAt)
-      const dateB = new Date(b.latest.updatedAt)
+  function loadMore() {
+    fetchMore({
+      variables: {first: 50, after: data?.articles.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
 
-      return dateA > dateB ? -1 : 1
+        return {
+          articles: {
+            ...fetchMoreResult.articles,
+            nodes: [...prev.articles.nodes, ...fetchMoreResult?.articles.nodes]
+          }
+        }
+      }
     })
-    .map(article => {
-      const {
-        id,
-        createdAt,
-        publishedAt,
-        latest: {updatedAt, title, state}
-      } = article
+  }
 
-      return (
-        <Box key={id} marginBottom={Spacing.Small}>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Link route={ArticleEditRoute.create({id})}>
-              <Typography variant="h3" color={title ? 'dark' : 'gray'}>
-                {title || 'Untitled'}
-              </Typography>
-            </Link>
-          </Box>
-          <Box
-            marginBottom={Spacing.ExtraSmall}
-            flexDirection="row"
-            alignItems="center"
-            display="flex">
-            <Typography element="div" variant="body1" color="grayDark">
-              <Box
-                marginRight={Spacing.ExtraSmall}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Box marginRight={Spacing.Tiny}>
-                  <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                </Box>
-                {new Date(createdAt).toLocaleString()}
-              </Box>
+  const articles = data?.articles.nodes.map(article => {
+    const {
+      id,
+      createdAt,
+      modifiedAt,
+
+      draft,
+      pending,
+      published,
+
+      latest: {title}
+    } = article
+
+    const states = []
+
+    if (draft) states.push('Draft')
+    if (pending) states.push('Pending')
+    if (published) states.push('Published')
+
+    return (
+      <Box key={id} marginBottom={Spacing.Small}>
+        <Box marginBottom={Spacing.ExtraSmall}>
+          <Link route={ArticleEditRoute.create({id})}>
+            <Typography variant="h3" color={title ? 'dark' : 'gray'}>
+              {title || 'Untitled'}
             </Typography>
-            <Typography element="div" variant="body1" color="grayDark">
-              <Box
-                marginRight={Spacing.Small}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Box marginRight={Spacing.Tiny}>
-                  <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                </Box>
-                {updatedAt && new Date(updatedAt).toLocaleString()}
-              </Box>
-            </Typography>
-            <Typography element="div" variant="subtitle1" color="gray">
-              {publishedAt != undefined && 'Published'}
-              {publishedAt != undefined && state === VersionState.Draft && ' / '}
-              {state === VersionState.Draft && 'Draft'}
-            </Typography>
-            <Box flexGrow={1} />
-            <OptionButton
-              position="left"
-              menuItems={
-                publishedAt // TODO: Allow disabling menu items
-                  ? [
-                      {
-                        id: ConfirmAction.Unpublish,
-                        label: 'Unpublish',
-                        icon: MaterialIconGetAppOutlined
-                      },
-                      {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-                    ]
-                  : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
-              }
-              onMenuItemClick={item => {
-                setCurrentArticle(article)
-                setConfirmationDialogOpen(true)
-                setConfirmAction(item.id as ConfirmAction)
-              }}
-            />
-          </Box>
-          <Divider />
+          </Link>
         </Box>
-      )
-    })
+        <Box
+          marginBottom={Spacing.ExtraSmall}
+          flexDirection="row"
+          alignItems="center"
+          display="flex">
+          <Typography element="div" variant="body1" color="grayDark">
+            <Box
+              marginRight={Spacing.ExtraSmall}
+              flexDirection="row"
+              alignItems="center"
+              display="flex">
+              <Box marginRight={Spacing.Tiny}>
+                <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+              </Box>
+              {new Date(createdAt).toLocaleString()}
+            </Box>
+          </Typography>
+          <Typography element="div" variant="body1" color="grayDark">
+            <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
+              <Box marginRight={Spacing.Tiny}>
+                <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+              </Box>
+              {new Date(modifiedAt).toLocaleString()}
+            </Box>
+          </Typography>
+          <Typography element="div" variant="subtitle1" color="gray">
+            {states.join(' / ')}
+          </Typography>
+          <Box flexGrow={1} />
+          <OptionButton
+            position="left"
+            menuItems={
+              published // TODO: Allow disabling menu items
+                ? [
+                    {
+                      id: ConfirmAction.Unpublish,
+                      label: 'Unpublish',
+                      icon: MaterialIconGetAppOutlined
+                    },
+                    {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                  ]
+                : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
+            }
+            onMenuItemClick={item => {
+              setCurrentArticle(article)
+              setConfirmationDialogOpen(true)
+              setConfirmAction(item.id as ConfirmAction)
+            }}
+          />
+        </Box>
+        <Divider />
+      </Box>
+    )
+  })
 
   return (
     <>
@@ -161,13 +176,21 @@ export function ArticleList() {
       </Box>
       <Box>
         {articles?.length ? (
-          articles
+          <>
+            {articles}
+            <Box display="flex" justifyContent="center">
+              {data?.articles.pageInfo.hasNextPage && (
+                <Button label="Load More" onClick={loadMore} />
+              )}
+            </Box>
+          </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
             No Articles found
           </Typography>
         ) : null}
       </Box>
+
       <Dialog open={isConfirmationDialogOpen} width={340}>
         {() => (
           <Panel>
@@ -230,10 +253,9 @@ export function ArticleList() {
                   {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                {currentArticle?.publishedAt && (
+                {currentArticle?.latest.publishedAt && (
                   <DescriptionListItem label="Published At">
-                    {currentArticle?.publishedAt &&
-                      new Date(currentArticle.createdAt).toLocaleString()}
+                    {new Date(currentArticle.createdAt).toLocaleString()}
                   </DescriptionListItem>
                 )}
               </DescriptionList>

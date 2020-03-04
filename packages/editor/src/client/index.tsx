@@ -62,7 +62,9 @@ const onDOMContentLoaded = async () => {
     document.getElementById(ElementID.Settings)!.textContent!
   )
 
-  const introspectionQueryResultData = await fetchIntrospectionQueryResultData(apiURL)
+  const adminAPIURL = `${apiURL}/admin`
+
+  const introspectionQueryResultData = await fetchIntrospectionQueryResultData(adminAPIURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
 
@@ -76,7 +78,7 @@ const onDOMContentLoaded = async () => {
   })
 
   const client = new ApolloClient({
-    link: authLink.concat(createUploadLink({uri: apiURL})),
+    link: authLink.concat(createUploadLink({uri: adminAPIURL})),
     cache: new InMemoryCache({
       fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
     })

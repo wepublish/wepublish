@@ -1,4 +1,5 @@
 import React, {useState, ReactNode} from 'react'
+import nanoid from 'nanoid'
 
 import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
 
@@ -26,8 +27,6 @@ import {ArticleReference} from '../api/article'
 import {TeaserGridBlockValue, ArticleTeaser} from '../api/blocks'
 
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
-import {VersionState} from '../api/common'
-import nanoid from 'nanoid'
 
 interface GridElementProps {
   numColumns: number
@@ -141,6 +140,12 @@ export function ArticleTeaserBlock({
   onChooseArticle,
   onRemoveArticle
 }: ArticleTeaserBlockProps) {
+  const states = []
+
+  if (teaser?.article?.draft) states.push('Draft')
+  if (teaser?.article?.pending) states.push('Pending')
+  if (teaser?.article?.published) states.push('Published')
+
   return (
     <Card
       style={{cursor: showGrabCursor ? 'grab' : ''}}
@@ -169,11 +174,7 @@ export function ArticleTeaserBlock({
 
             <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
               <Typography variant="subtitle1" color="gray">
-                {teaser.article.publishedAt != undefined && 'Published'}
-                {teaser.article.latest.state === VersionState.Draft &&
-                  teaser.article.publishedAt != undefined &&
-                  ' / '}
-                {teaser.article.latest.state === VersionState.Draft && 'Draft'}
+                {states.join(' / ')}
               </Typography>
               <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
                 {teaser.article.latest.title || 'Untitled'}

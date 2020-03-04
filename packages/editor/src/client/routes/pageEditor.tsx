@@ -116,8 +116,9 @@ export function PageEditor({id}: PageEditorProps) {
 
   useEffect(() => {
     if (pageData?.page) {
-      const {latest, publishedAt} = pageData.page
+      const {latest, published} = pageData.page
       const {slug, title, description, tags, image, blocks} = latest
+      const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
 
@@ -184,14 +185,14 @@ export function PageEditor({id}: PageEditorProps) {
         const {data: publishData} = await publishPage({
           variables: {
             id: pageID,
-            version: data.updatePage.latest.version,
+            publishAt: publishDate.toISOString(),
             publishedAt: publishDate.toISOString(),
             updatedAt: updateDate.toISOString()
           }
         })
 
-        if (publishData?.publishPage?.publishedAt) {
-          setPublishedAt(new Date(publishData?.publishPage?.publishedAt))
+        if (publishData?.publishPage?.published?.publishedAt) {
+          setPublishedAt(new Date(publishData?.publishPage?.published.publishedAt))
         }
       }
     }
