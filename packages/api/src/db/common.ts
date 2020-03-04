@@ -16,7 +16,7 @@ export interface ConnectionResult<T> {
   totalCount: number
 }
 
-import {UserInputError} from 'apollo-server'
+import {UserInputError} from 'apollo-server-express'
 
 export enum InputCursorType {
   After = 'after',

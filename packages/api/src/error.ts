@@ -1,4 +1,4 @@
-import {ApolloError} from 'apollo-server'
+import {ApolloError} from 'apollo-server-express'
 
 export enum ErrorCode {
   TokenExpired = 'TOKEN_EXPIRED',

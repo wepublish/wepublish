@@ -28,7 +28,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserInputError} from 'apollo-server'
+import {UserInputError} from 'apollo-server-express'
 import {GraphQLNavigation, GraphQLPublicNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 import {

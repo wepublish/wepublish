@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
@@ -18,6 +18,7 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "@types/graphql-upload": "^8.0.3",
     "@types/node-fetch": "^2.5.5",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",

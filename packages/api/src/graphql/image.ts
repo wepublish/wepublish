@@ -11,7 +11,7 @@ import {
 } from 'graphql'
 
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLUpload} from 'apollo-server'
+import {GraphQLUpload} from 'apollo-server-express'
 
 import {Context} from '../context'
 import {Image, ImageRotation, ImageOutput, ImageSort} from '../db/image'

@@ -9,7 +9,7 @@ import {DBAdapter} from './db/adapter'
 import {SessionWithToken, OptionalSessionWithToken} from './db/session'
 
 import {MediaAdapter} from './media/adapter'
-import {AuthenticationError} from 'apollo-server'
+import {AuthenticationError} from 'apollo-server-express'
 import {OptionalImage} from './db/image'
 import {OptionalArticle, OptionalPublicArticle} from './db/article'
 import {OptionalAuthor} from './db/author'
