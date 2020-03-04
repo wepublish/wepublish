@@ -47,7 +47,7 @@ import {
 import {GraphQLImage} from './image'
 import {BlockType} from '../db/block'
 import {GraphQLAuthor} from './author'
-import {PublishedArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
+import {PublicArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './common'
 
@@ -220,8 +220,8 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, Context>({
-  name: 'PublishedArticle',
+export const GraphQLPublicArticle = new GraphQLObjectType<PublicArticle, Context>({
+  name: 'Article',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
@@ -253,10 +253,10 @@ export const GraphQLPublishedArticle = new GraphQLObjectType<PublishedArticle, C
   }
 })
 
-export const GraphQLPublishedArticleConnection = new GraphQLObjectType({
-  name: 'PublishedArticleConnection',
+export const GraphQLPublicArticleConnection = new GraphQLObjectType({
+  name: 'ArticleConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublishedArticle)))},
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicArticle)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }

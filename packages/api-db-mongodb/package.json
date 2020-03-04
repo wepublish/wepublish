@@ -14,19 +14,18 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "bcrypt": "^3.0.7",
-    "mongodb": "^3.5.2",
+    "bcrypt": "^4.0.1",
+    "mongodb": "^3.5.4",
     "nanoid": "^2.1.11"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
-    "@types/mongodb": "^3.3.15",
+    "@types/mongodb": "^3.5.0",
     "@types/nanoid": "^2.1.0",
-    "@types/node": "^13.7.4",
+    "@types/node": "^13.7.7",
     "npm-run-all": "^4.1.5",
-    "sequelize": "5.21.3",
     "shx": "^0.3.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "@wepublish/api": "*"

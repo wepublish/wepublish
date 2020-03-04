@@ -25,13 +25,13 @@ import {
   GraphQLInputLinkPageBreakBlock,
   GraphQLArticleTeaserGridBlockInput,
   GraphQLArticleTeaserGridBlock,
-  GraphQLPublishedArticleTeaserGridBlock,
+  GraphQLPublicArticleTeaserGridBlock,
   GraphQLLinkPageBreakBlock
 } from './blocks'
 
 import {GraphQLImage} from './image'
 import {BlockType} from '../db/block'
-import {PublishedPage, PageRevision, Page, PageSort} from '../db/page'
+import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
 import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './common'
 
@@ -57,14 +57,14 @@ export const GraphQLPageBlock = new GraphQLUnionType({
   ]
 })
 
-export const GraphQLPublishedPageBlock = new GraphQLUnionType({
-  name: 'PublishedPageBlock',
+export const GraphQLPublicPageBlock = new GraphQLUnionType({
+  name: 'PageBlock',
   types: [
     GraphQLRichTextBlock,
     GraphQLTitleBlock,
     GraphQLImageBlock,
     GraphQLLinkPageBreakBlock,
-    GraphQLPublishedArticleTeaserGridBlock
+    GraphQLPublicArticleTeaserGridBlock
   ]
 })
 
@@ -184,8 +184,8 @@ export const GraphQLPageConnection = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublishedPage = new GraphQLObjectType<PublishedPage, Context>({
-  name: 'PublishedPage',
+export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
+  name: 'Page',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
@@ -205,14 +205,14 @@ export const GraphQLPublishedPage = new GraphQLObjectType<PublishedPage, Context
       }
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublishedPageBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPageBlock)))}
   }
 })
 
-export const GraphQLPublishedPageConnection = new GraphQLObjectType({
-  name: 'PublishedPageConnection',
+export const GraphQLPublicPageConnection = new GraphQLObjectType({
+  name: 'PageConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublishedPage)))},
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPage)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }

@@ -6,10 +6,10 @@ import {
   GraphQLArticleConnection,
   GraphQLArticleSort,
   GraphQLArticleFilter,
-  GraphQLPublishedArticleConnection,
+  GraphQLPublicArticleConnection,
   GraphQLPublishedArticleSort,
   GraphQLArticle,
-  GraphQLPublishedArticle,
+  GraphQLPublicArticle,
   GraphQLPublishedArticleFilter
 } from './article'
 
@@ -29,15 +29,15 @@ import {
 
 import {AuthorSort} from '../db/author'
 import {UserInputError} from 'apollo-server'
-import {GraphQLNavigation} from './navigation'
+import {GraphQLNavigation, GraphQLPublicNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
 import {
   GraphQLPage,
-  GraphQLPublishedPage,
+  GraphQLPublicPage,
   GraphQLPageConnection,
   GraphQLPageFilter,
   GraphQLPageSort,
-  GraphQLPublishedPageConnection,
+  GraphQLPublicPageConnection,
   GraphQLPublishedPageFilter,
   GraphQLPublishedPageSort
 } from './page'
@@ -70,12 +70,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Navigation
     // ==========
 
-    // TODO: Add Public Navigation Query
-
     navigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
       resolve(root, {id, key}, {authenticate, loaders}) {
+        authenticate()
+
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
         }
@@ -91,6 +91,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       resolve(root, {id, slug}, {authenticate, loaders}) {
+        authenticate()
+
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
@@ -130,6 +132,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLImage,
       args: {id: {type: GraphQLID}},
       resolve(root, {id}, {authenticate, loaders}) {
+        authenticate()
         return loaders.images.load(id)
       }
     },
@@ -170,14 +173,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    publishedArticle: {
-      type: GraphQLPublishedArticle,
-      args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        return loaders.publishedArticles.load(id)
-      }
-    },
-
     articles: {
       type: GraphQLNonNull(GraphQLArticleConnection),
       args: {
@@ -202,28 +197,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    publishedArticles: {
-      type: GraphQLNonNull(GraphQLPublishedArticleConnection),
-      args: {
-        after: {type: GraphQLID},
-        before: {type: GraphQLID},
-        first: {type: GraphQLInt},
-        last: {type: GraphQLInt},
-        filter: {type: GraphQLPublishedArticleFilter},
-        sort: {type: GraphQLPublishedArticleSort, defaultValue: ArticleSort.PublishedAt},
-        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
-      },
-      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.getPublishedArticles({
-          filter,
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
-      }
-    },
-
     // Page
     // =======
 
@@ -233,18 +206,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id}, {authenticate, loaders}) {
         authenticate()
         return loaders.pages.load(id)
-      }
-    },
-
-    publishedPage: {
-      type: GraphQLPublishedPage,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
-        }
-
-        return id ? loaders.publishedPagesByID.load(id) : loaders.publishedPagesBySlug.load(slug)
       }
     },
 
@@ -270,10 +231,115 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           limit: Limit(first, last)
         })
       }
+    }
+  }
+})
+
+export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
+  name: 'Query',
+  fields: {
+    // Navigation
+    // ==========
+
+    navigation: {
+      type: GraphQLPublicNavigation,
+      args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
+      resolve(root, {id, key}, {authenticate, loaders}) {
+        if ((id == null && key == null) || (id != null && key != null)) {
+          throw new UserInputError('You must provide either `id` or `key`.')
+        }
+
+        return id ? loaders.navigationByID.load(id) : loaders.navigationByKey.load(key)
+      }
     },
 
-    publishedPages: {
-      type: GraphQLNonNull(GraphQLPublishedPageConnection),
+    // Author
+    // ======
+
+    author: {
+      type: GraphQLAuthor,
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      resolve(root, {id, slug}, {authenticate, loaders}) {
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
+
+        return id ? loaders.authorsByID.load(id) : loaders.authorsBySlug.load(slug)
+      }
+    },
+
+    authors: {
+      type: GraphQLNonNull(GraphQLAuthorConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLAuthorFilter},
+        sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        return dbAdapter.getAuthors({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Article
+    // =======
+
+    article: {
+      type: GraphQLPublicArticle,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        return loaders.publicArticles.load(id)
+      }
+    },
+
+    articles: {
+      type: GraphQLNonNull(GraphQLPublicArticleConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLPublishedArticleFilter},
+        sort: {type: GraphQLPublishedArticleSort, defaultValue: ArticleSort.PublishedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
+        return dbAdapter.getPublishedArticles({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Page
+    // =======
+
+    page: {
+      type: GraphQLPublicPage,
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      resolve(root, {id, slug}, {authenticate, loaders}) {
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
+
+        return id ? loaders.publicPagesByID.load(id) : loaders.publicPagesBySlug.load(slug)
+      }
+    },
+
+    pages: {
+      type: GraphQLNonNull(GraphQLPublicPageConnection),
       args: {
         after: {type: GraphQLID},
         before: {type: GraphQLID},

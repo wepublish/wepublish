@@ -43,7 +43,7 @@ export interface ArticleRevision extends ArticleData {
   readonly publishedAt?: Date
 }
 
-export interface PublishedArticle extends ArticleData {
+export interface PublicArticle extends ArticleData {
   readonly id: string
 
   readonly updatedAt: Date
@@ -123,7 +123,7 @@ export interface PublishArticleArgs {
 }
 
 export type OptionalArticle = Article | null
-export type OptionalPublishedArticle = PublishedArticle | null
+export type OptionalPublicArticle = PublicArticle | null
 export type OptionalArticleHistory = ArticleHistory | null
 
 export interface DBArticleAdapter {
@@ -134,10 +134,10 @@ export interface DBArticleAdapter {
   deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
 
   getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
-  getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]>
+  getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
 
   getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
-  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublishedArticle>>
+  getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>
 
   // TODO: Implement article history
   // getArticleHistory(args: GetArticleHistoryArgs): Promise<OptionalArticleHistory>

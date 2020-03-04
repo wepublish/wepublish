@@ -11,8 +11,8 @@ import {
 import {Context} from '../context'
 
 import {ArticleNavigationLink, NavigationLinkType, PageNavigationLink} from '../db/navigation'
-import {GraphQLArticle} from './article'
-import {GraphQLPage} from './page'
+import {GraphQLArticle, GraphQLPublicArticle} from './article'
+import {GraphQLPage, GraphQLPublicPage} from './page'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -82,18 +82,15 @@ export const GraphQLNavigation = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublishedPageNavigationLink = new GraphQLObjectType<
-  PageNavigationLink,
-  Context
->({
-  name: 'PublishedPageNavigationLink',
+export const GraphQLPublicPageNavigationLink = new GraphQLObjectType<PageNavigationLink, Context>({
+  name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
     page: {
-      type: GraphQLPage,
+      type: GraphQLPublicPage,
       resolve({pageID}, _args, {loaders}) {
-        return loaders.publishedPagesByID.load(pageID)
+        return loaders.publicPagesByID.load(pageID)
       }
     }
   },
@@ -102,18 +99,18 @@ export const GraphQLPublishedPageNavigationLink = new GraphQLObjectType<
   }
 })
 
-export const GraphQLPublishedArticleNavigationLink = new GraphQLObjectType<
+export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
   ArticleNavigationLink,
   Context
 >({
-  name: 'PublishedArticleNavigationLink',
+  name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
     label: {type: GraphQLNonNull(GraphQLString)},
     article: {
-      type: GraphQLArticle,
+      type: GraphQLPublicArticle,
       resolve({articleID}, _args, {loaders}) {
-        return loaders.publishedArticles.load(articleID)
+        return loaders.publicArticles.load(articleID)
       }
     }
   },
@@ -123,20 +120,20 @@ export const GraphQLPublishedArticleNavigationLink = new GraphQLObjectType<
 })
 
 export const GraphQLPublicNavigationLink = new GraphQLUnionType({
-  name: 'PublicNavigationLink',
+  name: 'NavigationLink',
   types: [
-    GraphQLPublishedPageNavigationLink,
-    GraphQLPublishedArticleNavigationLink,
+    GraphQLPublicPageNavigationLink,
+    GraphQLPublicArticleNavigationLink,
     GraphQLExternalNavigationLink
   ]
 })
 
 export const GraphQLPublicNavigation = new GraphQLObjectType({
-  name: 'PublicNavigation',
+  name: 'Navigation',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     key: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink)))}
+    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicNavigationLink)))}
   }
 })

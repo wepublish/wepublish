@@ -11,10 +11,10 @@ import {SessionWithToken, OptionalSessionWithToken} from './db/session'
 import {MediaAdapter} from './media/adapter'
 import {AuthenticationError} from 'apollo-server'
 import {OptionalImage} from './db/image'
-import {OptionalArticle, OptionalPublishedArticle} from './db/article'
+import {OptionalArticle, OptionalPublicArticle} from './db/article'
 import {OptionalAuthor} from './db/author'
 import {OptionalNavigation} from './db/navigation'
-import {OptionalPage, OptionalPublishedPage} from './db/page'
+import {OptionalPage, OptionalPublicPage} from './db/page'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -26,11 +26,11 @@ export interface DataLoaderContext {
   readonly images: DataLoader<string, OptionalImage>
 
   readonly articles: DataLoader<string, OptionalArticle>
-  readonly publishedArticles: DataLoader<string, OptionalPublishedArticle>
+  readonly publicArticles: DataLoader<string, OptionalPublicArticle>
 
   readonly pages: DataLoader<string, OptionalPage>
-  readonly publishedPagesByID: DataLoader<string, OptionalPublishedPage>
-  readonly publishedPagesBySlug: DataLoader<string, OptionalPublishedPage>
+  readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
+  readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 }
 
 export interface Context {
@@ -71,11 +71,11 @@ export async function contextFromRequest(
       images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
 
       articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
-      publishedArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
+      publicArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
 
       pages: new DataLoader(ids => dbAdapter.getPagesByID(ids)),
-      publishedPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
-      publishedPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs))
+      publicPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
+      publicPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs))
     },
 
     dbAdapter,

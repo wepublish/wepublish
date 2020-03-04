@@ -40,7 +40,7 @@ export interface PageRevision extends PageData {
   readonly publishAt?: Date
 }
 
-export interface PublishedPage extends PageData {
+export interface PublicPage extends PageData {
   readonly id: string
 
   readonly updatedAt: Date
@@ -118,7 +118,7 @@ export interface PublishPageArgs {
 }
 
 export type OptionalPage = Page | null
-export type OptionalPublishedPage = PublishedPage | null
+export type OptionalPublicPage = PublicPage | null
 export type OptionalPageHistory = PageHistory | null
 
 export interface DBPageAdapter {
@@ -129,11 +129,11 @@ export interface DBPageAdapter {
   deletePage(args: DeletePageArgs): Promise<boolean | null>
 
   getPagesByID(ids: readonly string[]): Promise<OptionalPage[]>
-  getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublishedPage[]>
-  getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublishedPage[]>
+  getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublicPage[]>
+  getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublicPage[]>
 
   getPages(args: GetPagesArgs): Promise<ConnectionResult<Page>>
-  getPublishedPages(args: GetPublishedPagesArgs): Promise<ConnectionResult<PublishedPage>>
+  getPublishedPages(args: GetPublishedPagesArgs): Promise<ConnectionResult<PublicPage>>
 
   // TODO: Implement page history
   // getPageHistory(args: GetPageHistoryArgs): Promise<OptionalPageHistory>

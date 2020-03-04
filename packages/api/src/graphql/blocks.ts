@@ -34,7 +34,7 @@ import {
   ArticleTeaser
 } from '../db/block'
 
-import {GraphQLArticle, GraphQLPublishedArticle} from './article'
+import {GraphQLArticle, GraphQLPublicArticle} from './article'
 
 export const GraphQLRichTextBlock = new GraphQLObjectType({
   name: 'RichTextBlock',
@@ -72,26 +72,26 @@ export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaser
   }
 )
 
-export const GraphQLPublishedArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
-  name: 'PublishedArticleTeaser',
+export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
+  name: 'ArticleTeaser',
   fields: () => ({
     type: {type: GraphQLString},
     article: {
-      type: GraphQLPublishedArticle,
+      type: GraphQLPublicArticle,
       async resolve({articleID}, args, {loaders}) {
-        return loaders.publishedArticles.load(articleID)
+        return loaders.publicArticles.load(articleID)
       }
     }
   })
 })
 
-export const GraphQLPublishedArticleTeaserGridBlock = new GraphQLObjectType<
+export const GraphQLPublicArticleTeaserGridBlock = new GraphQLObjectType<
   ArticleTeaserGridBlock,
   Context
 >({
-  name: 'PublishedArticleTeaserGridBlock',
+  name: 'ArticleTeaserGridBlock',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublishedArticleTeaser))},
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicArticleTeaser))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   },
   isTypeOf(value) {

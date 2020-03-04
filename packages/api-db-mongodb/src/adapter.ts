@@ -25,8 +25,8 @@ import {
   LimitType,
   InputCursorType,
   OptionalArticle,
-  OptionalPublishedArticle,
-  PublishedArticle,
+  OptionalPublicArticle,
+  PublicArticle,
   GetImagesArgs,
   Image,
   ImageSort,
@@ -43,7 +43,7 @@ import {
   AuthorSort,
   OptionalNavigation,
   CreateNavigationArgs,
-  OptionalPublishedPage,
+  OptionalPublicPage,
   CreatePageArgs,
   Page,
   UpdatePageArgs,
@@ -52,7 +52,7 @@ import {
   PublishPageArgs,
   UnpublishPageArgs,
   GetPagesArgs,
-  PublishedPage,
+  PublicPage,
   GetPublishedPagesArgs,
   PageSort
 } from '@wepublish/api'
@@ -270,8 +270,7 @@ export class MongoDBAdapter implements DBAdapter {
 
     for (const migration of remainingMigrations) {
       await migration.migrate(db, locale)
-
-      db.collection<DBMigration>(CollectionName.Migrations).insertOne({
+      await db.collection<DBMigration>(CollectionName.Migrations).insertOne({
         version: migration.version,
         createdAt: new Date()
       })
@@ -1126,7 +1125,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublishedArticle[]> {
+  async getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]> {
     await this.updatePendingArticles()
 
     const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
@@ -1134,7 +1133,7 @@ export class MongoDBAdapter implements DBAdapter {
       articles.map(({_id: id, published: article}) => [id, {id, ...article!}])
     )
 
-    return ids.map(id => (articleMap[id] as PublishedArticle) ?? null)
+    return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
   }
 
   async getPublishedArticles({
@@ -1143,7 +1142,7 @@ export class MongoDBAdapter implements DBAdapter {
     order,
     cursor,
     limit
-  }: GetPublishedArticlesArgs): Promise<ConnectionResult<PublishedArticle>> {
+  }: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>> {
     const {nodes, pageInfo, totalCount} = await this.getArticles({
       filter: {...filter, published: true},
       sort,
@@ -1153,7 +1152,7 @@ export class MongoDBAdapter implements DBAdapter {
     })
 
     return {
-      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublishedArticle)),
+      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublicArticle)),
       pageInfo,
       totalCount
     }
@@ -1511,7 +1510,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  async getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublishedPage[]> {
+  async getPublishedPagesByID(ids: readonly string[]): Promise<OptionalPublicPage[]> {
     await this.updatePendingPages()
 
     const pages = await this.pages.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
@@ -1519,10 +1518,10 @@ export class MongoDBAdapter implements DBAdapter {
       pages.map(({_id: id, published: page}) => [id, {id, ...page!}])
     )
 
-    return ids.map(id => (pageMap[id] as PublishedPage) ?? null)
+    return ids.map(id => (pageMap[id] as PublicPage) ?? null)
   }
 
-  async getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublishedPage[]> {
+  async getPublishedPagesBySlug(slugs: readonly string[]): Promise<OptionalPublicPage[]> {
     await this.updatePendingPages()
 
     const pages = await this.pages
@@ -1533,7 +1532,7 @@ export class MongoDBAdapter implements DBAdapter {
       pages.map(({_id: id, published: page}) => [page!.slug, {id, ...page!}])
     )
 
-    return slugs.map(slug => (pageMap[slug] as PublishedPage) ?? null)
+    return slugs.map(slug => (pageMap[slug] as PublicPage) ?? null)
   }
 
   async getPublishedPages({
@@ -1542,7 +1541,7 @@ export class MongoDBAdapter implements DBAdapter {
     order,
     cursor,
     limit
-  }: GetPublishedPagesArgs): Promise<ConnectionResult<PublishedPage>> {
+  }: GetPublishedPagesArgs): Promise<ConnectionResult<PublicPage>> {
     const {nodes, pageInfo, totalCount} = await this.getPages({
       filter: {...filter, published: true},
       sort,
@@ -1552,7 +1551,7 @@ export class MongoDBAdapter implements DBAdapter {
     })
 
     return {
-      nodes: nodes.map(page => ({id: page.id, ...page.published!} as PublishedPage)),
+      nodes: nodes.map(page => ({id: page.id, ...page.published!} as PublicPage)),
       pageInfo,
       totalCount
     }

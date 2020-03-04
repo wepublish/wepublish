@@ -36,7 +36,7 @@ function mapBlockUnionMap(value: any) {
   return {type: key, ...value[key]} as Block
 }
 
-export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
+export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
     // Session
