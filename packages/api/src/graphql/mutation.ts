@@ -185,7 +185,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authenticate()
 
         await mediaAdapter.deleteImage(id)
-        return dbAdapter.deleteImage(id)
+        return dbAdapter.deleteImage({id})
       }
     },
 
