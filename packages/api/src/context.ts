@@ -5,10 +5,12 @@ import {IncomingMessage} from 'http'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {DBAdapter} from './db/adapter'
 import {SessionWithToken, OptionalSessionWithToken} from './db/session'
 
-import {MediaAdapter} from './media/adapter'
+import {DBAdapter} from './db/adapter'
+import {MediaAdapter} from './mediaAdapter'
+import {URLAdapter} from './urlAdapter'
+
 import {AuthenticationError} from 'apollo-server-express'
 import {OptionalImage} from './db/image'
 import {OptionalArticle, OptionalPublicArticle} from './db/article'
@@ -39,6 +41,7 @@ export interface Context {
 
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
+  readonly urlAdapter: URLAdapter
 
   readonly hooks?: Hooks
 
@@ -48,12 +51,13 @@ export interface Context {
 export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
+  readonly urlAdapter: URLAdapter
   readonly hooks?: Hooks
 }
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {dbAdapter, mediaAdapter, hooks}: ContextOptions
+  {dbAdapter, mediaAdapter, urlAdapter, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.getSessionByToken(token) : null
@@ -80,6 +84,7 @@ export async function contextFromRequest(
 
     dbAdapter,
     mediaAdapter,
+    urlAdapter,
     hooks,
 
     authenticate() {

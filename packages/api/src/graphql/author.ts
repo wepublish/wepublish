@@ -24,6 +24,12 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(author, {}, {urlAdapter}) {
+        return urlAdapter.getAuthorURL(author)
+      }
+    },
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}) {

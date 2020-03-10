@@ -194,6 +194,13 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     slug: {type: GraphQLNonNull(GraphQLSlug)},
 
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(page, {}, {urlAdapter}) {
+        return urlAdapter.getPublicPageURL(page)
+      }
+    },
+
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},

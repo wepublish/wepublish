@@ -25,7 +25,8 @@ export * from './db/page'
 export * from './db/common'
 export * from './db/adapter'
 
-export * from './media/adapter'
+export * from './mediaAdapter'
+export * from './urlAdapter'
 
 export * from './utility'
 export * from './error'
