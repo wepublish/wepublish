@@ -1055,9 +1055,9 @@ export class MongoDBAdapter implements DBAdapter {
       // TODO: Only match based on state filter
       metaFilters.push({
         $or: [
-          {'draft.authors': {$in: filter.authors}},
-          {'pending.authors': {$in: filter.authors}},
-          {'published.authors': {$in: filter.authors}}
+          {'draft.authorIDs': {$in: filter.authors}},
+          {'pending.authorIDs': {$in: filter.authors}},
+          {'published.authorIDs': {$in: filter.authors}}
         ]
       })
     }

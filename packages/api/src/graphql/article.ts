@@ -228,10 +228,18 @@ export const GraphQLPublicArticle = new GraphQLObjectType<PublicArticle, Context
     updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(article, {}, {urlAdapter}) {
+        return urlAdapter.getPublicArticleURL(article)
+      }
+    },
+
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     image: {
