@@ -11,7 +11,7 @@ export default (mode: string) =>
     output: {
       filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].js',
       path: path.resolve(__dirname, 'assets'),
-      publicPath: mode === 'production' ? '/assets' : 'http://localhost:3002/'
+      publicPath: mode === 'production' ? '/assets' : 'http://localhost:3001/'
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
@@ -32,10 +32,10 @@ export default (mode: string) =>
     plugins: [new AssetListPlugin({filename: './dist/assetList.json'})],
     devServer: {
       writeToDisk: true,
-      public: 'http://localhost:3002/',
-      publicPath: 'http://localhost:3002/',
+      public: 'http://localhost:3001/',
+      publicPath: 'http://localhost:3001/',
       host: '0.0.0.0',
-      port: 3002,
+      port: 3001,
       headers: {'Access-Control-Allow-Origin': '*'}
     }
   } as webpack.Configuration)

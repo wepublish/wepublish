@@ -13,9 +13,6 @@ import {
 
 import {GraphQLDateTime} from 'graphql-iso-date'
 
-import {GraphQLPeer} from './peer'
-import {GraphQLDateRange} from './dateRange'
-
 import {Context} from '../context'
 
 import {
@@ -48,10 +45,11 @@ import {
 } from './blocks'
 
 import {GraphQLImage} from './image'
-import {BlockType} from '../adapter/blocks'
-import {VersionState} from '../adapter/versionState'
-import {ArticleVersion, Article} from '../adapter/article'
+import {BlockType} from '../db/block'
 import {GraphQLAuthor} from './author'
+import {PublicArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
+import {GraphQLSlug} from './slug'
+import {GraphQLPageInfo} from './common'
 
 export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
   name: 'ArticleBlockUnionMap',
@@ -91,23 +89,55 @@ export const GraphQLArticleBlock = new GraphQLUnionType({
   ]
 })
 
-export const GraphQLVersionState = new GraphQLEnumType({
-  name: 'VersionState',
-  description: 'Current state of the article/page version.',
+export const GraphQLArticleFilter = new GraphQLInputObjectType({
+  name: 'ArticleFilter',
+  fields: {
+    title: {type: GraphQLString},
+    draft: {type: GraphQLBoolean},
+    published: {type: GraphQLBoolean},
+    pending: {type: GraphQLBoolean},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLPublishedArticleFilter = new GraphQLInputObjectType({
+  name: 'PublishedArticleFilter',
+  fields: {
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLArticleSort = new GraphQLEnumType({
+  name: 'ArticleSort',
   values: {
-    DRAFT: {value: VersionState.Draft},
-    PUBLISHED: {value: VersionState.Published}
+    CREATED_AT: {value: ArticleSort.CreatedAt},
+    MODIFIED_AT: {value: ArticleSort.ModifiedAt},
+    PUBLISH_AT: {value: ArticleSort.PublishAt},
+    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
+    UPDATED_AT: {value: ArticleSort.UpdatedAt}
+  }
+})
+
+export const GraphQLPublishedArticleSort = new GraphQLEnumType({
+  name: 'PublishedArticleSort',
+  values: {
+    PUBLISHED_AT: {value: ArticleSort.PublishedAt},
+    UPDATED_AT: {value: ArticleSort.UpdatedAt}
   }
 })
 
 export const GraphQLArticleInput = new GraphQLInputObjectType({
   name: 'ArticleInput',
   fields: {
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    lead: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
 
@@ -120,102 +150,122 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLArticlePageInfo = new GraphQLObjectType({
-  name: 'ArticlePageInfo',
+export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Context>({
+  name: 'ArticleRevision',
   fields: {
-    publishedBetween: {type: GraphQLDateRange},
-    updatedBetween: {type: GraphQLDateRange},
-    createdBetween: {type: GraphQLDateRange}
-  }
-})
-
-export const GraphQLArticleVersion = new GraphQLObjectType<ArticleVersion, Context>({
-  name: 'ArticleVersion',
-
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    version: {type: GraphQLNonNull(GraphQLInt)},
-    state: {type: GraphQLNonNull(GraphQLVersionState)},
+    revision: {type: GraphQLNonNull(GraphQLInt)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishAt: {type: GraphQLDateTime},
 
-    slug: {type: GraphQLNonNull(GraphQLString)},
+    updatedAt: {type: GraphQLDateTime},
+    publishedAt: {type: GraphQLDateTime},
+
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    lead: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+      resolve({imageID}, args, {loaders}, info) {
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve({authorIDs}, args, {storageAdapter}) {
-        return Promise.all(authorIDs.map(authorID => storageAdapter.getAuthor(authorID)))
+      resolve({authorIDs}, args, {loaders}) {
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
       }
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
-
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
   }
 })
 
-// NOTE: Because we have a recursion inside Peer we have to set the type explicitly.
-export const GraphQLArticle: GraphQLObjectType<Article, Context> = new GraphQLObjectType<
-  Article,
-  Context
->({
+export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   name: 'Article',
-
-  fields: () => ({
+  fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+    shared: {type: GraphQLNonNull(GraphQLBoolean)},
 
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLDateTime},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    published: {
-      type: GraphQLArticleVersion,
-      resolve(root, _args, {storageAdapter}) {
-        if (root.publishedAt == undefined || root.publishedVersion == undefined) return null
-        if (new Date().getTime() < root.publishedAt.getTime()) return null
-
-        return storageAdapter.getArticleVersion(root.id, root.publishedVersion)
-      }
-    },
+    draft: {type: GraphQLArticleRevision},
+    published: {type: GraphQLArticleRevision},
+    pending: {type: GraphQLArticleRevision},
 
     latest: {
-      type: GraphQLArticleVersion,
-      async resolve(root, _args, {storageAdapter, authenticate}) {
-        await authenticate()
-        return storageAdapter.getArticleVersion(root.id, root.latestVersion)
+      type: GraphQLNonNull(GraphQLArticleRevision),
+      resolve({draft, pending, published}) {
+        return draft ?? pending ?? published
       }
-    },
+    }
 
-    versions: {
-      type: GraphQLList(GraphQLArticleVersion),
-      async resolve(root, _args, {storageAdapter, authenticate}) {
-        await authenticate()
-        return storageAdapter.getArticleVersions(root.id)
-      }
-    },
-
-    peer: {type: GraphQLPeer} // TODO: Remove
-  })
+    // TODO: Implement article history
+    // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleRevision)))}
+  }
 })
 
 export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLArticle)},
-    pageInfo: {
-      type: GraphQLArticlePageInfo
-    }
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticle)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLPublicArticle = new GraphQLObjectType<PublicArticle, Context>({
+  name: 'Article',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(article, {}, {urlAdapter}) {
+        return urlAdapter.getPublicArticleURL(article)
+      }
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
+    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    image: {
+      type: GraphQLImage,
+      resolve({imageID}, args, {loaders}, info) {
+        return imageID ? loaders.images.load(imageID) : null
+      }
+    },
+
+    authors: {
+      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+      resolve({authorIDs}, args, {loaders}) {
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      }
+    },
+
+    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
+  }
+})
+
+export const GraphQLPublicArticleConnection = new GraphQLObjectType({
+  name: 'ArticleConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicArticle)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

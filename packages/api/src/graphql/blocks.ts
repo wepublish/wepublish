@@ -29,12 +29,12 @@ import {
   LinkPageBreakBlock,
   TitleBlock,
   QuoteBlock,
-  EmbedBlock
-} from '../adapter/blocks'
+  EmbedBlock,
+  ImageCaptionEdge,
+  ArticleTeaser
+} from '../db/block'
 
-import {ImageCaptionEdge} from '../adapter/image'
-import {ArticleTeaser, ArticleTeaserOverrides} from '../adapter/article'
-import {GraphQLArticle} from './article'
+import {GraphQLArticle, GraphQLPublicArticle} from './article'
 
 export const GraphQLRichTextBlock = new GraphQLObjectType({
   name: 'RichTextBlock',
@@ -46,32 +46,14 @@ export const GraphQLRichTextBlock = new GraphQLObjectType({
   }
 })
 
-export const GraphQLArticleTeaserOverrides = new GraphQLObjectType<ArticleTeaserOverrides, Context>(
-  {
-    name: 'ArticleTeaserOverrides',
-    fields: {
-      preTitle: {type: GraphQLString},
-      title: {type: GraphQLString},
-      lead: {type: GraphQLString},
-      image: {
-        type: GraphQLImage,
-        resolve({imageID}, args, {loaders}) {
-          return imageID ? loaders.image.load(imageID) : null
-        }
-      }
-    }
-  }
-)
-
 export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
     type: {type: GraphQLString},
-    overrides: {type: GraphQLArticleTeaserOverrides},
     article: {
       type: GraphQLArticle,
-      async resolve({articleID}, args, {storageAdapter}) {
-        return storageAdapter.getArticle(articleID)
+      async resolve({articleID}, args, {loaders}) {
+        return loaders.articles.load(articleID)
       }
     }
   })
@@ -90,6 +72,33 @@ export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaser
   }
 )
 
+export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
+  name: 'ArticleTeaser',
+  fields: () => ({
+    type: {type: GraphQLString},
+    article: {
+      type: GraphQLPublicArticle,
+      async resolve({articleID}, args, {loaders}) {
+        return loaders.publicArticles.load(articleID)
+      }
+    }
+  })
+})
+
+export const GraphQLPublicArticleTeaserGridBlock = new GraphQLObjectType<
+  ArticleTeaserGridBlock,
+  Context
+>({
+  name: 'ArticleTeaserGridBlock',
+  fields: {
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicArticleTeaser))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)}
+  },
+  isTypeOf(value) {
+    return value.type === BlockType.ArticleTeaserGrid
+  }
+})
+
 export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, Context>({
   name: 'GalleryImageEdge',
   fields: {
@@ -97,7 +106,7 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
     node: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     }
   }
@@ -109,7 +118,7 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
 
@@ -214,7 +223,7 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
     image: {
       type: GraphQLImage,
       resolve({imageID}, _args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     },
     richText: {type: GraphQLNonNull(GraphQLRichText)}

@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import {useMutation, useQuery, QueryHookOptions, MutationHookOptions} from '@apollo/react-hooks'
+import {PageInfo} from './common'
 
 export interface FocalPoint {
   x: number
@@ -31,7 +32,7 @@ export interface ImageRefData {
 export interface ImageData extends ImageRefData {
   readonly id: string
   readonly createdAt: string
-  readonly updatedAt: string
+  readonly modifiedAt: string
 
   readonly extension: string
   readonly fileSize: number
@@ -64,16 +65,7 @@ export interface UploadImageInput extends BaseImageInput {
   readonly file: File
 }
 
-export interface UpdateImageInput extends BaseImageInput {
-  readonly id: string
-}
-
-export interface PageInfo {
-  readonly startCursor?: string
-  readonly endCursor?: string
-  readonly hasNextPage: boolean
-  readonly hasPreviousPage: boolean
-}
+export interface UpdateImageInput extends BaseImageInput {}
 
 export const ImageURLFragment = gql`
   fragment ImageURLFragment on Image {
@@ -106,8 +98,9 @@ export const ImageRefFragment = gql`
 export const ImageFragment = gql`
   fragment ImageFragment on Image {
     id
+
     createdAt
-    updatedAt
+    modifiedAt
 
     filename
     extension
@@ -158,8 +151,8 @@ export function useImageUploadMutation(
 }
 
 const ImageListQuery = gql`
-  query($filter: String, $after: String, $before: String, $first: Int, $last: Int) {
-    images(filter: $filter, after: $after, before: $before, first: $first, last: $last) {
+  query($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {
       nodes {
         ...ImageRefFragment
       }
@@ -223,12 +216,13 @@ export interface ImageUpdateMutationData {
 }
 
 export interface ImageUpdateMutationVariables {
+  readonly id: string
   readonly input: UpdateImageInput
 }
 
 const ImageUpdateMutation = gql`
-  mutation($input: UpdateImageInput!) {
-    updateImage(input: $input) {
+  mutation($id: ID!, $input: UpdateImageInput!) {
+    updateImage(id: $id, input: $input) {
       ...ImageFragment
     }
   }

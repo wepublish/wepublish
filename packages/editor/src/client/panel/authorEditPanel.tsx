@@ -34,6 +34,7 @@ import {
   useAuthorQuery,
   useUpdateAuthorMutation
 } from '../api/author'
+import {slugify} from '../utility'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -44,6 +45,7 @@ export interface AuthorEditPanelProps {
 
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
+  const [slug, setSlug] = useState('')
   const [image, setImage] = useState<ImageRefData>()
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
@@ -91,9 +93,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     if (id) {
       const {data} = await updateAuthor({
         variables: {
+          id,
           input: {
-            id,
             name,
+            slug,
             imageID: image?.id
           }
         }
@@ -105,6 +108,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         variables: {
           input: {
             name,
+            slug,
             imageID: image?.id
           }
         }
@@ -138,7 +142,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               label="Name"
               value={name}
               disabled={isDisabled}
-              onChange={e => setName(e.target.value)}
+              onChange={e => {
+                setName(e.target.value)
+                setSlug(slugify(e.target.value))
+              }}
             />
           </Box>
         </PanelSection>

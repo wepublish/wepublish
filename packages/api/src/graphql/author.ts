@@ -5,27 +5,52 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLInt,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLEnumType
 } from 'graphql'
 
-import {Author} from '../adapter/author'
+import {Author} from '../db/author'
 import {Context} from '../context'
 
-import {GraphQLPageInfo} from './pageInfo'
+import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
+import {GraphQLSlug} from './slug'
+import {AuthorSort} from '../db/author'
 
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
 
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-    name: {type: GraphQLString},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    url: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve(author, {}, {urlAdapter}) {
+        return urlAdapter.getAuthorURL(author)
+      }
+    },
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}) {
-        return imageID ? loaders.image.load(imageID) : null
+        return imageID ? loaders.images.load(imageID) : null
       }
     }
+  }
+})
+
+export const GraphQLAuthorFilter = new GraphQLInputObjectType({
+  name: 'AuthorFilter',
+  fields: {
+    name: {type: GraphQLString}
+  }
+})
+
+export const GraphQLAuthorSort = new GraphQLEnumType({
+  name: 'AuthorSort',
+  values: {
+    CREATED_AT: {value: AuthorSort.CreatedAt},
+    MODIFIED_AT: {value: AuthorSort.ModifiedAt}
   }
 })
 
@@ -33,24 +58,16 @@ export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
   name: 'AuthorConnection',
   fields: {
     nodes: {type: GraphQLList(GraphQLAuthor)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)}
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
 
-export const GraphQLCreateAuthorInput = new GraphQLInputObjectType({
-  name: 'CreateAuthorInput',
+export const GraphQLAuthorInput = new GraphQLInputObjectType({
+  name: 'AuthorInput',
   fields: {
-    name: {type: GraphQLString},
-    imageID: {type: GraphQLID}
-  }
-})
-
-export const GraphQLUpdateAuthorInput = new GraphQLInputObjectType({
-  name: 'UpdateAuthorInput',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    name: {type: GraphQLString},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLSlug)},
     imageID: {type: GraphQLID}
   }
 })

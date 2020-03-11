@@ -1,71 +1,69 @@
 #!/usr/bin/env node
-import {contextFromRequest, generateIDSync, GraphQLWepublishSchema} from '@wepublish/api'
-import {MemoryStorageAdapter} from '@wepublish/api-storage-memory'
+import {WepublishServer, URLAdapter, PublicArticle, PublicPage, Author} from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
-import {KarmaStorageAdapter} from '@wepublish/api-storage-karma'
+import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import startMediaServer from '@karma.run/media'
 import LocalStorageBackend from '@karma.run/media-storage-local'
 import SharpImageBackend from '@karma.run/media-image-sharp'
 
-import express from 'express'
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import auth from './auth'
-
-import {ApolloServer, CorsOptions} from 'apollo-server-express'
 import {URL} from 'url'
 import {resolve as resolvePath} from 'path'
 
+// import auth from './auth'
+// app.use('/auth', await auth(storageAdapter))
+
+class ExampleURLAdapter implements URLAdapter {
+  getPublicArticleURL(article: PublicArticle): string {
+    return `https://wepublish.ch/article/${article.id}/${article.slug}`
+  }
+
+  getPublicPageURL(page: PublicPage): string {
+    return `https://wepublish.ch/page/${page.id}/${page.slug}`
+  }
+
+  getAuthorURL(author: Author): string {
+    return `https://wepublish.ch/author/${author.id}/${author.slug}`
+  }
+}
+
 async function asyncMain() {
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+
+  const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
 
   const mediaStoragePath = process.env.MEDIA_STORAGE_PATH ?? resolvePath(__dirname, '../.media')
   const mediaServerToken = process.env.MEDIA_SERVER_TOKEN! || '123'
-  const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 3005
+  const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 4001
   const mediaServerAddress = process.env.MEDIA_ADDRESS ?? 'localhost'
 
   const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
 
-  const karmaURL = process.env.KARMA_URL
-  const karmaUser = process.env.KARMA_USER
-  const karmaPassword = process.env.KARMA_PASSWORD
-  const shouldUseKarmaAdapter = karmaURL && karmaUser && karmaPassword
-
-  const storageAdapter = shouldUseKarmaAdapter
-    ? new KarmaStorageAdapter({
-        url: karmaURL!,
-        user: karmaUser!,
-        password: karmaPassword!
-      })
-    : new MemoryStorageAdapter({
-        users: [
-          {id: generateIDSync(), email: 'dev@wepublish.ch', password: '123'},
-          {id: generateIDSync(), email: 'nico.roos@tsri.ch', password: ''}
-        ]
-      })
-
-  if (storageAdapter instanceof KarmaStorageAdapter) {
-    if (await storageAdapter.initialize()) {
-      await storageAdapter.createUser(generateIDSync(), 'dev@wepublish.ch', '123')
+  await MongoDBAdapter.initialize({
+    url: process.env.MONGO_URL!,
+    database: process.env.MONGO_DATABASE ?? 'wepublish',
+    locale: process.env.MONGO_LOCALE ?? 'en',
+    seed: async adapter => {
+      adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
     }
-  }
+  })
 
-  const server = new ApolloServer({
-    schema: GraphQLWepublishSchema,
+  const dbAdapter = await MongoDBAdapter.connect({
+    url: process.env.MONGO_URL!,
+    database: process.env.MONGO_DATABASE ?? 'wepublish',
+    locale: process.env.MONGO_LOCALE ?? 'en'
+  })
+
+  const server = new WepublishServer({
+    mediaAdapter,
+    dbAdapter,
+    urlAdapter: new ExampleURLAdapter(),
     playground: true,
     introspection: true,
-    tracing: true,
-
-    context: ({req}) =>
-      contextFromRequest(req, {
-        storageAdapter,
-        mediaAdapter
-      })
+    tracing: true
   })
 
   await startMediaServer({
@@ -77,30 +75,10 @@ async function asyncMain() {
     token: mediaServerToken
   })
 
-  const app = express()
-  app.get('/hello', (req, res) => res.send('Hello World!'))
-  const corsOptions: CorsOptions = {
-    origin: '*',
-    allowedHeaders: [
-      'authorization',
-      'content-type',
-      'content-length',
-      'accept',
-      'origin',
-      'user-agent'
-    ],
-    methods: ['POST', 'GET', 'OPTIONS']
-  }
-  app.use(cors(corsOptions))
-  app.use(bodyParser.urlencoded({extended: true}))
-  app.use(cookieParser())
-  app.use('/auth', await auth(storageAdapter))
-
-  server.applyMiddleware({app})
-
-  app.listen(port, address, () =>
-    console.log(`API ready at http://${address}:${port}${server.graphqlPath}`)
-  )
+  await server.listen(port, address)
 }
 
-asyncMain()
+asyncMain().catch(err => {
+  console.error(err)
+  process.exit(1)
+})

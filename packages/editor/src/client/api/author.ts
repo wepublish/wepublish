@@ -25,8 +25,8 @@ export interface Author {
 // =====
 
 const ListAuthorsQuery = gql`
-  query ListArticles($filter: String, $after: String, $before: String, $first: Int, $last: Int) {
-    authors(filter: $filter, after: $after, before: $before, first: $first, last: $last) {
+  query ListAuthors($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
       nodes {
         ...AuthorFragment
       }
@@ -83,11 +83,12 @@ export function useAuthorQuery(opts?: QueryHookOptions<AuthorsData, AuthorVariab
 
 export interface CreateAuthorInput {
   name?: string
+  slug: string
   imageID?: string
 }
 
 const CreateAuthorMutation = gql`
-  mutation CreateAuthor($input: CreateAuthorInput!) {
+  mutation CreateAuthor($input: AuthorInput!) {
     createAuthor(input: $input) {
       ...AuthorFragment
     }
@@ -111,14 +112,14 @@ export function useCreateAuthorMutation(
 }
 
 export interface UpdateAuthorInput {
-  id: string
   name?: string
+  slug: string
   imageID?: string
 }
 
 const UpdateAuthorMutation = gql`
-  mutation UpdateAuthor($input: UpdateAuthorInput!) {
-    updateAuthor(input: $input) {
+  mutation UpdateAuthor($id: ID!, $input: AuthorInput!) {
+    updateAuthor(id: $id, input: $input) {
       ...AuthorFragment
     }
   }
@@ -131,6 +132,7 @@ export interface UpdateAuthorMutationData {
 }
 
 export interface UpdateAuthorVariables {
+  id: string
   input: UpdateAuthorInput
 }
 

@@ -23,7 +23,8 @@ import {
   PanelSection,
   DescriptionList,
   DescriptionListItem,
-  OptionButton
+  OptionButton,
+  Button
 } from '@karma.run/ui'
 
 import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
@@ -34,7 +35,6 @@ import {
   useDeletePageMutation,
   useUnpublishPageMutation
 } from '../api/page'
-import {VersionState} from '../api/common'
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -51,95 +51,107 @@ export function PageList() {
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
 
-  const {data, refetch, loading: isLoading} = useListPagesQuery({
-    variables: {filter: filter || undefined},
+  const {data, refetch, fetchMore, loading: isLoading} = useListPagesQuery({
+    variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })
 
-  const pages = data?.pages.nodes
-    .sort((a, b) => {
-      const dateA = new Date(a.latest.updatedAt)
-      const dateB = new Date(b.latest.updatedAt)
+  function loadMore() {
+    fetchMore({
+      variables: {first: 50, after: data?.pages.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
 
-      return dateA > dateB ? -1 : 1
+        return {
+          pages: {
+            ...fetchMoreResult.pages,
+            nodes: [...prev.pages.nodes, ...fetchMoreResult?.pages.nodes]
+          }
+        }
+      }
     })
-    .map(page => {
-      const {
-        id,
-        createdAt,
-        publishedAt,
-        latest: {updatedAt, title, state}
-      } = page
+  }
 
-      return (
-        <Box key={id} marginBottom={Spacing.Small}>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Link route={PageEditRoute.create({id})}>
-              <Typography variant="h3" color={title ? 'dark' : 'gray'}>
-                {title || 'Untitled'}
-              </Typography>
-            </Link>
-          </Box>
-          <Box
-            marginBottom={Spacing.ExtraSmall}
-            flexDirection="row"
-            alignItems="center"
-            display="flex">
-            <Typography element="div" variant="body1" color="grayDark">
-              <Box
-                marginRight={Spacing.ExtraSmall}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Box marginRight={Spacing.Tiny}>
-                  <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                </Box>
-                {new Date(createdAt).toLocaleString()}
-              </Box>
+  const pages = data?.pages.nodes.map(page => {
+    const {
+      id,
+      createdAt,
+      modifiedAt,
+      draft,
+      pending,
+      published,
+      latest: {title}
+    } = page
+
+    const states = []
+
+    if (draft) states.push('Draft')
+    if (pending) states.push('Pending')
+    if (published) states.push('Published')
+
+    return (
+      <Box key={id} marginBottom={Spacing.Small}>
+        <Box marginBottom={Spacing.ExtraSmall}>
+          <Link route={PageEditRoute.create({id})}>
+            <Typography variant="h3" color={title ? 'dark' : 'gray'}>
+              {title || 'Untitled'}
             </Typography>
-            <Typography element="div" variant="body1" color="grayDark">
-              <Box
-                marginRight={Spacing.Small}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Box marginRight={Spacing.Tiny}>
-                  <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                </Box>
-                {new Date(updatedAt).toLocaleString()}
-              </Box>
-            </Typography>
-            <Typography element="div" variant="subtitle1" color="gray">
-              {publishedAt != undefined && 'Published'}
-              {publishedAt != undefined && state === VersionState.Draft && ' / '}
-              {state === VersionState.Draft && 'Draft'}
-            </Typography>
-            <Box flexGrow={1} />
-            <OptionButton
-              position="left"
-              menuItems={
-                publishedAt // TODO: Allow disabling menu items
-                  ? [
-                      {
-                        id: ConfirmAction.Unpublish,
-                        label: 'Unpublish',
-                        icon: MaterialIconGetAppOutlined
-                      },
-                      {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-                    ]
-                  : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
-              }
-              onMenuItemClick={item => {
-                setCurrentPage(page)
-                setConfirmationDialogOpen(true)
-                setConfirmAction(item.id as ConfirmAction)
-              }}
-            />
-          </Box>
-          <Divider />
+          </Link>
         </Box>
-      )
-    })
+        <Box
+          marginBottom={Spacing.ExtraSmall}
+          flexDirection="row"
+          alignItems="center"
+          display="flex">
+          <Typography element="div" variant="body1" color="grayDark">
+            <Box
+              marginRight={Spacing.ExtraSmall}
+              flexDirection="row"
+              alignItems="center"
+              display="flex">
+              <Box marginRight={Spacing.Tiny}>
+                <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+              </Box>
+              {new Date(createdAt).toLocaleString()}
+            </Box>
+          </Typography>
+          <Typography element="div" variant="body1" color="grayDark">
+            <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
+              <Box marginRight={Spacing.Tiny}>
+                <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+              </Box>
+              {new Date(modifiedAt).toLocaleString()}
+            </Box>
+          </Typography>
+          <Typography element="div" variant="subtitle1" color="gray">
+            {states.join(' / ')}
+          </Typography>
+          <Box flexGrow={1} />
+          <OptionButton
+            position="left"
+            menuItems={
+              published // TODO: Allow disabling menu items
+                ? [
+                    {
+                      id: ConfirmAction.Unpublish,
+                      label: 'Unpublish',
+                      icon: MaterialIconGetAppOutlined
+                    },
+                    {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                  ]
+                : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
+            }
+            onMenuItemClick={item => {
+              setCurrentPage(page)
+              setConfirmationDialogOpen(true)
+              setConfirmAction(item.id as ConfirmAction)
+            }}
+          />
+        </Box>
+        <Divider />
+      </Box>
+    )
+  })
 
   return (
     <>
@@ -157,7 +169,12 @@ export function PageList() {
       </Box>
       <Box>
         {pages?.length ? (
-          pages
+          <>
+            {pages}
+            <Box display="flex" justifyContent="center">
+              {data?.pages.pageInfo.hasNextPage && <Button label="Load More" onClick={loadMore} />}
+            </Box>
+          </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
             No Pages found
@@ -224,9 +241,10 @@ export function PageList() {
                   {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                {currentPage?.publishedAt && (
+                {currentPage?.latest.publishedAt && (
                   <DescriptionListItem label="Published At">
-                    {currentPage?.publishedAt && new Date(currentPage.createdAt).toLocaleString()}
+                    {currentPage?.latest.publishedAt &&
+                      new Date(currentPage.createdAt).toLocaleString()}
                   </DescriptionListItem>
                 )}
               </DescriptionList>

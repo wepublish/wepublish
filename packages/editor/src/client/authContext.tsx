@@ -69,7 +69,7 @@ export function AuthProvider({children}: AuthProviderProps) {
   const [state, dispatch] = useReducer(authReducer, {})
 
   useEffect(() => {
-    if (data) {
+    if (data?.me) {
       const {email} = data.me
 
       dispatch({

@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
@@ -10,18 +10,19 @@
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean copy-license build sync-package-info",
+    "prepare": "run-s clean build",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "form-data": "^2.5.1",
+    "form-data": "^3.0.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.2",
+    "@types/graphql-upload": "^8.0.3",
+    "@types/node-fetch": "^2.5.5",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "^3.7.3"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "@wepublish/api": "*"

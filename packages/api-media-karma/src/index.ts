@@ -2,7 +2,7 @@ import {MediaAdapter, Image, UploadImage, ImageTransformation} from '@wepublish/
 import {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
-import {ApolloError} from 'apollo-server'
+import {ApolloError} from 'apollo-server-express'
 import {URL} from 'url'
 
 export class KarmaMediaAdapter implements MediaAdapter {
