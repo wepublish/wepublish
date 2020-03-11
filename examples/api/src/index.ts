@@ -12,6 +12,7 @@ import SharpImageBackend from '@karma.run/media-image-sharp'
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import auth from './auth'
 
 import {ApolloServer, CorsOptions} from 'apollo-server-express'
@@ -92,7 +93,8 @@ async function asyncMain() {
   }
   app.use(cors(corsOptions))
   app.use(bodyParser.urlencoded({extended: true}))
-  app.use('/auth', auth(storageAdapter))
+  app.use(cookieParser())
+  app.use('/auth', await auth(storageAdapter))
 
   server.applyMiddleware({app})
 
