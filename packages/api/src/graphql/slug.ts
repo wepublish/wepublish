@@ -1,6 +1,6 @@
 import {GraphQLScalarType, valueFromAST, GraphQLString} from 'graphql'
+import {slugify} from '../utility'
 
-// TODO: Validation / Normalization
 export const GraphQLSlug = new GraphQLScalarType({
   name: 'Slug',
   serialize(value) {
@@ -8,10 +8,13 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseValue(value) {
-    return value
+    if (typeof value != 'string') throw new Error()
+    return slugify(value)
   },
 
-  parseLiteral(value) {
-    return valueFromAST(value, GraphQLString)
+  parseLiteral(literal) {
+    const value: string | undefined = valueFromAST(literal, GraphQLString)
+    if (value == undefined) throw new Error()
+    return slugify(value)
   }
 })

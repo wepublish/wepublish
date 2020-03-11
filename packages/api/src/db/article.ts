@@ -61,7 +61,7 @@ export interface ArticleFilter {
   readonly tags?: string[]
 }
 
-export interface PublishedArticleFilter {
+export interface PublicArticleFilter {
   readonly authors?: string[]
   readonly tags?: string[]
 }
@@ -85,7 +85,7 @@ export interface GetArticlesArgs {
 export interface GetPublishedArticlesArgs {
   readonly cursor: InputCursor
   readonly limit: Limit
-  readonly filter?: PublishedArticleFilter
+  readonly filter?: PublicArticleFilter
   readonly sort: ArticleSort
   readonly order: SortOrder
 }

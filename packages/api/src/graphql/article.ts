@@ -101,8 +101,8 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPublishedArticleFilter = new GraphQLInputObjectType({
-  name: 'PublishedArticleFilter',
+export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
+  name: 'ArticleFilter',
   fields: {
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
@@ -120,8 +120,8 @@ export const GraphQLArticleSort = new GraphQLEnumType({
   }
 })
 
-export const GraphQLPublishedArticleSort = new GraphQLEnumType({
-  name: 'PublishedArticleSort',
+export const GraphQLPublicArticleSort = new GraphQLEnumType({
+  name: 'ArticleSort',
   values: {
     PUBLISHED_AT: {value: ArticleSort.PublishedAt},
     UPDATED_AT: {value: ArticleSort.UpdatedAt}
