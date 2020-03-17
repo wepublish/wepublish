@@ -6,7 +6,7 @@
   },
   "scripts": {
     "clean": "run-p clean:**",
-    "build": "run-s --print-label build:api build:api-db-memory build:api-media-karma build:editor",
+    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor",
     "watch": "run-p --print-label watch:*",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",

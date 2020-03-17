@@ -312,6 +312,15 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
+  async getUser(email: string): Promise<OptionalUser> {
+    const user = await this.users.findOne({email})
+    if (user) {
+      return {id: user._id, email: user.email}
+    } else {
+      return null
+    }
+  }
+
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
     const users = await this.users.find({_id: {$in: ids}}).toArray()
 

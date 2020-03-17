@@ -1,67 +1,96 @@
-import {NextFunction, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import axios from 'axios'
 import qs from 'qs'
 import {Client, generators, Issuer} from 'openid-client'
-import {MemoryStorageAdapter} from '@wepublish/api-storage-memory'
-import {KarmaStorageAdapter} from '@wepublish/api-storage-karma/lib'
 
-const authApp = Router()
+const authApp: Router = Router()
 
 const OAUTH_GOOGLE_ENABLED = true
 const OAUTH_GOOGLE_CLIENT_ID =
   '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com'
 const OAUTH_GOOGLE_KEY = 't267ZLqkV9dacrkPQp_pF-G2'
-const OAUTH_GOOGLE_REDIRECT_URL = 'http://localhost:3000/auth/google'
+const OAUTH_GOOGLE_REDIRECT_URL = 'http://localhost:4000/auth/google'
 const OAUTH_GOOGLE_SCOPE = 'openid profile email'
 
-//const OAUTH_GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_GOOGLE_CLIENT_ID}&redirect_uri=${OAUTH_GOOGLE_REDIRECT_URL}&response_type=code&scope=${OAUTH_GOOGLE_SCOPE}&access_type=online`
-
 const OAUTH_WEPUBLISH_ENABLED = true
-const OAUTH_WEPUBLISH_CLIENT_ID = 'mike2'
+const OAUTH_WEPUBLISH_CLIENT_ID = 'mike'
 const OAUTH_WEPUBLISH_KEY = 'some-secret'
-const OAUTH_WEPUBLISH_REDIRECT_URL = 'http://localhost:3000/auth/wepublish'
+const OAUTH_WEPUBLISH_REDIRECT_URL = 'http://localhost:4000/auth/wepublish'
 const OAUTH_WEPUBLISH_SCOPE = 'openid'
-//const OAUTH_WEPUBLISH_URL = `http://localhost:3010/oauth2/auth?client_id=${OAUTH_WEPUBLISH_CLIENT_ID}&redirect_uri=${OAUTH_WEPUBLISH_REDIRECT_URL}&response_type=code&scope=openid&state=1234qwer.`
 
-let storageAdapter: MemoryStorageAdapter | KarmaStorageAdapter
-let googleClient: Client
-let wepublishClient: Client
+const clients = new Map<string, Client>()
+
+authApp.all('*', async (req, res, next) => {
+  if (!clients.has('google') && OAUTH_GOOGLE_ENABLED) {
+    const googleIssuer = await Issuer.discover('https://accounts.google.com')
+    clients.set(
+      'google',
+      new googleIssuer.Client({
+        client_id: OAUTH_GOOGLE_CLIENT_ID,
+        client_secret: OAUTH_GOOGLE_KEY,
+        redirect_uris: [OAUTH_GOOGLE_REDIRECT_URL],
+        response_types: ['code']
+      })
+    )
+  }
+
+  if (!clients.get('wepublish') && OAUTH_WEPUBLISH_ENABLED) {
+    const wepublishIssuer = await Issuer.discover('http://localhost:4010')
+    clients.set(
+      'wepublish',
+      new wepublishIssuer.Client({
+        client_id: OAUTH_WEPUBLISH_CLIENT_ID,
+        client_secret: OAUTH_WEPUBLISH_KEY,
+        redirect_uris: [OAUTH_WEPUBLISH_REDIRECT_URL],
+        response_types: ['code']
+      })
+    )
+  }
+  next()
+})
 
 authApp.get('/login', async (req, res, next) => {
   const code_verifier = generators.codeVerifier()
   const code_challenge = generators.codeChallenge(code_verifier)
-  const googleUrl = googleClient.authorizationUrl({
+  //@ts-ignore
+  const googleUrl = clients.get('google').authorizationUrl({
     scope: OAUTH_GOOGLE_SCOPE,
     response_mode: 'form_post',
     code_challenge,
     code_challenge_method: 'S256'
   })
-  const wepublishUrl = wepublishClient.authorizationUrl({
+  //@ts-ignore
+  const wepublishUrl = clients.get('wepublish').authorizationUrl({
     scope: OAUTH_WEPUBLISH_SCOPE,
     //response_mode: 'form_post',
     state: code_verifier
   })
   res.cookie('code_verifier', code_verifier, {httpOnly: true})
   return res.send(`
-  <html>
-  <head>
-      <title>WePublish Login</title>
-  </head>
-  <body>
-      ${OAUTH_GOOGLE_ENABLED ? '<a href=' + googleUrl + '>Login with Google</a>' : ''}
-      ${OAUTH_WEPUBLISH_ENABLED ? '<a href=' + wepublishUrl + '>Login with Wepublish</a>' : ''}
-  </body>
-  </html>
-`)
+    <html>
+    <head>
+        <title>WePublish Login</title>
+    </head>
+    <body>
+        ${OAUTH_GOOGLE_ENABLED ? '<a href=' + googleUrl + '>Login with Google</a>' : ''}
+        ${OAUTH_WEPUBLISH_ENABLED ? '<a href=' + wepublishUrl + '>Login with Wepublish</a>' : ''}
+    </body>
+    </html>
+  `)
 })
 
-authApp.post('/google', async (req, res, next) => {
-  const params = googleClient.callbackParams(req)
+authApp.post('/google', async (req: Request, res, next) => {
+  //@ts-ignore
+  const params = clients.get('google').callbackParams(req)
   try {
     const {code_verifier} = req.cookies
-    const token = await googleClient.callback(OAUTH_GOOGLE_REDIRECT_URL, params, {code_verifier})
-    // @ts-ignore
-    const userInfo = await googleClient.userinfo(token.access_token)
+    //@ts-ignore
+    const token = await clients
+      .get('google')
+      .callback(OAUTH_GOOGLE_REDIRECT_URL, params, {code_verifier})
+    //@ts-ignore
+    const userInfo = await clients.get('google').userinfo(token.access_token)
+    const storageAdapter = req.wpContext.dbAdapter
     const user = await storageAdapter.getUser(userInfo.email)
     if (!user) {
       return res.sendStatus(401)
@@ -73,16 +102,20 @@ authApp.post('/google', async (req, res, next) => {
 })
 
 authApp.get('/wepublish', async (req, res, next) => {
-  console.log(req.query)
-  const params = wepublishClient.callbackParams(req)
+  const client = clients.get('wepublish')
+  if (client === undefined) {
+    return res.sendStatus(401)
+  }
+
+  const params = client.callbackParams(req)
   try {
     const {code_verifier} = req.cookies
-    const token = await wepublishClient.callback(OAUTH_WEPUBLISH_REDIRECT_URL, params, {
+    const token = await client.callback(OAUTH_WEPUBLISH_REDIRECT_URL, params, {
       state: code_verifier
     })
-    // @ts-ignore
-    const userInfo = await wepublishClient.userinfo(token.access_token)
-    const user = await storageAdapter.getUser(userInfo.email)
+    const userInfo = await client.userinfo(token.access_token ?? '')
+    const storageAdapter = req.wpContext.dbAdapter
+    const user = await storageAdapter.getUser(userInfo.email ?? '')
     if (!user) {
       return res.sendStatus(401)
     }
@@ -98,7 +131,7 @@ authApp.get('/wepublish/login', async (req, res, next) => {
     const {
       data: {skip, subject}
     } = await axios.get(
-      `http://localhost:3011/oauth2/auth/requests/login?${qs.stringify({login_challenge})}`
+      `http://localhost:4011/oauth2/auth/requests/login?${qs.stringify({login_challenge})}`
     )
     if (skip) {
       return acceptWepublishLogin(login_challenge, res, next, {subject})
@@ -129,7 +162,9 @@ authApp.get('/wepublish/login', async (req, res, next) => {
 authApp.post('/wepublish/login', async (req, res, next) => {
   const {email, password, login_challenge} = req.body
   try {
-    const user = await storageAdapter.getUserForCredentials(email, password)
+    // @ts-ignore
+    const storageAdapter = req.wpContext.dbAdapter
+    const user = await storageAdapter.getUserForCredentials({email, password})
     if (!user) {
       return res.sendStatus(401)
     }
@@ -154,13 +189,15 @@ const acceptWepublishLogin = async function(
       remember_for: 3600
     }
     const acceptRes = await axios.put(
-      `http://localhost:3011/oauth2/auth/requests/login/accept?${qs.stringify({login_challenge})}`,
+      `http://localhost:4011/oauth2/auth/requests/login/accept?${qs.stringify({login_challenge})}`,
       JSON.stringify(body),
       {headers: {'Content-Type': 'application/json'}}
     )
     if (acceptRes.status === 200) {
+      //@ts-ignore
       return res.redirect(acceptRes.data.redirect_to)
     } else {
+      //@ts-ignore
       return res.sendStatus(acceptRes.status)
     }
   } catch (error) {
@@ -171,9 +208,8 @@ const acceptWepublishLogin = async function(
 authApp.get('/wepublish/consent', async (req, res, next) => {
   const {consent_challenge} = req.query
   try {
-    console.log('constent_challenge', consent_challenge)
     const {data} = await axios.get(
-      `http://localhost:3011/oauth2/auth/requests/consent?${qs.stringify({consent_challenge})}`
+      `http://localhost:4011/oauth2/auth/requests/consent?${qs.stringify({consent_challenge})}`
     )
     if (data.skip) {
       return await acceptWepublishConsent(consent_challenge, res, next)
@@ -223,15 +259,17 @@ const acceptWepublishConsent = async function(
       remember_for: 3600
     }
     const acceptRes = await axios.put(
-      `http://localhost:3011/oauth2/auth/requests/consent/accept?${qs.stringify({
+      `http://localhost:4011/oauth2/auth/requests/consent/accept?${qs.stringify({
         consent_challenge
       })}`,
       JSON.stringify(body),
       {headers: {'Content-Type': 'application/json'}}
     )
     if (acceptRes.status === 200) {
+      //@ts-ignore
       return res.redirect(acceptRes.data.redirect_to)
     } else {
+      //@ts-ignore
       return res.sendStatus(acceptRes.status)
     }
   } catch (error) {
@@ -239,15 +277,14 @@ const acceptWepublishConsent = async function(
   }
 }
 
-authApp.get('/wepublish/userinfo', async (req, res, next) => {
-  console.log('userinfo', req)
+authApp.get('/wepublish/userinfo', async (req: Request, res: Response, next) => {
   const {authorization = ''} = req.headers
   try {
     const body = {
       token: authorization.slice(7)
     }
     const acceptRes = await axios.post(
-      `http://localhost:3011/oauth2/introspect`,
+      `http://localhost:4011/oauth2/introspect`,
       qs.stringify(body),
       {
         headers: {'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json'},
@@ -258,11 +295,13 @@ authApp.get('/wepublish/userinfo', async (req, res, next) => {
       }
     )
     if (acceptRes.status === 200) {
+      //@ts-ignore
       return res.json({
         sub: acceptRes.data.sub,
         email: acceptRes.data.sub
       })
     } else {
+      //@ts-ignore
       return res.sendStatus(acceptRes.status)
     }
   } catch (error) {
@@ -270,25 +309,4 @@ authApp.get('/wepublish/userinfo', async (req, res, next) => {
   }
 })
 
-const getAuthApp = async function(
-  globalStorageAdapter: MemoryStorageAdapter | KarmaStorageAdapter
-) {
-  storageAdapter = globalStorageAdapter
-  const googleIssuer = await Issuer.discover('https://accounts.google.com')
-  googleClient = new googleIssuer.Client({
-    client_id: OAUTH_GOOGLE_CLIENT_ID,
-    client_secret: OAUTH_GOOGLE_KEY,
-    redirect_uris: [OAUTH_GOOGLE_REDIRECT_URL],
-    response_types: ['code']
-  })
-  const wepublishIssuer = await Issuer.discover('http://localhost:3010')
-  wepublishClient = new wepublishIssuer.Client({
-    client_id: OAUTH_WEPUBLISH_CLIENT_ID,
-    client_secret: OAUTH_WEPUBLISH_KEY,
-    redirect_uris: [OAUTH_WEPUBLISH_REDIRECT_URL],
-    response_types: ['code']
-  })
-  return authApp
-}
-
-export default getAuthApp
+export default authApp

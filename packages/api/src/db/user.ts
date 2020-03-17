@@ -17,6 +17,7 @@ export type OptionalUser = User | null
 
 export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<User>
+  getUser(email: string): Promise<OptionalUser>
   getUsersByID(ids: string[]): Promise<OptionalUser[]>
   getUserForCredentials(args: GetUserForCredentialsArgs): Promise<OptionalUser>
 }

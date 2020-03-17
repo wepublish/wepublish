@@ -1,10 +1,15 @@
 import express from 'express'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import {Application} from 'express'
 
 import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+
+import auth from './auth'
+//
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -17,6 +22,16 @@ export class WepublishServer {
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
+
+    app.use(bodyParser.urlencoded({extended: true}))
+    app.use(cookieParser())
+    app.all('*', async (req, res, next) => {
+      //@ts-ignore
+      req.wpContext = await contextFromRequest(req, opts)
+      next()
+    })
+
+    app.use('/auth', auth)
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,

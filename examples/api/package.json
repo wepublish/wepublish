@@ -20,11 +20,12 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
+    "@karma.run/media": "^0.2.0",
+    "@karma.run/media-image-sharp": "^0.2.0",
+    "@karma.run/media-storage-local": "^0.1.4",
     "@wepublish/api": "*",
     "@wepublish/api-db-memory": "*",
     "@wepublish/api-media-karma": "*",
-    "@karma.run/media": "^0.2.0",
-    "@karma.run/media-image-sharp": "^0.2.0",
     "graphql": "^14.6.0"
   },
   "devDependencies": {

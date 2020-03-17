@@ -11,9 +11,6 @@ import SharpImageBackend from '@karma.run/media-image-sharp'
 import {URL} from 'url'
 import {resolve as resolvePath} from 'path'
 
-// import auth from './auth'
-// app.use('/auth', await auth(storageAdapter))
-
 class ExampleURLAdapter implements URLAdapter {
   getPublicArticleURL(article: PublicArticle): string {
     return `https://wepublish.ch/article/${article.id}/${article.slug}`
