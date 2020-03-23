@@ -7,6 +7,7 @@ export const AuthorFragment = gql`
   fragment AuthorFragment on Author {
     id
     name
+    slug
     image {
       ...ImageRefFragment
     }
@@ -18,6 +19,7 @@ export const AuthorFragment = gql`
 export interface Author {
   id: string
   name: string
+  slug: string
   image?: ImageRefData
 }
 

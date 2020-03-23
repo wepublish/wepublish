@@ -35,6 +35,8 @@ import {
   useUpdateAuthorMutation
 } from '../api/author'
 import {slugify} from '../utility'
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
+import {RichTextBlockValue} from '../api/blocks'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -47,6 +49,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [image, setImage] = useState<ImageRefData>()
+  const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -68,6 +71,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   useEffect(() => {
     if (data?.author) {
       setName(data.author.name)
+      setSlug(data.author.slug)
       setImage(data.author.image)
     }
   }, [data?.author])
@@ -142,7 +146,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               label="Name"
               value={name}
               disabled={isDisabled}
-              onChange={e => {
+              onChange={(e) => {
                 setName(e.target.value)
                 setSlug(slugify(e.target.value))
               }}
@@ -183,6 +187,12 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Card>
           </Box>
         </PanelSection>
+        <PanelSectionHeader title="Biography" />
+        <PanelSection>
+          <Box>
+            <RichTextBlock value={bio} onChange={(value) => setBio(value)} />
+          </Box>
+        </PanelSection>
       </Panel>
       <Toast
         type="error"
@@ -195,7 +205,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         {() => (
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
+            onSelect={(value) => {
               setChooseModalOpen(false)
               handleImageChange(value)
             }}

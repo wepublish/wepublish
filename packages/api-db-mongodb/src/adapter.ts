@@ -79,13 +79,11 @@ export interface MongoDBAdabterCommonArgs {
 
 export interface MongoDBAdapterConnectArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
-  readonly database: string
   readonly locale: string
 }
 
 export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
-  readonly database: string
   readonly locale: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
 }
@@ -210,11 +208,10 @@ export class MongoDBAdapter implements DBAdapter {
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
-    database,
     locale
   }: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
-    const db = client.db(database)
+    const db = client.db()
 
     const migrationState = await this.getDBMigrationState(db)
 
@@ -252,12 +249,13 @@ export class MongoDBAdapter implements DBAdapter {
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
-    database,
     locale,
     seed
   }: MongoDBAdapterInitializeArgs): Promise<InitializationResult> {
     const client = await this.createMongoClient(url)
-    const db = client.db(database)
+    const db = client.db()
+
+    console.log(db.databaseName)
 
     const migrationState = await this.getDBMigrationState(db)
 
@@ -277,7 +275,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, database, locale})
+      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
       await seed?.(adapter)
     }
 

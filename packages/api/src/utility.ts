@@ -1,15 +1,3 @@
-import nanoid from 'nanoid/generate'
-
-export const idAlphabet = 'IDAlphabet'
-
-export function generateID() {
-  return nanoid(idAlphabet, 16)
-}
-
-export function generateTokenID() {
-  return nanoid(idAlphabet, 32)
-}
-
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
   return str
