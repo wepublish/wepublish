@@ -42,7 +42,7 @@ async function asyncMain() {
   await MongoDBAdapter.initialize({
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
-    seed: async (adapter) => {
+    seed: async adapter => {
       adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
     }
   })
@@ -67,13 +67,14 @@ async function asyncMain() {
     maxUploadSize: 1024 * 1024 * 10,
     port: mediaServerPort,
     address: mediaServerAddress,
-    token: mediaServerToken
+    token: mediaServerToken,
+    logger: false
   })
 
   await server.listen(port, address)
 }
 
-asyncMain().catch((err) => {
+asyncMain().catch(err => {
   console.error(err)
   process.exit(1)
 })

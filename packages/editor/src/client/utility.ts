@@ -1,7 +1,12 @@
+import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
+}
+
+export function generateID(): string {
+  return nanoid()
 }
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056

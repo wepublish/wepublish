@@ -468,15 +468,18 @@ function LinkFormatButton() {
 }
 
 function validateURL(url: string): string | null {
-  try {
-    return new URL(url).toString()
-  } catch (err) {
-    try {
-      return new URL(`https://${url}`).toString()
-    } catch (err) {
-      return null
-    }
-  }
+  return url
+
+  // TODO: Implement better URL validation with for support relative links.
+  // try {
+  //   return new URL(url).toString()
+  // } catch (err) {
+  //   try {
+  //     return new URL(`https://${url}`).toString()
+  //   } catch (err) {
+  //     return null
+  //   }
+  // }
 }
 
 function RemoveLinkFormatButton() {

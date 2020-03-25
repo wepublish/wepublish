@@ -130,13 +130,13 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       ])
     }
 
-    return {
-      text: value.text,
-      bold: value.bold as boolean,
-      italic: value.italic as boolean,
-      underline: value.underline as boolean,
-      strikethrough: value.strikethrough as boolean
-    }
+    return Object.assign(
+      {text: value.text},
+      value.bold != undefined ? {bold: value.bold as boolean} : {},
+      value.italic != undefined ? {italic: value.italic as boolean} : {},
+      value.underline != undefined ? {underline: value.underline as boolean} : {},
+      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {}
+    )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
 
@@ -176,12 +176,14 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
           throw createRichTextError(`Expected string found ${value.title}`, [...path, 'title'])
         }
 
-        return {
-          type,
-          url: value.url,
-          title: value.title as string,
-          children: parseRichTextNodes(value.children, [...path, 'children'])
-        }
+        return Object.assign(
+          {
+            type,
+            url: value.url,
+            children: parseRichTextNodes(value.children, [...path, 'children'])
+          },
+          value.title != undefined ? {title: value.title as string} : {}
+        )
       }
 
       default:

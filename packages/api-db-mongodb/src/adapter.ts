@@ -254,9 +254,6 @@ export class MongoDBAdapter implements DBAdapter {
   }: MongoDBAdapterInitializeArgs): Promise<InitializationResult> {
     const client = await this.createMongoClient(url)
     const db = client.db()
-
-    console.log(db.databaseName)
-
     const migrationState = await this.getDBMigrationState(db)
 
     if (migrationState?.version === LatestMigration.version) {
@@ -444,7 +441,9 @@ export class MongoDBAdapter implements DBAdapter {
       modifiedAt: new Date(),
       name: input.name,
       slug: input.slug,
-      imageID: input.imageID
+      imageID: input.imageID,
+      links: input.links,
+      bio: input.bio
     })
 
     const {_id: id, ...author} = ops[0]
@@ -459,7 +458,9 @@ export class MongoDBAdapter implements DBAdapter {
           modifiedAt: new Date(),
           name: input.name,
           slug: input.slug,
-          imageID: input.imageID
+          imageID: input.imageID,
+          links: input.links,
+          bio: input.bio
         }
       },
       {returnOriginal: false}
@@ -532,7 +533,7 @@ export class MongoDBAdapter implements DBAdapter {
       textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
     }
 
-    const [totalCount, images] = await Promise.all([
+    const [totalCount, authors] = await Promise.all([
       this.authors.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
@@ -546,7 +547,7 @@ export class MongoDBAdapter implements DBAdapter {
         .toArray()
     ])
 
-    const nodes = images.slice(0, limitCount)
+    const nodes = authors.slice(0, limitCount)
 
     if (limit.type === LimitType.Last) {
       nodes.reverse()
@@ -554,14 +555,14 @@ export class MongoDBAdapter implements DBAdapter {
 
     const hasNextPage =
       limit.type === LimitType.First
-        ? images.length > limitCount
+        ? authors.length > limitCount
         : cursor.type === InputCursorType.Before
         ? true
         : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
-        ? images.length > limitCount
+        ? authors.length > limitCount
         : cursor.type === InputCursorType.After
         ? true
         : false

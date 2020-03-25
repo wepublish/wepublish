@@ -23,8 +23,10 @@ export enum BlockType {
   ArticleTeaserGrid6 = 'articleTeaserGrid6'
 }
 
+export type RichTextValue = Node[]
+
 export interface RichTextBlockValue {
-  readonly value: Node[]
+  readonly value: RichTextValue
   readonly selection: Range | null
 }
 
@@ -160,7 +162,7 @@ export interface BlockUnionMap {
   }
 
   readonly richText?: {
-    readonly richText: Node[]
+    readonly richText: RichTextValue
   }
 
   readonly quote?: {

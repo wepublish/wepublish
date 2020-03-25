@@ -1,10 +1,18 @@
 import {ConnectionResult, SortOrder, InputCursor, Limit} from './common'
+import {RichTextNode} from '../graphql/richText'
+
+export interface AuthorLink {
+  title: string
+  url: string
+}
 
 export interface Author {
   readonly id: string
   readonly name: string
   readonly slug: string
   readonly imageID?: string
+  readonly links: AuthorLink[]
+  readonly bio: RichTextNode[]
 }
 
 export type OptionalAuthor = Author | null

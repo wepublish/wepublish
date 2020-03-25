@@ -15,7 +15,9 @@ import {
   IconButton,
   Image,
   Toast,
-  ZIndex
+  ZIndex,
+  ListInput,
+  ListValue
 } from '@karma.run/ui'
 
 import {
@@ -32,9 +34,10 @@ import {
   useCreateAuthorMutation,
   Author,
   useAuthorQuery,
-  useUpdateAuthorMutation
+  useUpdateAuthorMutation,
+  AuthorLink
 } from '../api/author'
-import {slugify} from '../utility'
+import {slugify, generateID} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../api/blocks'
 
@@ -50,6 +53,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('')
   const [image, setImage] = useState<ImageRefData>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
+  const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -73,6 +77,16 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       setName(data.author.name)
       setSlug(data.author.slug)
       setImage(data.author.image)
+      setBio({value: data.author.bio, selection: null})
+      setLinks(
+        data.author.links.map(link => ({
+          id: generateID(),
+          value: {
+            title: link.title,
+            url: link.url
+          }
+        }))
+      )
     }
   }, [data?.author])
 
@@ -101,7 +115,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
-            imageID: image?.id
+            imageID: image?.id,
+            links: links.map(({value}) => value),
+            bio: bio.value
           }
         }
       })
@@ -113,7 +129,9 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           input: {
             name,
             slug,
-            imageID: image?.id
+            imageID: image?.id,
+            links: links.map(({value}) => value),
+            bio: bio.value
           }
         }
       })
@@ -146,7 +164,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
               label="Name"
               value={name}
               disabled={isDisabled}
-              onChange={(e) => {
+              onChange={e => {
                 setName(e.target.value)
                 setSlug(slugify(e.target.value))
               }}
@@ -187,11 +205,34 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Card>
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Biography" />
+        <PanelSectionHeader title="Links" />
         <PanelSection>
-          <Box>
-            <RichTextBlock value={bio} onChange={(value) => setBio(value)} />
-          </Box>
+          <ListInput
+            value={links}
+            onChange={links => setLinks(links)}
+            defaultValue={{title: '', url: ''}}>
+            {({value, onChange}) => (
+              <Box display="flex" flexDirection="row">
+                <TextInput
+                  label="Title"
+                  flexBasis="30%"
+                  marginRight={Spacing.ExtraSmall}
+                  value={value.title}
+                  onChange={e => onChange({...value, title: e.target.value})}
+                />
+                <TextInput
+                  label="Link"
+                  flexBasis="70%"
+                  value={value.url}
+                  onChange={e => onChange({...value, url: e.target.value})}
+                />
+              </Box>
+            )}
+          </ListInput>
+        </PanelSection>
+        <PanelSectionHeader title="Biographical Information" />
+        <PanelSection>
+          <RichTextBlock value={bio} onChange={value => setBio(value)} />
         </PanelSection>
       </Panel>
       <Toast
@@ -205,7 +246,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         {() => (
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={(value) => {
+            onSelect={value => {
               setChooseModalOpen(false)
               handleImageChange(value)
             }}
