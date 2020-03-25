@@ -38,7 +38,7 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
         return urlAdapter.getAuthorURL(author)
       }
     },
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthorLink)))},
+    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
     bio: {type: GraphQLRichText},
     image: {
       type: GraphQLImage,
@@ -86,7 +86,7 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthorLinkInput)))},
+    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
     imageID: {type: GraphQLID}
   }

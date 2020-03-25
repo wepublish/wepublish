@@ -32,8 +32,8 @@ export interface Author {
   name: string
   slug: string
   image?: ImageRefData
-  links: AuthorLink[]
-  bio: RichTextValue
+  links?: AuthorLink[]
+  bio?: RichTextValue
 }
 
 // Query

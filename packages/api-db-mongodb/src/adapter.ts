@@ -1174,10 +1174,8 @@ export class MongoDBAdapter implements DBAdapter {
   // ====
 
   async createPage({input}: CreatePageArgs): Promise<Page> {
-    const {shared, ...data} = input
+    const {...data} = input
     const {ops} = await this.pages.insertOne({
-      shared,
-
       createdAt: new Date(),
       modifiedAt: new Date(),
 
@@ -1197,13 +1195,12 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async updatePage({id, input}: UpdatePageArgs): Promise<OptionalPage> {
-    const {shared, ...data} = input
+    const {...data} = input
     const {value} = await this.pages.findOneAndUpdate(
       {_id: id},
       [
         {
           $set: {
-            shared,
             modifiedAt: new Date(),
 
             'draft.revision': {

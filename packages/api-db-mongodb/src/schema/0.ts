@@ -153,7 +153,6 @@ export interface DBArticleHistoryRevision extends DBArticleRevision {
 export interface DBPage {
   _id: any
 
-  shared: boolean
   createdAt: Date
   modifiedAt: Date
 

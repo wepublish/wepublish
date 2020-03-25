@@ -77,15 +77,17 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       setName(data.author.name)
       setSlug(data.author.slug)
       setImage(data.author.image)
-      setBio({value: data.author.bio, selection: null})
+      setBio(data.author.bio ? {value: data.author.bio, selection: null} : createDefaultValue())
       setLinks(
-        data.author.links.map(link => ({
-          id: generateID(),
-          value: {
-            title: link.title,
-            url: link.url
-          }
-        }))
+        data.author.links
+          ? data.author.links.map(link => ({
+              id: generateID(),
+              value: {
+                title: link.title,
+                url: link.url
+              }
+            }))
+          : []
       )
     }
   }, [data?.author])
