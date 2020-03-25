@@ -43,7 +43,7 @@ yarn watch
 Or if you want to watch only certain packages:
 
 ```
-yarn run-p watch:api watch:api-example watch:editor:
+yarn run-p watch:api watch:api-example watch:editor
 ```
 
 The following servers will be available:
