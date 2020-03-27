@@ -2,23 +2,38 @@ import gql from 'graphql-tag'
 import {useQuery, QueryHookOptions, useMutation, MutationHookOptions} from '@apollo/react-hooks'
 
 import {ImageRefFragment, ImageRefData} from './image'
+import {RichTextValue} from './blocks'
 
 export const AuthorFragment = gql`
   fragment AuthorFragment on Author {
     id
     name
+    slug
     image {
       ...ImageRefFragment
     }
+    links {
+      title
+      url
+    }
+    bio
   }
 
   ${ImageRefFragment}
 `
 
+export interface AuthorLink {
+  title: string
+  url: string
+}
+
 export interface Author {
   id: string
   name: string
+  slug: string
   image?: ImageRefData
+  links?: AuthorLink[]
+  bio?: RichTextValue
 }
 
 // Query
@@ -81,10 +96,12 @@ export function useAuthorQuery(opts?: QueryHookOptions<AuthorsData, AuthorVariab
 // Mutation
 // ========
 
-export interface CreateAuthorInput {
+export interface AuthorInput {
   name?: string
   slug: string
   imageID?: string
+  links: AuthorLink[]
+  bio: RichTextValue
 }
 
 const CreateAuthorMutation = gql`
@@ -102,19 +119,13 @@ export interface CreateAuthorMutationData {
 }
 
 export interface CreateAuthorVariables {
-  input: CreateAuthorInput
+  input: AuthorInput
 }
 
 export function useCreateAuthorMutation(
   opts?: MutationHookOptions<CreateAuthorMutationData, CreateAuthorVariables>
 ) {
   return useMutation<CreateAuthorMutationData, CreateAuthorVariables>(CreateAuthorMutation, opts)
-}
-
-export interface UpdateAuthorInput {
-  name?: string
-  slug: string
-  imageID?: string
 }
 
 const UpdateAuthorMutation = gql`
@@ -133,7 +144,7 @@ export interface UpdateAuthorMutationData {
 
 export interface UpdateAuthorVariables {
   id: string
-  input: UpdateAuthorInput
+  input: AuthorInput
 }
 
 export function useUpdateAuthorMutation(

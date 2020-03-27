@@ -79,13 +79,11 @@ export interface MongoDBAdabterCommonArgs {
 
 export interface MongoDBAdapterConnectArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
-  readonly database: string
   readonly locale: string
 }
 
 export interface MongoDBAdapterInitializeArgs extends MongoDBAdabterCommonArgs {
   readonly url: string
-  readonly database: string
   readonly locale: string
   readonly seed?: (adapter: MongoDBAdapter) => Promise<void>
 }
@@ -210,11 +208,10 @@ export class MongoDBAdapter implements DBAdapter {
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
-    database,
     locale
   }: MongoDBAdapterConnectArgs) {
     const client = await this.createMongoClient(url)
-    const db = client.db(database)
+    const db = client.db()
 
     const migrationState = await this.getDBMigrationState(db)
 
@@ -252,13 +249,11 @@ export class MongoDBAdapter implements DBAdapter {
     sessionTTL = MongoDBAdapter.DefaultSessionTTL,
     bcryptHashCostFactor = MongoDBAdapter.DefaultBcryptHashCostFactor,
     url,
-    database,
     locale,
     seed
   }: MongoDBAdapterInitializeArgs): Promise<InitializationResult> {
     const client = await this.createMongoClient(url)
-    const db = client.db(database)
-
+    const db = client.db()
     const migrationState = await this.getDBMigrationState(db)
 
     if (migrationState?.version === LatestMigration.version) {
@@ -277,7 +272,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
 
     if (!migrationState) {
-      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, database, locale})
+      const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
       await seed?.(adapter)
     }
 
@@ -446,7 +441,9 @@ export class MongoDBAdapter implements DBAdapter {
       modifiedAt: new Date(),
       name: input.name,
       slug: input.slug,
-      imageID: input.imageID
+      imageID: input.imageID,
+      links: input.links,
+      bio: input.bio
     })
 
     const {_id: id, ...author} = ops[0]
@@ -461,7 +458,9 @@ export class MongoDBAdapter implements DBAdapter {
           modifiedAt: new Date(),
           name: input.name,
           slug: input.slug,
-          imageID: input.imageID
+          imageID: input.imageID,
+          links: input.links,
+          bio: input.bio
         }
       },
       {returnOriginal: false}
@@ -534,7 +533,7 @@ export class MongoDBAdapter implements DBAdapter {
       textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
     }
 
-    const [totalCount, images] = await Promise.all([
+    const [totalCount, authors] = await Promise.all([
       this.authors.countDocuments(textFilter, {
         collation: {locale: this.locale, strength: 2}
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
@@ -548,7 +547,7 @@ export class MongoDBAdapter implements DBAdapter {
         .toArray()
     ])
 
-    const nodes = images.slice(0, limitCount)
+    const nodes = authors.slice(0, limitCount)
 
     if (limit.type === LimitType.Last) {
       nodes.reverse()
@@ -556,14 +555,14 @@ export class MongoDBAdapter implements DBAdapter {
 
     const hasNextPage =
       limit.type === LimitType.First
-        ? images.length > limitCount
+        ? authors.length > limitCount
         : cursor.type === InputCursorType.Before
         ? true
         : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
-        ? images.length > limitCount
+        ? authors.length > limitCount
         : cursor.type === InputCursorType.After
         ? true
         : false
@@ -1175,10 +1174,8 @@ export class MongoDBAdapter implements DBAdapter {
   // ====
 
   async createPage({input}: CreatePageArgs): Promise<Page> {
-    const {shared, ...data} = input
+    const {...data} = input
     const {ops} = await this.pages.insertOne({
-      shared,
-
       createdAt: new Date(),
       modifiedAt: new Date(),
 
@@ -1198,13 +1195,12 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async updatePage({id, input}: UpdatePageArgs): Promise<OptionalPage> {
-    const {shared, ...data} = input
+    const {...data} = input
     const {value} = await this.pages.findOneAndUpdate(
       {_id: id},
       [
         {
           $set: {
-            shared,
             modifiedAt: new Date(),
 
             'draft.revision': {

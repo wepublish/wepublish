@@ -3,19 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "bin": {
-    "wepublish-api-example": "./lib/index.js"
+    "wepublish-api-example": "./dist/index.js"
   },
-  "main": "./lib/",
+  "main": "./dist/",
   "license": "MIT",
   "scripts": {
     "start": "node ./lib/index.js",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:server": "nodemon --inspect=0.0.0.0:9240 ./lib/index.js",
+    "watch:server": "nodemon --inspect=0.0.0.0:9240 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
-    "clean": "shx rm -rf ./LICENSE ./lib",
+    "clean": "shx rm -rf ./LICENSE ./dist",
     "prepare": "run-s clean build",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
@@ -23,7 +23,7 @@
     "@wepublish/api": "*",
     "@wepublish/api-db-memory": "*",
     "@wepublish/api-media-karma": "*",
-    "@karma.run/media": "^0.2.0",
+    "@karma.run/media": "^0.2.1",
     "@karma.run/media-storage-local": "^0.1.4",
     "@karma.run/media-image-sharp": "^0.2.0",
     "graphql": "^14.6.0"

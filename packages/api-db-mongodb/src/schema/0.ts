@@ -1,4 +1,4 @@
-import {ArticleBlock, FocalPoint, NavigationLink, PageBlock} from '@wepublish/api'
+import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -62,6 +62,9 @@ export interface DBAuthor {
   slug: string
   name: string
   imageID?: string
+
+  links: Array<{title: string; url: string}>
+  bio: RichTextNode[]
 }
 
 // TODO: Consider using DB schema via $jsonSchema
@@ -150,7 +153,6 @@ export interface DBArticleHistoryRevision extends DBArticleRevision {
 export interface DBPage {
   _id: any
 
-  shared: boolean
   createdAt: Date
   modifiedAt: Date
 
