@@ -1,13 +1,15 @@
 import React, {ReactNode} from 'react'
 
-import {NavigationTemplate} from '@karma.run/ui'
+import {NavigationTemplate, Divider} from '@karma.run/ui'
 
 import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPowerSettingsNew,
   MaterialIconTextFields,
   MaterialIconPhotoLibraryOutlined,
-  MaterialIconPermIdentityOutlined
+  MaterialIconPermIdentityOutlined,
+  MaterialIconSettings,
+  MaterialIconShareOutlined
 } from '@karma.run/icons'
 
 import {
@@ -18,7 +20,9 @@ import {
   ImageListRoute,
   AuthorListRoute,
   useRoute,
-  RouteType
+  RouteType,
+  PeeringRoute,
+  SettingsRoute
 } from './route'
 
 export interface BaseProps {
@@ -58,6 +62,22 @@ export function Base({children}: BaseProps) {
             label="Image Library"
             route={ImageListRoute.create({})}
             active={current?.type === RouteType.ImageList}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconShareOutlined}
+            label="Peering"
+            route={PeeringRoute.create({})}
+            active={current?.type === RouteType.Peering}
+          />
+
+          <Divider />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconSettings}
+            label="Settings"
+            route={SettingsRoute.create({})}
+            active={current?.type === RouteType.Settings}
           />
 
           {/* TODO */}

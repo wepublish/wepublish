@@ -64,6 +64,7 @@ import {ImageBlock} from '../blocks/imageBlock'
 import {TitleBlock} from '../blocks/titleBlock'
 import {Author} from '../api/author'
 import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 
 export type ArticleBlockValue =
   | TitleBlockListValue
@@ -129,6 +130,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
 
+  const [hasChanged, setChanged] = useState(false)
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
@@ -181,6 +185,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     if (articleID) {
       await updateArticle({variables: {id: articleID, input}})
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
     } else {
@@ -193,6 +198,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Created')
     }
@@ -220,6 +226,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         }
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Published')
     }
@@ -242,6 +249,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 icon={MaterialIconArrowBack}
                 label="Back"
                 route={ArticleListRoute.create({})}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) e.preventDefault()
+                }}
               />
             }
             centerChildren={
@@ -280,7 +290,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        <BlockList value={blocks} onChange={setBlocks} disabled={isLoading || isDisabled}>
+        <BlockList
+          value={blocks}
+          onChange={blocks => {
+            setBlocks(blocks)
+            setChanged(true)
+          }}
+          disabled={isLoading || isDisabled}>
           {useBlockMap<ArticleBlockValue>(
             () => ({
               [BlockType.Title]: {
@@ -334,7 +350,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           <ArticleMetadataPanel
             value={metadata}
             onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => setMetadata(value)}
+            onChange={value => {
+              setMetadata(value)
+              setChanged(true)
+            }}
           />
         )}
       </Drawer>

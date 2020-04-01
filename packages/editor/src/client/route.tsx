@@ -37,7 +37,10 @@ export enum RouteType {
 
   AuthorList = 'authorList',
   AuthorEdit = 'authorEdit',
-  AuthorCreate = 'authorCreate'
+  AuthorCreate = 'authorCreate',
+
+  Peering = 'peering',
+  Settings = 'settings'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -72,6 +75,9 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
+export const PeeringRoute = route(RouteType.Peering, routePath`/peering`)
+export const SettingsRoute = route(RouteType.Settings, routePath`/settings`)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
@@ -90,6 +96,8 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
+  PeeringRoute,
+  SettingsRoute,
   NotFoundRoute
 ] as const
 
@@ -126,6 +134,9 @@ export function RouteProvider({children}: RouteProviderProps) {
   return (
     <BaseRouteProvider
       handleNextRoute={(next, dispatch) => {
+        // TODO: Handle UnsavedChangesDialog popstate
+        // TODO: Add a way to discard next route
+
         if (next.type === RouteType.Logout) {
           if (session) {
             logout({variables: {token: session.sessionToken}})
