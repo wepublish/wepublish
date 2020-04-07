@@ -9,7 +9,8 @@ import {
   MaterialIconPhotoLibraryOutlined,
   MaterialIconPermIdentityOutlined,
   MaterialIconSettings,
-  MaterialIconShareOutlined
+  MaterialIconShareOutlined,
+  MaterialIcon3dRotation
 } from '@karma.run/icons'
 
 import {
@@ -75,6 +76,13 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconSettings}
+            label="Settings"
+            route={SettingsRoute.create({})}
+            active={current?.type === RouteType.Settings}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIcon3dRotation}
             label="Settings"
             route={SettingsRoute.create({})}
             active={current?.type === RouteType.Settings}

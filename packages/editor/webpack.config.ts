@@ -3,7 +3,7 @@ import webpack from 'webpack'
 
 import {AssetListPlugin} from '@karma.run/webpack'
 
-export default (mode: string) =>
+export default (env: any, {mode}: any) =>
   ({
     entry: {
       client: './src/client/index.tsx'
@@ -15,16 +15,32 @@ export default (mode: string) =>
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
-      alias: {
-        'react-dom': '@hot-loader/react-dom'
-      }
+      alias:
+        mode === 'production'
+          ? {}
+          : {
+              'react-dom': '@hot-loader/react-dom'
+            }
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-react',
+              '@babel/preset-typescript',
+              ['@babel/preset-env', {modules: false}]
+            ],
+            plugins: [
+              '@babel/plugin-syntax-dynamic-import',
+              '@babel/plugin-proposal-optional-chaining',
+              '@babel/plugin-proposal-nullish-coalescing-operator',
+              ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
+            ]
+          }
         }
       ]
     },

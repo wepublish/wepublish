@@ -16,6 +16,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
+import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -28,6 +29,25 @@ function mapBlockUnionMap(value: any) {
     throw new Error(
       `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
         GraphQLArticleBlockUnionMap.name
+      }, they're mutually exclusive.`
+    )
+  }
+
+  const key = Object.keys(value)[0] as keyof BlockMap
+  return {type: key, ...value[key]} as Block
+}
+
+function mapNavigationLinkInput(value: any) {
+  const valueKeys = Object.keys(value)
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no navigation link types in ${GraphQLNavigationLinkInput.name}.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple navigation link  types (${JSON.stringify(Object.keys(value))}) in ${
+        GraphQLNavigationLinkInput.name
       }, they're mutually exclusive.`
     )
   }
@@ -86,6 +106,33 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     // Navigation
     // ==========
+
+    createNavigation: {
+      type: GraphQLNavigation,
+      args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.createNavigation({
+          ...input,
+          links: input.links.map(mapNavigationLinkInput)
+        })
+      }
+    },
+
+    updateNavigation: {
+      type: GraphQLNavigation,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLNavigationInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        authenticate()
+        return dbAdapter.updateNavigation(id, {
+          ...input,
+          links: input.links.map(mapNavigationLinkInput)
+        })
+      }
+    },
 
     // Author
     // ======

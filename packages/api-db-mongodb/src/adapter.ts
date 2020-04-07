@@ -42,7 +42,6 @@ import {
   GetAuthorsArgs,
   AuthorSort,
   OptionalNavigation,
-  CreateNavigationArgs,
   OptionalPublicPage,
   CreatePageArgs,
   Page,
@@ -54,7 +53,8 @@ import {
   GetPagesArgs,
   PublicPage,
   GetPublishedPagesArgs,
-  PageSort
+  PageSort,
+  NavigationInput
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -402,17 +402,57 @@ export class MongoDBAdapter implements DBAdapter {
   // Navigation
   // ==========
 
-  async createNavigation({input}: CreateNavigationArgs): Promise<OptionalNavigation> {
-    const {ops} = await this.navigations.insertOne({
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      name: input.name,
-      key: input.key,
-      links: input.links
-    })
+  async createNavigation(input: Readonly<NavigationInput>): Promise<OptionalNavigation> {
+    try {
+      const {ops} = await this.navigations.insertOne({
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        name: input.name,
+        key: input.key,
+        links: input.links
+      })
 
-    const {_id: id, ...navigation} = ops[0]
-    return {id, ...navigation}
+      const {_id: id, ...navigation} = ops[0]
+      return {id, ...navigation}
+    } catch (err) {
+      if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
+        throw new Error('"key" already exists!')
+      }
+
+      throw err
+    }
+  }
+
+  async updateNavigation(
+    id: string,
+    input: Readonly<NavigationInput>
+  ): Promise<OptionalNavigation> {
+    try {
+      const {value} = await this.navigations.findOneAndUpdate(
+        {_id: id},
+        {
+          $set: {
+            createdAt: new Date(),
+            modifiedAt: new Date(),
+            name: input.name,
+            key: input.key,
+            links: input.links
+          }
+        },
+        {returnOriginal: false}
+      )
+
+      if (!value) return null
+
+      const {_id: outID, ...navigation} = value
+      return {id: outID, ...navigation}
+    } catch (err) {
+      if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
+        throw new Error('"key" already exists!')
+      }
+
+      throw err
+    }
   }
 
   async getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]> {

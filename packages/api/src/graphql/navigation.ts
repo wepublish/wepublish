@@ -5,7 +5,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLUnionType,
-  GraphQLID
+  GraphQLID,
+  GraphQLInputObjectType
 } from 'graphql'
 
 import {Context} from '../context'
@@ -135,5 +136,47 @@ export const GraphQLPublicNavigation = new GraphQLObjectType({
     key: {type: GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLNonNull(GraphQLString)},
     links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicNavigationLink)))}
+  }
+})
+
+export const GraphQLArticleNavigationLinkInput = new GraphQLInputObjectType({
+  name: 'ArticleNavigationLinkInput',
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    articleID: {type: GraphQLNonNull(GraphQLID)}
+  }
+})
+
+export const GraphQLPageNavigationLinkInput = new GraphQLInputObjectType({
+  name: 'PageNavigationLinkInput',
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    pageID: {type: GraphQLNonNull(GraphQLID)}
+  }
+})
+
+export const GraphQLExternalNavigationLinkInput = new GraphQLInputObjectType({
+  name: 'ExternalNavigationLinkInput',
+  fields: {
+    label: {type: GraphQLNonNull(GraphQLString)},
+    url: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLNavigationLinkInput = new GraphQLInputObjectType({
+  name: 'NavigationLinkInput',
+  fields: {
+    [NavigationLinkType.Page]: {type: GraphQLPageNavigationLinkInput},
+    [NavigationLinkType.Article]: {type: GraphQLArticleNavigationLinkInput},
+    [NavigationLinkType.External]: {type: GraphQLExternalNavigationLinkInput}
+  }
+})
+
+export const GraphQLNavigationInput = new GraphQLInputObjectType({
+  name: 'NavigationInput',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLinkInput)))}
   }
 })
