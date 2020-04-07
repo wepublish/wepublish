@@ -42,22 +42,32 @@ export interface Context {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-
+  readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 
   authenticate(): SessionWithToken
+}
+
+export interface Oauth2Provider {
+  readonly name: string
+  readonly discoverUrl: string
+  readonly clientId: string
+  readonly clientKey: string
+  readonly scopes: string[]
+  readonly redirectUri: string[]
 }
 
 export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
+  readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 }
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {dbAdapter, mediaAdapter, urlAdapter, hooks}: ContextOptions
+  {dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.getSessionByToken(token) : null
@@ -85,6 +95,7 @@ export async function contextFromRequest(
     dbAdapter,
     mediaAdapter,
     urlAdapter,
+    oauth2Providers,
     hooks,
 
     authenticate() {

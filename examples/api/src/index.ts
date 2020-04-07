@@ -1,5 +1,12 @@
 #!/usr/bin/env node
-import {WepublishServer, URLAdapter, PublicArticle, PublicPage, Author} from '@wepublish/api'
+import {
+  WepublishServer,
+  URLAdapter,
+  PublicArticle,
+  PublicPage,
+  Author,
+  Oauth2Provider
+} from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
@@ -45,6 +52,7 @@ async function asyncMain() {
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
       adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
+      adapter.createUser({email: 'nico.roos@tsri.ch', password: '123'})
     }
   })
 
@@ -54,9 +62,29 @@ async function asyncMain() {
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
 
+  const oauth2Providers: Oauth2Provider[] = [
+    {
+      name: 'google',
+      discoverUrl: 'https://accounts.google.com',
+      clientId: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com',
+      clientKey: 't267ZLqkV9dacrkPQp_pF-G2',
+      redirectUri: ['http://localhost:4000/auth/google'],
+      scopes: ['openid profile email']
+    },
+    {
+      name: 'wepublish',
+      discoverUrl: 'http://localhost:4010',
+      clientId: 'mike',
+      clientKey: 'some-secret',
+      redirectUri: ['http://localhost:4000/auth/wepublish'],
+      scopes: ['openid']
+    }
+  ]
+
   const server = new WepublishServer({
     mediaAdapter,
     dbAdapter,
+    oauth2Providers,
     urlAdapter: new ExampleURLAdapter(),
     playground: true,
     introspection: true,

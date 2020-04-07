@@ -1,6 +1,7 @@
 import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
+import {GraphQLOAuth2Provider} from './auth'
 
 import {
   GraphQLArticleConnection,
@@ -64,6 +65,21 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, args, {authenticate, dbAdapter}) {
         const session = authenticate()
         return dbAdapter.getSessionsForUser(session.user)
+      }
+    },
+
+    oauth2providers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Provider))),
+      resolve(root, args, {oauth2Providers}) {
+        return oauth2Providers.map(provider => {
+          const {clientId, name, redirectUri, scopes} = provider
+          return {
+            clientId,
+            name,
+            redirectUri,
+            scopes
+          }
+        })
       }
     },
 
