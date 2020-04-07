@@ -6,7 +6,6 @@ import {
   GraphQLString,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLUnionType,
   GraphQLBoolean,
   GraphQLInt
 } from 'graphql'
@@ -15,58 +14,12 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 
 import {Context} from '../context'
 
-import {
-  GraphQLRichTextBlock,
-  GraphQLImageBlock,
-  GraphQLInputRichTextBlock,
-  GraphQLTitleBlock,
-  GraphQLInputImageBlock,
-  GraphQLInputTitleBlock,
-  GraphQLInputLinkPageBreakBlock,
-  GraphQLArticleTeaserGridBlockInput,
-  GraphQLArticleTeaserGridBlock,
-  GraphQLPublicArticleTeaserGridBlock,
-  GraphQLLinkPageBreakBlock
-} from './blocks'
-
 import {GraphQLImage} from './image'
-import {BlockType} from '../db/block'
 import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
 import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './common'
 
-export const GraphQLPageBlockUnionMap = new GraphQLInputObjectType({
-  name: 'PageBlockUnionMap',
-  fields: {
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
-    [BlockType.Image]: {type: GraphQLInputImageBlock},
-    [BlockType.Title]: {type: GraphQLInputTitleBlock},
-    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput},
-    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock}
-  }
-})
-
-export const GraphQLPageBlock = new GraphQLUnionType({
-  name: 'PageBlock',
-  types: [
-    GraphQLRichTextBlock,
-    GraphQLTitleBlock,
-    GraphQLImageBlock,
-    GraphQLLinkPageBreakBlock,
-    GraphQLArticleTeaserGridBlock
-  ]
-})
-
-export const GraphQLPublicPageBlock = new GraphQLUnionType({
-  name: 'PageBlock',
-  types: [
-    GraphQLRichTextBlock,
-    GraphQLTitleBlock,
-    GraphQLImageBlock,
-    GraphQLLinkPageBreakBlock,
-    GraphQLPublicArticleTeaserGridBlock
-  ]
-})
+import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -117,7 +70,7 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
     imageID: {type: GraphQLID},
 
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlockUnionMap)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
     }
   }
 })
@@ -146,7 +99,7 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
       }
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
 })
 
@@ -212,7 +165,7 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
       }
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPageBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
   }
 })
 

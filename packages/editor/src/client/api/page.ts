@@ -300,11 +300,55 @@ const GetPageQuery = gql`
             richText
           }
 
+          ... on QuoteBlock {
+            quote
+            author
+          }
+
+          ... on LinkPageBreakBlock {
+            text
+            linkText
+            linkURL
+          }
+
           ... on ImageBlock {
             caption
             image {
               ...ImageRefFragment
             }
+          }
+
+          ... on FacebookPostBlock {
+            userID
+            postID
+          }
+
+          ... on InstagramPostBlock {
+            postID
+          }
+
+          ... on TwitterTweetBlock {
+            userID
+            tweetID
+          }
+
+          ... on VimeoVideoBlock {
+            videoID
+          }
+
+          ... on YouTubeVideoBlock {
+            videoID
+          }
+
+          ... on SoundCloudTrackBlock {
+            trackID
+          }
+
+          ... on EmbedBlock {
+            url
+            title
+            width
+            height
           }
 
           ... on ArticleTeaserGridBlock {
@@ -315,12 +359,6 @@ const GetPageQuery = gql`
               }
             }
             numColumns
-          }
-
-          ... on LinkPageBreakBlock {
-            text
-            linkText
-            linkURL
           }
         }
       }
