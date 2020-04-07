@@ -21,7 +21,9 @@ import {
   MaterialIconTitle,
   MaterialIconTextFormat,
   MaterialIconImage,
-  MaterialIconViewDay
+  MaterialIconViewDay,
+  MaterialIconFormatQuote,
+  MaterialIconCode
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
@@ -49,7 +51,10 @@ import {
   TitleBlockListValue,
   RichTextBlockListValue,
   ImageBlockListValue,
-  LinkPageBreakBlockListValue
+  LinkPageBreakBlockListValue,
+  EmbedType,
+  QuoteBlockListValue,
+  EmbedBlockListValue
 } from '../api/blocks'
 
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
@@ -58,14 +63,18 @@ import {ImageBlock} from '../blocks/imageBlock'
 import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
 
 import nanoid from 'nanoid'
+import {EmbedBlock} from '../blocks/embedBlock'
+import {QuoteBlock} from '../blocks/quoteBlock'
 
 export type PageBlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
   | ImageBlockListValue
+  | QuoteBlockListValue
+  | LinkPageBreakBlockListValue
+  | EmbedBlockListValue
   | ArticleTeaserGridBlock1ListValue
   | ArticleTeaserGridBlock6ListValue
-  | LinkPageBreakBlockListValue
 
 export interface PageEditorProps {
   readonly id?: string
@@ -259,6 +268,48 @@ export function PageEditor({id}: PageEditorProps) {
         <BlockList value={blocks} onChange={blocks => setBlocks(blocks)} disabled={isDisabled}>
           {useBlockMap<PageBlockValue>(
             () => ({
+              [BlockType.Title]: {
+                field: props => <TitleBlock {...props} />,
+                defaultValue: {title: '', lead: ''},
+                label: 'Title',
+                icon: MaterialIconTitle
+              },
+
+              [BlockType.RichText]: {
+                field: props => <RichTextBlock {...props} />,
+                defaultValue: createDefaultValue,
+                label: 'Rich Text',
+                icon: MaterialIconTextFormat
+              },
+
+              [BlockType.Image]: {
+                field: props => <ImageBlock {...props} />,
+                defaultValue: {image: null, caption: ''},
+                label: 'Image',
+                icon: MaterialIconImage
+              },
+
+              [BlockType.Quote]: {
+                field: props => <QuoteBlock {...props} />,
+                defaultValue: {quote: '', author: ''},
+                label: 'Quote',
+                icon: MaterialIconFormatQuote
+              },
+
+              [BlockType.LinkPageBreak]: {
+                field: props => <LinkPageBreakBlock {...props} />,
+                defaultValue: {text: '', linkText: '', linkURL: ''},
+                label: 'Page Break',
+                icon: MaterialIconViewDay
+              },
+
+              [BlockType.Embed]: {
+                field: props => <EmbedBlock {...props} />,
+                defaultValue: {type: EmbedType.Other},
+                label: 'Embed',
+                icon: MaterialIconCode
+              },
+
               [BlockType.ArticleTeaserGrid1]: {
                 field: props => <TeaserGridBlock {...props} />,
                 defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
@@ -281,34 +332,6 @@ export function PageEditor({id}: PageEditorProps) {
                 },
                 label: '6 Cols',
                 icon: IconColumn6
-              },
-
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
-              },
-
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: createDefaultValue,
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
-              },
-
-              [BlockType.LinkPageBreak]: {
-                field: props => <LinkPageBreakBlock {...props} />,
-                defaultValue: {text: '', linkText: '', linkURL: ''},
-                label: 'Page Break',
-                icon: MaterialIconViewDay
               }
             }),
             []

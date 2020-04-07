@@ -5,7 +5,8 @@ import {
   GraphQLString,
   GraphQLID,
   GraphQLInt,
-  GraphQLList
+  GraphQLList,
+  GraphQLUnionType
 } from 'graphql'
 
 import {GraphQLRichText} from './richText'
@@ -384,4 +385,65 @@ export const GraphQLArticleTeaserGridBlockInput = new GraphQLInputObjectType({
     teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaserInput))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   }
+})
+
+export const GraphQLBlockInput = new GraphQLInputObjectType({
+  name: 'BlockInput',
+  fields: {
+    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
+    [BlockType.Image]: {type: GraphQLInputImageBlock},
+    [BlockType.Title]: {type: GraphQLInputTitleBlock},
+    [BlockType.Quote]: {type: GraphQLInputQuoteBlock},
+    [BlockType.FacebookPost]: {type: GraphQLInputFacebookPostBlock},
+    [BlockType.InstagramPost]: {type: GraphQLInputInstagramPostBlock},
+    [BlockType.TwitterTweet]: {type: GraphQLInputTwitterTweetBlock},
+    [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
+    [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
+    [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
+    [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
+    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock},
+    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
+  }
+})
+
+export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
+  name: 'Block',
+  types: () => [
+    GraphQLRichTextBlock,
+    GraphQLImageBlock,
+    GraphQLImageGalleryBlock,
+    GraphQLFacebookPostBlock,
+    GraphQLInstagramPostBlock,
+    GraphQLTwitterTweetBlock,
+    GraphQLVimeoVideoBlock,
+    GraphQLYouTubeVideoBlock,
+    GraphQLSoundCloudTrackBlock,
+    GraphQLEmbedBlock,
+    GraphQLListicleBlock,
+    GraphQLLinkPageBreakBlock,
+    GraphQLTitleBlock,
+    GraphQLQuoteBlock,
+    GraphQLArticleTeaserGridBlock
+  ]
+})
+
+export const GraphQLPublicBlock = new GraphQLUnionType({
+  name: 'Block',
+  types: () => [
+    GraphQLRichTextBlock,
+    GraphQLImageBlock,
+    GraphQLImageGalleryBlock,
+    GraphQLFacebookPostBlock,
+    GraphQLInstagramPostBlock,
+    GraphQLTwitterTweetBlock,
+    GraphQLVimeoVideoBlock,
+    GraphQLYouTubeVideoBlock,
+    GraphQLSoundCloudTrackBlock,
+    GraphQLEmbedBlock,
+    GraphQLListicleBlock,
+    GraphQLLinkPageBreakBlock,
+    GraphQLTitleBlock,
+    GraphQLQuoteBlock,
+    GraphQLPublicArticleTeaserGridBlock
+  ]
 })
