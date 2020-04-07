@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import nanoid from 'nanoid'
 
 import {
   EditorTemplate,
@@ -21,7 +22,9 @@ import {
   MaterialIconTitle,
   MaterialIconFormatQuote,
   MaterialIconCode,
-  MaterialIconViewDay
+  MaterialIconViewDay,
+  IconColumn6,
+  IconColumn1
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
@@ -54,7 +57,9 @@ import {
   blockForQueryBlock,
   unionMapForBlock,
   EmbedType,
-  LinkPageBreakBlockListValue
+  LinkPageBreakBlockListValue,
+  ArticleTeaserGridBlock1ListValue,
+  ArticleTeaserGridBlock6ListValue
 } from '../api/blocks'
 
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
@@ -65,7 +70,9 @@ import {TitleBlock} from '../blocks/titleBlock'
 import {Author} from '../api/author'
 import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
+import {TeaserGridBlock} from '../blocks/teaserGridBlock'
 
+// TODO: Deduplicate with `PageEditor`.
 export type ArticleBlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -73,6 +80,8 @@ export type ArticleBlockValue =
   | QuoteBlockListValue
   | LinkPageBreakBlockListValue
   | EmbedBlockListValue
+  | ArticleTeaserGridBlock1ListValue
+  | ArticleTeaserGridBlock6ListValue
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -339,6 +348,30 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 defaultValue: {type: EmbedType.Other},
                 label: 'Embed',
                 icon: MaterialIconCode
+              },
+
+              [BlockType.ArticleTeaserGrid1]: {
+                field: props => <TeaserGridBlock {...props} />,
+                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
+                label: '1 Col',
+                icon: IconColumn1
+              },
+
+              [BlockType.ArticleTeaserGrid6]: {
+                field: props => <TeaserGridBlock {...props} />,
+                defaultValue: {
+                  numColumns: 3,
+                  teasers: [
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null],
+                    [nanoid(), null]
+                  ]
+                },
+                label: '6 Cols',
+                icon: IconColumn6
               }
             }),
             []

@@ -367,12 +367,23 @@ const GetArticleQuery = gql`
             width
             height
           }
+
+          ... on ArticleTeaserGridBlock {
+            teasers {
+              type
+              article {
+                ...ArticleRefFragment
+              }
+            }
+            numColumns
+          }
         }
       }
     }
   }
 
   ${ImageRefFragment}
+  ${ArticleRefFragment}
   ${AuthorFragment}
 `
 

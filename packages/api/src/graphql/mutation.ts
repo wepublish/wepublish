@@ -10,25 +10,27 @@ import {
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 import {InvalidCredentialsError} from '../error'
-import {GraphQLArticleInput, GraphQLArticleBlockUnionMap, GraphQLArticle} from './article'
+import {GraphQLArticleInput, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
+
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
+import {GraphQLBlockInput} from './blocks'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
 
   if (valueKeys.length === 0) {
-    throw new Error(`Received no block types in ${GraphQLArticleBlockUnionMap.name}.`)
+    throw new Error(`Received no block types in ${GraphQLBlockInput.name}.`)
   }
 
   if (valueKeys.length > 1) {
     throw new Error(
       `Received multiple block types (${JSON.stringify(Object.keys(value))}) in ${
-        GraphQLArticleBlockUnionMap.name
+        GraphQLBlockInput.name
       }, they're mutually exclusive.`
     )
   }

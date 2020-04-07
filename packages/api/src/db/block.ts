@@ -135,8 +135,9 @@ export type ArticleBlock =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | ArticleTeaserGridBlock
 
-export type PageBlock = RichTextBlock | ImageBlock | ArticleTeaserGridBlock
+export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock
 
 export type BaseBlockMap = MapDiscriminatedUnion<Block, 'type'>
