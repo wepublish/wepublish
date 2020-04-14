@@ -344,7 +344,7 @@ export class MongoDBAdapter implements DBAdapter {
     return {id, user, token, createdAt, expiresAt}
   }
 
-  async deleteSessionByToken(token: string): Promise<boolean> {
+  async OptionalUserSessionWithToken(token: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({token})
     return deletedCount === 1
   }
@@ -370,7 +370,7 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  async deleteSessionByID(user: User, id: string): Promise<boolean> {
+  async OptionalUserSession(user: User, id: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
     return deletedCount === 1
   }

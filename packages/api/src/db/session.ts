@@ -1,26 +1,38 @@
 import {User} from './user'
+import {Peer} from './peer'
 
-export interface Session {
-  readonly id: string
-  readonly user: User
-  readonly createdAt: Date
-  readonly expiresAt: Date
+export enum SessionType {
+  User = 'user',
+  Peer = 'peer'
 }
 
-export interface SessionWithToken extends Session {
-  readonly token: string
+export interface PeerSession {
+  type: SessionType.Peer
+  peer: Peer
+  token: string
 }
 
+export interface UserSession {
+  type: SessionType.User
+  id: string
+  user: User
+  createdAt: Date
+  expiresAt: Date
+  token: string
+}
+
+export type OptionalUserSession = UserSession | null
+
+export type Session = PeerSession | UserSession
 export type OptionalSession = Session | null
-export type OptionalSessionWithToken = SessionWithToken | null
 
 export interface DBSessionAdapter {
-  createSessionForUser(user: User): Promise<OptionalSessionWithToken>
+  createUserSession(user: User): Promise<OptionalUserSession>
+  getUserSessions(user: User): Promise<UserSession[]>
 
-  getSessionsForUser(user: User): Promise<Session[]>
   getSessionByID(user: User, id: string): Promise<OptionalSession>
-  getSessionByToken(token: string): Promise<OptionalSessionWithToken>
+  getSessionByToken(token: string): Promise<OptionalSession>
 
-  deleteSessionByID(user: User, id: string): Promise<boolean>
-  deleteSessionByToken(token: string): Promise<boolean>
+  deleteUserSessionByID(user: User, id: string): Promise<boolean>
+  deleteUserSessionByToken(token: string): Promise<boolean>
 }

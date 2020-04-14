@@ -42,17 +42,32 @@ import {
   GraphQLPublishedPageSort
 } from './page'
 import {PageSort} from '../db/page'
+import {GraphQLSettings} from './settings'
+import {SessionType} from '../db/session'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
+    // Settings
+    // ========
+
+    settings: {
+      type: GraphQLNonNull(GraphQLSettings),
+      resolve(root, args, {dbAdapter}) {
+        return dbAdapter.getSettings()
+      }
+    },
+
+    // Peering
+    // =======
+
     // User
     // ====
 
     me: {
       type: GraphQLUser,
       resolve(root, args, {session}) {
-        return session?.user
+        return session?.type === SessionType.User ? session.user : null
       }
     },
 
@@ -61,9 +76,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     sessions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
-      resolve(root, args, {authenticate, dbAdapter}) {
-        const session = authenticate()
-        return dbAdapter.getSessionsForUser(session.user)
+      resolve(root, args, {authenticateUser, dbAdapter}) {
+        const session = authenticateUser()
+        return dbAdapter.getUserSessions(session.user)
       }
     },
 
@@ -73,8 +88,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      resolve(root, {id, key}, {authenticate, loaders}) {
-        authenticate()
+      resolve(root, {id, key}, {authenticateUser, loaders}) {
+        authenticateUser()
 
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
@@ -90,8 +105,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
-        authenticate()
+      resolve(root, {id, slug}, {authenticateUser, loaders}) {
+        authenticateUser()
 
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -112,8 +127,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticateUser, dbAdapter}
+      ) {
+        authenticateUser()
 
         return dbAdapter.getAuthors({
           filter,
@@ -131,8 +150,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     image: {
       type: GraphQLImage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+      resolve(root, {id}, {authenticateUser, loaders}) {
+        authenticateUser()
         return loaders.images.load(id)
       }
     },
@@ -148,8 +167,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticateUser, dbAdapter}
+      ) {
+        authenticateUser()
 
         return dbAdapter.getImages({
           filter,
@@ -167,8 +190,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+      resolve(root, {id}, {authenticateUser, loaders}) {
+        authenticateUser()
         return loaders.articles.load(id)
       }
     },
@@ -184,8 +207,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticateUser, dbAdapter}
+      ) {
+        authenticateUser()
 
         return dbAdapter.getArticles({
           filter,
@@ -203,8 +230,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     page: {
       type: GraphQLPage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+      resolve(root, {id}, {authenticateUser, loaders}) {
+        authenticateUser()
         return loaders.pages.load(id)
       }
     },
@@ -220,8 +247,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticateUser, dbAdapter}
+      ) {
+        authenticateUser()
 
         return dbAdapter.getPages({
           filter,
@@ -244,7 +275,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLPublicNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      resolve(root, {id, key}, {authenticate, loaders}) {
+      resolve(root, {id, key}, {authenticateUser, loaders}) {
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
         }
@@ -259,7 +290,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
+      resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }
@@ -279,7 +310,11 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticateUser, dbAdapter}
+      ) {
         return dbAdapter.getAuthors({
           filter,
           sort,
@@ -296,7 +331,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLPublicArticle,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate, loaders}) {
+      resolve(root, {id}, {authenticateUser, loaders}) {
         return loaders.publicArticles.load(id)
       }
     },
@@ -329,7 +364,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     page: {
       type: GraphQLPublicPage,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
+      resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
         }

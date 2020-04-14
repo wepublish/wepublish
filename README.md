@@ -3,8 +3,12 @@
 ## Packages
 
 - [@wepublish/api](./packages/api)
-  - [@wepublish/api-adapter-memory](./packages/api-adapter-memory)
-  - [@wepublish/api-adapter-karma](./packages/api-adapter-karma)
+  - DB Adapter:
+    - [@wepublish/api-db-mongodb](./packages/api-db-mongodb)
+    - ~~[@wepublish/api-db-memory](./packages/api-db-memory)~~ (Currently Unmaintend)
+    - ~~[@wepublish/api-db-karma](./packages/api-db-karma)~~ (Currently Unmaintend)
+  - Media Adapter:
+    - [@wepublish/api-media-karma](./packages/api-media-karma)
 - [@wepublish/editor](./packages/editor)
 
 ## Development

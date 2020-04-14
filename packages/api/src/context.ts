@@ -5,7 +5,7 @@ import {IncomingMessage} from 'http'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {SessionWithToken, OptionalSessionWithToken} from './db/session'
+import {PeerSession, UserSession, SessionType, OptionalSession} from './db/session'
 
 import {DBAdapter} from './db/adapter'
 import {MediaAdapter} from './mediaAdapter'
@@ -36,7 +36,7 @@ export interface DataLoaderContext {
 }
 
 export interface Context {
-  readonly session: OptionalSessionWithToken
+  readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
   readonly dbAdapter: DBAdapter
@@ -45,7 +45,8 @@ export interface Context {
 
   readonly hooks?: Hooks
 
-  authenticate(): SessionWithToken
+  authenticatePeer(): PeerSession
+  authenticateUser(): UserSession
 }
 
 export interface ContextOptions {
@@ -61,7 +62,11 @@ export async function contextFromRequest(
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.getSessionByToken(token) : null
-  const isSessionValid = session && session.expiresAt > new Date()
+  const isSessionValid = session
+    ? session.type === SessionType.User
+      ? session.expiresAt > new Date()
+      : true
+    : false
 
   return {
     session: isSessionValid ? session : null,
@@ -87,13 +92,21 @@ export async function contextFromRequest(
     urlAdapter,
     hooks,
 
-    authenticate() {
-      if (!session) {
-        throw new AuthenticationError('Invalid session!')
+    authenticateUser() {
+      if (!session || session.type !== SessionType.User) {
+        throw new AuthenticationError('Invalid user session!')
       }
 
       if (!isSessionValid) {
         throw new TokenExpiredError()
+      }
+
+      return session
+    },
+
+    authenticatePeer() {
+      if (!session || session.type !== SessionType.Peer) {
+        throw new AuthenticationError('Invalid peer session!')
       }
 
       return session
