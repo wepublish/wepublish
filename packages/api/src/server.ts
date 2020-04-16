@@ -8,9 +8,6 @@ import {ApolloServer} from 'apollo-server-express'
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
 
-import auth from './auth'
-//
-
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
   readonly introspection?: boolean
@@ -30,8 +27,6 @@ export class WepublishServer {
       req.wpContext = await contextFromRequest(req, opts)
       next()
     })
-
-    app.use('/auth', auth)
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
