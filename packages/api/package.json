@@ -26,6 +26,7 @@
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
     "ms": "^2.1.2",
+    "oidc-provider": "^6.23.4",
     "openid-client": "^3.14.0",
     "qs": "^6.9.1"
   },

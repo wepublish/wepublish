@@ -340,6 +340,16 @@ export class MongoDBAdapter implements DBAdapter {
     return null
   }
 
+  async getUserByID(id: string): Promise<OptionalUser> {
+    const user = await this.users.findOne({_id: id})
+
+    if (user) {
+      return {id: user._id, email: user.email}
+    } else {
+      return null
+    }
+  }
+
   // Session
   // =======
 

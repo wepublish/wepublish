@@ -9,5 +9,7 @@
   ],
   "delay": 250,
   "ignoreRoot": [".git"],
-  "env": {}
+  "env": {
+    "MONGO_URL": "mongodb://root:example@localhost:27017"
+  }
 }

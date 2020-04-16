@@ -73,11 +73,11 @@ async function asyncMain() {
     },
     {
       name: 'wepublish',
-      discoverUrl: 'http://localhost:4010',
-      clientId: 'mike',
-      clientKey: 'some-secret',
+      discoverUrl: 'http://localhost:4100/.well-known/openid-configuration',
+      clientId: 'wepublish_demo_wepublish_media',
+      clientKey: 'ThisIsASuperSecret',
       redirectUri: ['http://localhost:4000/auth/wepublish'],
-      scopes: ['openid']
+      scopes: ['openid profile email']
     }
   ]
 

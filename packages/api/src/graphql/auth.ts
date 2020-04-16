@@ -1,11 +1,9 @@
-import {GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 
-export const GraphQLOAuth2Provider = new GraphQLObjectType({
-  name: 'Oauth2Provider',
+export const GraphQLAuthProvider = new GraphQLObjectType({
+  name: 'AuthProvider',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
-    clientId: {type: GraphQLNonNull(GraphQLString)},
-    scope: {type: GraphQLNonNull(GraphQLString)}
+    url: {type: GraphQLNonNull(GraphQLString)}
   }
 })

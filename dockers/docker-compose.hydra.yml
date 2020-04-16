@@ -10,14 +10,14 @@ services:
     environment:
       URLS_SELF_ISSUER: "http://localhost:4010"
       URLS_SELF_PUBLIC: "http://localhost:4010"
-      URLS_LOGIN: "http://localhost:4000/auth/wepublish/login"
-      URLS_CONSENT: "http://localhost:4000/auth/wepublish/consent"
-      URLS_LOGOUT: "http://localhost:4000/auth/wepublish/logout"
-      URLS_ERROR: "http://localhost:4000/auth/wepublish/error"
+      URLS_LOGIN: "http://localhost:4000/auth/login"
+      URLS_CONSENT: "http://localhost:4000/auth/consent"
+      URLS_LOGOUT: "http://localhost:4000/auth/logout"
+      URLS_ERROR: "http://localhost:4000/auth/error"
       DSN: "postgres://wepublish:1234@db:5432/oauth?sslmode=disable"
       SECRETS_SYSTEM: "youReallyNeedToChangeThis"
       SERVER_ADMIN_CORS_ALLOWED_ORIGINS: '*'
-      WEBFINGER_OIDC_DISCOVERY_USERINFO_URL: "http://localhost:4000/auth/wepublish/userinfo"
+      WEBFINGER_OIDC_DISCOVERY_USERINFO_URL: "http://localhost:4000/auth/userinfo"
   db:
     image: "postgres"
     ports:
