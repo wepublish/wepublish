@@ -51,7 +51,6 @@ async function asyncMain() {
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
       adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
-      adapter.createUser({email: 'nico.roos@tsri.ch', password: '123'})
     }
   })
 
