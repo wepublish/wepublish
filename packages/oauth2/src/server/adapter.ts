@@ -117,7 +117,7 @@ export class MongoDBAdapter {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
-    this.client = connection.db(MongoDBAdapter.DatabaseName)
+    this.client = connection.db()
 
     const migrationState = await this.getDBMigrationState(this.client)
 
@@ -141,7 +141,7 @@ export class MongoDBAdapter {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
-    const db = client.db(MongoDBAdapter.DatabaseName)
+    const db = client.db()
 
     const migrationState = await this.getDBMigrationState(db)
 
@@ -158,10 +158,6 @@ export class MongoDBAdapter {
         version: migration.version,
         createdAt: new Date()
       })
-    }
-
-    if (!migrationState) {
-      await this.connect(url)
     }
 
     return {

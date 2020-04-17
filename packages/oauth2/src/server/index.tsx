@@ -20,11 +20,11 @@ const ONE_DAY_IN_MS = 1 * 24 * 60 * 60 * 1000
 async function asyncMain() {
   if (process.env.OAUTH_MONGODB_URI) {
     await OAuth2DBAdapter.initialize(process.env.OAUTH_MONGODB_URI, 'en')
+    await OAuth2DBAdapter.connect(process.env.OAUTH_MONGODB_URI)
   }
 
   const dbAdapter = await WepublishDBAdapter.connect({
     url: process.env.MONGO_URL!,
-    database: process.env.MONGO_DATABASE ?? 'wepublish',
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
 
@@ -32,7 +32,7 @@ async function asyncMain() {
 
   app.set('views', path.join(__dirname, 'views'))
   app.set('view engine', 'ejs')
-  const findAccount = async function(ctx: any, id: any) {
+  const findAccount = async function (ctx: any, id: any) {
     const user = await dbAdapter.getUserByID(id)
     if (user) {
       return {

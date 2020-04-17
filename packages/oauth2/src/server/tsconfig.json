@@ -7,6 +7,5 @@
     "types": ["@types/node"],
     "lib": ["es2017"],
     "resolveJsonModule": true
-  },
-  "references": [{"path": "../shared"}]
+  }
 }

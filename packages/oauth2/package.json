@@ -8,17 +8,17 @@
   "license": "MIT",
   "scripts": {
     "build": "run-p build:*",
-    "build:server": "tsc -b ./src/shared ./src/server",
+    "build:server": "tsc -b ./src/server",
     "watch": "npm-run-all copy-license sync-package-info copy-assets --parallel watch:*",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon --exec 'node -r dotenv/config' --inspect=0.0.0.0:9241 ./dist/server/index.js",
-    "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
+    "watch:server:build": "tsc -b ./src/server --watch",
     "copy-assets": "shx cp -R ./src/server/views ./dist/server",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js src/server/version.ts",
     "prepare": "run-s clean copy-license sync-package-info build crlf"
   },
   "dependencies": {

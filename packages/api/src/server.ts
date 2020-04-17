@@ -1,6 +1,4 @@
 import express from 'express'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
 import {Application} from 'express'
 
 import {ApolloServer} from 'apollo-server-express'
@@ -19,14 +17,6 @@ export class WepublishServer {
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
-
-    app.use(bodyParser.urlencoded({extended: true}))
-    app.use(cookieParser())
-    app.all('*', async (req, res, next) => {
-      //@ts-ignore
-      req.wpContext = await contextFromRequest(req, opts)
-      next()
-    })
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
