@@ -1,4 +1,5 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
+import {RichTextNode} from '../graphql/richText'
 
 export enum BlockType {
   Title = 'title',
@@ -17,49 +18,6 @@ export enum BlockType {
   LinkPageBreak = 'linkPageBreak',
   ArticleTeaserGrid = 'articleTeaserGrid'
 }
-
-export enum BlockFormat {
-  H1 = 'heading-one',
-  H2 = 'heading-two',
-  H3 = 'heading-three',
-  Paragraph = 'paragraph',
-  UnorderedList = 'unordered-list',
-  OrderedList = 'ordered-list',
-  ListItem = 'list-item'
-}
-
-export enum InlineFormat {
-  Link = 'link'
-}
-
-export enum TextFormat {
-  Bold = 'bold',
-  Italic = 'italic',
-  Underline = 'underline',
-  Strikethrough = 'strikethrough'
-}
-
-export interface RichTextBlockNode {
-  readonly type: BlockFormat
-  readonly children: RichTextNode[]
-}
-
-export interface RichTextLinkNode {
-  readonly type: InlineFormat.Link
-  readonly url: string
-  readonly title?: string
-  readonly children: RichTextNode[]
-}
-
-export interface RichTextTextNode {
-  readonly [TextFormat.Bold]?: boolean
-  readonly [TextFormat.Italic]?: boolean
-  readonly [TextFormat.Underline]?: boolean
-  readonly [TextFormat.Strikethrough]?: boolean
-  readonly text: string
-}
-
-export type RichTextNode = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
 
 export interface RichTextBlock {
   readonly type: BlockType.RichText
@@ -177,8 +135,9 @@ export type ArticleBlock =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | ArticleTeaserGridBlock
 
-export type PageBlock = RichTextBlock | ImageBlock | ArticleTeaserGridBlock
+export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock
 
 export type BaseBlockMap = MapDiscriminatedUnion<Block, 'type'>

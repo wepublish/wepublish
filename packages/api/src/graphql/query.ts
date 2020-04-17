@@ -15,10 +15,10 @@ import {
   GraphQLArticleSort,
   GraphQLArticleFilter,
   GraphQLPublicArticleConnection,
-  GraphQLPublishedArticleSort,
+  GraphQLPublicArticleSort,
   GraphQLArticle,
   GraphQLPublicArticle,
-  GraphQLPublishedArticleFilter
+  GraphQLPublicArticleFilter
 } from './article'
 
 import {InputCursor, Limit} from '../db/common'
@@ -355,8 +355,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
-        filter: {type: GraphQLPublishedArticleFilter},
-        sort: {type: GraphQLPublishedArticleSort, defaultValue: ArticleSort.PublishedAt},
+        filter: {type: GraphQLPublicArticleFilter},
+        sort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {

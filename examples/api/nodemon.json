@@ -5,11 +5,11 @@
     "../../node_modules/@wepublish/api-db-memory/lib/**/*.js",
     "../../node_modules/@wepublish/api-db-karma/lib/**/*.js",
     "../../node_modules/@wepublish/api-media-karma/lib/**/*.js",
-    "./lib/**/*.js"
+    "./dist/**/*.js"
   ],
   "delay": 250,
   "ignoreRoot": [".git"],
   "env": {
-    "MONGO_URL": "mongodb://root:example@localhost:27017"
+    "MONGO_URL": "mongodb://localhost:27017/wepublish"
   }
 }

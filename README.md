@@ -13,6 +13,7 @@
 
 - [Node v12.x.x][node-download-url]
 - [Yarn v1.17.x][yarn-download-url]
+- [Docker v19.x.x][docker-download-url]
 
 ### Recommended
 
@@ -27,10 +28,22 @@ If you're setting up the project for the first time:
 yarn install && yarn build
 ```
 
-After that you can watch all packages via:
+After that you can start docker-compose and watch all packages via:
+
+```
+yarn dev
+```
+
+If you rather wish to run docker-compose separately you can just watch the packages via:
 
 ```
 yarn watch
+```
+
+Or if you want to watch only certain packages:
+
+```
+yarn run-p watch:api watch:api-example watch:editor
 ```
 
 The following servers will be available:
@@ -39,6 +52,8 @@ The following servers will be available:
 - **Media Server:** [http://localhost:4001](http://localhost:4001)
 - **Editor:** [http://localhost:3000](http://localhost:3000)
 - **Webpack Dev Server:** [http://localhost:3001](http://localhost:3001)
+- **MongoDB:** [http://localhost:27017](http://localhost:27017)
+- **MongoDB Express:** [http://localhost:5000](http://localhost:5000)
 
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
@@ -49,6 +64,7 @@ There are several launch configurations that allow you to attach the debugger to
 
 [node-download-url]: https://nodejs.org/en/download/current/
 [yarn-download-url]: https://yarnpkg.com/en/docs/install
+[docker-download-url]: https://www.docker.com/get-started
 [vscode-download-url]: https://code.visualstudio.com/Download
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 [package-json-url]: package.json

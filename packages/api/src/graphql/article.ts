@@ -6,7 +6,6 @@ import {
   GraphQLString,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLUnionType,
   GraphQLBoolean,
   GraphQLInt
 } from 'graphql'
@@ -15,79 +14,12 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 
 import {Context} from '../context'
 
-import {
-  GraphQLRichTextBlock,
-  GraphQLImageBlock,
-  GraphQLInputRichTextBlock,
-  GraphQLImageGalleryBlock,
-  GraphQLFacebookPostBlock,
-  GraphQLInstagramPostBlock,
-  GraphQLTwitterTweetBlock,
-  GraphQLVimeoVideoBlock,
-  GraphQLYouTubeVideoBlock,
-  GraphQLSoundCloudTrackBlock,
-  GraphQLListicleBlock,
-  GraphQLLinkPageBreakBlock,
-  GraphQLQuoteBlock,
-  GraphQLTitleBlock,
-  GraphQLInputImageBlock,
-  GraphQLInputTitleBlock,
-  GraphQLInputQuoteBlock,
-  GraphQLInputFacebookPostBlock,
-  GraphQLInputInstagramPostBlock,
-  GraphQLInputTwitterTweetBlock,
-  GraphQLInputVimeoVideoBlock,
-  GraphQLInputYouTubeVideoBlock,
-  GraphQLInputSoundCloudTrackBlock,
-  GraphQLInputEmbedBlock,
-  GraphQLEmbedBlock,
-  GraphQLInputLinkPageBreakBlock
-} from './blocks'
-
 import {GraphQLImage} from './image'
-import {BlockType} from '../db/block'
 import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
 import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './common'
-
-export const GraphQLArticleBlockUnionMap = new GraphQLInputObjectType({
-  name: 'ArticleBlockUnionMap',
-  fields: {
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
-    [BlockType.Image]: {type: GraphQLInputImageBlock},
-    [BlockType.Title]: {type: GraphQLInputTitleBlock},
-    [BlockType.Quote]: {type: GraphQLInputQuoteBlock},
-    [BlockType.FacebookPost]: {type: GraphQLInputFacebookPostBlock},
-    [BlockType.InstagramPost]: {type: GraphQLInputInstagramPostBlock},
-    [BlockType.TwitterTweet]: {type: GraphQLInputTwitterTweetBlock},
-    [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
-    [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
-    [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
-    [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
-    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock}
-  }
-})
-
-export const GraphQLArticleBlock = new GraphQLUnionType({
-  name: 'ArticleBlock',
-  types: [
-    GraphQLRichTextBlock,
-    GraphQLImageBlock,
-    GraphQLImageGalleryBlock,
-    GraphQLFacebookPostBlock,
-    GraphQLInstagramPostBlock,
-    GraphQLTwitterTweetBlock,
-    GraphQLVimeoVideoBlock,
-    GraphQLYouTubeVideoBlock,
-    GraphQLSoundCloudTrackBlock,
-    GraphQLEmbedBlock,
-    GraphQLListicleBlock,
-    GraphQLLinkPageBreakBlock,
-    GraphQLTitleBlock,
-    GraphQLQuoteBlock
-  ]
-})
+import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -101,8 +33,8 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPublishedArticleFilter = new GraphQLInputObjectType({
-  name: 'PublishedArticleFilter',
+export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
+  name: 'ArticleFilter',
   fields: {
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
@@ -120,8 +52,8 @@ export const GraphQLArticleSort = new GraphQLEnumType({
   }
 })
 
-export const GraphQLPublishedArticleSort = new GraphQLEnumType({
-  name: 'PublishedArticleSort',
+export const GraphQLPublicArticleSort = new GraphQLEnumType({
+  name: 'ArticleSort',
   values: {
     PUBLISHED_AT: {value: ArticleSort.PublishedAt},
     UPDATED_AT: {value: ArticleSort.UpdatedAt}
@@ -145,7 +77,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
 
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlockUnionMap)))
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
     }
   }
 })
@@ -182,7 +114,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
 })
 
@@ -220,7 +152,10 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublicArticle = new GraphQLObjectType<PublicArticle, Context>({
+export const GraphQLPublicArticle: GraphQLObjectType<
+  PublicArticle,
+  Context
+> = new GraphQLObjectType<PublicArticle, Context>({
   name: 'Article',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
@@ -257,7 +192,7 @@ export const GraphQLPublicArticle = new GraphQLObjectType<PublicArticle, Context
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticleBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
   }
 })
 

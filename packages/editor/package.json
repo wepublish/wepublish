@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.5.2",
+  "version": "0.6.2",
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
@@ -25,8 +25,8 @@
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
     "@karma.run/icons": "^1.0.0",
-    "@karma.run/react": "0.1.1",
-    "@karma.run/ui": "0.3.9",
+    "@karma.run/react": "^0.1.3",
+    "@karma.run/ui": "0.3.14",
     "@karma.run/webpack": "^0.0.3",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.8",
@@ -50,8 +50,7 @@
     "slate-history": "^0.52.5",
     "slate-hyperscript": "^0.52.5",
     "slate-react": "^0.52.6",
-    "slate-schema": "^0.52.5",
-    "slugify": "^1.3.6"
+    "slate-schema": "^0.52.5"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",

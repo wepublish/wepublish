@@ -16,10 +16,18 @@ import {GraphQLPageInfo} from './common'
 import {GraphQLImage} from './image'
 import {GraphQLSlug} from './slug'
 import {AuthorSort} from '../db/author'
+import {GraphQLRichText} from './richText'
+
+export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
+  name: 'AuthorLink',
+  fields: {
+    title: {type: GraphQLNonNull(GraphQLString)},
+    url: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
 
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
-
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     name: {type: GraphQLNonNull(GraphQLString)},
@@ -30,6 +38,8 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
         return urlAdapter.getAuthorURL(author)
       }
     },
+    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
+    bio: {type: GraphQLRichText},
     image: {
       type: GraphQLImage,
       resolve({imageID}, args, {loaders}) {
@@ -63,11 +73,21 @@ export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
   }
 })
 
+export const GraphQLAuthorLinkInput = new GraphQLInputObjectType({
+  name: 'AuthorLinkInput',
+  fields: {
+    title: {type: GraphQLNonNull(GraphQLString)},
+    url: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLAuthorInput = new GraphQLInputObjectType({
   name: 'AuthorInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
+    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLinkInput))},
+    bio: {type: GraphQLRichText},
     imageID: {type: GraphQLID}
   }
 })
