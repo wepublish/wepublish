@@ -10,5 +10,4 @@ npm-debug.log
 yarn-error.log
 .tsbuildinfo
 .media
-.mongo-volume
 keys.json
