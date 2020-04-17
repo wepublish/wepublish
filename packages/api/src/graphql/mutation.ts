@@ -162,7 +162,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    // Image get(name)
+    // Image
     // =====
 
     uploadImage: {
