@@ -45,8 +45,7 @@
     "watch:api-example": "yarn workspace @wepublish/api-example watch",
     "start:api-example": "yarn workspace @wepublish/api-example start",
     "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
-    "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'",
-    "dev:watch:api": "run-p --print-label watch:api watch:api-storage-memory watch:api-media-karma"
+    "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
   },
   "workspaces": [
     "packages/*",
