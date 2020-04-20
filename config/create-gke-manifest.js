@@ -359,7 +359,7 @@ async function applyMediaServer() {
                 },
                 {
                   name: 'NUM_CLUSTERS',
-                  value: 1
+                  value: "1"
                 },
                 {
                   name: 'TOKEN',
