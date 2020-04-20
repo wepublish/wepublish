@@ -285,27 +285,6 @@ async function applyWebsite() {
   }
   await applyConfig(`deployment-${app}`, deployment)
 
-  if (ENVIRONMENT_NAME === 'production') {
-    const horizontalPodAutoscaler = {
-      apiVersion: 'autoscaling/v1',
-      kind: 'HorizontalPodAutoscaler',
-      metadata: {
-        name: appName,
-        namespace: NAMESPACE
-      },
-      spec: {
-        scaleTargetRef: {
-          apiVersion: 'extensions/v1beta1',
-          kind: 'Deployment',
-          name: appName
-        },
-        maxReplicas: 3,
-        minReplicas: 1,
-        targetCPUUtilizationPercentage: 60
-      }
-    }
-    await applyConfig(`pod-autoscaler-${app}`, horizontalPodAutoscaler)
-  }
 }
 
 async function applyMediaServer() {
@@ -889,8 +868,8 @@ async function applyMongo() {
               imagePullPolicy: 'IfNotPresent',
               resources: {
                 requests: {
-                  cpu: envSwitch(ENVIRONMENT_NAME, '200m', '0m'),
-                  memory: '1024Mi'
+                  cpu: '0m',
+                  memory: '128Mi'
                 }
               },
               terminationMessagePath: '/dev/termination-log',
