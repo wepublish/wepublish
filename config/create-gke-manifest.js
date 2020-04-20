@@ -712,12 +712,19 @@ async function applyEditor() {
               image: image,
               env: [
                 {
+                  name: 'NODE_ENV',
+                  value: `production`
+                },
+                {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
                 },
                 {
                   name: 'PORT',
                   value: '3006'
+                },{
+                  name: 'ADDRESS',
+                  value: '0.0.0.0'
                 }
               ],
               ports: [
