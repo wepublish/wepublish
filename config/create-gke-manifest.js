@@ -384,8 +384,8 @@ async function applyMediaServer() {
               imagePullPolicy: 'IfNotPresent',
               resources: {
                 requests: {
-                  cpu: envSwitch(ENVIRONMENT_NAME, '100m', '0m'),
-                  memory: '256Mi'
+                  cpu: '0m',
+                  memory: '128Mi'
                 }
               },
               terminationMessagePath: '/dev/termination-log',
@@ -600,8 +600,8 @@ async function applyApiServer() {
               imagePullPolicy: 'IfNotPresent',
               resources: {
                 requests: {
-                  cpu: envSwitch(ENVIRONMENT_NAME, '300m', '0m'),
-                  memory: '256Mi'
+                  cpu: '0m',
+                  memory: '128Mi'
                 }
               },
               terminationMessagePath: '/dev/termination-log',
@@ -749,7 +749,7 @@ async function applyEditor() {
               imagePullPolicy: 'IfNotPresent',
               resources: {
                 requests: {
-                  cpu: envSwitch(ENVIRONMENT_NAME, '20m', '0m'),
+                  cpu: '0m',
                   memory: '128Mi'
                 }
               },
