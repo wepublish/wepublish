@@ -1,4 +1,6 @@
 import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
+import {UserInputError} from 'apollo-server-express'
+
 import {Context} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
 
@@ -28,9 +30,9 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
-import {UserInputError} from 'apollo-server-express'
 import {GraphQLNavigation, GraphQLPublicNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
+
 import {
   GraphQLPage,
   GraphQLPublicPage,
@@ -41,6 +43,7 @@ import {
   GraphQLPublishedPageFilter,
   GraphQLPublishedPageSort
 } from './page'
+
 import {PageSort} from '../db/page'
 import {GraphQLSettings} from './settings'
 import {SessionType} from '../db/session'
@@ -225,7 +228,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     // Page
-    // =======
+    // ====
 
     page: {
       type: GraphQLPage,

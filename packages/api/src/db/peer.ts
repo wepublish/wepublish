@@ -29,7 +29,6 @@ export interface DBPeerAdapter {
 
   getPeerRequests(): Promise<PeerRequest[]>
 
-  createPeer(input: PeerInput): Promise<Peer>
   updatePeer(id: string, input: PeerInput): Promise<Peer>
   deletePeer(id: string): Promise<boolean>
 
