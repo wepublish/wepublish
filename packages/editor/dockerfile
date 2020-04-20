@@ -1,0 +1,24 @@
+FROM node:12.8.1-alpine
+
+USER node
+RUN mkdir -p /home/node/wepublish
+WORKDIR /home/node/wepublish
+
+COPY --chown=node:node package.json ./
+
+RUN yarn install
+
+COPY --chown=node:node ./src/ ./src/
+COPY --chown=node:node ./webpack.config.ts ./webpack.config.ts
+COPY --chown=node:node ./tsconfig.docker.json ./tsconfig.json
+COPY --chown=node:node ./.babelrc ./.babelrc
+
+RUN ./node_modules/.bin/webpack --mode production --devtool source-map
+RUN rm ./src/server/tsconfig.json ./src/shared/tsconfig.json
+RUN mv ./src/server/tsconfig.docker.json ./src/server/tsconfig.json
+RUN mv ./src/shared/tsconfig.docker.json ./src/shared/tsconfig.json
+RUN ./node_modules/.bin/tsc -b ./src/server ./src/shared
+
+ENV PORT=3006
+EXPOSE 3006
+CMD [ "node", "./dist/server/index.js" ]

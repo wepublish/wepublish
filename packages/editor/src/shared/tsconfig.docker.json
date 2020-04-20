@@ -1,0 +1,34 @@
+{
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../dist/shared",
+    "module": "commonjs",
+    "types": ["@types/node"],
+    "lib": ["es2017"],
+
+    "target": "es2017",
+    "moduleResolution": "node",
+
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react",
+    "incremental": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "alwaysStrict": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}

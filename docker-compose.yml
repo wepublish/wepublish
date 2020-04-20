@@ -1,12 +1,43 @@
 version: '3.7'
 services:
+  api:
+    build: ./examples/api/
+    ports:
+      - 4000:4000
+    environment:
+      NODE_ENV: production
+      MEDIA_SERVER_URL: http://localhost:3004
+      MEDIA_SERVER_TOKEN: tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf
+      MONGO_URL: mongodb://mongo:27017/wepublish
+      ADDRESS: 0.0.0.0
+      PORT: 4000
+  editor:
+    build: ./packages/editor/
+    ports:
+      - 3006:3006
+    environment:
+      NODE_ENV: production
+      ADDRESS: 0.0.0.0
+      API_URL: http://localhost:4000
+      #ASSET_HOST: http://localhost:3001
+      #PORT: 3006
+  media:
+    build: ./examples/media/
+    ports:
+      - 3004:3004
+    environment:
+      NUM_CLUSTERS: 1
+      STORAGE_PATH: ./.media
+      TOKEN: tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf
+      ADDRESS: 0.0.0.0
+      #PORT: 3004
   mongo:
     image: mongo:4.2.3-bionic
     ports:
       - 27017:27017
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 5000:8081
+#  mongo-express:
+#    image: mongo-express
+#    restart: always
+#    ports:
+#      - 5000:8081

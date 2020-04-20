@@ -1,0 +1,12 @@
+{
+  "watch": ["./lib/**/*.js"],
+  "delay": 250,
+  "env": {
+    "NUM_CLUSTERS": 1,
+    "DEBUG": true,
+    "PORT": 3004,
+    "STORAGE_PATH": "./.media",
+    "TOKEN": "123"
+  },
+  "ignoreRoot": [".git"]
+}

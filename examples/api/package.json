@@ -16,12 +16,12 @@
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./dist",
-    "prepare": "run-s clean build",
+    "prepare": "run-s clean",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
     "@wepublish/api": "*",
-    "@wepublish/api-db-memory": "*",
+    "@wepublish/api-db-mongodb": "*",
     "@wepublish/api-media-karma": "*",
     "@karma.run/media": "^0.2.1",
     "@karma.run/media-storage-local": "^0.1.4",
