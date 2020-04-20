@@ -18,11 +18,12 @@ const ENVIRONMENT_NAME = 'production'
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = 'wepublish'
 
-const domain = 'demo.wepublish.media'
+//const domain = 'demo.wepublish.media'
+const domain = 'demo.gifstr.io'
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
-  `www.${domain}`,
+  `www.${domain},`,
   'staging.website.34.65.204.205.nip.io'
 )
 
