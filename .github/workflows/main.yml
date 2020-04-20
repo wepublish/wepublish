@@ -51,13 +51,15 @@ jobs:
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
-      - uses: google/cloud-sdk:latest
+      - uses: dudagroup/github-actions@master
         with:
           version: '275.0.0'
           service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
       - name: Prepare Gcloud and Kubernetes
         run: |
-          echo $GCLOUD_SERVICE_KEY | base64 -d > gcloud-service-key.json
-          gcloud auth activate-service-account --key-file gcloud-service-key.json
+          gcloud components install kubectl
+          gcloud --quiet config set project tsri-246213
+          gcloud --quiet config set compute/zone europe-west6-c
+          gcloud --quiet container clusters get-credentials tsri-django
       - name: Deploy
         run: kubectl apply -f ./kubernetesConfigs
