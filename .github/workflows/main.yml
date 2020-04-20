@@ -49,19 +49,15 @@ jobs:
         env:
           TEST: 'test'
         run: |
-          node -v
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
-          cat ./kubernetesConfigs/secret.json
-      - uses: dudagroup/github-actions@master
+      - uses: google/cloud-sdk:latest
         with:
           version: '275.0.0'
-          service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+          service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
       - name: Prepare Gcloud and Kubernetes
         run: |
-          gcloud components install kubectl
-          gcloud --quiet config set project bajour
-          gcloud --quiet config set compute/zone europe-west6-c
-          gcloud --quiet container clusters get-credentials bajour
+          echo $GCLOUD_SERVICE_KEY | base64 -d > gcloud-service-key.json
+          gcloud auth activate-service-account --key-file gcloud-service-key.json
       - name: Deploy
         run: kubectl apply -f ./kubernetesConfigs
