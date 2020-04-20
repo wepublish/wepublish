@@ -132,7 +132,7 @@ async function applyWebsite() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '1m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'certmanager.k8s.io/cluster-issuer': 'letsencrypt-production'
+        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -444,7 +444,7 @@ async function applyMediaServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'certmanager.k8s.io/cluster-issuer': 'letsencrypt-production'
+        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -634,7 +634,7 @@ async function applyApiServer() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '10m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'certmanager.k8s.io/cluster-issuer': 'letsencrypt-production'
+        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
@@ -787,7 +787,7 @@ async function applyEditor() {
         'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
         'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
         'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
-        'certmanager.k8s.io/cluster-issuer': 'letsencrypt-production'
+        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
       }
     },
     spec: {
