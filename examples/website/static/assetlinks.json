@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ch.bajour.app",
+      "sha256_cert_fingerprints": [
+        "D0:7B:9A:5A:AB:B3:11:D3:16:90:70:F0:36:84:60:06:31:60:C2:2C:EA:08:28:45:31:92:32:74:49:DD:C1:B5",
+        "08:58:63:95:E3:D3:66:B3:26:EF:BF:2F:02:4A:E2:3A:AA:F6:BD:02:D7:30:F3:4A:5F:C6:F4:32:E3:7F:9F:BD"
+      ]
+    }
+  }
+]
