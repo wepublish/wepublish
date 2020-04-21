@@ -2,14 +2,13 @@ import React, {useState} from 'react'
 import {useStyle, cssRule} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {LogoButton} from '../atoms/logoButton'
-import {Link, PageRoute, useRoute} from '../route/routeContext'
+import {Link, PageRoute} from '../route/routeContext'
 import {IconType} from '../atoms/icon'
 import {pxToRem, whenDesktop} from '../style/helpers'
 import {Interactable} from '../atoms/interactable'
 import {RoundIconButton} from '../atoms/roundIconButton'
 import {SmallLogo} from '../atoms/logo'
 import {NavigationItem} from '../types'
-import {PODCAST_SLUG} from '../utility'
 
 export interface NavigationBarStyleProps {
   readonly isCollapsed: boolean
@@ -222,7 +221,6 @@ export interface NavigationBarProps {
 export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) {
   const [isCollapsed, setCollapsed] = useState(true)
   const css = useStyle({isCollapsed})
-  const {current} = useRoute()
 
   function onCollapse(collapse: boolean) {
     setCollapsed(collapse)
@@ -280,34 +278,8 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
             onClick={e => {
               onCollapse(true)
             }}>
-            <Link
-              className={css(LinkStyles, SmallLinkStyles)}
-              route={PageRoute.create({slug: PODCAST_SLUG})}>
-              Piepston
-            </Link>
-          </div>
-          <div
-            onClick={e => {
-              onCollapse(true)
-            }}>
-            <Link
-              route={{...current!, query: {modal: 'briefingarchiv'}}}
-              className={css(LinkStyles, SmallLinkStyles)}
-              target="_self"
-              rel="noopener">
-              Basel Briefing
-            </Link>
-          </div>
-          <div
-            onClick={e => {
-              onCollapse(true)
-            }}>
-            <Link
-              route={{...current!, query: {modal: 'memberwerden'}}}
-              className={css(LinkStyles, SmallLinkStyles)}
-              target="_self"
-              rel="noopener">
-              Member werden
+            <Link className={css(LinkStyles, SmallLinkStyles)} href="https://wepublish.media">
+              WePublish
             </Link>
           </div>
 
@@ -326,13 +298,13 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
         </div>
         <NavigationBarDivider />
         <div className={css(NavigationSocialMediaStyle, NavigationInnerBlockStyle)}>
-          <Link target="_blank" rel="noopener" href="https://www.facebook.com/bajourbasel">
+          <Link target="_blank" rel="noopener" href="https://www.facebook.com/wepublish">
             <RoundIconButton icon={IconType.Facebook}></RoundIconButton>
           </Link>
-          <Link target="_blank" rel="noopener" href="https://twitter.com/bajourbasel">
+          <Link target="_blank" rel="noopener" href="https://twitter.com/wepublish">
             <RoundIconButton icon={IconType.Twitter}></RoundIconButton>
           </Link>
-          <Link href="mailto:info@bajour.ch">
+          <Link href="mailto:info@wepublish.ch">
             <RoundIconButton icon={IconType.Mail}></RoundIconButton>
           </Link>
         </div>
@@ -343,11 +315,11 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
           </div>
           <div className={css(NavFooterWrapperStyle)}>
             <Link className={css(LinkStyles)} route={PageRoute.create({})}>
-              <strong>bajour.ch</strong>
+              <strong>wepublish.media</strong>
             </Link>
-            <div>Steinentorberg 20</div>
-            <div>4051 Basel</div>
-            <Link href="mailto:info@bajour.ch">info@bajour.ch</Link>
+            <div>Teststrasse 26</div>
+            <div>8000 Zürich</div>
+            <Link href="mailto:info@wepublish.ch">info@wepublish.ch</Link>
           </div>
         </div>
       </div>

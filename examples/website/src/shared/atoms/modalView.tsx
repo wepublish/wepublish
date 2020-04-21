@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react'
 import {BlockIcon, IconType} from './icon'
 import {cssRule, useStyle} from '@karma.run/react'
-import {Link, useRoute, RouteType, Route, PageRoute} from '../route/routeContext'
+import {Link, useRoute, Route} from '../route/routeContext'
 
 const ModalStyle = cssRule({
   position: 'fixed',
@@ -48,17 +48,7 @@ export interface ModalProps {
 }
 
 function closeRouteForRoute(route: Route) {
-  switch (route.type) {
-    case RouteType.Member:
-    case RouteType.Archiv:
-    case RouteType.PayRexxFull:
-    case RouteType.PayRexxGoenner:
-    case RouteType.PayRexxMember:
-    case RouteType.BaselBriefing:
-      return PageRoute.create({})
-    default:
-      return route
-  }
+  return route
 }
 
 export function Modal({children}: ModalProps) {

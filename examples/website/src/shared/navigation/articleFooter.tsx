@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Peer, ArticleMeta} from '../types'
 import {RelatedArticle} from '../molecules/relatedArticle'
 import {Tag} from '../atoms/tag'
@@ -63,29 +63,6 @@ const TitleStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
   borderBottom: `1px solid ${Color.Secondary}`
 }))
 
-const CommentoStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
-  fontSize: pxToRem(15),
-  lineHeight: '1.5em',
-
-  marginBottom: pxToRem(50),
-  padding: `0 ${pxToRem(25)}`,
-  opacity: showBackground ? 1 : 0,
-  transform: showBackground ? 'translate3d(0, 0, 0)' : 'translate3d(0, 100px, 0)',
-  transition: 'opacity 500ms ease, transform 700ms ease',
-
-  ...whenTablet({
-    width: '75%',
-    maxWidth: pxToRem(900),
-    margin: `0 auto ${pxToRem(70)}`
-  }),
-
-  ...whenDesktop({
-    width: '50%',
-    maxWidth: pxToRem(900),
-    margin: `0 auto ${pxToRem(70)}`
-  })
-}))
-
 export interface ArticleFooterProps {
   readonly relatedArticles: ArticleMeta[]
   readonly tags: string[]
@@ -100,28 +77,6 @@ export function ArticleFooter(props: ArticleFooterProps) {
   const css = useStyle({showBackground: show})
   const hasRelatedArticles = props.relatedArticles.length >= 1
   const hasTags = props.tags.length >= 1
-
-  useEffect(() => {
-    if (!window) {
-      return
-    }
-
-    const document = window.document
-    if (document.getElementById('commento')) {
-      const script = window.document.createElement('script')
-      script.async = true
-      script.src = 'https://commento.tsri.app/js/commento.js'
-      script.id = 'commento-script'
-      document.body.appendChild(script)
-    }
-
-    return () => {
-      const script = window.document.getElementById('commento-script')
-      if (script) {
-        document.body.removeChild(script)
-      }
-    }
-  }, ['commento-script'])
 
   return (
     <div>
@@ -146,9 +101,6 @@ export function ArticleFooter(props: ArticleFooterProps) {
               </div>
             )
           })}
-        <div className={css(CommentoStyle)}>
-          <div id={'commento'}></div>
-        </div>
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
     </div>

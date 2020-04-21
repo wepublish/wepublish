@@ -10,7 +10,6 @@ import {renderMarkup} from './render'
 import {matchRoute} from '../shared/route/routeContext'
 
 import {fetch} from 'cross-fetch'
-import {MailchimpCampaignData} from '../shared/appContext'
 
 let cachedIntrospectionQuery: any = null
 
@@ -98,10 +97,6 @@ export async function asyncMain() {
     res.sendFile(path.resolve(__dirname, '../../static/robots.txt'))
   })
 
-  app.get('/api/latest-mailchimp-campaign', async (req, res) => {
-    res.json(await getCurrentMailchimpCampaign())
-  })
-
   app.get('/*', async (req, res) => {
     const url = `${req.protocol}://${req.headers.host}${req.originalUrl}`
     const introspectionQueryResultData = await fetchIntrospectionQueryResultData(apiURL)
@@ -129,74 +124,4 @@ export async function asyncMain() {
   app.listen(port, address)
 
   console.log(`Server listening: http://${address}:${port}`)
-}
-
-export async function getCurrentMailchimpCampaign(): Promise<MailchimpCampaignData | null> {
-  const mailchimpRegion = process.env.MAILCHIMP_REGION
-  const folderID = process.env.MAILCHIMP_FOLDER_ID
-  const apiKey = process.env.MAILCHIMP_API_KEY
-
-  if (!folderID || !apiKey || !mailchimpRegion) {
-    console.warn(
-      'Missing Mailchimp environment variables, ensure ' +
-        'MAILCHIMP_REGION , MAILCHIMP_FOLDER_ID and MAILCHIMP_API_KEY are set.'
-    )
-
-    return null
-  }
-
-  const query = new URLSearchParams()
-
-  query.set('folder_id', `${folderID}`)
-  query.set('sort_field', 'send_time')
-  query.set('sort_dir', 'DESC')
-  query.set('count', '1')
-  query.set('fields', 'campaigns.id,campaigns.send_time,campaigns.long_archive_url')
-  query.toString()
-
-  const baiscauth = Buffer.from(`anystring:${apiKey}`).toString('base64')
-
-  try {
-    const response = await fetch(
-      `https://${mailchimpRegion}.api.mailchimp.com/3.0/campaigns?${query}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Basic ${baiscauth}`,
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
-        }
-      }
-    )
-
-    if (response.status < 200 || response.status > 299) {
-      console.error(`Error while fetching Mailchimp campaigns: ${response.status}`)
-      return null
-    }
-
-    const data = await response.json()
-
-    const currentDate = new Date()
-    const dateTimeCampain = new Date(data.campaigns[0]['send_time'])
-
-    if (
-      data.campaigns.length > 0 &&
-      currentDate.getUTCDate() == dateTimeCampain.getUTCDate() &&
-      currentDate.getUTCMonth() == dateTimeCampain.getUTCMonth() &&
-      currentDate.getUTCFullYear() == dateTimeCampain.getUTCFullYear()
-    ) {
-      const {id, long_archive_url, send_time} = data.campaigns[0]
-
-      return {
-        id,
-        longArchiveURL: long_archive_url,
-        sendTime: send_time
-      }
-    }
-
-    return null
-  } catch (err) {
-    console.error('Error while fetching Mailchimp campaigns:', err)
-    return null
-  }
 }

@@ -1,12 +1,6 @@
 import React from 'react'
 import {createContext, useContext, ReactNode} from 'react'
 
-export interface MailchimpCampaignData {
-  id: string
-  longArchiveURL: string
-  sendTime: string
-}
-
 export interface AppContextState {
   canonicalHost: string
 }

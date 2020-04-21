@@ -5,7 +5,7 @@ import {hot} from 'react-hot-loader/root'
 import {HelmetProvider} from 'react-helmet-async'
 import {rehydrate} from 'fela-dom'
 
-import {StyleProvider, preloadLazyComponents, LazyCapture, RouteActionType} from '@karma.run/react'
+import {StyleProvider, preloadLazyComponents, RouteActionType} from '@karma.run/react'
 
 import {ElementID} from '../shared/elementID'
 import {App} from '../shared/app'

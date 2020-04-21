@@ -73,14 +73,6 @@ function contentForRoute(activeRoute: Route | null) {
     case RouteType.Peer:
       return <ComingSoon />
 
-    case RouteType.Member:
-    case RouteType.Archiv:
-    case RouteType.PayRexxFull:
-    case RouteType.PayRexxGoenner:
-    case RouteType.PayRexxMember:
-    case RouteType.BaselBriefing:
-      return <PageTemplateContainer slug="" />
-
     case RouteType.Page:
       return <PageTemplateContainer slug={activeRoute.params.slug || ''} />
 

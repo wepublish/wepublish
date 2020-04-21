@@ -31,8 +31,6 @@ import {useAppContext} from '../appContext'
 
 import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
-import {PODCAST_SLUG} from '../utility'
-import {ArticleTemplateContainer} from './articleTemplateContainer'
 
 const PageQuery = gql`
   query Page($slug: Slug, $id: ID) {
@@ -93,12 +91,6 @@ export interface PageTemplateContainerProps {
 
 export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-
-  // hardcoded live url to link live article
-  if (slug == 'live') return <ArticleTemplateContainer id={'dPepR7arFPCQUMAw'} />
-
-  // hardcoded podcast article to link podcast article
-  if (slug == PODCAST_SLUG) return <ArticleTemplateContainer id={'V2Qa0rFNcqRuPIPv'} />
 
   const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id}})
 

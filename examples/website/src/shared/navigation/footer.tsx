@@ -3,10 +3,9 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {SmallLogo} from '../atoms/logo'
 import {pxToRem, whenDesktop} from '../style/helpers'
-import {Link, PageRoute, useRoute} from '../route/routeContext'
+import {Link} from '../route/routeContext'
 import {RoundIconButton} from '../atoms/roundIconButton'
 import {IconType} from '../atoms/icon'
-import {PrimaryButton} from '../atoms/primaryButton'
 import {NavigationItem} from '../types'
 
 export const FooterStyle = cssRule({
@@ -147,7 +146,6 @@ export interface FooterProps {
 
 export function Footer({text, navigation, onNewsletter}: FooterProps) {
   const css = useStyle()
-  const {current} = useRoute()
 
   return (
     <footer className={css(FooterStyle)}>
@@ -157,40 +155,27 @@ export function Footer({text, navigation, onNewsletter}: FooterProps) {
             <SmallLogo />
           </div>
           <p className={css(FooterAdressStyle)}>
-            <strong>bajour</strong>
+            <strong>wepublish</strong>
             <br />
-            Steinentorberg 20 <br />
-            4051 Basel <br />
+            Teststrasse 26 <br />
+            8000 Zürich <br />
             <br />
-            <Link href="mailto:info@bajour.ch">info@bajour.ch</Link>
+            <Link href="mailto:info@wepublish.ch">info@wepublish.ch</Link>
           </p>
         </div>
         <p className={css(FooterTextStyle)}>{text}</p>
         <div className={css(FooterShareStyle)}>
-          <Link target="_blank" rel="noopener" href="https://www.facebook.com/bajourbasel">
+          <Link target="_blank" rel="noopener" href="https://www.facebook.com/wepublish">
             <RoundIconButton icon={IconType.Facebook}></RoundIconButton>
           </Link>
-          <Link target="_blank" rel="noopener" href="https://twitter.com/bajourbasel">
+          <Link target="_blank" rel="noopener" href="https://twitter.com/wepublish">
             <RoundIconButton icon={IconType.Twitter}></RoundIconButton>
           </Link>
-          <Link href="mailto:info@bajour.ch">
+          <Link href="mailto:info@wepublish.ch">
             <RoundIconButton icon={IconType.Mail}></RoundIconButton>
           </Link>
         </div>
-        <div className={css(FooterMoreButtonStyle)}>
-          <Link route={{...current!, query: {modal: 'baselbriefing'}}}>
-            <PrimaryButton text="Abonniere uns" />
-          </Link>
-        </div>
       </div>
-      <nav className={css(FooterFootnoteStyle)}>
-        <Link route={PageRoute.create({})}>bajour.ch</Link>
-        {navigation?.map((item, index) => (
-          <Link key={index} route={item.route}>
-            {item.title}
-          </Link>
-        ))}
-      </nav>
     </footer>
   )
 }

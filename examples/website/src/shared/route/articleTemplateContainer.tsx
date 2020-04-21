@@ -102,16 +102,6 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        {/* Podcast Verification */}
-        {id == 'V2Qa0rFNcqRuPIPv' && (
-          <link
-            rel="alternate"
-            type="application/rss+xml"
-            title="Nach dem Piepston"
-            href="https://piepston.podigee.io/feed/mp3"
-          />
-        )}
-
         <link rel="canonical" href={canonicalURL} />
 
         <meta property="og:title" content={title} />
