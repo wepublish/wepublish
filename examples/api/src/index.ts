@@ -4,12 +4,7 @@ import {WepublishServer, URLAdapter, PublicArticle, PublicPage, Author} from '@w
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
-import startMediaServer from '@karma.run/media'
-import LocalStorageBackend from '@karma.run/media-storage-local'
-import SharpImageBackend from '@karma.run/media-image-sharp'
-
 import {URL} from 'url'
-import {resolve as resolvePath} from 'path'
 
 class ExampleURLAdapter implements URLAdapter {
   getPublicArticleURL(article: PublicArticle): string {
