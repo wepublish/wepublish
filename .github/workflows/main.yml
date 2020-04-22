@@ -37,7 +37,7 @@ jobs:
       - run: cd ./examples/website && npm run build
       - run: printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
       # - run: docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
-      - run: docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./website
+      - run: docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./examples/website
       - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}
       - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
       - name: Build docker editor
