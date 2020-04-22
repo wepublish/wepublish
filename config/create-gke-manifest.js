@@ -22,7 +22,7 @@ const domain = 'demo.wepublish.media'
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
-  `www.${domain},`,
+  `www.${domain},${domain}`,
   'staging.website.34.65.204.205.nip.io'
 )
 
@@ -62,7 +62,7 @@ async function applyNamespace() {
 
 async function applyWebsite() {
   const servicePort = 5000
-  const app = 'nodejs'
+  const app = 'website'
   const appName = `${app}-${ENVIRONMENT_NAME}`
 
   const service = {
