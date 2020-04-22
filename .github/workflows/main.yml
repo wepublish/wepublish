@@ -33,17 +33,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-        run: |
-          # https://cloud.google.com/container-registry/docs/advanced-authentication
-          cd ./examples/website
-          npm install
-          npm run build
-          cd
-          printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
-          # docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
-          docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./website
-          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}
-          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
+      - run: cd ./examples/website && npm install
+      - run: cd ./examples/website && npm run build
+      - run: printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
+      # - run: docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
+      - run: docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./website
+      - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}
+      - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
       - name: Build docker editor
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
