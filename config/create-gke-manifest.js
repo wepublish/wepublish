@@ -512,8 +512,12 @@ async function applyApiServer() {
                   value: `production`
                 },
                 {
-                  name: 'MEDIA_ADDRESS',
+                  name: 'MEDIA_SERVER_URL',
                   value: `https://${domainMedia}`
+                },
+                {
+                  name: 'MEDIA_ADDRESS',
+                  value: '${domainMedia}'
                 },
                 {
                   name: 'MEDIA_PORT',
