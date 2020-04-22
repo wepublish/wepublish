@@ -19,7 +19,6 @@ const HeaderStyle = cssRule(({isMinimized}: HeaderStyleProps) => ({
   alignItems: 'center',
 
   backgroundColor: Color.White,
-  //boxShadow: isMinimized ? 'none' : `0 0 25px rgba(${hexToRgb(Color.Primary)}, 0.6)`,
   borderBottom: isMinimized ? `1px solid ${Color.Secondary}` : 'none',
   textTransform: 'uppercase',
   fontSize: '14px',

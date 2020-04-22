@@ -1,5 +1,16 @@
 version: '3.7'
 services:
+  website:
+    build: ./examples/website/
+    ports:
+      - 5000:5000
+    environment:
+      NODE_ENV: production
+      ADDRESS: 0.0.0.0
+      CANONICAL_HOST: http://localhost:5000
+      API_URL: http://api:4000
+      ALLOWED_HOSTS: localhost
+      NUM_WORKERS: 1
   api:
     build: ./examples/api/
     ports:

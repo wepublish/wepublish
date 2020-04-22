@@ -1,6 +1,6 @@
 {
   // This file is only needed for VSCode, client will be built by webpack/babel.
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "include": ["./**/*"],
   "compilerOptions": {
     "types": [],

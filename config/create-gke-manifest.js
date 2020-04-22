@@ -18,8 +18,7 @@ const ENVIRONMENT_NAME = 'production'
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = 'wepublish'
 
-//const domain = 'demo.wepublish.media'
-const domain = 'demo.gifstr.io'
+const domain = 'demo.wepublish.media'
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
@@ -39,7 +38,7 @@ main().catch(e => {
 
 async function main() {
   await applyNamespace()
-  //await applyWebsite()
+  await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
@@ -62,7 +61,7 @@ async function applyNamespace() {
 
 
 async function applyWebsite() {
-  const servicePort = 3000
+  const servicePort = 5000
   const app = 'nodejs'
   const appName = `${app}-${ENVIRONMENT_NAME}`
 
@@ -201,7 +200,7 @@ async function applyWebsite() {
                   name: 'CANONICAL_HOST',
                   value: envSwitch(
                     ENVIRONMENT_NAME,
-                    'https://bajour.ch',
+                    'https://demo.wepublish.media',
                     'https://staging.website.bajour.ch'
                   )
                 },
@@ -212,23 +211,6 @@ async function applyWebsite() {
                 {
                   name: 'ALLOWED_HOSTS',
                   value: `${domainCn},${domainSan}`
-                },
-                {
-                  name: 'MAILCHIMP_API_KEY',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'we-publish-secrets',
-                      key: 'MAILCHIMP_API_KEY'
-                    }
-                  }
-                },
-                {
-                  name: 'MAILCHIMP_FOLDER_ID',
-                  value: '5ab6acaf6c'
-                },
-                {
-                  name: 'MAILCHIMP_REGION',
-                  value: 'us3'
                 }
               ],
               ports: [
@@ -240,8 +222,8 @@ async function applyWebsite() {
               imagePullPolicy: 'IfNotPresent',
               resources: {
                 requests: {
-                  cpu: envSwitch(ENVIRONMENT_NAME, '100m', '0m'),
-                  memory: envSwitch(ENVIRONMENT_NAME, '256Mi', '256Mi')
+                  cpu: '0m',
+                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '256Mi')
                 }
               },
               readinessProbe: {
@@ -258,7 +240,7 @@ async function applyWebsite() {
                 },
                 initialDelaySeconds: 5,
                 successThreshold: 1,
-                timeoutSeconds: envSwitch(ENVIRONMENT_NAME, 60, 60)
+                timeoutSeconds: 60
               },
               livenessProbe: {
                 httpGet: {
@@ -275,7 +257,7 @@ async function applyWebsite() {
                 initialDelaySeconds: 60,
                 periodSeconds: 60,
                 successThreshold: 1,
-                timeoutSeconds: envSwitch(ENVIRONMENT_NAME, 60, 60)
+                timeoutSeconds: 60
               }
             }
           ]
