@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build all projects
         uses: actions/setup-node@v1
-          with:
-            node-version: '12.x'
+        with:
+          node-version: '12.x'
       - run: |
           yarn install
           yarn build:demo
