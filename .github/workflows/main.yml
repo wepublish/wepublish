@@ -17,9 +17,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: |
-          yarn install
-          yarn build:demo
+      - run: yarn install
+      - run: yarn build:demo
       - name: Build docker media
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
