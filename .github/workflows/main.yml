@@ -31,8 +31,8 @@ jobs:
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/api:latest
       - name: Build docker website
         uses: actions/setup-node@v1
-          with:
-            node-version: '12.x'
+        with:
+          node-version: '12.x'
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
           cd ./examples/website
