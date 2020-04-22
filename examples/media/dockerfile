@@ -35,11 +35,9 @@ WORKDIR /home/node/bajour
 
 COPY --chown=node:node package.json ./
 
-RUN yarn install
+RUN yarn install --production
 
-COPY --chown=node:node ./src/ ./src/
-
-RUN yarn build
+COPY --chown=node:node ./lib/ ./lib/
 
 ENV PORT=3004
 EXPOSE 3004

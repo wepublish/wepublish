@@ -8,6 +8,7 @@
     "dev": "run-p start:docker watch",
     "clean": "run-p clean:**",
     "build": "run-s --print-label build:api build:api-db-memory build:api-media-karma build:editor",
+    "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor build:api-example build:media-example build:website-example",
     "watch": "run-p --print-label watch:*",
     "start:docker": "docker-compose up",
     "clean:api": "yarn workspace @wepublish/api clean",
@@ -39,6 +40,10 @@
     "build:api-example": "yarn workspace @wepublish/api-example build",
     "watch:api-example": "yarn workspace @wepublish/api-example watch",
     "start:api-example": "yarn workspace @wepublish/api-example start",
+    "clean:media-example": "yarn workspace @wepublish/media-example clean",
+    "build:media-example": "yarn workspace @wepublish/media-example build",
+    "clean:website-example": "yarn workspace @wepublish/website-example clean",
+    "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
     "prettier-check": "prettier --check '{packages,services}/**/*.{js,ts,tsx,json}'"
   },

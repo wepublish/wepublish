@@ -1,5 +1,5 @@
 {
-  "name": "@wepublish/website",
+  "name": "@wepublish/website-example",
   "version": "0.0.0",
   "private": true,
   "main": "./dist/server/index.js",

@@ -13,6 +13,13 @@ jobs:
       GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
     steps:
       - uses: actions/checkout@v1
+      - name: Build all projects
+        uses: actions/setup-node@v1
+          with:
+            node-version: '12.x'
+      - run: |
+          yarn install
+          yarn build:demo
       - name: Build docker media
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
@@ -30,16 +37,12 @@ jobs:
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/api:${GITHUB_SHA}
           docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/api:latest
       - name: Build docker website
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-      - run: cd ./examples/website && npm install
-      - run: cd ./examples/website && npm run build
-      - run: printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
-      # - run: docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
-      - run: docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./examples/website
-      - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}
-      - run: docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
+      - run: |
+          printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
+          docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
+          docker build --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest ./examples/website
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:latest
       - name: Build docker editor
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication

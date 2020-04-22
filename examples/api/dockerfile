@@ -11,17 +11,8 @@ COPY --chown=node:node package.json ./
 
 RUN yarn install
 
-COPY --chown=node:node ./src/ ./src/
+COPY --chown=node:node ./dist/ ./dist/
 
-RUN ./node_modules/.bin/tsc -b ./src/tsconfig.docker.json
-
-ENV NODE_ENV=production
-ENV MEDIA_SERVER_URL=http://localhost:3004
-
-# TODO: Put token into secrets
-ENV MEDIA_SERVER_TOKEN=tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf
-ENV ADDRESS=0.0.0.0
 ENV PORT=3005
-
 EXPOSE 3005
-CMD [ "node", "./lib/index.js" ]
+CMD [ "node", "./dist/index.js" ]

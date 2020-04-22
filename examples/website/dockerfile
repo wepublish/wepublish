@@ -9,6 +9,7 @@ COPY --chown=node:node package.json ./
 RUN yarn install --production
 
 COPY --chown=node:node ./dist/ ./dist/
+COPY --chown=node:node ./assets/ ./assets/
 COPY --chown=node:node ./static/ ./static/
 
 
