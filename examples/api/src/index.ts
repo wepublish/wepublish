@@ -36,7 +36,9 @@ async function asyncMain() {
   const mediaServerPort = process.env.MEDIA_PORT ? parseInt(process.env.MEDIA_PORT) : 4001
   const mediaServerAddress = process.env.MEDIA_ADDRESS ?? 'localhost'
 
-  const mediaServerURL = new URL(`http://${mediaServerAddress}:${mediaServerPort}`)
+  const mediaServerURL = new URL(
+    process.env.MEDIA_SERVER_URL || `http://${mediaServerAddress}:${mediaServerPort}`
+  )
   const mediaAdapter = new KarmaMediaAdapter(mediaServerURL, mediaServerToken)
 
   await MongoDBAdapter.initialize({

@@ -517,7 +517,7 @@ async function applyApiServer() {
                 },
                 {
                   name: 'MEDIA_ADDRESS',
-                  value: '${domainMedia}'
+                  value: `${domainMedia}`
                 },
                 {
                   name: 'MEDIA_PORT',
