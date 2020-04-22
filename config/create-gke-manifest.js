@@ -22,7 +22,7 @@ const domain = 'demo.wepublish.media'
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
-  `www.${domain},${domain}`,
+  `www.${domain}`,
   'staging.website.34.65.204.205.nip.io'
 )
 
@@ -211,6 +211,10 @@ async function applyWebsite() {
                 {
                   name: 'ALLOWED_HOSTS',
                   value: `${domainCn},${domainSan}`
+                },
+                {
+                  name: 'ADDRESS',
+                  value: '0.0.0.0'
                 }
               ],
               ports: [
