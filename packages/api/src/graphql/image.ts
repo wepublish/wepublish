@@ -151,7 +151,7 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
       type: GraphQLString,
       args: {input: {type: GraphQLImageTransformation}},
       resolve(image, {input}, {mediaAdapter}) {
-        return mediaAdapter.getImageURL(image, input)
+        return image.transformURL ? image.transformURL : mediaAdapter.getImageURL(image, input)
       }
     }
   }

@@ -11,8 +11,6 @@ import {
   OptionalImage,
   CreateImageArgs,
   UpdateImageArgs,
-  OptionalSessionWithToken,
-  Session,
   OptionalSession,
   Article,
   CreateArticleArgs,
@@ -54,7 +52,16 @@ import {
   PublicPage,
   GetPublishedPagesArgs,
   PageSort,
-  NavigationInput
+  NavigationInput,
+  Settings,
+  SessionType,
+  UserSession,
+  OptionalUserSession,
+  SettingsInput,
+  PendingPeer,
+  PeerState,
+  RequestedPeer,
+  OptionalPeer
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -69,7 +76,9 @@ import {
   DBImage,
   DBAuthor,
   DBNavigation,
-  DBPage
+  DBPage,
+  DBSettings,
+  DBPeer
 } from './schema'
 
 export interface MongoDBAdabterCommonArgs {
@@ -134,6 +143,8 @@ interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
   readonly client: MongoClient
   readonly db: Db
 
+  readonly settings: Collection<DBSettings>
+  readonly peers: Collection<DBPeer>
   readonly users: Collection<DBUser>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
@@ -155,6 +166,8 @@ export class MongoDBAdapter implements DBAdapter {
   readonly client: MongoClient
   readonly db: Db
 
+  readonly settings: Collection<DBSettings>
+  readonly peers: Collection<DBPeer>
   readonly users: Collection<DBUser>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
@@ -172,6 +185,8 @@ export class MongoDBAdapter implements DBAdapter {
     locale,
     client,
     db,
+    settings,
+    peers,
     users,
     sessions,
     navigations,
@@ -187,6 +202,8 @@ export class MongoDBAdapter implements DBAdapter {
     this.client = client
     this.db = db
 
+    this.settings = settings
+    this.peers = peers
     this.users = users
     this.sessions = sessions
     this.navigations = navigations
@@ -227,6 +244,8 @@ export class MongoDBAdapter implements DBAdapter {
       client,
       db,
       locale,
+      settings: db.collection(CollectionName.Settings),
+      peers: db.collection(CollectionName.Peers),
       users: db.collection(CollectionName.Users),
       sessions: db.collection(CollectionName.Sessions),
       navigations: db.collection(CollectionName.Navigations),
@@ -284,6 +303,69 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
+  // Settings
+  // ========
+
+  async getSettings(): Promise<Settings> {
+    const value = await this.settings.findOne({})
+
+    if (!value) {
+      return {
+        name: '',
+        apiURL: '',
+        conanicalURL: '',
+        themeColor: '#000000'
+      }
+    }
+
+    return value
+  }
+
+  async updateSettings(input: SettingsInput): Promise<Settings> {
+    const {value} = await this.settings.findOneAndUpdate(
+      {},
+      {$set: input},
+      {
+        upsert: true,
+        returnOriginal: false
+      }
+    )
+
+    return value!
+  }
+
+  // Peering
+  // =======
+
+  async createOutgoingPeerRequest(url: string, token: string): Promise<RequestedPeer> {
+    const {ops} = await this.peers.insertOne({
+      token: token,
+      apiURL: url,
+      state: PeerState.Requested
+    })
+
+    const {_id: id, ...peer} = ops[0]
+    return {id, ...peer} as RequestedPeer
+  }
+
+  async createIncomingPeerRequest(url: string): Promise<PendingPeer> {
+    const {ops} = await this.peers.insertOne({
+      token: generateToken(),
+      apiURL: url,
+      state: PeerState.Pending
+    })
+
+    const {_id: id, ...peer} = ops[0]
+    return {id, ...peer} as PendingPeer
+  }
+
+  async getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]> {
+    const peers = await this.peers.find({_id: {$in: ids}}).toArray()
+    const peerMap = Object.fromEntries(peers.map(({_id: id, ...peer}) => [id, {id, ...peer}]))
+
+    return ids.map(id => peerMap[id] ?? null)
+  }
+
   // User
   // ====
 
@@ -329,7 +411,7 @@ export class MongoDBAdapter implements DBAdapter {
   // Session
   // =======
 
-  async createSessionForUser(user: User): Promise<OptionalSessionWithToken> {
+  async createUserSession(user: User): Promise<OptionalUserSession> {
     const token = generateToken()
     const createdAt = new Date()
     const expiresAt = new Date(Date.now() + this.sessionTTL)
@@ -341,15 +423,15 @@ export class MongoDBAdapter implements DBAdapter {
       expiresAt
     })
 
-    return {id, user, token, createdAt, expiresAt}
+    return {type: SessionType.User, id, user, token, createdAt, expiresAt}
   }
 
-  async OptionalUserSessionWithToken(token: string): Promise<boolean> {
+  async deleteUserSessionByToken(token: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({token})
     return deletedCount === 1
   }
 
-  async getSessionByToken(token: string): Promise<OptionalSessionWithToken> {
+  async getSessionByToken(token: string): Promise<OptionalSession> {
     const session = await this.sessions.findOne({token})
 
     if (!session) return null
@@ -359,6 +441,7 @@ export class MongoDBAdapter implements DBAdapter {
     if (!user) return null
 
     return {
+      type: SessionType.User,
       id: session._id,
       token: session.token,
       createdAt: session.createdAt,
@@ -370,16 +453,18 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  async OptionalUserSession(user: User, id: string): Promise<boolean> {
+  async deleteUserSessionByID(user: User, id: string): Promise<boolean> {
     const {deletedCount} = await this.sessions.deleteOne({_id: id, userID: user.id})
     return deletedCount === 1
   }
 
-  async getSessionsForUser(user: User): Promise<Session[]> {
+  async getUserSessions(user: User): Promise<UserSession[]> {
     const sessions = await this.sessions.find({userID: user.id}).toArray()
 
     return sessions.map(session => ({
+      type: SessionType.User,
       id: session._id,
+      token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
       user: user
@@ -392,7 +477,9 @@ export class MongoDBAdapter implements DBAdapter {
     if (!session) return null
 
     return {
+      type: SessionType.User,
       id: session._id,
+      token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
       user: user

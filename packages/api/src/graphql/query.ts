@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
+import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID, print} from 'graphql'
 import {UserInputError} from 'apollo-server-express'
 
 import {Context} from '../context'
@@ -47,6 +47,7 @@ import {
 import {PageSort} from '../db/page'
 import {GraphQLSettings} from './settings'
 import {SessionType} from '../db/session'
+import {GraphQLPeer} from './peer'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -63,6 +64,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Peering
     // =======
+
+    peer: {
+      type: GraphQLNonNull(GraphQLPeer),
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {loaders}, info) {
+        // console.log(JSON.stringify(info))
+
+        console.log(print(info.fieldNodes[0]))
+
+        return loaders.peer.load(id)
+      }
+    },
 
     // User
     // ====
@@ -272,6 +285,16 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
+    // Settings
+    // ========
+
+    settings: {
+      type: GraphQLNonNull(GraphQLSettings),
+      resolve(root, args, {dbAdapter}) {
+        return dbAdapter.getSettings()
+      }
+    },
+
     // Navigation
     // ==========
 

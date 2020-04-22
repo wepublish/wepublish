@@ -15,6 +15,8 @@ import {GraphQLColor} from './color'
 export const GraphQLSettings = new GraphQLObjectType<Settings, Context>({
   name: 'Settings',
   fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+
     logo: {
       type: GraphQLImage,
       resolve(setting, args, {loaders}) {
@@ -40,6 +42,8 @@ export const GraphQLSettings = new GraphQLObjectType<Settings, Context>({
 export const GraphQLSettingsInput = new GraphQLInputObjectType({
   name: 'SettingsInput',
   fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+
     logoID: {type: GraphQLID},
     conanicalURL: {type: GraphQLNonNull(GraphQLString)},
     apiURL: {type: GraphQLNonNull(GraphQLString)},

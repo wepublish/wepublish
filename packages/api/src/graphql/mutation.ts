@@ -20,6 +20,8 @@ import {GraphQLPage, GraphQLPageInput} from './page'
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {GraphQLBlockInput} from './blocks'
 import {GraphQLSettings, GraphQLSettingsInput} from './settings'
+import {GraphQLPeer, GraphQLPeerRequestInput} from './peer'
+import {createOutgoingPeerRequestToken} from '../peering'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -76,6 +78,25 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     // Peering
     // =======
+
+    createOutgoingPeerRequest: {
+      type: GraphQLNonNull(GraphQLPeer),
+      args: {input: {type: GraphQLNonNull(GraphQLPeerRequestInput)}},
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        authenticateUser()
+
+        const token = await createOutgoingPeerRequestToken(input.apiURL, dbAdapter)
+        return dbAdapter.createOutgoingPeerRequest(input.apiURL, token)
+      }
+    },
+
+    createIncomingPeerRequest: {
+      type: GraphQLNonNull(GraphQLPeer),
+      args: {input: {type: GraphQLNonNull(GraphQLPeerRequestInput)}},
+      resolve(root, {input}, {dbAdapter}) {
+        return dbAdapter.createIncomingPeerRequest(input.apiURL)
+      }
+    },
 
     // createPeerRequest: {
     //   type: GraphQLNonNull(PeerRequest)
