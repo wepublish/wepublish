@@ -213,10 +213,6 @@ async function applyWebsite() {
                 {
                   name: 'ALLOWED_HOSTS',
                   value: `${domainCn},${domainSan}`
-                },
-                {
-                  name: 'ADDRESS',
-                  value: '0.0.0.0'
                 }
               ],
               ports: [
@@ -337,10 +333,6 @@ async function applyMediaServer() {
                       key: 'media_server_token'
                     }
                   }
-                },
-                {
-                  name: 'ADDRESS',
-                  value: '0.0.0.0'
                 }
               ],
               ports: [
@@ -525,14 +517,6 @@ async function applyApiServer() {
                   name: 'MEDIA_PORT',
                   value: '443'
                 },
-                {
-                  name: 'ADDRESS',
-                  value: '0.0.0.0'
-                },
-                {
-                  name: 'PORT',
-                  value: '3005'
-                },
                 // {
                 //   name: 'HOST_ENV',
                 //   value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
@@ -714,13 +698,6 @@ async function applyEditor() {
                 {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
-                },
-                {
-                  name: 'PORT',
-                  value: '3006'
-                },{
-                  name: 'ADDRESS',
-                  value: '0.0.0.0'
                 }
               ],
               ports: [

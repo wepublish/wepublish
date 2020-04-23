@@ -44,5 +44,6 @@ COPY --chown=node:node ./scripts/ ./scripts/
 RUN yarn install
 RUN yarn build:demo
 
+ENV ADDRESS=0.0.0.0
 ENV PORT=8000
 EXPOSE 8000
