@@ -30,6 +30,8 @@ const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `staging.medi
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${domain}`)
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
 
+const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
+
 
 main().catch(e => {
   process.stderr.write(e.toString())
@@ -61,7 +63,7 @@ async function applyNamespace() {
 
 
 async function applyWebsite() {
-  const servicePort = 5000
+  const servicePort = 8000
   const app = 'website'
   const appName = `${app}-${ENVIRONMENT_NAME}`
 
@@ -146,7 +148,6 @@ async function applyWebsite() {
   }
   await applyConfig(`ingress-${app}`, ingress)
 
-  const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/website:${GITHUB_SHA}`
   // Info Resources: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/node/resource-qos.md
   const deployment = {
     apiVersion: 'extensions/v1beta1',
@@ -187,6 +188,7 @@ async function applyWebsite() {
             {
               name: appName,
               image: image,
+              command: [ "node", "./examples/website/dist/server/index.js" ],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -274,10 +276,9 @@ async function applyWebsite() {
 }
 
 async function applyMediaServer() {
-  const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/media:${GITHUB_SHA}`
   const app = 'media'
   const appName = `${app}-${ENVIRONMENT_NAME}`
-  const appPort = 3004
+  const appPort = 8000
 
   const deployment = {
     apiVersion: 'extensions/v1beta1',
@@ -314,6 +315,7 @@ async function applyMediaServer() {
             {
               name: appName,
               image: image,
+              command: [ "node", "./examples/media/lib/index.js" ],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -462,10 +464,9 @@ async function applyMediaServer() {
 }
 
 async function applyApiServer() {
-  const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/api:${GITHUB_SHA}`
   const app = 'api'
   const appName = `${app}-${ENVIRONMENT_NAME}`
-  const appPort = 3005
+  const appPort = 8000
 
   const deployment = {
     apiVersion: 'extensions/v1beta1',
@@ -506,6 +507,7 @@ async function applyApiServer() {
             {
               name: appName,
               image: image,
+              command: ["node", "./examples/api/dist/index.js" ],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -660,10 +662,9 @@ async function applyApiServer() {
 }
 
 async function applyEditor() {
-  const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/editor:${GITHUB_SHA}`
   const app = 'editor'
   const appName = `${app}-${ENVIRONMENT_NAME}`
-  const appPort = 3006
+  const appPort = 8000
 
   const deployment = {
     apiVersion: 'extensions/v1beta1',
@@ -704,6 +705,7 @@ async function applyEditor() {
             {
               name: appName,
               image: image,
+              command: ["node", "./packages/editor/dist/server/index.js"],
               env: [
                 {
                   name: 'NODE_ENV',
