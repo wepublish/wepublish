@@ -5,11 +5,11 @@
   "main": "./lib/",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "node ./lib/index.js",
+    "start": "node ./dist/index.js",
     "build": "run-s build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all --parallel watch:*",
-    "watch:server": "nodemon --inspect=0.0.0.0:9241 ./lib/index.js",
+    "watch:server": "nodemon --inspect=0.0.0.0:9241 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "clean": "shx rm -rf ./lib"
   },

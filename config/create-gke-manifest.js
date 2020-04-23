@@ -311,7 +311,7 @@ async function applyMediaServer() {
             {
               name: appName,
               image: image,
-              command: [ "node", "./examples/media/lib/index.js" ],
+              command: [ "node", "./examples/media/dist/index.js" ],
               env: [
                 {
                   name: 'NODE_ENV',

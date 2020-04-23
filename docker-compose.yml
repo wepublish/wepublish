@@ -34,7 +34,7 @@ services:
     build: .
     ports:
       - 3004:8000
-    command: ["node", "./examples/media/lib/index.js"]
+    command: ["node", "./examples/media/dist/index.js"]
     environment:
       NUM_CLUSTERS: 1
       STORAGE_PATH: ./.media
