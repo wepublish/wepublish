@@ -121,46 +121,12 @@ export async function renderMarkup(opts: RenderOptions) {
 
   const scriptElements = bundleSet.map(url => <script async src={`${staticHost}/${url}`}></script>)
 
-  const isProduction =
-    process.env.NODE_ENV == 'production' && !staticHost.startsWith('https://staging')
-
-  let googleTagManager = ''
-  let googleTagManagerNoScript = ''
-  if (isProduction) {
-    googleTagManager = `
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl+ '&gtm_auth=EMoJF9p7Wu77j7k1OChhPQ&gtm_preview=env-1&gtm_cookies_win=x';f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MQDHF8V');`
-
-    googleTagManagerNoScript =
-      'https://www.googletagmanager.com/ns.html?id=GTM-MQDHF8V&gtm_auth=EMoJF9p7Wu77j7k1OChhPQ&gtm_preview=env-1&gtm_cookies_win=x'
-  } else {
-    googleTagManager = `
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl+ '&gtm_auth=pLdTy-FIFx8dMZvcjy9U3A&gtm_preview=env-25&gtm_cookies_win=x';f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MQDHF8V');`
-
-    googleTagManagerNoScript =
-      'https://www.googletagmanager.com/ns.html?id=GTM-MQDHF8V&gtm_auth=pLdTy-FIFx8dMZvcjy9U3A&gtm_preview=env-25&gtm_cookies_win=x'
-  }
-
   return {
     markup:
       '<!doctype html>' +
       ReactDOM.renderToStaticMarkup(
         <html>
           <head>
-            <script dangerouslySetInnerHTML={{__html: googleTagManager}} />
-
-            <script
-              data-ad-client="ca-pub-4936875882594717"
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
             {helmet.title.toComponent()}
             {helmet.meta.toComponent()}
             {helmet.link.toComponent()}
@@ -172,9 +138,6 @@ export async function renderMarkup(opts: RenderOptions) {
             <link rel="manifest" href="/static/manifest.json" />
             <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
             <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
-            <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png" />
-            <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png" />
-            <link rel="shortcut icon" type="image/x-icon" href="/static/favicon-16.ico" />
 
             {scriptElements}
 
@@ -213,12 +176,6 @@ export async function renderMarkup(opts: RenderOptions) {
             {renderStylesToComponents(styleRenderer)}
           </head>
           <body>
-            <noscript>
-              <iframe
-                src={googleTagManagerNoScript}
-                style={{display: 'none', visibility: 'hidden', width: 0, height: 0}}></iframe>
-            </noscript>
-
             <div id={ElementID.ReactRoot} dangerouslySetInnerHTML={{__html: componentString}}></div>
           </body>
         </html>
