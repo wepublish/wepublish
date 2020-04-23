@@ -42,6 +42,8 @@
     "start:api-example": "yarn workspace @wepublish/api-example start",
     "clean:media-example": "yarn workspace @wepublish/media-example clean",
     "build:media-example": "yarn workspace @wepublish/media-example build",
+    "watch:media-example": "yarn workspace @wepublish/media-example watch",
+    "start:media-example": "yarn workspace @wepublish/media-example start",
     "clean:website-example": "yarn workspace @wepublish/website-example clean",
     "build:website-example": "yarn workspace @wepublish/website-example build",
     "prettier": "prettier --write '{packages,services}/**/*.{js,ts,tsx,json}'",
