@@ -20,8 +20,7 @@
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
-    "prepare": "run-s clean",
-    "prepublishOnly": "run-s clean copy-license sync-package-info build crlf"
+    "prepare": "run-s clean copy-license sync-package-info build crlf"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

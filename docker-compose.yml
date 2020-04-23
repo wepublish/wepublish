@@ -50,9 +50,8 @@ services:
     image: mongo:4.2.3-bionic
     ports:
       - 27017:27017
-
-#  mongo-express:
-#    image: mongo-express
-#    restart: always
-#    ports:
-#      - 5000:8081
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 5000:8081

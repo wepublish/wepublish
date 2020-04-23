@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "run-p start:docker watch",
     "clean": "run-p clean:**",
-    "build": "run-s --print-label build:api build:api-db-memory build:api-media-karma build:editor",
+    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor build:api-example build:media-example build:website-example",
     "watch": "run-p --print-label watch:*",
     "start:docker": "docker-compose up",
