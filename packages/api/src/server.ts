@@ -49,7 +49,7 @@ export class WepublishServer {
 
     adminServer.applyMiddleware({
       app,
-      path: '/admin',
+      path: '/admins',
       cors: corsOptions
     })
 
