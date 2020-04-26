@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "run-p start:docker watch",
     "clean": "run-p clean:**",
-    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor",
+    "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:editor build:oauth2 build:api-example",
     "watch": "run-p --print-label watch:*",
     "start:docker": "docker-compose up",
     "clean:api": "yarn workspace @wepublish/api clean",

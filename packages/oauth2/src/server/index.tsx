@@ -10,8 +10,6 @@ import url from 'url'
 import {MongoDBAdapter as WepublishDBAdapter} from '@wepublish/api-db-mongodb'
 import set from 'lodash/set'
 
-import * as jwks_keys from './keys/keys.json'
-
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4100
 const {ISSUER = `http://localhost:${PORT}`} = process.env
 
@@ -27,6 +25,10 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
+
+  if (!process.env.JWKS_KEYS) {
+    throw new Error('No JWKS Keys defined in process.env.JWKS_Keys')
+  }
 
   const app = express()
 
@@ -73,8 +75,7 @@ async function asyncMain() {
       keys: process.env.OAUTH_COOKIE_KEYS.split(',')
     },
     jwks: {
-      //@ts-ignore
-      keys: jwks_keys.default
+      keys: JSON.parse(process.env.JWKS_KEYS)
     },
     findAccount,
     ...configuration
