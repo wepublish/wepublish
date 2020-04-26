@@ -1,30 +1,11 @@
 import {ElementID} from '../elementID'
-import {useStaticStyle, useFont} from '@karma.run/react'
-
-export const MonumentGroteskFont = 'Monument Grotesk'
+import {useStaticStyle} from '@karma.run/react'
 
 export function GlobalStyles() {
   const staticCSS = useStaticStyle()
-  const font = useFont()
-
-  font(
-    MonumentGroteskFont,
-    ['/static/fonts/MonumentGrotesk-Regular.woff', '/static/fonts/MonumentGrotesk-Regular.woff2'],
-    {
-      fontWeight: 'normal'
-    }
-  )
-
-  font(
-    MonumentGroteskFont,
-    ['/static/fonts/MonumentGrotesk-Bold.woff', '/static/fonts/MonumentGrotesk-Bold.woff2'],
-    {
-      fontWeight: 'bold'
-    }
-  )
 
   staticCSS('html', {
-    fontFamily: `"${MonumentGroteskFont}", Arial, sans-serif`,
+    fontFamily: `Arial, sans-serif`,
     fontSize: '62.5%'
   })
 
