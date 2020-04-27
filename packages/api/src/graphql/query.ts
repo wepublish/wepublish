@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID, print} from 'graphql'
+import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
 import {UserInputError} from 'apollo-server-express'
 
 import {Context} from '../context'
@@ -45,37 +45,32 @@ import {
 } from './page'
 
 import {PageSort} from '../db/page'
-import {GraphQLSettings} from './settings'
 import {SessionType} from '../db/session'
-import {GraphQLPeer} from './peer'
+import {GraphQLPeer, GraphQLPeerInfo} from './peer'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
   fields: {
-    // Settings
-    // ========
-
-    settings: {
-      type: GraphQLNonNull(GraphQLSettings),
-      resolve(root, args, {dbAdapter}) {
-        return dbAdapter.getSettings()
-      }
-    },
-
     // Peering
     // =======
 
-    peer: {
-      type: GraphQLNonNull(GraphQLPeer),
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {loaders}, info) {
-        // console.log(JSON.stringify(info))
-
-        console.log(print(info.fieldNodes[0]))
-
-        return loaders.peer.load(id)
+    peerInfo: {
+      type: GraphQLNonNull(GraphQLPeerInfo),
+      async resolve(root, args, {authenticateUser, hostURL, dbAdapter}) {
+        authenticateUser()
+        return {...(await dbAdapter.getPeerInfo()), hostURL}
       }
     },
+
+    peers: {
+      type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
+      resolve(root, {id}, {authenticateUser, dbAdapter, loaders}) {
+        authenticateUser()
+        return dbAdapter.getPeers()
+      }
+    },
+
+    //id: {type: GraphQLNonNull(GraphQLID)}
 
     // User
     // ====
@@ -288,10 +283,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // Settings
     // ========
 
-    settings: {
-      type: GraphQLNonNull(GraphQLSettings),
-      resolve(root, args, {dbAdapter}) {
-        return dbAdapter.getSettings()
+    peerInfo: {
+      type: GraphQLNonNull(GraphQLPeerInfo),
+      async resolve(root, args, {hostURL, dbAdapter}) {
+        return {...(await dbAdapter.getPeerInfo()), hostURL}
       }
     },
 

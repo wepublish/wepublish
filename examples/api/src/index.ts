@@ -27,6 +27,9 @@ class ExampleURLAdapter implements URLAdapter {
 
 async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+  if (!process.env.HOST_URL) throw new Error('No HOST defined in environment.')
+
+  const hostURL = process.env.HOST_URL
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
@@ -53,6 +56,7 @@ async function asyncMain() {
   })
 
   const server = new WepublishServer({
+    hostURL,
     mediaAdapter,
     dbAdapter,
     urlAdapter: new ExampleURLAdapter(),

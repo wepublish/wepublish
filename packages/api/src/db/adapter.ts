@@ -1,4 +1,3 @@
-import {DBSettingsAdapter} from './settings'
 import {DBUserAdapter} from './user'
 import {DBSessionAdapter} from './session'
 import {DBNavigationAdapter} from './navigation'
@@ -9,8 +8,7 @@ import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
 
 export interface DBAdapter
-  extends DBSettingsAdapter,
-    DBPeerAdapter,
+  extends DBPeerAdapter,
     DBUserAdapter,
     DBSessionAdapter,
     DBNavigationAdapter,

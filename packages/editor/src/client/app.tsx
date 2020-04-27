@@ -11,11 +11,16 @@ import {ImageList} from './routes/imageList'
 import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
+import {PeerList} from './routes/peerList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
     case RouteType.Login:
       return <Login />
+
+    case RouteType.PeerList:
+    case RouteType.PeerInfoEdit:
+      return <PeerList />
 
     case RouteType.Index:
     case RouteType.ArticleList:

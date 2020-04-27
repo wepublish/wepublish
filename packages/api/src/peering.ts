@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch'
 import gql from 'graphql-tag'
-import {DBAdapter} from './db/adapter'
 
 const CreateIncomingPeerRequestMutation = gql`
   mutation CreateIncomingPeerRequest($input: PeerRequestInput!) {
@@ -12,9 +11,8 @@ const CreateIncomingPeerRequestMutation = gql`
 
 export async function createOutgoingPeerRequestToken(
   url: string,
-  dbAdapter: DBAdapter
+  hostURL: string
 ): Promise<string> {
-  const settings = await dbAdapter.getSettings()
   const response = await fetch(`${url}/admin`, {
     method: 'POST',
     headers: {
@@ -25,7 +23,7 @@ export async function createOutgoingPeerRequestToken(
       query: CreateIncomingPeerRequestMutation.loc!.source.body,
       variables: {
         input: {
-          apiURL: settings.apiURL
+          apiURL: hostURL
         }
       }
     })

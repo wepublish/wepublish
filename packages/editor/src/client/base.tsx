@@ -8,9 +8,7 @@ import {
   MaterialIconTextFields,
   MaterialIconPhotoLibraryOutlined,
   MaterialIconPermIdentityOutlined,
-  MaterialIconSettings,
-  MaterialIconShareOutlined,
-  MaterialIcon3dRotation
+  MaterialIconShareOutlined
 } from '@karma.run/icons'
 
 import {
@@ -22,8 +20,7 @@ import {
   AuthorListRoute,
   useRoute,
   RouteType,
-  PeeringRoute,
-  SettingsRoute
+  PeerListRoute
 } from './route'
 
 export interface BaseProps {
@@ -68,24 +65,8 @@ export function Base({children}: BaseProps) {
           <RouteMenuLinkButton
             icon={MaterialIconShareOutlined}
             label="Peering"
-            route={PeeringRoute.create({})}
-            active={current?.type === RouteType.Peering}
-          />
-
-          <Divider />
-
-          <RouteMenuLinkButton
-            icon={MaterialIconSettings}
-            label="Settings"
-            route={SettingsRoute.create({})}
-            active={current?.type === RouteType.Settings}
-          />
-
-          <RouteMenuLinkButton
-            icon={MaterialIcon3dRotation}
-            label="Settings"
-            route={SettingsRoute.create({})}
-            active={current?.type === RouteType.Settings}
+            route={PeerListRoute.create({})}
+            active={current?.type === RouteType.PeerList}
           />
 
           {/* TODO */}
@@ -94,6 +75,8 @@ export function Base({children}: BaseProps) {
             label="Navigation"
             route={ImageListRoute.create({})}
           /> */}
+
+          <Divider />
 
           <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}

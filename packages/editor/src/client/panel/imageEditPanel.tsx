@@ -53,7 +53,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   const [fileSize, setFileSize] = useState(0)
   const [extension, setExtension] = useState('')
 
-  const [originalImageURL, setOriginalImageURL] = useState()
+  const [originalImageURL, setOriginalImageURL] = useState<string>()
 
   const [imageURL, setImageURL] = useState('')
   const [imageWidth, setImageWidth] = useState(0)

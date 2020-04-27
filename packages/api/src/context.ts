@@ -39,6 +39,8 @@ export interface DataLoaderContext {
 }
 
 export interface Context {
+  readonly hostURL: string
+
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
@@ -53,6 +55,7 @@ export interface Context {
 }
 
 export interface ContextOptions {
+  readonly hostURL: string
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -61,7 +64,7 @@ export interface ContextOptions {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {dbAdapter, mediaAdapter, urlAdapter, hooks}: ContextOptions
+  {hostURL, dbAdapter, mediaAdapter, urlAdapter, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.getSessionByToken(token) : null
@@ -72,6 +75,7 @@ export async function contextFromRequest(
     : false
 
   return {
+    hostURL,
     session: isSessionValid ? session : null,
     loaders: {
       navigationByID: new DataLoader(ids => dbAdapter.getNavigationsByID(ids)),

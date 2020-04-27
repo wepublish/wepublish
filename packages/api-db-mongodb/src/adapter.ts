@@ -53,15 +53,16 @@ import {
   GetPublishedPagesArgs,
   PageSort,
   NavigationInput,
-  Settings,
   SessionType,
   UserSession,
   OptionalUserSession,
-  SettingsInput,
   PendingPeer,
   PeerState,
   RequestedPeer,
-  OptionalPeer
+  OptionalPeer,
+  PeerInfo,
+  PeerInfoInput,
+  Peer
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -303,17 +304,15 @@ export class MongoDBAdapter implements DBAdapter {
     }
   }
 
-  // Settings
-  // ========
+  // Peering
+  // =======
 
-  async getSettings(): Promise<Settings> {
+  async getPeerInfo(): Promise<PeerInfo> {
     const value = await this.settings.findOne({})
 
     if (!value) {
       return {
         name: '',
-        apiURL: '',
-        conanicalURL: '',
         themeColor: '#000000'
       }
     }
@@ -321,7 +320,7 @@ export class MongoDBAdapter implements DBAdapter {
     return value
   }
 
-  async updateSettings(input: SettingsInput): Promise<Settings> {
+  async updatePeerInfo(input: PeerInfoInput): Promise<PeerInfo> {
     const {value} = await this.settings.findOneAndUpdate(
       {},
       {$set: input},
@@ -333,9 +332,6 @@ export class MongoDBAdapter implements DBAdapter {
 
     return value!
   }
-
-  // Peering
-  // =======
 
   async createOutgoingPeerRequest(url: string, token: string): Promise<RequestedPeer> {
     const {ops} = await this.peers.insertOne({
@@ -364,6 +360,11 @@ export class MongoDBAdapter implements DBAdapter {
     const peerMap = Object.fromEntries(peers.map(({_id: id, ...peer}) => [id, {id, ...peer}]))
 
     return ids.map(id => peerMap[id] ?? null)
+  }
+
+  async getPeers(): Promise<Peer[]> {
+    const peers = await this.peers.find().toArray()
+    return peers.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
   // User

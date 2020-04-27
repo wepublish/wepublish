@@ -1,8 +1,16 @@
 // import {Article, GetArticlesArgs} from './article'
 // import {ConnectionResult} from './common'
 
+export interface PeerInfo {
+  name: string
+  logoID?: string
+  themeColor: string
+}
+
+export type PeerInfoInput = PeerInfo
+
 export interface BasePeer {
-  apiURL: string
+  hostURL: string
 }
 
 export interface PeerData {
@@ -44,10 +52,14 @@ export type OptionalPeer = Peer | undefined
 export type OptionalPeerWithData = PeerWithData | undefined
 
 export interface DBPeerAdapter {
+  getPeerInfo(): Promise<PeerInfo>
+  updatePeerInfo(input: PeerInfoInput): Promise<PeerInfo>
+
   createIncomingPeerRequest(url: string): Promise<PendingPeer>
   createOutgoingPeerRequest(url: string, token: string): Promise<RequestedPeer>
 
   getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]>
+  getPeers(): Promise<Peer[]>
 
   // acceptIncomingPeerRequest(id: string): Promise<IncomingPeerRequest>
   // declineIncomingPeerRequest(id: string): Promise<IncomingPeerRequest>

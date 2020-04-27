@@ -17,7 +17,7 @@ import {
 
 import fetch from 'cross-fetch'
 
-import {Peer, PeerState} from '../db/peer'
+import {Peer, PeerState, PeerInfo} from '../db/peer'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
@@ -32,17 +32,36 @@ export const GraphQLPeerState = new GraphQLEnumType({
   }
 })
 
-export const GraphQLPeerData = new GraphQLObjectType<Peer, Context>({
-  name: 'PeerData',
+export const GraphQLPeerRequestInput = new GraphQLInputObjectType({
+  name: 'PeerRequestInput',
+  fields: {
+    apiURL: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLPeerInfo = new GraphQLObjectType<PeerInfo, Context>({
+  name: 'PeerInfo',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
 
-    logo: {type: GraphQLImage},
+    logo: {
+      type: GraphQLImage,
+      resolve(setting, args, {loaders}) {
+        return setting.logoID && loaders.images.load(setting.logoID)
+      }
+    },
 
-    apiURL: {type: GraphQLNonNull(GraphQLString)},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    hostURL: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
 
-    state: {type: GraphQLNonNull(GraphQLPeerState)}
+export const GraphQLPeerInfoInput = new GraphQLInputObjectType({
+  name: 'PeerInfoInput',
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    logoID: {type: GraphQLID},
+    themeColor: {type: GraphQLNonNull(GraphQLColor)}
   }
 })
 
@@ -50,23 +69,12 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-    // name: {type: GraphQLNonNull(GraphQLString)},
 
-    // logo: {
-    //   type: GraphQLImage,
-    //   resolve(setting, args, {loaders}) {
-    //     return null
-    //   }
-    // },
-
-    apiURL: {type: GraphQLNonNull(GraphQLString)},
-    // themeColor: {type: GraphQLNonNull(GraphQLColor)},
-    token: {type: GraphQLNonNull(GraphQLString)},
-
+    hostURL: {type: GraphQLNonNull(GraphQLString)},
     state: {type: GraphQLNonNull(GraphQLPeerState)},
 
-    data: {
-      type: GraphQLNonNull(GraphQLPeerData),
+    info: {
+      type: GraphQLPeerInfo,
       async resolve(root, args, context, info) {
         const fetcher: Fetcher = async ({
           query: queryDocument,
@@ -76,7 +84,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
         }) => {
           const query = print(queryDocument)
 
-          const fetchResult = await fetch(root.apiURL, {
+          const fetchResult = await fetch(root.hostURL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -102,12 +110,5 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
         })
       }
     }
-  }
-})
-
-export const GraphQLPeerRequestInput = new GraphQLInputObjectType({
-  name: 'PeerRequestInput',
-  fields: {
-    apiURL: {type: GraphQLNonNull(GraphQLString)}
   }
 })

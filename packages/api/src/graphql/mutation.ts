@@ -19,8 +19,7 @@ import {GraphQLPage, GraphQLPageInput} from './page'
 
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
 import {GraphQLBlockInput} from './blocks'
-import {GraphQLSettings, GraphQLSettingsInput} from './settings'
-import {GraphQLPeer, GraphQLPeerRequestInput} from './peer'
+import {GraphQLPeer, GraphQLPeerRequestInput, GraphQLPeerInfo, GraphQLPeerInfoInput} from './peer'
 import {createOutgoingPeerRequestToken} from '../peering'
 
 function mapBlockUnionMap(value: any) {
@@ -64,28 +63,25 @@ function mapNavigationLinkInput(value: any) {
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
   fields: {
-    // Settings
-    // ========
-
-    updateSettings: {
-      type: GraphQLNonNull(GraphQLSettings),
-      args: {input: {type: GraphQLNonNull(GraphQLSettingsInput)}},
-      resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
-        return dbAdapter.updateSettings(input)
-      }
-    },
-
     // Peering
     // =======
+
+    updatePeerInfo: {
+      type: GraphQLNonNull(GraphQLPeerInfo),
+      args: {input: {type: GraphQLNonNull(GraphQLPeerInfoInput)}},
+      async resolve(root, {input}, {hostURL, authenticateUser, dbAdapter}) {
+        authenticateUser()
+        return {...(await dbAdapter.updatePeerInfo(input)), hostURL}
+      }
+    },
 
     createOutgoingPeerRequest: {
       type: GraphQLNonNull(GraphQLPeer),
       args: {input: {type: GraphQLNonNull(GraphQLPeerRequestInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+      async resolve(root, {input}, {hostURL, authenticateUser, dbAdapter}) {
         authenticateUser()
 
-        const token = await createOutgoingPeerRequestToken(input.apiURL, dbAdapter)
+        const token = await createOutgoingPeerRequestToken(input.apiURL, hostURL)
         return dbAdapter.createOutgoingPeerRequest(input.apiURL, token)
       }
     },

@@ -10,7 +10,7 @@ import {
   required
 } from '@karma.run/react'
 
-import {LinkButton, NavigationLinkButton, MenuLinkButton} from '@karma.run/ui'
+import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation} from '@apollo/react-hooks'
 import {LocalStorageKey} from './utility'
@@ -39,8 +39,8 @@ export enum RouteType {
   AuthorEdit = 'authorEdit',
   AuthorCreate = 'authorCreate',
 
-  Peering = 'peering',
-  Settings = 'settings'
+  PeerList = 'peerList',
+  PeerInfoEdit = 'peerInfoEdit'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -75,8 +75,8 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
-export const PeeringRoute = route(RouteType.Peering, routePath`/peering`)
-export const SettingsRoute = route(RouteType.Settings, routePath`/settings`)
+export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
+export const PeerInfoEditRoute = route(RouteType.PeerInfoEdit, routePath`/peering/info`)
 
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
@@ -96,8 +96,8 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
-  PeeringRoute,
-  SettingsRoute,
+  PeerListRoute,
+  PeerInfoEditRoute,
   NotFoundRoute
 ] as const
 
@@ -111,6 +111,7 @@ export const {
 } = createRouteContext(routes)
 
 export const RouteLinkButton = routeLink(LinkButton)
+export const RouteLinkIconButton = routeLink(LinkIconButton)
 export const RouteMenuLinkButton = routeLink(MenuLinkButton)
 export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
 

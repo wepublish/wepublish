@@ -67,11 +67,14 @@ const onDOMContentLoaded = async () => {
   const introspectionQueryResultData = await fetchIntrospectionQueryResultData(adminAPIURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
+    const context = operation.getContext()
 
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
-      }
+        authorization: token ? `Bearer ${token}` : '',
+        ...context.headers
+      },
+      ...context
     })
 
     return forward(operation)
