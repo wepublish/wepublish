@@ -50,7 +50,7 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
+      adapter.createUser({email: 'dev@wepublish.ch', password: '123', name: 'Dev User'})
     }
   })
 

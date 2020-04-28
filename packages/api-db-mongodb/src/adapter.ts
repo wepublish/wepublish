@@ -62,6 +62,7 @@ import {generateID, generateToken, base64Encode, base64Decode, MongoErrorCode} f
 
 import {
   DBUser,
+  DBUserRole,
   DBSession,
   DBArticle,
   CollectionName,
@@ -135,6 +136,7 @@ interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
   readonly db: Db
 
   readonly users: Collection<DBUser>
+  readonly userRoles: Collection<DBUserRole>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
   readonly authors: Collection<DBAuthor>
@@ -156,6 +158,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly db: Db
 
   readonly users: Collection<DBUser>
+  readonly userRoles: Collection<DBUserRole>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
   readonly authors: Collection<DBAuthor>
@@ -173,6 +176,7 @@ export class MongoDBAdapter implements DBAdapter {
     client,
     db,
     users,
+    userRoles,
     sessions,
     navigations,
     authors,
@@ -188,6 +192,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.db = db
 
     this.users = users
+    this.userRoles = userRoles
     this.sessions = sessions
     this.navigations = navigations
     this.authors = authors
@@ -228,6 +233,7 @@ export class MongoDBAdapter implements DBAdapter {
       db,
       locale,
       users: db.collection(CollectionName.Users),
+      userRoles: db.collection(CollectionName.UserRoles),
       sessions: db.collection(CollectionName.Sessions),
       navigations: db.collection(CollectionName.Navigations),
       authors: db.collection(CollectionName.Authors),
@@ -287,17 +293,19 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  async createUser({email, password}: CreateUserArgs): Promise<User> {
+  async createUser({email, name, password}: CreateUserArgs): Promise<User> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
         email,
+        name,
+        roles: [],
         password: passwordHash
       })
 
-      return {id, email}
+      return {id, email, name}
     } catch (err) {
       if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
         throw new Error('Email address already exists!')
@@ -310,7 +318,7 @@ export class MongoDBAdapter implements DBAdapter {
   async getUser(email: string): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
     if (user) {
-      return {id: user._id, email: user.email}
+      return {id: user._id, email: user.email, name: user.name}
     } else {
       return null
     }
@@ -321,7 +329,8 @@ export class MongoDBAdapter implements DBAdapter {
 
     return users.map<OptionalUser>(user => ({
       id: user._id,
-      email: user.email
+      email: user.email,
+      name: user.name
     }))
   }
 
@@ -329,7 +338,7 @@ export class MongoDBAdapter implements DBAdapter {
     const user = await this.users.findOne({email})
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return {id: user._id, email: user.email}
+      return {id: user._id, email: user.email, name: user.name}
     }
 
     return null
@@ -339,7 +348,7 @@ export class MongoDBAdapter implements DBAdapter {
     const user = await this.users.findOne({_id: id})
 
     if (user) {
-      return {id: user._id, email: user.email}
+      return {id: user._id, email: user.email, name: user.name}
     } else {
       return null
     }
@@ -384,7 +393,8 @@ export class MongoDBAdapter implements DBAdapter {
       expiresAt: session.expiresAt,
       user: {
         id: user._id,
-        email: user.email
+        email: user.email,
+        name: user.name
       }
     }
   }

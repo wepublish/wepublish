@@ -1,6 +1,7 @@
 import {Db} from 'mongodb'
 
 import * as v0 from './schema/0'
+import * as v1 from './schema/1'
 
 export interface Migration {
   readonly version: number
@@ -17,7 +18,7 @@ export const Migrations: Migration[] = [
         strict: true
       })
 
-      await migrations.createIndex({name: 1}, {unique: true})
+      await migrations.createIndex({version: 1}, {unique: true})
 
       const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
         strict: true
@@ -93,6 +94,40 @@ export const Migrations: Migration[] = [
       await db.createCollection<v0.DBPageHistoryRevision>(v0.CollectionName.PagesHistory, {
         strict: true
       })
+    }
+  },
+  {
+    version: 1,
+    async migrate(db, locale) {
+      const userRoles = await db.createCollection<v1.DBUserRole>(v1.CollectionName.UserRoles, {
+        strict: true
+      })
+
+      await userRoles.createIndex({name: 1}, {unique: true})
+
+      userRoles.insertMany([
+        {
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          systemRole: true,
+          name: 'Admin',
+          description: 'Administrator Role'
+        },
+        {
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          systemRole: true,
+          name: 'Editor',
+          description: 'Editor Role'
+        },
+        {
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          systemRole: true,
+          name: 'Reader',
+          description: 'Reader Role'
+        }
+      ])
     }
   }
 ]
