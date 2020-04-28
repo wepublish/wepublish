@@ -1,15 +1,10 @@
 const fs = require('fs')
-const { spawn, exec } = require('child_process')
+const {spawn, exec} = require('child_process')
 try {
   require('dotenv').config()
-} catch (e) { }
+} catch (e) {}
 
-let {
-  GITHUB_SHA,
-  GITHUB_REPOSITORY,
-  GITHUB_REF,
-  PROJECT_ID
-} = process.env
+let {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
 
 const ENVIRONMENT_NAME = 'production'
 /*if (GITHUB_REF === 'refs/heads/production' || GITHUB_REF === 'production') {
@@ -31,7 +26,6 @@ const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${do
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
-
 
 main().catch(e => {
   process.stderr.write(e.toString())
@@ -60,7 +54,6 @@ async function applyNamespace() {
   }
   await applyConfig('namespace', namespace)
 }
-
 
 async function applyWebsite() {
   const servicePort = 8000
@@ -188,7 +181,7 @@ async function applyWebsite() {
             {
               name: appName,
               image: image,
-              command: [ "node", "./examples/website/dist/server/index.js" ],
+              command: ['node', './examples/website/dist/server/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -203,7 +196,7 @@ async function applyWebsite() {
                   value: envSwitch(
                     ENVIRONMENT_NAME,
                     'https://demo.wepublish.media',
-                    'https://staging.website.bajour.ch'
+                    'https://demo.wepublish.media'
                   )
                 },
                 {
@@ -268,7 +261,6 @@ async function applyWebsite() {
     }
   }
   await applyConfig(`deployment-${app}`, deployment)
-
 }
 
 async function applyMediaServer() {
@@ -311,7 +303,7 @@ async function applyMediaServer() {
             {
               name: appName,
               image: image,
-              command: [ "node", "./examples/media/dist/index.js" ],
+              command: ['node', './examples/media/dist/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -323,7 +315,7 @@ async function applyMediaServer() {
                 },
                 {
                   name: 'NUM_CLUSTERS',
-                  value: "1"
+                  value: '1'
                 },
                 {
                   name: 'TOKEN',
@@ -499,7 +491,7 @@ async function applyApiServer() {
             {
               name: appName,
               image: image,
-              command: ["node", "./examples/api/dist/index.js" ],
+              command: ['node', './examples/api/dist/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -689,7 +681,7 @@ async function applyEditor() {
             {
               name: appName,
               image: image,
-              command: ["node", "./packages/editor/dist/server/index.js"],
+              command: ['node', './packages/editor/dist/server/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -915,7 +907,7 @@ async function applyConfig(name, obj) {
   const configPath = 'kubernetesConfigs'
   try {
     await execCommand(`mkdir ${configPath}`)
-  } catch (e) { }
+  } catch (e) {}
   const filename = `./${configPath}/${name}.json`
   await writeFile(filename, obj)
 }

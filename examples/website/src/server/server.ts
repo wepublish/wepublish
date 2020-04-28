@@ -85,11 +85,6 @@ export async function asyncMain() {
     next()
   })
 
-  app.use(
-    '/.well-known/assetlinks.json',
-    express.static(path.resolve(__dirname, '../../static/assetlinks.json'))
-  )
-
   app.use('/static', express.static(path.resolve(__dirname, '../../static/')))
   app.use('/assets', express.static(path.resolve(__dirname, '../../assets/')))
 

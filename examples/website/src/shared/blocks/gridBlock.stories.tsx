@@ -18,7 +18,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -28,7 +28,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -38,7 +38,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -54,7 +54,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -64,7 +64,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -74,7 +74,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -84,7 +84,7 @@ storiesOf('Blocks|GridBlock', module)
         lead="Am 20. Oktober wählt die Schweiz ein neues Parlament. Wie präsentiert sich die Ausgangslage in den Kantonen?"
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -97,7 +97,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -107,7 +107,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -116,7 +116,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -130,7 +130,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
@@ -139,7 +139,7 @@ storiesOf('Blocks|GridBlock', module)
         image={mockTeaserImage}
         author={mockAuthor}
         date={new Date()}
-        peer={{id: 'bajour', name: 'Bajour', url: 'https://bajour.ch'}}
+        peer={{id: 'wepublish', name: 'Wepublish', url: 'https://wepublish.ch'}}
         tags={['Article Tag']}
         route={PageRoute.create({})}
       />
