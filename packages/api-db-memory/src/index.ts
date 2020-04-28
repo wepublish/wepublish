@@ -94,6 +94,11 @@ export class MemoryStorageAdapter implements StorageAdapter {
     return {id, email}
   }
 
+  async getUser(email: string): Promise<User | null> {
+    const user = this._users.find(user => user.email === email)
+    return user ? {id: user.id, email: user.email} : null
+  }
+
   async getUserForCredentials(email: string, password: string): Promise<User | null> {
     const user = this._users.find(user => user.email === email && user.password === password)
     return user ? {id: user.id, email: user.email} : null

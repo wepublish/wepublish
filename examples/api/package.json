@@ -8,11 +8,12 @@
   "main": "./dist/",
   "license": "MIT",
   "scripts": {
+    "setup": "shx cp .env.example .env",
     "start": "node ./lib/index.js",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
-    "watch:server": "nodemon --inspect=0.0.0.0:9240 ./dist/index.js",
+    "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9240 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./dist",
@@ -20,16 +21,17 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
+    "@karma.run/media": "^0.2.1",
+    "@karma.run/media-image-sharp": "^0.2.0",
+    "@karma.run/media-storage-local": "^0.1.4",
     "@wepublish/api": "*",
     "@wepublish/api-db-mongodb": "*",
     "@wepublish/api-media-karma": "*",
-    "@karma.run/media": "^0.2.1",
-    "@karma.run/media-storage-local": "^0.1.4",
-    "@karma.run/media-image-sharp": "^0.2.0",
     "graphql": "^14.6.0"
   },
   "devDependencies": {
     "@types/node": "^12.6.8",
+    "dotenv": "^8.2.0",
     "nodemon": "^1.19.1",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",

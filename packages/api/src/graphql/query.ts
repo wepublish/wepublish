@@ -1,6 +1,14 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
-import {Context} from '../context'
+import {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLInt,
+  GraphQLID,
+  GraphQLString
+} from 'graphql'
+import {Context, Oauth2Provider} from '../context'
 import {GraphQLUser, GraphQLSession} from './session'
+import {GraphQLAuthProvider} from './auth'
 
 import {
   GraphQLArticleConnection,
@@ -42,6 +50,7 @@ import {
   GraphQLPublishedPageSort
 } from './page'
 import {PageSort} from '../db/page'
+import {Client, Issuer} from 'openid-client'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -64,6 +73,44 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, args, {authenticate, dbAdapter}) {
         const session = authenticate()
         return dbAdapter.getSessionsForUser(session.user)
+      }
+    },
+
+    authProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      args: {redirectUri: {type: GraphQLString}},
+      async resolve(root, {redirectUri}, {oauth2Providers}) {
+        const clients: {
+          name: string
+          provider: Oauth2Provider
+          client: Client
+        }[] = await Promise.all(
+          oauth2Providers.map(async provider => {
+            const issuer = await Issuer.discover(provider.discoverUrl)
+            return {
+              name: provider.name,
+              provider,
+              client: new issuer.Client({
+                client_id: provider.clientId,
+                client_secret: provider.clientKey,
+                redirect_uris: provider.redirectUri,
+                response_types: ['code']
+              })
+            }
+          })
+        )
+        return clients.map(client => {
+          const url = client.client.authorizationUrl({
+            scope: client.provider.scopes.join(),
+            response_mode: 'query',
+            redirect_uri: `${redirectUri}/${client.name}`,
+            state: 'fakeRandomString'
+          })
+          return {
+            name: client.name,
+            url
+          }
+        })
       }
     },
 

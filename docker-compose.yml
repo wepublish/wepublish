@@ -1,44 +1,5 @@
 version: '3.7'
 services:
-  website:
-    build: .
-    ports:
-      - 5000:8000
-    command: ["node", "./examples/website/dist/server/index.js"]
-    environment:
-      NODE_ENV: production
-      CANONICAL_HOST: http://localhost:5000
-      API_URL: http://api:8000
-      ALLOWED_HOSTS: localhost
-      NUM_WORKERS: 1
-  api:
-    build: .
-    ports:
-      - 4000:8000
-    command: ["node", "./examples/api/dist/index.js"]
-    environment:
-      NODE_ENV: production
-      MEDIA_SERVER_URL: http://localhost:3004
-      MEDIA_SERVER_TOKEN: tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf
-      MONGO_URL: mongodb://mongo:27017/wepublish
-  editor:
-    build: .
-    ports:
-      - 3006:8000
-    command: ["node", "./packages/editor/dist/server/index.js"]
-    environment:
-      NODE_ENV: production
-      ADDRESS: 0.0.0.0
-      API_URL: http://localhost:4000
-  media:
-    build: .
-    ports:
-      - 3004:8000
-    command: ["node", "./examples/media/dist/index.js"]
-    environment:
-      NUM_CLUSTERS: 1
-      STORAGE_PATH: ./.media
-      TOKEN: tPcvBRM2B3uSulyxjXm2ciqH5f1vQy2VDAsf
   mongo:
     image: mongo:4.2.3-bionic
     ports:

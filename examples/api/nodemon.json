@@ -8,10 +8,5 @@
     "./dist/**/*.js"
   ],
   "delay": 250,
-  "ignoreRoot": [".git"],
-  "env": {
-    "MONGO_URL": "mongodb://localhost:27017/wepublish",
-    "MEDIA_SERVER_URL": "http://localhost:3004",
-    "MEDIA_SERVER_TOKEN": "123"
-  }
+  "ignoreRoot": [".git"]
 }
