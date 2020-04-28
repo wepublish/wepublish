@@ -1,9 +1,9 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {LoginTemplate, TextInput, Button, Spacing, Toast} from '@karma.run/ui'
+import {LoginTemplate, TextInput, Button, Spacing, Toast, Link, Box} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
-import {useMutation} from '@apollo/react-hooks'
+import {useMutation, useQuery} from '@apollo/react-hooks'
 
-import {useRouteDispatch, matchRoute, useRoute, IndexRoute} from './route'
+import {useRouteDispatch, matchRoute, useRoute, IndexRoute, LoginRoute} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
 import gql from 'graphql-tag'
@@ -27,6 +27,26 @@ const AuthWithCredentialsMutation = gql`
   }
 `
 
+const GetAuthProviders = gql`
+  query GetAuthProviders($redirectUri: String!) {
+    authProviders(redirectUri: $redirectUri) {
+      name
+      url
+    }
+  }
+`
+
+const AuthWithOAuth2Code = gql`
+  mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
+    createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,13 +60,52 @@ export function Login() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const [authenticate, {loading, error}] = useMutation(AuthWithCredentialsMutation)
+  const [authenticateWithOAuth2Code, {loading: loadingOAuth2, error: errorOAuth2}] = useMutation(
+    AuthWithOAuth2Code
+  )
+
+  const {data: providerData} = useQuery(GetAuthProviders, {
+    variables: {
+      redirectUri: 'http://localhost:3000/login'
+    }
+  })
+
+  useEffect(() => {
+    if (current !== null && current.params !== null && current.query && current.query.code) {
+      //@ts-ignore
+      const provider = current.params.provider
+      const {code} = current!.query
+      authenticateWithOAuth2Code({
+        variables: {
+          redirectUri: `http://localhost:3000/login/${provider}`,
+          name: provider,
+          code
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail}
+          } = response.data.createSessionWithOAuth2Code
+
+          authenticateUser(sessionToken, responseEmail)
+        })
+        .catch(() => {
+          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+        })
+    }
+  }, [current])
 
   useEffect(() => {
     if (error) {
       setErrorToastOpen(true)
       setErrorMessage(error.message)
     }
-  }, [error])
+    if (errorOAuth2) {
+      setErrorToastOpen(true)
+      setErrorMessage(errorOAuth2.message)
+    }
+  }, [error, errorOAuth2])
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -58,6 +117,10 @@ export function Login() {
       user: {email: responseEmail}
     } = response.data.createSession
 
+    authenticateUser(sessionToken, responseEmail)
+  }
+
+  function authenticateUser(sessionToken: string, responseEmail: string) {
     localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
 
     authDispatch({
@@ -73,31 +136,61 @@ export function Login() {
         return
       }
     }
-
     routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
   }
 
   return (
     <>
       <LoginTemplate backgroundChildren={<Background />}>
-        <LoginForm onSubmit={login}>
-          <TextInput
-            label="Email"
-            value={email}
-            autoComplete="username"
-            onChange={event => setEmail(event.target.value)}
-            marginBottom={Spacing.Small}
-          />
-          <TextInput
-            type="password"
-            label="Password"
-            value={password}
-            autoComplete="current-password"
-            onChange={event => setPassword(event.target.value)}
-            marginBottom={Spacing.Small}
-          />
-          <Button color="primary" label="Login" disabled={loading} />
-        </LoginForm>
+        {!loadingOAuth2 && (
+          <>
+            <LoginForm onSubmit={login}>
+              <TextInput
+                label="Email"
+                value={email}
+                autoComplete="username"
+                onChange={event => setEmail(event.target.value)}
+                marginBottom={Spacing.Small}
+              />
+              <TextInput
+                type="password"
+                label="Password"
+                value={password}
+                autoComplete="current-password"
+                onChange={event => setPassword(event.target.value)}
+                marginBottom={Spacing.Small}
+              />
+              <Button color="primary" label="Login" disabled={loading} />
+            </LoginForm>
+            {!!providerData && (
+              <>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  marginTop={Spacing.Small}
+                  alignItems="center">
+                  <p>Or Login with:</p>
+                  {providerData.authProviders.map(
+                    (provider: {url: string; name: string}, index: number) => {
+                      return (
+                        <Link href={provider.url} key={index}>
+                          <Box margin={Spacing.Tiny}>
+                            <Button label={provider.name} variant="outlined" color="primary" />
+                          </Box>
+                        </Link>
+                      )
+                    }
+                  )}
+                </Box>
+              </>
+            )}
+          </>
+        )}
+        {loadingOAuth2 && (
+          <div>
+            <p>Authenticating against OAuth2</p>
+          </div>
+        )}
       </LoginTemplate>
 
       <Toast

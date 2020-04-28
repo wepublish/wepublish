@@ -7,7 +7,8 @@ import {
   RouteActionType,
   fullPathForRoute,
   zeroOrMore,
-  required
+  required,
+  optional
 } from '@karma.run/react'
 
 import {LinkButton, NavigationLinkButton, MenuLinkButton} from '@karma.run/ui'
@@ -41,7 +42,7 @@ export enum RouteType {
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
-export const LoginRoute = route(RouteType.Login, routePath`/login`)
+export const LoginRoute = route(RouteType.Login, routePath`/login/${optional('provider')}`)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
 
 export const ArticleListRoute = route(RouteType.ArticleList, routePath`/articles`)

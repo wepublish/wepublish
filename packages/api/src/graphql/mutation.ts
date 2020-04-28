@@ -9,7 +9,12 @@ import {
 
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
-import {InvalidCredentialsError} from '../error'
+import {
+  InvalidCredentialsError,
+  OAuth2ProviderNotFoundError,
+  InvalidOAuth2TokenError,
+  UserNotFoundError
+} from '../error'
 import {GraphQLArticleInput, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -17,6 +22,7 @@ import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {GraphQLBlockInput} from './blocks'
+import {Issuer} from 'openid-client'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -53,6 +59,38 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const user = await dbAdapter.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
         return await dbAdapter.createSessionForUser(user)
+      }
+    },
+
+    createSessionWithOAuth2Code: {
+      type: GraphQLNonNull(GraphQLSessionWithToken),
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        code: {type: GraphQLNonNull(GraphQLString)},
+        redirectUri: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {name, code, redirectUri}, {dbAdapter, oauth2Providers}) {
+        try {
+          const provider = oauth2Providers.find(provider => provider.name === name)
+          if (!provider) throw new OAuth2ProviderNotFoundError()
+          const issuer = await Issuer.discover(provider.discoverUrl)
+          const client = new issuer.Client({
+            client_id: provider.clientId,
+            client_secret: provider.clientKey,
+            redirect_uris: provider.redirectUri,
+            response_types: ['code']
+          })
+          const token = await client.callback(redirectUri, {code})
+          if (!token.access_token) throw new InvalidOAuth2TokenError()
+          const userInfo = await client.userinfo(token.access_token)
+          if (!userInfo.email) throw new Error('UserInfo did not return an email')
+          const user = await dbAdapter.getUser(userInfo.email)
+          if (!user) throw new UserNotFoundError()
+          return await dbAdapter.createSessionForUser(user)
+        } catch (error) {
+          console.log('Error', error)
+          return
+        }
       }
     },
 
