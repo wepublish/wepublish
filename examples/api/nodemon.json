@@ -8,6 +8,5 @@
     "./dist/**/*.js"
   ],
   "delay": 250,
-  "ignoreRoot": [".git"],
-  "env": {}
+  "ignoreRoot": [".git"]
 }

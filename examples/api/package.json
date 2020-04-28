@@ -8,6 +8,7 @@
   "main": "./dist/",
   "license": "MIT",
   "scripts": {
+    "setup": "shx cp .env.example .env",
     "start": "node ./lib/index.js",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
@@ -15,7 +16,7 @@
     "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9240 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
-    "clean": "shx rm -rf ./LICENSE ./dist",
+    "clean": "shx rm -rf ./LICENSE ./dist ./.media",
     "prepare": "run-s clean build",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },

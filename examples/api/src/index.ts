@@ -63,17 +63,17 @@ async function asyncMain() {
     {
       name: 'google',
       discoverUrl: 'https://accounts.google.com',
-      clientId: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com',
-      clientKey: 't267ZLqkV9dacrkPQp_pF-G2',
-      redirectUri: ['http://localhost:4000/auth/google'],
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID ?? '',
+      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY ?? '',
+      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL ?? ''],
       scopes: ['openid profile email']
     },
     {
       name: 'wepublish',
       discoverUrl: 'http://localhost:4100/.well-known/openid-configuration',
-      clientId: 'wepublish_demo_wepublish_media',
-      clientKey: 'ThisIsASuperSecret',
-      redirectUri: ['http://localhost:4000/auth/wepublish'],
+      clientId: process.env.OAUTH_WEPUBLISH_CLIENT_ID ?? '',
+      clientKey: process.env.OAUTH_WEPUBLISH_CLIENT_KEY ?? '',
+      redirectUri: [process.env.OAUTH_WEPUBLISH_REDIRECT_URL ?? ''],
       scopes: ['openid profile email']
     }
   ]
