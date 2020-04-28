@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - f/WEP-65-demo-instance
+      - master
 
 jobs:
   release:
