@@ -1,0 +1,44 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: wepublish-269314
+      GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build docker
+        run: |
+          # https://cloud.google.com/container-registry/docs/advanced-authentication
+          printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
+          docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
+          docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+      - name: Create manifest
+        env:
+          TEST: 'test'
+        run: |
+          node ./config/create-gke-manifest.js
+          ls -al ./kubernetesConfigs
+      - uses: dudagroup/github-actions@master
+        with:
+          version: '275.0.0'
+          service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
+      - name: Prepare Gcloud and Kubernetes
+        run: |
+          gcloud components install kubectl
+          gcloud --quiet config set project tsri-246213
+          gcloud --quiet config set compute/zone europe-west6-c
+          gcloud --quiet container clusters get-credentials tsri-django
+      - name: Deploy
+        run: kubectl apply -f ./kubernetesConfigs

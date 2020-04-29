@@ -17,8 +17,28 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach to CMS Example",
+      "name": "Attach to Media Example",
       "port": 9241,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "${workspaceFolder}",
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to OAuth2 Server",
+      "port": 9231,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "${workspaceFolder}",
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Editor Server",
+      "port": 9230,
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "${workspaceFolder}",

@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "outDir": "../../dist/server",
+    "types": ["@types/node"],
+    "lib": ["es2017"]
+  },
+  "references": [{"path": "../shared"}]
+}
