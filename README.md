@@ -29,7 +29,7 @@
 If you're setting up the project for the first time:
 
 ```
-yarn install && yarn build
+yarn install && yarn setup && yarn build
 ```
 
 After that you can start docker-compose and watch all packages via:

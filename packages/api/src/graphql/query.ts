@@ -1,8 +1,19 @@
-import {GraphQLObjectType, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLID} from 'graphql'
+import {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLInt,
+  GraphQLID,
+  GraphQLString
+} from 'graphql'
+
+import {Client, Issuer} from 'openid-client'
 import {UserInputError} from 'apollo-server-express'
 
-import {Context} from '../context'
+import {Context, Oauth2Provider} from '../context'
+
 import {GraphQLUser, GraphQLSession} from './session'
+import {GraphQLAuthProvider} from './auth'
 
 import {
   GraphQLArticleConnection,
@@ -45,6 +56,7 @@ import {
 } from './page'
 
 import {PageSort} from '../db/page'
+
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerInfo} from './peer'
 
@@ -90,6 +102,44 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(root, args, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return dbAdapter.getUserSessions(session.user)
+      }
+    },
+
+    authProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      args: {redirectUri: {type: GraphQLString}},
+      async resolve(root, {redirectUri}, {oauth2Providers}) {
+        const clients: {
+          name: string
+          provider: Oauth2Provider
+          client: Client
+        }[] = await Promise.all(
+          oauth2Providers.map(async provider => {
+            const issuer = await Issuer.discover(provider.discoverUrl)
+            return {
+              name: provider.name,
+              provider,
+              client: new issuer.Client({
+                client_id: provider.clientId,
+                client_secret: provider.clientKey,
+                redirect_uris: provider.redirectUri,
+                response_types: ['code']
+              })
+            }
+          })
+        )
+        return clients.map(client => {
+          const url = client.client.authorizationUrl({
+            scope: client.provider.scopes.join(),
+            response_mode: 'query',
+            redirect_uri: `${redirectUri}/${client.name}`,
+            state: 'fakeRandomString'
+          })
+          return {
+            name: client.name,
+            url
+          }
+        })
       }
     },
 

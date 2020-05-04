@@ -1233,6 +1233,22 @@ export class KarmaStorageAdapter implements StorageAdapter {
     return {id, email}
   }
 
+  async getUser(inputEmail: string): Promise<User | null> {
+    const session = await this.getKarmaSession()
+
+    try {
+      const {id, email} = await session.do(
+        all(tag(ModelTag.User))
+          .filterList((index, value) => value.field('email').equal(string(inputEmail)))
+          .first()
+      )
+      return {id, email}
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }
+
   async getUserForCredentials(inputEmail: string, inputPassword: string): Promise<User | null> {
     const session = await this.getKarmaSession()
 

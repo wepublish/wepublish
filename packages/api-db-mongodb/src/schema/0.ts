@@ -49,7 +49,7 @@ export interface DBSettings {
 export interface DBPeer {
   _id: any
 
-  apiURL: string
+  hostURL: string
   token: string
   state: PeerState
 }

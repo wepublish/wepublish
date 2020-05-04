@@ -1,0 +1,10 @@
+{
+  // This file is only needed for VSCode, worker will be built by webpack/babel.
+  "extends": "../../tsconfig.json",
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "types": [],
+    "lib": ["webworker", "es2017"]
+  },
+  "references": [{"path": "../common"}]
+}
