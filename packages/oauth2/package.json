@@ -14,7 +14,7 @@
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9231 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/server --watch",
-    "copy-assets": "shx mkdir -p ./dist && shx cp -R ./src/server/views ./dist/server",
+    "copy-assets": "shx mkdir -p ./dist/server && shx cp -R ./src/server/views ./dist/server/views",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist",
     "start": "node ./dist/server/index.js",

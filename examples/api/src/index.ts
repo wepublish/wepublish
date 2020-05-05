@@ -62,7 +62,7 @@ async function asyncMain() {
   const oauth2Providers: Oauth2Provider[] = [
     {
       name: 'google',
-      discoverUrl: 'https://accounts.google.com',
+      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL ?? '',
       clientId: process.env.OAUTH_GOOGLE_CLIENT_ID ?? '',
       clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY ?? '',
       redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL ?? ''],

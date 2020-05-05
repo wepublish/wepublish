@@ -24,6 +24,7 @@ const domainSan = envSwitch(
 const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `staging.media.${domain}`)
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${domain}`)
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
+const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `staging.login.${domain}`)
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
@@ -38,6 +39,7 @@ async function main() {
   await applyMediaServer()
   await applyApiServer()
   await applyEditor()
+  await applyOAuth2()
   await applyMongo()
 }
 
@@ -541,6 +543,67 @@ async function applyApiServer() {
                       key: 'media_server_token'
                     }
                   }
+                },
+                {
+                  name: 'OAUTH_GOOGLE_DISCOVERY_URL',
+                  value: 'https://accounts.google.com'
+                },
+                {
+                  name: 'OAUTH_GOOGLE_CLIENT_ID',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_google_client_id'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_GOOGLE_CLIENT_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_google_client_key'
+                    }
+                  }
+                },{
+                  name: 'OAUTH_GOOGLE_REDIRECT_URL',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_google_redirect_url'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
+                  value: 'https://login.demo.wepublish.media/.well-known/openid-configuration'
+                },
+                {
+                  name: 'OAUTH_WEPUBLISH_CLIENT_ID',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_wepublish_client_id'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_WEPUBLISH_CLIENT_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_wepublish_client_key'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_WEPUBLISH_REDIRECT_URL',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'oauth_wepublish_redirect_url'
+                    }
+                  }
                 }
               ],
               ports: [
@@ -782,6 +845,216 @@ async function applyEditor() {
       tls: [
         {
           hosts: [domainEditor],
+          secretName: `${appName}-tls`
+        }
+      ]
+    }
+  }
+  await applyConfig(`ingress-${app}`, ingress)
+}
+
+async function applyOAuth2() {
+  const app = 'oauth2'
+  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appPort = 8000
+
+  const deployment = {
+    apiVersion: 'extensions/v1beta1',
+    kind: 'Deployment',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE,
+      labels: {
+        app: app,
+        release: ENVIRONMENT_NAME
+      }
+    },
+    spec: {
+      replicas: 1,
+      selector: {
+        matchLabels: {
+          app: app,
+          release: ENVIRONMENT_NAME
+        }
+      },
+      strategy: {
+        rollingUpdate: {
+          maxSurge: 1,
+          maxUnavailable: 0
+        },
+        type: 'RollingUpdate'
+      },
+      template: {
+        metadata: {
+          name: appName,
+          labels: {
+            app: app,
+            release: ENVIRONMENT_NAME
+          }
+        },
+        spec: {
+          containers: [
+            {
+              name: appName,
+              image: image,
+              command: ['node', './packages/oauth2/dist/server/index.js'],
+              env: [
+                {
+                  name: 'NODE_ENV',
+                  value: `production`
+                },
+                {
+                  name: 'MONGO_URL',
+                  value: `mongodb://mongo-production:27017/wepublish`
+                },
+                {
+                  name: 'OAUTH_MONGODB_URI',
+                  value: `mongodb://mongo-production:27017/wepublish-oauth2`
+                },
+                {
+                  name: 'OAUTH_CLIENT_ID',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'oauth_client_id'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_CLIENT_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'oauth_client_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_GRANT_TYPES',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'oauth_grant_types'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_REDIRECT_URIS',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'oauth_redirect_uris'
+                    }
+                  }
+                },
+                {
+                  name: 'OAUTH_COOKIE_KEYS',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'oauth_cookie_keys'
+                    }
+                  }
+                },
+                {
+                  name: 'JWKS_KEYS',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-oauth-secrets',
+                      key: 'jwks_keys'
+                    }
+                  }
+                }],
+              ports: [
+                {
+                  containerPort: appPort,
+                  protocol: 'TCP'
+                }
+              ],
+              imagePullPolicy: 'IfNotPresent',
+              resources: {
+                requests: {
+                  cpu: '0m',
+                  memory: '128Mi'
+                }
+              },
+              terminationMessagePath: '/dev/termination-log',
+              terminationMessagePolicy: 'File'
+            }
+          ],
+          dnsPolicy: 'ClusterFirst',
+          restartPolicy: 'Always',
+          schedulerName: 'default-scheduler',
+          terminationGracePeriodSeconds: 30
+        }
+      }
+    }
+  }
+  await applyConfig(`deployment-${app}`, deployment)
+
+  const service = {
+    apiVersion: 'v1',
+    kind: 'Service',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE
+    },
+    spec: {
+      ports: [
+        {
+          name: 'http',
+          port: appPort,
+          protocol: 'TCP',
+          targetPort: appPort
+        }
+      ],
+      selector: {
+        app: app,
+        release: ENVIRONMENT_NAME
+      },
+      type: 'ClusterIP'
+    }
+  }
+  await applyConfig(`service-${app}`, service)
+
+  let ingress = {
+    apiVersion: 'extensions/v1beta1',
+    kind: 'Ingress',
+    metadata: {
+      name: appName,
+      namespace: NAMESPACE,
+      labels: {
+        app: app,
+        release: ENVIRONMENT_NAME
+      },
+      annotations: {
+        'kubernetes.io/ingress.class': 'nginx',
+        'nginx.ingress.kubernetes.io/ssl-redirect': 'true',
+        'nginx.ingress.kubernetes.io/proxy-body-size': '20m',
+        'nginx.ingress.kubernetes.io/proxy-read-timeout': '30',
+        'cert-manager.io/cluster-issuer': 'letsencrypt-production'
+      }
+    },
+    spec: {
+      rules: [
+        {
+          host: domainOauth,
+          http: {
+            paths: [
+              {
+                backend: {
+                  serviceName: appName,
+                  servicePort: appPort
+                },
+                path: '/'
+              }
+            ]
+          }
+        }
+      ],
+      tls: [
+        {
+          hosts: [domainOauth],
           secretName: `${appName}-tls`
         }
       ]
