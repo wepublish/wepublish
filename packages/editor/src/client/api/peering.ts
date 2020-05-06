@@ -3,9 +3,18 @@ import {QueryHookOptions, useQuery, useMutation, MutationHookOptions} from '@apo
 
 import {ImageRefData, ImageRefFragment} from './image'
 
+export enum PeerState {
+  Accepted = 'accepted',
+  Declined = 'declined',
+  Pending = 'pending',
+  Requested = 'requested'
+}
+
 export interface Peer {
+  id: string
+  name: string
   hostURL: string
-  info: PeerInfo
+  info?: PeerInfo
 }
 
 export interface PeerInfo {
@@ -44,6 +53,8 @@ export function usePeerInfoQuery(opts?: QueryHookOptions<PeerInfoData>) {
 const PeerListQuery = gql`
   {
     peers {
+      id
+      name
       hostURL
       info {
         name
@@ -103,4 +114,37 @@ export function useUpdatePeerInfoMutation(
   opts?: MutationHookOptions<UpdatePeerInfoData, UpdatePeerInfoVariables>
 ) {
   return useMutation<UpdatePeerInfoData, UpdatePeerInfoVariables>(UpdatePeerInfoMutation, opts)
+}
+
+export interface PeerRequestInput {
+  hostURL: string
+}
+
+const CreateOutgoingPeerRequestMutation = gql`
+  mutation CreateOutgoingPeerRequest($input: PeerRequestInput!) {
+    createOutgoingPeerRequest(input: $input) {
+      name
+      hostURL
+      themeColor
+      logo {
+        ...ImageRefFragment
+      }
+    }
+  }
+
+  ${ImageRefFragment}
+`
+
+export interface CreateOutgoingPeerRequestInfoData {
+  updateSettings: PeerInfo
+}
+
+export interface CreateOutgoingPeerRequestVariables {
+  input: PeerRequestInput
+}
+
+export function useCreateOutgoingPeerRequestMutation(
+  opts?: MutationHookOptions<CreateOutgoingPeerRequestInfoData, CreateOutgoingPeerRequestVariables>
+) {
+  return useMutation(CreateOutgoingPeerRequestMutation, opts)
 }

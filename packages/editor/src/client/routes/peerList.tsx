@@ -106,15 +106,21 @@ export function PeerList() {
       {isPeerListLoading
         ? null
         : peerListData?.peers.map(peer => (
-            <Box marginBottom={Spacing.Small}>
+            <Box key={peer.id} marginBottom={Spacing.Small}>
               <Box display="flex" alignItems="center" marginBottom={Spacing.ExtraSmall}>
                 <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={50} height={50}>
-                  <PlaceholderImage width="100%" height="100%" />
+                  {peer.info?.logo ? (
+                    <Image src={peer.info.logo.squareURL} width="100%" height="100%" />
+                  ) : (
+                    <PlaceholderImage width="100%" height="100%" />
+                  )}
                 </Avatar>
                 <Box width="100%">
-                  <Typography variant="body2">Name</Typography>
+                  <Typography variant="body2" color={peer.info ? 'dark' : 'alertDark'}>
+                    {peer.info?.name ?? peer.name}
+                  </Typography>
                   <Typography variant="subtitle2" color="grayDark">
-                    http://localhost:3000
+                    {peer.hostURL}
                   </Typography>
                 </Box>
                 <RouteLinkIconButton icon={MaterialIconSettings} />

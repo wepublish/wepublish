@@ -1,8 +1,6 @@
-// import {Article, GetArticlesArgs} from './article'
-// import {ConnectionResult} from './common'
-
 export interface PeerInfo {
   name: string
+  logo?: any
   logoID?: string
   themeColor: string
 }
@@ -10,72 +8,30 @@ export interface PeerInfo {
 export type PeerInfoInput = PeerInfo
 
 export interface BasePeer {
-  hostURL: string
-}
-
-export interface PeerData {
   name: string
-  logoID?: string
-  themeColor: string
-}
-
-export enum PeerState {
-  Accepted = 'accepted',
-  Declined = 'declined',
-  Pending = 'pending',
-  Requested = 'requested'
+  hostURL: string
 }
 
 export interface Peer extends BasePeer {
   id: string
   token: string
-  state: PeerState
 }
 
-export interface RequestedPeer extends BasePeer {
-  id: string
+export type OptionalPeer = Peer | null
+
+export interface CreatePeerInput extends BasePeer {
   token: string
-  state: PeerState.Requested
 }
 
-export interface PendingPeer extends BasePeer {
-  id: string
-  token: string
-  state: PeerState.Pending
+export interface UpdatePeerInput extends BasePeer {
+  token?: string
 }
-
-export interface PeerWithData extends Peer, PeerData {}
-
-export interface PeerInput extends BasePeer {}
-
-export type OptionalPeer = Peer | undefined
-export type OptionalPeerWithData = PeerWithData | undefined
 
 export interface DBPeerAdapter {
   getPeerInfo(): Promise<PeerInfo>
   updatePeerInfo(input: PeerInfoInput): Promise<PeerInfo>
-
-  createIncomingPeerRequest(url: string): Promise<PendingPeer>
-  createOutgoingPeerRequest(url: string, token: string): Promise<RequestedPeer>
-
+  createPeer(input: CreatePeerInput): Promise<Peer>
+  updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
   getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]>
   getPeers(): Promise<Peer[]>
-
-  // acceptIncomingPeerRequest(id: string): Promise<IncomingPeerRequest>
-  // declineIncomingPeerRequest(id: string): Promise<IncomingPeerRequest>
-  // getIncomingPeerRequests(): Promise<IncomingPeerRequest[]>
-  // createOutgoingPeerRequest(input: OutgoingPeerRequestInput): Promise<OutgoingPeerRequest>
-  // deleteOutgoingPeerRequest(id: string): Promise<OutgoingPeerRequest>
-  // getOutgoingPeerRequests(): Promise<OutgoingPeerRequest[]>
-  // ---
-  // acceptPendingPeer(id: string): Promise<Peer>
-  // declinePendingPeer(id: string): Promise<Peer>
-  // updatePeer(id: string, input: PeerInput): Promise<Peer>
-  // updatePeerState(id: string, state: PeerState): Promise<Peer>
-  // deletePeer(id: string): Promise<boolean>
-  // getPeerByID(id: string): Promise<Peer>
-  // getPeerByToken(token: string): Promise<Peer>
-  // getPeers(): Promise<Peer[]>
-  // getPeerArticles(id: string, args: GetArticlesArgs): Promise<ConnectionResult<Article>>
-  // connectPeerArticle(id: string, articleID: string): Promise<Article>
 }

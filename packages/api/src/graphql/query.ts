@@ -59,6 +59,7 @@ import {PageSort} from '../db/page'
 
 import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerInfo} from './peer'
+import {GraphQLToken} from './token'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -70,7 +71,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPeerInfo),
       async resolve(root, args, {authenticateUser, hostURL, dbAdapter}) {
         authenticateUser()
-        return {...(await dbAdapter.getPeerInfo()), hostURL}
+        return {...(await dbAdapter.peer.getPeerInfo()), hostURL}
       }
     },
 
@@ -78,7 +79,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
       resolve(root, {id}, {authenticateUser, dbAdapter, loaders}) {
         authenticateUser()
-        return dbAdapter.getPeers()
+        return dbAdapter.peer.getPeers()
       }
     },
 
@@ -101,7 +102,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
       resolve(root, args, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
-        return dbAdapter.getUserSessions(session.user)
+        return dbAdapter.session.getUserSessions(session.user)
       }
     },
 
@@ -140,6 +141,17 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             url
           }
         })
+      }
+    },
+
+    // Token
+    // =====
+
+    tokens: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLToken))),
+      resolve(root, args, {authenticateUser, dbAdapter}) {
+        authenticateUser()
+        return dbAdapter.token.getTokens()
       }
     },
 
@@ -195,7 +207,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         authenticateUser()
 
-        return dbAdapter.getAuthors({
+        return dbAdapter.author.getAuthors({
           filter,
           sort,
           order,
@@ -235,7 +247,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         authenticateUser()
 
-        return dbAdapter.getImages({
+        return dbAdapter.image.getImages({
           filter,
           sort,
           order,
@@ -275,7 +287,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         authenticateUser()
 
-        return dbAdapter.getArticles({
+        return dbAdapter.article.getArticles({
           filter,
           sort,
           order,
@@ -315,7 +327,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       ) {
         authenticateUser()
 
-        return dbAdapter.getPages({
+        return dbAdapter.page.getPages({
           filter,
           sort,
           order,
@@ -336,7 +348,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peerInfo: {
       type: GraphQLNonNull(GraphQLPeerInfo),
       async resolve(root, args, {hostURL, dbAdapter}) {
-        return {...(await dbAdapter.getPeerInfo()), hostURL}
+        return {...(await dbAdapter.peer.getPeerInfo()), hostURL}
       }
     },
 
@@ -386,7 +398,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         {filter, sort, order, after, before, first, last},
         {authenticateUser, dbAdapter}
       ) {
-        return dbAdapter.getAuthors({
+        return dbAdapter.author.getAuthors({
           filter,
           sort,
           order,
@@ -419,7 +431,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.getPublishedArticles({
+        return dbAdapter.article.getPublishedArticles({
           filter,
           sort,
           order,
@@ -456,7 +468,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
-        return dbAdapter.getPublishedPages({
+        return dbAdapter.page.getPublishedPages({
           filter,
           sort,
           order,

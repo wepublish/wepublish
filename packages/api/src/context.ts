@@ -77,7 +77,7 @@ export async function contextFromRequest(
   {hostURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
-  const session = token ? await dbAdapter.getSessionByToken(token) : null
+  const session = token ? await dbAdapter.session.getSessionByToken(token) : null
   const isSessionValid = session
     ? session.type === SessionType.User
       ? session.expiresAt > new Date()
@@ -88,22 +88,22 @@ export async function contextFromRequest(
     hostURL,
     session: isSessionValid ? session : null,
     loaders: {
-      navigationByID: new DataLoader(ids => dbAdapter.getNavigationsByID(ids)),
-      navigationByKey: new DataLoader(keys => dbAdapter.getNavigationsByKey(keys)),
+      navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
+      navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
 
-      authorsByID: new DataLoader(ids => dbAdapter.getAuthorsByID(ids)),
-      authorsBySlug: new DataLoader(slugs => dbAdapter.getAuthorsBySlug(slugs)),
+      authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
+      authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
 
-      images: new DataLoader(ids => dbAdapter.getImagesByID(ids)),
+      images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-      articles: new DataLoader(ids => dbAdapter.getArticlesByID(ids)),
-      publicArticles: new DataLoader(ids => dbAdapter.getPublishedArticlesByID(ids)),
+      articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
+      publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
 
-      pages: new DataLoader(ids => dbAdapter.getPagesByID(ids)),
-      publicPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
-      publicPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs)),
+      pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
+      publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
+      publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
-      peer: new DataLoader(async ids => dbAdapter.getPeersByID(ids))
+      peer: new DataLoader(async ids => dbAdapter.peer.getPeersByID(ids))
     },
 
     dbAdapter,

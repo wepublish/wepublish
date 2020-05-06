@@ -2,7 +2,6 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLString,
-  GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLID,
   print
@@ -17,25 +16,17 @@ import {
 
 import fetch from 'cross-fetch'
 
-import {Peer, PeerState, PeerInfo} from '../db/peer'
+import {Peer, PeerInfo} from '../db/peer'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 
-export const GraphQLPeerState = new GraphQLEnumType({
-  name: 'PeerState',
-  values: {
-    ACCEPTED: {value: PeerState.Accepted},
-    DECLINED: {value: PeerState.Declined},
-    PENDING: {value: PeerState.Pending},
-    REQUESTED: {value: PeerState.Requested}
-  }
-})
-
-export const GraphQLPeerRequestInput = new GraphQLInputObjectType({
-  name: 'PeerRequestInput',
+export const GraphQLPeerInfoInput = new GraphQLInputObjectType({
+  name: 'PeerInfoInput',
   fields: {
-    apiURL: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: GraphQLNonNull(GraphQLString)},
+    logoID: {type: GraphQLID},
+    themeColor: {type: GraphQLNonNull(GraphQLColor)}
   }
 })
 
@@ -47,7 +38,7 @@ export const GraphQLPeerInfo = new GraphQLObjectType<PeerInfo, Context>({
     logo: {
       type: GraphQLImage,
       resolve(setting, args, {loaders}) {
-        return setting.logoID && loaders.images.load(setting.logoID)
+        return setting.logo ? setting.logo : setting.logoID && loaders.images.load(setting.logoID)
       }
     },
 
@@ -56,12 +47,21 @@ export const GraphQLPeerInfo = new GraphQLObjectType<PeerInfo, Context>({
   }
 })
 
-export const GraphQLPeerInfoInput = new GraphQLInputObjectType({
-  name: 'PeerInfoInput',
+export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
+  name: 'CreatePeerInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLNonNull(GraphQLColor)}
+    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    token: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
+  name: 'UpdatePeerInput',
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    token: {type: GraphQLString}
   }
 })
 
@@ -69,19 +69,12 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-
+    name: {type: GraphQLNonNull(GraphQLString)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
-    state: {type: GraphQLNonNull(GraphQLPeerState)},
-
     info: {
       type: GraphQLPeerInfo,
       async resolve(root, args, context, info) {
-        const fetcher: Fetcher = async ({
-          query: queryDocument,
-          variables,
-          operationName,
-          context
-        }) => {
+        const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
           const query = print(queryDocument)
 
           const fetchResult = await fetch(root.hostURL, {
@@ -104,7 +97,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
         return delegateToSchema({
           schema: schema,
           operation: 'query',
-          fieldName: 'settings',
+          fieldName: 'peerInfo',
           args: {},
           info
         })

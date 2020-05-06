@@ -6,13 +6,16 @@ import {DBImageAdapter} from './image'
 import {DBArticleAdapter} from './article'
 import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
+import {DBTokenAdapter} from './token'
 
-export interface DBAdapter
-  extends DBPeerAdapter,
-    DBUserAdapter,
-    DBSessionAdapter,
-    DBNavigationAdapter,
-    DBAuthorAdapter,
-    DBImageAdapter,
-    DBArticleAdapter,
-    DBPageAdapter {}
+export interface DBAdapter {
+  readonly peer: DBPeerAdapter
+  readonly user: DBUserAdapter
+  readonly session: DBSessionAdapter
+  readonly token: DBTokenAdapter
+  readonly navigation: DBNavigationAdapter
+  readonly author: DBAuthorAdapter
+  readonly image: DBImageAdapter
+  readonly article: DBArticleAdapter
+  readonly page: DBPageAdapter
+}

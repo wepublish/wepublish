@@ -18,15 +18,9 @@ import {
   DescriptionListItem
 } from '@karma.run/ui'
 
-import {
-  MaterialIconClose,
-  MaterialIconSaveOutlined,
-  MaterialIconAdd,
-  MaterialIconAddCircle,
-  MaterialIconAddCircleOutlineOutlined
-} from '@karma.run/icons'
+import {MaterialIconClose, MaterialIconAddCircleOutlineOutlined} from '@karma.run/icons'
 
-import {useUpdatePeerInfoMutation, PeerInfoData, PeerInfoQuery} from '../api/peering'
+import {PeerInfoData, PeerInfoQuery, useCreateOutgoingPeerRequestMutation} from '../api/peering'
 
 export interface ImageEditPanelProps {
   onClose?(): void
@@ -46,15 +40,19 @@ export function PeerAddPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerInfoMutation()
-  const isDisabled = isLoading || isSaving || !isValidURL
+  const [
+    createOutgoingPeerRequest,
+    {loading: isCreating, error: createError}
+  ] = useCreateOutgoingPeerRequestMutation()
+
+  const isDisabled = isLoading || isCreating || !isValidURL
 
   useEffect(() => {
-    if (saveError) {
+    if (createError) {
       setErrorToastOpen(true)
-      setErrorMessage(saveError.message)
+      setErrorMessage(createError.message)
     }
-  }, [saveError])
+  }, [createError])
 
   useEffect(() => {
     if (urlString == '') return

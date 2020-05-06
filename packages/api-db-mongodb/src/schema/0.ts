@@ -1,19 +1,15 @@
-import {
-  ArticleBlock,
-  FocalPoint,
-  NavigationLink,
-  PageBlock,
-  RichTextNode,
-  PeerState
-} from '@wepublish/api'
+import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
 
-  Settings = 'settings',
+  PeerInfo = 'settings',
   Peers = 'peers',
   Users = 'users',
+
   Sessions = 'sessions',
+  Tokens = 'tokens',
+
   Navigations = 'navigations',
   Authors = 'authors',
   Images = 'images',
@@ -32,26 +28,27 @@ export interface DBMigration {
   createdAt: Date
 }
 
-export interface DBSettings {
+export interface DBPeerInfo {
   _id: any
 
   name: string
-
   logoID?: string
-  conanicalURL: string
-  apiURL: string
   themeColor: string
-
-  defaultImageID?: string
-  defaultDescription?: string
 }
 
 export interface DBPeer {
   _id: any
 
+  name: string
   hostURL: string
   token: string
-  state: PeerState
+}
+
+export interface DBToken {
+  _id: any
+
+  name: string
+  token: string
 }
 
 export interface DBUser {

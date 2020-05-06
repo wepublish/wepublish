@@ -1,5 +1,6 @@
 import fetch from 'cross-fetch'
 import gql from 'graphql-tag'
+import {print} from 'graphql'
 
 const CreateIncomingPeerRequestMutation = gql`
   mutation CreateIncomingPeerRequest($input: PeerRequestInput!) {
@@ -12,7 +13,7 @@ const CreateIncomingPeerRequestMutation = gql`
 export async function createOutgoingPeerRequestToken(
   url: string,
   hostURL: string
-): Promise<string> {
+): Promise<string | undefined> {
   const response = await fetch(`${url}/admin`, {
     method: 'POST',
     headers: {
@@ -20,14 +21,14 @@ export async function createOutgoingPeerRequestToken(
       Accept: 'application/json'
     },
     body: JSON.stringify({
-      query: CreateIncomingPeerRequestMutation.loc!.source.body,
+      query: print(CreateIncomingPeerRequestMutation),
       variables: {
         input: {
-          apiURL: hostURL
+          hostURL: hostURL
         }
       }
     })
   }).then(r => r.json())
 
-  return response.data.createIncomingPeerRequest.token
+  return response?.data?.createIncomingPeerRequest?.token
 }
