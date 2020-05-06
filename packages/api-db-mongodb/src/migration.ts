@@ -2,6 +2,7 @@ import {Db} from 'mongodb'
 
 import * as v0 from './schema/0'
 import * as v1 from './schema/1'
+import {AllPermissions, EditorPermissions} from '@wepublish/api'
 
 export interface Migration {
   readonly version: number
@@ -111,21 +112,24 @@ export const Migrations: Migration[] = [
           modifiedAt: new Date(),
           systemRole: true,
           name: 'Admin',
-          description: 'Administrator Role'
+          description: 'Administrator Role',
+          permissions: AllPermissions
         },
         {
           createdAt: new Date(),
           modifiedAt: new Date(),
           systemRole: true,
           name: 'Editor',
-          description: 'Editor Role'
+          description: 'Editor Role',
+          permissions: EditorPermissions
         },
         {
           createdAt: new Date(),
           modifiedAt: new Date(),
           systemRole: true,
           name: 'Reader',
-          description: 'Reader Role'
+          description: 'Reader Role',
+          permissions: []
         }
       ])
     }

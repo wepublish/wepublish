@@ -5,7 +5,8 @@ export enum ErrorCode {
   InvalidCredentials = 'INVALID_CREDENTIALS',
   UserNotFound = 'USER_NOT_FOUND',
   InvalidOAuth2Token = 'INVALID_OAUTH_TOKEN',
-  OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND'
+  OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
+  NotAuthorised = 'NOT_AUTHORISED'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -35,5 +36,11 @@ export class InvalidOAuth2TokenError extends ApolloError {
 export class OAuth2ProviderNotFoundError extends ApolloError {
   constructor() {
     super('OAuth2 Provider not found', ErrorCode.OAuth2ProviderNotFound)
+  }
+}
+
+export class NotAuthorisedError extends ApolloError {
+  constructor() {
+    super('User is not authorised', ErrorCode.NotAuthorised)
   }
 }

@@ -13,7 +13,8 @@ import {
   InvalidCredentialsError,
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
-  UserNotFoundError
+  UserNotFoundError,
+  NotAuthorisedError
 } from '../error'
 import {GraphQLArticleInput, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
@@ -23,6 +24,8 @@ import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {GraphQLBlockInput} from './blocks'
 import {Issuer} from 'openid-client'
+import {CanCreateAuthor, User} from '..'
+import {Permission} from './permissions'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -41,6 +44,16 @@ function mapBlockUnionMap(value: any) {
 
   const key = Object.keys(value)[0] as keyof BlockMap
   return {type: key, ...value[key]} as Block
+}
+
+function authorise(neededPermission: Permission, user: User): void {
+  const userPermissions = user.roles.reduce<Permission[]>((permissions, role) => {
+    return role.permissions.concat(permissions)
+  }, [])
+  if (!userPermissions.some(permission => permission.name === neededPermission.name)) {
+    throw new NotAuthorisedError()
+  }
+  return
 }
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
@@ -133,7 +146,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
       resolve(root, {input}, {authenticate, dbAdapter}) {
-        authenticate()
+        const {user} = authenticate()
+        authorise(CanCreateAuthor, user)
         return dbAdapter.createAuthor({input})
       }
     },
