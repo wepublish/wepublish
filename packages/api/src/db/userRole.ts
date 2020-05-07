@@ -4,7 +4,6 @@ export interface CreateUserRoleArgs {
   readonly name: string
   readonly email: string
   readonly description: string
-  readonly systemRole: boolean
   readonly permissions: Permission[]
 }
 

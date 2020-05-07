@@ -383,7 +383,7 @@ export class MongoDBAdapter implements DBAdapter {
       modifiedAt: new Date(),
       name: args.name,
       description: args.description || '',
-      systemRole: args.systemRole,
+      systemRole: false, //always False because only the system can create system roles
       permissions: args.permissions
     })
 
