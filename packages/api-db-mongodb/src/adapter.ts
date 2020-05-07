@@ -296,7 +296,6 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  //@ts-ignore
   async createUser({email, name, password, roles}: CreateUserArgs): Promise<OptionalUser> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
@@ -309,7 +308,7 @@ export class MongoDBAdapter implements DBAdapter {
         password: passwordHash
       })
 
-      return await this.getUserByID(id)
+      return this.getUserByID(id)
     } catch (err) {
       if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
         throw new Error('Email address already exists!')
@@ -322,9 +321,12 @@ export class MongoDBAdapter implements DBAdapter {
   async getUser(email: string): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
     if (user) {
-      const _roles = await this.getUserRolesByID(user.roles)
-      const roles = !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
-      return {id: user._id, email: user.email, name: user.name, roles}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roles: await this._getUserRolesForDBUser(user)
+      }
     } else {
       return null
     }
@@ -333,13 +335,11 @@ export class MongoDBAdapter implements DBAdapter {
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
     const users = await this.users.find({_id: {$in: ids}}).toArray()
     const prepareUser = async (user: DBUser) => {
-      const _roles = await this.getUserRolesByID(user.roles)
-      const roles = !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
       return {
         id: user._id,
         email: user.email,
         name: user.name,
-        roles
+        roles: await this._getUserRolesForDBUser(user)
       }
     }
     return Promise.all(users.map(prepareUser))
@@ -349,9 +349,12 @@ export class MongoDBAdapter implements DBAdapter {
     const user = await this.users.findOne({email})
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const _roles = await this.getUserRolesByID(user.roles)
-      const roles = !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
-      return {id: user._id, email: user.email, name: user.name, roles}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roles: await this._getUserRolesForDBUser(user)
+      }
     }
 
     return null
@@ -360,9 +363,12 @@ export class MongoDBAdapter implements DBAdapter {
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
     if (user) {
-      const _roles = await this.getUserRolesByID(user.roles)
-      const roles = !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
-      return {id: user._id, email: user.email, name: user.name, roles}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roles: await this._getUserRolesForDBUser(user)
+      }
     } else {
       return null
     }
@@ -434,6 +440,11 @@ export class MongoDBAdapter implements DBAdapter {
       systemRole: userRole.systemRole,
       permissions: userRole.permissions
     }))
+  }
+
+  async _getUserRolesForDBUser(user: DBUser): Promise<UserRole[]> {
+    const _roles = await this.getUserRolesByID(user.roles)
+    return !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
   }
 
   // Session
