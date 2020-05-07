@@ -475,7 +475,6 @@ export class MongoDBAdapter implements DBAdapter {
 
     if (!session) return null
 
-    //const user = await this.users.findOne({_id: session.userID}, {projection: {password: false}})
     const user = await this.getUserByID(session.userID)
 
     if (!user) return null
