@@ -10,11 +10,24 @@ import {
   Avatar,
   PlaceholderImage,
   Divider,
-  Button
+  IconButton,
+  Dialog,
+  Panel,
+  PanelHeader,
+  NavigationButton,
+  PanelSection,
+  DescriptionList,
+  DescriptionListItem
 } from '@karma.run/ui'
 
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconSettings} from '@karma.run/icons'
+
+import {
+  MaterialIconSettings,
+  MaterialIconDeleteOutline,
+  MaterialIconClose,
+  MaterialIconCheck
+} from '@karma.run/icons'
 
 import {
   RouteLinkIconButton,
@@ -22,24 +35,40 @@ import {
   RouteType,
   useRoute,
   useRouteDispatch,
-  PeerListRoute
+  PeerListRoute,
+  RouteLinkButton,
+  PeerCreateRoute,
+  Link,
+  PeerEditRoute
 } from '../route'
 
-import {usePeerListQuery, usePeerInfoQuery} from '../api/peering'
-import {PeerInfoEditPanel} from '../panel/peerInfoEditPanel'
-import {PeerAddPanel} from '../panel/peerAddPanel'
+import {
+  usePeerListQuery,
+  usePeerProfileQuery,
+  useDeletePeerMutation,
+  PeerListQueryName,
+  Peer
+} from '../api/peering'
+
+import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
+import {PeerEditPanel} from '../panel/peerEditPanel'
 
 export function PeerList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
-  const [isPeerInfoEditModalOpen, setPeerInfoEditModalOpen] = useState(
-    current?.type === RouteType.PeerInfoEdit
+  const [isPeerProfileEditModalOpen, setPeerProfileEditModalOpen] = useState(
+    current?.type === RouteType.PeerProfileEdit
   )
 
-  const [isPeerAddModalOpen, setPeerAddModalOpen] = useState(
-    current?.type === RouteType.PeerInfoEdit
+  const [isEditModalOpen, setEditModalOpen] = useState(current?.type === RouteType.PeerProfileEdit)
+
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.AuthorEdit ? current.params.id : undefined
   )
+
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [currentPeer, setCurrentPeer] = useState<Peer>()
 
   const [isSuccessToastOpen, setSuccessToastOpen] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -49,17 +78,18 @@ export function PeerList() {
 
   const {
     data: peerInfoData,
-    refetch: refetchPeerInfo,
     loading: isPeerInfoLoading,
     error: peerInfoError
-  } = usePeerInfoQuery({fetchPolicy: 'network-only'})
+  } = usePeerProfileQuery({fetchPolicy: 'network-only'})
 
-  const {
-    data: peerListData,
-    refetch: refetchPeerList,
-    loading: isPeerListLoading,
-    error: peerListError
-  } = usePeerListQuery({fetchPolicy: 'network-only'})
+  const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
+  })
+
+  const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation({
+    refetchQueries: [PeerListQueryName]
+  })
 
   useEffect(() => {
     if (peerInfoError ?? peerListError) {
@@ -69,72 +99,105 @@ export function PeerList() {
   }, [peerInfoError])
 
   useEffect(() => {
-    if (current?.type === RouteType.PeerInfoEdit) {
-      setPeerInfoEditModalOpen(true)
+    switch (current?.type) {
+      case RouteType.PeerProfileEdit:
+        setPeerProfileEditModalOpen(true)
+        break
+
+      case RouteType.PeerCreate:
+        setEditID(undefined)
+        setEditModalOpen(true)
+        break
+
+      case RouteType.PeerEdit:
+        setEditID(current.params.id)
+        setEditModalOpen(true)
+        break
     }
   }, [current])
+
+  const peers = peerListData?.peers.map(peer => {
+    const {id, name, profile, hostURL} = peer
+
+    return (
+      <Box key={id} marginBottom={Spacing.Small}>
+        <Box display="flex" alignItems="center" marginBottom={Spacing.ExtraSmall}>
+          <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={50} height={50}>
+            {profile?.logo ? (
+              <Image src={profile.logo.squareURL} width="100%" height="100%" />
+            ) : (
+              <PlaceholderImage width="100%" height="100%" />
+            )}
+          </Avatar>
+          <Box width="100%">
+            <Link route={PeerEditRoute.create({id})}>
+              <Typography variant="body2" color={profile ? 'dark' : 'alertDark'}>
+                {name}
+              </Typography>
+            </Link>
+            <Typography variant="subtitle2" color="grayDark">
+              {profile && `${profile.name} - `}
+              {hostURL}
+            </Typography>
+          </Box>
+          <IconButton
+            icon={MaterialIconDeleteOutline}
+            onClick={() => {
+              setConfirmationDialogOpen(true)
+              setCurrentPeer(peer)
+            }}
+          />
+        </Box>
+        <Divider />
+      </Box>
+    )
+  })
 
   return (
     <>
       <Box display="flex" alignItems="center" marginBottom={Spacing.Small}>
         <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={75} height={75}>
-          {peerInfoData?.peerInfo.logo ? (
-            <Image src={peerInfoData.peerInfo.logo.squareURL} width="100%" height="100%" />
+          {peerInfoData?.peerProfile.logo ? (
+            <Image src={peerInfoData.peerProfile.logo.squareURL} width="100%" height="100%" />
           ) : (
             <PlaceholderImage width="100%" height="100%" />
           )}
         </Avatar>
         <Box width="100%">
-          <Typography variant="body2">{peerInfoData?.peerInfo.name}</Typography>
+          <Typography variant="body2">{peerInfoData?.peerProfile.name}</Typography>
           <Typography variant="subtitle2" color="grayDark">
-            {peerInfoData?.peerInfo.hostURL}
+            {peerInfoData?.peerProfile.hostURL}
           </Typography>
         </Box>
         <RouteLinkIconButton icon={MaterialIconSettings} route={PeerInfoEditRoute.create({})} />
       </Box>
 
-      <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-        <Typography variant="h1">Peers</Typography>
-        <Box flexGrow={1} />
-        <Button
-          color="primary"
-          label="Add Peer"
-          disabled={isPeerInfoLoading}
-          onClick={() => setPeerAddModalOpen(true)}
-        />
+      <Box marginBottom={Spacing.Large}>
+        <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
+          <Typography variant="h1">Peers</Typography>
+          <Box flexGrow={1} />
+          <RouteLinkButton
+            color="primary"
+            label="New Peer"
+            disabled={isPeerInfoLoading}
+            route={PeerCreateRoute.create({})}
+          />
+        </Box>
+        {peerListData?.peers?.length ? (
+          peers
+        ) : !isPeerListLoading ? (
+          <Typography variant="body1" color="gray" align="center">
+            No peers found
+          </Typography>
+        ) : null}
       </Box>
-      {isPeerListLoading
-        ? null
-        : peerListData?.peers.map(peer => (
-            <Box key={peer.id} marginBottom={Spacing.Small}>
-              <Box display="flex" alignItems="center" marginBottom={Spacing.ExtraSmall}>
-                <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={50} height={50}>
-                  {peer.info?.logo ? (
-                    <Image src={peer.info.logo.squareURL} width="100%" height="100%" />
-                  ) : (
-                    <PlaceholderImage width="100%" height="100%" />
-                  )}
-                </Avatar>
-                <Box width="100%">
-                  <Typography variant="body2" color={peer.info ? 'dark' : 'alertDark'}>
-                    {peer.info?.name ?? peer.name}
-                  </Typography>
-                  <Typography variant="subtitle2" color="grayDark">
-                    {peer.hostURL}
-                  </Typography>
-                </Box>
-                <RouteLinkIconButton icon={MaterialIconSettings} />
-              </Box>
-              <Divider />
-            </Box>
-          ))}
 
-      <Drawer open={isPeerInfoEditModalOpen} width={480}>
+      <Drawer open={isPeerProfileEditModalOpen} width={480}>
         {() => (
           <PeerInfoEditPanel
             onClose={() => {
-              setPeerInfoEditModalOpen(false)
-              refetchPeerInfo()
+              setPeerProfileEditModalOpen(false)
+
               dispatch({
                 type: RouteActionType.PushRoute,
                 route: PeerListRoute.create({})
@@ -144,14 +207,24 @@ export function PeerList() {
         )}
       </Drawer>
 
-      <Drawer open={isPeerAddModalOpen} width={480}>
+      <Drawer open={isEditModalOpen} width={480}>
         {() => (
-          <PeerAddPanel
+          <PeerEditPanel
+            id={editID}
             onClose={() => {
-              setPeerAddModalOpen(false)
+              setEditModalOpen(false)
+
+              dispatch({
+                type: RouteActionType.PushRoute,
+                route: PeerListRoute.create({})
+              })
+            }}
+            onSave={() => {
+              setEditModalOpen(false)
+
               setSuccessToastOpen(true)
-              setSuccessMessage('Peering Requested')
-              refetchPeerList()
+              setSuccessMessage(editID ? 'Peer Updated' : 'Peer Created')
+
               dispatch({
                 type: RouteActionType.PushRoute,
                 route: PeerListRoute.create({})
@@ -160,6 +233,42 @@ export function PeerList() {
           />
         )}
       </Drawer>
+
+      <Dialog open={isConfirmationDialogOpen} width={340}>
+        {() => (
+          <Panel>
+            <PanelHeader
+              title="Delete Peer?"
+              leftChildren={
+                <NavigationButton
+                  icon={MaterialIconClose}
+                  label="Cancel"
+                  onClick={() => setConfirmationDialogOpen(false)}
+                />
+              }
+              rightChildren={
+                <NavigationButton
+                  icon={MaterialIconCheck}
+                  label="Confirm"
+                  disabled={isDeleting}
+                  onClick={async () => {
+                    if (!currentPeer) return
+                    await deletePeer({variables: {id: currentPeer.id}})
+                    setConfirmationDialogOpen(false)
+                  }}
+                />
+              }
+            />
+            <PanelSection>
+              <DescriptionList>
+                <DescriptionListItem label="Name">
+                  {currentPeer?.name || 'Unknown'}
+                </DescriptionListItem>
+              </DescriptionList>
+            </PanelSection>
+          </Panel>
+        )}
+      </Dialog>
 
       <Toast
         type="success"

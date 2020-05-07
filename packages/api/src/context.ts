@@ -5,7 +5,7 @@ import {IncomingMessage} from 'http'
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {PeerSession, UserSession, SessionType, OptionalSession} from './db/session'
+import {TokenSession, UserSession, SessionType, OptionalSession, Session} from './db/session'
 
 import {DBAdapter} from './db/adapter'
 import {MediaAdapter} from './mediaAdapter'
@@ -50,8 +50,9 @@ export interface Context {
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 
-  authenticatePeer(): PeerSession
+  authenticateToken(): TokenSession
   authenticateUser(): UserSession
+  authenticateTokenOrUser(): Session
 }
 
 export interface Oauth2Provider {
@@ -124,9 +125,21 @@ export async function contextFromRequest(
       return session
     },
 
-    authenticatePeer() {
-      if (!session || session.type !== SessionType.Peer) {
-        throw new AuthenticationError('Invalid peer session!')
+    authenticateToken() {
+      if (!session || session.type !== SessionType.Token) {
+        throw new AuthenticationError('Invalid token session!')
+      }
+
+      return session
+    },
+
+    authenticateTokenOrUser() {
+      if (!session) {
+        throw new AuthenticationError('Invalid session!')
+      }
+
+      if (!isSessionValid) {
+        throw new TokenExpiredError()
       }
 
       return session

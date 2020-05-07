@@ -31,8 +31,8 @@ import {GraphQLBlockInput} from './blocks'
 
 import {
   GraphQLPeer,
-  GraphQLPeerInfo,
-  GraphQLPeerInfoInput,
+  GraphQLPeerProfile,
+  GraphQLPeerProfileInput,
   GraphQLCreatePeerInput,
   GraphQLUpdatePeerInput
 } from './peer'
@@ -82,12 +82,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // Peering
     // =======
 
-    updatePeerInfo: {
-      type: GraphQLNonNull(GraphQLPeerInfo),
-      args: {input: {type: GraphQLNonNull(GraphQLPeerInfoInput)}},
+    updatePeerProfile: {
+      type: GraphQLNonNull(GraphQLPeerProfile),
+      args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
       async resolve(root, {input}, {hostURL, authenticateUser, dbAdapter}) {
         authenticateUser()
-        return {...(await dbAdapter.peer.updatePeerInfo(input)), hostURL}
+        return {...(await dbAdapter.peer.updatePeerProfile(input)), hostURL}
       }
     },
 
@@ -97,7 +97,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {input}, {authenticateUser, dbAdapter}) {
         authenticateUser()
 
-        // TODO: Check if valid peer
+        // TODO: Check if valid peer?
         return dbAdapter.peer.createPeer(input)
       }
     },
@@ -111,8 +111,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
         authenticateUser()
 
-        // TODO: Check if valid peer
+        // TODO: Check if valid peer?
         return dbAdapter.peer.updatePeer(id, input)
+      }
+    },
+
+    deletePeer: {
+      type: GraphQLID,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
+        authenticateUser()
+        return dbAdapter.peer.deletePeer(id)
       }
     },
 

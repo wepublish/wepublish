@@ -1,3 +1,5 @@
+import url from 'url'
+
 import {
   GraphQLObjectType,
   GraphQLNonNull,
@@ -16,13 +18,14 @@ import {
 
 import fetch from 'cross-fetch'
 
-import {Peer, PeerInfo} from '../db/peer'
+import {Peer, PeerProfile} from '../db/peer'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
-export const GraphQLPeerInfoInput = new GraphQLInputObjectType({
-  name: 'PeerInfoInput',
+export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
+  name: 'PeerProfileInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLID},
@@ -30,8 +33,8 @@ export const GraphQLPeerInfoInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLPeerInfo = new GraphQLObjectType<PeerInfo, Context>({
-  name: 'PeerInfo',
+export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
+  name: 'PeerProfile',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
 
@@ -51,6 +54,7 @@ export const GraphQLCreatePeerInput = new GraphQLInputObjectType({
   name: 'CreatePeerInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     token: {type: GraphQLNonNull(GraphQLString)}
   }
@@ -60,6 +64,7 @@ export const GraphQLUpdatePeerInput = new GraphQLInputObjectType({
   name: 'UpdatePeerInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     token: {type: GraphQLString}
   }
@@ -69,15 +74,20 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
   name: 'Peer',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
-    info: {
-      type: GraphQLPeerInfo,
+    profile: {
+      type: GraphQLPeerProfile,
       async resolve(root, args, context, info) {
         const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
           const query = print(queryDocument)
 
-          const fetchResult = await fetch(root.hostURL, {
+          const fetchResult = await fetch(url.resolve(root.hostURL, 'admin'), {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -97,7 +107,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
         return delegateToSchema({
           schema: schema,
           operation: 'query',
-          fieldName: 'peerInfo',
+          fieldName: 'peerProfile',
           args: {},
           info
         })

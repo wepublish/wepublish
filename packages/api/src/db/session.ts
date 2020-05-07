@@ -1,14 +1,14 @@
 import {User} from './user'
-import {Peer} from './peer'
 
 export enum SessionType {
   User = 'user',
-  Peer = 'peer'
+  Token = 'token'
 }
 
-export interface PeerSession {
-  type: SessionType.Peer
-  peer: Peer
+export interface TokenSession {
+  type: SessionType.Token
+  id: string
+  name: string
   token: string
 }
 
@@ -23,7 +23,7 @@ export interface UserSession {
 
 export type OptionalUserSession = UserSession | null
 
-export type Session = PeerSession | UserSession
+export type Session = TokenSession | UserSession
 export type OptionalSession = Session | null
 
 export interface DBSessionAdapter {

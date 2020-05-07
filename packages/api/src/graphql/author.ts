@@ -17,6 +17,7 @@ import {GraphQLImage} from './image'
 import {GraphQLSlug} from './slug'
 import {AuthorSort} from '../db/author'
 import {GraphQLRichText} from './richText'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -30,6 +31,10 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
     name: {type: GraphQLNonNull(GraphQLString)},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     url: {

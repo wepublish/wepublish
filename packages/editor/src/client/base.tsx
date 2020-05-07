@@ -8,7 +8,8 @@ import {
   MaterialIconTextFields,
   MaterialIconPhotoLibraryOutlined,
   MaterialIconPermIdentityOutlined,
-  MaterialIconShareOutlined
+  MaterialIconShareOutlined,
+  MaterialIconLockOutlined
 } from '@karma.run/icons'
 
 import {
@@ -20,7 +21,8 @@ import {
   AuthorListRoute,
   useRoute,
   RouteType,
-  PeerListRoute
+  PeerListRoute,
+  TokenListRoute
 } from './route'
 
 export interface BaseProps {
@@ -62,6 +64,15 @@ export function Base({children}: BaseProps) {
             active={current?.type === RouteType.ImageList}
           />
 
+          {/* TODO */}
+          {/* <RouteMenuIconLinkButton
+            icon={MaterialIconNavigationOutlined}
+            label="Navigation"
+            route={ImageListRoute.create({})}
+          /> */}
+
+          <Divider />
+
           <RouteMenuLinkButton
             icon={MaterialIconShareOutlined}
             label="Peering"
@@ -69,12 +80,12 @@ export function Base({children}: BaseProps) {
             active={current?.type === RouteType.PeerList}
           />
 
-          {/* TODO */}
-          {/* <RouteMenuIconLinkButton
-            icon={MaterialIconNavigationOutlined}
-            label="Navigation"
-            route={ImageListRoute.create({})}
-          /> */}
+          <RouteMenuLinkButton
+            icon={MaterialIconLockOutlined}
+            label="Tokens"
+            route={TokenListRoute.create({})}
+            active={current?.type === RouteType.TokenList}
+          />
 
           <Divider />
 

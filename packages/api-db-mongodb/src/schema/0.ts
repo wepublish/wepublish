@@ -39,7 +39,11 @@ export interface DBPeerInfo {
 export interface DBPeer {
   _id: any
 
+  createdAt: Date
+  modifiedAt: Date
+
   name: string
+  slug: string
   hostURL: string
   token: string
 }

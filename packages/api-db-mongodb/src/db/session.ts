@@ -9,18 +9,20 @@ import {
 
 import {Collection, Db} from 'mongodb'
 
-import {CollectionName, DBSession, DBUser} from '../schema'
+import {CollectionName, DBSession, DBUser, DBToken} from '../schema'
 import {generateToken} from '../utility'
 
 export class MongoDBSessionAdapter implements DBSessionAdapter {
   private sessions: Collection<DBSession>
   private users: Collection<DBUser>
+  private tokens: Collection<DBToken>
 
   private sessionTTL: number
 
   constructor(db: Db, sessionTTL: number) {
     this.sessions = db.collection(CollectionName.Sessions)
     this.users = db.collection(CollectionName.Users)
+    this.tokens = db.collection(CollectionName.Tokens)
     this.sessionTTL = sessionTTL
   }
 
@@ -45,25 +47,37 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
   }
 
   async getSessionByToken(token: string): Promise<OptionalSession> {
-    const session = await this.sessions.findOne({token})
+    const [tokenMatch, session] = await Promise.all([
+      this.tokens.findOne({token}),
+      this.sessions.findOne({token})
+    ])
 
-    if (!session) return null
+    if (tokenMatch) {
+      return {
+        type: SessionType.Token,
+        id: tokenMatch._id,
+        name: tokenMatch.name,
+        token: tokenMatch.token
+      }
+    } else if (session) {
+      const user = await this.users.findOne({_id: session.userID}, {projection: {password: false}})
 
-    const user = await this.users.findOne({_id: session.userID}, {projection: {password: false}})
+      if (!user) return null
 
-    if (!user) return null
-
-    return {
-      type: SessionType.User,
-      id: session._id,
-      token: session.token,
-      createdAt: session.createdAt,
-      expiresAt: session.expiresAt,
-      user: {
-        id: user._id,
-        email: user.email
+      return {
+        type: SessionType.User,
+        id: session._id,
+        token: session.token,
+        createdAt: session.createdAt,
+        expiresAt: session.expiresAt,
+        user: {
+          id: user._id,
+          email: user.email
+        }
       }
     }
+
+    return null
   }
 
   async deleteUserSessionByID(user: User, id: string): Promise<boolean> {

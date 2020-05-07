@@ -58,7 +58,7 @@ import {
 import {PageSort} from '../db/page'
 
 import {SessionType} from '../db/session'
-import {GraphQLPeer, GraphQLPeerInfo} from './peer'
+import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
@@ -67,19 +67,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Peering
     // =======
 
-    peerInfo: {
-      type: GraphQLNonNull(GraphQLPeerInfo),
-      async resolve(root, args, {authenticateUser, hostURL, dbAdapter}) {
-        authenticateUser()
-        return {...(await dbAdapter.peer.getPeerInfo()), hostURL}
+    peerProfile: {
+      type: GraphQLNonNull(GraphQLPeerProfile),
+      async resolve(root, args, {authenticateTokenOrUser, hostURL, dbAdapter}) {
+        authenticateTokenOrUser()
+        return {...(await dbAdapter.peer.getPeerProfile()), hostURL}
       }
     },
 
     peers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
-      resolve(root, {id}, {authenticateUser, dbAdapter, loaders}) {
+      resolve(root, {id}, {authenticateUser, dbAdapter}) {
         authenticateUser()
         return dbAdapter.peer.getPeers()
+      }
+    },
+
+    peer: {
+      type: GraphQLPeer,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {authenticateUser, dbAdapter, loaders}) {
+        authenticateUser()
+        return loaders.peer.load(id)
       }
     },
 
@@ -345,10 +354,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // Settings
     // ========
 
-    peerInfo: {
-      type: GraphQLNonNull(GraphQLPeerInfo),
+    peerProfile: {
+      type: GraphQLNonNull(GraphQLPeerProfile),
       async resolve(root, args, {hostURL, dbAdapter}) {
-        return {...(await dbAdapter.peer.getPeerInfo()), hostURL}
+        return {...(await dbAdapter.peer.getPeerProfile()), hostURL}
       }
     },
 

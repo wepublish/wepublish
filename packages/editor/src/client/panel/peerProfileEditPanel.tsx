@@ -26,7 +26,13 @@ import {
 } from '@karma.run/icons'
 
 import {ImageRefData} from '../api/image'
-import {usePeerInfoQuery, useUpdatePeerInfoMutation} from '../api/peering'
+
+import {
+  usePeerProfileQuery,
+  useUpdatePeerProfileMutation,
+  PeerProfileQueryName
+} from '../api/peering'
+
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
 
@@ -49,20 +55,22 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const {data, loading: isLoading, error: fetchError} = usePeerInfoQuery({
+  const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
   })
 
-  const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerInfoMutation()
+  const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
+    refetchQueries: [PeerProfileQueryName]
+  })
   const isDisabled = isLoading || isSaving
 
   useEffect(() => {
-    if (data?.peerInfo) {
-      setLogoImage(data.peerInfo.logo)
-      setName(data.peerInfo.name)
-      setThemeColor(data.peerInfo.themeColor)
+    if (data?.peerProfile) {
+      setLogoImage(data.peerProfile.logo)
+      setName(data.peerProfile.name)
+      setThemeColor(data.peerProfile.themeColor)
     }
-  }, [data?.peerInfo])
+  }, [data?.peerProfile])
 
   useEffect(() => {
     if (fetchError || saveError) {

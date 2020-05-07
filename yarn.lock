@@ -1137,7 +1137,7 @@
   resolved "https://registry.yarnpkg.com/@karma.run/media-storage-local/-/media-storage-local-0.1.4.tgz#e2331840c602c268bffc0180cbed7c227c315c4e"
   integrity sha512-Ne0EF6gTEnsqM3cPJLXdwLasNo/rDtUDx6S1GbBR8E0ICyLlbBSRAMJVLHJ/XZeoETAOCSYzEZ6MyYylpN/+Tw==
 
-"@karma.run/media@^0.2.0", "@karma.run/media@^0.2.1":
+"@karma.run/media@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@karma.run/media/-/media-0.2.1.tgz#d1fb72b748f7d1d88c73895651256794ad5196e7"
   integrity sha512-QAgcjp7uhOjC8PhnfTS+o8/p9ikJUao+ZgbFusQypVyQGVjS8eHH9HNUo8oHkBnHSjZrBr2xWiXo4/j+D37gIg==

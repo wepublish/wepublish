@@ -1,12 +1,13 @@
 import {
   DBPeerAdapter,
-  PeerInfo,
+  PeerProfile,
   OptionalPeer,
   Peer,
-  PeerInfoInput,
+  PeerProfileInput,
   UpdatePeerInput,
   CreatePeerInput
 } from '@wepublish/api'
+
 import {Collection, Db} from 'mongodb'
 
 import {CollectionName, DBPeerInfo, DBPeer} from '../schema'
@@ -20,7 +21,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     this.peers = db.collection(CollectionName.Peers)
   }
 
-  async getPeerInfo(): Promise<PeerInfo> {
+  async getPeerProfile(): Promise<PeerProfile> {
     const value = await this.peerInfo.findOne({})
 
     if (!value) {
@@ -33,10 +34,16 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     return value
   }
 
-  async updatePeerInfo(input: PeerInfoInput): Promise<PeerInfo> {
+  async updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile> {
     const {value} = await this.peerInfo.findOneAndUpdate(
       {},
-      {$set: input},
+      {
+        $set: {
+          name: input.name,
+          logoID: input.logoID,
+          themeColor: input.themeColor
+        }
+      },
       {
         upsert: true,
         returnOriginal: false
@@ -46,8 +53,11 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     return value!
   }
 
-  async createPeer({name, hostURL, token}: CreatePeerInput): Promise<Peer> {
+  async createPeer({name, slug, hostURL, token}: CreatePeerInput): Promise<Peer> {
     const {ops} = await this.peers.insertOne({
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      slug,
       name,
       token,
       hostURL
@@ -57,15 +67,19 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     return {id, ...data}
   }
 
-  async updatePeer(id: string, {hostURL, name, token}: UpdatePeerInput): Promise<OptionalPeer> {
+  async updatePeer(
+    id: string,
+    {hostURL, name, slug, token}: UpdatePeerInput
+  ): Promise<OptionalPeer> {
     const {value} = await this.peers.findOneAndUpdate(
       {_id: id},
       [
         {
           $set: {
             modifiedAt: new Date(),
-            name,
-            hostURL,
+            name: {$literal: name},
+            slug: {$literal: slug},
+            hostURL: {$literal: hostURL},
             token: token ? {$literal: token} : '$token'
           } as any
         }
@@ -77,6 +91,11 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
 
     const {_id: outID, ...data} = value
     return {id: outID, ...data}
+  }
+
+  async deletePeer(id: string): Promise<string | null> {
+    const {deletedCount} = await this.peers.deleteOne({_id: id})
+    return deletedCount !== 0 ? id : null
   }
 
   async getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]> {

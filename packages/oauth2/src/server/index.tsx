@@ -35,7 +35,7 @@ async function asyncMain() {
   app.set('views', path.join(__dirname, 'views'))
   app.set('view engine', 'ejs')
   const findAccount = async function (ctx: any, id: any) {
-    const user = await dbAdapter.getUserByID(id)
+    const user = await dbAdapter.user.getUserByID(id)
     if (user) {
       return {
         accountId: user.id,

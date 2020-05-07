@@ -47,8 +47,8 @@ export function AuthorList() {
     current?.type === RouteType.AuthorEdit || current?.type === RouteType.AuthorCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.AuthorEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.AuthorEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -68,14 +68,16 @@ export function AuthorList() {
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
   useEffect(() => {
-    if (current?.type === RouteType.AuthorCreate) {
-      setEditID(null)
-      setEditModalOpen(true)
-    }
+    switch (current?.type) {
+      case RouteType.AuthorCreate:
+        setEditID(undefined)
+        setEditModalOpen(true)
+        break
 
-    if (current?.type === RouteType.AuthorEdit) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
+      case RouteType.AuthorEdit:
+        setEditID(current.params.id)
+        setEditModalOpen(true)
+        break
     }
   }, [current])
 
@@ -148,7 +150,7 @@ export function AuthorList() {
       <Drawer open={isEditModalOpen} width={480}>
         {() => (
           <AuthorEditPanel
-            id={editID!}
+            id={editID}
             onClose={() => {
               setEditModalOpen(false)
               dispatch({

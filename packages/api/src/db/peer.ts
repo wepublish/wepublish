@@ -1,18 +1,25 @@
-export interface PeerInfo {
+export interface PeerProfile {
   name: string
   logo?: any
   logoID?: string
   themeColor: string
 }
 
-export type PeerInfoInput = PeerInfo
+export interface PeerProfileInput {
+  name: string
+  logoID?: string
+  themeColor: string
+}
 
 export interface BasePeer {
   name: string
+  slug: string
   hostURL: string
 }
 
 export interface Peer extends BasePeer {
+  createdAt: Date
+  modifiedAt: Date
   id: string
   token: string
 }
@@ -28,10 +35,11 @@ export interface UpdatePeerInput extends BasePeer {
 }
 
 export interface DBPeerAdapter {
-  getPeerInfo(): Promise<PeerInfo>
-  updatePeerInfo(input: PeerInfoInput): Promise<PeerInfo>
+  getPeerProfile(): Promise<PeerProfile>
+  updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile>
   createPeer(input: CreatePeerInput): Promise<Peer>
   updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
+  deletePeer(id: string): Promise<string | null>
   getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]>
   getPeers(): Promise<Peer[]>
 }

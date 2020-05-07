@@ -13,11 +13,12 @@ export enum PeerState {
 export interface Peer {
   id: string
   name: string
+  slug: string
   hostURL: string
-  info?: PeerInfo
+  profile?: PeerProfile
 }
 
-export interface PeerInfo {
+export interface PeerProfile {
   name: string
   hostURL: string
   logo?: ImageRefData
@@ -27,9 +28,11 @@ export interface PeerInfo {
 // Query
 // =====
 
-export const PeerInfoQuery = gql`
-  {
-    peerInfo {
+export const PeerProfileQueryName = 'PeerProfile'
+
+export const PeerProfileQuery = gql`
+  query ${PeerProfileQueryName} {
+    peerProfile {
       name
       hostURL
       themeColor
@@ -42,21 +45,23 @@ export const PeerInfoQuery = gql`
   ${ImageRefFragment}
 `
 
-export interface PeerInfoData {
-  peerInfo: PeerInfo
+export interface PeerProfileData {
+  peerProfile: PeerProfile
 }
 
-export function usePeerInfoQuery(opts?: QueryHookOptions<PeerInfoData>) {
-  return useQuery<PeerInfoData>(PeerInfoQuery, opts)
+export function usePeerProfileQuery(opts?: QueryHookOptions<PeerProfileData>) {
+  return useQuery(PeerProfileQuery, opts)
 }
 
-const PeerListQuery = gql`
-  {
+export const PeerListQueryName = 'PeerList'
+
+export const PeerListQuery = gql`
+  query ${PeerListQueryName} {
     peers {
       id
       name
       hostURL
-      info {
+      profile {
         name
         hostURL
         themeColor
@@ -75,21 +80,47 @@ export interface PeerListData {
 }
 
 export function usePeerListQuery(opts?: QueryHookOptions<PeerListData>) {
-  return useQuery<PeerListData>(PeerListQuery, opts)
+  return useQuery(PeerListQuery, opts)
+}
+
+export const PeerQueryName = 'Peer'
+
+export const PeerQuery = gql`
+  query ${PeerQueryName}($id: ID!) {
+    peer(id: $id) {
+      id
+      name
+      slug
+      hostURL
+    }
+  }
+
+`
+
+export interface PeerData {
+  peer: Peer
+}
+
+export interface PeerVariables {
+  id: string
+}
+
+export function usePeerQuery(opts?: QueryHookOptions<PeerData, PeerVariables>) {
+  return useQuery(PeerQuery, opts)
 }
 
 // Mutation
 // ========
 
-export interface PeerInfoInput {
+export interface PeerProfileInput {
   name: string
   logoID?: string
   themeColor: string
 }
 
-const UpdatePeerInfoMutation = gql`
-  mutation UpdatePeerInfo($input: PeerInfoInput!) {
-    updatePeerInfo(input: $input) {
+export const UpdatePeerProfileMutation = gql`
+  mutation UpdatePeerProfile($input: PeerProfileInput!) {
+    updatePeerProfile(input: $input) {
       name
       hostURL
       themeColor
@@ -102,49 +133,104 @@ const UpdatePeerInfoMutation = gql`
   ${ImageRefFragment}
 `
 
-export interface UpdatePeerInfoData {
-  updateSettings: PeerInfo
+export interface UpdatePeerProfileData {
+  updateSettings: PeerProfile
 }
 
-export interface UpdatePeerInfoVariables {
-  input: PeerInfoInput
+export interface UpdatePeerProfileVariables {
+  input: PeerProfileInput
 }
 
-export function useUpdatePeerInfoMutation(
-  opts?: MutationHookOptions<UpdatePeerInfoData, UpdatePeerInfoVariables>
+export function useUpdatePeerProfileMutation(
+  opts?: MutationHookOptions<UpdatePeerProfileData, UpdatePeerProfileVariables>
 ) {
-  return useMutation<UpdatePeerInfoData, UpdatePeerInfoVariables>(UpdatePeerInfoMutation, opts)
+  return useMutation<UpdatePeerProfileData, UpdatePeerProfileVariables>(
+    UpdatePeerProfileMutation,
+    opts
+  )
 }
 
-export interface PeerRequestInput {
+export interface CreatePeerInput {
+  name: string
+  slug: string
   hostURL: string
+  token: string
 }
 
-const CreateOutgoingPeerRequestMutation = gql`
-  mutation CreateOutgoingPeerRequest($input: PeerRequestInput!) {
-    createOutgoingPeerRequest(input: $input) {
+export const CreatePeerMutation = gql`
+  mutation CreatePeer($input: CreatePeerInput!) {
+    createPeer(input: $input) {
+      id
+      slug
       name
       hostURL
-      themeColor
-      logo {
-        ...ImageRefFragment
-      }
     }
   }
-
-  ${ImageRefFragment}
 `
 
-export interface CreateOutgoingPeerRequestInfoData {
-  updateSettings: PeerInfo
+export interface CreatePeerData {
+  createPeer: Peer
 }
 
-export interface CreateOutgoingPeerRequestVariables {
-  input: PeerRequestInput
+export interface CreatePeerVariables {
+  input: CreatePeerInput
 }
 
-export function useCreateOutgoingPeerRequestMutation(
-  opts?: MutationHookOptions<CreateOutgoingPeerRequestInfoData, CreateOutgoingPeerRequestVariables>
+export function useCreatePeerMutation(
+  opts?: MutationHookOptions<CreatePeerData, CreatePeerVariables>
 ) {
-  return useMutation(CreateOutgoingPeerRequestMutation, opts)
+  return useMutation(CreatePeerMutation, opts)
+}
+
+export interface UpdatePeerInput {
+  name: string
+  slug: string
+  hostURL: string
+  token?: string
+}
+
+export const UpdatePeerMutation = gql`
+  mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+    updatePeer(id: $id, input: $input) {
+      id
+      slug
+      name
+      hostURL
+    }
+  }
+`
+
+export interface UpdatePeerData {
+  createPeer: Peer
+}
+
+export interface UpdatePeerVariables {
+  id: string
+  input: UpdatePeerInput
+}
+
+export function useUpdatePeerMutation(
+  opts?: MutationHookOptions<UpdatePeerData, UpdatePeerVariables>
+) {
+  return useMutation(UpdatePeerMutation, opts)
+}
+
+export const DeletePeerMutation = gql`
+  mutation DeletePeer($id: ID!) {
+    deletePeer(id: $id)
+  }
+`
+
+export interface DeletePeerData {
+  deletePeer: string
+}
+
+export interface DeletePeerVariables {
+  id: string
+}
+
+export function useDeletePeerMutation(
+  opts?: MutationHookOptions<DeletePeerData, DeletePeerVariables>
+) {
+  return useMutation(DeletePeerMutation, opts)
 }

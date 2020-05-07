@@ -12,6 +12,7 @@ import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
 import {PeerList} from './routes/peerList'
+import {TokenList} from './routes/tokenList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -19,8 +20,15 @@ export function contentForRoute(route: Route) {
       return <Login />
 
     case RouteType.PeerList:
-    case RouteType.PeerInfoEdit:
+    case RouteType.PeerProfileEdit:
+    case RouteType.PeerCreate:
+    case RouteType.PeerEdit:
       return <PeerList />
+
+    case RouteType.TokenList:
+    case RouteType.TokenCreate:
+    case RouteType.TokenEdit:
+      return <TokenList />
 
     case RouteType.Index:
     case RouteType.ArticleList:
