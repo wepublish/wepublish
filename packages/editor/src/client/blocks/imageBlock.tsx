@@ -18,7 +18,7 @@ import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/ic
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 import {ImageRefData} from '../api/image'
-import {ImageBlockValue} from '../api/blocks'
+import {ImageBlockValue} from './types'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {

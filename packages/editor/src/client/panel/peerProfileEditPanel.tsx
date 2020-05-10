@@ -25,16 +25,18 @@ import {
   MaterialIconEditOutlined
 } from '@karma.run/icons'
 
-import {ImageRefData} from '../api/image'
-
 import {
   usePeerProfileQuery,
   useUpdatePeerProfileMutation,
-  PeerProfileQueryName
-} from '../api/peering'
+  PeerProfileDocument,
+  PeerProfileQuery
+} from '../api'
 
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
+import {getOperationNameFromDocument} from '../utility'
+
+type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
 export interface ImageEditPanelProps {
   onClose?(): void
@@ -45,7 +47,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const [logoImage, setLogoImage] = useState<ImageRefData>()
+  const [logoImage, setLogoImage] = useState<PeerProfileImage>()
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
 
@@ -60,7 +62,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   })
 
   const [updateSettings, {loading: isSaving, error: saveError}] = useUpdatePeerProfileMutation({
-    refetchQueries: [PeerProfileQueryName]
+    refetchQueries: [getOperationNameFromDocument(PeerProfileDocument)]
   })
   const isDisabled = isLoading || isSaving
 
@@ -157,7 +159,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                           />
                         </Box>
                       </Box>
-                      <Image src={logoImage.previewURL} width="100%" height={200} />
+                      {logoImage.previewURL && (
+                        <Image src={logoImage.previewURL} width="100%" height={200} />
+                      )}
                     </Box>
                   )}
                 </PlaceholderInput>

@@ -48,7 +48,7 @@ import {
   Spacing,
   Box
 } from '@karma.run/ui'
-import {RichTextBlockValue} from '../api/blocks'
+import {RichTextBlockValue} from './types'
 
 enum BlockFormat {
   H1 = 'heading-one',

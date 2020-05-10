@@ -12,7 +12,7 @@ import {
 } from '@karma.run/ui'
 
 import {EmbedPreview} from '../blocks/embedBlock'
-import {EmbedBlockValue, EmbedType} from '../api/blocks'
+import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue

@@ -19,14 +19,15 @@ import {
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 
 import {
-  PeerProfileData,
-  PeerProfileQuery,
+  PeerListDocument,
   useCreatePeerMutation,
-  PeerListQueryName,
   usePeerQuery,
-  useUpdatePeerMutation
-} from '../api/peering'
-import {slugify} from '../utility'
+  useUpdatePeerMutation,
+  PeerProfileDocument,
+  PeerProfileQuery
+} from '../api'
+
+import {slugify, getOperationNameFromDocument} from '../utility'
 
 export interface ImageEditPanelProps {
   id?: string
@@ -43,7 +44,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
 
   const [isValidURL, setValidURL] = useState<boolean>()
   const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
-  const [profile, setProfile] = useState<PeerProfileData>()
+  const [profile, setProfile] = useState<PeerProfileQuery['peerProfile']>()
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -55,12 +56,10 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   })
 
   const [createPeer, {loading: isCreating, error: createError}] = useCreatePeerMutation({
-    refetchQueries: [PeerListQueryName]
+    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation({
-    refetchQueries: [PeerListQueryName]
-  })
+  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation()
 
   const isDisabled = isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL
 
@@ -105,7 +104,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
       fetch(url.toString(), {
         method: 'POST',
         headers: {'Content-Type': 'application/json; charset=utf-8'},
-        body: JSON.stringify({query: PeerProfileQuery.loc!.source.body}),
+        body: JSON.stringify({query: PeerProfileDocument.loc!.source.body}),
         signal: abortController?.signal
       })
         .then(response => {
@@ -118,7 +117,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
           // TODO: Better validation
           if (response?.data?.peerProfile) {
             setValidURL(true)
-            setProfile(response.data)
+            setProfile(response.data.peerProfile)
           } else {
             setValidURL(false)
           }
@@ -221,17 +220,15 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
           <>
             <PanelSection dark>
               <Card marginBottom={Spacing.Medium} height={200}>
-                {profile?.peerProfile.logo ? (
-                  <Image src={profile.peerProfile.logo.previewURL} width="100%" height="100%" />
+                {profile?.logo ? (
+                  <Image src={profile.logo.previewURL!} width="100%" height="100%" />
                 ) : (
                   <PlaceholderImage width="100%" height="100%" />
                 )}
               </Card>
               <DescriptionList>
-                <DescriptionListItem label="Name">{profile?.peerProfile.name}</DescriptionListItem>
-                <DescriptionListItem label="Theme Color">
-                  {profile?.peerProfile.themeColor}
-                </DescriptionListItem>
+                <DescriptionListItem label="Name">{profile?.name}</DescriptionListItem>
+                <DescriptionListItem label="Theme Color">{profile?.themeColor}</DescriptionListItem>
               </DescriptionList>
             </PanelSection>
           </>

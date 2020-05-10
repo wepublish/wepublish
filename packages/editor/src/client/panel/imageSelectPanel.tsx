@@ -18,12 +18,12 @@ import {
   Divider
 } from '@karma.run/ui'
 
-import {useImageListQuery, ImageRefData} from '../api/image'
+import {useImageListQuery, ImageRefFragment} from '../api'
 import {ImagedEditPanel} from './imageEditPanel'
 
 export interface ImageSelectPanelProps {
   onClose(): void
-  onSelect(image: ImageRefData): void
+  onSelect(image: ImageRefFragment): void
 }
 
 const ImagesPerPage = 20
@@ -32,8 +32,8 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [after, setAfter] = useState<string | undefined>(undefined)
-  const [before, setBefore] = useState<string | undefined>(undefined)
+  const [after, setAfter] = useState<string | undefined | null>(undefined)
+  const [before, setBefore] = useState<string | undefined | null>(undefined)
 
   const [file, setFile] = useState<File | null>(null)
   const {data, loading: isLoading} = useImageListQuery({
@@ -102,7 +102,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                     width="100%"
                     overflow="hidden"
                     style={{cursor: 'pointer'}}>
-                    <Image width="100%" height="100%" src={image.thumbURL} />
+                    {image.thumbURL && <Image width="100%" height="100%" src={image.thumbURL} />}
                   </Card>
                 </Box>
               </Column>

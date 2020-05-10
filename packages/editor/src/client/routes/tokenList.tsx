@@ -25,7 +25,8 @@ import {RouteType, useRoute, useRouteDispatch, PeerListRoute} from '../route'
 
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
-import {useTokenListQuery, useDeleteTokenMutation, Token, TokenListQueryName} from '../api/token'
+import {useTokenListQuery, useDeleteTokenMutation, Token, TokenListDocument} from '../api'
+import {getOperationNameFromDocument} from '../utility'
 
 export function TokenList() {
   const {current} = useRoute()
@@ -58,7 +59,7 @@ export function TokenList() {
   })
 
   const [deleteToken, {loading: isDeleting}] = useDeleteTokenMutation({
-    refetchQueries: [TokenListQueryName]
+    refetchQueries: [getOperationNameFromDocument(TokenListDocument)]
   })
 
   useEffect(() => {

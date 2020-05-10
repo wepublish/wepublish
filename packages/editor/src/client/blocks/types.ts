@@ -3,8 +3,7 @@ import {Node, Range} from 'slate'
 
 import nanoid from 'nanoid'
 
-import {ImageRefData} from './image'
-import {ArticleReference} from './article'
+import {FullBlockFragment, ImageRefFragment, ArticleRefFragment} from '../api'
 
 export enum BlockType {
   RichText = 'richText',
@@ -31,7 +30,7 @@ export interface RichTextBlockValue {
 }
 
 export interface ImageBlockValue {
-  readonly image: ImageRefData | null
+  readonly image: ImageRefFragment | null
   readonly caption: string
 }
 
@@ -112,7 +111,7 @@ export type EmbedBlockValue =
 
 export interface ArticleTeaser {
   readonly type: string
-  readonly article?: ArticleReference
+  readonly article?: ArticleRefFragment
 }
 
 export interface TeaserGridBlockValue {
@@ -328,11 +327,10 @@ export function unionMapForBlock(block: BlockValue): BlockUnionMap {
   }
 }
 
-export function blockForQueryBlock(block: any): BlockValue | null {
-  const type: string = block.__typename
+export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue {
   const key: string = nanoid()
 
-  switch (type) {
+  switch (block?.__typename) {
     case 'ImageBlock':
       return {
         key,
@@ -415,10 +413,10 @@ export function blockForQueryBlock(block: any): BlockValue | null {
         type: BlockType.Embed,
         value: {
           type: EmbedType.Other,
-          url: block.url,
-          title: block.title,
-          width: block.width,
-          height: block.height
+          url: block.url ?? undefined,
+          title: block.title ?? undefined,
+          width: block.width ?? undefined,
+          height: block.height ?? undefined
         }
       }
 

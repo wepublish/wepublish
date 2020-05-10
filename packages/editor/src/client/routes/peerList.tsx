@@ -46,12 +46,15 @@ import {
   usePeerListQuery,
   usePeerProfileQuery,
   useDeletePeerMutation,
-  PeerListQueryName,
-  Peer
-} from '../api/peering'
+  PeerListDocument,
+  PeerListQuery
+} from '../api'
 
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
+import {getOperationNameFromDocument} from '../utility'
+
+type Peer = NonNullable<PeerListQuery['peers']>[number]
 
 export function PeerList() {
   const {current} = useRoute()
@@ -88,7 +91,7 @@ export function PeerList() {
   })
 
   const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation({
-    refetchQueries: [PeerListQueryName]
+    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
   useEffect(() => {
@@ -116,14 +119,14 @@ export function PeerList() {
     }
   }, [current])
 
-  const peers = peerListData?.peers.map(peer => {
+  const peers = peerListData?.peers?.map(peer => {
     const {id, name, profile, hostURL} = peer
 
     return (
       <Box key={id} marginBottom={Spacing.Small}>
         <Box display="flex" alignItems="center" marginBottom={Spacing.ExtraSmall}>
           <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={50} height={50}>
-            {profile?.logo ? (
+            {profile?.logo?.squareURL ? (
               <Image src={profile.logo.squareURL} width="100%" height="100%" />
             ) : (
               <PlaceholderImage width="100%" height="100%" />
@@ -157,7 +160,7 @@ export function PeerList() {
     <>
       <Box display="flex" alignItems="center" marginBottom={Spacing.Small}>
         <Avatar flexShrink={0} marginRight={Spacing.ExtraSmall} width={75} height={75}>
-          {peerInfoData?.peerProfile.logo ? (
+          {peerInfoData?.peerProfile?.logo?.squareURL ? (
             <Image src={peerInfoData.peerProfile.logo.squareURL} width="100%" height="100%" />
           ) : (
             <PlaceholderImage width="100%" height="100%" />

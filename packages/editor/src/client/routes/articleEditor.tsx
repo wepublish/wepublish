@@ -41,11 +41,12 @@ import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
   useCreateArticleMutation,
-  useGetArticleQuery,
+  useArticleQuery,
   useUpdateArticleMutation,
   ArticleInput,
-  usePublishArticleMutation
-} from '../api/article'
+  usePublishArticleMutation,
+  AuthorRefFragment
+} from '../api'
 
 import {
   BlockType,
@@ -60,14 +61,14 @@ import {
   LinkPageBreakBlockListValue,
   ArticleTeaserGridBlock1ListValue,
   ArticleTeaserGridBlock6ListValue
-} from '../api/blocks'
+} from '../blocks/types'
 
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {QuoteBlock} from '../blocks/quoteBlock'
 import {EmbedBlock} from '../blocks/embedBlock'
 import {ImageBlock} from '../blocks/imageBlock'
 import {TitleBlock} from '../blocks/titleBlock'
-import {Author} from '../api/author'
+
 import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {TeaserGridBlock} from '../blocks/teaserGridBlock'
@@ -130,7 +131,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, loading: isLoading} = useGetArticleQuery({
+  const {data: articleData, loading: isLoading} = useArticleQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
@@ -152,13 +153,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setMetadata({
         slug,
-        preTitle: preTitle || '',
+        preTitle: preTitle ?? '',
         title,
-        lead,
+        lead: lead ?? '',
         tags,
         shared,
         breaking,
-        authors: authors.filter((author: Author | null) => author != null),
+        authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image ? image : undefined
       })
 

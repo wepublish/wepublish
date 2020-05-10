@@ -22,18 +22,20 @@ import {
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 
 import {
-  useImageUploadMutation,
-  useImageUpdateMutation,
+  useUploadImageMutation,
+  useUpdateImageMutation,
   useImageQuery,
-  ImageRefData
-} from '../api/image'
+  ImageRefFragment,
+  ImageListDocument
+} from '../api'
+import {getOperationNameFromDocument} from '../utility'
 
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
 
   onClose?(): void
-  onSave?(image: ImageRefData): void
+  onSave?(image: ImageRefFragment): void
 }
 
 export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps) {
@@ -70,8 +72,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
     skip: id == undefined
   })
 
-  const [updateImage, {loading: isUpdating, error: savingError}] = useImageUpdateMutation()
-  const [uploadImage, {loading: isUploading, error: uploadError}] = useImageUploadMutation()
+  const [updateImage, {loading: isUpdating, error: savingError}] = useUpdateImageMutation()
+
+  const [uploadImage, {loading: isUploading, error: uploadError}] = useUploadImageMutation({
+    refetchQueries: [getOperationNameFromDocument(ImageListDocument)]
+  })
 
   const [isLoading, setLoading] = useState(true)
   const isDisabled = isLoading || isUpdating || isUploading
@@ -133,11 +138,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         setSource(image.source ?? '')
         setLicense(image.license ?? '')
 
-        setOriginalImageURL(image.url)
-        setImageURL(image.mediumURL)
+        setOriginalImageURL(image.url ?? '')
+        setImageURL(image.mediumURL ?? '')
         setImageWidth(image.width)
         setImageHeight(image.height)
-        setFocalPoint(image.focalPoint)
+        setFocalPoint(image.focalPoint ?? undefined)
 
         setLoading(false)
       } else {

@@ -31,35 +31,40 @@ import {
 import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
 
 import {
-  useListArticlesQuery,
-  ArticleReference,
+  useArticleListQuery,
+  ArticleRefFragment,
   useUnpublishArticleMutation,
-  useDeleteArticleMutation
-} from '../api/article'
+  useDeleteArticleMutation,
+  ArticleListDocument,
+  ArticleListQuery
+} from '../api'
 
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
 }
 
+const ArticlesPerPage = 50
+
 export function ArticleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentArticle, setCurrentArticle] = useState<ArticleReference>()
+  const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
 
-  const {data, refetch, fetchMore, loading: isLoading} = useListArticlesQuery({
-    variables: {filter: filter || undefined, first: 50},
+  const listVariables = {filter: filter || undefined, first: ArticlesPerPage}
+  const {data, fetchMore, loading: isLoading} = useArticleListQuery({
+    variables: listVariables,
     fetchPolicy: 'network-only'
   })
 
   function loadMore() {
     fetchMore({
-      variables: {first: 50, after: data?.articles.pageInfo.endCursor},
+      variables: {...listVariables, after: data?.articles.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
         if (!fetchMoreResult) return prev
 
@@ -216,7 +221,28 @@ export function ArticleList() {
                     switch (confirmAction) {
                       case ConfirmAction.Delete:
                         await deleteArticle({
-                          variables: {id: currentArticle.id}
+                          variables: {id: currentArticle.id},
+                          update: cache => {
+                            const query = cache.readQuery<ArticleListQuery>({
+                              query: ArticleListDocument,
+                              variables: listVariables
+                            })
+
+                            if (!query) return
+
+                            cache.writeQuery<ArticleListQuery>({
+                              query: ArticleListDocument,
+                              data: {
+                                articles: {
+                                  ...query.articles,
+                                  nodes: query.articles.nodes.filter(
+                                    article => article.id !== currentArticle.id
+                                  )
+                                }
+                              },
+                              variables: listVariables
+                            })
+                          }
                         })
                         break
 
@@ -228,7 +254,6 @@ export function ArticleList() {
                     }
 
                     setConfirmationDialogOpen(false)
-                    refetch()
                   }}
                 />
               }

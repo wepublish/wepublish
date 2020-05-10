@@ -23,8 +23,8 @@ import {styled} from '@karma.run/react'
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {ArticleReference} from '../api/article'
-import {TeaserGridBlockValue, ArticleTeaser} from '../api/blocks'
+import {ArticleRefFragment} from '../api'
+import {TeaserGridBlockValue, ArticleTeaser} from './types'
 
 import {ArticleChoosePanel} from '../panel/articleChoosePanel'
 
@@ -58,7 +58,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
 
   const {teasers, numColumns} = value
 
-  function handleArticleChange(index: number, article: ArticleReference | null) {
+  function handleArticleChange(index: number, article: ArticleRefFragment | null) {
     const currentValue = teasers[index] || {}
 
     onChange({
@@ -161,8 +161,8 @@ export function ArticleTeaserBlock({
                   draggable={false}
                   src={
                     numColumns === 1
-                      ? teaser.article.latest.image.column1URL
-                      : teaser.article.latest.image.column6URL
+                      ? teaser.article.latest.image.column1URL ?? ''
+                      : teaser.article.latest.image.column6URL ?? ''
                   }
                   width="100%"
                   height="100%"

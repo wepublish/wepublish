@@ -1,0 +1,17 @@
+query TokenList {
+  tokens {
+    id
+    name
+  }
+}
+
+mutation CreateToken($input: TokenInput!) {
+  createToken(input: $input) {
+    id
+    name
+  }
+}
+
+mutation DeleteToken($id: ID!) {
+  deleteToken(id: $id)
+}

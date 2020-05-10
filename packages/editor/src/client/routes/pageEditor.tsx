@@ -35,9 +35,9 @@ import {
   PageInput,
   useCreatePageMutation,
   useUpdatePageMutation,
-  useGetPageQuery,
+  usePageQuery,
   usePublishPageMutation
-} from '../api/page'
+} from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
@@ -55,7 +55,7 @@ import {
   EmbedType,
   QuoteBlockListValue,
   EmbedBlockListValue
-} from '../api/blocks'
+} from '../blocks/types'
 
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
 import {TitleBlock} from '../blocks/titleBlock'
@@ -114,7 +114,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, loading: isLoading} = useGetPageQuery({
+  const {data: pageData, loading: isLoading} = usePageQuery({
     skip: isNew || createData != null,
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
@@ -134,9 +134,9 @@ export function PageEditor({id}: PageEditorProps) {
       setMetadata({
         slug,
         title,
-        description,
+        description: description ?? '',
         tags,
-        image: image ? image : null
+        image: image ? image : undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

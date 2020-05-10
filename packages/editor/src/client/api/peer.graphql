@@ -1,0 +1,68 @@
+query PeerProfile {
+  peerProfile {
+    name
+    hostURL
+    themeColor
+    logo {
+      ...ImageRef
+    }
+  }
+}
+
+mutation UpdatePeerProfile($input: PeerProfileInput!) {
+  updatePeerProfile(input: $input) {
+    name
+    hostURL
+    themeColor
+    logo {
+      ...ImageRef
+    }
+  }
+}
+
+query PeerList {
+  peers {
+    id
+    name
+    hostURL
+    profile {
+      name
+      hostURL
+      themeColor
+      logo {
+        ...ImageRef
+      }
+    }
+  }
+}
+
+query Peer($id: ID!) {
+  peer(id: $id) {
+    id
+    name
+    slug
+    hostURL
+  }
+}
+
+mutation CreatePeer($input: CreatePeerInput!) {
+  createPeer(input: $input) {
+    id
+    slug
+    name
+    hostURL
+  }
+}
+
+mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
+  updatePeer(id: $id, input: $input) {
+    id
+    slug
+    name
+    hostURL
+  }
+}
+
+mutation DeletePeer($id: ID!) {
+  deletePeer(id: $id)
+}

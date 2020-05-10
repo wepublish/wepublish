@@ -30,28 +30,33 @@ import {
 import {RouteLinkButton, Link, PageCreateRoute, PageEditRoute} from '../route'
 
 import {
-  useListPagesQuery,
-  PageReference,
+  PageRefFragment,
+  usePageListQuery,
   useDeletePageMutation,
-  useUnpublishPageMutation
-} from '../api/page'
+  useUnpublishPageMutation,
+  PageListDocument,
+  PageListQuery
+} from '../api'
 
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
 }
 
+const PagesPerPage = 50
+
 export function PageList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState<PageReference>()
+  const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
 
-  const {data, refetch, fetchMore, loading: isLoading} = useListPagesQuery({
+  const listVariables = {filter: filter || undefined, first: PagesPerPage}
+  const {data, fetchMore, loading: isLoading} = usePageListQuery({
     variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })
@@ -204,7 +209,26 @@ export function PageList() {
                     switch (confirmAction) {
                       case ConfirmAction.Delete:
                         await deletePage({
-                          variables: {id: currentPage.id}
+                          variables: {id: currentPage.id},
+                          update: cache => {
+                            const query = cache.readQuery<PageListQuery>({
+                              query: PageListDocument,
+                              variables: listVariables
+                            })
+
+                            if (!query) return
+
+                            cache.writeQuery<PageListQuery>({
+                              query: PageListDocument,
+                              data: {
+                                pages: {
+                                  ...query.pages,
+                                  nodes: query.pages.nodes.filter(pages => pages.id !== pages.id)
+                                }
+                              },
+                              variables: listVariables
+                            })
+                          }
                         })
                         break
 
@@ -216,7 +240,6 @@ export function PageList() {
                     }
 
                     setConfirmationDialogOpen(false)
-                    refetch()
                   }}
                 />
               }

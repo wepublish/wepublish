@@ -29,29 +29,33 @@ import {
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {ImageRefData} from '../api/image'
+
 import {
   useCreateAuthorMutation,
-  Author,
   useAuthorQuery,
   useUpdateAuthorMutation,
-  AuthorLink
-} from '../api/author'
-import {slugify, generateID} from '../utility'
+  AuthorLink,
+  ImageRefFragment,
+  Maybe,
+  FullAuthorFragment,
+  AuthorListDocument
+} from '../api'
+
+import {slugify, generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
-import {RichTextBlockValue} from '../api/blocks'
+import {RichTextBlockValue} from '../blocks/types'
 
 export interface AuthorEditPanelProps {
   id?: string
 
   onClose?(): void
-  onSave?(author: Author): void
+  onSave?(author: FullAuthorFragment): void
 }
 
 export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
-  const [image, setImage] = useState<ImageRefData>()
+  const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
 
@@ -67,7 +71,10 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     skip: id == undefined
   })
 
-  const [createAuthor, {loading: isCreating, error: createError}] = useCreateAuthorMutation()
+  const [createAuthor, {loading: isCreating, error: createError}] = useCreateAuthorMutation({
+    refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
+  })
+
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
   const isDisabled = isLoading || isCreating || isUpdating || loadError != undefined
@@ -105,7 +112,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
     }
   }, [loadError, createError, updateError])
 
-  function handleImageChange(image: ImageRefData) {
+  function handleImageChange(image: ImageRefFragment) {
     setImage(image)
   }
 
@@ -200,7 +207,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                         onClick={() => setImage(undefined)}
                       />
                     </Box>
-                    <Image src={image.previewURL} width="100%" height={200} />
+                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
                   </Box>
                 )}
               </PlaceholderInput>

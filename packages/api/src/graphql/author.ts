@@ -72,7 +72,7 @@ export const GraphQLAuthorSort = new GraphQLEnumType({
 export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
   name: 'AuthorConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLAuthor)},
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
