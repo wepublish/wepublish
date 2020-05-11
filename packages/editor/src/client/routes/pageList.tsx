@@ -223,7 +223,9 @@ export function PageList() {
                               data: {
                                 pages: {
                                   ...query.pages,
-                                  nodes: query.pages.nodes.filter(pages => pages.id !== pages.id)
+                                  nodes: query.pages.nodes.filter(
+                                    page => page.id !== currentPage.id
+                                  )
                                 }
                               },
                               variables: listVariables

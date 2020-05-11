@@ -9,6 +9,7 @@ mutation CreateToken($input: TokenInput!) {
   createToken(input: $input) {
     id
     name
+    token
   }
 }
 

@@ -1,9 +1,10 @@
 export interface PeerProfile {
   name: string
-  logo?: any
   logoID?: string
   themeColor: string
 }
+
+export type ResolvedPeerProfile = unknown
 
 export interface PeerProfileInput {
   name: string

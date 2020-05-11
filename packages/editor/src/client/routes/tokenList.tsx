@@ -7,7 +7,6 @@ import {
   Drawer,
   Toast,
   Divider,
-  Button,
   IconButton,
   Dialog,
   Panel,
@@ -21,31 +20,30 @@ import {
 import {RouteActionType} from '@karma.run/react'
 import {MaterialIconDeleteOutline, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
-import {RouteType, useRoute, useRouteDispatch, PeerListRoute} from '../route'
+import {
+  RouteType,
+  useRoute,
+  useRouteDispatch,
+  TokenListRoute,
+  RouteLinkButton,
+  TokenGenerateRoute
+} from '../route'
 
-import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
-import {PeerEditPanel} from '../panel/peerEditPanel'
 import {useTokenListQuery, useDeleteTokenMutation, Token, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
+import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 export function TokenList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
-  const [isPeerInfoEditModalOpen, setPeerInfoEditModalOpen] = useState(
-    current?.type === RouteType.PeerProfileEdit
-  )
-
-  const [isPeerAddModalOpen, setPeerAddModalOpen] = useState(
-    current?.type === RouteType.PeerProfileEdit
+  const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
+    current?.type === RouteType.TokenGenerate
   )
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
   const [currentToken, setCurrentToken] = useState<Token>()
-
-  const [isSuccessToastOpen, setSuccessToastOpen] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -69,17 +67,28 @@ export function TokenList() {
     }
   }, [tokenListError])
 
+  useEffect(() => {
+    switch (current?.type) {
+      case RouteType.TokenGenerate:
+        setTokenGeneratePanelOpen(true)
+        break
+
+      default:
+        setTokenGeneratePanelOpen(false)
+    }
+  }, [current])
+
   return (
     <>
       <Box>
         <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
           <Typography variant="h1">Tokens</Typography>
           <Box flexGrow={1} />
-          <Button
+          <RouteLinkButton
             color="primary"
-            label="New Token"
+            label="Generate Token"
             disabled={isTokenListLoading}
-            onClick={() => setPeerAddModalOpen(true)}
+            route={TokenGenerateRoute.create({})}
           />
         </Box>
         {isTokenListLoading
@@ -102,41 +111,13 @@ export function TokenList() {
             ))}
       </Box>
 
-      <Drawer open={isPeerInfoEditModalOpen} width={480}>
+      <Drawer open={isTokenGeneratePanelOpen} width={480}>
         {() => (
-          <PeerInfoEditPanel
+          <TokenGeneratePanel
             onClose={() => {
-              setPeerInfoEditModalOpen(false)
-
               dispatch({
                 type: RouteActionType.PushRoute,
-                route: PeerListRoute.create({})
-              })
-            }}
-          />
-        )}
-      </Drawer>
-
-      <Drawer open={isPeerAddModalOpen} width={480}>
-        {() => (
-          <PeerEditPanel
-            onClose={() => {
-              setPeerAddModalOpen(false)
-
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PeerListRoute.create({})
-              })
-            }}
-            onSave={() => {
-              setPeerAddModalOpen(false)
-
-              setSuccessToastOpen(true)
-              setSuccessMessage('Peer Created')
-
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PeerListRoute.create({})
+                route: TokenListRoute.create({})
               })
             }}
           />
@@ -147,7 +128,7 @@ export function TokenList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete Peer?"
+              title="Delete Token?"
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
@@ -179,14 +160,6 @@ export function TokenList() {
           </Panel>
         )}
       </Dialog>
-
-      <Toast
-        type="success"
-        open={isSuccessToastOpen}
-        autoHideDuration={2000}
-        onClose={() => setSuccessToastOpen(false)}>
-        {successMessage}
-      </Toast>
 
       <Toast
         type="error"

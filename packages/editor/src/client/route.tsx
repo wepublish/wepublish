@@ -46,8 +46,7 @@ export enum RouteType {
   PeerEdit = 'peerEdit',
 
   TokenList = 'tokenList',
-  TokenCreate = 'tokenCreate',
-  TokenEdit = 'tokenEdit'
+  TokenGenerate = 'tokenGenerate'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -88,8 +87,7 @@ export const PeerCreateRoute = route(RouteType.PeerCreate, routePath`/peering/cr
 export const PeerEditRoute = route(RouteType.PeerEdit, routePath`/peering/edit/${required('id')}`)
 
 export const TokenListRoute = route(RouteType.TokenList, routePath`/tokens`)
-export const TokenCreateRoute = route(RouteType.TokenCreate, routePath`/tokens/create`)
-export const TokenEditRoute = route(RouteType.TokenEdit, routePath`/tokens/edit/${required('id')}`)
+export const TokenGenerateRoute = route(RouteType.TokenGenerate, routePath`/tokens/generate`)
 
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
@@ -114,8 +112,7 @@ export const routes = [
   PeerCreateRoute,
   PeerEditRoute,
   TokenListRoute,
-  TokenCreateRoute,
-  TokenEditRoute,
+  TokenGenerateRoute,
   NotFoundRoute
 ] as const
 

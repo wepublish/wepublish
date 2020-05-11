@@ -10,19 +10,19 @@ import {
 
 import {Collection, Db} from 'mongodb'
 
-import {CollectionName, DBPeerInfo, DBPeer} from '../schema'
+import {CollectionName, DBPeerProfile, DBPeer} from '../schema'
 
 export class MongoDBPeerAdapter implements DBPeerAdapter {
-  private peerInfo: Collection<DBPeerInfo>
+  private peerProfiles: Collection<DBPeerProfile>
   private peers: Collection<DBPeer>
 
   constructor(db: Db) {
-    this.peerInfo = db.collection(CollectionName.PeerInfo)
+    this.peerProfiles = db.collection(CollectionName.PeerProfiles)
     this.peers = db.collection(CollectionName.Peers)
   }
 
   async getPeerProfile(): Promise<PeerProfile> {
-    const value = await this.peerInfo.findOne({})
+    const value = await this.peerProfiles.findOne({})
 
     if (!value) {
       return {
@@ -35,7 +35,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
   }
 
   async updatePeerProfile(input: PeerProfileInput): Promise<PeerProfile> {
-    const {value} = await this.peerInfo.findOneAndUpdate(
+    const {value} = await this.peerProfiles.findOneAndUpdate(
       {},
       {
         $set: {
@@ -106,7 +106,7 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
   }
 
   async getPeers(): Promise<Peer[]> {
-    const peers = await this.peers.find().toArray()
+    const peers = await this.peers.find().sort({createdAt: -1}).toArray()
     return peers.map(({_id: id, ...data}) => ({id, ...data}))
   }
 }

@@ -26,8 +26,7 @@ export function contentForRoute(route: Route) {
       return <PeerList />
 
     case RouteType.TokenList:
-    case RouteType.TokenCreate:
-    case RouteType.TokenEdit:
+    case RouteType.TokenGenerate:
       return <TokenList />
 
     case RouteType.Index:

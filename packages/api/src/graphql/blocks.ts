@@ -1,3 +1,5 @@
+import url from 'url'
+
 import {
   GraphQLObjectType,
   GraphQLInputObjectType,
@@ -6,8 +8,19 @@ import {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
-  GraphQLUnionType
+  GraphQLUnionType,
+  GraphQLEnumType,
+  print
 } from 'graphql'
+
+import {
+  makeRemoteExecutableSchema,
+  introspectSchema,
+  delegateToSchema,
+  Fetcher
+} from 'graphql-tools'
+
+import fetch from 'cross-fetch'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -16,7 +29,6 @@ import {Context} from '../context'
 
 import {
   BlockType,
-  ArticleTeaserGridBlock,
   ImageBlock,
   ImageGalleryBlock,
   FacebookPostBlock,
@@ -32,71 +44,219 @@ import {
   QuoteBlock,
   EmbedBlock,
   ImageCaptionEdge,
-  ArticleTeaser
+  ArticleTeaser,
+  TeaserGridBlock,
+  TeaserStyle,
+  PeerArticleTeaser,
+  PageTeaser,
+  TeaserType,
+  RichTextBlock,
+  Teaser
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
+import {GraphQLPage, GraphQLPublicPage} from './page'
+import {GraphQLPeer} from './peer'
+import {
+  markResultAsProxied,
+  createProxyingResolver,
+  createProxyingIsTypeOf,
+  isSourceProxied
+} from '../utility'
 
-export const GraphQLRichTextBlock = new GraphQLObjectType({
+export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
   name: 'RichTextBlock',
   fields: {
     richText: {type: GraphQLNonNull(GraphQLRichText)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf('RichTextBlock', value => {
     return value.type === BlockType.RichText
-  }
+  })
 })
 
 export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
-    type: {type: GraphQLString},
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
     article: {
       type: GraphQLArticle,
-      async resolve({articleID}, args, {loaders}) {
+      resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
         return loaders.articles.load(articleID)
-      }
+      })
     }
   })
 })
 
-export const GraphQLArticleTeaserGridBlock = new GraphQLObjectType<ArticleTeaserGridBlock, Context>(
-  {
-    name: 'ArticleTeaserGridBlock',
-    fields: {
-      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaser))},
-      numColumns: {type: GraphQLNonNull(GraphQLInt)}
+export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
+  name: 'PeerArticleTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    peer: {
+      type: GraphQLPeer,
+      resolve: createProxyingResolver(({peerID}, args, {loaders}) => {
+        return loaders.peer.load(peerID)
+      })
     },
-    isTypeOf(value) {
-      return value.type === BlockType.ArticleTeaserGrid
+    article: {
+      type: GraphQLArticle,
+      resolve: createProxyingResolver(async ({peerID, articleID}, args, {loaders}, info) => {
+        const peer = await loaders.peer.load(peerID)
+
+        if (!peer) return null
+
+        const {hostURL, token} = peer
+
+        const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
+          const query = print(queryDocument)
+          const fetchResult = await fetch(url.resolve(hostURL, 'admin'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({query, variables, operationName})
+          })
+
+          return fetchResult.json()
+        }
+
+        const schema = makeRemoteExecutableSchema({
+          schema: await introspectSchema(fetcher),
+          fetcher
+        })
+
+        return markResultAsProxied(
+          await delegateToSchema({
+            schema: schema,
+            operation: 'query',
+            fieldName: 'article',
+            args: {id: articleID},
+            info
+          })
+        )
+      })
+    }
+  })
+})
+
+export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
+  name: 'PageTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    page: {
+      type: GraphQLPage,
+      resolve: createProxyingResolver(({pageID}, args, {loaders}) => {
+        return loaders.pages.load(pageID)
+      })
+    }
+  }),
+  isTypeOf(value) {
+    return value.type === TeaserType.Page
+  }
+})
+
+export const GraphQLTeaserStyle = new GraphQLEnumType({
+  name: 'TeaserStyle',
+  values: {
+    DEFAULT: {value: TeaserStyle.Default},
+    IMAGE: {value: TeaserStyle.Image},
+    TEXT: {value: TeaserStyle.Text}
+  }
+})
+
+export const GraphQLTeaser = new GraphQLUnionType({
+  name: 'Teaser',
+  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser],
+  resolveType(value: Teaser) {
+    switch (isSourceProxied(value) ? value.__typename : value.type) {
+      case GraphQLArticleTeaser.name:
+      case TeaserType.Article:
+        return GraphQLArticleTeaser
+
+      case GraphQLPeerArticleTeaser.name:
+      case TeaserType.PeerArticle:
+        return GraphQLPeerArticleTeaser
+
+      case GraphQLPageTeaser.name:
+      case TeaserType.Page:
+        return GraphQLPageTeaser
+
+      default:
+        return null
     }
   }
-)
+})
+
+export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
+  name: 'TeaserGridBlock',
+  fields: {
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaser))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)}
+  },
+  isTypeOf: createProxyingIsTypeOf('TeaserGridBlock', value => {
+    return value.type === BlockType.TeaserGrid
+  })
+})
 
 export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
-    type: {type: GraphQLString},
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
     article: {
       type: GraphQLPublicArticle,
-      async resolve({articleID}, args, {loaders}) {
+      resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
         return loaders.publicArticles.load(articleID)
-      }
+      })
     }
   })
 })
 
-export const GraphQLPublicArticleTeaserGridBlock = new GraphQLObjectType<
-  ArticleTeaserGridBlock,
-  Context
->({
-  name: 'ArticleTeaserGridBlock',
+export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
+  name: 'PeerArticleTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    article: {
+      type: GraphQLPublicArticle,
+      resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
+        // TODO
+        return null
+      })
+    }
+  }),
+  isTypeOf(value) {
+    return value.type === TeaserType.PeerArticle
+  }
+})
+
+export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
+  name: 'PageTeaser',
+  fields: () => ({
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    page: {
+      type: GraphQLPublicPage,
+      resolve: createProxyingResolver(({pageID}, args, {loaders}) => {
+        return loaders.publicPagesByID.load(pageID)
+      })
+    }
+  }),
+  isTypeOf(value) {
+    return value.type === TeaserType.Page
+  }
+})
+
+export const GraphQLPublicTeaser = new GraphQLUnionType({
+  name: 'Teaser',
+  types: [GraphQLPublicArticleTeaser, GraphQLPublicPeerArticleTeaser, GraphQLPublicPageTeaser]
+})
+
+export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
+  name: 'TeaserGridBlock',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicArticleTeaser))},
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaser))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   },
   isTypeOf(value) {
-    return value.type === BlockType.ArticleTeaserGrid
+    return value.type === BlockType.TeaserGrid
   }
 })
 
@@ -106,9 +266,9 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
     caption: {type: GraphQLString},
     node: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     }
   }
 })
@@ -118,9 +278,9 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
   fields: {
     image: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
 
     caption: {type: GraphQLString}
@@ -223,9 +383,9 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
     title: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
-      resolve({imageID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
     richText: {type: GraphQLNonNull(GraphQLRichText)}
   }
@@ -374,22 +534,48 @@ export const GraphQLInputEmbedBlock = new GraphQLInputObjectType({
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
-    type: {type: GraphQLString},
-    articleID: {type: GraphQLID}
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    articleID: {type: GraphQLNonNull(GraphQLID)}
   }
 })
 
-export const GraphQLArticleTeaserGridBlockInput = new GraphQLInputObjectType({
-  name: 'ArticleTeaserGridBlockInput',
+export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
+  name: 'PeerArticleTeaserInput',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLArticleTeaserInput))},
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    peerID: {type: GraphQLNonNull(GraphQLID)},
+    articleID: {type: GraphQLNonNull(GraphQLID)}
+  }
+})
+
+export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
+  name: 'PageTeaserInput',
+  fields: {
+    style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    pageID: {type: GraphQLNonNull(GraphQLID)}
+  }
+})
+
+export const GraphQLTeaserInput = new GraphQLInputObjectType({
+  name: 'TeaserInput',
+  fields: () => ({
+    [TeaserType.Article]: {type: GraphQLArticleTeaserInput},
+    [TeaserType.PeerArticle]: {type: GraphQLPeerArticleTeaserInput},
+    [TeaserType.Page]: {type: GraphQLPageTeaserInput}
+  })
+})
+
+export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserGridBlockInput',
+  fields: {
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserInput))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLBlockInput = new GraphQLInputObjectType({
   name: 'BlockInput',
-  fields: {
+  fields: () => ({
     [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
     [BlockType.Image]: {type: GraphQLInputImageBlock},
     [BlockType.Title]: {type: GraphQLInputTitleBlock},
@@ -402,8 +588,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
     [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
     [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock},
-    [BlockType.ArticleTeaserGrid]: {type: GraphQLArticleTeaserGridBlockInput}
-  }
+    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
+  })
 })
 
 export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
@@ -423,11 +609,11 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLArticleTeaserGridBlock
+    GraphQLTeaserGridBlock
   ]
 })
 
-export const GraphQLPublicBlock = new GraphQLUnionType({
+export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
   name: 'Block',
   types: () => [
     GraphQLRichTextBlock,
@@ -444,6 +630,6 @@ export const GraphQLPublicBlock = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLPublicArticleTeaserGridBlock
+    GraphQLPublicTeaserGridBlock
   ]
 })

@@ -271,9 +271,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLArticle,
-      args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticateUser, loaders}) {
-        authenticateUser()
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id}, {authenticateTokenOrUser, loaders}) {
+        authenticateTokenOrUser()
         return loaders.articles.load(id)
       }
     },
@@ -292,9 +292,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       resolve(
         root,
         {filter, sort, order, after, before, first, last},
-        {authenticateUser, dbAdapter}
+        {authenticateTokenOrUser, dbAdapter}
       ) {
-        authenticateUser()
+        authenticateTokenOrUser()
 
         return dbAdapter.article.getArticles({
           filter,

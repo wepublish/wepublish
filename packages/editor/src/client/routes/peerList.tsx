@@ -52,7 +52,6 @@ import {
 
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
-import {getOperationNameFromDocument} from '../utility'
 
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 
@@ -87,19 +86,17 @@ export function PeerList() {
 
   const {data: peerListData, loading: isPeerListLoading, error: peerListError} = usePeerListQuery({
     fetchPolicy: 'network-only',
-    errorPolicy: 'all'
+    errorPolicy: 'ignore'
   })
 
-  const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation({
-    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
-  })
+  const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
 
   useEffect(() => {
     if (peerInfoError ?? peerListError) {
       setErrorToastOpen(true)
       setErrorMessage(peerInfoError?.message ?? peerListError!.message)
     }
-  }, [peerInfoError])
+  }, [peerInfoError, peerListError])
 
   useEffect(() => {
     switch (current?.type) {
@@ -256,7 +253,23 @@ export function PeerList() {
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentPeer) return
-                    await deletePeer({variables: {id: currentPeer.id}})
+                    await deletePeer({
+                      variables: {id: currentPeer.id},
+                      update: cache => {
+                        const query = cache.readQuery<PeerListQuery>({
+                          query: PeerListDocument
+                        })
+
+                        if (!query) return
+
+                        cache.writeQuery<PeerListQuery>({
+                          query: PeerListDocument,
+                          data: {
+                            peers: query.peers?.filter(peer => peer.id !== currentPeer.id)
+                          }
+                        })
+                      }
+                    })
                     setConfirmationDialogOpen(false)
                   }}
                 />

@@ -1,65 +1,59 @@
+fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  logo {
+    ...ImageRef
+  }
+}
+
+fragment PeerRef on Peer {
+  id
+  name
+  slug
+  hostURL
+}
+
+fragment PeerWithProfile on Peer {
+  ...PeerRef
+  profile {
+    ...FullPeerProfile
+  }
+}
+
 query PeerProfile {
   peerProfile {
-    name
-    hostURL
-    themeColor
-    logo {
-      ...ImageRef
-    }
+    ...FullPeerProfile
   }
 }
 
 mutation UpdatePeerProfile($input: PeerProfileInput!) {
   updatePeerProfile(input: $input) {
-    name
-    hostURL
-    themeColor
-    logo {
-      ...ImageRef
-    }
+    ...FullPeerProfile
   }
 }
 
 query PeerList {
   peers {
-    id
-    name
-    hostURL
-    profile {
-      name
-      hostURL
-      themeColor
-      logo {
-        ...ImageRef
-      }
-    }
+    ...PeerWithProfile
   }
 }
 
 query Peer($id: ID!) {
   peer(id: $id) {
-    id
-    name
-    slug
-    hostURL
+    ...PeerRef
   }
 }
 
 mutation CreatePeer($input: CreatePeerInput!) {
   createPeer(input: $input) {
-    id
-    slug
-    name
-    hostURL
+    ...PeerRef
   }
 }
 
 mutation UpdatePeer($id: ID!, $input: UpdatePeerInput!) {
   updatePeer(id: $id, input: $input) {
-    id
-    slug
-    name
-    hostURL
+    ...PeerRef
   }
 }
 

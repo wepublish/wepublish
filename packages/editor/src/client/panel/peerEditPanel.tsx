@@ -24,7 +24,7 @@ import {
   usePeerQuery,
   useUpdatePeerMutation,
   PeerProfileDocument,
-  PeerProfileQuery
+  FullPeerProfileFragment
 } from '../api'
 
 import {slugify, getOperationNameFromDocument} from '../utility'
@@ -44,7 +44,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
 
   const [isValidURL, setValidURL] = useState<boolean>()
   const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
-  const [profile, setProfile] = useState<PeerProfileQuery['peerProfile']>()
+  const [profile, setProfile] = useState<FullPeerProfileFragment>()
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -59,7 +59,10 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation()
+  // createError?.graphQLErrors
+  const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation({
+    refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
+  })
 
   const isDisabled = isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL
 

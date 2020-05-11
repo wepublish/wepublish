@@ -16,6 +16,7 @@ import {GraphQLUpload} from 'apollo-server-express'
 import {Context} from '../context'
 import {Image, ImageRotation, ImageOutput, ImageSort} from '../db/image'
 import {GraphQLPageInfo} from './common'
+import {createProxyingResolver} from '../utility'
 
 export const GraphQLInputPoint = new GraphQLInputObjectType({
   name: 'InputPoint',
@@ -142,17 +143,17 @@ export const GraphQLImage = new GraphQLObjectType<Image, Context>({
 
     url: {
       type: GraphQLString,
-      resolve(image, {}, {mediaAdapter}) {
+      resolve: createProxyingResolver((image, {}, {mediaAdapter}) => {
         return mediaAdapter.getImageURL(image)
-      }
+      })
     },
 
     transformURL: {
       type: GraphQLString,
       args: {input: {type: GraphQLImageTransformation}},
-      resolve(image, {input}, {mediaAdapter}) {
+      resolve: createProxyingResolver((image, {input}, {mediaAdapter}) => {
         return image.transformURL ? image.transformURL : mediaAdapter.getImageURL(image, input)
-      }
+      })
     }
   }
 })

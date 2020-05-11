@@ -18,6 +18,7 @@ import {GraphQLSlug} from './slug'
 import {AuthorSort} from '../db/author'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {createProxyingResolver} from '../utility'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -39,17 +40,17 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve(author, {}, {urlAdapter}) {
+      resolve: createProxyingResolver((author, {}, {urlAdapter}) => {
         return urlAdapter.getAuthorURL(author)
-      }
+      })
     },
     links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
     bio: {type: GraphQLRichText},
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     }
   }
 })

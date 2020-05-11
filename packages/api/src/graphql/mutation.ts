@@ -20,14 +20,14 @@ import {
 } from '../error'
 
 import {GraphQLArticleInput, GraphQLArticle} from './article'
-import {BlockMap, Block} from '../db/block'
+import {BlockMap, Block, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 
 import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} from './navigation'
-import {GraphQLBlockInput} from './blocks'
+import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 
 import {
   GraphQLPeer,
@@ -37,6 +37,27 @@ import {
   GraphQLUpdatePeerInput
 } from './peer'
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+
+function mapTeaserUnionMap(value: any) {
+  const valueKeys = Object.keys(value)
+
+  if (valueKeys.length === 0) {
+    throw new Error(`Received no teaser types in ${GraphQLTeaserInput.name}.`)
+  }
+
+  if (valueKeys.length > 1) {
+    throw new Error(
+      `Received multiple teaser types (${JSON.stringify(Object.keys(value))}) in ${
+        GraphQLTeaserInput.name
+      }, they're mutually exclusive.`
+    )
+  }
+
+  const type = Object.keys(value)[0] as keyof BlockMap
+  const teaserValue = value[type]
+
+  return {type, ...teaserValue} as Block
+}
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -53,8 +74,16 @@ function mapBlockUnionMap(value: any) {
     )
   }
 
-  const key = Object.keys(value)[0] as keyof BlockMap
-  return {type: key, ...value[key]} as Block
+  const type = Object.keys(value)[0] as keyof BlockMap
+  const blockValue = value[type]
+
+  switch (type) {
+    case BlockType.TeaserGrid:
+      return {type, ...blockValue, teasers: blockValue.teasers.map(mapTeaserUnionMap)}
+
+    default:
+      return {type, ...blockValue} as Block
+  }
 }
 
 function mapNavigationLinkInput(value: any) {

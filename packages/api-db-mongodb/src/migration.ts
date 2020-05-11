@@ -19,17 +19,21 @@ export const Migrations: Migration[] = [
 
       await migrations.createIndex({name: 1}, {unique: true})
 
-      await db.createCollection<v0.DBPeerInfo>(v0.CollectionName.PeerInfo, {
+      await db.createCollection<v0.DBPeerProfile>(v0.CollectionName.PeerProfiles, {
         strict: true
       })
 
-      await db.createCollection<v0.DBPeer>(v0.CollectionName.Peers, {
+      const peers = await db.createCollection<v0.DBPeer>(v0.CollectionName.Peers, {
         strict: true
       })
 
-      await db.createCollection<v0.DBToken>(v0.CollectionName.Tokens, {
+      await peers.createIndex({slug: 1}, {unique: true})
+
+      const tokens = await db.createCollection<v0.DBToken>(v0.CollectionName.Tokens, {
         strict: true
       })
+
+      await tokens.createIndex({name: 1}, {unique: true})
 
       const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
         strict: true

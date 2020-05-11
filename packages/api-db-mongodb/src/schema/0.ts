@@ -3,7 +3,7 @@ import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from 
 export enum CollectionName {
   Migrations = 'migrations',
 
-  PeerInfo = 'settings',
+  PeerProfiles = 'peerProfiles',
   Peers = 'peers',
   Users = 'users',
 
@@ -28,7 +28,7 @@ export interface DBMigration {
   createdAt: Date
 }
 
-export interface DBPeerInfo {
+export interface DBPeerProfile {
   _id: any
 
   name: string
@@ -50,6 +50,9 @@ export interface DBPeer {
 
 export interface DBToken {
   _id: any
+
+  createdAt: Date
+  modifiedAt: Date
 
   name: string
   token: string

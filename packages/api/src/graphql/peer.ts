@@ -23,6 +23,7 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {markResultAsProxied, createProxyingResolver} from '../utility'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -40,9 +41,9 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
 
     logo: {
       type: GraphQLImage,
-      resolve(setting, args, {loaders}) {
-        return setting.logo ? setting.logo : setting.logoID && loaders.images.load(setting.logoID)
-      }
+      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+        return profile.logoID ? loaders.images.load(profile.logoID) : null
+      })
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
@@ -83,7 +84,7 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,
-      async resolve(root, args, context, info) {
+      resolve: createProxyingResolver(async (root, args, context, info) => {
         const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
           const query = print(queryDocument)
 
@@ -104,14 +105,16 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
           fetcher
         })
 
-        return delegateToSchema({
-          schema: schema,
-          operation: 'query',
-          fieldName: 'peerProfile',
-          args: {},
-          info
-        })
-      }
+        return markResultAsProxied(
+          await delegateToSchema({
+            schema: schema,
+            operation: 'query',
+            fieldName: 'peerProfile',
+            args: {},
+            info
+          })
+        )
+      })
     }
   }
 })

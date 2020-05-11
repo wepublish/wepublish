@@ -1,3 +1,5 @@
+import {GraphQLFieldResolver, GraphQLIsTypeOfFn} from 'graphql'
+
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
   return str
@@ -33,4 +35,49 @@ export function slugify(str: string) {
     .replace(/--+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')
+}
+
+export const IsProxiedSymbol = Symbol('isProxied')
+
+export function markResultAsProxied(result: any) {
+  for (const key in result) {
+    const value = result[key]
+
+    if (typeof value === 'object' && value != null) {
+      markResultAsProxied(value)
+    }
+  }
+
+  return Object.assign(result, {[IsProxiedSymbol]: true})
+}
+
+export function isSourceProxied<T>(source: T): source is T & {__typename?: string} {
+  return (source as any)[IsProxiedSymbol] == true
+}
+
+export function createProxyingResolver<TSource, TContext, TArgs = {[argName: string]: any}>(
+  resolver: GraphQLFieldResolver<TSource, TContext, TArgs>
+): GraphQLFieldResolver<TSource, TContext, TArgs> {
+  return (source, args, context, info) => {
+    if (isSourceProxied(source)) {
+      return (source as any)[info.path.key]
+    }
+
+    return resolver(source, args, context, info)
+  }
+}
+
+// TODO: Remove
+export function createProxyingIsTypeOf<TSource, TContext>(
+  name: string,
+  isTypeOf: GraphQLIsTypeOfFn<TSource, TContext>
+): GraphQLIsTypeOfFn<TSource, TContext> {
+  return (source, context, info) => {
+    if ((source as any)?.__typename === name) {
+      markResultAsProxied(source)
+      return true
+    }
+
+    return isTypeOf(source, context, info)
+  }
 }

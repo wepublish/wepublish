@@ -16,7 +16,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  ArticleTeaserGrid = 'articleTeaserGrid'
+  ArticleTeaserGrid = 'articleTeaserGrid',
+  TeaserGrid = 'teaserGrid'
 }
 
 export interface RichTextBlock {
@@ -110,14 +111,53 @@ export interface QuoteBlock {
   readonly author?: string
 }
 
-export interface ArticleTeaser {
-  readonly type?: string
-  readonly articleID: string
-}
-
 export interface ArticleTeaserGridBlock {
   readonly type: BlockType.ArticleTeaserGrid
   readonly teasers: ArticleTeaser[]
+  readonly numColumns: number
+}
+
+export enum TeaserType {
+  Article = 'article',
+  PeerArticle = 'peerArticle',
+  Page = 'page',
+  External = 'external'
+}
+
+export enum TeaserStyle {
+  Default = 'default',
+  Text = 'text',
+  Image = 'image'
+}
+
+export interface ArticleTeaser {
+  type: TeaserType.Article
+  style: TeaserStyle
+  articleID: string
+}
+
+export interface PeerArticleTeaser {
+  type: TeaserType.PeerArticle
+  style: TeaserStyle
+  peerID: string
+  articleID: string
+
+  imageID?: string
+  title?: string
+  lead?: string
+}
+
+export interface PageTeaser {
+  type: TeaserType.Page
+  style: TeaserStyle
+  pageID: string
+}
+
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+
+export interface TeaserGridBlock {
+  readonly type: BlockType.TeaserGrid
+  readonly teasers: Teaser[]
   readonly numColumns: number
 }
 
@@ -136,6 +176,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | ArticleTeaserGridBlock
+  | TeaserGridBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

@@ -13,6 +13,8 @@ export class MongoDBTokenAdapter implements DBTokenAdapter {
 
   async createToken(input: TokenInput): Promise<Token> {
     const {ops} = await this.tokens.insertOne({
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       name: input.name,
       token: generateToken()
     })
@@ -22,7 +24,7 @@ export class MongoDBTokenAdapter implements DBTokenAdapter {
   }
 
   async getTokens(): Promise<Token[]> {
-    const tokens = await this.tokens.find().toArray()
+    const tokens = await this.tokens.find().sort({createdAt: -1}).toArray()
     return tokens.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
