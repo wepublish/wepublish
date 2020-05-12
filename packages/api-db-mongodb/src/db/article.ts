@@ -20,7 +20,7 @@ import {
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 
-import {CollectionName, DBArticle} from '../schema'
+import {CollectionName, DBArticle} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 

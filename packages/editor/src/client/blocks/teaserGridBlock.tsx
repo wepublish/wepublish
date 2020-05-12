@@ -1,7 +1,11 @@
 import React, {useState, ReactNode} from 'react'
 import nanoid from 'nanoid'
 
-import {MaterialIconInsertDriveFileOutlined, MaterialIconClose} from '@karma.run/icons'
+import {
+  MaterialIconInsertDriveFileOutlined,
+  MaterialIconClose,
+  MaterialIconEditOutlined
+} from '@karma.run/icons'
 
 import {
   PlaceholderInput,
@@ -23,10 +27,9 @@ import {styled} from '@karma.run/react'
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {ArticleRefFragment} from '../api'
-import {TeaserGridBlockValue, ArticleTeaser} from './types'
+import {TeaserGridBlockValue, ArticleTeaser, Teaser, TeaserType, PageTeaser} from './types'
 
-import {ArticleChoosePanel} from '../panel/articleChoosePanel'
+import {TeaserSelectPanel, TeaserLink} from '../panel/teaserSelectPanel'
 
 interface GridElementProps {
   numColumns: number
@@ -39,8 +42,8 @@ const GridElement = styled('div', ({numColumns}: GridElementProps) => ({
   userSelect: 'none'
 }))
 
-const GridItem = SortableElement((props: ArticleTeaserBlockProps) => {
-  return <ArticleTeaserBlock {...props} />
+const GridItem = SortableElement((props: TeaserBlockProps) => {
+  return <TeaserBlock {...props} />
 })
 
 interface GridProps {
@@ -58,13 +61,13 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
 
   const {teasers, numColumns} = value
 
-  function handleArticleChange(index: number, article: ArticleRefFragment | null) {
-    const currentValue = teasers[index] || {}
+  function handleTeaserLinkChange(index: number, teaserLink: TeaserLink | null) {
+    // const currentValue = teasers[index] || {}
 
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
-        [index]: [nanoid(), article ? {...currentValue, article} : null]
+        [index]: [nanoid(), teaserLink ? teaserLink : null]
       })
     })
   }
@@ -105,18 +108,18 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
               setChooseModalOpen(true)
             }}
             onRemoveArticle={() => {
-              handleArticleChange(index, null)
+              handleTeaserLinkChange(index, null)
             }}
           />
         ))}
       </Grid>
       <Drawer open={isChooseModalOpen} width={500}>
         {() => (
-          <ArticleChoosePanel
+          <TeaserSelectPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={article => {
+            onSelect={teaserLink => {
               setChooseModalOpen(false)
-              handleArticleChange(choosingIndex, article)
+              handleTeaserLinkChange(choosingIndex, teaserLink)
             }}
           />
         )}
@@ -125,27 +128,21 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
   )
 }
 
-export interface ArticleTeaserBlockProps {
-  teaser: ArticleTeaser | null
+export interface TeaserBlockProps {
+  teaser: Teaser | null
   showGrabCursor: boolean
   numColumns: number
   onChooseArticle: () => void
   onRemoveArticle: () => void
 }
 
-export function ArticleTeaserBlock({
+export function TeaserBlock({
   teaser,
   numColumns,
   showGrabCursor,
   onChooseArticle,
   onRemoveArticle
-}: ArticleTeaserBlockProps) {
-  const states = []
-
-  if (teaser?.article?.draft) states.push('Draft')
-  if (teaser?.article?.pending) states.push('Pending')
-  if (teaser?.article?.published) states.push('Published')
-
+}: TeaserBlockProps) {
   return (
     <Card
       style={{cursor: showGrabCursor ? 'grab' : ''}}
@@ -153,44 +150,26 @@ export function ArticleTeaserBlock({
       overflow="hidden"
       zIndex={ZIndex.Default}>
       <PlaceholderInput onAddClick={onChooseArticle}>
-        {teaser && teaser.article && (
+        {teaser && (
           <Box position="relative" width="100%" height="100%">
-            <Box position="absolute" width="100%" height="100%">
-              {teaser.article.latest.image ? (
-                <Image
-                  draggable={false}
-                  src={
-                    numColumns === 1
-                      ? teaser.article.latest.image.column1URL ?? ''
-                      : teaser.article.latest.image.column6URL ?? ''
-                  }
-                  width="100%"
-                  height="100%"
-                />
-              ) : (
-                <PlaceholderImage width="100%" height="100%" />
-              )}
-            </Box>
-
-            <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
-              <Typography variant="subtitle1" color="gray">
-                {states.join(' / ')}
-              </Typography>
-              <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
-                {teaser.article.latest.title || 'Untitled'}
-              </Typography>
-            </Overlay>
+            {contentForTeaser(teaser, numColumns)}
 
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
+                icon={MaterialIconEditOutlined}
+                title="Edit Teaser"
+                onClick={onChooseArticle}
+                margin={Spacing.ExtraSmall}
+              />
+              <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
-                title="Choose Article"
+                title="Choose Teaser"
                 onClick={onChooseArticle}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconClose}
-                title="Remove Article"
+                title="Remove Teaser"
                 onClick={onRemoveArticle}
                 margin={Spacing.ExtraSmall}
               />
@@ -199,5 +178,107 @@ export function ArticleTeaserBlock({
         )}
       </PlaceholderInput>
     </Card>
+  )
+}
+
+export function contentForTeaser(teaser: Teaser, numColumns: number) {
+  switch (teaser.type) {
+    case TeaserType.Article:
+      return <ArticleTeaserContent teaser={teaser} numColumns={numColumns} />
+
+    case TeaserType.PeerArticle:
+      return null
+
+    case TeaserType.Page:
+      return <PageTeaserContent teaser={teaser} numColumns={numColumns} />
+
+    default:
+      return null
+  }
+}
+
+export interface ArticleTeaserContentProps {
+  teaser: ArticleTeaser
+  numColumns: number
+}
+
+export function ArticleTeaserContent({teaser, numColumns}: ArticleTeaserContentProps) {
+  const states = []
+
+  if (teaser?.article?.draft) states.push('Draft')
+  if (teaser?.article?.pending) states.push('Pending')
+  if (teaser?.article?.published) states.push('Published')
+
+  return (
+    <>
+      <Box position="absolute" width="100%" height="100%">
+        {teaser.article.latest.image ? (
+          <Image
+            draggable={false}
+            src={
+              numColumns === 1
+                ? teaser.article.latest.image.column1URL ?? ''
+                : teaser.article.latest.image.column6URL ?? ''
+            }
+            width="100%"
+            height="100%"
+          />
+        ) : (
+          <PlaceholderImage width="100%" height="100%" />
+        )}
+      </Box>
+
+      <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
+        <Typography variant="subtitle1" color="gray">
+          {states.join(' / ')}
+        </Typography>
+        <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
+          {teaser.article.latest.title || 'Untitled'}
+        </Typography>
+      </Overlay>
+    </>
+  )
+}
+
+export interface PageTeaserContentProps {
+  teaser: PageTeaser
+  numColumns: number
+}
+
+export function PageTeaserContent({teaser, numColumns}: PageTeaserContentProps) {
+  const states = []
+
+  if (teaser?.page?.draft) states.push('Draft')
+  if (teaser?.page?.pending) states.push('Pending')
+  if (teaser?.page?.published) states.push('Published')
+
+  return (
+    <>
+      <Box position="absolute" width="100%" height="100%">
+        {teaser.page.latest.image ? (
+          <Image
+            draggable={false}
+            src={
+              numColumns === 1
+                ? teaser.page.latest.image.column1URL ?? ''
+                : teaser.page.latest.image.column6URL ?? ''
+            }
+            width="100%"
+            height="100%"
+          />
+        ) : (
+          <PlaceholderImage width="100%" height="100%" />
+        )}
+      </Box>
+
+      <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
+        <Typography variant="subtitle1" color="gray">
+          {states.join(' / ')}
+        </Typography>
+        <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
+          {teaser.page.latest.title || 'Untitled'}
+        </Typography>
+      </Overlay>
+    </>
   )
 }

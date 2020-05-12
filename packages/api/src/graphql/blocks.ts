@@ -1,5 +1,3 @@
-import url from 'url'
-
 import {
   GraphQLObjectType,
   GraphQLInputObjectType,
@@ -9,18 +7,8 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLUnionType,
-  GraphQLEnumType,
-  print
+  GraphQLEnumType
 } from 'graphql'
-
-import {
-  makeRemoteExecutableSchema,
-  introspectSchema,
-  delegateToSchema,
-  Fetcher
-} from 'graphql-tools'
-
-import fetch from 'cross-fetch'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -50,26 +38,20 @@ import {
   PeerArticleTeaser,
   PageTeaser,
   TeaserType,
-  RichTextBlock,
-  Teaser
+  RichTextBlock
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
-import {
-  markResultAsProxied,
-  createProxyingResolver,
-  createProxyingIsTypeOf,
-  isSourceProxied
-} from '../utility'
+import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerQuery} from '../utility'
 
 export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
   name: 'RichTextBlock',
   fields: {
     richText: {type: GraphQLNonNull(GraphQLRichText)}
   },
-  isTypeOf: createProxyingIsTypeOf('RichTextBlock', value => {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.RichText
   })
 })
@@ -78,71 +60,77 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
   name: 'ArticleTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
     article: {
       type: GraphQLArticle,
       resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
         return loaders.articles.load(articleID)
       })
     }
-  })
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Article)
 })
 
 export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
   name: 'PeerArticleTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
     peer: {
       type: GraphQLPeer,
       resolve: createProxyingResolver(({peerID}, args, {loaders}) => {
         return loaders.peer.load(peerID)
       })
     },
+
+    articleID: {type: GraphQLNonNull(GraphQLID)},
     article: {
       type: GraphQLArticle,
       resolve: createProxyingResolver(async ({peerID, articleID}, args, {loaders}, info) => {
         const peer = await loaders.peer.load(peerID)
-
         if (!peer) return null
-
-        const {hostURL, token} = peer
-
-        const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
-          const query = print(queryDocument)
-          const fetchResult = await fetch(url.resolve(hostURL, 'admin'), {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({query, variables, operationName})
-          })
-
-          return fetchResult.json()
-        }
-
-        const schema = makeRemoteExecutableSchema({
-          schema: await introspectSchema(fetcher),
-          fetcher
-        })
-
-        return markResultAsProxied(
-          await delegateToSchema({
-            schema: schema,
-            operation: 'query',
-            fieldName: 'article',
-            args: {id: articleID},
-            info
-          })
-        )
+        return delegateToPeerQuery(peer, info, true, 'article', {id: articleID})
       })
     }
-  })
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.PeerArticle)
 })
 
 export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   name: 'PageTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
     page: {
       type: GraphQLPage,
       resolve: createProxyingResolver(({pageID}, args, {loaders}) => {
@@ -150,9 +138,8 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
       })
     }
   }),
-  isTypeOf(value) {
-    return value.type === TeaserType.Page
-  }
+
+  isTypeOf: createProxyingIsTypeOf(value => value.type === TeaserType.Page)
 })
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
@@ -166,25 +153,7 @@ export const GraphQLTeaserStyle = new GraphQLEnumType({
 
 export const GraphQLTeaser = new GraphQLUnionType({
   name: 'Teaser',
-  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser],
-  resolveType(value: Teaser) {
-    switch (isSourceProxied(value) ? value.__typename : value.type) {
-      case GraphQLArticleTeaser.name:
-      case TeaserType.Article:
-        return GraphQLArticleTeaser
-
-      case GraphQLPeerArticleTeaser.name:
-      case TeaserType.PeerArticle:
-        return GraphQLPeerArticleTeaser
-
-      case GraphQLPageTeaser.name:
-      case TeaserType.Page:
-        return GraphQLPageTeaser
-
-      default:
-        return null
-    }
-  }
+  types: [GraphQLArticleTeaser, GraphQLPeerArticleTeaser, GraphQLPageTeaser]
 })
 
 export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -193,7 +162,7 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
     teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaser))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   },
-  isTypeOf: createProxyingIsTypeOf('TeaserGridBlock', value => {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
   })
 })
@@ -223,9 +192,9 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
       })
     }
   }),
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === TeaserType.PeerArticle
-  }
+  })
 })
 
 export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
@@ -239,9 +208,9 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
       })
     }
   }),
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === TeaserType.Page
-  }
+  })
 })
 
 export const GraphQLPublicTeaser = new GraphQLUnionType({
@@ -255,9 +224,9 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
     teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaser))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TeaserGrid
-  }
+  })
 })
 
 export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, Context>({
@@ -285,9 +254,9 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
 
     caption: {type: GraphQLString}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Image
-  }
+  })
 })
 
 export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock, Context>({
@@ -297,9 +266,9 @@ export const GraphQLImageGalleryBlock = new GraphQLObjectType<ImageGalleryBlock,
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLGalleryImageEdge)))
     }
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.ImageGallery
-  }
+  })
 })
 
 export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock, Context>({
@@ -308,9 +277,9 @@ export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock,
     userID: {type: GraphQLNonNull(GraphQLString)},
     postID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.FacebookPost
-  }
+  })
 })
 
 export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBlock, Context>({
@@ -318,9 +287,9 @@ export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBloc
   fields: {
     postID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.InstagramPost
-  }
+  })
 })
 
 export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock, Context>({
@@ -329,9 +298,9 @@ export const GraphQLTwitterTweetBlock = new GraphQLObjectType<TwitterTweetBlock,
     userID: {type: GraphQLNonNull(GraphQLString)},
     tweetID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.TwitterTweet
-  }
+  })
 })
 
 export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Context>({
@@ -339,9 +308,9 @@ export const GraphQLVimeoVideoBlock = new GraphQLObjectType<VimeoVideoBlock, Con
   fields: {
     videoID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.VimeoVideo
-  }
+  })
 })
 
 export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock, Context>({
@@ -349,9 +318,9 @@ export const GraphQLYouTubeVideoBlock = new GraphQLObjectType<YouTubeVideoBlock,
   fields: {
     videoID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.YouTubeVideo
-  }
+  })
 })
 
 export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrackBlock, Context>({
@@ -359,9 +328,9 @@ export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrack
   fields: {
     trackID: {type: GraphQLNonNull(GraphQLString)}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.SoundCloudTrack
-  }
+  })
 })
 
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
@@ -372,9 +341,9 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     width: {type: GraphQLInt},
     height: {type: GraphQLInt}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Embed
-  }
+  })
 })
 
 export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>({
@@ -396,9 +365,9 @@ export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context
   fields: {
     listicle: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLListicleItem)))}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Listicle
-  }
+  })
 })
 
 export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBlock, Context>({
@@ -408,9 +377,9 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.LinkPageBreak
-  }
+  })
 })
 
 export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
@@ -419,9 +388,9 @@ export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
     title: {type: GraphQLString},
     lead: {type: GraphQLString}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Title
-  }
+  })
 })
 
 export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
@@ -430,9 +399,9 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
     quote: {type: GraphQLString},
     author: {type: GraphQLString}
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Quote
-  }
+  })
 })
 
 export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({

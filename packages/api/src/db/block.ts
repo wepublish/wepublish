@@ -134,6 +134,10 @@ export interface ArticleTeaser {
   type: TeaserType.Article
   style: TeaserStyle
   articleID: string
+
+  imageID?: string
+  title?: string
+  lead?: string
 }
 
 export interface PeerArticleTeaser {
@@ -151,6 +155,10 @@ export interface PageTeaser {
   type: TeaserType.Page
   style: TeaserStyle
   pageID: string
+
+  imageID?: string
+  title?: string
+  lead?: string
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser

@@ -5,8 +5,6 @@ import {DBAdapter, SortOrder} from '@wepublish/api'
 import {Migrations, LatestMigration} from './migration'
 import {generateID} from './utility'
 
-import {CollectionName, DBMigration} from './schema'
-
 import {MongoDBUserAdapter} from './db/user'
 import {MongoDBPeerAdapter} from './db/peer'
 import {MongoDBSessionAdapter} from './db/session'
@@ -17,6 +15,7 @@ import {MongoDBTokenAdapter} from './db/token'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
+import {DBMigration, CollectionName} from './db/schema'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number

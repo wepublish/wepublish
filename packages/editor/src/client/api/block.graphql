@@ -1,3 +1,39 @@
+fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+    article {
+      ...ArticleRef
+    }
+  }
+
+  ... on PeerArticleTeaser {
+    style
+
+    image {
+      ...ImageRef
+    }
+
+    title
+    lead
+
+    peer {
+      ...PeerRef
+    }
+
+    articleID
+    article {
+      ...ArticleRef
+    }
+  }
+
+  ... on PageTeaser {
+    style
+    page {
+      ...PageRef
+    }
+  }
+}
+
 fragment FullBlock on Block {
   __typename
 
@@ -61,12 +97,9 @@ fragment FullBlock on Block {
     height
   }
 
-  ... on ArticleTeaserGridBlock {
+  ... on TeaserGridBlock {
     teasers {
-      type
-      article {
-        ...ArticleRef
-      }
+      ...FullTeaser
     }
     numColumns
   }

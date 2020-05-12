@@ -1,4 +1,22 @@
-import {GraphQLFieldResolver, GraphQLIsTypeOfFn} from 'graphql'
+import url from 'url'
+import fetch from 'cross-fetch'
+
+import {
+  GraphQLFieldResolver,
+  GraphQLIsTypeOfFn,
+  print,
+  GraphQLResolveInfo,
+  GraphQLObjectType
+} from 'graphql'
+
+import {
+  delegateToSchema,
+  introspectSchema,
+  makeRemoteExecutableSchema,
+  Fetcher
+} from 'graphql-tools'
+
+import {Peer} from './db/peer'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -67,17 +85,50 @@ export function createProxyingResolver<TSource, TContext, TArgs = {[argName: str
   }
 }
 
-// TODO: Remove
 export function createProxyingIsTypeOf<TSource, TContext>(
-  name: string,
   isTypeOf: GraphQLIsTypeOfFn<TSource, TContext>
 ): GraphQLIsTypeOfFn<TSource, TContext> {
-  return (source, context, info) => {
-    if ((source as any)?.__typename === name) {
-      markResultAsProxied(source)
-      return true
-    }
-
-    return isTypeOf(source, context, info)
+  return function (this: GraphQLObjectType, source, context, info) {
+    return isSourceProxied(source)
+      ? source.__typename === this.name
+      : isTypeOf(source, context, info)
   }
+}
+
+export async function delegateToPeerQuery(
+  peer: Peer,
+  info: GraphQLResolveInfo,
+  isAdminQuery: boolean,
+  fieldName: string,
+  args?: {[key: string]: any}
+) {
+  const {hostURL, token} = peer
+  const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
+    const query = print(queryDocument)
+    const fetchResult = await fetch(url.resolve(hostURL, isAdminQuery ? 'admin' : ''), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({query, variables, operationName})
+    })
+
+    return fetchResult.json()
+  }
+
+  const schema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(fetcher),
+    fetcher
+  })
+
+  return markResultAsProxied(
+    await delegateToSchema({
+      schema: schema,
+      operation: 'query',
+      fieldName: fieldName,
+      args,
+      info
+    })
+  )
 }

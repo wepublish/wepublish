@@ -107,24 +107,13 @@ export enum ArticleSort {
 
 export type ArticleTeaser = {
    __typename?: 'ArticleTeaser';
-  type?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
   article?: Maybe<Article>;
 };
 
-export type ArticleTeaserGridBlock = {
-   __typename?: 'ArticleTeaserGridBlock';
-  teasers: Array<Maybe<ArticleTeaser>>;
-  numColumns: Scalars['Int'];
-};
-
-export type ArticleTeaserGridBlockInput = {
-  teasers: Array<Maybe<ArticleTeaserInput>>;
-  numColumns: Scalars['Int'];
-};
-
 export type ArticleTeaserInput = {
-  type?: Maybe<Scalars['String']>;
-  articleID?: Maybe<Scalars['ID']>;
+  style: TeaserStyle;
+  articleID: Scalars['ID'];
 };
 
 export type Author = {
@@ -185,7 +174,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | FacebookPostBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | ListicleBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | ArticleTeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | FacebookPostBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | ListicleBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
   richText?: Maybe<InputRichTextBlock>;
@@ -200,13 +189,15 @@ export type BlockInput = {
   soundCloudTrack?: Maybe<InputSoundCloudTrackBlock>;
   embed?: Maybe<InputEmbedBlock>;
   linkPageBreak?: Maybe<InputLinkPageBreakBlock>;
-  articleTeaserGrid?: Maybe<ArticleTeaserGridBlockInput>;
+  teaserGrid?: Maybe<TeaserGridBlockInput>;
 };
 
 
 export type CreatedToken = {
    __typename?: 'CreatedToken';
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   token: Scalars['String'];
 };
@@ -698,6 +689,17 @@ export enum PageSort {
   UpdatedAt = 'UPDATED_AT'
 }
 
+export type PageTeaser = {
+   __typename?: 'PageTeaser';
+  style: TeaserStyle;
+  page?: Maybe<Page>;
+};
+
+export type PageTeaserInput = {
+  style: TeaserStyle;
+  pageID: Scalars['ID'];
+};
+
 export type Peer = {
    __typename?: 'Peer';
   id: Scalars['ID'];
@@ -707,6 +709,23 @@ export type Peer = {
   slug: Scalars['String'];
   hostURL: Scalars['String'];
   profile?: Maybe<PeerProfile>;
+};
+
+export type PeerArticleTeaser = {
+   __typename?: 'PeerArticleTeaser';
+  style: TeaserStyle;
+  image?: Maybe<Image>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  peer?: Maybe<Peer>;
+  articleID: Scalars['ID'];
+  article?: Maybe<Article>;
+};
+
+export type PeerArticleTeaserInput = {
+  style: TeaserStyle;
+  peerID: Scalars['ID'];
+  articleID: Scalars['ID'];
 };
 
 export type PeerProfile = {
@@ -800,7 +819,7 @@ export type QueryImagesArgs = {
 
 
 export type QueryArticleArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
 };
 
 
@@ -870,6 +889,31 @@ export type SoundCloudTrackBlock = {
   trackID: Scalars['String'];
 };
 
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
+
+export type TeaserGridBlock = {
+   __typename?: 'TeaserGridBlock';
+  teasers: Array<Maybe<Teaser>>;
+  numColumns: Scalars['Int'];
+};
+
+export type TeaserGridBlockInput = {
+  teasers: Array<Maybe<TeaserInput>>;
+  numColumns: Scalars['Int'];
+};
+
+export type TeaserInput = {
+  article?: Maybe<ArticleTeaserInput>;
+  peerArticle?: Maybe<PeerArticleTeaserInput>;
+  page?: Maybe<PageTeaserInput>;
+};
+
+export enum TeaserStyle {
+  Default = 'DEFAULT',
+  Image = 'IMAGE',
+  Text = 'TEXT'
+}
+
 export type TitleBlock = {
    __typename?: 'TitleBlock';
   title?: Maybe<Scalars['String']>;
@@ -879,6 +923,8 @@ export type TitleBlock = {
 export type Token = {
    __typename?: 'Token';
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
 };
 
@@ -1129,8 +1175,8 @@ export type ArticleQuery = (
         { __typename?: 'QuoteBlock' }
         & FullBlock_QuoteBlock_Fragment
       ) | (
-        { __typename?: 'ArticleTeaserGridBlock' }
-        & FullBlock_ArticleTeaserGridBlock_Fragment
+        { __typename?: 'TeaserGridBlock' }
+        & FullBlock_TeaserGridBlock_Fragment
       )> }
     ) }
   )> }
@@ -1229,6 +1275,41 @@ export type DeleteAuthorMutation = (
   & Pick<Mutation, 'deleteAuthor'>
 );
 
+type FullTeaser_ArticleTeaser_Fragment = (
+  { __typename?: 'ArticleTeaser' }
+  & Pick<ArticleTeaser, 'style'>
+  & { article?: Maybe<(
+    { __typename?: 'Article' }
+    & ArticleRefFragment
+  )> }
+);
+
+type FullTeaser_PeerArticleTeaser_Fragment = (
+  { __typename?: 'PeerArticleTeaser' }
+  & Pick<PeerArticleTeaser, 'style' | 'title' | 'lead' | 'articleID'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, peer?: Maybe<(
+    { __typename?: 'Peer' }
+    & PeerRefFragment
+  )>, article?: Maybe<(
+    { __typename?: 'Article' }
+    & ArticleRefFragment
+  )> }
+);
+
+type FullTeaser_PageTeaser_Fragment = (
+  { __typename?: 'PageTeaser' }
+  & Pick<PageTeaser, 'style'>
+  & { page?: Maybe<(
+    { __typename?: 'Page' }
+    & PageRefFragment
+  )> }
+);
+
+export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment | FullTeaser_PageTeaser_Fragment;
+
 type FullBlock_RichTextBlock_Fragment = (
   { __typename: 'RichTextBlock' }
   & Pick<RichTextBlock, 'richText'>
@@ -1297,20 +1378,22 @@ type FullBlock_QuoteBlock_Fragment = (
   & Pick<QuoteBlock, 'quote' | 'author'>
 );
 
-type FullBlock_ArticleTeaserGridBlock_Fragment = (
-  { __typename: 'ArticleTeaserGridBlock' }
-  & Pick<ArticleTeaserGridBlock, 'numColumns'>
+type FullBlock_TeaserGridBlock_Fragment = (
+  { __typename: 'TeaserGridBlock' }
+  & Pick<TeaserGridBlock, 'numColumns'>
   & { teasers: Array<Maybe<(
     { __typename?: 'ArticleTeaser' }
-    & Pick<ArticleTeaser, 'type'>
-    & { article?: Maybe<(
-      { __typename?: 'Article' }
-      & ArticleRefFragment
-    )> }
+    & FullTeaser_ArticleTeaser_Fragment
+  ) | (
+    { __typename?: 'PeerArticleTeaser' }
+    & FullTeaser_PeerArticleTeaser_Fragment
+  ) | (
+    { __typename?: 'PageTeaser' }
+    & FullTeaser_PageTeaser_Fragment
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_ArticleTeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -1594,8 +1677,8 @@ export type PageQuery = (
         { __typename?: 'QuoteBlock' }
         & FullBlock_QuoteBlock_Fragment
       ) | (
-        { __typename?: 'ArticleTeaserGridBlock' }
-        & FullBlock_ArticleTeaserGridBlock_Fragment
+        { __typename?: 'TeaserGridBlock' }
+        & FullBlock_TeaserGridBlock_Fragment
       )> }
     ) }
   )> }
@@ -1835,6 +1918,76 @@ export const ArticleRefFragmentDoc = gql`
   }
 }
     ${ImageRefFragmentDoc}`;
+export const PeerRefFragmentDoc = gql`
+    fragment PeerRef on Peer {
+  id
+  name
+  slug
+  hostURL
+}
+    `;
+export const PageRefFragmentDoc = gql`
+    fragment PageRef on Page {
+  id
+  createdAt
+  modifiedAt
+  draft {
+    revision
+  }
+  pending {
+    revision
+  }
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+  latest {
+    publishedAt
+    updatedAt
+    revision
+    title
+    description
+    image {
+      ...ImageRef
+    }
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullTeaserFragmentDoc = gql`
+    fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+    article {
+      ...ArticleRef
+    }
+  }
+  ... on PeerArticleTeaser {
+    style
+    image {
+      ...ImageRef
+    }
+    title
+    lead
+    peer {
+      ...PeerRef
+    }
+    articleID
+    article {
+      ...ArticleRef
+    }
+  }
+  ... on PageTeaser {
+    style
+    page {
+      ...PageRef
+    }
+  }
+}
+    ${ArticleRefFragmentDoc}
+${ImageRefFragmentDoc}
+${PeerRefFragmentDoc}
+${PageRefFragmentDoc}`;
 export const FullBlockFragmentDoc = gql`
     fragment FullBlock on Block {
   __typename
@@ -1886,18 +2039,15 @@ export const FullBlockFragmentDoc = gql`
     width
     height
   }
-  ... on ArticleTeaserGridBlock {
+  ... on TeaserGridBlock {
     teasers {
-      type
-      article {
-        ...ArticleRef
-      }
+      ...FullTeaser
     }
     numColumns
   }
 }
     ${ImageRefFragmentDoc}
-${ArticleRefFragmentDoc}`;
+${FullTeaserFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -1938,42 +2088,6 @@ export const MutationPageFragmentDoc = gql`
     updatedAt
     revision
   }
-}
-    `;
-export const PageRefFragmentDoc = gql`
-    fragment PageRef on Page {
-  id
-  createdAt
-  modifiedAt
-  draft {
-    revision
-  }
-  pending {
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-    title
-    description
-    image {
-      ...ImageRef
-    }
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const PeerRefFragmentDoc = gql`
-    fragment PeerRef on Peer {
-  id
-  name
-  slug
-  hostURL
 }
     `;
 export const FullPeerProfileFragmentDoc = gql`

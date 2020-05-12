@@ -1,7 +1,7 @@
 import {DBNavigationAdapter, NavigationInput, OptionalNavigation} from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
-import {CollectionName, DBNavigation} from '../schema'
+import {CollectionName, DBNavigation} from './schema'
 import {MongoErrorCode} from '../utility'
 
 export class MongoDBNavigationAdapter implements DBNavigationAdapter {

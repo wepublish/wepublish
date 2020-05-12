@@ -10,7 +10,7 @@ import {
 
 import {Collection, Db, MongoError} from 'mongodb'
 
-import {DBUser, CollectionName} from '../schema'
+import {DBUser, CollectionName} from './schema'
 import {MongoErrorCode} from '../utility'
 
 export class MongoDBUserAdapter implements DBUserAdapter {

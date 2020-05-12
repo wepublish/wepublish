@@ -3,7 +3,15 @@ import {Node, Range} from 'slate'
 
 import nanoid from 'nanoid'
 
-import {FullBlockFragment, ImageRefFragment, ArticleRefFragment} from '../api'
+import {
+  FullBlockFragment,
+  ImageRefFragment,
+  ArticleRefFragment,
+  BlockInput,
+  PeerRefFragment,
+  PageRefFragment,
+  TeaserStyle
+} from '../api'
 
 export enum BlockType {
   RichText = 'richText',
@@ -109,13 +117,51 @@ export type EmbedBlockValue =
   | SoundCloudTrackEmbed
   | OtherEmbed
 
+export enum TeaserType {
+  Article = 'article',
+  PeerArticle = 'peerArticle',
+  Page = 'page'
+}
+
 export interface ArticleTeaser {
-  readonly type: string
+  readonly type: TeaserType.Article
+  readonly style: TeaserStyle
+
+  readonly image?: ImageRefFragment
+  readonly title: string
+  readonly lead: string
+
+  readonly article: ArticleRefFragment
+}
+
+export interface PeerArticleTeaser {
+  readonly type: TeaserType.PeerArticle
+  readonly style: TeaserStyle
+
+  readonly image?: ImageRefFragment
+  readonly title: string
+  readonly lead: string
+
+  readonly peer: PeerRefFragment
+  readonly articleID: string
   readonly article?: ArticleRefFragment
 }
 
+export interface PageTeaser {
+  readonly type: TeaserType.Page
+
+  readonly image?: ImageRefFragment
+  readonly title: string
+  readonly lead: string
+
+  readonly style: TeaserStyle
+  readonly page: PageRefFragment
+}
+
+export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
+
 export interface TeaserGridBlockValue {
-  readonly teasers: Array<[string, ArticleTeaser | null]>
+  readonly teasers: Array<[string, Teaser | null]>
   readonly numColumns: number
 }
 
@@ -149,72 +195,7 @@ export type BlockValue =
   | ArticleTeaserGridBlock1ListValue
   | ArticleTeaserGridBlock6ListValue
 
-export interface BlockUnionMap {
-  readonly image?: {
-    readonly caption?: string
-    readonly imageID?: string
-  }
-
-  readonly title?: {
-    readonly title?: string
-    readonly lead?: string
-  }
-
-  readonly richText?: {
-    readonly richText: RichTextValue
-  }
-
-  readonly quote?: {
-    readonly quote?: string
-    readonly author?: string
-  }
-
-  readonly facebookPost?: {
-    readonly userID: string
-    readonly postID: string
-  }
-
-  readonly instagramPost?: {
-    readonly postID: string
-  }
-
-  readonly twitterTweet?: {
-    readonly userID: string
-    readonly tweetID: string
-  }
-
-  readonly vimeoVideo?: {
-    readonly videoID: string
-  }
-
-  readonly youTubeVideo?: {
-    readonly videoID: string
-  }
-
-  readonly soundCloudTrack?: {
-    readonly trackID: string
-  }
-
-  readonly embed?: {
-    readonly url?: string
-    readonly title?: string
-    readonly width?: number
-    readonly height?: number
-  }
-
-  readonly linkPageBreak?: {
-    readonly text?: string
-    readonly linkURL?: string
-    readonly linkText?: string
-  }
-
-  readonly articleTeaserGrid?: {
-    readonly teasers: Array<{type: string; articleID: string} | null>
-    readonly numColumns: number
-  }
-}
-
-export function unionMapForBlock(block: BlockValue): BlockUnionMap {
+export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
     case BlockType.Image:
       return {
@@ -317,10 +298,24 @@ export function unionMapForBlock(block: BlockValue): BlockUnionMap {
     case BlockType.ArticleTeaserGrid1:
     case BlockType.ArticleTeaserGrid6:
       return {
-        articleTeaserGrid: {
-          teasers: block.value.teasers.map(([, value]) =>
-            value && value.article ? {type: value.type, articleID: value.article.id} : null
-          ),
+        teaserGrid: {
+          teasers: block.value.teasers.map(([, value]) => {
+            switch (value?.type) {
+              case TeaserType.Article:
+                return {article: {style: value.style, articleID: value.article.id}}
+
+              case TeaserType.PeerArticle:
+                return {
+                  article: {style: value.style, peerID: value.peer.id, articleID: value.articleID}
+                }
+
+              case TeaserType.Page:
+                return {page: {style: value.style, pageID: value.page.id}}
+
+              default:
+                return null
+            }
+          }),
           numColumns: block.value.numColumns
         }
       }
@@ -420,13 +415,60 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    case 'ArticleTeaserGridBlock':
+    case 'TeaserGridBlock':
       return {
         key,
         type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid6,
         value: {
           numColumns: block.numColumns,
-          teasers: block.teasers.map((teaser: any) => [nanoid(), teaser])
+          teasers: block.teasers.map(teaser => {
+            switch (teaser?.__typename) {
+              case 'ArticleTeaser':
+                return [
+                  nanoid(),
+                  teaser.article
+                    ? {
+                        type: TeaserType.Article,
+                        style: teaser.style,
+                        article: teaser.article
+                      }
+                    : null
+                ]
+
+              case 'PeerArticleTeaser':
+              case 'PeerArticleTeaser':
+                return [
+                  nanoid(),
+                  teaser.peer
+                    ? {
+                        type: TeaserType.PeerArticle,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        title: teaser.title ?? '',
+                        lead: teaser.lead ?? '',
+                        peer: teaser.peer,
+                        articleID: teaser.articleID,
+                        article: teaser.article ?? undefined
+                      }
+                    : null
+                ]
+
+              case 'PageTeaser':
+                return [
+                  nanoid(),
+                  teaser.page
+                    ? {
+                        type: TeaserType.Page,
+                        style: teaser.style,
+                        page: teaser.page
+                      }
+                    : null
+                ]
+
+              default:
+                return [nanoid(), null]
+            }
+          })
         }
       }
 

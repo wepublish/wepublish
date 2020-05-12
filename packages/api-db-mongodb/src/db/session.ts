@@ -9,7 +9,7 @@ import {
 
 import {Collection, Db} from 'mongodb'
 
-import {CollectionName, DBSession, DBUser, DBToken} from '../schema'
+import {CollectionName, DBSession, DBUser, DBToken} from './schema'
 import {generateToken} from '../utility'
 
 export class MongoDBSessionAdapter implements DBSessionAdapter {

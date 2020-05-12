@@ -20,6 +20,7 @@ import {GraphQLSlug} from './slug'
 import {GraphQLPageInfo} from './common'
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
+import {createProxyingResolver} from '../utility'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -94,9 +95,9 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}, info) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
 
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
@@ -118,9 +119,9 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
 
     latest: {
       type: GraphQLNonNull(GraphQLPageRevision),
-      resolve({draft, pending, published}) {
+      resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
-      }
+      })
     }
 
     // TODO: Implement page history
@@ -149,9 +150,9 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve(page, {}, {urlAdapter}) {
+      resolve: createProxyingResolver((page, {}, {urlAdapter}) => {
         return urlAdapter.getPublicPageURL(page)
-      }
+      })
     },
 
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -160,9 +161,9 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}, info) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
 
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}

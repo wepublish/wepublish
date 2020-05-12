@@ -15,7 +15,7 @@ import {
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 
-import {CollectionName, DBImage} from '../schema'
+import {CollectionName, DBImage} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 

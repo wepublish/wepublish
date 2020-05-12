@@ -1,29 +1,17 @@
-import url from 'url'
-
 import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLString,
   GraphQLInputObjectType,
-  GraphQLID,
-  print
+  GraphQLID
 } from 'graphql'
-
-import {
-  delegateToSchema,
-  makeRemoteExecutableSchema,
-  introspectSchema,
-  Fetcher
-} from 'graphql-tools'
-
-import fetch from 'cross-fetch'
 
 import {Peer, PeerProfile} from '../db/peer'
 import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {markResultAsProxied, createProxyingResolver} from '../utility'
+import {createProxyingResolver, delegateToPeerQuery} from '../utility'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -84,37 +72,9 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,
-      resolve: createProxyingResolver(async (root, args, context, info) => {
-        const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
-          const query = print(queryDocument)
-
-          const fetchResult = await fetch(url.resolve(root.hostURL, 'admin'), {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${root.token}`
-            },
-            body: JSON.stringify({query, variables, operationName})
-          })
-
-          return fetchResult.json()
-        }
-
-        const schema = makeRemoteExecutableSchema({
-          schema: await introspectSchema(fetcher),
-          fetcher
-        })
-
-        return markResultAsProxied(
-          await delegateToSchema({
-            schema: schema,
-            operation: 'query',
-            fieldName: 'peerProfile',
-            args: {},
-            info
-          })
-        )
-      })
+      resolve: createProxyingResolver(async (source, args, context, info) =>
+        delegateToPeerQuery(source, info, true, 'peerProfile')
+      )
     }
   }
 })

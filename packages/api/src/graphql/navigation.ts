@@ -11,9 +11,15 @@ import {
 
 import {Context} from '../context'
 
-import {ArticleNavigationLink, NavigationLinkType, PageNavigationLink} from '../db/navigation'
+import {
+  ArticleNavigationLink,
+  NavigationLinkType,
+  PageNavigationLink,
+  ExternalNavigationLink
+} from '../db/navigation'
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
+import {createProxyingResolver, createProxyingIsTypeOf} from '../utility'
 
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
@@ -29,14 +35,14 @@ export const GraphQLPageNavigationLink = new GraphQLObjectType<PageNavigationLin
     label: {type: GraphQLNonNull(GraphQLString)},
     page: {
       type: GraphQLPage,
-      resolve({pageID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
         return loaders.pages.load(pageID)
-      }
+      })
     }
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === NavigationLinkType.Page
-  }
+  })
 })
 
 export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigationLink, Context>({
@@ -46,27 +52,29 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
     label: {type: GraphQLNonNull(GraphQLString)},
     article: {
       type: GraphQLArticle,
-      resolve({articleID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
         return loaders.articles.load(articleID)
-      }
+      })
     }
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === NavigationLinkType.Article
-  }
+  })
 })
 
-export const GraphQLExternalNavigationLink = new GraphQLObjectType({
-  name: 'ExternalNavigationLink',
-  interfaces: [GraphQLBaseNavigationLink],
-  fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
-    url: {type: GraphQLNonNull(GraphQLString)}
-  },
-  isTypeOf(value) {
-    return value.type === NavigationLinkType.External
+export const GraphQLExternalNavigationLink = new GraphQLObjectType<ExternalNavigationLink, Context>(
+  {
+    name: 'ExternalNavigationLink',
+    interfaces: [GraphQLBaseNavigationLink],
+    fields: {
+      label: {type: GraphQLNonNull(GraphQLString)},
+      url: {type: GraphQLNonNull(GraphQLString)}
+    },
+    isTypeOf: createProxyingIsTypeOf(value => {
+      return value.type === NavigationLinkType.External
+    })
   }
-})
+)
 
 export const GraphQLNavigationLink = new GraphQLUnionType({
   name: 'NavigationLink',
@@ -90,14 +98,14 @@ export const GraphQLPublicPageNavigationLink = new GraphQLObjectType<PageNavigat
     label: {type: GraphQLNonNull(GraphQLString)},
     page: {
       type: GraphQLPublicPage,
-      resolve({pageID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
         return loaders.publicPagesByID.load(pageID)
-      }
+      })
     }
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === NavigationLinkType.Page
-  }
+  })
 })
 
 export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
@@ -110,14 +118,14 @@ export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
     label: {type: GraphQLNonNull(GraphQLString)},
     article: {
       type: GraphQLPublicArticle,
-      resolve({articleID}, _args, {loaders}) {
+      resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
         return loaders.publicArticles.load(articleID)
-      }
+      })
     }
   },
-  isTypeOf(value) {
+  isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === NavigationLinkType.Article
-  }
+  })
 })
 
 export const GraphQLPublicNavigationLink = new GraphQLUnionType({

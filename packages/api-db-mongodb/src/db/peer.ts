@@ -10,7 +10,7 @@ import {
 
 import {Collection, Db} from 'mongodb'
 
-import {CollectionName, DBPeerProfile, DBPeer} from '../schema'
+import {CollectionName, DBPeerProfile, DBPeer} from './schema'
 
 export class MongoDBPeerAdapter implements DBPeerAdapter {
   private peerProfiles: Collection<DBPeerProfile>
