@@ -1,5 +1,3 @@
-import {UserRole} from './userRole'
-
 export interface CreateUserArgs {
   readonly name: string
   readonly email: string
@@ -16,7 +14,7 @@ export interface User {
   readonly id: string
   readonly name: string
   readonly email: string
-  readonly roles: UserRole[]
+  readonly roleIDs: string[]
 }
 
 export type OptionalUser = User | null

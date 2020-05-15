@@ -24,7 +24,7 @@ import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 import {GraphQLBlockInput} from './blocks'
 import {Issuer} from 'openid-client'
-import {CanCreateAuthor, User} from '..'
+import {CanCreateAuthor, UserRole} from '..'
 import {Permission} from './permissions'
 
 function mapBlockUnionMap(value: any) {
@@ -46,8 +46,8 @@ function mapBlockUnionMap(value: any) {
   return {type: key, ...value[key]} as Block
 }
 
-function authorise(neededPermission: Permission, user: User): void {
-  const userPermissions = user.roles.reduce<Permission[]>((permissions, role) => {
+function authorise(neededPermission: Permission, userRoles: UserRole[]): void {
+  const userPermissions = userRoles.reduce<Permission[]>((permissions, role) => {
     return role.permissions.concat(permissions)
   }, [])
   if (!userPermissions.some(permission => permission.name === neededPermission.name)) {
@@ -146,8 +146,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
       resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {user} = authenticate()
-        authorise(CanCreateAuthor, user)
+        const {roles} = authenticate()
+        authorise(CanCreateAuthor, roles)
         return dbAdapter.createAuthor({input})
       }
     },

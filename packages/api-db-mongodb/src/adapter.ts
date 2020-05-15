@@ -325,7 +325,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roles: await this._getUserRolesForDBUser(user)
+        roleIDs: user.roles
       }
     } else {
       return null
@@ -334,15 +334,14 @@ export class MongoDBAdapter implements DBAdapter {
 
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
     const users = await this.users.find({_id: {$in: ids}}).toArray()
-    const prepareUser = async (user: DBUser) => {
+    return users.map(user => {
       return {
         id: user._id,
         email: user.email,
         name: user.name,
-        roles: await this._getUserRolesForDBUser(user)
+        roleIDs: user.roles
       }
-    }
-    return Promise.all(users.map(prepareUser))
+    })
   }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
@@ -353,7 +352,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roles: await this._getUserRolesForDBUser(user)
+        roleIDs: user.roles
       }
     }
 
@@ -367,7 +366,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roles: await this._getUserRolesForDBUser(user)
+        roleIDs: user.roles
       }
     } else {
       return null
@@ -442,8 +441,8 @@ export class MongoDBAdapter implements DBAdapter {
     }))
   }
 
-  async _getUserRolesForDBUser(user: DBUser): Promise<UserRole[]> {
-    const _roles = await this.getUserRolesByID(user.roles)
+  async _getUserRolesForUser(user: User): Promise<UserRole[]> {
+    const _roles = await this.getUserRolesByID(user.roleIDs)
     return !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
   }
 
@@ -462,7 +461,9 @@ export class MongoDBAdapter implements DBAdapter {
       expiresAt
     })
 
-    return {id, user, token, createdAt, expiresAt}
+    const roles = await this._getUserRolesForUser(user)
+
+    return {id, user, token, createdAt, roles, expiresAt}
   }
 
   async deleteSessionByToken(token: string): Promise<boolean> {
@@ -484,7 +485,8 @@ export class MongoDBAdapter implements DBAdapter {
       token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user
+      user,
+      roles: await this._getUserRolesForUser(user)
     }
   }
 
@@ -496,12 +498,17 @@ export class MongoDBAdapter implements DBAdapter {
   async getSessionsForUser(user: User): Promise<Session[]> {
     const sessions = await this.sessions.find({userID: user.id}).toArray()
 
-    return sessions.map(session => ({
-      id: session._id,
-      createdAt: session.createdAt,
-      expiresAt: session.expiresAt,
-      user: user
-    }))
+    return await Promise.all<Session>(
+      sessions.map(async session => {
+        return {
+          id: session._id,
+          createdAt: session.createdAt,
+          expiresAt: session.expiresAt,
+          user: user,
+          roles: await this._getUserRolesForUser(user)
+        }
+      })
+    )
   }
 
   async getSessionByID(user: User, id: string): Promise<OptionalSession> {
@@ -513,7 +520,8 @@ export class MongoDBAdapter implements DBAdapter {
       id: session._id,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user: user
+      user: user,
+      roles: await this._getUserRolesForUser(user)
     }
   }
 

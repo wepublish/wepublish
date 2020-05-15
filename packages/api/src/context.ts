@@ -17,6 +17,7 @@ import {OptionalArticle, OptionalPublicArticle} from './db/article'
 import {OptionalAuthor} from './db/author'
 import {OptionalNavigation} from './db/navigation'
 import {OptionalPage, OptionalPublicPage} from './db/page'
+import {OptionalUserRole} from './db/userRole'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -33,6 +34,8 @@ export interface DataLoaderContext {
   readonly pages: DataLoader<string, OptionalPage>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+
+  readonly userRolesByID: DataLoader<string, OptionalUserRole>
 }
 
 export interface Context {
@@ -89,7 +92,9 @@ export async function contextFromRequest(
 
       pages: new DataLoader(ids => dbAdapter.getPagesByID(ids)),
       publicPagesByID: new DataLoader(ids => dbAdapter.getPublishedPagesByID(ids)),
-      publicPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs))
+      publicPagesBySlug: new DataLoader(slugs => dbAdapter.getPublishedPagesBySlug(slugs)),
+
+      userRolesByID: new DataLoader(ids => dbAdapter.getUserRolesByID(ids))
     },
 
     dbAdapter,

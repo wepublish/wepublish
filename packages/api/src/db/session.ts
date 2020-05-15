@@ -1,8 +1,10 @@
 import {User} from './user'
+import {UserRole} from './userRole'
 
 export interface Session {
   readonly id: string
   readonly user: User
+  readonly roles: UserRole[]
   readonly createdAt: Date
   readonly expiresAt: Date
 }

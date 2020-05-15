@@ -21,5 +21,5 @@ export interface DBUserRoleAdapter {
   createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole>
   getUserRole(name: string): Promise<OptionalUserRole>
   getUserRoleByID(id: string): Promise<OptionalUserRole>
-  getUserRolesByID(ids: string[]): Promise<OptionalUserRole[]>
+  getUserRolesByID(ids: readonly string[]): Promise<OptionalUserRole[]>
 }
