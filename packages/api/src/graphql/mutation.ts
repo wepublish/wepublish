@@ -13,8 +13,7 @@ import {
   InvalidCredentialsError,
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
-  UserNotFoundError,
-  NotAuthorisedError
+  UserNotFoundError
 } from '../error'
 import {GraphQLArticleInput, GraphQLArticle} from './article'
 import {BlockMap, Block} from '../db/block'
@@ -35,9 +34,8 @@ import {
   CanDeletePage,
   CanPublishArticle,
   CanPublishPage,
-  UserRole
-} from '..'
-import {Permission} from './permissions'
+  authorise
+} from './permissions'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -56,16 +54,6 @@ function mapBlockUnionMap(value: any) {
 
   const key = Object.keys(value)[0] as keyof BlockMap
   return {type: key, ...value[key]} as Block
-}
-
-function authorise(neededPermission: Permission, userRoles: UserRole[]): void {
-  const userPermissions = userRoles.reduce<Permission[]>((permissions, role) => {
-    return role.permissions.concat(permissions)
-  }, [])
-  if (!userPermissions.some(permission => permission.name === neededPermission.name)) {
-    throw new NotAuthorisedError()
-  }
-  return
 }
 
 export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({

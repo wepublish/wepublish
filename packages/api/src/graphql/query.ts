@@ -51,6 +51,18 @@ import {
 } from './page'
 import {PageSort} from '../db/page'
 import {Client, Issuer} from 'openid-client'
+import {
+  authorise,
+  CanGetArticle,
+  CanGetArticles,
+  CanGetAuthor,
+  CanGetAuthors,
+  CanGetImage,
+  CanGetImages,
+  CanGetNavigation,
+  CanGetPage,
+  CanGetPages
+} from './permissions'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -121,7 +133,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
       resolve(root, {id, key}, {authenticate, loaders}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetNavigation, roles)
 
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
@@ -138,7 +151,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
       resolve(root, {id, slug}, {authenticate, loaders}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetAuthor, roles)
 
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -160,7 +174,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetAuthors, roles)
 
         return dbAdapter.getAuthors({
           filter,
@@ -179,7 +194,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLImage,
       args: {id: {type: GraphQLID}},
       resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetImage, roles)
         return loaders.images.load(id)
       }
     },
@@ -196,7 +212,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetImages, roles)
 
         return dbAdapter.getImages({
           filter,
@@ -215,7 +232,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLArticle,
       args: {id: {type: GraphQLID}},
       resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetArticle, roles)
         return loaders.articles.load(id)
       }
     },
@@ -232,7 +250,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetArticles, roles)
 
         return dbAdapter.getArticles({
           filter,
@@ -251,7 +270,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLPage,
       args: {id: {type: GraphQLID}},
       resolve(root, {id}, {authenticate, loaders}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetPage, roles)
         return loaders.pages.load(id)
       }
     },
@@ -268,7 +288,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
-        authenticate()
+        const {roles} = authenticate()
+        authorise(CanGetPages, roles)
 
         return dbAdapter.getPages({
           filter,
