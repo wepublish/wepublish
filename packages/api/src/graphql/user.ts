@@ -43,6 +43,7 @@ export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
     roles: {
       type: GraphQLNonNull(GraphQLList(GraphQLUserRole)),
@@ -74,5 +75,14 @@ export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
     nodes: {type: GraphQLList(GraphQLUser)},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLUserInput = new GraphQLInputObjectType({
+  name: 'UserInput',
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: GraphQLNonNull(GraphQLString)},
+    roles: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })

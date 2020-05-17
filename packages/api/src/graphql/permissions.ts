@@ -133,6 +133,12 @@ export const CanDeletePage: Permission = <Permission>{
   deprecated: false
 }
 
+export const CanCreateUser: Permission = <Permission>{
+  id: 'CAN_CREATE_USER',
+  description: 'Allows to create an user',
+  deprecated: false
+}
+
 export const CanGetUser: Permission = <Permission>{
   id: 'CAN_GET_USER',
   description: 'Allows to get an user',
@@ -169,7 +175,11 @@ export const AllPermissions: Permission[] = <Permission[]>[
   CanGetPage,
   CanGetPages,
   CanDeletePage,
-  CanPublishPage
+  CanPublishPage,
+  CanCreateUser,
+  CanGetUser,
+  CanGetUsers,
+  CanDeleteUser
 ]
 
 export const EditorPermissions: Permission[] = <Permission[]>[

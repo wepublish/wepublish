@@ -34,8 +34,11 @@ import {
   CanDeletePage,
   CanPublishArticle,
   CanPublishPage,
-  authorise
+  authorise,
+  CanCreateUser,
+  CanDeleteUser
 } from './permissions'
+import {GraphQLUser, GraphQLUserInput} from './user'
 
 function mapBlockUnionMap(value: any) {
   const valueKeys = Object.keys(value)
@@ -135,6 +138,42 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     // User
     // ====
+
+    createUser: {
+      type: GraphQLUser,
+      args: {input: {type: GraphQLNonNull(GraphQLUserInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.createUser({input})
+      }
+    },
+
+    updateUser: {
+      type: GraphQLAuthor,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUserInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.updateAuthor({id, input})
+      }
+    },
+
+    deleteUser: {
+      type: GraphQLString,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteUser, roles)
+        await dbAdapter.deleteAuthor({id})
+        return id
+      }
+    },
 
     // Navigation
     // ==========

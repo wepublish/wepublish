@@ -11,6 +11,7 @@ import {ImageList} from './routes/imageList'
 import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
+import {UserList} from './routes/userList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -33,6 +34,11 @@ export function contentForRoute(route: Route) {
     case RouteType.AuthorCreate:
     case RouteType.AuthorEdit:
       return <AuthorList />
+
+    case RouteType.UserList:
+    case RouteType.UserCreate:
+    case RouteType.UserEdit:
+      return <UserList />
 
     case RouteType.NotFound:
       return <ArticleList />

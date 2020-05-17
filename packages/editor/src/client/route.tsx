@@ -38,7 +38,11 @@ export enum RouteType {
 
   AuthorList = 'authorList',
   AuthorEdit = 'authorEdit',
-  AuthorCreate = 'authorCreate'
+  AuthorCreate = 'authorCreate',
+
+  UserList = 'userList',
+  UserEdit = 'userEdit',
+  UserCreate = 'userCreate'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -73,6 +77,10 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
+export const UserListRoute = route(RouteType.UserList, routePath`/users`)
+export const UserEditRoute = route(RouteType.UserEdit, routePath`/user/edit/${required('id')}`)
+export const UserCreateRoute = route(RouteType.UserCreate, routePath`/user/create`)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
@@ -91,6 +99,9 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
+  UserListRoute,
+  UserEditRoute,
+  UserCreateRoute,
   NotFoundRoute
 ] as const
 

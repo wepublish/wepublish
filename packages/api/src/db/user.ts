@@ -1,10 +1,22 @@
 import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
-export interface CreateUserArgs {
+export interface UserInput {
   readonly name: string
   readonly email: string
   readonly password: string
   readonly roles: string[]
+}
+
+export interface CreateUserArgs {
+  readonly input: UserInput
+}
+export interface UpdateUserArgs {
+  readonly id: string
+  readonly input: UserInput
+}
+
+export interface DeleteUserArgs {
+  readonly id: string
 }
 
 export interface GetUserForCredentialsArgs {
@@ -40,6 +52,9 @@ export interface GetUsersArgs {
 
 export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<OptionalUser>
+  updateUser(args: UpdateUserArgs): Promise<OptionalUser>
+  deleteUser(args: DeleteUserArgs): Promise<string | null>
+
   getUser(email: string): Promise<OptionalUser>
   getUsersByID(ids: string[]): Promise<OptionalUser[]>
   getUserByID(id: string): Promise<OptionalUser>

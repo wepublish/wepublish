@@ -59,7 +59,9 @@ import {
   PageSort,
   UserRole,
   GetUsersArgs,
-  UserSort
+  UserSort,
+  UpdateUserArgs,
+  DeleteUserArgs
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -298,15 +300,15 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  async createUser({email, name, password, roles}: CreateUserArgs): Promise<OptionalUser> {
+  async createUser({input}: CreateUserArgs): Promise<OptionalUser> {
     try {
-      const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
+      const passwordHash = await bcrypt.hash(input.password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
-        email,
-        name,
-        roles,
+        email: input.email,
+        name: input.name,
+        roles: input.roles,
         password: passwordHash
       })
 
@@ -332,6 +334,32 @@ export class MongoDBAdapter implements DBAdapter {
     } else {
       return null
     }
+  }
+
+  async updateUser({id, input}: UpdateUserArgs): Promise<OptionalUser> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          name: input.name,
+          email: input.email,
+          roles: input.roles
+          //TODO: how to handle password
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
+  }
+
+  async deleteUser({id}: DeleteUserArgs): Promise<string | null> {
+    const {deletedCount} = await this.users.deleteOne({_id: id})
+    return deletedCount !== 0 ? id : null
   }
 
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
