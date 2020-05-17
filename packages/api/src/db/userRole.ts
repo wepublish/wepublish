@@ -2,7 +2,7 @@ export interface CreateUserRoleArgs {
   readonly name: string
   readonly email: string
   readonly description: string
-  readonly permissions: string[]
+  readonly permissionIDs: string[]
 }
 
 export interface UserRole {
@@ -10,7 +10,7 @@ export interface UserRole {
   readonly name: string
   readonly description?: string
   readonly systemRole: boolean
-  readonly permissions: string[]
+  readonly permissionIDs: string[]
 }
 
 export type OptionalUserRole = UserRole | null

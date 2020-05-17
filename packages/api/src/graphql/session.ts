@@ -7,12 +7,14 @@ import {
   GraphQLBoolean
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {AllPermissions} from './permissions'
 
 export const GraphQLPermission = new GraphQLObjectType({
   name: 'Permission',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)}
+    id: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLNonNull(GraphQLString)},
+    deprecated: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
@@ -23,7 +25,13 @@ export const GraphQLUserRole = new GraphQLObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
-    permissions: {type: GraphQLNonNull(GraphQLList(GraphQLPermission))}
+    permissions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLPermission)),
+      resolve(test, args, {loaders}) {
+        const {permissionIDs} = test
+        return AllPermissions.filter(permission => permissionIDs.includes(permission.id))
+      }
+    }
   }
 })
 

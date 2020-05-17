@@ -383,7 +383,7 @@ export class MongoDBAdapter implements DBAdapter {
       name: args.name,
       description: args.description || '',
       systemRole: false, //always False because only the system can create system roles
-      permissions: args.permissions
+      permissionIDs: args.permissionIDs
     })
 
     const userRole = await this.userRoles.findOne({_id: id})
@@ -395,7 +395,7 @@ export class MongoDBAdapter implements DBAdapter {
       name: userRole.name,
       description: userRole.description,
       systemRole: userRole.systemRole,
-      permissions: userRole.permissions
+      permissionIDs: userRole.permissionIDs
     }
   }
 
@@ -407,7 +407,7 @@ export class MongoDBAdapter implements DBAdapter {
         name: userRole.name,
         description: userRole.description,
         systemRole: userRole.systemRole,
-        permissions: userRole.permissions
+        permissionIDs: userRole.permissionIDs
       }
     } else {
       return null
@@ -422,7 +422,7 @@ export class MongoDBAdapter implements DBAdapter {
         name: userRole.name,
         description: userRole.description,
         systemRole: userRole.systemRole,
-        permissions: userRole.permissions
+        permissionIDs: userRole.permissionIDs
       }
     } else {
       return null
@@ -437,7 +437,7 @@ export class MongoDBAdapter implements DBAdapter {
       name: userRole.name,
       description: userRole.description,
       systemRole: userRole.systemRole,
-      permissions: userRole.permissions
+      permissionIDs: userRole.permissionIDs
     }))
   }
 

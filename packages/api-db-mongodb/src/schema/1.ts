@@ -32,5 +32,5 @@ export interface DBUserRole {
   description?: string
   systemRole: boolean
 
-  permissions: string[]
+  permissionIDs: string[]
 }
