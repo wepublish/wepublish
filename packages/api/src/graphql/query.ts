@@ -7,7 +7,7 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context, Oauth2Provider} from '../context'
-import {GraphQLUser, GraphQLSession} from './session'
+import {GraphQLSession} from './session'
 import {GraphQLAuthProvider} from './auth'
 
 import {
@@ -36,6 +36,7 @@ import {
 } from './author'
 
 import {AuthorSort} from '../db/author'
+import {UserSort} from '../db/user'
 import {UserInputError} from 'apollo-server-express'
 import {GraphQLNavigation, GraphQLPublicNavigation} from './navigation'
 import {GraphQLSlug} from './slug'
@@ -61,8 +62,11 @@ import {
   CanGetImages,
   CanGetNavigation,
   CanGetPage,
-  CanGetPages
+  CanGetPages,
+  CanGetUser,
+  CanGetUsers
 } from './permissions'
+import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -122,6 +126,47 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             name: client.name,
             url
           }
+        })
+      }
+    },
+
+    // Users
+    // ==========
+    user: {
+      type: GraphQLUser,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetUser, roles)
+
+        if (id == null) {
+          throw new UserInputError('You must provide `id`')
+        }
+        return dbAdapter.getUserByID(id)
+      }
+    },
+
+    users: {
+      type: GraphQLNonNull(GraphQLUserConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLUserFilter},
+        sort: {type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetUsers, roles)
+
+        return dbAdapter.getUsers({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
         })
       }
     },
