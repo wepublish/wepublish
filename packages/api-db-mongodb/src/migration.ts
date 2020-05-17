@@ -113,7 +113,7 @@ export const Migrations: Migration[] = [
           systemRole: true,
           name: 'Admin',
           description: 'Administrator Role',
-          permissions: AllPermissions
+          permissions: AllPermissions.map(permission => permission.id)
         },
         {
           createdAt: new Date(),
@@ -121,7 +121,7 @@ export const Migrations: Migration[] = [
           systemRole: true,
           name: 'Editor',
           description: 'Editor Role',
-          permissions: EditorPermissions
+          permissions: EditorPermissions.map(permission => permission.id)
         },
         {
           createdAt: new Date(),

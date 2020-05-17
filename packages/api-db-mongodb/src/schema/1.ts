@@ -1,5 +1,4 @@
 import {DBUser as DBUser0} from './0'
-import {Permission} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -33,5 +32,5 @@ export interface DBUserRole {
   description?: string
   systemRole: boolean
 
-  permissions: Permission[]
+  permissions: string[]
 }
