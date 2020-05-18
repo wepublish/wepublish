@@ -25,115 +25,115 @@ export const authorise = function (neededPermission: Permission, userRoles: User
   return
 }
 
-export const CanGetNavigation: Permission = <Permission>{
+export const CanGetNavigation: Permission = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',
   deprecated: false
 }
 
-export const CanCreateAuthor: Permission = <Permission>{
+export const CanCreateAuthor: Permission = {
   id: 'CAN_CREATE_AUTHOR',
   description: 'Allows to create authors',
   deprecated: false
 }
 
-export const CanGetAuthor: Permission = <Permission>{
+export const CanGetAuthor: Permission = {
   id: 'CAN_GET_AUTHOR',
   description: 'Allows to get author',
   deprecated: false
 }
 
-export const CanGetAuthors: Permission = <Permission>{
+export const CanGetAuthors: Permission = {
   id: 'CAN_GET_AUTHORS',
   description: 'Allows to all authors',
   deprecated: false
 }
 
-export const CanDeleteAuthor: Permission = <Permission>{
+export const CanDeleteAuthor: Permission = {
   id: 'CAN_DELETE_AUTHORS',
   description: 'Allows to delete authors',
   deprecated: false
 }
 
-export const CanCreateImage: Permission = <Permission>{
+export const CanCreateImage: Permission = {
   id: 'CAN_CREATE_IMAGE',
   description: 'Allows to create images',
   deprecated: false
 }
 
-export const CanGetImage: Permission = <Permission>{
+export const CanGetImage: Permission = {
   id: 'CAN_GET_IMAGE',
   description: 'Allows to get image',
   deprecated: false
 }
 
-export const CanGetImages: Permission = <Permission>{
+export const CanGetImages: Permission = {
   id: 'CAN_GET_IMAGES',
   description: 'Allows to get all images',
   deprecated: false
 }
 
-export const CanDeleteImage: Permission = <Permission>{
+export const CanDeleteImage: Permission = {
   id: 'CAN_DELETE_IMAGE',
   description: 'Allows to delete images',
   deprecated: false
 }
 
-export const CanCreateArticle: Permission = <Permission>{
+export const CanCreateArticle: Permission = {
   id: 'CAN_CREATE_ARTICLE',
   description: 'Allows to create articles',
   deprecated: false
 }
 
-export const CanGetArticle: Permission = <Permission>{
+export const CanGetArticle: Permission = {
   id: 'CAN_GET_ARTICLE',
   description: 'Allows to get article',
   deprecated: false
 }
 
-export const CanGetArticles: Permission = <Permission>{
+export const CanGetArticles: Permission = {
   id: 'CAN_GET_ARTICLES',
   description: 'Allows to get all articles',
   deprecated: false
 }
 
-export const CanPublishArticle: Permission = <Permission>{
+export const CanPublishArticle: Permission = {
   id: 'CAN_PUBLISH_ARTICLE',
   description: 'Allows to publish articles',
   deprecated: false
 }
 
-export const CanDeleteArticle: Permission = <Permission>{
+export const CanDeleteArticle: Permission = {
   id: 'CAN_DELETE_ARTICLE',
   description: 'Allows to delete articles',
   deprecated: false
 }
 
-export const CanCreatePage: Permission = <Permission>{
+export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
   deprecated: false
 }
 
-export const CanGetPage: Permission = <Permission>{
+export const CanGetPage: Permission = {
   id: 'CAN_GET_PAGE',
   description: 'Allows to get Page',
   deprecated: false
 }
 
-export const CanGetPages: Permission = <Permission>{
+export const CanGetPages: Permission = {
   id: 'CAN_GET_PAGES',
   description: 'Allows to get all Pages',
   deprecated: false
 }
 
-export const CanPublishPage: Permission = <Permission>{
+export const CanPublishPage: Permission = {
   id: 'CAN_PUBLISH_PAGE',
   description: 'Allows to publish Pages',
   deprecated: false
 }
 
-export const CanDeletePage: Permission = <Permission>{
+export const CanDeletePage: Permission = {
   id: 'CAN_DELETE_PAGE',
   description: 'Allows to delete Pages',
   deprecated: false
