@@ -263,7 +263,8 @@ export function PageList() {
                 </DescriptionListItem>
 
                 <DescriptionListItem label="Updated At">
-                  {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
+                  {currentPage?.latest.updatedAt &&
+                    new Date(currentPage.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentPage?.latest.publishedAt && (

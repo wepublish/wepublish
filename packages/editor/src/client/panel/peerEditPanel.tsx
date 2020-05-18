@@ -59,7 +59,6 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  // createError?.graphQLErrors
   const [updatePeer, {loading: isUpdating, error: updateError}] = useUpdatePeerMutation({
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })

@@ -123,40 +123,36 @@ export enum TeaserType {
   Page = 'page'
 }
 
-export interface ArticleTeaser {
-  readonly type: TeaserType.Article
-  readonly style: TeaserStyle
-
-  readonly image?: ImageRefFragment
-  readonly title: string
-  readonly lead: string
-
-  readonly article: ArticleRefFragment
+export interface ArticleTeaserLink {
+  type: TeaserType.Article
+  article: ArticleRefFragment
 }
 
-export interface PeerArticleTeaser {
-  readonly type: TeaserType.PeerArticle
-  readonly style: TeaserStyle
-
-  readonly image?: ImageRefFragment
-  readonly title: string
-  readonly lead: string
-
-  readonly peer: PeerRefFragment
-  readonly articleID: string
-  readonly article?: ArticleRefFragment
+export interface PeerArticleTeaserLink {
+  type: TeaserType.PeerArticle
+  peer: PeerRefFragment
+  articleID: string
+  article?: ArticleRefFragment
 }
 
-export interface PageTeaser {
-  readonly type: TeaserType.Page
-
-  readonly image?: ImageRefFragment
-  readonly title: string
-  readonly lead: string
-
-  readonly style: TeaserStyle
-  readonly page: PageRefFragment
+export interface PageTeaserLink {
+  type: TeaserType.Page
+  page: PageRefFragment
 }
+
+export type TeaserLink = ArticleTeaserLink | PeerArticleTeaserLink | PageTeaserLink
+
+export interface BaseTeaser {
+  style: TeaserStyle
+  image?: ImageRefFragment
+  preTitle?: string
+  title?: string
+  lead?: string
+}
+
+export interface ArticleTeaser extends ArticleTeaserLink, BaseTeaser {}
+export interface PeerArticleTeaser extends PeerArticleTeaserLink, BaseTeaser {}
+export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
@@ -302,15 +298,38 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           teasers: block.value.teasers.map(([, value]) => {
             switch (value?.type) {
               case TeaserType.Article:
-                return {article: {style: value.style, articleID: value.article.id}}
+                return {
+                  article: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    articleID: value.article.id
+                  }
+                }
 
               case TeaserType.PeerArticle:
                 return {
-                  article: {style: value.style, peerID: value.peer.id, articleID: value.articleID}
+                  peerArticle: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    peerID: value.peer.id,
+                    articleID: value.articleID
+                  }
                 }
 
               case TeaserType.Page:
-                return {page: {style: value.style, pageID: value.page.id}}
+                return {
+                  page: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    pageID: value.page.id
+                  }
+                }
 
               default:
                 return null
@@ -430,6 +449,10 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     ? {
                         type: TeaserType.Article,
                         style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
                         article: teaser.article
                       }
                     : null
@@ -444,8 +467,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         type: TeaserType.PeerArticle,
                         style: teaser.style,
                         image: teaser.image ?? undefined,
-                        title: teaser.title ?? '',
-                        lead: teaser.lead ?? '',
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
                         peer: teaser.peer,
                         articleID: teaser.articleID,
                         article: teaser.article ?? undefined
@@ -460,6 +484,10 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     ? {
                         type: TeaserType.Page,
                         style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
                         page: teaser.page
                       }
                     : null

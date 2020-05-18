@@ -302,6 +302,10 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
       stateFilter['pending'] = {[filter.pending ? '$ne' : '$eq']: null}
     }
 
+    if (filter?.shared != undefined) {
+      stateFilter['shared'] = {[filter.shared ? '$ne' : '$eq']: false}
+    }
+
     if (filter?.tags) {
       // TODO: Only match based on state filter
       metaFilters.push({
@@ -392,7 +396,7 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
     const articles = await this.articles.find({_id: {$in: ids}, published: {$ne: null}}).toArray()
     const articleMap = Object.fromEntries(
-      articles.map(({_id: id, published: article}) => [id, {id, ...article!}])
+      articles.map(({_id: id, shared, published: article}) => [id, {id, shared, ...article!}])
     )
 
     return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
@@ -414,7 +418,10 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     })
 
     return {
-      nodes: nodes.map(article => ({id: article.id, ...article.published!} as PublicArticle)),
+      nodes: nodes.map(
+        article =>
+          ({id: article.id, shared: article.shared, ...article.published!} as PublicArticle)
+      ),
       pageInfo,
       totalCount
     }

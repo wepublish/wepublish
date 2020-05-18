@@ -44,7 +44,7 @@ import {
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
 import {GraphQLPage, GraphQLPublicPage} from './page'
 import {GraphQLPeer} from './peer'
-import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerQuery} from '../utility'
+import {createProxyingResolver, createProxyingIsTypeOf, delegateToPeerSchema} from '../utility'
 
 export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
   name: 'RichTextBlock',
@@ -68,6 +68,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
       )
     },
 
+    preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
 
@@ -93,6 +94,7 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
       )
     },
 
+    preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
 
@@ -106,10 +108,12 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
     articleID: {type: GraphQLNonNull(GraphQLID)},
     article: {
       type: GraphQLArticle,
-      resolve: createProxyingResolver(async ({peerID, articleID}, args, {loaders}, info) => {
-        const peer = await loaders.peer.load(peerID)
-        if (!peer) return null
-        return delegateToPeerQuery(peer, info, true, 'article', {id: articleID})
+      resolve: createProxyingResolver(async ({peerID, articleID}, args, context, info) => {
+        return delegateToPeerSchema(peerID, true, context, {
+          fieldName: 'article',
+          args: {id: articleID},
+          info
+        })
       })
     }
   }),
@@ -128,6 +132,7 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
       )
     },
 
+    preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
 
@@ -171,12 +176,27 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
   name: 'ArticleTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
     article: {
       type: GraphQLPublicArticle,
       resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
         return loaders.publicArticles.load(articleID)
       })
     }
+  }),
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === TeaserType.Article
   })
 })
 
@@ -184,11 +204,34 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
   name: 'PeerArticleTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
+    peer: {
+      type: GraphQLPeer,
+      resolve: createProxyingResolver(({peerID}, args, {loaders}) => {
+        return loaders.peer.load(peerID)
+      })
+    },
+
+    articleID: {type: GraphQLNonNull(GraphQLID)},
     article: {
       type: GraphQLPublicArticle,
-      resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
-        // TODO
-        return null
+      resolve: createProxyingResolver(({peerID, articleID}, args, context, info) => {
+        return delegateToPeerSchema(peerID, false, context, {
+          fieldName: 'article',
+          args: {id: articleID},
+          info
+        })
       })
     }
   }),
@@ -201,6 +244,18 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
   name: 'PageTeaser',
   fields: () => ({
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
+        imageID ? loaders.images.load(imageID) : null
+      )
+    },
+
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
+
     page: {
       type: GraphQLPublicPage,
       resolve: createProxyingResolver(({pageID}, args, {loaders}) => {
@@ -504,6 +559,10 @@ export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     articleID: {type: GraphQLNonNull(GraphQLID)}
   }
 })
@@ -512,6 +571,10 @@ export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
   name: 'PeerArticleTeaserInput',
   fields: {
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     peerID: {type: GraphQLNonNull(GraphQLID)},
     articleID: {type: GraphQLNonNull(GraphQLID)}
   }
@@ -521,6 +584,10 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   name: 'PageTeaserInput',
   fields: {
     style: {type: GraphQLNonNull(GraphQLTeaserStyle)},
+    imageID: {type: GraphQLID},
+    preTitle: {type: GraphQLString},
+    title: {type: GraphQLString},
+    lead: {type: GraphQLString},
     pageID: {type: GraphQLNonNull(GraphQLID)}
   }
 })

@@ -11,7 +11,7 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {createProxyingResolver, delegateToPeerQuery} from '../utility'
+import {createProxyingResolver, delegateToPeerSchema} from '../utility'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
@@ -72,9 +72,9 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     profile: {
       type: GraphQLPeerProfile,
-      resolve: createProxyingResolver(async (source, args, context, info) =>
-        delegateToPeerQuery(source, info, true, 'peerProfile')
-      )
+      resolve: createProxyingResolver(async (source, args, context, info) => {
+        return delegateToPeerSchema(source.id, true, context, {fieldName: 'peerProfile', info})
+      })
     }
   }
 })

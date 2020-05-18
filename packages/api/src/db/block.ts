@@ -147,6 +147,7 @@ export interface PeerArticleTeaser {
   articleID: string
 
   imageID?: string
+  preTitle?: string
   title?: string
   lead?: string
 }
@@ -157,6 +158,7 @@ export interface PageTeaser {
   pageID: string
 
   imageID?: string
+  preTitle?: string
   title?: string
   lead?: string
 }

@@ -81,7 +81,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImagedEditPanel file={file} onSave={image => onSelect(image)} />
+    return <ImagedEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
   }
 
   return (

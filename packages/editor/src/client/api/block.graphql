@@ -1,6 +1,15 @@
 fragment FullTeaser on Teaser {
   ... on ArticleTeaser {
     style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+
     article {
       ...ArticleRef
     }
@@ -13,11 +22,12 @@ fragment FullTeaser on Teaser {
       ...ImageRef
     }
 
+    preTitle
     title
     lead
 
     peer {
-      ...PeerRef
+      ...PeerWithProfile
     }
 
     articleID
@@ -28,6 +38,15 @@ fragment FullTeaser on Teaser {
 
   ... on PageTeaser {
     style
+
+    image {
+      ...ImageRef
+    }
+
+    preTitle
+    title
+    lead
+
     page {
       ...PageRef
     }

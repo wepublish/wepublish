@@ -42,5 +42,6 @@ export interface DBPeerAdapter {
   updatePeer(id: string, input: UpdatePeerInput): Promise<OptionalPeer>
   deletePeer(id: string): Promise<string | null>
   getPeersByID(ids: readonly string[]): Promise<OptionalPeer[]>
+  getPeersBySlug(ids: readonly string[]): Promise<OptionalPeer[]>
   getPeers(): Promise<Peer[]>
 }

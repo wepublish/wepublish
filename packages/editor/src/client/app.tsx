@@ -1,4 +1,5 @@
 import React from 'react'
+import {hot} from 'react-hot-loader/root'
 
 import {useRoute, RouteType, Route} from './route'
 
@@ -82,3 +83,5 @@ export function App() {
 
   return null
 }
+
+export const HotApp = hot(App)

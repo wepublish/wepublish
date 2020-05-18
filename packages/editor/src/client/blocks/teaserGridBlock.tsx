@@ -19,7 +19,8 @@ import {
   ZIndex,
   PlaceholderImage,
   Overlay,
-  Card
+  Card,
+  Chip
 } from '@karma.run/ui'
 
 import {styled} from '@karma.run/react'
@@ -27,9 +28,11 @@ import {styled} from '@karma.run/react'
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {TeaserGridBlockValue, ArticleTeaser, Teaser, TeaserType, PageTeaser} from './types'
+import {TeaserGridBlockValue, Teaser, TeaserType} from './types'
 
-import {TeaserSelectPanel, TeaserLink} from '../panel/teaserSelectPanel'
+import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
+import {TeaserEditPanel} from '../panel/teaserEditPanel'
+import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 interface GridElementProps {
   numColumns: number
@@ -56,14 +59,14 @@ const Grid = SortableContainer(({children, numColumns}: GridProps) => {
 })
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
+  const [editIndex, setEditIndex] = useState(0)
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const [choosingIndex, setChoosingIndex] = useState(0)
 
   const {teasers, numColumns} = value
 
-  function handleTeaserLinkChange(index: number, teaserLink: TeaserLink | null) {
-    // const currentValue = teasers[index] || {}
-
+  function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
@@ -103,23 +106,39 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
             numColumns={numColumns}
             showGrabCursor={teasers.length !== 1}
             disabled={teasers.length === 1}
-            onChooseArticle={() => {
-              setChoosingIndex(index)
+            onEdit={() => {
+              setEditIndex(index)
+              setEditModalOpen(true)
+            }}
+            onChoose={() => {
+              setEditIndex(index)
               setChooseModalOpen(true)
             }}
-            onRemoveArticle={() => {
+            onRemove={() => {
               handleTeaserLinkChange(index, null)
             }}
           />
         ))}
       </Grid>
+      <Drawer open={isEditModalOpen} width={500}>
+        {() => (
+          <TeaserEditPanel
+            initialTeaser={teasers[editIndex][1]!}
+            onClose={() => setEditModalOpen(false)}
+            onConfirm={teaser => {
+              setEditModalOpen(false)
+              handleTeaserLinkChange(editIndex, teaser)
+            }}
+          />
+        )}
+      </Drawer>
       <Drawer open={isChooseModalOpen} width={500}>
         {() => (
-          <TeaserSelectPanel
+          <TeaserSelectAndEditPanel
             onClose={() => setChooseModalOpen(false)}
-            onSelect={teaserLink => {
+            onSelect={teaser => {
               setChooseModalOpen(false)
-              handleTeaserLinkChange(choosingIndex, teaserLink)
+              handleTeaserLinkChange(editIndex, teaser)
             }}
           />
         )}
@@ -132,16 +151,18 @@ export interface TeaserBlockProps {
   teaser: Teaser | null
   showGrabCursor: boolean
   numColumns: number
-  onChooseArticle: () => void
-  onRemoveArticle: () => void
+  onEdit: () => void
+  onChoose: () => void
+  onRemove: () => void
 }
 
 export function TeaserBlock({
   teaser,
   numColumns,
   showGrabCursor,
-  onChooseArticle,
-  onRemoveArticle
+  onEdit,
+  onChoose,
+  onRemove
 }: TeaserBlockProps) {
   return (
     <Card
@@ -149,7 +170,7 @@ export function TeaserBlock({
       height={300}
       overflow="hidden"
       zIndex={ZIndex.Default}>
-      <PlaceholderInput onAddClick={onChooseArticle}>
+      <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
           <Box position="relative" width="100%" height="100%">
             {contentForTeaser(teaser, numColumns)}
@@ -158,19 +179,19 @@ export function TeaserBlock({
               <IconButton
                 icon={MaterialIconEditOutlined}
                 title="Edit Teaser"
-                onClick={onChooseArticle}
+                onClick={onEdit}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
                 title="Choose Teaser"
-                onClick={onChooseArticle}
+                onClick={onChoose}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconClose}
                 title="Remove Teaser"
-                onClick={onRemoveArticle}
+                onClick={onRemove}
                 margin={Spacing.ExtraSmall}
               />
             </Box>
@@ -183,43 +204,98 @@ export function TeaserBlock({
 
 export function contentForTeaser(teaser: Teaser, numColumns: number) {
   switch (teaser.type) {
-    case TeaserType.Article:
-      return <ArticleTeaserContent teaser={teaser} numColumns={numColumns} />
+    case TeaserType.Article: {
+      const states = []
+
+      if (teaser?.article?.draft) states.push('Draft')
+      if (teaser?.article?.pending) states.push('Pending')
+      if (teaser?.article?.published) states.push('Published')
+
+      return (
+        <TeaserContent
+          style={teaser.style}
+          image={teaser.image ?? teaser.article.latest.image ?? undefined}
+          preTitle={teaser.preTitle ?? teaser.article.latest.preTitle ?? undefined}
+          title={teaser.title ?? teaser.article.latest.title}
+          lead={teaser.lead ?? teaser.article.latest.lead ?? undefined}
+          states={states}
+          numColumns={numColumns}
+        />
+      )
+    }
 
     case TeaserType.PeerArticle:
-      return null
+      const states = []
 
-    case TeaserType.Page:
-      return <PageTeaserContent teaser={teaser} numColumns={numColumns} />
+      if (teaser?.article?.draft) states.push('Draft')
+      if (teaser?.article?.pending) states.push('Pending')
+      if (teaser?.article?.published) states.push('Published')
+
+      return (
+        <TeaserContent
+          style={teaser.style}
+          image={teaser.image ?? teaser.article?.latest.image ?? undefined}
+          preTitle={teaser.preTitle ?? teaser.article?.latest.preTitle ?? undefined}
+          title={teaser.title ?? teaser.article?.latest.title}
+          lead={teaser.lead ?? teaser.article?.latest.lead ?? undefined}
+          states={states}
+          peer={teaser.peer}
+          numColumns={numColumns}
+        />
+      )
+
+    case TeaserType.Page: {
+      const states = []
+
+      if (teaser?.page?.draft) states.push('Draft')
+      if (teaser?.page?.pending) states.push('Pending')
+      if (teaser?.page?.published) states.push('Published')
+
+      return (
+        <TeaserContent
+          style={teaser.style}
+          image={teaser.image ?? teaser.page.latest.image ?? undefined}
+          title={teaser.title ?? teaser.page.latest.title}
+          lead={teaser.lead ?? teaser.page.latest.description ?? undefined}
+          states={states}
+          numColumns={numColumns}
+        />
+      )
+    }
 
     default:
       return null
   }
 }
 
-export interface ArticleTeaserContentProps {
-  teaser: ArticleTeaser
+export interface TeaserContentProps {
+  style: TeaserStyle
+  preTitle?: string
+  title?: string
+  lead?: string
+  image?: ImageRefFragment
+  states?: string[]
+  peer?: PeerWithProfileFragment
   numColumns: number
 }
 
-export function ArticleTeaserContent({teaser, numColumns}: ArticleTeaserContentProps) {
-  const states = []
-
-  if (teaser?.article?.draft) states.push('Draft')
-  if (teaser?.article?.pending) states.push('Pending')
-  if (teaser?.article?.published) states.push('Published')
-
+export function TeaserContent({
+  style,
+  preTitle,
+  title,
+  lead,
+  image,
+  states,
+  peer,
+  numColumns
+}: TeaserContentProps) {
   return (
     <>
       <Box position="absolute" width="100%" height="100%">
-        {teaser.article.latest.image ? (
+        {image ? (
           <Image
             draggable={false}
-            src={
-              numColumns === 1
-                ? teaser.article.latest.image.column1URL ?? ''
-                : teaser.article.latest.image.column6URL ?? ''
-            }
+            src={numColumns === 1 ? image.column1URL ?? '' : image.column6URL ?? ''}
             width="100%"
             height="100%"
           />
@@ -229,56 +305,55 @@ export function ArticleTeaserContent({teaser, numColumns}: ArticleTeaserContentP
       </Box>
 
       <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
-        <Typography variant="subtitle1" color="gray">
-          {states.join(' / ')}
-        </Typography>
-        <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
-          {teaser.article.latest.title || 'Untitled'}
-        </Typography>
-      </Overlay>
-    </>
-  )
-}
-
-export interface PageTeaserContentProps {
-  teaser: PageTeaser
-  numColumns: number
-}
-
-export function PageTeaserContent({teaser, numColumns}: PageTeaserContentProps) {
-  const states = []
-
-  if (teaser?.page?.draft) states.push('Draft')
-  if (teaser?.page?.pending) states.push('Pending')
-  if (teaser?.page?.published) states.push('Published')
-
-  return (
-    <>
-      <Box position="absolute" width="100%" height="100%">
-        {teaser.page.latest.image ? (
-          <Image
-            draggable={false}
-            src={
-              numColumns === 1
-                ? teaser.page.latest.image.column1URL ?? ''
-                : teaser.page.latest.image.column6URL ?? ''
-            }
-            width="100%"
-            height="100%"
-          />
-        ) : (
-          <PlaceholderImage width="100%" height="100%" />
+        <Box marginBottom={Spacing.ExtraSmall}>
+          {preTitle && (
+            <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
+              {preTitle}
+            </Typography>
+          )}
+          <Typography variant="body2" color="white" spacing="small">
+            {title || 'Untitled'}
+          </Typography>
+          {lead && (
+            <Typography variant="subtitle1" color="white" ellipsize>
+              {lead}
+            </Typography>
+          )}
+        </Box>
+        {peer && (
+          <Box display="flex" marginBottom={Spacing.ExtraSmall}>
+            <Chip
+              imageURL={peer.profile?.logo?.squareURL ?? undefined}
+              label={peer.profile?.name ?? peer.name}
+            />
+          </Box>
         )}
-      </Box>
-
-      <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
-        <Typography variant="subtitle1" color="gray">
-          {states.join(' / ')}
-        </Typography>
-        <Typography variant={numColumns === 1 ? 'h2' : 'body2'} color="white">
-          {teaser.page.latest.title || 'Untitled'}
-        </Typography>
+        <Box display="flex">
+          <Box marginRight={Spacing.ExtraSmall}>
+            <Typography variant="subtitle1" color="gray">
+              Style: {labelForTeaserStyle(style)}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle1" color="gray">
+              Status: {states?.join(' / ')}
+            </Typography>
+          </Box>
+        </Box>
       </Overlay>
     </>
   )
+}
+
+function labelForTeaserStyle(style: TeaserStyle) {
+  switch (style) {
+    case TeaserStyle.Default:
+      return 'Default'
+
+    case TeaserStyle.Image:
+      return 'Image'
+
+    case TeaserStyle.Text:
+      return 'Text'
+  }
 }

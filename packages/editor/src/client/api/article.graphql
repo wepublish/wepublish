@@ -44,6 +44,7 @@ fragment ArticleRef on Article {
     publishedAt
     updatedAt
     revision
+    preTitle
     title
     lead
     image {
@@ -63,6 +64,27 @@ query ArticleList($filter: String, $after: ID, $first: Int) {
       endCursor
       hasNextPage
       hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query PeerArticleList($filter: String, $after: ID, $first: Int) {
+  peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+    nodes {
+      peer {
+        ...PeerWithProfile
+      }
+
+      article {
+        ...ArticleRef
+      }
+    }
+
+    pageInfo {
+      endCursor
+      hasNextPage
     }
 
     totalCount

@@ -105,6 +105,15 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     return ids.map(id => peerMap[id] ?? null)
   }
 
+  async getPeersBySlug(slugs: readonly string[]): Promise<OptionalPeer[]> {
+    const peers = await this.peers.find({slug: {$in: slugs as string[]}}).toArray()
+    const peerMap = Object.fromEntries(
+      peers.map(({_id: id, slug, ...peer}) => [slug, {id, slug, ...peer!}])
+    )
+
+    return slugs.map<OptionalPeer>(slug => peerMap[slug] ?? null)
+  }
+
   async getPeers(): Promise<Peer[]> {
     const peers = await this.peers.find().sort({createdAt: -1}).toArray()
     return peers.map(({_id: id, ...data}) => ({id, ...data}))

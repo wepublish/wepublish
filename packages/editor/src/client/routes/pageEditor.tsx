@@ -88,8 +88,13 @@ export function PageEditor({id}: PageEditorProps) {
     {data: createData, loading: isCreating, error: createError}
   ] = useCreatePageMutation()
 
-  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation()
-  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation()
+  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({
+    fetchPolicy: 'no-cache'
+  })
+
+  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation({
+    fetchPolicy: 'no-cache'
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -116,6 +121,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   const {data: pageData, loading: isLoading} = usePageQuery({
     skip: isNew || createData != null,
+    errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
   })

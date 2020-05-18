@@ -14,35 +14,12 @@ import {
   Icon,
   IconScale,
   SearchInput,
-  Button
+  Button,
+  Chip
 } from '@karma.run/ui'
 
-import {
-  useArticleListQuery,
-  usePageListQuery,
-  ArticleRefFragment,
-  PeerRefFragment,
-  PageRefFragment
-} from '../api'
-import {TeaserType} from '../blocks/types'
-
-export interface ArticleTeaserLink {
-  type: TeaserType.Article
-  article: ArticleRefFragment
-}
-
-export interface PeerArticleTeaserLink {
-  type: TeaserType.PeerArticle
-  peer: PeerRefFragment
-  article: ArticleRefFragment
-}
-
-export interface PageTeaserLink {
-  type: TeaserType.Page
-  page: PageRefFragment
-}
-
-export type TeaserLink = ArticleTeaserLink | PeerArticleTeaserLink | PageTeaserLink
+import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
+import {TeaserType, TeaserLink} from '../blocks/types'
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -56,7 +33,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
   const [filter, setFilter] = useState('')
 
-  const listVariables = {filter: filter || undefined, first: 50}
+  const listVariables = {filter: filter || undefined, first: 2}
+
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
@@ -66,20 +44,32 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     fetchPolicy: 'network-only'
   })
 
-  const {data: pageListData, error: pageListError} = usePageListQuery({
+  const {
+    data: peerArticleListData,
+    fetchMore: fetchMorePeerArticles,
+    error: peerArticleListError
+  } = usePeerArticleListQuery({
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
 
+  const {data: pageListData, fetchMore: fetchMorePages, error: pageListError} = usePageListQuery({
+    variables: listVariables,
+    fetchPolicy: 'no-cache'
+  })
+
   const articles = articleListData?.articles.nodes ?? []
+  const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
 
   useEffect(() => {
-    if (articleListError ?? pageListError) {
+    if (articleListError ?? pageListError ?? peerArticleListError) {
       setErrorToastOpen(true)
-      setErrorMessage(articleListError?.message ?? pageListError!.message)
+      setErrorMessage(
+        articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message
+      )
     }
-  }, [articleListError ?? pageListError])
+  }, [articleListError ?? pageListError ?? peerArticleListError])
 
   function loadMoreArticles() {
     fetchMoreArticles({
@@ -91,6 +81,38 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           articles: {
             ...fetchMoreResult.articles,
             nodes: [...prev.articles.nodes, ...fetchMoreResult?.articles.nodes]
+          }
+        }
+      }
+    })
+  }
+
+  function loadMorePeerArticles() {
+    fetchMorePeerArticles({
+      variables: {...listVariables, after: peerArticleListData?.peerArticles.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          peerArticles: {
+            ...fetchMoreResult.peerArticles,
+            nodes: [...prev.peerArticles.nodes, ...fetchMoreResult?.peerArticles.nodes]
+          }
+        }
+      }
+    })
+  }
+
+  function loadMorePages() {
+    fetchMorePages({
+      variables: {...listVariables, after: pageListData?.pages.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          pages: {
+            ...fetchMoreResult.pages,
+            nodes: [...prev.pages.nodes, ...fetchMoreResult?.pages.nodes]
           }
         }
       }
@@ -111,18 +133,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
               return (
                 <Box key={article.id} marginBottom={Spacing.Small}>
-                  <Box marginBottom={Spacing.Tiny}>
-                    {props => (
-                      // TODO: Clickable
-                      <div
-                        {...props}
-                        style={{cursor: 'pointer'}}
-                        onClick={() => onSelect({type: TeaserType.Article, article})}>
-                        <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                          {article.latest.title || 'Untitled'}
-                        </Typography>
-                      </div>
-                    )}
+                  <Box
+                    marginBottom={Spacing.Tiny}
+                    style={{cursor: 'pointer'}}
+                    onClick={() => onSelect({type: TeaserType.Article, article})}>
+                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
+                      {article.latest.title || 'Untitled'}
+                    </Typography>
                   </Box>
                   <Box
                     marginBottom={Spacing.ExtraSmall}
@@ -150,8 +167,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                         <Box marginRight={Spacing.Tiny}>
                           <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
                         </Box>
-                        {article.latest.updatedAt &&
-                          new Date(article.latest.updatedAt).toLocaleString()}
+                        {new Date(article.modifiedAt).toLocaleString()}
                       </Box>
                     </Typography>
                     <Typography element="div" variant="subtitle1" color="gray">
@@ -171,68 +187,142 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
         )
 
       case TeaserType.PeerArticle:
-        return null
+        return (
+          <>
+            {peerArticles.map(({peer, article}) => {
+              const states = []
+
+              if (article.draft) states.push('Draft')
+              if (article.pending) states.push('Pending')
+              if (article.published) states.push('Published')
+
+              return (
+                <Box key={`${peer.id}.${article.id}`} marginBottom={Spacing.Small}>
+                  <Box
+                    marginBottom={Spacing.Tiny}
+                    style={{cursor: 'pointer'}}
+                    onClick={() =>
+                      onSelect({type: TeaserType.PeerArticle, peer, articleID: article.id, article})
+                    }>
+                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
+                      {article.latest.title || 'Untitled'}
+                    </Typography>
+                  </Box>
+                  <Box
+                    marginBottom={Spacing.ExtraSmall}
+                    flexDirection="row"
+                    alignItems="center"
+                    display="flex">
+                    <Typography element="div" variant="subtitle1" color="grayDark">
+                      <Box
+                        marginRight={Spacing.ExtraSmall}
+                        flexDirection="row"
+                        alignItems="center"
+                        display="flex">
+                        <Box marginRight={Spacing.Tiny}>
+                          <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+                        </Box>
+                        {new Date(article.createdAt).toLocaleString()}
+                      </Box>
+                    </Typography>
+                    <Typography element="div" variant="subtitle1" color="grayDark">
+                      <Box
+                        marginRight={Spacing.Small}
+                        flexDirection="row"
+                        alignItems="center"
+                        display="flex">
+                        <Box marginRight={Spacing.Tiny}>
+                          <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+                        </Box>
+                        {new Date(article.modifiedAt).toLocaleString()}
+                      </Box>
+                    </Typography>
+                    <Typography element="div" variant="subtitle1" color="gray">
+                      {states.join(' / ')}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" marginBottom={Spacing.ExtraSmall}>
+                    <Chip
+                      imageURL={peer.profile?.logo?.squareURL ?? undefined}
+                      label={peer.profile?.name ?? peer.name}
+                    />
+                  </Box>
+                  <Divider />
+                </Box>
+              )
+            })}
+            <Box display="flex" justifyContent="center">
+              {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
+                <Button label="Load More" onClick={loadMorePeerArticles} />
+              )}
+            </Box>
+          </>
+        )
 
       case TeaserType.Page:
-        return pages.map(page => {
-          const states = []
+        return (
+          <>
+            {pages.map(page => {
+              const states = []
 
-          if (page.draft) states.push('Draft')
-          if (page.pending) states.push('Pending')
-          if (page.published) states.push('Published')
+              if (page.draft) states.push('Draft')
+              if (page.pending) states.push('Pending')
+              if (page.published) states.push('Published')
 
-          return (
-            <Box key={page.id} marginBottom={Spacing.Small}>
-              <Box marginBottom={Spacing.Tiny}>
-                {props => (
-                  // TODO: Clickable
-                  <div
-                    {...props}
+              return (
+                <Box key={page.id} marginBottom={Spacing.Small}>
+                  <Box
+                    marginBottom={Spacing.Tiny}
                     style={{cursor: 'pointer'}}
                     onClick={() => onSelect({type: TeaserType.Page, page})}>
                     <Typography variant="body2" color={page.latest.title ? 'dark' : 'gray'}>
                       {page.latest.title || 'Untitled'}
                     </Typography>
-                  </div>
-                )}
-              </Box>
-              <Box
-                marginBottom={Spacing.ExtraSmall}
-                flexDirection="row"
-                alignItems="center"
-                display="flex">
-                <Typography element="div" variant="subtitle1" color="grayDark">
+                  </Box>
                   <Box
-                    marginRight={Spacing.ExtraSmall}
+                    marginBottom={Spacing.ExtraSmall}
                     flexDirection="row"
                     alignItems="center"
                     display="flex">
-                    <Box marginRight={Spacing.Tiny}>
-                      <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                    </Box>
-                    {new Date(page.createdAt).toLocaleString()}
+                    <Typography element="div" variant="subtitle1" color="grayDark">
+                      <Box
+                        marginRight={Spacing.ExtraSmall}
+                        flexDirection="row"
+                        alignItems="center"
+                        display="flex">
+                        <Box marginRight={Spacing.Tiny}>
+                          <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
+                        </Box>
+                        {new Date(page.createdAt).toLocaleString()}
+                      </Box>
+                    </Typography>
+                    <Typography element="div" variant="subtitle1" color="grayDark">
+                      <Box
+                        marginRight={Spacing.Small}
+                        flexDirection="row"
+                        alignItems="center"
+                        display="flex">
+                        <Box marginRight={Spacing.Tiny}>
+                          <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
+                        </Box>
+                        {page.modifiedAt && new Date(page.modifiedAt).toLocaleString()}
+                      </Box>
+                    </Typography>
+                    <Typography element="div" variant="subtitle1" color="gray">
+                      {states.join(' / ')}
+                    </Typography>
                   </Box>
-                </Typography>
-                <Typography element="div" variant="subtitle1" color="grayDark">
-                  <Box
-                    marginRight={Spacing.Small}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Box marginRight={Spacing.Tiny}>
-                      <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                    </Box>
-                    {page.latest.updatedAt && new Date(page.latest.updatedAt).toLocaleString()}
-                  </Box>
-                </Typography>
-                <Typography element="div" variant="subtitle1" color="gray">
-                  {states.join(' / ')}
-                </Typography>
-              </Box>
-              <Divider />
+                  <Divider />
+                </Box>
+              )
+            })}
+            <Box display="flex" justifyContent="center">
+              {pageListData?.pages.pageInfo.hasNextPage && (
+                <Button label="Load More" onClick={loadMorePages} />
+              )}
             </Box>
-          )
-        })
+          </>
+        )
     }
   }
 

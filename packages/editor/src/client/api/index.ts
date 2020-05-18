@@ -108,11 +108,19 @@ export enum ArticleSort {
 export type ArticleTeaser = {
    __typename?: 'ArticleTeaser';
   style: TeaserStyle;
+  image?: Maybe<Image>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   article?: Maybe<Article>;
 };
 
 export type ArticleTeaserInput = {
   style: TeaserStyle;
+  imageID?: Maybe<Scalars['ID']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   articleID: Scalars['ID'];
 };
 
@@ -692,11 +700,19 @@ export enum PageSort {
 export type PageTeaser = {
    __typename?: 'PageTeaser';
   style: TeaserStyle;
+  image?: Maybe<Image>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
 };
 
 export type PageTeaserInput = {
   style: TeaserStyle;
+  imageID?: Maybe<Scalars['ID']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   pageID: Scalars['ID'];
 };
 
@@ -711,10 +727,24 @@ export type Peer = {
   profile?: Maybe<PeerProfile>;
 };
 
+export type PeerArticle = {
+   __typename?: 'PeerArticle';
+  peer: Peer;
+  article: Article;
+};
+
+export type PeerArticleConnection = {
+   __typename?: 'PeerArticleConnection';
+  nodes: Array<PeerArticle>;
+  pageInfo: UnidirectionalPageInfo;
+  totalCount: Scalars['Int'];
+};
+
 export type PeerArticleTeaser = {
    __typename?: 'PeerArticleTeaser';
   style: TeaserStyle;
   image?: Maybe<Image>;
+  preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
@@ -724,6 +754,10 @@ export type PeerArticleTeaser = {
 
 export type PeerArticleTeaserInput = {
   style: TeaserStyle;
+  imageID?: Maybe<Scalars['ID']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
   peerID: Scalars['ID'];
   articleID: Scalars['ID'];
 };
@@ -764,6 +798,8 @@ export type Query = {
   images: ImageConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
+  peerArticle?: Maybe<Article>;
+  peerArticles: PeerArticleConnection;
   page?: Maybe<Page>;
   pages: PageConnection;
 };
@@ -828,6 +864,21 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPeerArticleArgs = {
+  peerID: Scalars['ID'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryPeerArticlesArgs = {
+  after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
@@ -938,6 +989,12 @@ export type TwitterTweetBlock = {
   tweetID: Scalars['String'];
 };
 
+export type UnidirectionalPageInfo = {
+   __typename?: 'UnidirectionalPageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+};
+
 export type UpdateImageInput = {
   filename?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -1014,7 +1071,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
   )>, latest: (
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'title' | 'lead'>
+    & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
     & { image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
@@ -1040,6 +1097,34 @@ export type ArticleListQuery = (
     )>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
+
+export type PeerArticleListQueryVariables = {
+  filter?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+};
+
+
+export type PeerArticleListQuery = (
+  { __typename?: 'Query' }
+  & { peerArticles: (
+    { __typename?: 'PeerArticleConnection' }
+    & Pick<PeerArticleConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'PeerArticle' }
+      & { peer: (
+        { __typename?: 'Peer' }
+        & PeerWithProfileFragment
+      ), article: (
+        { __typename?: 'Article' }
+        & ArticleRefFragment
+      ) }
+    )>, pageInfo: (
+      { __typename?: 'UnidirectionalPageInfo' }
+      & Pick<UnidirectionalPageInfo, 'endCursor' | 'hasNextPage'>
     ) }
   ) }
 );
@@ -1277,8 +1362,11 @@ export type DeleteAuthorMutation = (
 
 type FullTeaser_ArticleTeaser_Fragment = (
   { __typename?: 'ArticleTeaser' }
-  & Pick<ArticleTeaser, 'style'>
-  & { article?: Maybe<(
+  & Pick<ArticleTeaser, 'style' | 'preTitle' | 'title' | 'lead'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, article?: Maybe<(
     { __typename?: 'Article' }
     & ArticleRefFragment
   )> }
@@ -1286,13 +1374,13 @@ type FullTeaser_ArticleTeaser_Fragment = (
 
 type FullTeaser_PeerArticleTeaser_Fragment = (
   { __typename?: 'PeerArticleTeaser' }
-  & Pick<PeerArticleTeaser, 'style' | 'title' | 'lead' | 'articleID'>
+  & Pick<PeerArticleTeaser, 'style' | 'preTitle' | 'title' | 'lead' | 'articleID'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
   )>, peer?: Maybe<(
     { __typename?: 'Peer' }
-    & PeerRefFragment
+    & PeerWithProfileFragment
   )>, article?: Maybe<(
     { __typename?: 'Article' }
     & ArticleRefFragment
@@ -1301,8 +1389,11 @@ type FullTeaser_PeerArticleTeaser_Fragment = (
 
 type FullTeaser_PageTeaser_Fragment = (
   { __typename?: 'PageTeaser' }
-  & Pick<PageTeaser, 'style'>
-  & { page?: Maybe<(
+  & Pick<PageTeaser, 'style' | 'preTitle' | 'title' | 'lead'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )>, page?: Maybe<(
     { __typename?: 'Page' }
     & PageRefFragment
   )> }
@@ -1910,6 +2001,7 @@ export const ArticleRefFragmentDoc = gql`
     publishedAt
     updatedAt
     revision
+    preTitle
     title
     lead
     image {
@@ -1926,6 +2018,25 @@ export const PeerRefFragmentDoc = gql`
   hostURL
 }
     `;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  hostURL
+  themeColor
+  logo {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const PeerWithProfileFragmentDoc = gql`
+    fragment PeerWithProfile on Peer {
+  ...PeerRef
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${PeerRefFragmentDoc}
+${FullPeerProfileFragmentDoc}`;
 export const PageRefFragmentDoc = gql`
     fragment PageRef on Page {
   id
@@ -1958,6 +2069,12 @@ export const FullTeaserFragmentDoc = gql`
     fragment FullTeaser on Teaser {
   ... on ArticleTeaser {
     style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
     article {
       ...ArticleRef
     }
@@ -1967,10 +2084,11 @@ export const FullTeaserFragmentDoc = gql`
     image {
       ...ImageRef
     }
+    preTitle
     title
     lead
     peer {
-      ...PeerRef
+      ...PeerWithProfile
     }
     articleID
     article {
@@ -1979,14 +2097,20 @@ export const FullTeaserFragmentDoc = gql`
   }
   ... on PageTeaser {
     style
+    image {
+      ...ImageRef
+    }
+    preTitle
+    title
+    lead
     page {
       ...PageRef
     }
   }
 }
-    ${ArticleRefFragmentDoc}
-${ImageRefFragmentDoc}
-${PeerRefFragmentDoc}
+    ${ImageRefFragmentDoc}
+${ArticleRefFragmentDoc}
+${PeerWithProfileFragmentDoc}
 ${PageRefFragmentDoc}`;
 export const FullBlockFragmentDoc = gql`
     fragment FullBlock on Block {
@@ -2090,25 +2214,6 @@ export const MutationPageFragmentDoc = gql`
   }
 }
     `;
-export const FullPeerProfileFragmentDoc = gql`
-    fragment FullPeerProfile on PeerProfile {
-  name
-  hostURL
-  themeColor
-  logo {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const PeerWithProfileFragmentDoc = gql`
-    fragment PeerWithProfile on Peer {
-  ...PeerRef
-  profile {
-    ...FullPeerProfile
-  }
-}
-    ${PeerRefFragmentDoc}
-${FullPeerProfileFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
@@ -2153,6 +2258,54 @@ export function useArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQuery
 export type ArticleListQueryHookResult = ReturnType<typeof useArticleListQuery>;
 export type ArticleListLazyQueryHookResult = ReturnType<typeof useArticleListLazyQuery>;
 export type ArticleListQueryResult = ApolloReactCommon.QueryResult<ArticleListQuery, ArticleListQueryVariables>;
+export const PeerArticleListDocument = gql`
+    query PeerArticleList($filter: String, $after: ID, $first: Int) {
+  peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+    nodes {
+      peer {
+        ...PeerWithProfile
+      }
+      article {
+        ...ArticleRef
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    totalCount
+  }
+}
+    ${PeerWithProfileFragmentDoc}
+${ArticleRefFragmentDoc}`;
+
+/**
+ * __usePeerArticleListQuery__
+ *
+ * To run a query within a React component, call `usePeerArticleListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePeerArticleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePeerArticleListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function usePeerArticleListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
+        return ApolloReactHooks.useQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, baseOptions);
+      }
+export function usePeerArticleListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PeerArticleListQuery, PeerArticleListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PeerArticleListQuery, PeerArticleListQueryVariables>(PeerArticleListDocument, baseOptions);
+        }
+export type PeerArticleListQueryHookResult = ReturnType<typeof usePeerArticleListQuery>;
+export type PeerArticleListLazyQueryHookResult = ReturnType<typeof usePeerArticleListLazyQuery>;
+export type PeerArticleListQueryResult = ApolloReactCommon.QueryResult<PeerArticleListQuery, PeerArticleListQueryVariables>;
 export const CreateArticleDocument = gql`
     mutation CreateArticle($input: ArticleInput!) {
   createArticle(input: $input) {

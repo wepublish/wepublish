@@ -1,6 +1,11 @@
-import DataLoader from 'dataloader'
-
 import {IncomingMessage} from 'http'
+import url from 'url'
+import crypto from 'crypto'
+
+import fetch from 'node-fetch'
+import AbortController from 'abort-controller'
+
+import DataLoader from 'dataloader'
 
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
@@ -18,6 +23,13 @@ import {OptionalAuthor} from './db/author'
 import {OptionalNavigation} from './db/navigation'
 import {OptionalPage, OptionalPublicPage} from './db/page'
 import {OptionalPeer} from './db/peer'
+import {GraphQLSchema, print} from 'graphql'
+import {
+  makeRemoteExecutableSchema,
+  introspectSchema,
+  Fetcher,
+  IFetcherOperation
+} from 'graphql-tools'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -36,6 +48,10 @@ export interface DataLoaderContext {
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
   readonly peer: DataLoader<string, OptionalPeer>
+  readonly peerBySlug: DataLoader<string, OptionalPeer>
+
+  readonly peerSchema: DataLoader<string, GraphQLSchema | null>
+  readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 }
 
 export interface Context {
@@ -85,6 +101,10 @@ export async function contextFromRequest(
       : true
     : false
 
+  const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
+    dbAdapter.peer.getPeersByID(ids)
+  )
+
   return {
     hostURL,
     session: isSessionValid ? session : null,
@@ -104,7 +124,64 @@ export async function contextFromRequest(
       publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
       publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
-      peer: new DataLoader(async ids => dbAdapter.peer.getPeersByID(ids))
+      peer: peerDataLoader,
+      peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
+        dbAdapter.peer.getPeersBySlug(slugs)
+      ),
+
+      peerSchema: new DataLoader(async ids => {
+        const peers = await peerDataLoader.loadMany(ids)
+
+        return Promise.all(
+          peers.map(async peer => {
+            try {
+              if (!peer) return null
+
+              if (peer instanceof Error) {
+                console.error(peer)
+                return null
+              }
+
+              const fetcher = createFetcher(peer.hostURL, peer.token)
+
+              return makeRemoteExecutableSchema({
+                schema: await introspectSchema(fetcher),
+                fetcher
+              })
+            } catch (err) {
+              console.error(err)
+              return null
+            }
+          })
+        )
+      }),
+
+      peerAdminSchema: new DataLoader(async ids => {
+        const peers = await peerDataLoader.loadMany(ids)
+
+        return Promise.all(
+          peers.map(async peer => {
+            try {
+              if (!peer) return null
+
+              if (peer instanceof Error) {
+                console.error(peer)
+                return null
+              }
+
+              const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
+
+              return makeRemoteExecutableSchema({
+                schema: await introspectSchema(fetcher),
+                fetcher
+              })
+            } catch (err) {
+              console.error(err)
+              return null
+            }
+          })
+        )
+      })
     },
 
     dbAdapter,
@@ -154,4 +231,60 @@ export function tokenFromRequest(req: IncomingMessage): string | null {
   }
 
   return null
+}
+
+export function createFetcher(hostURL: string, token: string): Fetcher {
+  // TODO: Implement batching and improve caching
+  const cache = new DataLoader<
+    {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
+    any,
+    string
+  >(
+    async queries => {
+      const results = await Promise.all(
+        queries.map(async ({query, variables, operationName}) => {
+          try {
+            const abortController = new AbortController()
+            const fetchResult = await Promise.race([
+              fetch(hostURL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
+                body: JSON.stringify({query, variables, operationName}),
+                signal: abortController.signal
+              }),
+              new Promise<null>((resolve, reject) =>
+                // TODO: Make timeout configurable
+                setTimeout(() => {
+                  abortController.abort()
+                  reject(null)
+                }, 200)
+              )
+            ])
+
+            if (fetchResult?.status != 200) return null
+
+            return await fetchResult.json()
+          } catch (err) {
+            console.error(err)
+            return null
+          }
+        })
+      )
+
+      return results
+    },
+    {
+      cacheKeyFn: ({query, variables, operationName}) =>
+        // Use faster hashing function, doesn't have to be crypto safe.
+        crypto
+          .createHash('sha1')
+          .update(`${query}.${JSON.stringify(variables)}.${operationName}`)
+          .digest('base64')
+    }
+  )
+
+  return async ({query: queryDocument, variables, operationName}) => {
+    const query = print(queryDocument)
+    return cache.load({query, variables, operationName})
+  }
 }

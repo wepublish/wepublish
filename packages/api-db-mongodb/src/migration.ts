@@ -15,7 +15,7 @@ export const Migrations: Migration[] = [
     async migrate(db, locale) {
       const migrations = await db.createCollection(CollectionName.Migrations, {strict: true})
 
-      await migrations.createIndex({version: 1}, {unique: true})
+      await migrations.createIndex({name: 1}, {unique: true})
 
       const users = await db.createCollection(CollectionName.Users, {
         strict: true
@@ -94,9 +94,14 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    // Fix incorrect migration index. Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
     version: 1,
     async migrate(db) {
+      const migrations = db.collection(CollectionName.Migrations)
+
+      await migrations.dropIndex('name_1')
+      await migrations.createIndex({version: 1}, {unique: true})
+
       await db.createCollection(CollectionName.PeerProfiles, {strict: true})
 
       const peers = await db.createCollection(CollectionName.Peers, {strict: true})

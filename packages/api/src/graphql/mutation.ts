@@ -39,6 +39,8 @@ import {
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 
 function mapTeaserUnionMap(value: any) {
+  if (!value) return null
+
   const valueKeys = Object.keys(value)
 
   if (valueKeys.length === 0) {

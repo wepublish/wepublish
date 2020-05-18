@@ -101,8 +101,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     {loading: isCreating, data: createData, error: createError}
   ] = useCreateArticleMutation()
 
-  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
-  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation()
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
+    fetchPolicy: 'no-cache'
+  })
+
+  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation({
+    fetchPolicy: 'no-cache'
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -133,6 +138,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const {data: articleData, loading: isLoading} = useArticleQuery({
     skip: isNew || createData != null,
+    errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
   })

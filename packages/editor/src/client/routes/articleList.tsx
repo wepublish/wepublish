@@ -275,7 +275,8 @@ export function ArticleList() {
                 </DescriptionListItem>
 
                 <DescriptionListItem label="Updated At">
-                  {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
+                  {currentArticle?.latest.updatedAt &&
+                    new Date(currentArticle.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentArticle?.latest.publishedAt && (

@@ -1,22 +1,8 @@
-import url from 'url'
-import fetch from 'cross-fetch'
+import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
 
-import {
-  GraphQLFieldResolver,
-  GraphQLIsTypeOfFn,
-  print,
-  GraphQLResolveInfo,
-  GraphQLObjectType
-} from 'graphql'
+import {delegateToSchema, IDelegateToSchemaOptions} from 'graphql-tools'
 
-import {
-  delegateToSchema,
-  introspectSchema,
-  makeRemoteExecutableSchema,
-  Fetcher
-} from 'graphql-tools'
-
-import {Peer} from './db/peer'
+import {Context} from './context'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -55,9 +41,19 @@ export function slugify(str: string) {
     .replace(/-+$/, '')
 }
 
+export function base64Encode(str: string): string {
+  return Buffer.from(str).toString('base64')
+}
+
+export function base64Decode(str: string): string {
+  return Buffer.from(str, 'base64').toString()
+}
+
 export const IsProxiedSymbol = Symbol('isProxied')
 
 export function markResultAsProxied(result: any) {
+  if (!result) return null
+
   for (const key in result) {
     const value = result[key]
 
@@ -95,40 +91,23 @@ export function createProxyingIsTypeOf<TSource, TContext>(
   }
 }
 
-export async function delegateToPeerQuery(
-  peer: Peer,
-  info: GraphQLResolveInfo,
-  isAdminQuery: boolean,
-  fieldName: string,
-  args?: {[key: string]: any}
+export async function delegateToPeerSchema(
+  peerID: string,
+  fetchAdminEndpoint: boolean,
+  context: Context,
+  opts: Omit<IDelegateToSchemaOptions, 'schema'>
 ) {
-  const {hostURL, token} = peer
-  const fetcher: Fetcher = async ({query: queryDocument, variables, operationName}) => {
-    const query = print(queryDocument)
-    const fetchResult = await fetch(url.resolve(hostURL, isAdminQuery ? 'admin' : ''), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({query, variables, operationName})
-    })
+  const schema = fetchAdminEndpoint
+    ? await context.loaders.peerAdminSchema.load(peerID)
+    : await context.loaders.peerSchema.load(peerID)
 
-    return fetchResult.json()
-  }
-
-  const schema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(fetcher),
-    fetcher
-  })
+  if (!schema) return null
 
   return markResultAsProxied(
     await delegateToSchema({
+      ...opts,
       schema: schema,
-      operation: 'query',
-      fieldName: fieldName,
-      args,
-      info
+      transforms: [...(opts.transforms ?? [])]
     })
   )
 }
