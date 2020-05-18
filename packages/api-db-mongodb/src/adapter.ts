@@ -61,7 +61,11 @@ import {
   GetUsersArgs,
   UserSort,
   UpdateUserArgs,
-  DeleteUserArgs
+  DeleteUserArgs,
+  UpdateUserRoleArgs,
+  DeleteUserRoleArgs,
+  GetUserRolesArgs,
+  UserRoleSort
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -502,14 +506,14 @@ export class MongoDBAdapter implements DBAdapter {
   // UserRoles
   // =========
 
-  async createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole> {
+  async createUserRole({input}: CreateUserRoleArgs): Promise<OptionalUserRole> {
     const {insertedId: id} = await this.userRoles.insertOne({
       createdAt: new Date(),
       modifiedAt: new Date(),
-      name: args.name,
-      description: args.description || '',
+      name: input.name,
+      description: input.description || '',
       systemRole: false, //always False because only the system can create system roles
-      permissionIDs: args.permissionIDs
+      permissionIDs: input.permissionIDs // Test if they exist
     })
 
     const userRole = await this.userRoles.findOne({_id: id})
@@ -523,6 +527,31 @@ export class MongoDBAdapter implements DBAdapter {
       systemRole: userRole.systemRole,
       permissionIDs: userRole.permissionIDs
     }
+  }
+
+  async updateUserRole({id, input}: UpdateUserRoleArgs): Promise<OptionalUserRole> {
+    const {value} = await this.userRoles.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          name: input.name,
+          description: input.description,
+          permissionIDs: input.permissionIDs
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserRoleByID(outID)
+  }
+
+  async deleteUserRole({id}: DeleteUserRoleArgs): Promise<string | null> {
+    const {deletedCount} = await this.userRoles.deleteOne({_id: id})
+    return deletedCount !== 0 ? id : null
   }
 
   async getUserRole(name: string): Promise<OptionalUserRole> {
@@ -570,6 +599,103 @@ export class MongoDBAdapter implements DBAdapter {
   async _getUserRolesForUser(user: User): Promise<UserRole[]> {
     const _roles = await this.getUserRolesByID(user.roleIDs)
     return !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
+  }
+
+  async getUserRoles({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetUserRolesArgs): Promise<ConnectionResult<UserRole>> {
+    const limitCount = Math.min(limit.count, MongoDBAdapter.MaxResultsPerPage)
+    const sortDirection = limit.type === LimitType.First ? order : -order
+
+    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
+
+    const expr =
+      order === SortOrder.Ascending
+        ? cursor.type === InputCursorType.After
+          ? '$gt'
+          : '$lt'
+        : cursor.type === InputCursorType.After
+        ? '$lt'
+        : '$gt'
+
+    const sortField = userRoleSortFieldForSort(sort)
+    const cursorFilter = cursorData
+      ? {
+          $or: [
+            {[sortField]: {[expr]: cursorData.date}},
+            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
+          ]
+        }
+      : {}
+
+    let textFilter: FilterQuery<any> = {}
+
+    // TODO: Rename to search
+    if (filter?.name != undefined) {
+      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+    }
+
+    const [totalCount, userRoles] = await Promise.all([
+      this.userRoles.countDocuments(textFilter, {
+        collation: {locale: this.locale, strength: 2}
+      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
+
+      this.userRoles
+        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .match(textFilter)
+        .match(cursorFilter)
+        .sort({[sortField]: sortDirection, _id: sortDirection})
+        .limit(limitCount + 1)
+        .toArray()
+    ])
+
+    const nodes = userRoles.slice(0, limitCount)
+
+    if (limit.type === LimitType.Last) {
+      nodes.reverse()
+    }
+
+    const hasNextPage =
+      limit.type === LimitType.First
+        ? userRoles.length > limitCount
+        : cursor.type === InputCursorType.Before
+        ? true
+        : false
+
+    const hasPreviousPage =
+      limit.type === LimitType.Last
+        ? userRoles.length > limitCount
+        : cursor.type === InputCursorType.After
+        ? true
+        : false
+
+    const firstUserRole = nodes[0]
+    const lastUserRole = nodes[nodes.length - 1]
+
+    const startCursor = firstUserRole
+      ? new Cursor(firstUserRole._id, userRoleDateForSort(firstUserRole, sort)).toString()
+      : null
+
+    const endCursor = lastUserRole
+      ? new Cursor(lastUserRole._id, userRoleDateForSort(lastUserRole, sort)).toString()
+      : null
+
+    return {
+      nodes: nodes.map<UserRole>(({_id: id, ...userRole}) => ({id, ...userRole})),
+
+      pageInfo: {
+        startCursor,
+        endCursor,
+        hasNextPage,
+        hasPreviousPage
+      },
+
+      totalCount
+    }
   }
 
   // Session
@@ -1952,5 +2078,25 @@ function userDateForSort(user: DBUser, sort: UserSort): Date {
 
     case UserSort.ModifiedAt:
       return user.modifiedAt
+  }
+}
+
+function userRoleSortFieldForSort(sort: UserRoleSort) {
+  switch (sort) {
+    case UserRoleSort.CreatedAt:
+      return 'createdAt'
+
+    case UserRoleSort.ModifiedAt:
+      return 'modifiedAt'
+  }
+}
+
+function userRoleDateForSort(userRole: DBUserRole, sort: UserRoleSort): Date {
+  switch (sort) {
+    case UserRoleSort.CreatedAt:
+      return userRole.createdAt
+
+    case UserRoleSort.ModifiedAt:
+      return userRole.modifiedAt
   }
 }

@@ -1,5 +1,4 @@
 import {
-  GraphQLBoolean,
   GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLInt,
@@ -8,36 +7,10 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {AllPermissions} from './permissions'
 import {UserSort} from '../db/user'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
-
-export const GraphQLPermission = new GraphQLObjectType({
-  name: 'Permission',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLString)},
-    deprecated: {type: GraphQLNonNull(GraphQLBoolean)}
-  }
-})
-
-export const GraphQLUserRole = new GraphQLObjectType({
-  name: 'UserRole',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLString},
-    systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
-    permissions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLPermission)),
-      resolve(test, args, {loaders}) {
-        const {permissionIDs} = test
-        return AllPermissions.filter(permission => permissionIDs.includes(permission.id))
-      }
-    }
-  }
-})
+import {GraphQLUserRole} from './userRole'
 
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',

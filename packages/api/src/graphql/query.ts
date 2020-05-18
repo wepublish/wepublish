@@ -53,6 +53,7 @@ import {
 import {PageSort} from '../db/page'
 import {Client, Issuer} from 'openid-client'
 import {
+  AllPermissions,
   authorise,
   CanGetArticle,
   CanGetArticles,
@@ -63,10 +64,22 @@ import {
   CanGetNavigation,
   CanGetPage,
   CanGetPages,
+  CanGetPermission,
+  CanGetPermissions,
   CanGetUser,
+  CanGetUserRole,
+  CanGetUserRoles,
   CanGetUsers
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
+import {
+  GraphQLPermission,
+  GraphQLUserRole,
+  GraphQLUserRoleConnection,
+  GraphQLUserRoleFilter,
+  GraphQLUserRoleSort
+} from './userRole'
+import {UserRoleSort} from '../db/userRole'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -168,6 +181,76 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // UserRole
+    // ========
+
+    userRole: {
+      type: GraphQLUserRole,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetUserRole, roles)
+
+        if (id == null) {
+          throw new UserInputError('You must provide `id`')
+        }
+        return dbAdapter.getUserRoleByID(id)
+      }
+    },
+
+    userRoles: {
+      type: GraphQLNonNull(GraphQLUserRoleConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLUserRoleFilter},
+        sort: {type: GraphQLUserRoleSort, defaultValue: UserRoleSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetUserRoles, roles)
+
+        return dbAdapter.getUserRoles({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Permissions
+    // ========
+
+    permission: {
+      type: GraphQLPermission,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate}) {
+        const {roles} = authenticate()
+        authorise(CanGetPermission, roles)
+
+        if (id == null) {
+          throw new Error('You must provide `id`')
+        }
+        return AllPermissions.find(permission => permission.id === id)
+      }
+    },
+
+    permissions: {
+      type: GraphQLList(GraphQLNonNull(GraphQLPermission)),
+      args: {},
+      resolve(root, {}, {authenticate}) {
+        const {roles} = authenticate()
+        authorise(CanGetPermissions, roles)
+
+        return AllPermissions
       }
     },
 

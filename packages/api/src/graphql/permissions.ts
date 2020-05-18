@@ -163,6 +163,42 @@ export const CanDeleteUser: Permission = {
   deprecated: false
 }
 
+export const CanCreateUserRole: Permission = {
+  id: 'CAN_CREATE_USER_ROLE',
+  description: 'Allows to create an user role',
+  deprecated: false
+}
+
+export const CanGetUserRole: Permission = {
+  id: 'CAN_GET_USER_ROLE',
+  description: 'Allows to get an user role',
+  deprecated: false
+}
+
+export const CanGetUserRoles: Permission = {
+  id: 'CAN_GET_USER_ROLE',
+  description: 'Allows to get all user roles',
+  deprecated: false
+}
+
+export const CanDeleteUserRole: Permission = {
+  id: 'CAN_DELETE_USER_ROLE',
+  description: 'Allows to delete user role',
+  deprecated: false
+}
+
+export const CanGetPermission: Permission = {
+  id: 'CAN_GET_PERMISSION',
+  description: 'Allows to get a permission',
+  deprecated: false
+}
+
+export const CanGetPermissions: Permission = {
+  id: 'CAN_GET_PERMISSIONS',
+  description: 'Allows to get all permissions',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateAuthor,
   CanGetAuthor,
@@ -185,7 +221,13 @@ export const AllPermissions: Permission[] = [
   CanCreateUser,
   CanGetUser,
   CanGetUsers,
-  CanDeleteUser
+  CanDeleteUser,
+  CanCreateUserRole,
+  CanGetUserRole,
+  CanGetUserRoles,
+  CanDeleteUserRole,
+  CanGetPermission,
+  CanGetPermissions
 ]
 
 export const EditorPermissions: Permission[] = [
