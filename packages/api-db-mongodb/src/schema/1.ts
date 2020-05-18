@@ -19,7 +19,7 @@ export enum CollectionName {
 export interface DBUser extends DBUser0 {
   name: string
 
-  roles: string[]
+  roleIDs: string[]
 }
 
 export interface DBUserRole {

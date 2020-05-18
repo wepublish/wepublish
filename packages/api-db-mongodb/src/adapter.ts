@@ -296,7 +296,7 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  async createUser({email, name, password, roles}: CreateUserArgs): Promise<OptionalUser> {
+  async createUser({email, name, password, roleIDs}: CreateUserArgs): Promise<OptionalUser> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
@@ -304,7 +304,7 @@ export class MongoDBAdapter implements DBAdapter {
         modifiedAt: new Date(),
         email,
         name,
-        roles,
+        roleIDs,
         password: passwordHash
       })
 
@@ -325,7 +325,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     } else {
       return null
@@ -339,7 +339,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     })
   }
@@ -352,7 +352,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     }
 
@@ -366,7 +366,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     } else {
       return null

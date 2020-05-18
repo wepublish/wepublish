@@ -123,14 +123,6 @@ export const Migrations: Migration[] = [
           name: 'Editor',
           description: 'Editor Role',
           permissionIDs: []
-        },
-        {
-          createdAt: new Date(),
-          modifiedAt: new Date(),
-          systemRole: true,
-          name: 'Reader',
-          description: 'Reader Role',
-          permissionIDs: []
         }
       ])
     }
