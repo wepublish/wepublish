@@ -139,31 +139,31 @@ export const CanDeletePage: Permission = {
   deprecated: false
 }
 
-export const CanCreateUser: Permission = <Permission>{
+export const CanCreateUser: Permission = {
   id: 'CAN_CREATE_USER',
   description: 'Allows to create an user',
   deprecated: false
 }
 
-export const CanGetUser: Permission = <Permission>{
+export const CanGetUser: Permission = {
   id: 'CAN_GET_USER',
   description: 'Allows to get an user',
   deprecated: false
 }
 
-export const CanGetUsers: Permission = <Permission>{
+export const CanGetUsers: Permission = {
   id: 'CAN_GET_USERS',
   description: 'Allows to get all users',
   deprecated: false
 }
 
-export const CanDeleteUser: Permission = <Permission>{
+export const CanDeleteUser: Permission = {
   id: 'CAN_DELETE_USER',
   description: 'Allows to delete users',
   deprecated: false
 }
 
-export const AllPermissions: Permission[] = <Permission[]>[
+export const AllPermissions: Permission[] = [
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -188,7 +188,7 @@ export const AllPermissions: Permission[] = <Permission[]>[
   CanDeleteUser
 ]
 
-export const EditorPermissions: Permission[] = <Permission[]>[
+export const EditorPermissions: Permission[] = [
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
