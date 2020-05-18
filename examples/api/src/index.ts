@@ -59,15 +59,15 @@ async function asyncMain() {
           email: 'dev@wepublish.ch',
           password: '123',
           name: 'Dev User',
-          roles: [adminUserRoleId]
+          roleIDs: [adminUserRoleId]
         }
       })
       adapter.createUser({
         input: {
-          email: 'nico.roos@tsri.ch',
+          email: 'editor@wepublish.ch',
           password: '123',
           name: 'Editor User',
-          roles: [editorUserRoleId]
+          roleIDs: [editorUserRoleId]
         }
       })
     }

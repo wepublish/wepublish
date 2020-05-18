@@ -11,7 +11,13 @@ export const authorise = function (neededPermission: Permission, userRoles: User
     console.warn('Permission is deprecated', neededPermission)
   }
   const userPermissions = userRoles.reduce<string[]>((permissions, role) => {
-    return role.permissionIDs.concat(permissions)
+    if (role.id === 'admin') {
+      return role.permissionIDs.concat(AllPermissions.map(permission => permission.id))
+    } else if (role.id === 'editor') {
+      return role.permissionIDs.concat(EditorPermissions.map(permission => permission.id))
+    } else {
+      return role.permissionIDs.concat(permissions)
+    }
   }, [])
   if (!userPermissions.some(permission => permission === neededPermission.id)) {
     throw new NotAuthorisedError()

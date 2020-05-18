@@ -308,7 +308,7 @@ export class MongoDBAdapter implements DBAdapter {
         modifiedAt: new Date(),
         email: input.email,
         name: input.name,
-        roles: input.roles,
+        roleIDs: input.roleIDs,
         password: passwordHash
       })
 
@@ -329,7 +329,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     } else {
       return null
@@ -369,7 +369,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     })
   }
@@ -382,7 +382,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     }
 
@@ -396,7 +396,7 @@ export class MongoDBAdapter implements DBAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roles
+        roleIDs: user.roleIDs
       }
     } else {
       return null

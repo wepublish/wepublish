@@ -2,7 +2,6 @@ import {Db} from 'mongodb'
 
 import * as v0 from './schema/0'
 import * as v1 from './schema/1'
-import {AllPermissions, EditorPermissions} from '@wepublish/api'
 
 export interface Migration {
   readonly version: number
@@ -108,27 +107,21 @@ export const Migrations: Migration[] = [
 
       userRoles.insertMany([
         {
+          _id: 'admin',
           createdAt: new Date(),
           modifiedAt: new Date(),
           systemRole: true,
           name: 'Admin',
           description: 'Administrator Role',
-          permissionIDs: AllPermissions.map(permission => permission.id)
+          permissionIDs: []
         },
         {
+          _id: 'editor',
           createdAt: new Date(),
           modifiedAt: new Date(),
           systemRole: true,
           name: 'Editor',
           description: 'Editor Role',
-          permissionIDs: EditorPermissions.map(permission => permission.id)
-        },
-        {
-          createdAt: new Date(),
-          modifiedAt: new Date(),
-          systemRole: true,
-          name: 'Reader',
-          description: 'Reader Role',
           permissionIDs: []
         }
       ])
