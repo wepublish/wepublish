@@ -3,12 +3,15 @@ import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 export interface UserInput {
   readonly name: string
   readonly email: string
-  readonly password: string
   readonly roleIDs: string[]
 }
 
+export interface CreateUserInput extends UserInput {
+  readonly password: string
+}
+
 export interface CreateUserArgs {
-  readonly input: UserInput
+  readonly input: CreateUserInput
 }
 export interface UpdateUserArgs {
   readonly id: string

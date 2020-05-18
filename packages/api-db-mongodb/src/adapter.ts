@@ -344,8 +344,7 @@ export class MongoDBAdapter implements DBAdapter {
           modifiedAt: new Date(),
           name: input.name,
           email: input.email,
-          roles: input.roles
-          //TODO: how to handle password
+          roleIDs: input.roleIDs
         }
       },
       {returnOriginal: false}
@@ -487,7 +486,7 @@ export class MongoDBAdapter implements DBAdapter {
       : null
 
     return {
-      nodes: nodes.map<User>(({_id: id, roles: roleIDs, ...user}) => ({id, roleIDs, ...user})),
+      nodes: nodes.map<User>(({_id: id, ...user}) => ({id, ...user})),
 
       pageInfo: {
         startCursor,
