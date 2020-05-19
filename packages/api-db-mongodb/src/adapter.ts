@@ -530,6 +530,10 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async updateUserRole({id, input}: UpdateUserRoleArgs): Promise<OptionalUserRole> {
+    const userRole = await this.getUserRoleByID(id)
+    if (userRole?.systemRole) {
+      throw new Error('Can not change SystemRoles')
+    }
     const {value} = await this.userRoles.findOneAndUpdate(
       {_id: id},
       {
@@ -550,6 +554,10 @@ export class MongoDBAdapter implements DBAdapter {
   }
 
   async deleteUserRole({id}: DeleteUserRoleArgs): Promise<string | null> {
+    const userRole = await this.getUserRoleByID(id)
+    if (userRole?.systemRole) {
+      throw new Error('Can not delete SystemRoles')
+    }
     const {deletedCount} = await this.userRoles.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
   }

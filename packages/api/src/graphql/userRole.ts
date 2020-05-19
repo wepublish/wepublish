@@ -33,19 +33,23 @@ export const GraphQLUserRole = new GraphQLObjectType({
     permissions: {
       type: GraphQLNonNull(GraphQLList(GraphQLPermission)),
       resolve({id, permissionIDs}, args, {loaders}) {
-        if (id === 'admin') {
-          return AllPermissions.map(permission => ({...permission, checked: true}))
-        } else if (id === 'editor') {
-          return AllPermissions.map(permission => ({
+        return AllPermissions.map(permission => {
+          let checked
+          switch (id) {
+            case 'admin':
+              checked = true
+              break
+            case 'editor':
+              checked = !!EditorPermissions.find(editorPer => editorPer.id === permission.id)
+              break
+            default:
+              checked = permissionIDs ? permissionIDs.includes(permission.id) : false
+          }
+          return {
             ...permission,
-            checked: !!EditorPermissions.find(editorPer => editorPer.id === permission.id)
-          }))
-        } else {
-          return AllPermissions.map(permission => ({
-            ...permission,
-            checked: permissionIDs.includes(permission.id)
-          }))
-        }
+            checked
+          }
+        })
       }
     }
   }
@@ -65,7 +69,7 @@ export const GraphQLUserRoleInput = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLString)},
-    permissions: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    permissionIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
 

@@ -64,7 +64,6 @@ import {
   CanGetNavigation,
   CanGetPage,
   CanGetPages,
-  CanGetPermission,
   CanGetPermissions,
   CanGetUser,
   CanGetUserRole,
@@ -229,20 +228,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // Permissions
     // ========
 
-    permission: {
-      type: GraphQLPermission,
-      args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticate}) {
-        const {roles} = authenticate()
-        authorise(CanGetPermission, roles)
-
-        if (id == null) {
-          throw new Error('You must provide `id`')
-        }
-        return AllPermissions.find(permission => permission.id === id)
-      }
-    },
-
     permissions: {
       type: GraphQLList(GraphQLNonNull(GraphQLPermission)),
       args: {},
@@ -250,7 +235,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetPermissions, roles)
 
-        return AllPermissions
+        return AllPermissions.map(permission => ({...permission, checked: false}))
       }
     },
 

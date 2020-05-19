@@ -77,7 +77,7 @@ export function UserRoleList() {
   }, [current])
 
   const userRoles = data?.userRoles.nodes.map(userRole => {
-    const {id, name, description} = userRole
+    const {id, name, description, systemRole} = userRole
 
     return (
       <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
@@ -97,17 +97,19 @@ export function UserRoleList() {
           </Link>
 
           <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-            ]}
-            onMenuItemClick={item => {
-              setCurrentUserRole(userRole)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
+          {!systemRole && (
+            <OptionButton
+              position="left"
+              menuItems={[
+                {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+              ]}
+              onMenuItemClick={item => {
+                setCurrentUserRole(userRole)
+                setConfirmationDialogOpen(true)
+                setConfirmAction(item.id as ConfirmAction)
+              }}
+            />
+          )}
         </Box>
         <Divider />
       </Box>

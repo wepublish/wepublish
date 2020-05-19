@@ -66,6 +66,25 @@ export function useListUserRolesQuery(
   return useQuery<ListUserRolesData, ListUserRolesVariables>(ListUserRolesQuery, opts)
 }
 
+const ListPermissionsQuery = gql`
+  query ListPermissions {
+    permissions {
+      id
+      description
+      checked
+      deprecated
+    }
+  }
+`
+
+export interface ListPermissionsData {
+  permissions: Permission[]
+}
+
+export function useListPermissionsQuery(opts?: QueryHookOptions<ListPermissionsData>) {
+  return useQuery<ListPermissionsData>(ListPermissionsQuery, opts)
+}
+
 const UserRoleQuery = gql`
   query UserRole($id: ID!) {
     userRole(id: $id) {
@@ -94,7 +113,7 @@ export function useUserRoleQuery(opts?: QueryHookOptions<UserRoleData, UserRoleV
 export interface UserRoleInput {
   name: string
   description: string
-  permissions: string[]
+  permissionIDs: string[]
 }
 
 const CreateUserRoleMutation = gql`

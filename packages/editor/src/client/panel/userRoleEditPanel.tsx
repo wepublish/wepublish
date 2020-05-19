@@ -10,8 +10,8 @@ import {
   Spacing,
   PanelSectionHeader,
   Toast,
-  Checkbox,
-  Toggle
+  Toggle,
+  Typography
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
@@ -19,6 +19,7 @@ import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 import {
   Permission,
   useCreateUserRoleMutation,
+  useListPermissionsQuery,
   UserRole,
   useUpdateUserRoleMutation,
   useUserRoleQuery
@@ -46,10 +47,25 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     skip: id == undefined
   })
 
+  const {
+    data: permissionData,
+    loading: isPermissionLoading,
+    error: loadPermissionError
+  } = useListPermissionsQuery({
+    fetchPolicy: 'network-only',
+    skip: id != undefined
+  })
+
   const [createUserRole, {loading: isCreating, error: createError}] = useCreateUserRoleMutation()
   const [updateUserRole, {loading: isUpdating, error: updateError}] = useUpdateUserRoleMutation()
 
-  const isDisabled = systemRole || isLoading || isCreating || isUpdating || loadError != undefined
+  const isDisabled =
+    systemRole ||
+    isLoading ||
+    isPermissionLoading ||
+    isCreating ||
+    isUpdating ||
+    loadError != undefined
 
   useEffect(() => {
     if (data?.userRole) {
@@ -61,6 +77,12 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
   }, [data?.userRole])
 
   useEffect(() => {
+    if (permissionData?.permissions) {
+      setPermissions(permissionData.permissions)
+    }
+  }, [permissionData?.permissions])
+
+  useEffect(() => {
     if (loadError) {
       setErrorToastOpen(true)
       setErrorMessage(loadError.message)
@@ -70,8 +92,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     } else if (updateError) {
       setErrorToastOpen(true)
       setErrorMessage(updateError.message)
+    } else if (loadPermissionError) {
+      setErrorToastOpen(true)
+      setErrorMessage(loadPermissionError.message)
     }
-  }, [loadError, createError, updateError])
+  }, [loadError, createError, updateError, loadPermissionError])
 
   async function handleSave() {
     if (id) {
@@ -81,7 +106,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           input: {
             name,
             description,
-            permissions: permissions.filter(permission => permission.checked).map(({id}) => id)
+            permissionIDs: permissions.filter(permission => permission.checked).map(({id}) => id)
           }
         }
       })
@@ -93,7 +118,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           input: {
             name,
             description,
-            permissions: permissions.filter(permission => permission.checked).map(({id}) => id)
+            permissionIDs: permissions.filter(permission => permission.checked).map(({id}) => id)
           }
         }
       })
@@ -141,14 +166,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
               }}
             />
           </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Checkbox
-              label="System Role"
-              checked={systemRole}
-              disabled={true}
-              onChange={e => e.preventDefault()}
-            />
-          </Box>
+          {systemRole && (
+            <Box marginBottom={Spacing.ExtraSmall}>
+              <Typography variant="body1">is a System Role and can't be edited</Typography>
+            </Box>
+          )}
         </PanelSection>
         <PanelSectionHeader title="Permissions" />
         <PanelSection>
