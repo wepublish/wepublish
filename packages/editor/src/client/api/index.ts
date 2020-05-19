@@ -182,7 +182,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | FacebookPostBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | ListicleBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | ListicleBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
   richText?: Maybe<InputRichTextBlock>;
@@ -190,6 +190,7 @@ export type BlockInput = {
   title?: Maybe<InputTitleBlock>;
   quote?: Maybe<InputQuoteBlock>;
   facebookPost?: Maybe<InputFacebookPostBlock>;
+  facebookVideo?: Maybe<InputFacebookVideoBlock>;
   instagramPost?: Maybe<InputInstagramPostBlock>;
   twitterTweet?: Maybe<InputTwitterTweetBlock>;
   vimeoVideo?: Maybe<InputVimeoVideoBlock>;
@@ -241,6 +242,12 @@ export type FacebookPostBlock = {
    __typename?: 'FacebookPostBlock';
   userID: Scalars['String'];
   postID: Scalars['String'];
+};
+
+export type FacebookVideoBlock = {
+   __typename?: 'FacebookVideoBlock';
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
 };
 
 export type GalleryImageEdge = {
@@ -337,6 +344,11 @@ export type InputEmbedBlock = {
 export type InputFacebookPostBlock = {
   userID: Scalars['String'];
   postID: Scalars['String'];
+};
+
+export type InputFacebookVideoBlock = {
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
 };
 
 export type InputImageBlock = {
@@ -1048,6 +1060,9 @@ export type MutationArticleFragment = (
   & { draft?: Maybe<(
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+  )>, pending?: Maybe<(
+    { __typename?: 'ArticleRevision' }
+    & Pick<ArticleRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -1205,7 +1220,10 @@ export type ArticleQuery = (
   & { article?: Maybe<(
     { __typename?: 'Article' }
     & Pick<Article, 'id' | 'shared'>
-    & { published?: Maybe<(
+    & { pending?: Maybe<(
+      { __typename?: 'ArticleRevision' }
+      & Pick<ArticleRevision, 'publishAt'>
+    )>, published?: Maybe<(
       { __typename?: 'ArticleRevision' }
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
@@ -1229,6 +1247,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'FacebookPostBlock' }
         & FullBlock_FacebookPostBlock_Fragment
+      ) | (
+        { __typename?: 'FacebookVideoBlock' }
+        & FullBlock_FacebookVideoBlock_Fragment
       ) | (
         { __typename?: 'InstagramPostBlock' }
         & FullBlock_InstagramPostBlock_Fragment
@@ -1265,6 +1286,56 @@ export type ArticleQuery = (
       )> }
     ) }
   )> }
+);
+
+export type CreateSessionMutationVariables = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type CreateSessionMutation = (
+  { __typename?: 'Mutation' }
+  & { createSession: (
+    { __typename?: 'SessionWithToken' }
+    & Pick<SessionWithToken, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+    ) }
+  ) }
+);
+
+export type GetAuthProvidersQueryVariables = {
+  redirectUri: Scalars['String'];
+};
+
+
+export type GetAuthProvidersQuery = (
+  { __typename?: 'Query' }
+  & { authProviders: Array<(
+    { __typename?: 'AuthProvider' }
+    & Pick<AuthProvider, 'name' | 'url'>
+  )> }
+);
+
+export type CreateSessionWithOAuth2CodeMutationVariables = {
+  redirectUri: Scalars['String'];
+  name: Scalars['String'];
+  code: Scalars['String'];
+};
+
+
+export type CreateSessionWithOAuth2CodeMutation = (
+  { __typename?: 'Mutation' }
+  & { createSessionWithOAuth2Code: (
+    { __typename?: 'SessionWithToken' }
+    & Pick<SessionWithToken, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+    ) }
+  ) }
 );
 
 export type AuthorRefFragment = (
@@ -1422,6 +1493,11 @@ type FullBlock_FacebookPostBlock_Fragment = (
   & Pick<FacebookPostBlock, 'userID' | 'postID'>
 );
 
+type FullBlock_FacebookVideoBlock_Fragment = (
+  { __typename: 'FacebookVideoBlock' }
+  & Pick<FacebookVideoBlock, 'userID' | 'videoID'>
+);
+
 type FullBlock_InstagramPostBlock_Fragment = (
   { __typename: 'InstagramPostBlock' }
   & Pick<InstagramPostBlock, 'postID'>
@@ -1484,7 +1560,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -1587,6 +1663,9 @@ export type MutationPageFragment = (
   & { draft?: Maybe<(
     { __typename?: 'PageRevision' }
     & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
+  )>, pending?: Maybe<(
+    { __typename?: 'PageRevision' }
+    & Pick<PageRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'PageRevision' }
     & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -1716,7 +1795,10 @@ export type PageQuery = (
   & { page?: Maybe<(
     { __typename?: 'Page' }
     & Pick<Page, 'id'>
-    & { published?: Maybe<(
+    & { pending?: Maybe<(
+      { __typename?: 'PageRevision' }
+      & Pick<PageRevision, 'publishAt'>
+    )>, published?: Maybe<(
       { __typename?: 'PageRevision' }
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
@@ -1737,6 +1819,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'FacebookPostBlock' }
         & FullBlock_FacebookPostBlock_Fragment
+      ) | (
+        { __typename?: 'FacebookVideoBlock' }
+        & FullBlock_FacebookVideoBlock_Fragment
       ) | (
         { __typename?: 'InstagramPostBlock' }
         & FullBlock_InstagramPostBlock_Fragment
@@ -1923,6 +2008,10 @@ export const MutationArticleFragmentDoc = gql`
   draft {
     publishedAt
     updatedAt
+    revision
+  }
+  pending {
+    publishAt
     revision
   }
   published {
@@ -2141,6 +2230,10 @@ export const FullBlockFragmentDoc = gql`
     userID
     postID
   }
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
   ... on InstagramPostBlock {
     postID
   }
@@ -2200,6 +2293,10 @@ export const MutationPageFragmentDoc = gql`
   draft {
     publishedAt
     updatedAt
+    revision
+  }
+  pending {
+    publishAt
     revision
   }
   published {
@@ -2473,6 +2570,9 @@ export const ArticleDocument = gql`
   article(id: $id) {
     id
     shared
+    pending {
+      publishAt
+    }
     published {
       publishedAt
       updatedAt
@@ -2528,6 +2628,113 @@ export function useArticleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
 export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
 export type ArticleQueryResult = ApolloReactCommon.QueryResult<ArticleQuery, ArticleQueryVariables>;
+export const CreateSessionDocument = gql`
+    mutation CreateSession($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    user {
+      email
+    }
+    token
+  }
+}
+    `;
+export type CreateSessionMutationFn = ApolloReactCommon.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
+
+/**
+ * __useCreateSessionMutation__
+ *
+ * To run a mutation, you first call `useCreateSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSessionMutation, { data, loading, error }] = useCreateSessionMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useCreateSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSessionMutation, CreateSessionMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateSessionMutation, CreateSessionMutationVariables>(CreateSessionDocument, baseOptions);
+      }
+export type CreateSessionMutationHookResult = ReturnType<typeof useCreateSessionMutation>;
+export type CreateSessionMutationResult = ApolloReactCommon.MutationResult<CreateSessionMutation>;
+export type CreateSessionMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateSessionMutation, CreateSessionMutationVariables>;
+export const GetAuthProvidersDocument = gql`
+    query GetAuthProviders($redirectUri: String!) {
+  authProviders(redirectUri: $redirectUri) {
+    name
+    url
+  }
+}
+    `;
+
+/**
+ * __useGetAuthProvidersQuery__
+ *
+ * To run a query within a React component, call `useGetAuthProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAuthProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAuthProvidersQuery({
+ *   variables: {
+ *      redirectUri: // value for 'redirectUri'
+ *   },
+ * });
+ */
+export function useGetAuthProvidersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>(GetAuthProvidersDocument, baseOptions);
+      }
+export function useGetAuthProvidersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>(GetAuthProvidersDocument, baseOptions);
+        }
+export type GetAuthProvidersQueryHookResult = ReturnType<typeof useGetAuthProvidersQuery>;
+export type GetAuthProvidersLazyQueryHookResult = ReturnType<typeof useGetAuthProvidersLazyQuery>;
+export type GetAuthProvidersQueryResult = ApolloReactCommon.QueryResult<GetAuthProvidersQuery, GetAuthProvidersQueryVariables>;
+export const CreateSessionWithOAuth2CodeDocument = gql`
+    mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
+  createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
+    user {
+      email
+    }
+    token
+  }
+}
+    `;
+export type CreateSessionWithOAuth2CodeMutationFn = ApolloReactCommon.MutationFunction<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
+
+/**
+ * __useCreateSessionWithOAuth2CodeMutation__
+ *
+ * To run a mutation, you first call `useCreateSessionWithOAuth2CodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSessionWithOAuth2CodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSessionWithOAuth2CodeMutation, { data, loading, error }] = useCreateSessionWithOAuth2CodeMutation({
+ *   variables: {
+ *      redirectUri: // value for 'redirectUri'
+ *      name: // value for 'name'
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useCreateSessionWithOAuth2CodeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>(CreateSessionWithOAuth2CodeDocument, baseOptions);
+      }
+export type CreateSessionWithOAuth2CodeMutationHookResult = ReturnType<typeof useCreateSessionWithOAuth2CodeMutation>;
+export type CreateSessionWithOAuth2CodeMutationResult = ApolloReactCommon.MutationResult<CreateSessionWithOAuth2CodeMutation>;
+export type CreateSessionWithOAuth2CodeMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
@@ -3085,6 +3292,9 @@ export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {
     id
+    pending {
+      publishAt
+    }
     published {
       publishedAt
       updatedAt

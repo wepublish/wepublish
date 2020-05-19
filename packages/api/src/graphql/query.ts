@@ -439,13 +439,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           })
         )
 
-        // console.log('==========')
-        // articles.forEach((article, index) => {
-        //   const peer = peers[index]
-        //   console.log('===')
-        //   console.log(peer, JSON.stringify(article))
-        // })
-
         const totalCount = articles.reduce((prev, result) => prev + (result?.totalCount ?? 0), 0)
         const cursors = Object.fromEntries(
           articles.map((result, index) => [peers[index].id, result?.pageInfo.endCursor ?? null])

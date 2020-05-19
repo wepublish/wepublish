@@ -65,6 +65,7 @@ import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
 import nanoid from 'nanoid'
 import {EmbedBlock} from '../blocks/embedBlock'
 import {QuoteBlock} from '../blocks/quoteBlock'
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 
 export type PageBlockValue =
   | TitleBlockListValue
@@ -92,7 +93,10 @@ export function PageEditor({id}: PageEditorProps) {
     fetchPolicy: 'no-cache'
   })
 
-  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation({
+  const [
+    publishPage,
+    {data: publishData, loading: isPublishing, error: publishError}
+  ] = usePublishPageMutation({
     fetchPolicy: 'no-cache'
   })
 
@@ -128,6 +132,14 @@ export function PageEditor({id}: PageEditorProps) {
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
+    ? new Date(publishData?.publishPage?.pending?.publishAt)
+    : pageData?.page?.pending?.publishAt
+    ? new Date(pageData?.page?.pending?.publishAt)
+    : undefined
+
+  const [hasChanged, setChanged] = useState(false)
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
 
   useEffect(() => {
     if (pageData?.page) {
@@ -173,6 +185,7 @@ export function PageEditor({id}: PageEditorProps) {
     if (pageID) {
       await updatePage({variables: {id: pageID, input}})
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Page Draft Saved')
     } else {
@@ -185,6 +198,7 @@ export function PageEditor({id}: PageEditorProps) {
         })
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Page Draft Created')
     }
@@ -212,6 +226,7 @@ export function PageEditor({id}: PageEditorProps) {
       }
     }
 
+    setChanged(false)
     setSuccessToastOpen(true)
     setSuccessMessage('Page Published')
   }
@@ -233,6 +248,9 @@ export function PageEditor({id}: PageEditorProps) {
                 icon={MaterialIconArrowBack}
                 label="Back"
                 route={PageListRoute.create({})}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) e.preventDefault()
+                }}
               />
             }
             centerChildren={
@@ -271,7 +289,13 @@ export function PageEditor({id}: PageEditorProps) {
             }
           />
         }>
-        <BlockList value={blocks} onChange={blocks => setBlocks(blocks)} disabled={isDisabled}>
+        <BlockList
+          value={blocks}
+          onChange={blocks => {
+            setBlocks(blocks)
+            setChanged(true)
+          }}
+          disabled={isDisabled}>
           {useBlockMap<PageBlockValue>(
             () => ({
               [BlockType.Title]: {
@@ -349,7 +373,10 @@ export function PageEditor({id}: PageEditorProps) {
           <PageMetadataPanel
             value={metadata}
             onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => setMetadata(value)}
+            onChange={value => {
+              setMetadata(value)
+              setChanged(true)
+            }}
           />
         )}
       </Drawer>
@@ -357,6 +384,7 @@ export function PageEditor({id}: PageEditorProps) {
         {() => (
           <PublishPagePanel
             initialPublishDate={publishedAt}
+            pendingPublishDate={pendingPublishDate}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
             onConfirm={(publishDate, updateDate) => {

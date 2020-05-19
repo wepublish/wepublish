@@ -7,6 +7,11 @@ fragment MutationPage on Page {
     revision
   }
 
+  pending {
+    publishAt
+    revision
+  }
+
   published {
     publishedAt
     updatedAt
@@ -100,6 +105,10 @@ mutation DeletePage($id: ID!) {
 query Page($id: ID!) {
   page(id: $id) {
     id
+
+    pending {
+      publishAt
+    }
 
     published {
       publishedAt

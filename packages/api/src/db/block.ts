@@ -5,6 +5,7 @@ export enum BlockType {
   Title = 'title',
   RichText = 'richText',
   FacebookPost = 'facebookPost',
+  FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
@@ -45,6 +46,12 @@ export interface FacebookPostBlock {
   readonly type: BlockType.FacebookPost
   readonly userID: string
   readonly postID: string
+}
+
+export interface FacebookVideoBlock {
+  readonly type: BlockType.FacebookVideo
+  readonly userID: string
+  readonly videoID: string
 }
 
 export interface InstagramPostBlock {

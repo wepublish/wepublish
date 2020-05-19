@@ -33,7 +33,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
   const [filter, setFilter] = useState('')
 
-  const listVariables = {filter: filter || undefined, first: 2}
+  const listVariables = {filter: filter || undefined, first: 20}
 
   const {
     data: articleListData,

@@ -7,6 +7,11 @@ fragment MutationArticle on Article {
     revision
   }
 
+  pending {
+    publishAt
+    revision
+  }
+
   published {
     publishedAt
     updatedAt
@@ -128,6 +133,10 @@ query Article($id: ID!) {
   article(id: $id) {
     id
     shared
+
+    pending {
+      publishAt
+    }
 
     published {
       publishedAt

@@ -8,7 +8,8 @@ import {
   PanelSection,
   TextArea,
   Spacing,
-  Typography
+  Typography,
+  Box
 } from '@karma.run/ui'
 
 import {EmbedPreview} from '../blocks/embedBlock'
@@ -24,7 +25,7 @@ export interface EmbedEditPanel {
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
 
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
 
   const isEmpty = embed.type === EmbedType.Other && embed.url == undefined
@@ -32,15 +33,19 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   useEffect(() => {
     setErrorMessage(undefined)
 
-    const faceBookMatch = input.match(/facebook.com\/(.+)\/posts\/([0-9]+)/)
+    const facebookPostMatch = input.match(/facebook.com\/(.+)\/posts\/([0-9]+)/)
+    const facebookVideoMatch = input.match(/facebook.com\/(.+)\/videos\/([0-9]+)/)
     const instagramMatch = input.match(/instagram.com\/p\/([0-9a-zA-Z-_]+)/)
     const twitterMatch = input.match(/twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/)
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
     const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
 
-    if (faceBookMatch) {
-      const [, userID, postID] = faceBookMatch
+    if (facebookPostMatch) {
+      const [, userID, postID] = facebookPostMatch
       setEmbed({type: EmbedType.FacebookPost, userID, postID})
+    } else if (facebookVideoMatch) {
+      const [, userID, videoID] = facebookVideoMatch
+      setEmbed({type: EmbedType.FacebookVideo, userID, videoID})
     } else if (instagramMatch) {
       const [, postID] = instagramMatch
       setEmbed({type: EmbedType.InstagramPost, postID})
@@ -112,19 +117,53 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <Typography variant="subtitle1">
-          {`If you want to include a Facebook Post, Instagram Post, Twitter Tweet, Vimeo Video,
-          YouTube Video you have to add a link e.g. https://www.facebook.com/id/posts/id/.`}
-          <br />
-          <br />
-          {`In iframe embed codes the src="", width="" and height="" are validated e.g.
-          <iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>`}
-          <br />
-          <br />
-          {`Due to validation, shareable peers and GDPR-compliant, embedding blocks cannot be edited. It is possible to add a new link to an existing block.`}
-        </Typography>
+        <Box marginBottom={Spacing.ExtraSmall}>
+          <Typography variant="subtitle1" spacing="small">
+            If you want to include a Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo
+            Video, YouTube Video you have to add a link e.g. https://www.facebook.com/id/posts/id/.
+          </Typography>
+          <Typography variant="subtitle1" spacing="small">
+            In iframe embed codes the src="", width="" and height="" are validated e.g.
+            {'<iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>'}
+          </Typography>
+          <Typography variant="subtitle1" spacing="small">
+            Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
+            limited to simple iframes and supported embeds listed above.
+          </Typography>
+        </Box>
+
         <EmbedPreview value={embed} />
       </PanelSection>
     </Panel>
   )
+}
+
+function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
+  switch (embed.type) {
+    case EmbedType.FacebookPost:
+      return `https://www.facebook.com/${embed.userID}/posts/${embed.postID}/`
+
+    case EmbedType.FacebookVideo:
+      return `https://www.facebook.com/${embed.userID}/videos/${embed.videoID}/`
+
+    case EmbedType.InstagramPost:
+      return `https://www.instagram.com/p/${embed.postID}/`
+
+    case EmbedType.TwitterTweet:
+      return `https://twitter.com/${embed.userID}/status/${embed.tweetID}/`
+
+    case EmbedType.VimeoVideo:
+      return `https://vimeo.com/${embed.videoID}`
+
+    case EmbedType.YouTubeVideo:
+      return `https://www.youtube.com/watch?v=${embed.videoID}`
+
+    case EmbedType.SoundCloudTrack:
+      return `https://api.soundcloud.com/tracks/${embed.trackID}`
+
+    case EmbedType.Other:
+      return embed.url
+        ? `<iframe title="${embed.title}" src="${embed.url}" width="${embed.width}" height="${embed.height}" />`
+        : ''
+  }
 }

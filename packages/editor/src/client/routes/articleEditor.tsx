@@ -105,7 +105,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     fetchPolicy: 'no-cache'
   })
 
-  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation({
+  const [
+    publishArticle,
+    {data: publishData, loading: isPublishing, error: publishError}
+  ] = usePublishArticleMutation({
     fetchPolicy: 'no-cache'
   })
 
@@ -145,6 +148,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
+    ? new Date(publishData?.publishArticle?.pending?.publishAt)
+    : articleData?.article?.pending?.publishAt
+    ? new Date(articleData?.article?.pending?.publishAt)
+    : undefined
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
@@ -220,7 +228,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  // TODO: Support new API in UI
   async function handlePublish(publishDate: Date, updateDate: Date) {
     if (articleID) {
       const {data} = await updateArticle({
@@ -401,6 +408,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         {() => (
           <PublishArticlePanel
             initialPublishDate={publishedAt}
+            pendingPublishDate={pendingPublishDate}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
             onConfirm={(publishDate, updateDate) => {

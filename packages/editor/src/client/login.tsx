@@ -1,51 +1,23 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
 import {LoginTemplate, TextInput, Button, Spacing, Toast, Link, Box} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
-import {useMutation, useQuery} from '@apollo/react-hooks'
 
 import {useRouteDispatch, matchRoute, useRoute, IndexRoute, LoginRoute} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
-import gql from 'graphql-tag'
 import {LocalStorageKey} from './utility'
 import {Logo} from './logo'
+import {
+  useCreateSessionWithOAuth2CodeMutation,
+  useCreateSessionMutation,
+  useGetAuthProvidersQuery
+} from './api'
 
 const LoginForm = styled('form', () => ({
   display: 'flex',
   flexDirection: 'column',
   margin: 0
 }))
-
-const AuthWithCredentialsMutation = gql`
-  mutation CreateSession($email: String!, $password: String!) {
-    createSession(email: $email, password: $password) {
-      user {
-        email
-      }
-      token
-    }
-  }
-`
-
-const GetAuthProviders = gql`
-  query GetAuthProviders($redirectUri: String!) {
-    authProviders(redirectUri: $redirectUri) {
-      name
-      url
-    }
-  }
-`
-
-const AuthWithOAuth2Code = gql`
-  mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
-    createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
-      user {
-        email
-      }
-      token
-    }
-  }
-`
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -59,12 +31,14 @@ export function Login() {
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const [authenticate, {loading, error}] = useMutation(AuthWithCredentialsMutation)
-  const [authenticateWithOAuth2Code, {loading: loadingOAuth2, error: errorOAuth2}] = useMutation(
-    AuthWithOAuth2Code
-  )
+  const [authenticate, {loading, error}] = useCreateSessionMutation()
 
-  const {data: providerData} = useQuery(GetAuthProviders, {
+  const [
+    authenticateWithOAuth2Code,
+    {loading: loadingOAuth2, error: errorOAuth2}
+  ] = useCreateSessionWithOAuth2CodeMutation()
+
+  const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
       redirectUri: 'http://localhost:3000/login'
     }
@@ -111,6 +85,8 @@ export function Login() {
     e.preventDefault()
 
     const response = await authenticate({variables: {email, password}})
+
+    if (!response.data?.createSession) return
 
     const {
       token: sessionToken,

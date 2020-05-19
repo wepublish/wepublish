@@ -1,0 +1,24 @@
+mutation CreateSession($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    user {
+      email
+    }
+    token
+  }
+}
+
+query GetAuthProviders($redirectUri: String!) {
+  authProviders(redirectUri: $redirectUri) {
+    name
+    url
+  }
+}
+
+mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $code: String!) {
+  createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
+    user {
+      email
+    }
+    token
+  }
+}

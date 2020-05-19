@@ -38,7 +38,8 @@ import {
   PeerArticleTeaser,
   PageTeaser,
   TeaserType,
-  RichTextBlock
+  RichTextBlock,
+  FacebookVideoBlock
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
@@ -337,6 +338,17 @@ export const GraphQLFacebookPostBlock = new GraphQLObjectType<FacebookPostBlock,
   })
 })
 
+export const GraphQLFacebookVideoBlock = new GraphQLObjectType<FacebookVideoBlock, Context>({
+  name: 'FacebookVideoBlock',
+  fields: {
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.FacebookVideo
+  })
+})
+
 export const GraphQLInstagramPostBlock = new GraphQLObjectType<InstagramPostBlock, Context>({
   name: 'InstagramPostBlock',
   fields: {
@@ -509,6 +521,14 @@ export const GraphQLInputFacebookPostBlock = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLInputFacebookVideoBlock = new GraphQLInputObjectType({
+  name: 'InputFacebookVideoBlock',
+  fields: {
+    userID: {type: GraphQLNonNull(GraphQLString)},
+    videoID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLInputInstagramPostBlock = new GraphQLInputObjectType({
   name: 'InputInstagramPostBlock',
   fields: {
@@ -617,6 +637,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.Title]: {type: GraphQLInputTitleBlock},
     [BlockType.Quote]: {type: GraphQLInputQuoteBlock},
     [BlockType.FacebookPost]: {type: GraphQLInputFacebookPostBlock},
+    [BlockType.FacebookVideo]: {type: GraphQLInputFacebookVideoBlock},
     [BlockType.InstagramPost]: {type: GraphQLInputInstagramPostBlock},
     [BlockType.TwitterTweet]: {type: GraphQLInputTwitterTweetBlock},
     [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
@@ -635,6 +656,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLImageBlock,
     GraphQLImageGalleryBlock,
     GraphQLFacebookPostBlock,
+    GraphQLFacebookVideoBlock,
     GraphQLInstagramPostBlock,
     GraphQLTwitterTweetBlock,
     GraphQLVimeoVideoBlock,

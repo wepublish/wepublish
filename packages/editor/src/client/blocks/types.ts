@@ -18,12 +18,6 @@ export enum BlockType {
   Title = 'title',
   Image = 'image',
   Quote = 'quote',
-  FacebookPost = 'facebookPost',
-  InstagramPost = 'instagramPost',
-  TwitterTweet = 'twitterTweet',
-  VimeoVideo = 'vimeoVideo',
-  YouTubeVideo = 'youTubeVideo',
-  SoundCloudTrack = 'soundCloudTrack',
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
   ArticleTeaserGrid1 = 'articleTeaserGrid1',
@@ -60,6 +54,7 @@ export interface LinkPageBreakBlockValue {
 
 export enum EmbedType {
   FacebookPost = 'facebookPost',
+  FacebookVideo = 'facebookVideo',
   InstagramPost = 'instagramPost',
   TwitterTweet = 'twitterTweet',
   VimeoVideo = 'vimeoVideo',
@@ -72,6 +67,12 @@ export interface FacebookPostEmbed {
   readonly type: EmbedType.FacebookPost
   readonly userID: string
   readonly postID: string
+}
+
+export interface FacebookVideoEmbed {
+  readonly type: EmbedType.FacebookVideo
+  readonly userID: string
+  readonly videoID: string
 }
 
 export interface InstagramPostEmbed {
@@ -110,6 +111,7 @@ export interface OtherEmbed {
 
 export type EmbedBlockValue =
   | FacebookPostEmbed
+  | FacebookVideoEmbed
   | InstagramPostEmbed
   | TwitterTweetEmbed
   | VimeoVideoEmbed
@@ -240,6 +242,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             facebookPost: {
               userID: value.userID,
               postID: value.postID
+            }
+          }
+
+        case EmbedType.FacebookVideo:
+          return {
+            facebookVideo: {
+              userID: value.userID,
+              videoID: value.videoID
             }
           }
 
@@ -384,6 +394,13 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {type: EmbedType.FacebookPost, userID: block.userID, postID: block.postID}
+      }
+
+    case 'FacebookVideoBlock':
+      return {
+        key,
+        type: BlockType.Embed,
+        value: {type: EmbedType.FacebookVideo, userID: block.userID, videoID: block.videoID}
       }
 
     case 'InstagramPostBlock':

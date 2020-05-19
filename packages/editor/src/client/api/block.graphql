@@ -88,6 +88,11 @@ fragment FullBlock on Block {
     postID
   }
 
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
+
   ... on InstagramPostBlock {
     postID
   }

@@ -23,7 +23,7 @@ import {OptionalAuthor} from './db/author'
 import {OptionalNavigation} from './db/navigation'
 import {OptionalPage, OptionalPublicPage} from './db/page'
 import {OptionalPeer} from './db/peer'
-import {GraphQLSchema, print} from 'graphql'
+import {GraphQLSchema, print, GraphQLError} from 'graphql'
 import {
   makeRemoteExecutableSchema,
   introspectSchema,
@@ -234,7 +234,7 @@ export function tokenFromRequest(req: IncomingMessage): string | null {
 }
 
 export function createFetcher(hostURL: string, token: string): Fetcher {
-  // TODO: Implement batching and improve caching
+  // TODO: Implement batching and improve caching.
   const cache = new DataLoader<
     {query: string} & Omit<IFetcherOperation, 'query' | 'context'>,
     any,
@@ -245,28 +245,33 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
         queries.map(async ({query, variables, operationName}) => {
           try {
             const abortController = new AbortController()
-            const fetchResult = await Promise.race([
-              fetch(hostURL, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
-                body: JSON.stringify({query, variables, operationName}),
-                signal: abortController.signal
-              }),
-              new Promise<null>((resolve, reject) =>
-                // TODO: Make timeout configurable
-                setTimeout(() => {
-                  abortController.abort()
-                  reject(null)
-                }, 200)
-              )
-            ])
 
-            if (fetchResult?.status != 200) return null
+            // TODO: Make timeout configurable.
+            setTimeout(() => abortController.abort(), 200)
+
+            const fetchResult = await fetch(hostURL, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
+              body: JSON.stringify({query, variables, operationName}),
+              signal: abortController.signal
+            })
+
+            if (fetchResult?.status != 200) {
+              return {
+                errors: [
+                  new GraphQLError(`Peer responded with invalid status: ${fetchResult?.status}`)
+                ]
+              }
+            }
 
             return await fetchResult.json()
           } catch (err) {
+            if (err.type === 'aborted') {
+              err = new Error(`Connection to peer (${hostURL}) timed out.`)
+            }
+
             console.error(err)
-            return null
+            return {errors: [err]}
           }
         })
       )
@@ -275,7 +280,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
     },
     {
       cacheKeyFn: ({query, variables, operationName}) =>
-        // Use faster hashing function, doesn't have to be crypto safe.
+        // TODO: Use faster hashing function, doesn't have to be crypto safe.
         crypto
           .createHash('sha1')
           .update(`${query}.${JSON.stringify(variables)}.${operationName}`)
