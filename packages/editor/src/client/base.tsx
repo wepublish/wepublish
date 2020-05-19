@@ -8,7 +8,8 @@ import {
   MaterialIconTextFields,
   MaterialIconPhotoLibraryOutlined,
   MaterialIconPermIdentityOutlined,
-  MaterialIconFaceOutlined
+  MaterialIconFaceOutlined,
+  MaterialIconHowToRegOutlined
 } from '@karma.run/icons'
 
 import {
@@ -20,7 +21,8 @@ import {
   AuthorListRoute,
   useRoute,
   RouteType,
-  UserListRoute
+  UserListRoute,
+  UserRoleListRoute
 } from './route'
 
 export interface BaseProps {
@@ -67,6 +69,13 @@ export function Base({children}: BaseProps) {
             label="Users"
             route={UserListRoute.create({})}
             active={current?.type === RouteType.UserList}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconHowToRegOutlined}
+            label="User Roles"
+            route={UserRoleListRoute.create({})}
+            active={current?.type === RouteType.UserRoleList}
           />
 
           {/* TODO */}

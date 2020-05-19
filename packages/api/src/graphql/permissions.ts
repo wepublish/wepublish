@@ -176,7 +176,7 @@ export const CanGetUserRole: Permission = {
 }
 
 export const CanGetUserRoles: Permission = {
-  id: 'CAN_GET_USER_ROLE',
+  id: 'CAN_GET_USER_ROLES',
   description: 'Allows to get all user roles',
   deprecated: false
 }

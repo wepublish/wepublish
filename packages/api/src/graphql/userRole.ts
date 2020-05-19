@@ -8,7 +8,7 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
-import {AllPermissions} from './permissions'
+import {AllPermissions, EditorPermissions} from './permissions'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {UserRoleSort} from '../db/userRole'
@@ -18,6 +18,7 @@ export const GraphQLPermission = new GraphQLObjectType({
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLString)},
+    checked: {type: GraphQLNonNull(GraphQLBoolean)},
     deprecated: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -31,9 +32,20 @@ export const GraphQLUserRole = new GraphQLObjectType({
     systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
     permissions: {
       type: GraphQLNonNull(GraphQLList(GraphQLPermission)),
-      resolve(test, args, {loaders}) {
-        const {permissionIDs} = test
-        return AllPermissions.filter(permission => permissionIDs.includes(permission.id))
+      resolve({id, permissionIDs}, args, {loaders}) {
+        if (id === 'admin') {
+          return AllPermissions.map(permission => ({...permission, checked: true}))
+        } else if (id === 'editor') {
+          return AllPermissions.map(permission => ({
+            ...permission,
+            checked: !!EditorPermissions.find(editorPer => editorPer.id === permission.id)
+          }))
+        } else {
+          return AllPermissions.map(permission => ({
+            ...permission,
+            checked: permissionIDs.includes(permission.id)
+          }))
+        }
       }
     }
   }

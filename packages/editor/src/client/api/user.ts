@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import {useQuery, QueryHookOptions, useMutation, MutationHookOptions} from '@apollo/react-hooks'
+import {UserRole} from './userRole'
 
 export const UserFragment = gql`
   fragment UserFragment on User {
@@ -14,13 +15,6 @@ export const UserFragment = gql`
     }
   }
 `
-
-export interface UserRole {
-  id: string
-  name: string
-  description: string
-  systemRole: boolean
-}
 
 export interface User {
   id: string

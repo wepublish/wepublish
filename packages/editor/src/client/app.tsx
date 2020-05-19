@@ -12,6 +12,7 @@ import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
 import {UserList} from './routes/userList'
+import {UserRoleList} from './routes/userRoleList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -39,6 +40,11 @@ export function contentForRoute(route: Route) {
     case RouteType.UserCreate:
     case RouteType.UserEdit:
       return <UserList />
+
+    case RouteType.UserRoleList:
+    case RouteType.UserRoleCreate:
+    case RouteType.UserRoleEdit:
+      return <UserRoleList />
 
     case RouteType.NotFound:
       return <ArticleList />
