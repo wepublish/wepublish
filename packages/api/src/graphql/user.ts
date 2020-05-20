@@ -56,6 +56,6 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
-    roles: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })

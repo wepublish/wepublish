@@ -91,9 +91,10 @@ export function UserList() {
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
               {name || 'Unknown'}
             </Typography>
+            <Typography variant="body1" color={email ? 'dark' : 'gray'}>
+              {email || 'No Description'}
+            </Typography>
           </Link>
-
-          <Typography variant="h2">{email}</Typography>
 
           <Box flexGrow={1} />
           <OptionButton

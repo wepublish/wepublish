@@ -84,8 +84,7 @@ export function useUserQuery(opts?: QueryHookOptions<UsersData, UserVariables>) 
 export interface UserInput {
   name: string
   email: string
-  password: string
-  roles: UserRole[]
+  roleIDs: string[]
 }
 
 const CreateUserMutation = gql`
