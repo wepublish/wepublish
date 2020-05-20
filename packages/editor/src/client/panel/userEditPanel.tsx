@@ -13,7 +13,8 @@ import {
   Typography,
   OptionButton,
   IconButton,
-  Select
+  Select,
+  Button
 } from '@karma.run/ui'
 
 import {
@@ -78,7 +79,6 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       setName(data.user.name)
       setEmail(data.user.email)
       setRoles(data.user.roles)
-      setPassword('***') //TODO: handle password
     }
   }, [data?.user])
 
@@ -125,11 +125,17 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             name,
             email,
             roleIDs: roles.map(role => role.id)
-          }
+          },
+          password
         }
       })
       if (data?.createUser) onSave?.(data.createUser)
     }
+  }
+
+  function handleSetCurrentUserRole(userRole: UserRole | undefined): void {
+    if (!userRole) return
+    setCurrentUserRole(userRole)
   }
 
   return (
@@ -172,14 +178,17 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             />
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Password"
-              value={password}
-              disabled={isDisabled}
-              onChange={e => {
-                setPassword(e.target.value)
-              }}
-            />
+            {!id && (
+              <TextInput
+                label="Password"
+                value={password}
+                disabled={isDisabled}
+                onChange={e => {
+                  setPassword(e.target.value)
+                }}
+              />
+            )}
+            {id && <Button label="Reset Password" variant="outlined" />}
           </Box>
         </PanelSection>
         <PanelSectionHeader title="User Roles" />
@@ -214,7 +223,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               options={userRoles}
               value={currentUserRole}
               renderListItem={userRole => userRole?.name}
-              onChange={userRole => setCurrentUserRole(userRole)}
+              onChange={userRole => handleSetCurrentUserRole(userRole)}
             />
             <IconButton
               flexBasis="10%"

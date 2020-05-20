@@ -144,11 +144,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createUser: {
       type: GraphQLUser,
-      args: {input: {type: GraphQLNonNull(GraphQLUserInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
+      args: {
+        input: {type: GraphQLNonNull(GraphQLUserInput)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve(root, {input, password}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
-        return dbAdapter.createUser({input})
+        return dbAdapter.createUser({input, password})
       }
     },
 

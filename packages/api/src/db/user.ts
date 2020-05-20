@@ -6,13 +6,11 @@ export interface UserInput {
   readonly roleIDs: string[]
 }
 
-export interface CreateUserInput extends UserInput {
+export interface CreateUserArgs {
+  readonly input: UserInput
   readonly password: string
 }
 
-export interface CreateUserArgs {
-  readonly input: CreateUserInput
-}
 export interface UpdateUserArgs {
   readonly id: string
   readonly input: UserInput

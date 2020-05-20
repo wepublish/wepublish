@@ -88,8 +88,8 @@ export interface UserInput {
 }
 
 const CreateUserMutation = gql`
-  mutation CreateUser($input: UserInput!) {
-    createUser(input: $input) {
+  mutation CreateUser($input: UserInput!, $password: String!) {
+    createUser(input: $input, password: $password) {
       ...UserFragment
     }
   }
@@ -103,6 +103,7 @@ export interface CreateUserMutationData {
 
 export interface CreateUserVariables {
   input: UserInput
+  password: string
 }
 
 export function useCreateUserMutation(

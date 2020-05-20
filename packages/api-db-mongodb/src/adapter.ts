@@ -304,9 +304,9 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  async createUser({input}: CreateUserArgs): Promise<OptionalUser> {
+  async createUser({input, password}: CreateUserArgs): Promise<OptionalUser> {
     try {
-      const passwordHash = await bcrypt.hash(input.password, this.bcryptHashCostFactor)
+      const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
