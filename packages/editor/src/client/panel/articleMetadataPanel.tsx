@@ -213,6 +213,7 @@ export function AuthorInput(props: AuthorInputProps) {
     <AutocompleteInput
       {...props}
       valueToChipData={author => ({
+        id: author.id,
         label: author.name,
         imageURL: author.image?.squareURL ?? undefined
       })}>

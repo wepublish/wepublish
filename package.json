@@ -10,7 +10,7 @@
     "clean": "run-p --print-label clean:**",
     "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:oauth2 build:api-example",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:website-example",
-    "watch": "run-p --print-label watch:*",
+    "watch": "run-p watch:*",
     "start:docker": "docker-compose up mongo mongo-express",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",

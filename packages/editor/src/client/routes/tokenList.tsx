@@ -29,7 +29,13 @@ import {
   TokenGenerateRoute
 } from '../route'
 
-import {useTokenListQuery, useDeleteTokenMutation, Token, TokenListDocument} from '../api'
+import {
+  useTokenListQuery,
+  useDeleteTokenMutation,
+  TokenRefFragment,
+  TokenListDocument
+} from '../api'
+
 import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
@@ -43,7 +49,7 @@ export function TokenList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
-  const [currentToken, setCurrentToken] = useState<Token>()
+  const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -75,6 +81,7 @@ export function TokenList() {
 
       default:
         setTokenGeneratePanelOpen(false)
+        break
     }
   }, [current])
 

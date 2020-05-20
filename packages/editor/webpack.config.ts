@@ -2,6 +2,8 @@ import path from 'path'
 import webpack from 'webpack'
 
 import {AssetListPlugin} from '@karma.run/webpack'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
 export default (env: any, {mode}: any) =>
   ({
@@ -45,7 +47,13 @@ export default (env: any, {mode}: any) =>
       ]
     },
     devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
-    plugins: [new AssetListPlugin({filename: './dist/assetList.json'})],
+    plugins: [
+      new CleanWebpackPlugin({cleanStaleWebpackAssets: true}),
+      new AssetListPlugin({filename: './dist/assetList.json'}),
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: './tsconfig.json'
+      })
+    ],
     devServer: {
       writeToDisk: true,
       public: 'http://localhost:3001/',

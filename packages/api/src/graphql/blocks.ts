@@ -289,7 +289,7 @@ export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, C
   name: 'GalleryImageEdge',
   fields: {
     caption: {type: GraphQLString},
-    node: {
+    image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
@@ -430,7 +430,7 @@ export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>(
 export const GraphQLListicleBlock = new GraphQLObjectType<ListicleBlock, Context>({
   name: 'ListicleBlock',
   fields: {
-    listicle: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLListicleItem)))}
+    items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLListicleItem)))}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Listicle
@@ -471,8 +471,8 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
   })
 })
 
-export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
-  name: 'InputRichTextBlock',
+export const GraphQLRichTextBlockInput = new GraphQLInputObjectType({
+  name: 'RichTextBlockInput',
   fields: {
     richText: {
       type: GraphQLNonNull(GraphQLRichText)
@@ -480,32 +480,63 @@ export const GraphQLInputRichTextBlock = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLInputTitleBlock = new GraphQLInputObjectType({
-  name: 'InputTitleBlock',
+export const GraphQLTitleBlockInput = new GraphQLInputObjectType({
+  name: 'TitleBlockInput',
   fields: {
     title: {type: GraphQLString},
     lead: {type: GraphQLString}
   }
 })
 
-export const GraphQLInputImageBlock = new GraphQLInputObjectType({
-  name: 'InputImageBlock',
+export const GraphQLImageBlockInput = new GraphQLInputObjectType({
+  name: 'ImageBlockInput',
   fields: {
     caption: {type: GraphQLString},
     imageID: {type: GraphQLID}
   }
 })
 
-export const GraphQLInputQuoteBlock = new GraphQLInputObjectType({
-  name: 'InputQuoteBlock',
+export const GraphQLGalleryImageEdgeInput = new GraphQLInputObjectType({
+  name: 'GalleryImageEdgeInput',
+  fields: {
+    caption: {type: GraphQLString},
+    imageID: {type: GraphQLID}
+  }
+})
+
+export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
+  name: 'ImageGalleryBlockInput',
+  fields: {
+    images: {type: GraphQLList(GraphQLGalleryImageEdgeInput)}
+  }
+})
+
+export const GraphQLListicleItemInput = new GraphQLInputObjectType({
+  name: 'ListicleItemInput',
+  fields: {
+    title: {type: GraphQLNonNull(GraphQLString)},
+    imageID: {type: GraphQLID},
+    richText: {type: GraphQLNonNull(GraphQLRichText)}
+  }
+})
+
+export const GraphQLListicleBlockInput = new GraphQLInputObjectType({
+  name: 'ListicleBlockInput',
+  fields: {
+    items: {type: GraphQLList(GraphQLListicleItemInput)}
+  }
+})
+
+export const GraphQLQuoteBlockInput = new GraphQLInputObjectType({
+  name: 'QuoteBlockInput',
   fields: {
     quote: {type: GraphQLString},
     author: {type: GraphQLString}
   }
 })
 
-export const GraphQLInputLinkPageBreakBlock = new GraphQLInputObjectType({
-  name: 'InputLinkPageBreakBlock',
+export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
+  name: 'LinkPageBreakBlockInput',
   fields: {
     text: {type: GraphQLString},
     linkURL: {type: GraphQLString},
@@ -513,60 +544,60 @@ export const GraphQLInputLinkPageBreakBlock = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLInputFacebookPostBlock = new GraphQLInputObjectType({
-  name: 'InputFacebookPostBlock',
+export const GraphQLFacebookPostBlockInput = new GraphQLInputObjectType({
+  name: 'FacebookPostBlockInput',
   fields: {
     userID: {type: GraphQLNonNull(GraphQLString)},
     postID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputFacebookVideoBlock = new GraphQLInputObjectType({
-  name: 'InputFacebookVideoBlock',
+export const GraphQLFacebookVideoBlockInput = new GraphQLInputObjectType({
+  name: 'FacebookVideoBlockInput',
   fields: {
     userID: {type: GraphQLNonNull(GraphQLString)},
     videoID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputInstagramPostBlock = new GraphQLInputObjectType({
-  name: 'InputInstagramPostBlock',
+export const GraphQLInstagramPostBlockInput = new GraphQLInputObjectType({
+  name: 'InstagramPostBlockInput',
   fields: {
     postID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputTwitterTweetBlock = new GraphQLInputObjectType({
-  name: 'InputTwitterTweetBlock',
+export const GraphQLTwitterTweetBlockInput = new GraphQLInputObjectType({
+  name: 'TwitterTweetBlockInput',
   fields: {
     userID: {type: GraphQLNonNull(GraphQLString)},
     tweetID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputVimeoVideoBlock = new GraphQLInputObjectType({
-  name: 'InputVimeoVideoBlock',
+export const GraphQLVimeoVideoBlockInput = new GraphQLInputObjectType({
+  name: 'VimeoVideoBlockInput',
   fields: {
     videoID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputYouTubeVideoBlock = new GraphQLInputObjectType({
-  name: 'InputYouTubeVideoBlock',
+export const GraphQLYouTubeVideoBlockInput = new GraphQLInputObjectType({
+  name: 'YouTubeVideoBlockInput',
   fields: {
     videoID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputSoundCloudTrackBlock = new GraphQLInputObjectType({
-  name: 'InputSoundCloudTrackBlock',
+export const GraphQLSoundCloudTrackBlockInput = new GraphQLInputObjectType({
+  name: 'SoundCloudTrackBlockInput',
   fields: {
     trackID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
-export const GraphQLInputEmbedBlock = new GraphQLInputObjectType({
-  name: 'InputEmbedBlock',
+export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
+  name: 'EmbedBlockInput',
   fields: {
     url: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -632,19 +663,21 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
 export const GraphQLBlockInput = new GraphQLInputObjectType({
   name: 'BlockInput',
   fields: () => ({
-    [BlockType.RichText]: {type: GraphQLInputRichTextBlock},
-    [BlockType.Image]: {type: GraphQLInputImageBlock},
-    [BlockType.Title]: {type: GraphQLInputTitleBlock},
-    [BlockType.Quote]: {type: GraphQLInputQuoteBlock},
-    [BlockType.FacebookPost]: {type: GraphQLInputFacebookPostBlock},
-    [BlockType.FacebookVideo]: {type: GraphQLInputFacebookVideoBlock},
-    [BlockType.InstagramPost]: {type: GraphQLInputInstagramPostBlock},
-    [BlockType.TwitterTweet]: {type: GraphQLInputTwitterTweetBlock},
-    [BlockType.VimeoVideo]: {type: GraphQLInputVimeoVideoBlock},
-    [BlockType.YouTubeVideo]: {type: GraphQLInputYouTubeVideoBlock},
-    [BlockType.SoundCloudTrack]: {type: GraphQLInputSoundCloudTrackBlock},
-    [BlockType.Embed]: {type: GraphQLInputEmbedBlock},
-    [BlockType.LinkPageBreak]: {type: GraphQLInputLinkPageBreakBlock},
+    [BlockType.RichText]: {type: GraphQLRichTextBlockInput},
+    [BlockType.Image]: {type: GraphQLImageBlockInput},
+    [BlockType.ImageGallery]: {type: GraphQLImageGalleryBlockInput},
+    [BlockType.Listicle]: {type: GraphQLListicleBlockInput},
+    [BlockType.Title]: {type: GraphQLTitleBlockInput},
+    [BlockType.Quote]: {type: GraphQLQuoteBlockInput},
+    [BlockType.FacebookPost]: {type: GraphQLFacebookPostBlockInput},
+    [BlockType.FacebookVideo]: {type: GraphQLFacebookVideoBlockInput},
+    [BlockType.InstagramPost]: {type: GraphQLInstagramPostBlockInput},
+    [BlockType.TwitterTweet]: {type: GraphQLTwitterTweetBlockInput},
+    [BlockType.VimeoVideo]: {type: GraphQLVimeoVideoBlockInput},
+    [BlockType.YouTubeVideo]: {type: GraphQLYouTubeVideoBlockInput},
+    [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
+    [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
+    [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
   })
 })
@@ -655,6 +688,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLRichTextBlock,
     GraphQLImageBlock,
     GraphQLImageGalleryBlock,
+    GraphQLListicleBlock,
     GraphQLFacebookPostBlock,
     GraphQLFacebookVideoBlock,
     GraphQLInstagramPostBlock,
@@ -663,7 +697,6 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
     GraphQLEmbedBlock,
-    GraphQLListicleBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
@@ -677,6 +710,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLRichTextBlock,
     GraphQLImageBlock,
     GraphQLImageGalleryBlock,
+    GraphQLListicleBlock,
     GraphQLFacebookPostBlock,
     GraphQLInstagramPostBlock,
     GraphQLTwitterTweetBlock,
@@ -684,7 +718,6 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
     GraphQLEmbedBlock,
-    GraphQLListicleBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,

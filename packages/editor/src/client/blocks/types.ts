@@ -17,6 +17,8 @@ export enum BlockType {
   RichText = 'richText',
   Title = 'title',
   Image = 'image',
+  ImageGallery = 'imageGallery',
+  Listicle = 'listicle',
   Quote = 'quote',
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
@@ -27,29 +29,48 @@ export enum BlockType {
 export type RichTextValue = Node[]
 
 export interface RichTextBlockValue {
-  readonly value: RichTextValue
-  readonly selection: Range | null
+  value: RichTextValue
+  selection: Range | null
 }
 
 export interface ImageBlockValue {
-  readonly image: ImageRefFragment | null
-  readonly caption: string
+  image: ImageRefFragment | null
+  caption: string
+}
+
+export interface GalleryImageEdge {
+  image: ImageRefFragment | null
+  caption: string
+}
+
+export interface ImageGalleryBlockValue {
+  images: GalleryImageEdge[]
+}
+
+export interface ListicleItem {
+  title: string
+  image: ImageRefFragment | null
+  richText: RichTextBlockValue
+}
+
+export interface ListicleBlockValue {
+  items: ListicleItem[]
 }
 
 export interface TitleBlockValue {
-  readonly title: string
-  readonly lead: string
+  title: string
+  lead: string
 }
 
 export interface QuoteBlockValue {
-  readonly quote: string
-  readonly author: string
+  quote: string
+  author: string
 }
 
 export interface LinkPageBreakBlockValue {
-  readonly text: string
-  readonly linkURL: string
-  readonly linkText: string
+  text: string
+  linkURL: string
+  linkText: string
 }
 
 export enum EmbedType {
@@ -64,49 +85,49 @@ export enum EmbedType {
 }
 
 export interface FacebookPostEmbed {
-  readonly type: EmbedType.FacebookPost
-  readonly userID: string
-  readonly postID: string
+  type: EmbedType.FacebookPost
+  userID: string
+  postID: string
 }
 
 export interface FacebookVideoEmbed {
-  readonly type: EmbedType.FacebookVideo
-  readonly userID: string
-  readonly videoID: string
+  type: EmbedType.FacebookVideo
+  userID: string
+  videoID: string
 }
 
 export interface InstagramPostEmbed {
-  readonly type: EmbedType.InstagramPost
-  readonly postID: string
+  type: EmbedType.InstagramPost
+  postID: string
 }
 
 export interface TwitterTweetEmbed {
-  readonly type: EmbedType.TwitterTweet
-  readonly userID: string
-  readonly tweetID: string
+  type: EmbedType.TwitterTweet
+  userID: string
+  tweetID: string
 }
 
 export interface VimeoVideoEmbed {
-  readonly type: EmbedType.VimeoVideo
-  readonly videoID: string
+  type: EmbedType.VimeoVideo
+  videoID: string
 }
 
 export interface YouTubeVideoEmbed {
-  readonly type: EmbedType.YouTubeVideo
-  readonly videoID: string
+  type: EmbedType.YouTubeVideo
+  videoID: string
 }
 
 export interface SoundCloudTrackEmbed {
-  readonly type: EmbedType.SoundCloudTrack
-  readonly trackID: string
+  type: EmbedType.SoundCloudTrack
+  trackID: string
 }
 
 export interface OtherEmbed {
-  readonly type: EmbedType.Other
-  readonly url?: string
-  readonly title?: string
-  readonly width?: number
-  readonly height?: number
+  type: EmbedType.Other
+  url?: string
+  title?: string
+  width?: number
+  height?: number
 }
 
 export type EmbedBlockValue =
@@ -159,12 +180,17 @@ export interface PageTeaser extends PageTeaserLink, BaseTeaser {}
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser
 
 export interface TeaserGridBlockValue {
-  readonly teasers: Array<[string, Teaser | null]>
-  readonly numColumns: number
+  teasers: Array<[string, Teaser | null]>
+  numColumns: number
 }
 
 export type RichTextBlockListValue = BlockListValue<BlockType.RichText, RichTextBlockValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
+export type ImageGalleryBlockListValue = BlockListValue<
+  BlockType.ImageGallery,
+  ImageGalleryBlockValue
+>
+export type ListicleBlockListValue = BlockListValue<BlockType.Listicle, ListicleBlockValue>
 export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
 export type QuoteBlockListValue = BlockListValue<BlockType.Quote, QuoteBlockValue>
 export type EmbedBlockListValue = BlockListValue<BlockType.Embed, EmbedBlockValue>
@@ -187,6 +213,8 @@ export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
   | ImageBlockListValue
+  | ImageGalleryBlockListValue
+  | ListicleBlockListValue
   | QuoteBlockListValue
   | EmbedBlockListValue
   | LinkPageBreakBlockListValue
@@ -200,6 +228,24 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         image: {
           imageID: block.value.image?.id,
           caption: block.value.caption || undefined
+        }
+      }
+
+    case BlockType.ImageGallery:
+      return {
+        imageGallery: {
+          images: block.value.images
+        }
+      }
+
+    case BlockType.Listicle:
+      return {
+        listicle: {
+          items: block.value.items.map(({title, richText, image}) => ({
+            title,
+            richText: richText.value,
+            imageID: image?.id
+          }))
         }
       }
 
@@ -362,6 +408,31 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           caption: block.caption ?? '',
           image: block.image ? block.image : null
+        }
+      }
+
+    case 'ImageGalleryBlock':
+      return {
+        key,
+        type: BlockType.ImageGallery,
+        value: {
+          images: block.images.map(({image, caption}) => ({
+            image: image ?? null,
+            caption: caption ?? ''
+          }))
+        }
+      }
+
+    case 'ListicleBlock':
+      return {
+        key,
+        type: BlockType.Listicle,
+        value: {
+          items: block.items.map(({title, richText, image}) => ({
+            title,
+            image: image ?? null,
+            richText: {value: richText, selection: null}
+          }))
         }
       }
 

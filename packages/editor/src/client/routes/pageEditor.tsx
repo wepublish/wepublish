@@ -15,21 +15,12 @@ import {
   MaterialIconArrowBack,
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined,
-  IconColumn6,
-  IconColumn1,
-  MaterialIconTitle,
-  MaterialIconTextFormat,
-  MaterialIconImage,
-  MaterialIconViewDay,
-  MaterialIconFormatQuote,
-  MaterialIconCode
+  MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
-import {TeaserGridBlock} from '../blocks/teaserGridBlock'
 
 import {
   PageInput,
@@ -42,40 +33,10 @@ import {
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
-import {
-  BlockType,
-  blockForQueryBlock,
-  unionMapForBlock,
-  ArticleTeaserGridBlock1ListValue,
-  ArticleTeaserGridBlock6ListValue,
-  TitleBlockListValue,
-  RichTextBlockListValue,
-  ImageBlockListValue,
-  LinkPageBreakBlockListValue,
-  EmbedType,
-  QuoteBlockListValue,
-  EmbedBlockListValue
-} from '../blocks/types'
+import {blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
 
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
-import {TitleBlock} from '../blocks/titleBlock'
-import {ImageBlock} from '../blocks/imageBlock'
-import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
-
-import nanoid from 'nanoid'
-import {EmbedBlock} from '../blocks/embedBlock'
-import {QuoteBlock} from '../blocks/quoteBlock'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-
-export type PageBlockValue =
-  | TitleBlockListValue
-  | RichTextBlockListValue
-  | ImageBlockListValue
-  | QuoteBlockListValue
-  | LinkPageBreakBlockListValue
-  | EmbedBlockListValue
-  | ArticleTeaserGridBlock1ListValue
-  | ArticleTeaserGridBlock6ListValue
+import {BlockMap} from '../blocks/blockMap'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -119,7 +80,7 @@ export function PageEditor({id}: PageEditorProps) {
   })
 
   const isNew = id == undefined
-  const [blocks, setBlocks] = useState<PageBlockValue[]>([])
+  const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
 
@@ -296,76 +257,7 @@ export function PageEditor({id}: PageEditorProps) {
             setChanged(true)
           }}
           disabled={isDisabled}>
-          {useBlockMap<PageBlockValue>(
-            () => ({
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
-              },
-
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: createDefaultValue,
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
-              },
-
-              [BlockType.Quote]: {
-                field: props => <QuoteBlock {...props} />,
-                defaultValue: {quote: '', author: ''},
-                label: 'Quote',
-                icon: MaterialIconFormatQuote
-              },
-
-              [BlockType.LinkPageBreak]: {
-                field: props => <LinkPageBreakBlock {...props} />,
-                defaultValue: {text: '', linkText: '', linkURL: ''},
-                label: 'Page Break',
-                icon: MaterialIconViewDay
-              },
-
-              [BlockType.Embed]: {
-                field: props => <EmbedBlock {...props} />,
-                defaultValue: {type: EmbedType.Other},
-                label: 'Embed',
-                icon: MaterialIconCode
-              },
-
-              [BlockType.ArticleTeaserGrid1]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
-                label: '1 Col',
-                icon: IconColumn1
-              },
-
-              [BlockType.ArticleTeaserGrid6]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {
-                  numColumns: 3,
-                  teasers: [
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null]
-                  ]
-                },
-                label: '6 Cols',
-                icon: IconColumn6
-              }
-            }),
-            []
-          )}
+          {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>

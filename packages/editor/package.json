@@ -9,7 +9,7 @@
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-p build:*",
-    "build:client": "webpack --mode production --json > stats.json",
+    "build:client": "webpack --mode production",
     "build:server": "tsc -b ./src/shared ./src/server",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
@@ -87,6 +87,8 @@
     "typescript": "^3.8.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "webpack-dev-server": "^3.9.0",
+    "fork-ts-checker-webpack-plugin": "^4.1.4",
+    "clean-webpack-plugin": "^3.0.0"
   }
 }

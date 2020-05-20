@@ -17,7 +17,7 @@ import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/ic
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
-import {ImageRefData} from '../api/image'
+import {ImageRefFragment} from '../api'
 import {ImageBlockValue} from './types'
 
 // TODO: Handle disabled prop
@@ -32,7 +32,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageRefData | null) {
+  function handleImageChange(image: ImageRefFragment | null) {
     onChange({...value, image})
   }
 
@@ -62,7 +62,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                     onClick={() => setChooseModalOpen(true)}
                   /> */}
               </Box>
-              <Image src={image.largeURL} width="100%" height={300} contain />
+              {image.largeURL && <Image src={image.largeURL} width="100%" height={300} contain />}
             </Box>
           )}
         </PlaceholderInput>

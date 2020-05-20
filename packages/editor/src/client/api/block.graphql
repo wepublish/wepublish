@@ -83,6 +83,25 @@ fragment FullBlock on Block {
     }
   }
 
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...ImageRef
+      }
+    }
+  }
+
+  ... on ListicleBlock {
+    items {
+      title
+      image {
+        ...ImageRef
+      }
+      richText
+    }
+  }
+
   ... on FacebookPostBlock {
     userID
     postID

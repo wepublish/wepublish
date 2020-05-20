@@ -1,7 +1,11 @@
+fragment TokenRef on Token {
+  id
+  name
+}
+
 query TokenList {
   tokens {
-    id
-    name
+    ...TokenRef
   }
 }
 

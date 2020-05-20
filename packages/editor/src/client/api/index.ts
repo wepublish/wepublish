@@ -182,22 +182,24 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | ListicleBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
-  richText?: Maybe<InputRichTextBlock>;
-  image?: Maybe<InputImageBlock>;
-  title?: Maybe<InputTitleBlock>;
-  quote?: Maybe<InputQuoteBlock>;
-  facebookPost?: Maybe<InputFacebookPostBlock>;
-  facebookVideo?: Maybe<InputFacebookVideoBlock>;
-  instagramPost?: Maybe<InputInstagramPostBlock>;
-  twitterTweet?: Maybe<InputTwitterTweetBlock>;
-  vimeoVideo?: Maybe<InputVimeoVideoBlock>;
-  youTubeVideo?: Maybe<InputYouTubeVideoBlock>;
-  soundCloudTrack?: Maybe<InputSoundCloudTrackBlock>;
-  embed?: Maybe<InputEmbedBlock>;
-  linkPageBreak?: Maybe<InputLinkPageBreakBlock>;
+  richText?: Maybe<RichTextBlockInput>;
+  image?: Maybe<ImageBlockInput>;
+  imageGallery?: Maybe<ImageGalleryBlockInput>;
+  listicle?: Maybe<ListicleBlockInput>;
+  title?: Maybe<TitleBlockInput>;
+  quote?: Maybe<QuoteBlockInput>;
+  facebookPost?: Maybe<FacebookPostBlockInput>;
+  facebookVideo?: Maybe<FacebookVideoBlockInput>;
+  instagramPost?: Maybe<InstagramPostBlockInput>;
+  twitterTweet?: Maybe<TwitterTweetBlockInput>;
+  vimeoVideo?: Maybe<VimeoVideoBlockInput>;
+  youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
+  soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
+  embed?: Maybe<EmbedBlockInput>;
+  linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
 };
 
@@ -227,6 +229,13 @@ export type EmbedBlock = {
   height?: Maybe<Scalars['Int']>;
 };
 
+export type EmbedBlockInput = {
+  url?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+};
+
 export type ExternalNavigationLink = BaseNavigationLink & {
    __typename?: 'ExternalNavigationLink';
   label: Scalars['String'];
@@ -244,8 +253,18 @@ export type FacebookPostBlock = {
   postID: Scalars['String'];
 };
 
+export type FacebookPostBlockInput = {
+  userID: Scalars['String'];
+  postID: Scalars['String'];
+};
+
 export type FacebookVideoBlock = {
    __typename?: 'FacebookVideoBlock';
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
+};
+
+export type FacebookVideoBlockInput = {
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
@@ -253,7 +272,12 @@ export type FacebookVideoBlock = {
 export type GalleryImageEdge = {
    __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
-  node?: Maybe<Image>;
+  image?: Maybe<Image>;
+};
+
+export type GalleryImageEdgeInput = {
+  caption?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['ID']>;
 };
 
 export type Image = {
@@ -290,6 +314,11 @@ export type ImageBlock = {
   caption?: Maybe<Scalars['String']>;
 };
 
+export type ImageBlockInput = {
+  caption?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['ID']>;
+};
+
 export type ImageConnection = {
    __typename?: 'ImageConnection';
   nodes: Array<Image>;
@@ -305,6 +334,10 @@ export type ImageFilter = {
 export type ImageGalleryBlock = {
    __typename?: 'ImageGalleryBlock';
   images: Array<GalleryImageEdge>;
+};
+
+export type ImageGalleryBlockInput = {
+  images?: Maybe<Array<Maybe<GalleryImageEdgeInput>>>;
 };
 
 export enum ImageOutput {
@@ -334,76 +367,17 @@ export type ImageTransformation = {
   output?: Maybe<ImageOutput>;
 };
 
-export type InputEmbedBlock = {
-  url?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-};
-
-export type InputFacebookPostBlock = {
-  userID: Scalars['String'];
-  postID: Scalars['String'];
-};
-
-export type InputFacebookVideoBlock = {
-  userID: Scalars['String'];
-  videoID: Scalars['String'];
-};
-
-export type InputImageBlock = {
-  caption?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['ID']>;
-};
-
-export type InputInstagramPostBlock = {
-  postID: Scalars['String'];
-};
-
-export type InputLinkPageBreakBlock = {
-  text?: Maybe<Scalars['String']>;
-  linkURL?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-};
-
 export type InputPoint = {
   x: Scalars['Float'];
   y: Scalars['Float'];
 };
 
-export type InputQuoteBlock = {
-  quote?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
-};
-
-export type InputRichTextBlock = {
-  richText: Scalars['RichText'];
-};
-
-export type InputSoundCloudTrackBlock = {
-  trackID: Scalars['String'];
-};
-
-export type InputTitleBlock = {
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-};
-
-export type InputTwitterTweetBlock = {
-  userID: Scalars['String'];
-  tweetID: Scalars['String'];
-};
-
-export type InputVimeoVideoBlock = {
-  videoID: Scalars['String'];
-};
-
-export type InputYouTubeVideoBlock = {
-  videoID: Scalars['String'];
-};
-
 export type InstagramPostBlock = {
    __typename?: 'InstagramPostBlock';
+  postID: Scalars['String'];
+};
+
+export type InstagramPostBlockInput = {
   postID: Scalars['String'];
 };
 
@@ -414,15 +388,31 @@ export type LinkPageBreakBlock = {
   linkText?: Maybe<Scalars['String']>;
 };
 
+export type LinkPageBreakBlockInput = {
+  text?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+};
+
 export type ListicleBlock = {
    __typename?: 'ListicleBlock';
-  listicle: Array<ListicleItem>;
+  items: Array<ListicleItem>;
+};
+
+export type ListicleBlockInput = {
+  items?: Maybe<Array<Maybe<ListicleItemInput>>>;
 };
 
 export type ListicleItem = {
    __typename?: 'ListicleItem';
   title: Scalars['String'];
   image?: Maybe<Image>;
+  richText: Scalars['RichText'];
+};
+
+export type ListicleItemInput = {
+  title: Scalars['String'];
+  imageID?: Maybe<Scalars['ID']>;
   richText: Scalars['RichText'];
 };
 
@@ -918,9 +908,18 @@ export type QuoteBlock = {
   author?: Maybe<Scalars['String']>;
 };
 
+export type QuoteBlockInput = {
+  quote?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
+};
+
 
 export type RichTextBlock = {
    __typename?: 'RichTextBlock';
+  richText: Scalars['RichText'];
+};
+
+export type RichTextBlockInput = {
   richText: Scalars['RichText'];
 };
 
@@ -949,6 +948,10 @@ export enum SortOrder {
 
 export type SoundCloudTrackBlock = {
    __typename?: 'SoundCloudTrackBlock';
+  trackID: Scalars['String'];
+};
+
+export type SoundCloudTrackBlockInput = {
   trackID: Scalars['String'];
 };
 
@@ -983,6 +986,11 @@ export type TitleBlock = {
   lead?: Maybe<Scalars['String']>;
 };
 
+export type TitleBlockInput = {
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+};
+
 export type Token = {
    __typename?: 'Token';
   id: Scalars['ID'];
@@ -997,6 +1005,11 @@ export type TokenInput = {
 
 export type TwitterTweetBlock = {
    __typename?: 'TwitterTweetBlock';
+  userID: Scalars['String'];
+  tweetID: Scalars['String'];
+};
+
+export type TwitterTweetBlockInput = {
   userID: Scalars['String'];
   tweetID: Scalars['String'];
 };
@@ -1049,8 +1062,16 @@ export type VimeoVideoBlock = {
   videoID: Scalars['String'];
 };
 
+export type VimeoVideoBlockInput = {
+  videoID: Scalars['String'];
+};
+
 export type YouTubeVideoBlock = {
    __typename?: 'YouTubeVideoBlock';
+  videoID: Scalars['String'];
+};
+
+export type YouTubeVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
@@ -1245,6 +1266,9 @@ export type ArticleQuery = (
         { __typename?: 'ImageGalleryBlock' }
         & FullBlock_ImageGalleryBlock_Fragment
       ) | (
+        { __typename?: 'ListicleBlock' }
+        & FullBlock_ListicleBlock_Fragment
+      ) | (
         { __typename?: 'FacebookPostBlock' }
         & FullBlock_FacebookPostBlock_Fragment
       ) | (
@@ -1268,9 +1292,6 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
-      ) | (
-        { __typename?: 'ListicleBlock' }
-        & FullBlock_ListicleBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -1486,7 +1507,29 @@ type FullBlock_ImageBlock_Fragment = (
   )> }
 );
 
-type FullBlock_ImageGalleryBlock_Fragment = { __typename: 'ImageGalleryBlock' };
+type FullBlock_ImageGalleryBlock_Fragment = (
+  { __typename: 'ImageGalleryBlock' }
+  & { images: Array<(
+    { __typename?: 'GalleryImageEdge' }
+    & Pick<GalleryImageEdge, 'caption'>
+    & { image?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )> }
+  )> }
+);
+
+type FullBlock_ListicleBlock_Fragment = (
+  { __typename: 'ListicleBlock' }
+  & { items: Array<(
+    { __typename?: 'ListicleItem' }
+    & Pick<ListicleItem, 'title' | 'richText'>
+    & { image?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )> }
+  )> }
+);
 
 type FullBlock_FacebookPostBlock_Fragment = (
   { __typename: 'FacebookPostBlock' }
@@ -1528,8 +1571,6 @@ type FullBlock_EmbedBlock_Fragment = (
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height'>
 );
 
-type FullBlock_ListicleBlock_Fragment = { __typename: 'ListicleBlock' };
-
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL'>
@@ -1560,7 +1601,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -1817,6 +1858,9 @@ export type PageQuery = (
         { __typename?: 'ImageGalleryBlock' }
         & FullBlock_ImageGalleryBlock_Fragment
       ) | (
+        { __typename?: 'ListicleBlock' }
+        & FullBlock_ListicleBlock_Fragment
+      ) | (
         { __typename?: 'FacebookPostBlock' }
         & FullBlock_FacebookPostBlock_Fragment
       ) | (
@@ -1840,9 +1884,6 @@ export type PageQuery = (
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
-      ) | (
-        { __typename?: 'ListicleBlock' }
-        & FullBlock_ListicleBlock_Fragment
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
@@ -1968,6 +2009,11 @@ export type DeletePeerMutation = (
   & Pick<Mutation, 'deletePeer'>
 );
 
+export type TokenRefFragment = (
+  { __typename?: 'Token' }
+  & Pick<Token, 'id' | 'name'>
+);
+
 export type TokenListQueryVariables = {};
 
 
@@ -1975,7 +2021,7 @@ export type TokenListQuery = (
   { __typename?: 'Query' }
   & { tokens: Array<(
     { __typename?: 'Token' }
-    & Pick<Token, 'id' | 'name'>
+    & TokenRefFragment
   )> }
 );
 
@@ -2226,6 +2272,23 @@ export const FullBlockFragmentDoc = gql`
       ...ImageRef
     }
   }
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ... on ListicleBlock {
+    items {
+      title
+      image {
+        ...ImageRef
+      }
+      richText
+    }
+  }
   ... on FacebookPostBlock {
     userID
     postID
@@ -2309,6 +2372,12 @@ export const MutationPageFragmentDoc = gql`
     updatedAt
     revision
   }
+}
+    `;
+export const TokenRefFragmentDoc = gql`
+    fragment TokenRef on Token {
+  id
+  name
 }
     `;
 export const ArticleListDocument = gql`
@@ -3570,11 +3639,10 @@ export type DeletePeerMutationOptions = ApolloReactCommon.BaseMutationOptions<De
 export const TokenListDocument = gql`
     query TokenList {
   tokens {
-    id
-    name
+    ...TokenRef
   }
 }
-    `;
+    ${TokenRefFragmentDoc}`;
 
 /**
  * __useTokenListQuery__
