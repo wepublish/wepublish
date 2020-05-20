@@ -6,6 +6,8 @@ import {
   DBAdapter,
   CreateUserArgs,
   GetUserForCredentialsArgs,
+  CreateUserRoleArgs,
+  OptionalUserRole,
   User,
   OptionalUser,
   OptionalImage,
@@ -54,7 +56,8 @@ import {
   GetPagesArgs,
   PublicPage,
   GetPublishedPagesArgs,
-  PageSort
+  PageSort,
+  UserRole
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -62,6 +65,7 @@ import {generateID, generateToken, base64Encode, base64Decode, MongoErrorCode} f
 
 import {
   DBUser,
+  DBUserRole,
   DBSession,
   DBArticle,
   CollectionName,
@@ -135,6 +139,7 @@ interface MongoDBAdapterArgs extends MongoDBAdabterCommonArgs {
   readonly db: Db
 
   readonly users: Collection<DBUser>
+  readonly userRoles: Collection<DBUserRole>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
   readonly authors: Collection<DBAuthor>
@@ -156,6 +161,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly db: Db
 
   readonly users: Collection<DBUser>
+  readonly userRoles: Collection<DBUserRole>
   readonly sessions: Collection<DBSession>
   readonly navigations: Collection<DBNavigation>
   readonly authors: Collection<DBAuthor>
@@ -173,6 +179,7 @@ export class MongoDBAdapter implements DBAdapter {
     client,
     db,
     users,
+    userRoles,
     sessions,
     navigations,
     authors,
@@ -188,6 +195,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.db = db
 
     this.users = users
+    this.userRoles = userRoles
     this.sessions = sessions
     this.navigations = navigations
     this.authors = authors
@@ -228,6 +236,7 @@ export class MongoDBAdapter implements DBAdapter {
       db,
       locale,
       users: db.collection(CollectionName.Users),
+      userRoles: db.collection(CollectionName.UserRoles),
       sessions: db.collection(CollectionName.Sessions),
       navigations: db.collection(CollectionName.Navigations),
       authors: db.collection(CollectionName.Authors),
@@ -287,17 +296,19 @@ export class MongoDBAdapter implements DBAdapter {
   // User
   // ====
 
-  async createUser({email, password}: CreateUserArgs): Promise<User> {
+  async createUser({email, name, password, roleIDs}: CreateUserArgs): Promise<OptionalUser> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
         email,
+        name,
+        roleIDs,
         password: passwordHash
       })
 
-      return {id, email}
+      return this.getUserByID(id)
     } catch (err) {
       if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
         throw new Error('Email address already exists!')
@@ -310,7 +321,12 @@ export class MongoDBAdapter implements DBAdapter {
   async getUser(email: string): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
     if (user) {
-      return {id: user._id, email: user.email}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roleIDs: user.roleIDs
+      }
     } else {
       return null
     }
@@ -318,18 +334,26 @@ export class MongoDBAdapter implements DBAdapter {
 
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
     const users = await this.users.find({_id: {$in: ids}}).toArray()
-
-    return users.map<OptionalUser>(user => ({
-      id: user._id,
-      email: user.email
-    }))
+    return users.map(user => {
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roleIDs: user.roleIDs
+      }
+    })
   }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return {id: user._id, email: user.email}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roleIDs: user.roleIDs
+      }
     }
 
     return null
@@ -337,12 +361,89 @@ export class MongoDBAdapter implements DBAdapter {
 
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
-
     if (user) {
-      return {id: user._id, email: user.email}
+      return {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        roleIDs: user.roleIDs
+      }
     } else {
       return null
     }
+  }
+
+  // UserRoles
+  // =========
+
+  async createUserRole(args: CreateUserRoleArgs): Promise<OptionalUserRole> {
+    const {insertedId: id} = await this.userRoles.insertOne({
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      name: args.name,
+      description: args.description || '',
+      systemRole: false, //always False because only the system can create system roles
+      permissionIDs: args.permissionIDs
+    })
+
+    const userRole = await this.userRoles.findOne({_id: id})
+    if (!userRole) {
+      throw new Error('Could not create UserRole')
+    }
+    return {
+      id: userRole._id,
+      name: userRole.name,
+      description: userRole.description,
+      systemRole: userRole.systemRole,
+      permissionIDs: userRole.permissionIDs
+    }
+  }
+
+  async getUserRole(name: string): Promise<OptionalUserRole> {
+    const userRole = await this.userRoles.findOne({name})
+    if (userRole) {
+      return {
+        id: userRole._id,
+        name: userRole.name,
+        description: userRole.description,
+        systemRole: userRole.systemRole,
+        permissionIDs: userRole.permissionIDs
+      }
+    } else {
+      return null
+    }
+  }
+
+  async getUserRoleByID(id: string): Promise<OptionalUserRole> {
+    const userRole = await this.userRoles.findOne({_id: id})
+    if (userRole) {
+      return {
+        id: userRole._id,
+        name: userRole.name,
+        description: userRole.description,
+        systemRole: userRole.systemRole,
+        permissionIDs: userRole.permissionIDs
+      }
+    } else {
+      return null
+    }
+  }
+
+  async getUserRolesByID(ids: string[]): Promise<OptionalUserRole[]> {
+    const userRoles = await this.userRoles.find({_id: {$in: ids}}).toArray()
+
+    return userRoles.map<OptionalUserRole>(userRole => ({
+      id: userRole._id,
+      name: userRole.name,
+      description: userRole.description,
+      systemRole: userRole.systemRole,
+      permissionIDs: userRole.permissionIDs
+    }))
+  }
+
+  async _getUserRolesForUser(user: User): Promise<UserRole[]> {
+    const _roles = await this.getUserRolesByID(user.roleIDs)
+    return !_roles ? ([] as UserRole[]) : (_roles as UserRole[])
   }
 
   // Session
@@ -360,7 +461,9 @@ export class MongoDBAdapter implements DBAdapter {
       expiresAt
     })
 
-    return {id, user, token, createdAt, expiresAt}
+    const roles = await this._getUserRolesForUser(user)
+
+    return {id, user, token, createdAt, roles, expiresAt}
   }
 
   async deleteSessionByToken(token: string): Promise<boolean> {
@@ -373,7 +476,7 @@ export class MongoDBAdapter implements DBAdapter {
 
     if (!session) return null
 
-    const user = await this.users.findOne({_id: session.userID}, {projection: {password: false}})
+    const user = await this.getUserByID(session.userID)
 
     if (!user) return null
 
@@ -382,10 +485,8 @@ export class MongoDBAdapter implements DBAdapter {
       token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user: {
-        id: user._id,
-        email: user.email
-      }
+      user,
+      roles: await this._getUserRolesForUser(user)
     }
   }
 
@@ -397,12 +498,17 @@ export class MongoDBAdapter implements DBAdapter {
   async getSessionsForUser(user: User): Promise<Session[]> {
     const sessions = await this.sessions.find({userID: user.id}).toArray()
 
-    return sessions.map(session => ({
-      id: session._id,
-      createdAt: session.createdAt,
-      expiresAt: session.expiresAt,
-      user: user
-    }))
+    return await Promise.all<Session>(
+      sessions.map(async session => {
+        return {
+          id: session._id,
+          createdAt: session.createdAt,
+          expiresAt: session.expiresAt,
+          user: user,
+          roles: await this._getUserRolesForUser(user)
+        }
+      })
+    )
   }
 
   async getSessionByID(user: User, id: string): Promise<OptionalSession> {
@@ -414,7 +520,8 @@ export class MongoDBAdapter implements DBAdapter {
       id: session._id,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user: user
+      user: user,
+      roles: await this._getUserRolesForUser(user)
     }
   }
 

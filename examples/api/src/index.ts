@@ -50,7 +50,22 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      adapter.createUser({email: 'dev@wepublish.ch', password: '123'})
+      const adminUserRole = await adapter.getUserRole('Admin')
+      const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
+      const editorUserRole = await adapter.getUserRole('Editor')
+      const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
+      adapter.createUser({
+        email: 'dev@wepublish.ch',
+        password: '123',
+        name: 'Dev User',
+        roleIDs: [adminUserRoleId]
+      })
+      adapter.createUser({
+        email: 'editor@wepublish.ch',
+        password: '123',
+        name: 'Editor User',
+        roleIDs: [editorUserRoleId]
+      })
     }
   })
 
