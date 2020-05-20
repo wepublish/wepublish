@@ -137,6 +137,34 @@ export function useUpdateUserMutation(
   return useMutation<UpdateUserMutationData, UpdateUserVariables>(UpdateUserMutation, opts)
 }
 
+const ResetUserPasswordMutation = gql`
+  mutation ResetUserPassword($id: ID!, $password: String!) {
+    resetUserPassword(id: $id, password: $password) {
+      ...UserFragment
+    }
+  }
+
+  ${UserFragment}
+`
+
+export interface ResetUserPasswordMutationData {
+  resetUserPassword: User
+}
+
+export interface ResetUserPasswordVariables {
+  id: string
+  password: string
+}
+
+export function useResetUserPasswordMutation(
+  opts?: MutationHookOptions<ResetUserPasswordMutationData, ResetUserPasswordVariables>
+) {
+  return useMutation<ResetUserPasswordMutationData, ResetUserPasswordVariables>(
+    ResetUserPasswordMutation,
+    opts
+  )
+}
+
 const DeleteUserMutation = gql`
   mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)

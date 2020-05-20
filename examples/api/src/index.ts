@@ -57,18 +57,18 @@ async function asyncMain() {
       adapter.createUser({
         input: {
           email: 'dev@wepublish.ch',
-          password: '123',
           name: 'Dev User',
           roleIDs: [adminUserRoleId]
-        }
+        },
+        password: '123'
       })
       adapter.createUser({
         input: {
           email: 'editor@wepublish.ch',
-          password: '123',
           name: 'Editor User',
           roleIDs: [editorUserRoleId]
-        }
+        },
+        password: '123'
       })
     }
   })

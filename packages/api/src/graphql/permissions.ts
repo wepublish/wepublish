@@ -145,6 +145,12 @@ export const CanCreateUser: Permission = {
   deprecated: false
 }
 
+export const CanResetUserPassword: Permission = {
+  id: 'CAN_RESET_USER_PASSWORD',
+  description: 'Allows to reset the password of an user',
+  deprecated: false
+}
+
 export const CanGetUser: Permission = {
   id: 'CAN_GET_USER',
   description: 'Allows to get an user',
@@ -219,6 +225,7 @@ export const AllPermissions: Permission[] = [
   CanDeletePage,
   CanPublishPage,
   CanCreateUser,
+  CanResetUserPassword,
   CanGetUser,
   CanGetUsers,
   CanDeleteUser,

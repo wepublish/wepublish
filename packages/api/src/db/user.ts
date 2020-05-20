@@ -20,6 +20,11 @@ export interface DeleteUserArgs {
   readonly id: string
 }
 
+export interface ResetUserPasswordArgs {
+  readonly id: string
+  readonly password: string
+}
+
 export interface GetUserForCredentialsArgs {
   readonly email: string
   readonly password: string
@@ -55,6 +60,8 @@ export interface DBUserAdapter {
   createUser(args: CreateUserArgs): Promise<OptionalUser>
   updateUser(args: UpdateUserArgs): Promise<OptionalUser>
   deleteUser(args: DeleteUserArgs): Promise<string | null>
+
+  resetUserPassword(args: ResetUserPasswordArgs): Promise<OptionalUser>
 
   getUser(email: string): Promise<OptionalUser>
   getUsersByID(ids: string[]): Promise<OptionalUser[]>

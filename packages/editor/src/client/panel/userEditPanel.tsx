@@ -14,7 +14,8 @@ import {
   OptionButton,
   IconButton,
   Select,
-  Button
+  Button,
+  Dialog
 } from '@karma.run/ui'
 
 import {
@@ -26,6 +27,7 @@ import {
 
 import {useCreateUserMutation, User, useUpdateUserMutation, useUserQuery} from '../api/user'
 import {useListUserRolesQuery, UserRole} from '../api/userRole'
+import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 export interface UserEditPanelProps {
   id?: string
@@ -47,6 +49,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [userRoles, setUserRoles] = useState<UserRole[]>([])
 
   const [currentUserRole, setCurrentUserRole] = useState<UserRole>()
+
+  const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -181,6 +185,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             {!id && (
               <TextInput
                 label="Password"
+                type="password"
                 value={password}
                 disabled={isDisabled}
                 onChange={e => {
@@ -188,7 +193,13 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 }}
               />
             )}
-            {id && <Button label="Reset Password" variant="outlined" />}
+            {id && (
+              <Button
+                label="Reset Password"
+                variant="outlined"
+                onClick={() => setIsResetUserPasswordOpen(true)}
+              />
+            )}
           </Box>
         </PanelSection>
         <PanelSectionHeader title="User Roles" />
@@ -246,6 +257,19 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         onClose={() => setErrorToastOpen(false)}>
         {errorMessage}
       </Toast>
+      <Dialog
+        open={isResetUserPasswordOpen}
+        onClose={() => setIsResetUserPasswordOpen(false)}
+        width={480}
+        closeOnBackgroundClick>
+        {() => (
+          <ResetUserPasswordPanel
+            userID={id}
+            userName={name}
+            onClose={() => setIsResetUserPasswordOpen(false)}
+          />
+        )}
+      </Dialog>
     </>
   )
 }

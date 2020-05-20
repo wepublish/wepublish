@@ -28,9 +28,15 @@ import {
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
+import {
+  MaterialIconDeleteOutlined,
+  MaterialIconClose,
+  MaterialIconCheck,
+  MaterialIconRestoreOutlined
+} from '@karma.run/icons'
 import {useDeleteUserMutation, useListUsersQuery, User} from '../api/user'
 import {UserEditPanel} from '../panel/userEditPanel'
+import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 enum ConfirmAction {
   Delete = 'delete'
@@ -50,6 +56,7 @@ export function UserList() {
 
   const [filter, setFilter] = useState('')
 
+  const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<User>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
@@ -100,12 +107,20 @@ export function UserList() {
           <OptionButton
             position="left"
             menuItems={[
+              {id: 'resetUserPassword', label: 'Reset Password', icon: MaterialIconRestoreOutlined},
               {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
             ]}
             onMenuItemClick={item => {
               setCurrentUser(user)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
+              switch (item.id) {
+                case ConfirmAction.Delete:
+                  setConfirmationDialogOpen(true)
+                  setConfirmAction(item.id as ConfirmAction)
+                  break
+                case 'resetUserPassword':
+                  setIsResetUserPasswordOpen(true)
+                  break
+              }
             }}
           />
         </Box>
@@ -159,6 +174,19 @@ export function UserList() {
           />
         )}
       </Drawer>
+      <Dialog
+        open={isResetUserPasswordOpen}
+        onClose={() => setIsResetUserPasswordOpen(false)}
+        width={480}
+        closeOnBackgroundClick>
+        {() => (
+          <ResetUserPasswordPanel
+            userID={currentUser?.id}
+            userName={currentUser?.name}
+            onClose={() => setIsResetUserPasswordOpen(false)}
+          />
+        )}
+      </Dialog>
       <Dialog open={isConfirmationDialogOpen} width={340}>
         {() => (
           <Panel>

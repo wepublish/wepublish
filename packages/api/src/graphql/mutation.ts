@@ -38,7 +38,8 @@ import {
   CanCreateUser,
   CanDeleteUser,
   CanCreateUserRole,
-  CanDeleteUserRole
+  CanDeleteUserRole,
+  CanResetUserPassword
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -165,6 +166,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
         return dbAdapter.updateUser({id, input})
+      }
+    },
+
+    resetUserPassword: {
+      type: GraphQLUser,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve(root, {id, password}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanResetUserPassword, roles)
+        return dbAdapter.resetUserPassword({id, password})
       }
     },
 

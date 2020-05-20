@@ -65,7 +65,8 @@ import {
   UpdateUserRoleArgs,
   DeleteUserRoleArgs,
   GetUserRolesArgs,
-  UserRoleSort
+  UserRoleSort,
+  ResetUserPasswordArgs
 } from '@wepublish/api'
 
 import {Migrations, LatestMigration} from './migration'
@@ -363,6 +364,24 @@ export class MongoDBAdapter implements DBAdapter {
   async deleteUser({id}: DeleteUserArgs): Promise<string | null> {
     const {deletedCount} = await this.users.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
+  }
+
+  async resetUserPassword({id, password}: ResetUserPasswordArgs): Promise<OptionalUser> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          password: await bcrypt.hash(password, this.bcryptHashCostFactor)
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
   }
 
   async getUsersByID(ids: string[]): Promise<OptionalUser[]> {
