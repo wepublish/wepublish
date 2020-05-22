@@ -152,7 +152,7 @@ export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
   values: {
     DEFAULT: {value: TeaserStyle.Default},
-    IMAGE: {value: TeaserStyle.Image},
+    LIGHT: {value: TeaserStyle.Light},
     TEXT: {value: TeaserStyle.Text}
   }
 })

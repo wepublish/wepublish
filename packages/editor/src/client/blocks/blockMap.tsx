@@ -9,7 +9,9 @@ import {
   MaterialIconViewDay,
   MaterialIconCode,
   IconColumn1,
-  IconColumn6
+  IconColumn6,
+  MaterialIconCollections,
+  MaterialIconList
 } from '@karma.run/icons'
 
 import {BlockMapForValue} from '@karma.run/ui'
@@ -22,6 +24,7 @@ import {QuoteBlock} from './quoteBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'
 import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
+import {ImageGalleryBlock} from './imageGalleryBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -46,17 +49,17 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [BlockType.ImageGallery]: {
-    field: props => <div />,
-    defaultValue: {images: []},
+    field: props => <ImageGalleryBlock {...props} />,
+    defaultValue: {images: [{caption: '', image: null}]},
     label: 'Gallery',
-    icon: MaterialIconImage
+    icon: MaterialIconCollections
   },
 
   [BlockType.Listicle]: {
     field: props => <div />,
     defaultValue: {items: []},
     label: 'Listicle',
-    icon: MaterialIconImage
+    icon: MaterialIconList
   },
 
   [BlockType.Quote]: {
@@ -69,7 +72,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.LinkPageBreak]: {
     field: props => <LinkPageBreakBlock {...props} />,
     defaultValue: {text: '', linkText: '', linkURL: ''},
-    label: 'Page Break',
+    label: 'Break',
     icon: MaterialIconViewDay
   },
 

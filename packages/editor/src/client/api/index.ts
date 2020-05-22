@@ -976,7 +976,7 @@ export type TeaserInput = {
 
 export enum TeaserStyle {
   Default = 'DEFAULT',
-  Image = 'IMAGE',
+  Light = 'LIGHT',
   Text = 'TEXT'
 }
 

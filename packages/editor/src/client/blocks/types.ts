@@ -234,7 +234,10 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.ImageGallery:
       return {
         imageGallery: {
-          images: block.value.images
+          images: block.value.images.map(item => ({
+            caption: item.caption,
+            imageID: item.image?.id
+          }))
         }
       }
 

@@ -133,8 +133,8 @@ export enum TeaserType {
 
 export enum TeaserStyle {
   Default = 'default',
-  Text = 'text',
-  Image = 'image'
+  Light = 'light',
+  Text = 'text'
 }
 
 export interface ArticleTeaser {

@@ -120,7 +120,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
           />
         ))}
       </Grid>
-      <Drawer open={isEditModalOpen} width={500}>
+      <Drawer open={isEditModalOpen} width={480}>
         {() => (
           <TeaserEditPanel
             initialTeaser={teasers[editIndex][1]!}
@@ -132,7 +132,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
           />
         )}
       </Drawer>
-      <Drawer open={isChooseModalOpen} width={500}>
+      <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <TeaserSelectAndEditPanel
             onClose={() => setChooseModalOpen(false)}
@@ -177,15 +177,15 @@ export function TeaserBlock({
 
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
-                icon={MaterialIconEditOutlined}
-                title="Edit Teaser"
-                onClick={onEdit}
-                margin={Spacing.ExtraSmall}
-              />
-              <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
                 title="Choose Teaser"
                 onClick={onChoose}
+                margin={Spacing.ExtraSmall}
+              />
+              <IconButton
+                icon={MaterialIconEditOutlined}
+                title="Edit Teaser"
+                onClick={onEdit}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
@@ -350,8 +350,8 @@ function labelForTeaserStyle(style: TeaserStyle) {
     case TeaserStyle.Default:
       return 'Default'
 
-    case TeaserStyle.Image:
-      return 'Image'
+    case TeaserStyle.Light:
+      return 'Light'
 
     case TeaserStyle.Text:
       return 'Text'

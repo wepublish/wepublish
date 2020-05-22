@@ -1540,10 +1540,10 @@
   dependencies:
     axios "^0.18.0"
 
-"@karma.run/ui@0.3.17":
-  version "0.3.17"
-  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.3.17.tgz#bfa527e905a0d56a5844570d6dec6daf0250f984"
-  integrity sha512-uNIRHu5vcn8a6kUGBiAtY9JhItoHxWtdnOvltDwbsr31DTSwbhsQYJ9Ly7SRlZfsekotLRelClBehE87D6ituQ==
+"@karma.run/ui@0.3.20":
+  version "0.3.20"
+  resolved "https://registry.yarnpkg.com/@karma.run/ui/-/ui-0.3.20.tgz#0e8044330b145eed12f06d67e5614a4a7408a0d0"
+  integrity sha512-45cH7iJ94TyfNSzfIu+Ap3EZzi7q2GAXoLfI2b2upNts/lSnIs7gYHw265HFMxMwgAG8v0lcWSX3Qi3x6XtuFQ==
   dependencies:
     "@karma.run/icons" "^1.0.0"
     "@karma.run/react" "^0.1.1"

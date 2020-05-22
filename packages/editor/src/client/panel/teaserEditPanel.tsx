@@ -91,7 +91,7 @@ export function TeaserEditPanel({
           <Select
             label="Style"
             value={{id: style}}
-            options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Image}, {id: TeaserStyle.Text}]}
+            options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Light}, {id: TeaserStyle.Text}]}
             onChange={value => setStyle(value?.id!)}
             renderListItem={renderTeaserStyleListItem}
             marginBottom={Spacing.Small}
@@ -251,8 +251,8 @@ function renderTeaserStyleListItem(value: {id: TeaserStyle}) {
     case TeaserStyle.Default:
       return 'Default'
 
-    case TeaserStyle.Image:
-      return 'Image'
+    case TeaserStyle.Light:
+      return 'Light'
 
     case TeaserStyle.Text:
       return 'Text'
