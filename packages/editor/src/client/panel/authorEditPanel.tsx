@@ -84,7 +84,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       setName(data.author.name)
       setSlug(data.author.slug)
       setImage(data.author.image)
-      setBio(data.author.bio ? {value: data.author.bio, selection: null} : createDefaultValue())
+      setBio(data.author.bio ? data.author.bio : createDefaultValue())
       setLinks(
         data.author.links
           ? data.author.links.map(link => ({
@@ -126,7 +126,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             slug,
             imageID: image?.id,
             links: links.map(({value}) => value),
-            bio: bio.value
+            bio: bio
           }
         }
       })
@@ -140,7 +140,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             slug,
             imageID: image?.id,
             links: links.map(({value}) => value),
-            bio: bio.value
+            bio: bio
           }
         }
       })

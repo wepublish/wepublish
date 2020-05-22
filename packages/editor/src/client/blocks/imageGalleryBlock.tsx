@@ -20,7 +20,8 @@ import {
   MaterialIconChevronRight,
   MaterialIconChevronLeft,
   MaterialIconList,
-  MaterialIconClose
+  MaterialIconClose,
+  MaterialIconAdd
 } from '@karma.run/icons'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
@@ -29,11 +30,11 @@ import {ImageRefFragment} from '../api'
 import {ImageGalleryBlockValue} from './types'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 
-// TODO: Handle disabled prop
 export function ImageGalleryBlock({
   value,
   onChange,
-  autofocus
+  autofocus,
+  disabled
 }: BlockProps<ImageGalleryBlockValue>) {
   const [isGalleryListEditModalOpen, setGalleryListEditModalOpen] = useState(false)
 
@@ -48,9 +49,9 @@ export function ImageGalleryBlock({
   const caption = item?.caption ?? ''
 
   const hasPrevious = index > 0
-  const hasNext = image || caption ? index < value.images.length : index < value.images.length - 1
+  const hasNext = index < value.images.length - 1
 
-  const isNewIndex = (!image && !caption) || index >= value.images.length
+  const isNewIndex = !image && !caption && index >= value.images.length
 
   useEffect(() => {
     if (autofocus) {
@@ -91,6 +92,7 @@ export function ImageGalleryBlock({
             title="Edit Gallery List"
             onClick={() => setGalleryListEditModalOpen(true)}
             marginRight={Spacing.Tiny}
+            disabled={disabled}
           />
         </Box>
         <Box flexBasis="0" display="flex" justifyContent="center" flexGrow={1} flexShrink={1}>
@@ -103,14 +105,21 @@ export function ImageGalleryBlock({
             icon={MaterialIconChevronLeft}
             title="Previous"
             onClick={() => setIndex(index => index - 1)}
-            disabled={!hasPrevious}
+            disabled={disabled || !hasPrevious}
             marginRight={Spacing.Tiny}
           />
           <IconButton
             icon={MaterialIconChevronRight}
             title="Next"
             onClick={() => setIndex(index => index + 1)}
-            disabled={!hasNext}
+            disabled={disabled || !hasNext}
+            marginRight={Spacing.ExtraSmall}
+          />
+          <IconButton
+            icon={MaterialIconAdd}
+            title="Add"
+            onClick={() => setIndex(value.images.length)}
+            disabled={disabled || isNewIndex}
           />
         </Box>
       </Box>
@@ -124,18 +133,21 @@ export function ImageGalleryBlock({
                     icon={MaterialIconImageOutlined}
                     title="Choose Image"
                     onClick={() => setChooseModalOpen(true)}
+                    disabled={disabled}
                     margin={Spacing.ExtraSmall}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
                     title="Edit Image"
                     onClick={() => setEditModalOpen(true)}
+                    disabled={disabled}
                     margin={Spacing.ExtraSmall}
                   />
                   <IconButton
                     icon={MaterialIconClose}
                     title="Remove Image"
                     margin={Spacing.ExtraSmall}
+                    disabled={disabled}
                     onClick={() => handleImageChange(null)}
                   />
                 </Box>
@@ -152,6 +164,7 @@ export function ImageGalleryBlock({
           align="center"
           placeholder="Caption"
           value={caption}
+          disabled={disabled}
           onChange={e => {
             handleCaptionChange(e.target.value)
           }}

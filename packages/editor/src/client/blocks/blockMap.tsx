@@ -25,6 +25,7 @@ import {LinkPageBreakBlock} from './linkPageBreakBlock'
 import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
+import {ListicleBlock} from './listicleBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -56,7 +57,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [BlockType.Listicle]: {
-    field: props => <div />,
+    field: props => <ListicleBlock {...props} />,
     defaultValue: {items: []},
     label: 'Listicle',
     icon: MaterialIconList

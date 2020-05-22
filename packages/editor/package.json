@@ -49,11 +49,10 @@
     "react-hot-loader": "^4.12.18",
     "react-sortable-hoc": "^1.11.0",
     "regenerator-runtime": "^0.13.3",
-    "slate": "^0.52.5",
-    "slate-history": "^0.52.5",
-    "slate-hyperscript": "^0.52.5",
-    "slate-react": "^0.52.6",
-    "slate-schema": "^0.52.5"
+    "slate": "^0.58.1",
+    "slate-history": "^0.58.1",
+    "slate-hyperscript": "^0.58.1",
+    "slate-react": "^0.58.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.5",

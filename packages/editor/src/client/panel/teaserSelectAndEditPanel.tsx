@@ -25,7 +25,6 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
           setTeaser(teaser)
         }}
       />
-      )
       <Drawer open={isEditOpen} width={480}>
         {() => (
           <TeaserEditPanel

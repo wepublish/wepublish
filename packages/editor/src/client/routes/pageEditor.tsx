@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {
   EditorTemplate,
@@ -101,6 +101,11 @@ export function PageEditor({id}: PageEditorProps) {
 
   const [hasChanged, setChanged] = useState(false)
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks)
+    setChanged(true)
+  }, [])
 
   useEffect(() => {
     if (pageData?.page) {
@@ -250,13 +255,7 @@ export function PageEditor({id}: PageEditorProps) {
             }
           />
         }>
-        <BlockList
-          value={blocks}
-          onChange={blocks => {
-            setBlocks(blocks)
-            setChanged(true)
-          }}
-          disabled={isDisabled}>
+        <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>

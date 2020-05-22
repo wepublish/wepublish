@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {
   EditorTemplate,
@@ -115,7 +115,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     : undefined
 
   const [hasChanged, setChanged] = useState(false)
+
   const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks)
+    setChanged(true)
+  }, [])
 
   useEffect(() => {
     if (articleData?.article) {
@@ -273,13 +279,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        <BlockList
-          value={blocks}
-          onChange={blocks => {
-            setBlocks(blocks)
-            setChanged(true)
-          }}
-          disabled={isLoading || isDisabled}>
+        <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>

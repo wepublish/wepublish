@@ -1,5 +1,5 @@
-import {BlockListValue} from '@karma.run/ui'
-import {Node, Range} from 'slate'
+import {BlockListValue, ListValue} from '@karma.run/ui'
+import {Node} from 'slate'
 
 import nanoid from 'nanoid'
 
@@ -26,12 +26,7 @@ export enum BlockType {
   ArticleTeaserGrid6 = 'articleTeaserGrid6'
 }
 
-export type RichTextValue = Node[]
-
-export interface RichTextBlockValue {
-  value: RichTextValue
-  selection: Range | null
-}
+export type RichTextBlockValue = Node[]
 
 export interface ImageBlockValue {
   image: ImageRefFragment | null
@@ -54,7 +49,7 @@ export interface ListicleItem {
 }
 
 export interface ListicleBlockValue {
-  items: ListicleItem[]
+  items: ListValue<ListicleItem>[]
 }
 
 export interface TitleBlockValue {
@@ -244,9 +239,9 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.Listicle:
       return {
         listicle: {
-          items: block.value.items.map(({title, richText, image}) => ({
+          items: block.value.items.map(({value: {title, richText, image}}) => ({
             title,
-            richText: richText.value,
+            richText: richText,
             imageID: image?.id
           }))
         }
@@ -262,7 +257,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
 
     case BlockType.RichText:
       return {
-        richText: {richText: block.value.value}
+        richText: {richText: block.value}
       }
 
     case BlockType.Quote:
@@ -432,9 +427,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         type: BlockType.Listicle,
         value: {
           items: block.items.map(({title, richText, image}) => ({
-            title,
-            image: image ?? null,
-            richText: {value: richText, selection: null}
+            id: nanoid(),
+            value: {
+              title,
+              image: image ?? null,
+              richText: richText
+            }
           }))
         }
       }
@@ -453,7 +451,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
       return {
         key,
         type: BlockType.RichText,
-        value: {value: block.richText, selection: null}
+        value: block.richText
       }
 
     case 'QuoteBlock':
