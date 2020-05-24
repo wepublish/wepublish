@@ -30,7 +30,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     draft: {type: GraphQLBoolean},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
@@ -38,7 +38,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })

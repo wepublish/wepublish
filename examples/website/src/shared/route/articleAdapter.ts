@@ -5,6 +5,7 @@ export function authorsAdapter(authors: any): Author[] {
   return authors.map((author: any) => {
     return {
       id: author.id,
+      slug: author.slug,
       name: author.name,
       image: author.image && imageAdapter(author.image)
     }

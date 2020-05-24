@@ -24,9 +24,10 @@ export interface ImageData {
 }
 
 export interface Author {
-  readonly id: string
-  readonly name: string
-  readonly image: ImageData
+  id: string
+  slug: string
+  name: string
+  image: ImageData
 }
 
 export interface NavigationItem {
@@ -52,6 +53,7 @@ export interface ArticleMeta {
   isBreaking: boolean
 
   teaserType?: TeaserType
+  teaserStyle?: TeaserStyle
 }
 
 export type PublishedArticle = ArticleMeta & {
@@ -59,6 +61,12 @@ export type PublishedArticle = ArticleMeta & {
 }
 
 export enum TeaserType {
+  Article = 'article',
+  PeerArticle = 'peerArticle',
+  Page = 'page'
+}
+
+export enum TeaserStyle {
   Default = 'default',
   Light = 'light',
   Text = 'text',
@@ -75,8 +83,10 @@ export interface Page {
 
 export interface Peer {
   id: string
+  slug: string
   name: string
-  url: string
+  logoURL: string
+  hostURL: string
 }
 
 export enum BlockType {
@@ -227,14 +237,14 @@ export type GridBlock = BaseBlock<
   BlockType.Grid,
   {
     numColumns: number
-    blocks: FrontContentBlock[]
+    blocks: Block[]
   }
 >
 
 // Block Unions
 // ------------
 
-export type ArticleBlock =
+export type Block =
   | RichTextBlock
   | GalleryBlock
   | EmbedBlock
@@ -244,11 +254,8 @@ export type ArticleBlock =
   | PeerPageBreakBlock
   | TitleBlock
   | TitleImageBlock
-
-export type FrontLayoutBlock = GridBlock
-export type FrontContentBlock = TeaserBlock
-
-export type Block = FrontLayoutBlock | FrontContentBlock | ArticleBlock
+  | GridBlock
+  | TeaserBlock
 
 // Image
 export interface ImageRefData {

@@ -194,12 +194,12 @@ export type LinkPageBreakBlockListValue = BlockListValue<
   LinkPageBreakBlockValue
 >
 
-export type ArticleTeaserGridBlock1ListValue = BlockListValue<
+export type TeaserGridBlock1ListValue = BlockListValue<
   BlockType.ArticleTeaserGrid1,
   TeaserGridBlockValue
 >
 
-export type ArticleTeaserGridBlock6ListValue = BlockListValue<
+export type TeaserGridBlock6ListValue = BlockListValue<
   BlockType.ArticleTeaserGrid6,
   TeaserGridBlockValue
 >
@@ -213,8 +213,8 @@ export type BlockValue =
   | QuoteBlockListValue
   | EmbedBlockListValue
   | LinkPageBreakBlockListValue
-  | ArticleTeaserGridBlock1ListValue
-  | ArticleTeaserGridBlock6ListValue
+  | TeaserGridBlock1ListValue
+  | TeaserGridBlock6ListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {

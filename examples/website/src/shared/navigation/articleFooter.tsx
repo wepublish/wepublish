@@ -93,7 +93,9 @@ export function ArticleFooter(props: ArticleFooterProps) {
             return (
               <div key={author.id} className={css(AuthorStyle)}>
                 {author.image && <RoundImage width={60} height={60} src={author.image.url} />}
-                <Link className={css(AuthorTagStyle)} route={AuthorRoute.create({id: author.id})}>
+                <Link
+                  className={css(AuthorTagStyle)}
+                  route={AuthorRoute.create({id: author.slug || author.id})}>
                   <a className={css(AuthorTagStyle)}>
                     <Tag title={author.name} />
                   </a>

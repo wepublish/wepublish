@@ -203,7 +203,7 @@ export function DefaultTeaser({
             {/* TODO create author routes */}
             {authors
               .map<React.ReactNode>(author => (
-                <Link key={author.id} route={AuthorRoute.create({id: author.id})}>
+                <Link key={author.id} route={AuthorRoute.create({id: author.slug || author.id})}>
                   {author.name}
                 </Link>
               ))

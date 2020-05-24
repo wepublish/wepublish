@@ -118,12 +118,6 @@ export interface QuoteBlock {
   author?: string
 }
 
-export interface ArticleTeaserGridBlock {
-  type: BlockType.ArticleTeaserGrid
-  teasers: ArticleTeaser[]
-  numColumns: number
-}
-
 export enum TeaserType {
   Article = 'article',
   PeerArticle = 'peerArticle',
@@ -192,7 +186,6 @@ export type ArticleBlock =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
-  | ArticleTeaserGridBlock
   | TeaserGridBlock
 
 export type PageBlock = ArticleBlock
