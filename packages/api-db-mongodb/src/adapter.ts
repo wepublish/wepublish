@@ -16,6 +16,7 @@ import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
+import {MongoDBUserRoleAdapter} from './db/userRole'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -56,6 +57,7 @@ export class MongoDBAdapter implements DBAdapter {
 
   readonly peer: MongoDBPeerAdapter
   readonly user: MongoDBUserAdapter
+  readonly userRole: MongoDBUserRoleAdapter
   readonly session: MongoDBSessionAdapter
   readonly token: MongoDBTokenAdapter
   readonly navigation: MongoDBNavigationAdapter
@@ -83,7 +85,8 @@ export class MongoDBAdapter implements DBAdapter {
 
     this.peer = new MongoDBPeerAdapter(db)
     this.user = new MongoDBUserAdapter(db, bcryptHashCostFactor)
-    this.session = new MongoDBSessionAdapter(db, sessionTTL)
+    this.userRole = new MongoDBUserRoleAdapter(db)
+    this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)
     this.author = new MongoDBAuthorAdapter(db, locale)

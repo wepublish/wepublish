@@ -1,4 +1,5 @@
 import {User} from './user'
+import {UserRole} from './userRole'
 
 export enum SessionType {
   User = 'user',
@@ -10,12 +11,14 @@ export interface TokenSession {
   id: string
   name: string
   token: string
+  roles: UserRole[]
 }
 
 export interface UserSession {
   type: SessionType.User
   id: string
   user: User
+  roles: UserRole[]
   createdAt: Date
   expiresAt: Date
   token: string

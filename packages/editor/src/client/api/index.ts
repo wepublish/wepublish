@@ -431,6 +431,7 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>;
   createNavigation?: Maybe<Navigation>;
   updateNavigation?: Maybe<Navigation>;
+  deleteNavigation?: Maybe<Navigation>;
   createAuthor?: Maybe<Author>;
   updateAuthor?: Maybe<Author>;
   deleteAuthor?: Maybe<Scalars['ID']>;
@@ -507,6 +508,11 @@ export type MutationCreateNavigationArgs = {
 export type MutationUpdateNavigationArgs = {
   id: Scalars['ID'];
   input: NavigationInput;
+};
+
+
+export type MutationDeleteNavigationArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -778,6 +784,13 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color'];
 };
 
+export type Permission = {
+   __typename?: 'Permission';
+  id: Scalars['String'];
+  description: Scalars['String'];
+  deprecated: Scalars['Boolean'];
+};
+
 export type Point = {
    __typename?: 'Point';
   x: Scalars['Float'];
@@ -794,6 +807,7 @@ export type Query = {
   authProviders: Array<AuthProvider>;
   tokens: Array<Token>;
   navigation?: Maybe<Navigation>;
+  navigations?: Maybe<Array<Maybe<Navigation>>>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   image?: Maybe<Image>;
@@ -1055,6 +1069,16 @@ export type User = {
    __typename?: 'User';
   id: Scalars['String'];
   email: Scalars['String'];
+  roles: Array<Maybe<UserRole>>;
+};
+
+export type UserRole = {
+   __typename?: 'UserRole';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  systemRole: Scalars['Boolean'];
+  permissions: Array<Maybe<Permission>>;
 };
 
 export type VimeoVideoBlock = {

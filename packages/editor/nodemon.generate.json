@@ -1,6 +1,0 @@
-{
-  "watch": ["./src/**/*"],
-  "ext": "graphql",
-  "delay": 250,
-  "ignoreRoot": [".git"]
-}

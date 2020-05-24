@@ -69,7 +69,6 @@ export function PageBreakBlock({
   linkText,
   isArticle = false
 }: PageBreakBlockProps & PageBreackBlockStyleProps) {
-  console.log('isArticle', isArticle)
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>

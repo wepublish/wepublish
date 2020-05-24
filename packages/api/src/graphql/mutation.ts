@@ -30,12 +30,34 @@ import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} f
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 
 import {
+  CanCreateArticle,
+  CanCreateAuthor,
+  CanCreateImage,
+  CanCreatePage,
+  CanDeleteArticle,
+  CanDeleteAuthor,
+  CanDeleteImage,
+  CanDeletePage,
+  CanPublishArticle,
+  CanPublishPage,
+  authorise,
+  CanCreatePeer,
+  CanUpdatePeerProfile,
+  CanDeletePeer,
+  CanCreateToken,
+  CanDeleteToken,
+  CanCreateNavigation,
+  CanDeleteNavigation
+} from './permissions'
+
+import {
   GraphQLPeer,
   GraphQLPeerProfile,
   GraphQLPeerProfileInput,
   GraphQLCreatePeerInput,
   GraphQLUpdatePeerInput
 } from './peer'
+
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 
 function mapTeaserUnionMap(value: any) {
@@ -116,8 +138,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePeerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
       args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
-      async resolve(root, {input}, {hostURL, authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {input}, {hostURL, authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanUpdatePeerProfile, roles)
+
         return {...(await dbAdapter.peer.updatePeerProfile(input)), hostURL}
       }
     },
@@ -125,8 +149,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPeer: {
       type: GraphQLNonNull(GraphQLPeer),
       args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePeer, roles)
 
         // TODO: Check if valid peer?
         return dbAdapter.peer.createPeer(input)
@@ -139,8 +164,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUpdatePeerInput)}
       },
-      async resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePeer, roles)
 
         // TODO: Check if valid peer?
         return dbAdapter.peer.updatePeer(id, input)
@@ -150,8 +176,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePeer: {
       type: GraphQLID,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeletePeer, roles)
+
         return dbAdapter.peer.deletePeer(id)
       }
     },
@@ -180,27 +208,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
       async resolve(root, {name, code, redirectUri}, {dbAdapter, oauth2Providers}) {
-        try {
-          const provider = oauth2Providers.find(provider => provider.name === name)
-          if (!provider) throw new OAuth2ProviderNotFoundError()
-          const issuer = await Issuer.discover(provider.discoverUrl)
-          const client = new issuer.Client({
-            client_id: provider.clientId,
-            client_secret: provider.clientKey,
-            redirect_uris: provider.redirectUri,
-            response_types: ['code']
-          })
-          const token = await client.callback(redirectUri, {code})
-          if (!token.access_token) throw new InvalidOAuth2TokenError()
-          const userInfo = await client.userinfo(token.access_token)
-          if (!userInfo.email) throw new Error('UserInfo did not return an email')
-          const user = await dbAdapter.user.getUser(userInfo.email)
-          if (!user) throw new UserNotFoundError()
-          return await dbAdapter.session.createUserSession(user)
-        } catch (error) {
-          console.log('Error', error)
-          return
-        }
+        const provider = oauth2Providers.find(provider => provider.name === name)
+        if (!provider) throw new OAuth2ProviderNotFoundError()
+        const issuer = await Issuer.discover(provider.discoverUrl)
+        const client = new issuer.Client({
+          client_id: provider.clientId,
+          client_secret: provider.clientKey,
+          redirect_uris: provider.redirectUri,
+          response_types: ['code']
+        })
+        const token = await client.callback(redirectUri, {code})
+        if (!token.access_token) throw new InvalidOAuth2TokenError()
+        const userInfo = await client.userinfo(token.access_token)
+        if (!userInfo.email) throw new Error('UserInfo did not return an email')
+        const user = await dbAdapter.user.getUser(userInfo.email)
+        if (!user) throw new UserNotFoundError()
+        return await dbAdapter.session.createUserSession(user)
       }
     },
 
@@ -216,7 +239,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      async resolve(root, {}, {session, dbAdapter}) {
+      async resolve(root, {}, {authenticateUser, dbAdapter}) {
+        const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
       }
     },
@@ -236,17 +260,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createToken: {
       type: GraphQLNonNull(GraphQLCreatedToken),
       args: {input: {type: GraphQLNonNull(GraphQLTokenInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
-        return dbAdapter.token.createToken(input)
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateToken, roles)
+
+        // TODO: Receive roleIDs from input
+        return dbAdapter.token.createToken({...input, roleIDs: ['peer']})
       }
     },
 
     deleteToken: {
       type: GraphQLString,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteToken, roles)
+
         return dbAdapter.token.deleteToken(id)
       }
     },
@@ -260,8 +289,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createNavigation: {
       type: GraphQLNavigation,
       args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
-      resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateNavigation, roles)
+
         return dbAdapter.navigation.createNavigation({
           ...input,
           links: input.links.map(mapNavigationLinkInput)
@@ -275,12 +306,25 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLNavigationInput)}
       },
-      resolve(root, {id, input}, {authenticateUser: authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateNavigation, roles)
+
         return dbAdapter.navigation.updateNavigation(id, {
           ...input,
           links: input.links.map(mapNavigationLinkInput)
         })
+      }
+    },
+
+    deleteNavigation: {
+      type: GraphQLNavigation,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteNavigation, roles)
+
+        return dbAdapter.navigation.deleteNavigation(id)
       }
     },
 
@@ -290,8 +334,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createAuthor: {
       type: GraphQLAuthor,
       args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
-      resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateAuthor, roles)
         return dbAdapter.author.createAuthor({input})
       }
     },
@@ -302,8 +347,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLAuthorInput)}
       },
-      resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateAuthor, roles)
         return dbAdapter.author.updateAuthor({id, input})
       }
     },
@@ -313,8 +359,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteAuthor, roles)
         await dbAdapter.author.deleteAuthor({id})
         return id
       }
@@ -326,8 +373,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     uploadImage: {
       type: GraphQLImage,
       args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
-      async resolve(root, {input}, {authenticateUser, mediaAdapter, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {input}, {authenticate, mediaAdapter, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateImage, roles)
 
         const {
           file,
@@ -369,8 +417,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}
       },
-      resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateImage, roles)
         return dbAdapter.image.updateImage({id, input})
       }
     },
@@ -378,8 +427,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteImage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, mediaAdapter, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, mediaAdapter, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteImage, roles)
 
         await mediaAdapter.deleteImage(id)
         return dbAdapter.image.deleteImage({id})
@@ -392,8 +442,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createArticle: {
       type: GraphQLNonNull(GraphQLArticle),
       args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateArticle, roles)
 
         return dbAdapter.article.createArticle({
           input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
@@ -407,8 +458,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLArticleInput)}
       },
-      async resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateArticle, roles)
 
         return dbAdapter.article.updateArticle({
           id,
@@ -420,8 +472,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteArticle: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteArticle, roles)
         return dbAdapter.article.deleteArticle({id})
       }
     },
@@ -434,8 +487,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanPublishArticle, roles)
 
         return dbAdapter.article.publishArticle({
           id,
@@ -449,8 +503,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     unpublishArticle: {
       type: GraphQLArticle,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanPublishArticle, roles)
         return dbAdapter.article.unpublishArticle({id})
       }
     },
@@ -461,8 +516,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPage: {
       type: GraphQLNonNull(GraphQLPage),
       args: {input: {type: GraphQLNonNull(GraphQLPageInput)}},
-      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePage, roles)
 
         return dbAdapter.page.createPage({
           input: {...input, blocks: input.blocks.map(mapBlockUnionMap)}
@@ -476,8 +532,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLPageInput)}
       },
-      async resolve(root, {id, input}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePage, roles)
 
         return dbAdapter.page.updatePage({
           id,
@@ -489,8 +546,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePage: {
       type: GraphQLBoolean,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeletePage, roles)
         return dbAdapter.page.deletePage({id})
       }
     },
@@ -503,8 +561,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanPublishPage, roles)
 
         return dbAdapter.page.publishPage({
           id,
@@ -518,8 +577,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     unpublishPage: {
       type: GraphQLPage,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
       }
     }

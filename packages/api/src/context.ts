@@ -7,6 +7,15 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
+import {GraphQLSchema, print, GraphQLError} from 'graphql'
+
+import {
+  makeRemoteExecutableSchema,
+  introspectSchema,
+  Fetcher,
+  IFetcherOperation
+} from 'graphql-tools'
+
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
@@ -22,14 +31,9 @@ import {OptionalArticle, OptionalPublicArticle} from './db/article'
 import {OptionalAuthor} from './db/author'
 import {OptionalNavigation} from './db/navigation'
 import {OptionalPage, OptionalPublicPage} from './db/page'
+
 import {OptionalPeer} from './db/peer'
-import {GraphQLSchema, print, GraphQLError} from 'graphql'
-import {
-  makeRemoteExecutableSchema,
-  introspectSchema,
-  Fetcher,
-  IFetcherOperation
-} from 'graphql-tools'
+import {OptionalUserRole} from './db/userRole'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -46,6 +50,8 @@ export interface DataLoaderContext {
   readonly pages: DataLoader<string, OptionalPage>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+
+  readonly userRolesByID: DataLoader<string, OptionalUserRole>
 
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>
@@ -66,9 +72,9 @@ export interface Context {
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 
+  authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
-  authenticateTokenOrUser(): Session
 }
 
 export interface Oauth2Provider {
@@ -123,6 +129,8 @@ export async function contextFromRequest(
       pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
       publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
       publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+
+      userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
 
       peer: peerDataLoader,
       peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
@@ -210,7 +218,7 @@ export async function contextFromRequest(
       return session
     },
 
-    authenticateTokenOrUser() {
+    authenticate() {
       if (!session) {
         throw new AuthenticationError('Invalid session!')
       }

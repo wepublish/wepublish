@@ -1,4 +1,4 @@
-import {DBNavigationAdapter, NavigationInput, OptionalNavigation} from '@wepublish/api'
+import {DBNavigationAdapter, NavigationInput, OptionalNavigation, Navigation} from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
 import {CollectionName, DBNavigation} from './schema'
@@ -41,7 +41,6 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
         {_id: id},
         {
           $set: {
-            createdAt: new Date(),
             modifiedAt: new Date(),
             name: input.name,
             key: input.key,
@@ -62,6 +61,16 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
 
       throw err
     }
+  }
+
+  async deleteNavigation(id: string): Promise<string | null> {
+    const {deletedCount} = await this.navigations.deleteOne({_id: id})
+    return deletedCount !== 0 ? id : null
+  }
+
+  async getNavigations(): Promise<Navigation[]> {
+    const navigations = await this.navigations.find().sort({createdAt: -1}).toArray()
+    return navigations.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
   async getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]> {

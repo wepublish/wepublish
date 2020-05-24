@@ -22,17 +22,19 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     this.bcryptHashCostFactor = bcryptHashCostFactor
   }
 
-  async createUser({email, password}: CreateUserArgs): Promise<User> {
+  async createUser({email, name, password, roleIDs}: CreateUserArgs): Promise<User> {
     try {
       const passwordHash = await bcrypt.hash(password, this.bcryptHashCostFactor)
       const {insertedId: id} = await this.users.insertOne({
         createdAt: new Date(),
         modifiedAt: new Date(),
         email,
+        name,
+        roleIDs,
         password: passwordHash
       })
 
-      return {id, email}
+      return {id, email, name, roleIDs}
     } catch (err) {
       if (err instanceof MongoError && err.code === MongoErrorCode.DuplicateKey) {
         throw new Error('Email address already exists!')
@@ -44,10 +46,14 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
   async getUser(email: string): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
-    if (user) {
-      return {id: user._id, email: user.email}
-    } else {
-      return null
+
+    if (!user) return null
+
+    return {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      roleIDs: user.roleIDs
     }
   }
 
@@ -56,27 +62,39 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
     return users.map<OptionalUser>(user => ({
       id: user._id,
-      email: user.email
+      email: user.email,
+      name: user.name,
+      roleIDs: user.roleIDs
     }))
   }
 
   async getUserForCredentials({email, password}: GetUserForCredentialsArgs): Promise<OptionalUser> {
     const user = await this.users.findOne({email})
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return {id: user._id, email: user.email}
-    }
+    if (!user) return null
 
-    return null
+    const passwordMatches = await bcrypt.compare(password, user.password)
+
+    if (!passwordMatches) return null
+
+    return {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      roleIDs: user.roleIDs
+    }
   }
 
   async getUserByID(id: string): Promise<OptionalUser> {
     const user = await this.users.findOne({_id: id})
 
-    if (user) {
-      return {id: user._id, email: user.email}
-    } else {
-      return null
+    if (!user) return null
+
+    return {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      roleIDs: user.roleIDs
     }
   }
 }

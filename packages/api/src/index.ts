@@ -15,8 +15,10 @@ export * from './graphql/mutation'
 export * from './graphql/query'
 
 export * from './graphql/schema'
+export * from './graphql/permissions'
 
 export * from './db/user'
+export * from './db/userRole'
 export * from './db/session'
 export * from './db/navigation'
 export * from './db/author'

@@ -58,7 +58,18 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.Listicle]: {
     field: props => <ListicleBlock {...props} />,
-    defaultValue: {items: []},
+    defaultValue: {
+      items: [
+        {
+          id: nanoid(),
+          value: {
+            image: null,
+            title: '',
+            richText: createDefaultValue()
+          }
+        }
+      ]
+    },
     label: 'Listicle',
     icon: MaterialIconList
   },

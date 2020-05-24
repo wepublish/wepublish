@@ -6,6 +6,7 @@ export enum CollectionName {
   PeerProfiles = 'peerProfiles',
   Peers = 'peers',
   Users = 'users',
+  UserRoles = 'users.roles',
 
   Sessions = 'sessions',
   Tokens = 'tokens',
@@ -56,6 +57,8 @@ export interface DBToken {
 
   name: string
   token: string
+
+  roleIDs: string[]
 }
 
 export interface DBUser {
@@ -65,7 +68,23 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
+  name: string
   password: string
+
+  roleIDs: string[]
+}
+
+export interface DBUserRole {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  description?: string
+  systemRole: boolean
+
+  permissionIDs: string[]
 }
 
 export interface DBSession {

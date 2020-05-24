@@ -40,7 +40,7 @@ export function Login() {
 
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
-      redirectUri: 'http://localhost:3000/login'
+      redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     }
   })
 
@@ -51,7 +51,7 @@ export function Login() {
       const {code} = current!.query
       authenticateWithOAuth2Code({
         variables: {
-          redirectUri: `http://localhost:3000/login/${provider}`,
+          redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`,
           name: provider,
           code
         }

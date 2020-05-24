@@ -9,20 +9,32 @@ import {
 
 import {Collection, Db} from 'mongodb'
 
-import {CollectionName, DBSession, DBUser, DBToken} from './schema'
+import {CollectionName, DBSession, DBToken} from './schema'
 import {generateToken} from '../utility'
+import {MongoDBUserAdapter} from './user'
+import {MongoDBUserRoleAdapter} from './userRole'
 
 export class MongoDBSessionAdapter implements DBSessionAdapter {
   private sessions: Collection<DBSession>
-  private users: Collection<DBUser>
   private tokens: Collection<DBToken>
+
+  private user: MongoDBUserAdapter
+  private userRole: MongoDBUserRoleAdapter
 
   private sessionTTL: number
 
-  constructor(db: Db, sessionTTL: number) {
+  constructor(
+    db: Db,
+    user: MongoDBUserAdapter,
+    userRole: MongoDBUserRoleAdapter,
+    sessionTTL: number
+  ) {
     this.sessions = db.collection(CollectionName.Sessions)
-    this.users = db.collection(CollectionName.Users)
     this.tokens = db.collection(CollectionName.Tokens)
+
+    this.user = user
+    this.userRole = userRole
+
     this.sessionTTL = sessionTTL
   }
 
@@ -38,7 +50,15 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
       expiresAt
     })
 
-    return {type: SessionType.User, id, user, token, createdAt, expiresAt}
+    return {
+      type: SessionType.User,
+      id,
+      user,
+      token,
+      createdAt,
+      expiresAt,
+      roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
+    }
   }
 
   async deleteUserSessionByToken(token: string): Promise<boolean> {
@@ -57,10 +77,11 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
         type: SessionType.Token,
         id: tokenMatch._id,
         name: tokenMatch.name,
-        token: tokenMatch.token
+        token: tokenMatch.token,
+        roles: await this.userRole.getNonOptionalUserRolesByID(tokenMatch.roleIDs)
       }
     } else if (session) {
-      const user = await this.users.findOne({_id: session.userID}, {projection: {password: false}})
+      const user = await this.user.getUserByID(session.userID)
 
       if (!user) return null
 
@@ -70,10 +91,8 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
         token: session.token,
         createdAt: session.createdAt,
         expiresAt: session.expiresAt,
-        user: {
-          id: user._id,
-          email: user.email
-        }
+        user,
+        roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
       }
     }
 
@@ -87,6 +106,7 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
 
   async getUserSessions(user: User): Promise<UserSession[]> {
     const sessions = await this.sessions.find({userID: user.id}).toArray()
+    const roles = await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
 
     return sessions.map(session => ({
       type: SessionType.User,
@@ -94,7 +114,8 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
       token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user: user
+      user,
+      roles
     }))
   }
 
@@ -109,7 +130,8 @@ export class MongoDBSessionAdapter implements DBSessionAdapter {
       token: session.token,
       createdAt: session.createdAt,
       expiresAt: session.expiresAt,
-      user: user
+      user: user,
+      roles: await this.userRole.getNonOptionalUserRolesByID(user.roleIDs)
     }
   }
 }

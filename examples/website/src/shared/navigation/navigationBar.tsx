@@ -231,8 +231,8 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
     } else {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
 
-      document.body.style.paddingRight = open ? `${scrollbarWidth}px` : ''
-      document.documentElement.style.overflow = open ? 'hidden' : ''
+      document.body.style.paddingRight = collapse ? '' : `${scrollbarWidth}px`
+      document.documentElement.style.overflow = collapse ? '' : 'hidden'
     }
   }
 

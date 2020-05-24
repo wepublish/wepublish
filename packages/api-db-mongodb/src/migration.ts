@@ -1,5 +1,4 @@
 import {Db} from 'mongodb'
-
 import {CollectionName} from './db/schema'
 
 export interface Migration {
@@ -94,13 +93,68 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    // Fix incorrect migration index. Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    //  Fix incorrect migration index. Add user roles, Add name and roleIDs to users.
     version: 1,
-    async migrate(db) {
+    async migrate(db, locale) {
       const migrations = db.collection(CollectionName.Migrations)
 
       await migrations.dropIndex('name_1')
       await migrations.createIndex({version: 1}, {unique: true})
+
+      const userRoles = await db.createCollection(CollectionName.UserRoles, {
+        strict: true
+      })
+
+      await userRoles.createIndex({name: 1}, {unique: true})
+
+      userRoles.insertMany([
+        {
+          _id: 'admin',
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          systemRole: true,
+          name: 'Admin',
+          description: 'Administrator Role',
+          permissionIDs: []
+        },
+        {
+          _id: 'editor',
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          systemRole: true,
+          name: 'Editor',
+          description: 'Editor Role',
+          permissionIDs: []
+        }
+      ])
+
+      const user = db.collection(CollectionName.Users)
+
+      user.updateMany({}, [
+        {
+          $set: {
+            name: '$email',
+            roleIDs: ['admin']
+          }
+        }
+      ])
+    }
+  },
+  {
+    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    version: 2,
+    async migrate(db) {
+      const userRoles = db.collection(CollectionName.UserRoles)
+
+      userRoles.insertOne({
+        _id: 'peer',
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        systemRole: true,
+        name: 'Peer',
+        description: 'Peer Role',
+        permissionIDs: []
+      })
 
       await db.createCollection(CollectionName.PeerProfiles, {strict: true})
 

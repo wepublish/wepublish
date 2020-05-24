@@ -8,6 +8,8 @@ import {
   Kind
 } from 'graphql'
 
+import {WrapQuery, ExtractField} from 'graphql-tools'
+
 import {Client, Issuer} from 'openid-client'
 import {UserInputError} from 'apollo-server-express'
 
@@ -63,7 +65,27 @@ import {SessionType} from '../db/session'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLToken} from './token'
 import {delegateToPeerSchema, base64Encode, base64Decode} from '../utility'
-import {WrapQuery, ExtractField} from 'graphql-tools'
+
+import {
+  authorise,
+  CanGetArticle,
+  CanGetArticles,
+  CanGetAuthor,
+  CanGetAuthors,
+  CanGetImage,
+  CanGetImages,
+  CanGetNavigation,
+  CanGetPage,
+  CanGetPages,
+  isAuthorised,
+  CanGetSharedArticle,
+  CanGetPeerArticle,
+  CanGetPeerArticles,
+  CanGetNavigations,
+  CanGetSharedArticles
+} from './permissions'
+
+import {NotAuthorisedError} from '../error'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -73,8 +95,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      async resolve(root, args, {authenticateTokenOrUser, hostURL, dbAdapter}) {
-        authenticateTokenOrUser()
+      async resolve(root, args, {authenticate, hostURL, dbAdapter}) {
+        authenticate()
         return {...(await dbAdapter.peer.getPeerProfile()), hostURL}
       }
     },
@@ -172,8 +194,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
-      resolve(root, {id, key}, {authenticateUser, loaders}) {
-        authenticateUser()
+      resolve(root, {id, key}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetNavigation, roles)
 
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
@@ -183,14 +206,25 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    navigations: {
+      type: GraphQLList(GraphQLNavigation),
+      resolve(root, args, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetNavigations, roles)
+
+        dbAdapter.navigation.getNavigations()
+      }
+    },
+
     // Author
     // ======
 
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticateUser, loaders}) {
-        authenticateUser()
+      resolve(root, {id, slug}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetAuthor, roles)
 
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -211,12 +245,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, last},
-        {authenticateUser, dbAdapter}
-      ) {
-        authenticateUser()
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetAuthors, roles)
 
         return dbAdapter.author.getAuthors({
           filter,
@@ -234,8 +265,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     image: {
       type: GraphQLImage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticateUser, loaders}) {
-        authenticateUser()
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetImage, roles)
         return loaders.images.load(id)
       }
     },
@@ -251,12 +283,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, last},
-        {authenticateUser, dbAdapter}
-      ) {
-        authenticateUser()
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetImages, roles)
 
         return dbAdapter.image.getImages({
           filter,
@@ -274,11 +303,23 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLArticle,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticateTokenOrUser, loaders}) {
-        const session = authenticateTokenOrUser()
+      async resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
 
-        const article = await loaders.articles.load(id)
-        return session.type === SessionType.Token ? (article?.shared ? article : null) : article
+        const canGetArticle = isAuthorised(CanGetArticle, roles)
+        const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
+
+        if (canGetArticle || canGetSharedArticle) {
+          const article = await loaders.articles.load(id)
+
+          if (canGetArticle) {
+            return article
+          } else {
+            return article?.shared ? article : null
+          }
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
@@ -293,20 +334,23 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, last},
-        {authenticateTokenOrUser, dbAdapter}
-      ) {
-        const session = authenticateTokenOrUser()
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
 
-        return dbAdapter.article.getArticles({
-          filter: {...filter, shared: session.type === SessionType.Token ? true : undefined},
-          sort,
-          order,
-          cursor: InputCursor(after, before),
-          limit: Limit(first, last)
-        })
+        const canGetArticles = isAuthorised(CanGetArticles, roles)
+        const canGetSharedArticles = isAuthorised(CanGetSharedArticles, roles)
+
+        if (canGetArticles || canGetSharedArticles) {
+          return dbAdapter.article.getArticles({
+            filter: {...filter, shared: !canGetArticles ? true : undefined},
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
@@ -317,9 +361,11 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       type: GraphQLArticle,
       args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
       resolve(root, {peerID, id}, context, info) {
-        const {authenticateTokenOrUser} = context
+        const {authenticate} = context
+        const {roles} = authenticate()
 
-        authenticateTokenOrUser()
+        authorise(CanGetPeerArticle, roles)
+
         return delegateToPeerSchema(peerID, true, context, {fieldName: 'article', args: {id}, info})
       }
     },
@@ -334,9 +380,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       async resolve(root, {filter, sort, order, after, first}, context, info) {
-        const {authenticateTokenOrUser, loaders, dbAdapter} = context
+        const {authenticate, loaders, dbAdapter} = context
+        const {roles} = authenticate()
 
-        authenticateTokenOrUser()
+        authorise(CanGetPeerArticles, roles)
 
         after = after ? JSON.parse(base64Decode(after)) : null
 
@@ -515,8 +562,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     page: {
       type: GraphQLPage,
       args: {id: {type: GraphQLID}},
-      resolve(root, {id}, {authenticateUser, loaders}) {
-        authenticateUser()
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetPage, roles)
         return loaders.pages.load(id)
       }
     },
@@ -532,12 +580,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(
-        root,
-        {filter, sort, order, after, before, first, last},
-        {authenticateUser, dbAdapter}
-      ) {
-        authenticateUser()
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetPages, roles)
 
         return dbAdapter.page.getPages({
           filter,
