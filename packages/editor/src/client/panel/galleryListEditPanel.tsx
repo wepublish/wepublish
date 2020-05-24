@@ -80,7 +80,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
   return (
     <>
       <Box>
-        <Card height={150}>
+        <Card overflow="hidden" height={150}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
             {image && (
               <Box position="relative" width="100%" height="100%">

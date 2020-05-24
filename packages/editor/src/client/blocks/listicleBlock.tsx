@@ -28,7 +28,7 @@ import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
 import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {isFunctionalUpdate} from '@karma.run/react'
 
-export function ListicleBlock({value, onChange, autofocus}: BlockProps<ListicleBlockValue>) {
+export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
     <ListInput
       value={value.items}
@@ -37,7 +37,8 @@ export function ListicleBlock({value, onChange, autofocus}: BlockProps<ListicleB
           items: isFunctionalUpdate(items) ? items(value.items) : items
         }))
       }
-      defaultValue={{image: null, richText: createDefaultValue(), title: ''}}>
+      defaultValue={{image: null, richText: createDefaultValue(), title: ''}}
+      disabled={disabled}>
       {props => <ListicleItemElement {...props} />}
     </ListInput>
   )
@@ -55,13 +56,18 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         ...value,
         richText: isFunctionalUpdate(richText) ? richText(value.richText) : richText
       })),
-    []
+    [onChange]
   )
 
   return (
     <>
       <Box display="flex" flexDirection="row">
-        <Card width={200} height={150} marginRight={Spacing.ExtraSmall} flexShrink={0}>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          marginRight={Spacing.ExtraSmall}
+          flexShrink={0}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
             {image && (
               <Box position="relative" width="100%" height="100%">

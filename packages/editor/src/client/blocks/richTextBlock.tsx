@@ -12,7 +12,6 @@ import {
 } from 'slate-react'
 
 import {withHistory} from 'slate-history'
-// import {defineSchema} from 'slate-schema'
 import {jsx} from 'slate-hyperscript'
 
 import {
@@ -280,7 +279,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   onChange
 }: RichTextBlockProps) {
   const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
-  const hasFocus = ReactEditor.isFocused(editor)
+  const [hasFocus, setFocus] = useState(false)
 
   useEffect(() => {
     if (autofocus) {
@@ -293,6 +292,7 @@ export const RichTextBlock = memo(function RichTextBlock({
       editor={editor}
       value={value}
       onChange={(newValue: SlateNode[]) => {
+        setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) onChange(newValue)
       }}>
       <Toolbar fadeOut={!hasFocus}>
