@@ -17,7 +17,6 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  ArticleTeaserGrid = 'articleTeaserGrid',
   TeaserGrid = 'teaserGrid'
 }
 

@@ -22,8 +22,8 @@ export enum BlockType {
   Quote = 'quote',
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
-  ArticleTeaserGrid1 = 'articleTeaserGrid1',
-  ArticleTeaserGrid6 = 'articleTeaserGrid6'
+  TeaserGrid1 = 'teaserGrid1',
+  TeaserGrid6 = 'teaserGrid6'
 }
 
 export type RichTextBlockValue = Node[]
@@ -194,15 +194,9 @@ export type LinkPageBreakBlockListValue = BlockListValue<
   LinkPageBreakBlockValue
 >
 
-export type TeaserGridBlock1ListValue = BlockListValue<
-  BlockType.ArticleTeaserGrid1,
-  TeaserGridBlockValue
->
+export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, TeaserGridBlockValue>
 
-export type TeaserGridBlock6ListValue = BlockListValue<
-  BlockType.ArticleTeaserGrid6,
-  TeaserGridBlockValue
->
+export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
 
 export type BlockValue =
   | TitleBlockListValue
@@ -345,8 +339,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       }
     }
 
-    case BlockType.ArticleTeaserGrid1:
-    case BlockType.ArticleTeaserGrid6:
+    case BlockType.TeaserGrid1:
+    case BlockType.TeaserGrid6:
       return {
         teaserGrid: {
           teasers: block.value.teasers.map(([, value]) => {
@@ -526,7 +520,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'TeaserGridBlock':
       return {
         key,
-        type: block.numColumns === 1 ? BlockType.ArticleTeaserGrid1 : BlockType.ArticleTeaserGrid6,
+        type: block.numColumns === 1 ? BlockType.TeaserGrid1 : BlockType.TeaserGrid6,
         value: {
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => {

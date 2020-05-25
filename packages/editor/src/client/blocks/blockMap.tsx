@@ -95,14 +95,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     icon: MaterialIconCode
   },
 
-  [BlockType.ArticleTeaserGrid1]: {
+  [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
     label: '1 Col',
     icon: IconColumn1
   },
 
-  [BlockType.ArticleTeaserGrid6]: {
+  [BlockType.TeaserGrid6]: {
     field: props => <TeaserGridBlock {...props} />,
     defaultValue: {
       numColumns: 3,

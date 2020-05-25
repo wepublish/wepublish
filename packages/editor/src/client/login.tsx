@@ -138,7 +138,7 @@ export function Login() {
               />
               <Button color="primary" label="Login" disabled={loading} />
             </LoginForm>
-            {!!providerData && (
+            {!!providerData?.authProviders?.length && (
               <>
                 <Box
                   display="flex"
