@@ -259,7 +259,7 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
             const abortController = new AbortController()
 
             // TODO: Make timeout configurable.
-            setTimeout(() => abortController.abort(), 200)
+            setTimeout(() => abortController.abort(), 1000)
 
             const fetchResult = await fetch(hostURL, {
               method: 'POST',

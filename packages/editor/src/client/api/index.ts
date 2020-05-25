@@ -776,6 +776,7 @@ export type PeerProfile = {
   logo?: Maybe<Image>;
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
+  websiteURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
