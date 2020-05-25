@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "typings": "./lib/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -16,16 +16,16 @@
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
     "@types/qs": "^6.9.1",
-    "apollo-server-express": "^2.11.0",
-    "node-fetch": "^2.6.0",
     "abort-controller": "^3.0.0",
-    "graphql-tag": "^2.10.3",
-    "graphql-tools": "^5.0.0",
+    "apollo-server-express": "^2.11.0",
     "dataloader": "^2.0.0",
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
+    "graphql-tag": "^2.10.3",
+    "graphql-tools": "^5.0.0",
     "ms": "^2.1.2",
+    "node-fetch": "^2.6.0",
     "oidc-provider": "^6.23.4",
     "openid-client": "^3.14.0",
     "qs": "^6.9.1"
