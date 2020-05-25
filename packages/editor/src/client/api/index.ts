@@ -51,7 +51,7 @@ export type ArticleFilter = {
   draft?: Maybe<Scalars['Boolean']>;
   published?: Maybe<Scalars['Boolean']>;
   pending?: Maybe<Scalars['Boolean']>;
-  authors?: Maybe<Array<Scalars['String']>>;
+  authors?: Maybe<Array<Scalars['ID']>>;
   tags?: Maybe<Array<Scalars['String']>>;
 };
 

@@ -100,6 +100,7 @@ export interface TitleBlockDefaultProps {
   updatedAt?: Date
   showSocialMediaIcons?: boolean
   shareUrl: string
+  isPeerArticle: boolean
 }
 
 export function TitleBlock({type, ...props}: TitleBlockDefaultProps & {type: HeaderType}) {
@@ -121,7 +122,8 @@ export function TitleBlockDefault({
   publishedAt,
   updatedAt,
   showSocialMediaIcons = false,
-  shareUrl
+  shareUrl,
+  isPeerArticle
 }: TitleBlockDefaultProps) {
   const ref = React.createRef<HTMLParagraphElement>()
   const show = usePermanentVisibility(ref, {threshold: 0})
@@ -141,11 +143,19 @@ export function TitleBlockDefault({
             <>
               {/* TODO create author routes */}
               {authors
-                .map<React.ReactNode>(author => (
-                  <Link key={author.id} route={AuthorRoute.create({id: author.slug || author.id})}>
-                    {author.name}
-                  </Link>
-                ))
+                .map<React.ReactNode>(author =>
+                  isPeerArticle ? (
+                    <Link key={author.id} href={author.url}>
+                      {author.name}
+                    </Link>
+                  ) : (
+                    <Link
+                      key={author.id}
+                      route={AuthorRoute.create({id: author.slug || author.id})}>
+                      {author.name}
+                    </Link>
+                  )
+                )
                 .reduce((prev, curr) => [prev, ', ', curr])}
               {' — '}
               {/* authors.map(author => author.name).join(', ') */}

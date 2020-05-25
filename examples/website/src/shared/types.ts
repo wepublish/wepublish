@@ -25,6 +25,7 @@ export interface ImageData {
 
 export interface Author {
   id: string
+  url: string
   slug: string
   name: string
   image: ImageData
@@ -38,6 +39,8 @@ export interface NavigationItem {
 
 export interface ArticleMeta {
   id: string
+  url: string
+
   peer?: Peer
   authors?: Author[]
   tags: string[]
@@ -86,7 +89,8 @@ export interface Peer {
   slug: string
   name: string
   logoURL: string
-  hostURL: string
+  websiteURL: string
+  themeColor: string
 }
 
 export enum BlockType {

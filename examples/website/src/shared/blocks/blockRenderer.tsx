@@ -24,6 +24,7 @@ export interface BlockRendererProps {
   children?(blockElement: JSX.Element | null): ReactNode
   articleShareUrl?: string
   isArticle?: boolean
+  isPeerArticle?: boolean
 }
 
 export function BlockRenderer({blocks, children, ...props}: BlockRendererProps) {
@@ -46,10 +47,11 @@ export interface RenderBlockOptions {
   updatedAt: Date
   articleShareUrl?: string
   isArticle?: boolean
+  isPeerArticle?: boolean
 }
 
 export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
-  const {authors, publishedAt, updatedAt, articleShareUrl, isArticle} = opts
+  const {authors, publishedAt, updatedAt, articleShareUrl, isArticle, isPeerArticle = false} = opts
 
   if (!block) return null
 
@@ -119,6 +121,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           publishedAt={publishedAt}
           updatedAt={updatedAt}
           showSocialMediaIcons={block.value.isHeader}
+          isPeerArticle={isPeerArticle}
         />
       )
 

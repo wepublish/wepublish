@@ -35,7 +35,8 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     },
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
-    hostURL: {type: GraphQLNonNull(GraphQLString)}
+    hostURL: {type: GraphQLNonNull(GraphQLString)},
+    websiteURL: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 

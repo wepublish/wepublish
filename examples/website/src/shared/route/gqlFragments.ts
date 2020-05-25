@@ -37,6 +37,7 @@ export const simpleImageDataFragment = gql`
 export const authorsDataFragment = gql`
   fragment AuthorsData on Author {
     id
+    url
     slug
     name
     image {
@@ -61,6 +62,7 @@ export const articleMetaDataFragment = gql`
   fragment ArticleMetaData on Article {
     __typename
     id
+    url
 
     updatedAt
     publishedAt
@@ -86,6 +88,7 @@ export const pageMetaDataFragment = gql`
   fragment PageMetaData on Page {
     __typename
     id
+    url
 
     updatedAt
     publishedAt
@@ -108,7 +111,7 @@ export const peerMetaDataFragment = gql`
     slug
     profile {
       name
-      hostURL
+      websiteURL
       themeColor
       logo {
         ...SimpleImageData

@@ -82,7 +82,10 @@ import {
   CanGetPeerArticle,
   CanGetPeerArticles,
   CanGetNavigations,
-  CanGetSharedArticles
+  CanGetSharedArticles,
+  CanGetPeerProfile,
+  CanGetPeers,
+  CanGetPeer
 } from './permissions'
 
 import {NotAuthorisedError} from '../error'
@@ -95,16 +98,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      async resolve(root, args, {authenticate, hostURL, dbAdapter}) {
-        authenticate()
-        return {...(await dbAdapter.peer.getPeerProfile()), hostURL}
+      async resolve(root, args, {authenticate, hostURL, websiteURL, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetPeerProfile, roles)
+        return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
       }
     },
 
     peers: {
       type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
-      resolve(root, {id}, {authenticateUser, dbAdapter}) {
-        authenticateUser()
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetPeers, roles)
         return dbAdapter.peer.getPeers()
       }
     },
@@ -112,8 +117,9 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticateUser, dbAdapter, loaders}) {
-        authenticateUser()
+      resolve(root, {id}, {authenticate, dbAdapter, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetPeer, roles)
         return loaders.peer.load(id)
       }
     },
@@ -604,8 +610,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
-      async resolve(root, args, {hostURL, dbAdapter}) {
-        return {...(await dbAdapter.peer.getPeerProfile()), hostURL}
+      async resolve(root, args, {hostURL, websiteURL, dbAdapter}) {
+        return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
       }
     },
 

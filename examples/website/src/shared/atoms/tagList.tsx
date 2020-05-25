@@ -22,7 +22,11 @@ export function TagList({peer, tags}: TagListProps) {
 
   return (
     <div className={css(TagListStyle)}>
-      {peer && <Tag iconURL={peer.logoURL} title={peer.name} />}
+      {peer && (
+        <Link href={peer.websiteURL}>
+          <Tag iconURL={peer.logoURL} title={new URL(peer.websiteURL).hostname} />
+        </Link>
+      )}
       {tags &&
         tags.map(tag => (
           <Link key={tag} route={TagRoute.create({tag: tag})}>

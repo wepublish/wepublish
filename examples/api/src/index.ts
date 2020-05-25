@@ -32,6 +32,7 @@ async function asyncMain() {
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
   const hostURL = process.env.HOST_URL
+  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
@@ -100,6 +101,7 @@ async function asyncMain() {
 
   const server = new WepublishServer({
     hostURL,
+    websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,

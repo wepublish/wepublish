@@ -10,7 +10,7 @@ import {
   TeaserType
 } from '../types'
 import {BlockTypes} from './gqlFragments'
-import {authorsAdapter} from './articleAdapter'
+import {authorsAdapter, peerAdapter} from './articleAdapter'
 import {ListicalItem} from '../blocks/listicalBlock'
 
 export function getFrontBlocks(blocks: any) {
@@ -286,17 +286,10 @@ export function teaserAdapter(teaser: any): ArticleMeta | null {
 
   return {
     id: data.id,
+    url: data.url,
     publishedAt: new Date(data.publishedAt),
     updatedAt: new Date(data.updatedAt),
-    peer: peer
-      ? {
-          id: peer.id,
-          slug: peer.slug,
-          name: peer.profile.name,
-          logoURL: peer.profile.logo?.squareURL,
-          hostURL: peer.profile.hostURL
-        }
-      : undefined,
+    peer: peer && peerAdapter(peer),
     preTitle: preTitle || data.preTitle,
     title: title || data.title,
     lead: lead || data.lead || data.description,

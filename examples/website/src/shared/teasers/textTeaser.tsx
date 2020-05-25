@@ -100,11 +100,17 @@ export function TextTeaser({
           <>
             {/* TODO create author routes */}
             {authors
-              .map<React.ReactNode>(author => (
-                <Link key={author.id} route={AuthorRoute.create({id: author.slug || author.id})}>
-                  {author.name}
-                </Link>
-              ))
+              .map<React.ReactNode>(author =>
+                peer ? (
+                  <Link key={author.id} href={author.url}>
+                    {author.name}
+                  </Link>
+                ) : (
+                  <Link key={author.id} route={AuthorRoute.create({id: author.slug || author.id})}>
+                    {author.name}
+                  </Link>
+                )
+              )
               .reduce((prev, curr) => [prev, ', ', curr])}
             {' — '}
           </>

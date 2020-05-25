@@ -69,6 +69,7 @@ export interface ArticleFooterProps {
   readonly authors?: Author[]
   readonly peer?: Peer
   readonly showImage?: boolean
+  isPeerArticle?: boolean
 }
 
 export function ArticleFooter(props: ArticleFooterProps) {
@@ -93,13 +94,21 @@ export function ArticleFooter(props: ArticleFooterProps) {
             return (
               <div key={author.id} className={css(AuthorStyle)}>
                 {author.image && <RoundImage width={60} height={60} src={author.image.url} />}
-                <Link
-                  className={css(AuthorTagStyle)}
-                  route={AuthorRoute.create({id: author.slug || author.id})}>
-                  <a className={css(AuthorTagStyle)}>
-                    <Tag title={author.name} />
-                  </a>
-                </Link>
+                {props.isPeerArticle ? (
+                  <Link className={css(AuthorTagStyle)} href={author.url}>
+                    <a className={css(AuthorTagStyle)}>
+                      <Tag title={author.name} />
+                    </a>
+                  </Link>
+                ) : (
+                  <Link
+                    className={css(AuthorTagStyle)}
+                    route={AuthorRoute.create({id: author.slug || author.id})}>
+                    <a className={css(AuthorTagStyle)}>
+                      <Tag title={author.name} />
+                    </a>
+                  </Link>
+                )}
               </div>
             )
           })}

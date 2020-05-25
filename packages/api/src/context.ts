@@ -62,6 +62,7 @@ export interface DataLoaderContext {
 
 export interface Context {
   readonly hostURL: string
+  readonly websiteURL: string
 
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
@@ -88,6 +89,8 @@ export interface Oauth2Provider {
 
 export interface ContextOptions {
   readonly hostURL: string
+  readonly websiteURL: string
+
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -97,7 +100,7 @@ export interface ContextOptions {
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {hostURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
+  {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.session.getSessionByToken(token) : null
@@ -113,6 +116,7 @@ export async function contextFromRequest(
 
   return {
     hostURL,
+    websiteURL,
     session: isSessionValid ? session : null,
     loaders: {
       navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
