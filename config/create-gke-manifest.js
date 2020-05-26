@@ -114,7 +114,7 @@ async function applyWebsite() {
   }
 
   let ingress = {
-    apiVersion: 'apps/v1',
+    apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: appName,
