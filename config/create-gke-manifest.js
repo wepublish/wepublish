@@ -114,7 +114,7 @@ async function applyWebsite() {
   }
 
   let ingress = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -145,7 +145,7 @@ async function applyWebsite() {
 
   // Info Resources: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/node/resource-qos.md
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
@@ -271,7 +271,7 @@ async function applyMediaServer() {
   const appPort = 8000
 
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
@@ -404,7 +404,7 @@ async function applyMediaServer() {
   await applyConfig(`service-${app}`, service)
 
   let ingress = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -455,7 +455,7 @@ async function applyApiServer() {
   const appPort = 8000
 
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
@@ -673,7 +673,7 @@ async function applyApiServer() {
   await applyConfig(`service-${app}`, service)
 
   let ingress = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -724,7 +724,7 @@ async function applyEditor() {
   const appPort = 8000
 
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
@@ -826,7 +826,7 @@ async function applyEditor() {
   await applyConfig(`service-${app}`, service)
 
   let ingress = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -877,7 +877,7 @@ async function applyOAuth2() {
   const appPort = 8000
 
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
@@ -1037,7 +1037,7 @@ async function applyOAuth2() {
   await applyConfig(`service-${app}`, service)
 
   let ingress = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
       name: appName,
@@ -1088,7 +1088,7 @@ async function applyMongo() {
   const appName = `${app}-${ENVIRONMENT_NAME}`
 
   const deployment = {
-    apiVersion: 'extensions/v1beta1',
+    apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
       name: appName,
