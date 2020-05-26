@@ -7,35 +7,37 @@ export interface AuthorLink {
 }
 
 export interface Author {
-  readonly id: string
-  readonly name: string
-  readonly slug: string
-  readonly imageID?: string
-  readonly links: AuthorLink[]
-  readonly bio: RichTextNode[]
+  id: string
+  createdAt: Date
+  modifiedAt: Date
+  name: string
+  slug: string
+  imageID?: string
+  links: AuthorLink[]
+  bio: RichTextNode[]
 }
 
 export interface AuthorInput {
-  readonly name: string
-  readonly slug: string
-  readonly imageID?: string
-  readonly links: AuthorLink[]
-  readonly bio: RichTextNode[]
+  name: string
+  slug: string
+  imageID?: string
+  links: AuthorLink[]
+  bio: RichTextNode[]
 }
 
 export type OptionalAuthor = Author | null
 
 export interface CreateAuthorArgs {
-  readonly input: AuthorInput
+  input: AuthorInput
 }
 
 export interface UpdateAuthorArgs {
-  readonly id: string
-  readonly input: AuthorInput
+  id: string
+  input: AuthorInput
 }
 
 export interface DeleteAuthorArgs {
-  readonly id: string
+  id: string
 }
 
 export enum AuthorSort {
@@ -44,15 +46,15 @@ export enum AuthorSort {
 }
 
 export interface AuthorFilter {
-  readonly name?: string
+  name?: string
 }
 
 export interface GetAuthorsArgs {
-  readonly cursor: InputCursor
-  readonly limit: Limit
-  readonly filter?: AuthorFilter
-  readonly sort: AuthorSort
-  readonly order: SortOrder
+  cursor: InputCursor
+  limit: Limit
+  filter?: AuthorFilter
+  sort: AuthorSort
+  order: SortOrder
 }
 
 export interface DBAuthorAdapter {

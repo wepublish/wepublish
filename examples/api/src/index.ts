@@ -29,6 +29,10 @@ class ExampleURLAdapter implements URLAdapter {
 
 async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+  if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
+
+  const hostURL = process.env.HOST_URL
+  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
@@ -50,17 +54,19 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      const adminUserRole = await adapter.getUserRole('Admin')
+      const adminUserRole = await adapter.userRole.getUserRole('Admin')
       const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-      const editorUserRole = await adapter.getUserRole('Editor')
+      const editorUserRole = await adapter.userRole.getUserRole('Editor')
       const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
-      adapter.createUser({
+
+      adapter.user.createUser({
         email: 'dev@wepublish.ch',
         password: '123',
         name: 'Dev User',
         roleIDs: [adminUserRoleId]
       })
-      adapter.createUser({
+
+      adapter.user.createUser({
         email: 'editor@wepublish.ch',
         password: '123',
         name: 'Editor User',
@@ -94,6 +100,8 @@ async function asyncMain() {
   ]
 
   const server = new WepublishServer({
+    hostURL,
+    websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,

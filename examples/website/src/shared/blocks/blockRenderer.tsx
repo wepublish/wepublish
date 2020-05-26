@@ -1,4 +1,4 @@
-import {Block, BlockType, PublishedArticle, TeaserType, Author} from '../types'
+import {Block, BlockType, PublishedArticle, TeaserStyle, Author, TeaserType} from '../types'
 import React, {ReactNode} from 'react'
 import {EmbedBlock} from './embedBlock'
 import {GalleryBlock} from './galleryBlock'
@@ -10,7 +10,7 @@ import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
 import {TextTeaser} from '../teasers/textTeaser'
-import {ArticleRoute} from '../route/routeContext'
+import {ArticleRoute, Route, PageRoute, PeerArticleRoute} from '../route/routeContext'
 import {PageBreakBlock} from './peerPageBreak'
 import {ListicalBLock} from './listicalBlock'
 import {TitleBlock} from './titleBlock'
@@ -24,6 +24,7 @@ export interface BlockRendererProps {
   children?(blockElement: JSX.Element | null): ReactNode
   articleShareUrl?: string
   isArticle?: boolean
+  isPeerArticle?: boolean
 }
 
 export function BlockRenderer({blocks, children, ...props}: BlockRendererProps) {
@@ -46,10 +47,11 @@ export interface RenderBlockOptions {
   updatedAt: Date
   articleShareUrl?: string
   isArticle?: boolean
+  isPeerArticle?: boolean
 }
 
 export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
-  const {authors, publishedAt, updatedAt, articleShareUrl, isArticle} = opts
+  const {authors, publishedAt, updatedAt, articleShareUrl, isArticle, isPeerArticle = false} = opts
 
   if (!block) return null
 
@@ -119,6 +121,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           publishedAt={publishedAt}
           updatedAt={updatedAt}
           showSocialMediaIcons={block.value.isHeader}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -136,8 +139,31 @@ function renderTeaser(key: string, article: PublishedArticle) {
     return result
   }
 
+  let route: Route
+
   switch (article.teaserType) {
-    case TeaserType.Default:
+    case TeaserType.Article:
+      route = ArticleRoute.create({id: article.id, slug: article.slug})
+      break
+
+    case TeaserType.PeerArticle:
+      route = PeerArticleRoute.create({
+        peerID: article.peer!.id,
+        id: article.id,
+        slug: article.slug
+      })
+      break
+
+    case TeaserType.Page:
+      route = PageRoute.create({slug: article.slug})
+      break
+
+    default:
+      throw new Error('Unknown teaser type')
+  }
+
+  switch (article.teaserStyle) {
+    case TeaserStyle.Default:
     default:
       return (
         <DefaultTeaser
@@ -150,13 +176,13 @@ function renderTeaser(key: string, article: PublishedArticle) {
           image={article.image}
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
           authors={article.authors}
           isSingle={true}
         />
       )
 
-    case TeaserType.Light:
+    case TeaserStyle.Light:
       return (
         <ImageTeaser
           key={key}
@@ -166,12 +192,12 @@ function renderTeaser(key: string, article: PublishedArticle) {
           image={article.image}
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
           authors={article.authors}
         />
       )
 
-    case TeaserType.Text:
+    case TeaserStyle.Text:
       return (
         <TextTeaser
           key={key}
@@ -181,12 +207,12 @@ function renderTeaser(key: string, article: PublishedArticle) {
           lead={article.lead}
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
           authors={article.authors}
         />
       )
 
-    case TeaserType.Breaking:
+    case TeaserStyle.Breaking:
       return (
         <BreakingTeaser
           key={key}

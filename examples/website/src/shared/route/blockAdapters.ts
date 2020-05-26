@@ -5,10 +5,12 @@ import {
   ArticleMeta,
   ImageData,
   TitleBlockValue,
-  HeaderType
+  HeaderType,
+  TeaserStyle,
+  TeaserType
 } from '../types'
 import {BlockTypes} from './gqlFragments'
-import {authorsAdapter} from './articleAdapter'
+import {authorsAdapter, peerAdapter} from './articleAdapter'
 import {ListicalItem} from '../blocks/listicalBlock'
 
 export function getFrontBlocks(blocks: any) {
@@ -65,7 +67,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           }
         }
 
-      case 'ArticleTeaserGridBlock':
+      case 'TeaserGridBlock':
         return {
           type: BlockType.Grid,
           key: index,
@@ -79,7 +81,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
         return {
           type: BlockType.Listicle,
           key: index,
-          value: listicleToListical(block.listicle)
+          value: listicleToListical(block.items)
         }
 
       case 'LinkPageBreakBlock':
@@ -214,8 +216,8 @@ export function imageAdapter(image: any): ImageData {
 
 export function imageEdgeToMedia(imageEdge: any): ImageData {
   return {
-    ...imageEdge.node,
-    caption: imageEdge.description
+    ...imageEdge.image,
+    caption: imageEdge.caption
   }
 }
 
@@ -231,35 +233,72 @@ export function listicleToListical(listicle: any): ListicalItem {
 
 export function articlesToTeasers(teasers: any): Block[] {
   return teasers.map((teaser: any) => {
-    return teaser && teaser?.article
-      ? {
-          type: BlockType.Teaser,
-          key: teaser.article.id,
-          value: teaserAdapter(teaser)
-        }
-      : null
+    const teaserData = teaser ? teaserAdapter(teaser) : null
+    return teaserData ? {type: BlockType.Teaser, key: teaserData.id, value: teaserData} : null
   })
 }
 
 export function teaserAdapter(teaser: any): ArticleMeta | null {
-  const published = teaser.article
-  let {overrides, article} = teaser
+  const {__typename, style, image, preTitle, title, lead, peer} = teaser
 
-  overrides = overrides || {} // TODO: Upgrade to TypeScript 3.7 and use optional chaining
+  let teaserType: TeaserType
+  let data: any
+
+  switch (__typename) {
+    case 'ArticleTeaser':
+      teaserType = TeaserType.Article
+      data = teaser.article
+      break
+
+    case 'PeerArticleTeaser':
+      teaserType = TeaserType.PeerArticle
+      data = teaser.article
+      break
+
+    case 'PageTeaser':
+      teaserType = TeaserType.Page
+      data = teaser.page
+      break
+
+    default:
+      return null
+  }
+
+  if (!data) return null
+
+  let teaserStyle: TeaserStyle
+
+  switch (style) {
+    case 'LIGHT':
+      teaserStyle = TeaserStyle.Light
+      break
+
+    case 'TEXT':
+      teaserStyle = TeaserStyle.Text
+      break
+
+    default:
+      teaserStyle = TeaserStyle.Default
+      break
+  }
+
+  if (teaserType === TeaserType.PeerArticle && !peer?.profile) return null
 
   return {
-    id: article.id,
-    publishedAt: new Date(teaser.article.publishedAt),
-    updatedAt: new Date(teaser.article.updatedAt),
-    peer: article.peer,
-    preTitle: overrides.preTitle ? overrides.preTitle : published.preTitle,
-    title: overrides.title ? overrides.title : published.title,
-    lead: overrides.lead ? overrides.lead : published.lead,
-    image: overrides.image ? imageAdapter(overrides.image) : imageAdapter(published.image),
-    slug: published.slug || undefined,
-    teaserType: teaser.type,
-    authors: published.authors && authorsAdapter(published.authors),
-    tags: published.tags,
-    isBreaking: published.breaking
+    id: data.id,
+    url: data.url,
+    publishedAt: new Date(data.publishedAt),
+    updatedAt: new Date(data.updatedAt),
+    peer: peer && peerAdapter(peer),
+    preTitle: preTitle || data.preTitle,
+    title: title || data.title,
+    lead: lead || data.lead || data.description,
+    image: image ? imageAdapter(image) : imageAdapter(data.image),
+    slug: data.slug || undefined,
+    teaserType,
+    teaserStyle: data.breaking ? TeaserStyle.Breaking : teaserStyle,
+    authors: data.authors && authorsAdapter(data.authors),
+    tags: data.tags ?? [],
+    isBreaking: data.breaking
   }
 }

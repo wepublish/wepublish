@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
-    "start": "node ./lib/index.js",
+    "start": "node ./dist/index.js",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",

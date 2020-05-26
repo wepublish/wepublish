@@ -16,7 +16,8 @@ import {
   NavigationButton,
   PanelSection,
   DescriptionList,
-  DescriptionListItem
+  DescriptionListItem,
+  Button
 } from '@karma.run/ui'
 
 import {
@@ -30,7 +31,7 @@ import {
   AuthorCreateRoute
 } from '../route'
 
-import {useListAuthorsQuery, Author, useDeleteAuthorMutation} from '../api/author'
+import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment} from '../api'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@karma.run/react'
 import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
@@ -47,20 +48,20 @@ export function AuthorList() {
     current?.type === RouteType.AuthorEdit || current?.type === RouteType.AuthorCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.AuthorEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.AuthorEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentAuthor, setCurrentAuthor] = useState<Author>()
+  const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, refetch, loading: isLoading} = useListAuthorsQuery({
+  const {data, fetchMore, loading: isLoading} = useAuthorListQuery({
     variables: {
       filter: filter || undefined,
-      first: 200 // TODO: Pagination
+      first: 50
     },
     fetchPolicy: 'network-only'
   })
@@ -68,16 +69,34 @@ export function AuthorList() {
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
   useEffect(() => {
-    if (current?.type === RouteType.AuthorCreate) {
-      setEditID(null)
-      setEditModalOpen(true)
-    }
+    switch (current?.type) {
+      case RouteType.AuthorCreate:
+        setEditID(undefined)
+        setEditModalOpen(true)
+        break
 
-    if (current?.type === RouteType.AuthorEdit) {
-      setEditID(current.params.id)
-      setEditModalOpen(true)
+      case RouteType.AuthorEdit:
+        setEditID(current.params.id)
+        setEditModalOpen(true)
+        break
     }
   }, [current])
+
+  function loadMore() {
+    fetchMore({
+      variables: {first: 50, after: data?.authors.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          authors: {
+            ...fetchMoreResult.authors,
+            nodes: [...prev.authors.nodes, ...fetchMoreResult?.authors.nodes]
+          }
+        }
+      }
+    })
+  }
 
   const authors = data?.authors.nodes.map(author => {
     const {id, name, image} = author
@@ -92,7 +111,7 @@ export function AuthorList() {
           alignItems="center">
           <Avatar width={50} height={50} marginRight={Spacing.Small}>
             {image ? (
-              <Image src={image.squareURL} width="100%" height="100%" />
+              image.squareURL && <Image src={image.squareURL} width="100%" height="100%" />
             ) : (
               <PlaceholderImage width="100%" height="100%" />
             )}
@@ -138,7 +157,14 @@ export function AuthorList() {
       </Box>
       <Box>
         {authors?.length ? (
-          authors
+          <>
+            {authors}
+            <Box display="flex" justifyContent="center">
+              {data?.authors.pageInfo.hasNextPage && (
+                <Button label="Load More" onClick={loadMore} />
+              )}
+            </Box>
+          </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
             No Authors found
@@ -148,7 +174,7 @@ export function AuthorList() {
       <Drawer open={isEditModalOpen} width={480}>
         {() => (
           <AuthorEditPanel
-            id={editID!}
+            id={editID}
             onClose={() => {
               setEditModalOpen(false)
               dispatch({
@@ -158,7 +184,6 @@ export function AuthorList() {
             }}
             onSave={() => {
               setEditModalOpen(false)
-              refetch()
               dispatch({
                 type: RouteActionType.PushRoute,
                 route: AuthorListRoute.create({}, current ?? undefined)
@@ -196,7 +221,6 @@ export function AuthorList() {
                     }
 
                     setConfirmationDialogOpen(false)
-                    refetch()
                   }}
                 />
               }

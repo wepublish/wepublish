@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react'
-import nanoid from 'nanoid'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {
   EditorTemplate,
@@ -14,17 +13,9 @@ import {
 
 import {
   MaterialIconArrowBack,
-  MaterialIconTextFormat,
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined,
-  MaterialIconImage,
-  MaterialIconTitle,
-  MaterialIconFormatQuote,
-  MaterialIconCode,
-  MaterialIconViewDay,
-  IconColumn6,
-  IconColumn1
+  MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
@@ -41,52 +32,23 @@ import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
   useCreateArticleMutation,
-  useGetArticleQuery,
+  useArticleQuery,
   useUpdateArticleMutation,
   ArticleInput,
-  usePublishArticleMutation
-} from '../api/article'
+  usePublishArticleMutation,
+  AuthorRefFragment
+} from '../api'
 
-import {
-  BlockType,
-  TitleBlockListValue,
-  RichTextBlockListValue,
-  ImageBlockListValue,
-  QuoteBlockListValue,
-  EmbedBlockListValue,
-  blockForQueryBlock,
-  unionMapForBlock,
-  EmbedType,
-  LinkPageBreakBlockListValue,
-  ArticleTeaserGridBlock1ListValue,
-  ArticleTeaserGridBlock6ListValue
-} from '../api/blocks'
+import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
 
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
-import {QuoteBlock} from '../blocks/quoteBlock'
-import {EmbedBlock} from '../blocks/embedBlock'
-import {ImageBlock} from '../blocks/imageBlock'
-import {TitleBlock} from '../blocks/titleBlock'
-import {Author} from '../api/author'
-import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
-import {TeaserGridBlock} from '../blocks/teaserGridBlock'
-
-// TODO: Deduplicate with `PageEditor`.
-export type ArticleBlockValue =
-  | TitleBlockListValue
-  | RichTextBlockListValue
-  | ImageBlockListValue
-  | QuoteBlockListValue
-  | LinkPageBreakBlockListValue
-  | EmbedBlockListValue
-  | ArticleTeaserGridBlock1ListValue
-  | ArticleTeaserGridBlock6ListValue
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
+import {BlockMap} from '../blocks/blockMap'
 
 export interface ArticleEditorProps {
   readonly id?: string
 }
 
-const InitialArticleBlocks: ArticleBlockValue[] = [
+const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
@@ -99,8 +61,16 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     {loading: isCreating, data: createData, error: createError}
   ] = useCreateArticleMutation()
 
-  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation()
-  const [publishArticle, {loading: isPublishing, error: publishError}] = usePublishArticleMutation()
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
+    fetchPolicy: 'no-cache'
+  })
+
+  const [
+    publishArticle,
+    {data: publishData, loading: isPublishing, error: publishError}
+  ] = usePublishArticleMutation({
+    fetchPolicy: 'no-cache'
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -125,18 +95,33 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   const isNew = id == undefined
-  const [blocks, setBlocks] = useState<ArticleBlockValue[]>(isNew ? InitialArticleBlocks : [])
+  const [blocks, setBlocks] = useState<BlockValue[]>(isNew ? InitialArticleBlocks : [])
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, loading: isLoading} = useGetArticleQuery({
+  const {data: articleData, loading: isLoading} = useArticleQuery({
     skip: isNew || createData != null,
+    errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: articleID!}
   })
 
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
+    ? new Date(publishData?.publishArticle?.pending?.publishAt)
+    : articleData?.article?.pending?.publishAt
+    ? new Date(articleData?.article?.pending?.publishAt)
+    : undefined
+
+  const [hasChanged, setChanged] = useState(false)
+
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks)
+    setChanged(true)
+  }, [])
 
   useEffect(() => {
     if (articleData?.article) {
@@ -148,13 +133,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setMetadata({
         slug,
-        preTitle: preTitle || '',
+        preTitle: preTitle ?? '',
         title,
-        lead,
+        lead: lead ?? '',
         tags,
         shared,
         breaking,
-        authors: authors.filter((author: Author | null) => author != null),
+        authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image ? image : undefined
       })
 
@@ -190,6 +175,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     if (articleID) {
       await updateArticle({variables: {id: articleID, input}})
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Saved')
     } else {
@@ -202,12 +188,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Draft Created')
     }
   }
 
-  // TODO: Support new API in UI
   async function handlePublish(publishDate: Date, updateDate: Date) {
     if (articleID) {
       const {data} = await updateArticle({
@@ -229,6 +215,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         }
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Article Published')
     }
@@ -251,6 +238,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 icon={MaterialIconArrowBack}
                 label="Back"
                 route={ArticleListRoute.create({})}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) e.preventDefault()
+                }}
               />
             }
             centerChildren={
@@ -289,77 +279,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             }
           />
         }>
-        <BlockList value={blocks} onChange={setBlocks} disabled={isLoading || isDisabled}>
-          {useBlockMap<ArticleBlockValue>(
-            () => ({
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
-              },
-
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: createDefaultValue,
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
-              },
-
-              [BlockType.Quote]: {
-                field: props => <QuoteBlock {...props} />,
-                defaultValue: {quote: '', author: ''},
-                label: 'Quote',
-                icon: MaterialIconFormatQuote
-              },
-
-              [BlockType.LinkPageBreak]: {
-                field: props => <LinkPageBreakBlock {...props} />,
-                defaultValue: {text: '', linkText: '', linkURL: ''},
-                label: 'Page Break',
-                icon: MaterialIconViewDay
-              },
-
-              [BlockType.Embed]: {
-                field: props => <EmbedBlock {...props} />,
-                defaultValue: {type: EmbedType.Other},
-                label: 'Embed',
-                icon: MaterialIconCode
-              },
-
-              [BlockType.ArticleTeaserGrid1]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
-                label: '1 Col',
-                icon: IconColumn1
-              },
-
-              [BlockType.ArticleTeaserGrid6]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {
-                  numColumns: 3,
-                  teasers: [
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null]
-                  ]
-                },
-                label: '6 Cols',
-                icon: IconColumn6
-              }
-            }),
-            []
-          )}
+        <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
+          {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
@@ -367,7 +288,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           <ArticleMetadataPanel
             value={metadata}
             onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => setMetadata(value)}
+            onChange={value => {
+              setMetadata(value)
+              setChanged(true)
+            }}
           />
         )}
       </Drawer>
@@ -375,6 +299,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         {() => (
           <PublishArticlePanel
             initialPublishDate={publishedAt}
+            pendingPublishDate={pendingPublishDate}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
             onConfirm={(publishDate, updateDate) => {

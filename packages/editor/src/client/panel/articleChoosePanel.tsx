@@ -16,11 +16,11 @@ import {
   SearchInput
 } from '@karma.run/ui'
 
-import {useListArticlesQuery, ArticleReference} from '../api/article'
+import {useArticleListQuery, ArticleRefFragment} from '../api'
 
 export interface ArticleChoosePanelProps {
   onClose(): void
-  onSelect(article: ArticleReference): void
+  onSelect(article: ArticleRefFragment): void
 }
 
 export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps) {
@@ -29,7 +29,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
 
   const [filter, setFilter] = useState('')
 
-  const {data, error, loading} = useListArticlesQuery({
+  const {data, error, loading} = useArticleListQuery({
     variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {
   EditorTemplate,
@@ -15,66 +15,28 @@ import {
   MaterialIconArrowBack,
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined,
-  IconColumn6,
-  IconColumn1,
-  MaterialIconTitle,
-  MaterialIconTextFormat,
-  MaterialIconImage,
-  MaterialIconViewDay,
-  MaterialIconFormatQuote,
-  MaterialIconCode
+  MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
 import {RouteActionType} from '@karma.run/react'
 
 import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
-import {TeaserGridBlock} from '../blocks/teaserGridBlock'
 
 import {
   PageInput,
   useCreatePageMutation,
   useUpdatePageMutation,
-  useGetPageQuery,
+  usePageQuery,
   usePublishPageMutation
-} from '../api/page'
+} from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
-import {
-  BlockType,
-  blockForQueryBlock,
-  unionMapForBlock,
-  ArticleTeaserGridBlock1ListValue,
-  ArticleTeaserGridBlock6ListValue,
-  TitleBlockListValue,
-  RichTextBlockListValue,
-  ImageBlockListValue,
-  LinkPageBreakBlockListValue,
-  EmbedType,
-  QuoteBlockListValue,
-  EmbedBlockListValue
-} from '../api/blocks'
+import {blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
 
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
-import {TitleBlock} from '../blocks/titleBlock'
-import {ImageBlock} from '../blocks/imageBlock'
-import {LinkPageBreakBlock} from '../blocks/linkPageBreakBlock'
-
-import nanoid from 'nanoid'
-import {EmbedBlock} from '../blocks/embedBlock'
-import {QuoteBlock} from '../blocks/quoteBlock'
-
-export type PageBlockValue =
-  | TitleBlockListValue
-  | RichTextBlockListValue
-  | ImageBlockListValue
-  | QuoteBlockListValue
-  | LinkPageBreakBlockListValue
-  | EmbedBlockListValue
-  | ArticleTeaserGridBlock1ListValue
-  | ArticleTeaserGridBlock6ListValue
+import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
+import {BlockMap} from '../blocks/blockMap'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -88,8 +50,16 @@ export function PageEditor({id}: PageEditorProps) {
     {data: createData, loading: isCreating, error: createError}
   ] = useCreatePageMutation()
 
-  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation()
-  const [publishPage, {loading: isPublishing, error: publishError}] = usePublishPageMutation()
+  const [updatePage, {loading: isUpdating, error: updateError}] = useUpdatePageMutation({
+    fetchPolicy: 'no-cache'
+  })
+
+  const [
+    publishPage,
+    {data: publishData, loading: isPublishing, error: publishError}
+  ] = usePublishPageMutation({
+    fetchPolicy: 'no-cache'
+  })
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
@@ -110,18 +80,32 @@ export function PageEditor({id}: PageEditorProps) {
   })
 
   const isNew = id == undefined
-  const [blocks, setBlocks] = useState<PageBlockValue[]>([])
+  const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
 
-  const {data: pageData, loading: isLoading} = useGetPageQuery({
+  const {data: pageData, loading: isLoading} = usePageQuery({
     skip: isNew || createData != null,
+    errorPolicy: 'all',
     fetchPolicy: 'no-cache',
     variables: {id: pageID!}
   })
 
   const isNotFound = pageData && !pageData.page
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
+  const pendingPublishDate = publishData?.publishPage?.pending?.publishAt
+    ? new Date(publishData?.publishPage?.pending?.publishAt)
+    : pageData?.page?.pending?.publishAt
+    ? new Date(pageData?.page?.pending?.publishAt)
+    : undefined
+
+  const [hasChanged, setChanged] = useState(false)
+  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
+
+  const handleChange = useCallback((blocks: React.SetStateAction<BlockValue[]>) => {
+    setBlocks(blocks)
+    setChanged(true)
+  }, [])
 
   useEffect(() => {
     if (pageData?.page) {
@@ -134,9 +118,9 @@ export function PageEditor({id}: PageEditorProps) {
       setMetadata({
         slug,
         title,
-        description,
+        description: description ?? '',
         tags,
-        image: image ? image : null
+        image: image ? image : undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -167,6 +151,7 @@ export function PageEditor({id}: PageEditorProps) {
     if (pageID) {
       await updatePage({variables: {id: pageID, input}})
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Page Draft Saved')
     } else {
@@ -179,6 +164,7 @@ export function PageEditor({id}: PageEditorProps) {
         })
       }
 
+      setChanged(false)
       setSuccessToastOpen(true)
       setSuccessMessage('Page Draft Created')
     }
@@ -206,6 +192,7 @@ export function PageEditor({id}: PageEditorProps) {
       }
     }
 
+    setChanged(false)
     setSuccessToastOpen(true)
     setSuccessMessage('Page Published')
   }
@@ -227,6 +214,9 @@ export function PageEditor({id}: PageEditorProps) {
                 icon={MaterialIconArrowBack}
                 label="Back"
                 route={PageListRoute.create({})}
+                onClick={e => {
+                  if (!unsavedChangesDialog()) e.preventDefault()
+                }}
               />
             }
             centerChildren={
@@ -265,77 +255,8 @@ export function PageEditor({id}: PageEditorProps) {
             }
           />
         }>
-        <BlockList value={blocks} onChange={blocks => setBlocks(blocks)} disabled={isDisabled}>
-          {useBlockMap<PageBlockValue>(
-            () => ({
-              [BlockType.Title]: {
-                field: props => <TitleBlock {...props} />,
-                defaultValue: {title: '', lead: ''},
-                label: 'Title',
-                icon: MaterialIconTitle
-              },
-
-              [BlockType.RichText]: {
-                field: props => <RichTextBlock {...props} />,
-                defaultValue: createDefaultValue,
-                label: 'Rich Text',
-                icon: MaterialIconTextFormat
-              },
-
-              [BlockType.Image]: {
-                field: props => <ImageBlock {...props} />,
-                defaultValue: {image: null, caption: ''},
-                label: 'Image',
-                icon: MaterialIconImage
-              },
-
-              [BlockType.Quote]: {
-                field: props => <QuoteBlock {...props} />,
-                defaultValue: {quote: '', author: ''},
-                label: 'Quote',
-                icon: MaterialIconFormatQuote
-              },
-
-              [BlockType.LinkPageBreak]: {
-                field: props => <LinkPageBreakBlock {...props} />,
-                defaultValue: {text: '', linkText: '', linkURL: ''},
-                label: 'Page Break',
-                icon: MaterialIconViewDay
-              },
-
-              [BlockType.Embed]: {
-                field: props => <EmbedBlock {...props} />,
-                defaultValue: {type: EmbedType.Other},
-                label: 'Embed',
-                icon: MaterialIconCode
-              },
-
-              [BlockType.ArticleTeaserGrid1]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
-                label: '1 Col',
-                icon: IconColumn1
-              },
-
-              [BlockType.ArticleTeaserGrid6]: {
-                field: props => <TeaserGridBlock {...props} />,
-                defaultValue: {
-                  numColumns: 3,
-                  teasers: [
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null],
-                    [nanoid(), null]
-                  ]
-                },
-                label: '6 Cols',
-                icon: IconColumn6
-              }
-            }),
-            []
-          )}
+        <BlockList value={blocks} onChange={handleChange} disabled={isDisabled}>
+          {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
       <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
@@ -343,7 +264,10 @@ export function PageEditor({id}: PageEditorProps) {
           <PageMetadataPanel
             value={metadata}
             onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => setMetadata(value)}
+            onChange={value => {
+              setMetadata(value)
+              setChanged(true)
+            }}
           />
         )}
       </Drawer>
@@ -351,6 +275,7 @@ export function PageEditor({id}: PageEditorProps) {
         {() => (
           <PublishPagePanel
             initialPublishDate={publishedAt}
+            pendingPublishDate={pendingPublishDate}
             metadata={metadata}
             onClose={() => setPublishDialogOpen(false)}
             onConfirm={(publishDate, updateDate) => {

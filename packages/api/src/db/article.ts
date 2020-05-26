@@ -29,6 +29,11 @@ export interface Article {
   readonly pending: ArticleRevision | null
 }
 
+export interface PeerArticle {
+  peerID: string
+  article: any
+}
+
 export interface ArticleHistory {
   readonly id: string
   readonly revisions: ArticleRevision[]
@@ -46,6 +51,7 @@ export interface ArticleRevision extends ArticleData {
 export interface PublicArticle extends ArticleData {
   readonly id: string
 
+  readonly shared: boolean
   readonly updatedAt: Date
   readonly publishedAt: Date
 
@@ -57,6 +63,7 @@ export interface ArticleFilter {
   readonly draft?: boolean
   readonly published?: boolean
   readonly pending?: boolean
+  readonly shared?: boolean
   readonly authors?: string[]
   readonly tags?: string[]
 }

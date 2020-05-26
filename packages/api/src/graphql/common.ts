@@ -25,3 +25,11 @@ export const GraphQLPageInfo = new GraphQLObjectType({
     hasPreviousPage: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
+
+export const GraphQLUnidirectionalPageInfo = new GraphQLObjectType({
+  name: 'UnidirectionalPageInfo',
+  fields: {
+    endCursor: {type: GraphQLString},
+    hasNextPage: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})

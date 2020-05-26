@@ -11,6 +11,7 @@ export interface ArticleFooterContainerProps {
   readonly peer?: Peer
   readonly publishDate: Date
   readonly id: string
+  isPeerArticle?: boolean
 }
 
 export function ArticleFooterContainer({
@@ -18,7 +19,8 @@ export function ArticleFooterContainer({
   authors,
   peer,
   publishDate,
-  id
+  id,
+  isPeerArticle
 }: ArticleFooterContainerProps) {
   const first = 4
 
@@ -46,5 +48,12 @@ export function ArticleFooterContainer({
 
   articles = articles.slice(0, 3)
 
-  return <ArticleFooter relatedArticles={articles} tags={tags} authors={authors} />
+  return (
+    <ArticleFooter
+      relatedArticles={articles}
+      tags={tags}
+      authors={authors}
+      isPeerArticle={isPeerArticle}
+    />
+  )
 }

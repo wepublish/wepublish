@@ -15,7 +15,7 @@
     "clean": "shx rm -rf ./dist ./.media"
   },
   "dependencies": {
-    "@karma.run/media": "^0.2.0",
+    "@karma.run/media": "^0.2.1",
     "@karma.run/media-storage-local": "^0.1.4",
     "@karma.run/media-image-sharp": "^0.2.0"
   },

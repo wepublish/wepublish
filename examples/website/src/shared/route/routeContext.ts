@@ -4,12 +4,14 @@ import {
   routePath,
   required,
   RouteInstancesForRoutes,
-  zeroOrMore
+  zeroOrMore,
+  optional
 } from '@karma.run/react'
 
 import {PublishedArticle} from '../types'
 
 export enum RouteType {
+  PeerArticle = 'peerArticle',
   Article = 'article',
   Page = 'page',
   Tag = 'tag',
@@ -18,18 +20,23 @@ export enum RouteType {
   Modal = 'modal'
 }
 
+export const PeerArticleRoute = route(
+  RouteType.PeerArticle,
+  routePath`/a/${required('peerID')}/${required('id')}/${optional('slug')}`,
+  null as PublishedArticle | null
+)
+
 export const ArticleRoute = route(
   RouteType.Article,
-  routePath`/a/${required('id')}/${zeroOrMore('slug')}`,
+  routePath`/a/${required('id')}/${optional('slug')}`,
   null as PublishedArticle | null
 )
 
 export const PageRoute = route(RouteType.Page, routePath`/${zeroOrMore('slug')}`, null)
 export const TagRoute = route(RouteType.Tag, routePath`/tag/${required('tag')}`, null)
-export const PeerRoute = route(RouteType.Peer, routePath`/peer/${required('id')}`, null)
 export const AuthorRoute = route(RouteType.Author, routePath`/author/${required('id')}`, null)
 
-export const routes = [ArticleRoute, TagRoute, PeerRoute, AuthorRoute, PageRoute] as const
+export const routes = [PeerArticleRoute, ArticleRoute, TagRoute, AuthorRoute, PageRoute] as const
 
 export const {Link, RouteProvider, matchRoute, useRoute, useRouteDispatch} = createRouteContext(
   routes

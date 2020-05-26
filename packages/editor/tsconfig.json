@@ -3,6 +3,6 @@
   "include": ["./**/*"],
   "compilerOptions": {
     "types": ["@types/node", "@types/webpack-dev-server"],
-    "lib": ["es2017"]
+    "lib": ["ES2017", "ES2018", "ES2019", "dom", "dom.iterable"]
   }
 }

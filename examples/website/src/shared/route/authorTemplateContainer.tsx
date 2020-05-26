@@ -11,7 +11,7 @@ import {ArticleRoute, Link} from './routeContext'
 import {PageHeader} from '../atoms/pageHeader'
 import {RoundImage} from '../atoms/roundImage'
 import {LoadMoreButton} from '../atoms/loadMoreButton'
-import {useListArticlesByAuthorQuery} from '../query'
+import {useListArticlesQuery, useAuthorQuery} from '../query'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
 import {RichTextBlock} from '../blocks/richTextBlock'
 import {RoundIconButton} from '../atoms/roundIconButton'
@@ -54,22 +54,26 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
   const css = useStyle()
   const first = 30
 
-  const {data, fetchMore, loading} = useListArticlesByAuthorQuery({
-    variables: {filter: id, id: id, first: first, cursor: null}
+  const {data, loading: isLoadingAuthor} = useAuthorQuery({variables: {id: id, slug: id}})
+  const author = data?.authorBySlug ?? data?.authorByID
+  const authorID = author?.id ?? ''
+
+  const {data: articlesData, fetchMore, loading: isLoadingArticles} = useListArticlesQuery({
+    variables: {authors: [authorID], first: first, cursor: null},
+    skip: author == null
   })
 
-  if (loading) return <Loader text="Loading" />
+  if (isLoadingAuthor || isLoadingArticles) return <Loader text="Loading" />
+  if (!articlesData || !data || !author) return <NotFoundTemplate />
 
-  if (!data?.author) return <NotFoundTemplate />
+  const {name, image, links, bio} = author
 
-  const {name, image, links, bio} = data.author
-
-  const articles = relatedArticlesAdapter(data.articles.nodes).filter(
+  const articles = relatedArticlesAdapter(articlesData.articles.nodes).filter(
     article => article != null
   ) as ArticleMeta[]
 
   function loadMore() {
-    if (data?.articles.pageInfo.endCursor == null) return
+    if (articlesData?.articles.pageInfo.endCursor == null) return
 
     fetchMore({
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -82,11 +86,15 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
           }
         }
       },
-      variables: {first: first, cursor: data.articles.pageInfo.endCursor, filter: id, id: id}
+      variables: {
+        first: first,
+        cursor: articlesData.articles.pageInfo.endCursor,
+        authors: [authorID]
+      }
     })
   }
 
-  const hasNextPage = data.articles.pageInfo.hasNextPage
+  const hasNextPage = articlesData.articles.pageInfo.hasNextPage
 
   function linkUrlToIcon(linkUrl: string) {
     if (linkUrl.includes('facebook')) return IconType.Facebook

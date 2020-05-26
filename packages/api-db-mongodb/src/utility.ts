@@ -18,6 +18,10 @@ export function base64Decode(str: string): string {
   return Buffer.from(str, 'base64').toString()
 }
 
+export function isNonNull<T>(value: T): value is NonNullable<T> {
+  return value != null
+}
+
 export enum MongoErrorCode {
   DuplicateKey = 11000
 }

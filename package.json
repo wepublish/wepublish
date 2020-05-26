@@ -37,6 +37,7 @@
     "clean:editor": "yarn workspace @wepublish/editor clean",
     "build:editor": "yarn workspace @wepublish/editor build",
     "watch:editor": "yarn workspace @wepublish/editor watch",
+    "generate:editor:api": "yarn workspace @wepublish/editor generate:api",
     "publish:editor": "yarn workspace @wepublish/editor publish --access public --no-git-tag-version",
     "setup:oauth2": "yarn workspace @wepublish/oauth2 setup",
     "start:oauth2": "yarn workspace @wepublish/oauth2 start",
