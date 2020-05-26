@@ -15,15 +15,15 @@ import {URL} from 'url'
 
 class ExampleURLAdapter implements URLAdapter {
   getPublicArticleURL(article: PublicArticle): string {
-    return `https://wepublish.ch/article/${article.id}/${article.slug}`
+    return `https://demo.wepublish.ch/article/${article.id}/${article.slug}`
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `https://wepublish.ch/page/${page.id}/${page.slug}`
+    return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `https://wepublish.ch/author/${author.id}/${author.slug}`
+    return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
 }
 

@@ -5,8 +5,8 @@
 - [@wepublish/api](./packages/api)
   - DB Adapter:
     - [@wepublish/api-db-mongodb](./packages/api-db-mongodb)
-    - ~~[@wepublish/api-db-memory](./packages/api-db-memory)~~ (Currently Unmaintend)
-    - ~~[@wepublish/api-db-karma](./packages/api-db-karma)~~ (Currently Unmaintend)
+    - ~~[@wepublish/api-db-memory](./packages/api-db-memory)~~ (Currently Unmaintained)
+    - ~~[@wepublish/api-db-karma](./packages/api-db-karma)~~ (Currently Unmaintained)
   - Media Adapter:
     - [@wepublish/api-media-karma](./packages/api-media-karma)
 - [@wepublish/editor](./packages/editor)

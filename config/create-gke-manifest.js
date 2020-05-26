@@ -535,6 +535,23 @@ async function applyApiServer() {
                   name: 'MONGO_LOCALE',
                   value: 'de'
                 },
+
+                {
+                  name: 'HOST_URL',
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
+                    'https://api.demo.wepublish.media',
+                    'https://api.demo.wepublish.media'
+                  )
+                },
+                {
+                  name: 'WEBSITE_URL',
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
+                    'https://demo.wepublish.media',
+                    'https://demo.wepublish.media'
+                  )
+                },
                 {
                   name: 'MEDIA_SERVER_TOKEN',
                   valueFrom: {
@@ -565,7 +582,8 @@ async function applyApiServer() {
                       key: 'oauth_google_client_key'
                     }
                   }
-                },{
+                },
+                {
                   name: 'OAUTH_GOOGLE_REDIRECT_URL',
                   valueFrom: {
                     secretKeyRef: {
@@ -964,7 +982,8 @@ async function applyOAuth2() {
                       key: 'jwks_keys'
                     }
                   }
-                }],
+                }
+              ],
               ports: [
                 {
                   containerPort: appPort,
