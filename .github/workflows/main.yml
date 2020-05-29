@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - master
+      - f/testing-integration-e2e
 
 jobs:
   release:
@@ -42,3 +42,19 @@ jobs:
           gcloud --quiet container clusters get-credentials tsri-django
       - name: Deploy
         run: kubectl apply -f ./kubernetesConfigs
+  e2eTest:
+    needs: release
+    name: Runs e2e Test on demo.wepublish.media
+    runs-on: ubuntu-latest
+    env:
+      E2E_TEST_EDITOR_URL: 'https://editor.demo.wepublish.media'
+      E2E_TEST_WEBSITE_URL: 'https://demo.wepublish.media'
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - uses: actions/checkout@v1
+      - name: Run TestCafe Tests
+        uses: DevExpress/testcafe-action@latest
+        with:
+          args: 'chrome ./tests/e2e.ts'
