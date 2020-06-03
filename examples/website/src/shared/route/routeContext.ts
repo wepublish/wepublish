@@ -22,7 +22,7 @@ export enum RouteType {
 
 export const PeerArticleRoute = route(
   RouteType.PeerArticle,
-  routePath`/a/${required('peerID')}/${required('id')}/${optional('slug')}`,
+  routePath`/needs_to_be_fixed/${required('peerID')}/${required('id')}/${optional('slug')}`,
   null as PublishedArticle | null
 )
 
