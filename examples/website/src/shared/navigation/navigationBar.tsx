@@ -229,11 +229,10 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
       document.body.style.paddingRight = ''
       document.documentElement.style.overflow = ''
     } else {
-      /* throws error in build. But used to work before. But what is open
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
 
-      document.body.style.paddingRight = open ? `${scrollbarWidth}px` : ''
-      document.documentElement.style.overflow = open ? 'hidden' : '' */
+      document.body.style.paddingRight = collapse ? '' : `${scrollbarWidth}px`
+      document.documentElement.style.overflow = collapse ? '' : 'hidden'
     }
   }
 

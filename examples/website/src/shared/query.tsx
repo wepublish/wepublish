@@ -18,13 +18,13 @@ export interface ListArticlesData {
 export interface ListArticlesVariables {
   first: number
   cursor?: string | null
-  filter?: string[] | string
-  id?: string
+  filter?: string[]
+  authors?: string[]
 }
 
 const ArticleTagQuery = gql`
-  query ArticleTag($first: Int, $filter: [String!], $cursor: ID) {
-    articles(first: $first, after: $cursor, filter: {tags: $filter}) {
+  query ArticleTag($first: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
+    articles(first: $first, after: $cursor, filter: {tags: $filter, authors: $authors}) {
       pageInfo {
         startCursor
         endCursor
@@ -44,7 +44,7 @@ const ArticleTagQuery = gql`
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
 ) {
-  return useQuery<ListArticlesData, ListArticlesVariables>(ArticleTagQuery, opts)
+  return useQuery(ArticleTagQuery, opts)
 }
 
 export interface AuthorLink {
@@ -53,19 +53,27 @@ export interface AuthorLink {
 }
 
 export interface Author {
+  id: string
   name: string
   image?: ImageRefData
   links?: AuthorLink[]
   bio?: Node[]
 }
 
-export interface ListArticlesDataByAuthor extends ListArticlesData {
-  author?: Author
+export interface AuthorQueryVariables {
+  id?: string
+  slug?: string
 }
 
-const ArticlesByAuthor = gql`
-  query Author($first: Int, $cursor: ID, $id: ID!, $filter: String!) {
-    author(id: $id) {
+export interface AuthorQueryData {
+  authorByID?: Author
+  authorBySlug?: Author
+}
+
+const AuthorQuery = gql`
+  query Author($id: ID, $slug: Slug) {
+    authorByID: author(id: $id) {
+      id
       name
       image {
         ...SimpleImageData
@@ -76,25 +84,22 @@ const ArticlesByAuthor = gql`
       }
       bio
     }
-    articles(first: $first, after: $cursor, filter: {authors: [$filter]}) {
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
+    authorBySlug: author(slug: $slug) {
+      id
+      name
+      image {
+        ...SimpleImageData
       }
-      totalCount
-      nodes {
-        ...ArticleMetaData
+      links {
+        title
+        url
       }
+      bio
     }
   }
   ${simpleImageDataFragment}
-  ${articleMetaDataFragment}
 `
 
-export function useListArticlesByAuthorQuery(
-  opts?: QueryHookOptions<ListArticlesDataByAuthor, ListArticlesVariables>
-) {
-  return useQuery<ListArticlesDataByAuthor, ListArticlesVariables>(ArticlesByAuthor, opts)
+export function useAuthorQuery(opts?: QueryHookOptions<AuthorQueryData, AuthorQueryVariables>) {
+  return useQuery(AuthorQuery, opts)
 }

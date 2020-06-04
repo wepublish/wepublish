@@ -1,5 +1,6 @@
 import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
+import {DocumentNode, OperationDefinitionNode} from 'graphql'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -97,4 +98,13 @@ export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin
     }),
     [isLoading, isLoaded, load]
   )
+}
+
+export function getOperationNameFromDocument(node: DocumentNode) {
+  const firstOperation = node.definitions.find(
+    node => node.kind === 'OperationDefinition'
+  ) as OperationDefinitionNode
+
+  if (!firstOperation?.name?.value) throw new Error("Coulnd't find operation name.")
+  return firstOperation.name.value
 }

@@ -14,13 +14,13 @@ import {
 
 import {MaterialIconEditOutlined} from '@karma.run/icons'
 import {EmbedEditPanel} from '../panel/embedEditPanel'
-import {EmbedBlockValue, EmbedType} from '../api/blocks'
+import {EmbedBlockValue, EmbedType} from './types'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {VimeoVideoEmbed} from './embeds/vimeo'
 import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {InstagramPostEmbed} from './embeds/instagram'
 import {TwitterTweetEmbed} from './embeds/twitter'
-import {FacebookPostEmbed} from './embeds/facebook'
+import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
 import {IframeEmbed} from './embeds/iframe'
 
 // TODO: Handle disabled prop
@@ -81,6 +81,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
   switch (value.type) {
     case EmbedType.FacebookPost:
       return <FacebookPostEmbed userID={value.userID} postID={value.postID} />
+
+    case EmbedType.FacebookVideo:
+      return <FacebookVideoEmbed userID={value.userID} videoID={value.videoID} />
 
     case EmbedType.InstagramPost:
       return <InstagramPostEmbed postID={value.postID} />

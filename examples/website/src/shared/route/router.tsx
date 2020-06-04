@@ -2,10 +2,9 @@ import React, {useEffect} from 'react'
 import {useRoute, RouteType, Route} from './routeContext'
 
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
-import {ArticleTemplateContainer} from './articleTemplateContainer'
+import {ArticleTemplateContainer, PeerArticleTemplateContainer} from './articleTemplateContainer'
 import {BaseTemplateContainer, BaseTemplateContainerProps} from './baseTemplateContainer'
 import {PageTemplateContainer} from './pageTemplateContainer'
-import {ComingSoon} from '../templates/comingSoon'
 import {AuthorTemplateContainer} from './authorTemplateContainer'
 import {TagTemplateContainer} from './tagTemplateContainer'
 
@@ -45,6 +44,12 @@ export function Router() {
 
 function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps {
   switch (route?.type) {
+    case RouteType.PeerArticle:
+      return {
+        hideHeaderMobile: true,
+        largeHeader: true
+      }
+
     case RouteType.Article:
       return {
         footerText: 'Hat Dir der Artikel gefallen?',
@@ -66,15 +71,17 @@ function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps
 
 function contentForRoute(activeRoute: Route | null) {
   switch (activeRoute?.type) {
-    // TODO case RouteType.Tag:
-    //   const tag = activeRoute.params.tag
-
-    // TODO case RouteType.Peer: Type is not in activeRoute.type
-    case RouteType.Peer:
-      return <ComingSoon />
-
     case RouteType.Page:
       return <PageTemplateContainer slug={activeRoute.params.slug || ''} />
+
+    case RouteType.PeerArticle:
+      return (
+        <PeerArticleTemplateContainer
+          peerID={activeRoute.params.peerID}
+          id={activeRoute.params.id}
+          slug={activeRoute.params.slug}
+        />
+      )
 
     case RouteType.Article:
       return <ArticleTemplateContainer id={activeRoute.params.id} slug={activeRoute.params.slug} />

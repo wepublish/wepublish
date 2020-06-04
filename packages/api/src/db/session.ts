@@ -1,28 +1,41 @@
 import {User} from './user'
 import {UserRole} from './userRole'
 
-export interface Session {
-  readonly id: string
-  readonly user: User
-  readonly roles: UserRole[]
-  readonly createdAt: Date
-  readonly expiresAt: Date
+export enum SessionType {
+  User = 'user',
+  Token = 'token'
 }
 
-export interface SessionWithToken extends Session {
-  readonly token: string
+export interface TokenSession {
+  type: SessionType.Token
+  id: string
+  name: string
+  token: string
+  roles: UserRole[]
 }
 
+export interface UserSession {
+  type: SessionType.User
+  id: string
+  user: User
+  roles: UserRole[]
+  createdAt: Date
+  expiresAt: Date
+  token: string
+}
+
+export type OptionalUserSession = UserSession | null
+
+export type Session = TokenSession | UserSession
 export type OptionalSession = Session | null
-export type OptionalSessionWithToken = SessionWithToken | null
 
 export interface DBSessionAdapter {
-  createSessionForUser(user: User): Promise<OptionalSessionWithToken>
+  createUserSession(user: User): Promise<OptionalUserSession>
+  getUserSessions(user: User): Promise<UserSession[]>
 
-  getSessionsForUser(user: User): Promise<Session[]>
   getSessionByID(user: User, id: string): Promise<OptionalSession>
-  getSessionByToken(token: string): Promise<OptionalSessionWithToken>
+  getSessionByToken(token: string): Promise<OptionalSession>
 
-  deleteSessionByID(user: User, id: string): Promise<boolean>
-  deleteSessionByToken(token: string): Promise<boolean>
+  deleteUserSessionByID(user: User, id: string): Promise<boolean>
+  deleteUserSessionByToken(token: string): Promise<boolean>
 }

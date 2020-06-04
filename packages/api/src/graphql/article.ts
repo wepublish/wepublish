@@ -16,10 +16,12 @@ import {Context} from '../context'
 
 import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
-import {PublicArticle, ArticleRevision, Article, ArticleSort} from '../db/article'
+import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
-import {GraphQLPageInfo} from './common'
+import {GraphQLPageInfo, GraphQLUnidirectionalPageInfo} from './common'
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
+import {createProxyingResolver} from '../utility'
+import {GraphQLPeer} from './peer'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -28,7 +30,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     draft: {type: GraphQLBoolean},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
@@ -36,7 +38,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
     tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
@@ -101,16 +103,16 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}, info) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve({authorIDs}, args, {loaders}) {
+      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
         return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
-      }
+      })
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
@@ -133,9 +135,9 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 
     latest: {
       type: GraphQLNonNull(GraphQLArticleRevision),
-      resolve({draft, pending, published}) {
+      resolve: createProxyingResolver(({draft, pending, published}, {}, {}, info) => {
         return draft ?? pending ?? published
-      }
+      })
     }
 
     // TODO: Implement article history
@@ -148,6 +150,26 @@ export const GraphQLArticleConnection = new GraphQLObjectType({
   fields: {
     nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticle)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
+  name: 'PeerArticle',
+  fields: {
+    peer: {
+      type: GraphQLNonNull(GraphQLPeer),
+      resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
+    },
+    article: {type: GraphQLNonNull(GraphQLArticle)}
+  }
+})
+
+export const GraphQLPeerArticleConnection = new GraphQLObjectType({
+  name: 'PeerArticleConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPeerArticle)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLUnidirectionalPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
@@ -167,9 +189,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     url: {
       type: GraphQLNonNull(GraphQLString),
-      resolve(article, {}, {urlAdapter}) {
+      resolve: createProxyingResolver((article, {}, {urlAdapter}) => {
         return urlAdapter.getPublicArticleURL(article)
-      }
+      })
     },
 
     preTitle: {type: GraphQLString},
@@ -179,16 +201,16 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     image: {
       type: GraphQLImage,
-      resolve({imageID}, args, {loaders}, info) {
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
-      }
+      })
     },
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve({authorIDs}, args, {loaders}) {
+      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
         return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
-      }
+      })
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},

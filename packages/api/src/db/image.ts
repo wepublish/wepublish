@@ -53,6 +53,8 @@ export interface Image extends EditableImageComponents, StaticImageComponents {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
+
+  readonly transformURL?: string
 }
 
 export type OptionalImage = Image | null

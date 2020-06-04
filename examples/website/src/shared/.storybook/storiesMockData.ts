@@ -1,6 +1,6 @@
 import {Node} from 'slate'
 
-import {Peer, BlockType, PublishedArticle, EmbedType, TeaserType, HeaderType} from '../types'
+import {Peer, BlockType, PublishedArticle, EmbedType, TeaserStyle, HeaderType} from '../types'
 import {ListicalItem} from '../blocks/listicalBlock'
 
 import {MediaImage, NavigationItem, Author} from '../types'
@@ -356,7 +356,7 @@ export const mockArticle: PublishedArticle = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur, lorem id aliquet vulputate, elit dolor faucibus velit, vitae bibendum justo quam sit amet lectus.',
   image: mockTeaserImage,
   slug: 'foo',
-  teaserType: TeaserType.Default,
+  teaserType: TeaserStyle.Default,
   tags: mockTags,
   isBreaking: false,
   blocks: [
@@ -401,7 +401,7 @@ export const mockBreakingArticle: PublishedArticle = {
   lead:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur, lorem id aliquet vulputate, elit dolor faucibus velit, vitae bibendum justo quam sit amet lectus.',
   image: mockTeaserImage,
-  teaserType: TeaserType.Breaking,
+  teaserType: TeaserStyle.Breaking,
   slug: 'foo',
   tags: mockTags,
   isBreaking: true,
@@ -438,7 +438,7 @@ export const mockImageTitleArticle: PublishedArticle = {
   lead:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin efficitur, lorem id aliquet vulputate, elit dolor faucibus velit, vitae bibendum justo quam sit amet lectus.',
   image: mockTeaserImage,
-  teaserType: TeaserType.Light,
+  teaserType: TeaserStyle.Light,
   slug: 'foo',
   tags: mockTags,
   isBreaking: false,

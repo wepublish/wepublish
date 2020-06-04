@@ -1,7 +1,5 @@
 import {Db} from 'mongodb'
-
-import * as v0 from './schema/0'
-import * as v1 from './schema/1'
+import {CollectionName} from './db/schema'
 
 export interface Migration {
   readonly version: number
@@ -14,19 +12,17 @@ export const Migrations: Migration[] = [
   {
     version: 0,
     async migrate(db, locale) {
-      const migrations = await db.createCollection<v0.DBMigration>(v0.CollectionName.Migrations, {
-        strict: true
-      })
+      const migrations = await db.createCollection(CollectionName.Migrations, {strict: true})
 
-      await migrations.createIndex({version: 1}, {unique: true})
+      await migrations.createIndex({name: 1}, {unique: true})
 
-      const users = await db.createCollection<v0.DBUser>(v0.CollectionName.Users, {
+      const users = await db.createCollection(CollectionName.Users, {
         strict: true
       })
 
       await users.createIndex({email: 1}, {unique: true})
 
-      const sessions = await db.createCollection<v0.DBSession>(v0.CollectionName.Sessions, {
+      const sessions = await db.createCollection(CollectionName.Sessions, {
         strict: true
       })
 
@@ -34,28 +30,28 @@ export const Migrations: Migration[] = [
       await sessions.createIndex({token: 1}, {unique: true})
       await sessions.createIndex({expiresAt: 1}, {expireAfterSeconds: SessionDocumentTTL})
 
-      const navigations = await db.createCollection(v0.CollectionName.Navigations, {strict: true})
+      const navigations = await db.createCollection(CollectionName.Navigations, {strict: true})
 
       await navigations.createIndex({createdAt: -1})
       await navigations.createIndex({modifiedAt: -1})
       await navigations.createIndex({name: 1})
       await navigations.createIndex({key: 1}, {unique: true})
 
-      const authors = await db.createCollection(v0.CollectionName.Authors, {strict: true})
+      const authors = await db.createCollection(CollectionName.Authors, {strict: true})
 
       await authors.createIndex({createdAt: -1})
       await authors.createIndex({modifiedAt: -1})
       await authors.createIndex({name: 1})
       await authors.createIndex({slug: 1}, {unique: true})
 
-      const images = await db.createCollection(v0.CollectionName.Images, {strict: true})
+      const images = await db.createCollection(CollectionName.Images, {strict: true})
 
       await images.createIndex({createdAt: -1})
       await images.createIndex({modifiedAt: -1})
       await images.createIndex({title: 1})
       await images.createIndex({tags: 1}, {collation: {locale, strength: 2}})
 
-      const articles = await db.createCollection<v0.DBArticle>(v0.CollectionName.Articles, {
+      const articles = await db.createCollection(CollectionName.Articles, {
         strict: true
       })
 
@@ -70,11 +66,11 @@ export const Migrations: Migration[] = [
       await articles.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
       await articles.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
-      await db.createCollection<v0.DBArticleHistoryRevision>(v0.CollectionName.ArticlesHistory, {
+      await db.createCollection(CollectionName.ArticlesHistory, {
         strict: true
       })
 
-      const pages = await db.createCollection<v0.DBPage>(v0.CollectionName.Pages, {
+      const pages = await db.createCollection(CollectionName.Pages, {
         strict: true
       })
 
@@ -89,17 +85,23 @@ export const Migrations: Migration[] = [
       await pages.createIndex({'pending.tags': 1}, {collation: {locale, strength: 2}})
       await pages.createIndex({'published.tags': 1}, {collation: {locale, strength: 2}})
 
-      // TODO: Add unique index for slug
+      // TODO: Add unique index for slug on published page
 
-      await db.createCollection<v0.DBPageHistoryRevision>(v0.CollectionName.PagesHistory, {
+      await db.createCollection(CollectionName.PagesHistory, {
         strict: true
       })
     }
   },
   {
+    //  Fix incorrect migration index. Add user roles, Add name and roleIDs to users.
     version: 1,
     async migrate(db, locale) {
-      const userRoles = await db.createCollection<v1.DBUserRole>(v1.CollectionName.UserRoles, {
+      const migrations = db.collection(CollectionName.Migrations)
+
+      await migrations.dropIndex('name_1')
+      await migrations.createIndex({version: 1}, {unique: true})
+
+      const userRoles = await db.createCollection(CollectionName.UserRoles, {
         strict: true
       })
 
@@ -125,6 +127,112 @@ export const Migrations: Migration[] = [
           permissionIDs: []
         }
       ])
+
+      const user = db.collection(CollectionName.Users)
+
+      user.updateMany({}, [
+        {
+          $set: {
+            name: '$email',
+            roleIDs: ['admin']
+          }
+        }
+      ])
+    }
+  },
+  {
+    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    version: 2,
+    async migrate(db) {
+      const userRoles = db.collection(CollectionName.UserRoles)
+
+      userRoles.insertOne({
+        _id: 'peer',
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        systemRole: true,
+        name: 'Peer',
+        description: 'Peer Role',
+        permissionIDs: []
+      })
+
+      await db.createCollection(CollectionName.PeerProfiles, {strict: true})
+
+      const peers = await db.createCollection(CollectionName.Peers, {strict: true})
+
+      await peers.createIndex({slug: 1}, {unique: true})
+
+      const tokens = await db.createCollection(CollectionName.Tokens, {
+        strict: true
+      })
+
+      await tokens.createIndex({name: 1}, {unique: true})
+
+      const filter = {
+        $or: [
+          {'draft.blocks.type': 'articleTeaserGrid'},
+          {'published.blocks.type': 'articleTeaserGrid'},
+          {'pending.blocks.type': 'articleTeaserGrid'}
+        ]
+      }
+
+      function mapArticleTeaserGridBlock(block: any) {
+        if (block.type === 'articleTeaserGrid') {
+          return {
+            type: 'teaserGrid',
+            teasers: block.teasers.map((teaser: any) =>
+              teaser
+                ? {
+                    type: 'article',
+                    style: 'default',
+                    articleID: teaser.articleID
+                  }
+                : null
+            ),
+            numColumns: block.numColumns
+          }
+        }
+
+        return block
+      }
+
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find(filter).toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.blocks = article.draft.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        if (article.pending) {
+          article.pending.blocks = article.pending.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        if (article.published) {
+          article.published.blocks = article.published.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find(filter).toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.blocks = page.draft.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        if (page.pending) {
+          page.pending.blocks = page.pending.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        if (page.published) {
+          page.published.blocks = page.published.blocks.map(mapArticleTeaserGridBlock)
+        }
+
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
     }
   }
 ]

@@ -15,14 +15,6 @@ export enum BlockTypes {
   LinkPageBreakBlock = 'LinkPageBreakBlock'
 }
 
-export const peerDataFragment = gql`
-  fragment PeerData on Peer {
-    id
-    name
-    url
-  }
-`
-
 export const simpleImageDataFragment = gql`
   fragment SimpleImageData on Image {
     id
@@ -45,6 +37,8 @@ export const simpleImageDataFragment = gql`
 export const authorsDataFragment = gql`
   fragment AuthorsData on Author {
     id
+    url
+    slug
     name
     image {
       ...SimpleImageData
@@ -56,7 +50,7 @@ export const authorsDataFragment = gql`
 export const imageEdgeDataFragment = gql`
   fragment ImageEdgeData on GalleryImageEdge {
     caption
-    node {
+    image {
       ...SimpleImageData
     }
   }
@@ -68,6 +62,7 @@ export const articleMetaDataFragment = gql`
   fragment ArticleMetaData on Article {
     __typename
     id
+    url
 
     updatedAt
     publishedAt
@@ -89,18 +84,107 @@ export const articleMetaDataFragment = gql`
   ${authorsDataFragment}
 `
 
+export const pageMetaDataFragment = gql`
+  fragment PageMetaData on Page {
+    __typename
+    id
+    url
+
+    updatedAt
+    publishedAt
+
+    slug
+
+    title
+    description
+
+    image {
+      ...SimpleImageData
+    }
+  }
+  ${simpleImageDataFragment}
+`
+
+export const peerMetaDataFragment = gql`
+  fragment PeerMetaData on Peer {
+    id
+    slug
+    profile {
+      name
+      websiteURL
+      themeColor
+      logo {
+        ...SimpleImageData
+      }
+    }
+  }
+  ${simpleImageDataFragment}
+`
+
 export const gridBlockFrontDataGQLfragment = gql`
-  fragment ArticleGridBlockData on ArticleTeaserGridBlock {
+  fragment ArticleGridBlockData on TeaserGridBlock {
     numColumns
     teasers {
-      type
-      article {
-        ...ArticleMetaData
+      __typename
+
+      ... on ArticleTeaser {
+        style
+
+        image {
+          ...SimpleImageData
+        }
+
+        preTitle
+        title
+        lead
+
+        article {
+          ...ArticleMetaData
+        }
+      }
+
+      ... on PeerArticleTeaser {
+        style
+
+        image {
+          ...SimpleImageData
+        }
+
+        preTitle
+        title
+        lead
+
+        peer {
+          ...PeerMetaData
+        }
+
+        articleID
+        article {
+          ...ArticleMetaData
+        }
+      }
+
+      ... on PageTeaser {
+        style
+
+        image {
+          ...SimpleImageData
+        }
+
+        preTitle
+        title
+        lead
+
+        page {
+          ...PageMetaData
+        }
       }
     }
   }
   ${simpleImageDataFragment}
   ${articleMetaDataFragment}
+  ${pageMetaDataFragment}
+  ${peerMetaDataFragment}
 `
 
 // # transform(input: [{width: 1280, height: 400}])
@@ -194,7 +278,7 @@ export const embedBlockDataFragment = gql`
 export const listicleBlockDataFragment = gql`
   fragment ListicleBlockData on ListicleBlock {
     __typename
-    listicle {
+    items {
       title
       richText
       image {

@@ -2,9 +2,11 @@ import path from 'path'
 import webpack from 'webpack'
 
 import {AssetListPlugin} from '@karma.run/webpack'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
-export default (mode: string) =>
-  ({
+export default (env: any, {mode}: any) => {
+  return {
     entry: {
       client: './src/client/index.tsx'
     },
@@ -15,21 +17,43 @@ export default (mode: string) =>
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
-      alias: {
-        'react-dom': '@hot-loader/react-dom'
-      }
+      alias:
+        mode === 'production'
+          ? {}
+          : {
+              'react-dom': '@hot-loader/react-dom'
+            }
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-react',
+              '@babel/preset-typescript',
+              ['@babel/preset-env', {modules: false}]
+            ],
+            plugins: [
+              '@babel/plugin-syntax-dynamic-import',
+              '@babel/plugin-proposal-optional-chaining',
+              '@babel/plugin-proposal-nullish-coalescing-operator',
+              ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
+            ]
+          }
         }
       ]
     },
     devtool: mode === 'production' ? 'source-map' : 'cheap-module-source-map',
-    plugins: [new AssetListPlugin({filename: './dist/assetList.json'})],
+    plugins: [
+      new CleanWebpackPlugin({cleanStaleWebpackAssets: true}),
+      new AssetListPlugin({filename: './dist/assetList.json'}),
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: './tsconfig.json'
+      })
+    ],
     devServer: {
       writeToDisk: true,
       public: 'http://localhost:3001/',
@@ -38,4 +62,5 @@ export default (mode: string) =>
       port: 3001,
       headers: {'Access-Control-Allow-Origin': '*'}
     }
-  } as webpack.Configuration)
+  } as webpack.Configuration
+}

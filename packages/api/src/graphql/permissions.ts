@@ -1,4 +1,5 @@
-import {NotAuthorisedError, UserRole} from '..'
+import {NotAuthorisedError} from '../error'
+import {UserRole} from '../db/userRole'
 
 export interface Permission {
   id: string
@@ -6,28 +7,53 @@ export interface Permission {
   deprecated: boolean
 }
 
-export const authorise = function (neededPermission: Permission, userRoles: UserRole[]): void {
+export function authorise(neededPermission: Permission, userRoles: UserRole[]): void {
+  if (!isAuthorised(neededPermission, userRoles)) {
+    throw new NotAuthorisedError()
+  }
+}
+
+export function isAuthorised(neededPermission: Permission, userRoles: UserRole[]): boolean {
   if (neededPermission.deprecated) {
     console.warn('Permission is deprecated', neededPermission)
   }
+
   const userPermissions = userRoles.reduce<string[]>((permissions, role) => {
     if (role.id === 'admin') {
       return role.permissionIDs.concat(AllPermissions.map(permission => permission.id))
     } else if (role.id === 'editor') {
       return role.permissionIDs.concat(EditorPermissions.map(permission => permission.id))
+    } else if (role.id === 'peer') {
+      return role.permissionIDs.concat(PeerPermissions.map(permission => permission.id))
     } else {
       return role.permissionIDs.concat(permissions)
     }
   }, [])
-  if (!userPermissions.some(permission => permission === neededPermission.id)) {
-    throw new NotAuthorisedError()
-  }
-  return
+
+  return userPermissions.some(permission => permission === neededPermission.id)
 }
 
 export const CanGetNavigation: Permission = {
   id: 'CAN_GET_NAVIGATION',
   description: 'Allows to get navigation',
+  deprecated: false
+}
+
+export const CanGetNavigations: Permission = {
+  id: 'CAN_GET_NAVIGATIONS',
+  description: 'Allows to get all navigations',
+  deprecated: false
+}
+
+export const CanCreateNavigation: Permission = {
+  id: 'CAN_CREATE_NAVIGATION',
+  description: 'Allows to get navigation',
+  deprecated: false
+}
+
+export const CanDeleteNavigation: Permission = {
+  id: 'CAN_DELETE_NAVIGATION',
+  description: 'Allows to delete navigations',
   deprecated: false
 }
 
@@ -91,9 +117,33 @@ export const CanGetArticle: Permission = {
   deprecated: false
 }
 
+export const CanGetSharedArticle: Permission = {
+  id: 'CAN_GET_SHARED_ARTICLE',
+  description: 'Allows to get shared article',
+  deprecated: false
+}
+
 export const CanGetArticles: Permission = {
   id: 'CAN_GET_ARTICLES',
   description: 'Allows to get all articles',
+  deprecated: false
+}
+
+export const CanGetSharedArticles: Permission = {
+  id: 'CAN_GET_SHARED_ARTICLES',
+  description: 'Allows to get shared articles',
+  deprecated: false
+}
+
+export const CanGetPeerArticle: Permission = {
+  id: 'CAN_GET_PEER_ARTICLE',
+  description: 'Allows to get peer article',
+  deprecated: false
+}
+
+export const CanGetPeerArticles: Permission = {
+  id: 'CAN_GET_PEER_ARTICLES',
+  description: 'Allows to get all peer articles',
   deprecated: false
 }
 
@@ -139,7 +189,65 @@ export const CanDeletePage: Permission = {
   deprecated: false
 }
 
+export const CanUpdatePeerProfile: Permission = {
+  id: 'CAN_UPDATE_PEER_PROFILE',
+  description: 'Allows to update peer profile',
+  deprecated: false
+}
+
+export const CanGetPeerProfile: Permission = {
+  id: 'CAN_GET_PEER_PROFILE',
+  description: 'Allows to get peer profile',
+  deprecated: false
+}
+
+export const CanCreatePeer: Permission = {
+  id: 'CAN_CREATE_PEER',
+  description: 'Allows to create peers',
+  deprecated: false
+}
+
+export const CanGetPeer: Permission = {
+  id: 'CAN_GET_PEER',
+  description: 'Allows to get peer',
+  deprecated: false
+}
+
+export const CanGetPeers: Permission = {
+  id: 'CAN_GET_PEERS',
+  description: 'Allows to get all peers',
+  deprecated: false
+}
+
+export const CanDeletePeer: Permission = {
+  id: 'CAN_DELETE_PEER',
+  description: 'Allows to delete peers',
+  deprecated: false
+}
+
+export const CanCreateToken: Permission = {
+  id: 'CAN_CREATE_TOKEN',
+  description: 'Allows to create tokens',
+  deprecated: false
+}
+
+export const CanGetTokens: Permission = {
+  id: 'CAN_GET_TOKENS',
+  description: 'Allows to get all tokens',
+  deprecated: false
+}
+
+export const CanDeleteToken: Permission = {
+  id: 'CAN_DELETE_TOKEN',
+  description: 'Allows to delete tokens',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
+  CanCreateNavigation,
+  CanGetNavigation,
+  CanGetNavigations,
+  CanDeleteNavigation,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,
@@ -153,11 +261,21 @@ export const AllPermissions: Permission[] = [
   CanGetArticles,
   CanDeleteArticle,
   CanPublishArticle,
+  CanGetPeerArticle,
+  CanGetPeerArticles,
   CanCreatePage,
   CanGetPage,
   CanGetPages,
   CanDeletePage,
-  CanPublishPage
+  CanPublishPage,
+  CanUpdatePeerProfile,
+  CanGetPeerProfile,
+  CanCreatePeer,
+  CanGetPeer,
+  CanGetPeers,
+  CanDeletePeer,
+  CanCreateToken,
+  CanGetTokens
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -174,5 +292,13 @@ export const EditorPermissions: Permission[] = [
   CanCreatePage,
   CanGetPage,
   CanGetPages,
-  CanPublishPage
+  CanPublishPage,
+  CanGetPeer,
+  CanGetPeers
+]
+
+export const PeerPermissions: Permission[] = [
+  CanGetPeerProfile,
+  CanGetSharedArticle,
+  CanGetSharedArticles
 ]

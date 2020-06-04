@@ -69,14 +69,13 @@ export function PageBreakBlock({
   linkText,
   isArticle = false
 }: PageBreakBlockProps & PageBreackBlockStyleProps) {
-  console.log('isArticle', isArticle)
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>
       <div className={css(PeerPageBreakInnerStyle)}>
         {peer && (
           <div className={css(PeerPageBreakImageStyle)}>
-            <Image src={peer.url} height={90} width={90} />
+            <Image src={peer.logoURL} height={90} width={90} />
           </div>
         )}
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>

@@ -27,14 +27,14 @@ import {
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {ImageRefData} from '../api/image'
+import {ImageRefFragment} from '../api'
 
 export interface PageMetadata {
   readonly slug: string
   readonly title: string
   readonly description: string
   readonly tags: string[]
-  readonly image?: ImageRefData
+  readonly image?: ImageRefFragment
 }
 
 export interface PageMetadataPanelProps {
@@ -50,7 +50,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageRefData) {
+  function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
   }
 
@@ -124,7 +124,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                         margin={Spacing.ExtraSmall}
                       />
                     </Box>
-                    <Image src={image.url} width="100%" height="100%" />
+                    {image.url && <Image src={image.url} width="100%" height="100%" />}
                   </Box>
                 )}
               </PlaceholderInput>

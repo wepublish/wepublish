@@ -13,8 +13,6 @@ import {ApolloProvider} from '@apollo/react-hooks'
 import {createStyleRenderer} from '@karma.run/ui'
 import {UIProvider} from '@karma.run/ui'
 
-import {hot} from 'react-hot-loader/root'
-import {App} from './app'
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
 import {RouteProvider} from './route'
@@ -23,6 +21,7 @@ import {LocalStorageKey} from './utility'
 import {TwitterProvider} from './blocks/embeds/twitter'
 import {InstagramProvider} from './blocks/embeds/instagram'
 import {FacebookProvider} from './blocks/embeds/facebook'
+import {HotApp} from './app'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
@@ -55,8 +54,6 @@ export async function fetchIntrospectionQueryResultData(url: string) {
   return result.data
 }
 
-const HotApp = hot(App)
-
 const onDOMContentLoaded = async () => {
   const {apiURL}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
@@ -67,12 +64,15 @@ const onDOMContentLoaded = async () => {
   const introspectionQueryResultData = await fetchIntrospectionQueryResultData(adminAPIURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
+    const context = operation.getContext()
 
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : ''
+        authorization: token ? `Bearer ${token}` : '',
+        ...context.headers
       },
-      credentials: 'include'
+      credentials: 'include',
+      ...context
     })
 
     return forward(operation)

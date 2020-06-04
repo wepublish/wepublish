@@ -1,6 +1,5 @@
-import React, {useState, useRef, memo, useCallback, useEffect} from 'react'
-
-import {Editor, Node as SlateNode, createEditor, Range} from 'slate'
+import React, {useState, memo, useEffect, useMemo} from 'react'
+import {Editor, Node as SlateNode, createEditor, Range, Transforms} from 'slate'
 
 import {
   useSlate,
@@ -8,11 +7,11 @@ import {
   RenderElementProps,
   Slate,
   withReact,
-  RenderLeafProps
+  RenderLeafProps,
+  ReactEditor
 } from 'slate-react'
 
 import {withHistory} from 'slate-history'
-import {defineSchema} from 'slate-schema'
 import {jsx} from 'slate-hyperscript'
 
 import {
@@ -48,7 +47,7 @@ import {
   Spacing,
   Box
 } from '@karma.run/ui'
-import {RichTextBlockValue} from '../api/blocks'
+import {RichTextBlockValue} from './types'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -71,18 +70,12 @@ enum TextFormat {
   Strikethrough = 'strikethrough'
 }
 
+type Format = BlockFormat | InlineFormat | TextFormat
+
 const BlockFormats: string[] = Object.values(BlockFormat)
 const InlineFormats: string[] = Object.values(InlineFormat)
 const TextFormats: string[] = Object.values(TextFormat)
 const ListFormats: string[] = [BlockFormat.UnorderedList, BlockFormat.OrderedList]
-
-enum CommandType {
-  ToggleFormat = 'toggle_format',
-  InsertData = 'insert_data',
-  InsertText = 'insert_text',
-  InsertLink = 'insert_link',
-  RemoveLink = 'remove_link'
-}
 
 const ElementTags: any = {
   A: (el: Element) => ({
@@ -224,142 +217,122 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
   return <span {...attributes}>{children}</span>
 }
 
-const withSchema = defineSchema([
-  {
-    for: 'node',
-    match: 'editor',
-    validate: {
-      children: [
-        {
-          match: [
-            ([node]) =>
-              node.type === BlockFormat.H1 ||
-              node.type === BlockFormat.H2 ||
-              node.type === BlockFormat.H3 ||
-              node.type === BlockFormat.UnorderedList ||
-              node.type === BlockFormat.OrderedList ||
-              node.type === BlockFormat.Paragraph ||
-              node.type === InlineFormat.Link
-          ]
-        }
-      ]
-    },
-    normalize: (editor, error) => {
-      const {code, path} = error
+// TODO: Re-implement via `normalizeNode`
+// See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
 
-      switch (code) {
-        case 'child_invalid':
-          Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
-          break
-      }
-    }
-  },
+// const withSchema = defineSchema([
+//   {
+//     for: 'node',
+//     match: 'editor',
+//     validate: {
+//       children: [
+//         {
+//           match: [
+//             ([node]) =>
+//               node.type === BlockFormat.H1 ||
+//               node.type === BlockFormat.H2 ||
+//               node.type === BlockFormat.H3 ||
+//               node.type === BlockFormat.UnorderedList ||
+//               node.type === BlockFormat.OrderedList ||
+//               node.type === BlockFormat.Paragraph ||
+//               node.type === InlineFormat.Link
+//           ]
+//         }
+//       ]
+//     },
+//     normalize: (editor, error) => {
+//       const {code, path} = error
 
-  {
-    for: 'node',
-    match: ([node]) =>
-      node.type === BlockFormat.UnorderedList || node.type === BlockFormat.OrderedList,
-    validate: {
-      children: [{match: [([node]) => node.type === BlockFormat.ListItem]}]
-    },
-    normalize: (editor, error) => {
-      const {code, path} = error
+//       switch (code) {
+//         case 'child_invalid':
+//           Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
+//           break
+//       }
+//     }
+//   },
 
-      switch (code) {
-        case 'child_invalid':
-          Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
-          break
-      }
-    }
-  }
-])
+//   {
+//     for: 'node',
+//     match: ([node]) =>
+//       node.type === BlockFormat.UnorderedList || node.type === BlockFormat.OrderedList,
+//     validate: {
+//       children: [{match: [([node]) => node.type === BlockFormat.ListItem]}]
+//     },
+//     normalize: (editor, error) => {
+//       const {code, path} = error
+
+//       switch (code) {
+//         case 'child_invalid':
+//           Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
+//           break
+//       }
+//     }
+//   }
+// ])
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {}
 
 export const RichTextBlock = memo(function RichTextBlock({
-  value: {value, selection},
+  value,
   autofocus,
   disabled,
   onChange
 }: RichTextBlockProps) {
+  const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
   const [hasFocus, setFocus] = useState(false)
-
-  const focusRef = useRef<HTMLElement>(null)
-  const editorRef = useRef<Editor | null>(null)
-
-  if (!editorRef.current) {
-    editorRef.current = withSchema(withRichText(withHistory(withReact(createEditor()))))
-  }
 
   useEffect(() => {
     if (autofocus) {
-      // NOTE: Slate's `Editable` doesn't expose a ref so we have to get it manually.
-      // TODO: Doesn't seem to work
-      focusRef.current?.querySelector<HTMLDivElement>('div[contenteditable="true"]')?.focus()
+      ReactEditor.focus(editor)
     }
   }, [])
 
-  const handleChange = useCallback(
-    (newValue: SlateNode[], newSelection: Range | null) => {
-      onChange(richTextValue => {
-        const {value, selection} = richTextValue
-
-        if (value === newValue && selection === newSelection) return richTextValue
-        return {value: newValue, selection: newSelection}
-      })
-    },
-    [onChange]
-  )
-
   return (
-    <Box ref={focusRef} width="100%">
-      <Slate
-        editor={editorRef.current!}
-        value={value}
-        selection={selection}
-        onChange={handleChange}>
-        <Toolbar fadeOut={!hasFocus}>
-          <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
-          <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
-          <FormatButton icon={MaterialIconLooks3Outlined} format={BlockFormat.H3} />
+    <Slate
+      editor={editor}
+      value={value}
+      onChange={(newValue: SlateNode[]) => {
+        setFocus(ReactEditor.isFocused(editor))
+        if (value !== newValue) onChange(newValue)
+      }}>
+      <Toolbar fadeOut={!hasFocus}>
+        <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
+        <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
+        <FormatButton icon={MaterialIconLooks3Outlined} format={BlockFormat.H3} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
-          <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
+        <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
+        <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
-          <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
-          <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
-          <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
+        <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
+        <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
+        <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
+        <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <LinkFormatButton />
-          <RemoveLinkFormatButton />
-        </Toolbar>
-        <Editable
-          readOnly={disabled}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          placeholder="Start writing..."
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-        />
-      </Slate>
-    </Box>
+        <LinkFormatButton />
+        <RemoveLinkFormatButton />
+      </Toolbar>
+      <Editable
+        readOnly={disabled}
+        placeholder="Start writing..."
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+      />
+    </Slate>
   )
 })
 
 interface SlateBlockButtonProps extends ToolbarButtonProps {
-  readonly format: BlockFormat | InlineFormat | TextFormat
+  readonly format: Format
 }
 
 function FormatButton({icon, format}: SlateBlockButtonProps) {
   const editor = useSlate()
-  const [, forceRender] = useState({})
 
   return (
     <ToolbarButton
@@ -367,10 +340,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
       active={isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
-        editor.exec({type: CommandType.ToggleFormat, format})
-
-        // NOTE: ToggleFormat doesn't fire an onChange when pendingFormats gets updated
-        forceRender({})
+        toggleFormat(editor, format)
       }}
     />
   )
@@ -379,6 +349,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
 function LinkFormatButton() {
   const editor = useSlate()
   const [isLinkDialogOpen, setLinkDialogOpen] = useState(false)
+  const [selection, setSelection] = useState<Range | null>(null)
 
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
@@ -397,7 +368,7 @@ function LinkFormatButton() {
           const nodes = Array.from(
             Editor.nodes(editor, {
               at: editor.selection ?? undefined,
-              match: {type: InlineFormat.Link}
+              match: node => node.type === InlineFormat.Link
             })
           )
 
@@ -406,13 +377,14 @@ function LinkFormatButton() {
           if (tuple) {
             const [node] = tuple
 
-            setTitle(node.title ?? '')
-            setURL(node.url ?? '')
+            setTitle((node.title as string) ?? '')
+            setURL((node.url as string) ?? '')
           } else {
             setTitle('')
             setURL('')
           }
 
+          setSelection(editor.selection)
           setLinkDialogOpen(true)
         }}
       />
@@ -433,11 +405,7 @@ function LinkFormatButton() {
                   disabled={isDisabled}
                   label="Apply"
                   onClick={() => {
-                    editor.exec({
-                      type: CommandType.InsertLink,
-                      url: validatedURL,
-                      title: title || undefined
-                    })
+                    insertLink(editor, selection, validatedURL!, title || undefined)
                     setLinkDialogOpen(false)
                   }}
                 />
@@ -492,32 +460,21 @@ function RemoveLinkFormatButton() {
       disabled={!isFormatActive(editor, InlineFormat.Link)}
       onMouseDown={e => {
         e.preventDefault()
-        editor.exec({type: CommandType.RemoveLink})
+        removeLink(editor)
       }}
     />
   )
 }
 
-function isFormatActive(editor: Editor, format: BlockFormat | InlineFormat | TextFormat) {
+function isFormatActive(editor: Editor, format: Format) {
   if (TextFormats.includes(format)) {
-    if (editor.pendingFormats && editor.pendingFormats.hasOwnProperty(format)) {
-      return editor.pendingFormats[format] ? true : false
-    } else if (editor.selection) {
-      const matches = Array.from(
-        Editor.nodes(editor, {
-          at: editor.selection!,
-          match: 'text',
-          mode: 'all'
-        })
-      )
-
-      return matches.every(([match]) => match[format] === true)
-    }
+    const marks = Editor.marks(editor)
+    return marks ? marks[format] === true : false
   }
 
   if (BlockFormats.includes(format) || InlineFormats.includes(format)) {
     const [match] = Editor.nodes(editor, {
-      match: {type: format},
+      match: node => node.type === format,
       mode: 'all'
     })
 
@@ -527,127 +484,76 @@ function isFormatActive(editor: Editor, format: BlockFormat | InlineFormat | Tex
   return false
 }
 
-function withRichText(editor: Editor): Editor {
-  const {exec, isInline} = editor
+function toggleFormat(editor: Editor, format: Format) {
+  const isActive = isFormatActive(editor, format)
+  const isList = ListFormats.includes(format)
 
-  // See: https://github.com/ianstormtaylor/slate/issues/3144#issuecomment-562395538
-  editor.pendingFormats = null
-  editor.isInline = node => (InlineFormats.includes(node.type) ? true : isInline(node))
+  if (TextFormats.includes(format)) {
+    if (isActive) {
+      editor.removeMark(format)
+    } else {
+      editor.addMark(format, true)
+    }
+  }
 
-  editor.exec = command => {
-    switch (command.type) {
-      case CommandType.InsertText: {
-        if (editor.pendingFormats) {
-          Editor.insertNodes(editor, {
-            ...editor.pendingFormats,
-            text: command.text
-          })
+  if (BlockFormats.includes(format)) {
+    for (const format of ListFormats) {
+      Transforms.unwrapNodes(editor, {match: node => node.type === format, split: true})
+    }
 
-          editor.pendingFormats = null
-        } else {
-          exec(command)
-        }
-        break
+    Transforms.setNodes(editor, {
+      type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
+    })
+
+    if (!isActive && isList) {
+      Transforms.wrapNodes(editor, {type: format, children: []})
+    }
+  }
+}
+
+function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
+  if (selection) {
+    if (Range.isCollapsed(selection)) {
+      const nodes = Array.from(
+        Editor.nodes(editor, {
+          at: selection,
+          match: node => node.type === InlineFormat.Link
+        })
+      )
+
+      const tuple = nodes[0]
+
+      if (tuple) {
+        const [, path] = tuple
+        Transforms.select(editor, path)
       }
+    } else {
+      Transforms.select(editor, selection)
+    }
+  }
 
-      case CommandType.ToggleFormat: {
-        const {format} = command
+  Transforms.unwrapNodes(editor, {match: node => node.type == InlineFormat.Link})
+  Transforms.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
+  Transforms.collapse(editor, {edge: 'end'})
+}
 
-        const isActive = isFormatActive(editor, format)
-        const isList = ListFormats.includes(format)
+function removeLink(editor: Editor) {
+  Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Link})
+}
 
-        if (TextFormats.includes(format)) {
-          if (editor.selection && Range.isExpanded(editor.selection)) {
-            Editor.setNodes(
-              editor,
-              {[format]: isActive ? null : true},
-              {match: 'text', split: true}
-            )
-          } else if (editor.selection) {
-            const [[active]] = Editor.nodes(editor, {
-              match: 'text',
-              mode: 'all'
-            })
+function withRichText<T extends ReactEditor>(editor: T): T {
+  const {insertData, isInline} = editor
 
-            const activeFormats = TextFormats.reduce(
-              (acc, key) => ({...acc, [key]: active[key]}),
-              {} as Record<string, boolean | undefined>
-            )
+  editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
+  editor.insertData = (data: any) => {
+    const html = data.getData('text/html')
 
-            editor.pendingFormats = {
-              ...activeFormats,
-              ...(editor.pendingFormats || {}),
-              [format]: isActive ? undefined : true
-            }
-          }
-        }
-
-        if (BlockFormats.includes(format)) {
-          for (const format of ListFormats) {
-            Editor.unwrapNodes(editor, {match: {type: format}, split: true})
-          }
-
-          Editor.setNodes(editor, {
-            type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
-          })
-
-          if (!isActive && isList) {
-            Editor.wrapNodes(editor, {type: format, children: []})
-          }
-        }
-
-        break
-      }
-
-      case CommandType.InsertData: {
-        const {data} = command
-        const html = data.getData('text/html')
-
-        if (html) {
-          const parsed = new DOMParser().parseFromString(html, 'text/html')
-          const fragment = deserialize(parsed.body)
-          Editor.insertFragment(editor, fragment)
-        } else {
-          exec(command)
-        }
-
-        break
-      }
-
-      case CommandType.InsertLink: {
-        const {url, title} = command
-
-        if (editor.selection && Range.isCollapsed(editor.selection)) {
-          const nodes = Array.from(
-            Editor.nodes(editor, {
-              at: editor.selection,
-              match: {type: InlineFormat.Link}
-            })
-          )
-
-          const tuple = nodes[0]
-
-          if (tuple) {
-            const [, path] = tuple
-            Editor.select(editor, path)
-          }
-        }
-
-        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
-        Editor.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
-        Editor.collapse(editor, {edge: 'end'})
-        break
-      }
-
-      case CommandType.RemoveLink: {
-        Editor.unwrapNodes(editor, {match: {type: InlineFormat.Link}})
-        break
-      }
-
-      default: {
-        exec(command)
-        break
-      }
+    if (html) {
+      const parsed = new DOMParser().parseFromString(html, 'text/html')
+      const fragment = deserialize(parsed.body)
+      Editor.insertFragment(editor, fragment)
+    } else {
+      insertData(data)
     }
   }
 
@@ -655,5 +561,5 @@ function withRichText(editor: Editor): Editor {
 }
 
 export function createDefaultValue(): RichTextBlockValue {
-  return {value: [{type: BlockFormat.Paragraph, children: [{text: ''}]}], selection: null}
+  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
 }
