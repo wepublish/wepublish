@@ -3,23 +3,24 @@ import { ClientFunction, Role, Selector } from "testcafe";
 const loginName = Selector('input').withAttribute('placeholder','Email')
 const loginPassword = Selector('input').withAttribute('placeholder','Password')
 const createArticle = Selector('a').withAttribute('href', '/article/create')
-const metadataButton = Selector('button.NavigationButton').child('span').withText('Metadata')
-const createButton = Selector('button.NavigationButton').child('span').withText('Create')
-const publishButton = Selector('button.NavigationButton').child('span').withText('Publish')
-const backButton = Selector('a.NavigationButton').withAttribute('href', '/articles')
+const metadataButton = Selector('button').child('span').withText('Metadata')
+const createButton = Selector('button').child('span').withText('Create')
+const publishButton = Selector('button').child('span').withText('Publish')
+const backButton = Selector('a').withAttribute('href', '/articles')
 
-const closeButton = Selector('.Drawer button').child('span').withText('Close')
-const metaPreTitleInput = Selector('.Drawer input').withAttribute('placeholder', 'Pre-title')
-const metaTitleInput = Selector('.Drawer input').withAttribute('placeholder', 'Title')
-const metaLeadInput = Selector('.Drawer textarea').withAttribute('placeholder', 'Lead')
+const closeButton = Selector('button').child('span').withText('Close')
+const metaPreTitleInput = Selector('input').withAttribute('placeholder', 'Pre-title')
+const metaTitleInput = Selector('input').withAttribute('placeholder', 'Title')
+const metaLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead')
 
 const articleTitleInput = Selector('textarea').withAttribute('placeholder', 'Title')
 const articleLeadInput = Selector('textarea').withAttribute('placeholder', 'Lead Text')
-const lastAddButton = Selector('button.IconButton').withAttribute('title','Add Block').nth(2)
-const richTextButton = Selector('button.NavigationButton').child('span').withText('Rich Text')
+const lastAddButton = Selector('button').withAttribute('title','Add Block').nth(2)
+const richTextButton = Selector('button').child('span').withText('Rich Text')
 const richTextBox = Selector('div').withAttribute('role','textbox')
 
-const confirmButton = Selector('.Modal button').child('span').withText('Confirm')
+const confirmButton = Selector('button').child('span').withText('Confirm')
+const deleteButton = Selector('button').child('span').withText('Delete')
 
 const EDITOR_URL = process.env.E2E_TEST_EDITOR_URL
 const WEBSITE_URL = process.env.E2E_TEST_WEBSITE_URL
@@ -97,14 +98,14 @@ test
   })
 
 test('Publish article', async t => {
-  const articleBox = Selector('div.Box').child('a').withAttribute('href', `/article/edit/${articleID}`)
+  const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
   const h3Title = Selector('h3').withText(articleTitle)
   await t
     .click(h3Title)
     .click(publishButton)
     .click(confirmButton)
     .click(backButton)
-    .expect(articleBox.child('div').withText('Published')).ok()
+    .expect(articleBox.child('div').nth(1).child('div').nth(2).innerText).eql('Published')
 })
 
 test
@@ -116,3 +117,12 @@ test
     await t
       .expect(h1Title.innerText).eql('This is the article Title')
   })
+
+test('Delete article', async t => {
+  const articleBox = Selector('a').withAttribute('href', `/article/edit/${articleID}`).parent(1)
+  await t
+    .click(articleBox.child('div').nth(1).child('div').nth(4).child('button'))
+    .click(deleteButton)
+    .click(confirmButton)
+    .expect(articleBox.exists).notOk()
+})
