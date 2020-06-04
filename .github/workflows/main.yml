@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - f/testing-integration-e2e
+      - master
 
 jobs:
   release:
