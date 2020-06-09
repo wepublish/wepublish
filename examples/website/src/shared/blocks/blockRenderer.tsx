@@ -71,10 +71,6 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           {block.value.blocks.map(block => renderBlock(block, opts))}
         </GridBlock>
       )
-
-    case BlockType.Quote:
-      return <QuoteBlock author={block.value.author} text={block.value.text} />
-
     case BlockType.Image:
       return (
         <ImageBlock
