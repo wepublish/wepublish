@@ -13,11 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /**
-   * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
-   * `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
-   * 8601 standard for representation of dates and times using the Gregorian calendar.
-   */
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   /** A hexidecimal color value. */
   Color: string;
@@ -28,7 +24,7 @@ export type Scalars = {
 };
 
 export type Article = {
-   __typename?: 'Article';
+  __typename?: 'Article';
   id: Scalars['ID'];
   shared: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
@@ -40,7 +36,7 @@ export type Article = {
 };
 
 export type ArticleConnection = {
-   __typename?: 'ArticleConnection';
+  __typename?: 'ArticleConnection';
   nodes: Array<Article>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -69,7 +65,7 @@ export type ArticleInput = {
 };
 
 export type ArticleNavigationLink = BaseNavigationLink & {
-   __typename?: 'ArticleNavigationLink';
+  __typename?: 'ArticleNavigationLink';
   label: Scalars['String'];
   article?: Maybe<Article>;
 };
@@ -80,7 +76,7 @@ export type ArticleNavigationLinkInput = {
 };
 
 export type ArticleRevision = {
-   __typename?: 'ArticleRevision';
+  __typename?: 'ArticleRevision';
   revision: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   publishAt?: Maybe<Scalars['DateTime']>;
@@ -106,7 +102,7 @@ export enum ArticleSort {
 }
 
 export type ArticleTeaser = {
-   __typename?: 'ArticleTeaser';
+  __typename?: 'ArticleTeaser';
   style: TeaserStyle;
   image?: Maybe<Image>;
   preTitle?: Maybe<Scalars['String']>;
@@ -125,7 +121,7 @@ export type ArticleTeaserInput = {
 };
 
 export type Author = {
-   __typename?: 'Author';
+  __typename?: 'Author';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -138,7 +134,7 @@ export type Author = {
 };
 
 export type AuthorConnection = {
-   __typename?: 'AuthorConnection';
+  __typename?: 'AuthorConnection';
   nodes: Array<Author>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -157,7 +153,7 @@ export type AuthorInput = {
 };
 
 export type AuthorLink = {
-   __typename?: 'AuthorLink';
+  __typename?: 'AuthorLink';
   title: Scalars['String'];
   url: Scalars['String'];
 };
@@ -173,7 +169,7 @@ export enum AuthorSort {
 }
 
 export type AuthProvider = {
-   __typename?: 'AuthProvider';
+  __typename?: 'AuthProvider';
   name: Scalars['String'];
   url: Scalars['String'];
 };
@@ -205,7 +201,7 @@ export type BlockInput = {
 
 
 export type CreatedToken = {
-   __typename?: 'CreatedToken';
+  __typename?: 'CreatedToken';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -222,7 +218,7 @@ export type CreatePeerInput = {
 
 
 export type EmbedBlock = {
-   __typename?: 'EmbedBlock';
+  __typename?: 'EmbedBlock';
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
@@ -237,7 +233,7 @@ export type EmbedBlockInput = {
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
-   __typename?: 'ExternalNavigationLink';
+  __typename?: 'ExternalNavigationLink';
   label: Scalars['String'];
   url: Scalars['String'];
 };
@@ -248,7 +244,7 @@ export type ExternalNavigationLinkInput = {
 };
 
 export type FacebookPostBlock = {
-   __typename?: 'FacebookPostBlock';
+  __typename?: 'FacebookPostBlock';
   userID: Scalars['String'];
   postID: Scalars['String'];
 };
@@ -259,7 +255,7 @@ export type FacebookPostBlockInput = {
 };
 
 export type FacebookVideoBlock = {
-   __typename?: 'FacebookVideoBlock';
+  __typename?: 'FacebookVideoBlock';
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
@@ -270,7 +266,7 @@ export type FacebookVideoBlockInput = {
 };
 
 export type GalleryImageEdge = {
-   __typename?: 'GalleryImageEdge';
+  __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
 };
@@ -281,7 +277,7 @@ export type GalleryImageEdgeInput = {
 };
 
 export type Image = {
-   __typename?: 'Image';
+  __typename?: 'Image';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -309,7 +305,7 @@ export type ImageTransformUrlArgs = {
 };
 
 export type ImageBlock = {
-   __typename?: 'ImageBlock';
+  __typename?: 'ImageBlock';
   image?: Maybe<Image>;
   caption?: Maybe<Scalars['String']>;
 };
@@ -320,7 +316,7 @@ export type ImageBlockInput = {
 };
 
 export type ImageConnection = {
-   __typename?: 'ImageConnection';
+  __typename?: 'ImageConnection';
   nodes: Array<Image>;
   totalCount: Scalars['Int'];
   pageInfo: PageInfo;
@@ -332,7 +328,7 @@ export type ImageFilter = {
 };
 
 export type ImageGalleryBlock = {
-   __typename?: 'ImageGalleryBlock';
+  __typename?: 'ImageGalleryBlock';
   images: Array<GalleryImageEdge>;
 };
 
@@ -373,7 +369,7 @@ export type InputPoint = {
 };
 
 export type InstagramPostBlock = {
-   __typename?: 'InstagramPostBlock';
+  __typename?: 'InstagramPostBlock';
   postID: Scalars['String'];
 };
 
@@ -382,7 +378,7 @@ export type InstagramPostBlockInput = {
 };
 
 export type LinkPageBreakBlock = {
-   __typename?: 'LinkPageBreakBlock';
+  __typename?: 'LinkPageBreakBlock';
   text?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
@@ -395,7 +391,7 @@ export type LinkPageBreakBlockInput = {
 };
 
 export type ListicleBlock = {
-   __typename?: 'ListicleBlock';
+  __typename?: 'ListicleBlock';
   items: Array<ListicleItem>;
 };
 
@@ -404,7 +400,7 @@ export type ListicleBlockInput = {
 };
 
 export type ListicleItem = {
-   __typename?: 'ListicleItem';
+  __typename?: 'ListicleItem';
   title: Scalars['String'];
   image?: Maybe<Image>;
   richText: Scalars['RichText'];
@@ -417,7 +413,7 @@ export type ListicleItemInput = {
 };
 
 export type Mutation = {
-   __typename?: 'Mutation';
+  __typename?: 'Mutation';
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
@@ -606,7 +602,7 @@ export type MutationUnpublishPageArgs = {
 };
 
 export type Navigation = {
-   __typename?: 'Navigation';
+  __typename?: 'Navigation';
   id: Scalars['ID'];
   key: Scalars['String'];
   name: Scalars['String'];
@@ -628,7 +624,7 @@ export type NavigationLinkInput = {
 };
 
 export type Page = {
-   __typename?: 'Page';
+  __typename?: 'Page';
   id: Scalars['ID'];
   shared: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
@@ -640,7 +636,7 @@ export type Page = {
 };
 
 export type PageConnection = {
-   __typename?: 'PageConnection';
+  __typename?: 'PageConnection';
   nodes: Array<Page>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
@@ -655,7 +651,7 @@ export type PageFilter = {
 };
 
 export type PageInfo = {
-   __typename?: 'PageInfo';
+  __typename?: 'PageInfo';
   startCursor?: Maybe<Scalars['String']>;
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
@@ -672,7 +668,7 @@ export type PageInput = {
 };
 
 export type PageNavigationLink = BaseNavigationLink & {
-   __typename?: 'PageNavigationLink';
+  __typename?: 'PageNavigationLink';
   label: Scalars['String'];
   page?: Maybe<Page>;
 };
@@ -683,7 +679,7 @@ export type PageNavigationLinkInput = {
 };
 
 export type PageRevision = {
-   __typename?: 'PageRevision';
+  __typename?: 'PageRevision';
   revision: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   publishAt?: Maybe<Scalars['DateTime']>;
@@ -706,7 +702,7 @@ export enum PageSort {
 }
 
 export type PageTeaser = {
-   __typename?: 'PageTeaser';
+  __typename?: 'PageTeaser';
   style: TeaserStyle;
   image?: Maybe<Image>;
   preTitle?: Maybe<Scalars['String']>;
@@ -725,7 +721,7 @@ export type PageTeaserInput = {
 };
 
 export type Peer = {
-   __typename?: 'Peer';
+  __typename?: 'Peer';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -736,20 +732,20 @@ export type Peer = {
 };
 
 export type PeerArticle = {
-   __typename?: 'PeerArticle';
+  __typename?: 'PeerArticle';
   peer: Peer;
   article: Article;
 };
 
 export type PeerArticleConnection = {
-   __typename?: 'PeerArticleConnection';
+  __typename?: 'PeerArticleConnection';
   nodes: Array<PeerArticle>;
   pageInfo: UnidirectionalPageInfo;
   totalCount: Scalars['Int'];
 };
 
 export type PeerArticleTeaser = {
-   __typename?: 'PeerArticleTeaser';
+  __typename?: 'PeerArticleTeaser';
   style: TeaserStyle;
   image?: Maybe<Image>;
   preTitle?: Maybe<Scalars['String']>;
@@ -771,7 +767,7 @@ export type PeerArticleTeaserInput = {
 };
 
 export type PeerProfile = {
-   __typename?: 'PeerProfile';
+  __typename?: 'PeerProfile';
   name: Scalars['String'];
   logo?: Maybe<Image>;
   themeColor: Scalars['Color'];
@@ -786,20 +782,20 @@ export type PeerProfileInput = {
 };
 
 export type Permission = {
-   __typename?: 'Permission';
+  __typename?: 'Permission';
   id: Scalars['String'];
   description: Scalars['String'];
   deprecated: Scalars['Boolean'];
 };
 
 export type Point = {
-   __typename?: 'Point';
+  __typename?: 'Point';
   x: Scalars['Float'];
   y: Scalars['Float'];
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -918,7 +914,7 @@ export type QueryPagesArgs = {
 };
 
 export type QuoteBlock = {
-   __typename?: 'QuoteBlock';
+  __typename?: 'QuoteBlock';
   quote?: Maybe<Scalars['String']>;
   author?: Maybe<Scalars['String']>;
 };
@@ -930,7 +926,7 @@ export type QuoteBlockInput = {
 
 
 export type RichTextBlock = {
-   __typename?: 'RichTextBlock';
+  __typename?: 'RichTextBlock';
   richText: Scalars['RichText'];
 };
 
@@ -939,7 +935,7 @@ export type RichTextBlockInput = {
 };
 
 export type Session = {
-   __typename?: 'Session';
+  __typename?: 'Session';
   id: Scalars['ID'];
   user: User;
   createdAt: Scalars['DateTime'];
@@ -947,7 +943,7 @@ export type Session = {
 };
 
 export type SessionWithToken = {
-   __typename?: 'SessionWithToken';
+  __typename?: 'SessionWithToken';
   id: Scalars['ID'];
   user: User;
   token: Scalars['String'];
@@ -962,7 +958,7 @@ export enum SortOrder {
 }
 
 export type SoundCloudTrackBlock = {
-   __typename?: 'SoundCloudTrackBlock';
+  __typename?: 'SoundCloudTrackBlock';
   trackID: Scalars['String'];
 };
 
@@ -973,7 +969,7 @@ export type SoundCloudTrackBlockInput = {
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserGridBlock = {
-   __typename?: 'TeaserGridBlock';
+  __typename?: 'TeaserGridBlock';
   teasers: Array<Maybe<Teaser>>;
   numColumns: Scalars['Int'];
 };
@@ -996,7 +992,7 @@ export enum TeaserStyle {
 }
 
 export type TitleBlock = {
-   __typename?: 'TitleBlock';
+  __typename?: 'TitleBlock';
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
 };
@@ -1007,7 +1003,7 @@ export type TitleBlockInput = {
 };
 
 export type Token = {
-   __typename?: 'Token';
+  __typename?: 'Token';
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
@@ -1019,7 +1015,7 @@ export type TokenInput = {
 };
 
 export type TwitterTweetBlock = {
-   __typename?: 'TwitterTweetBlock';
+  __typename?: 'TwitterTweetBlock';
   userID: Scalars['String'];
   tweetID: Scalars['String'];
 };
@@ -1030,7 +1026,7 @@ export type TwitterTweetBlockInput = {
 };
 
 export type UnidirectionalPageInfo = {
-   __typename?: 'UnidirectionalPageInfo';
+  __typename?: 'UnidirectionalPageInfo';
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
 };
@@ -1067,14 +1063,14 @@ export type UploadImageInput = {
 };
 
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   id: Scalars['String'];
   email: Scalars['String'];
   roles: Array<Maybe<UserRole>>;
 };
 
 export type UserRole = {
-   __typename?: 'UserRole';
+  __typename?: 'UserRole';
   id: Scalars['String'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -1083,7 +1079,7 @@ export type UserRole = {
 };
 
 export type VimeoVideoBlock = {
-   __typename?: 'VimeoVideoBlock';
+  __typename?: 'VimeoVideoBlock';
   videoID: Scalars['String'];
 };
 
@@ -1092,7 +1088,7 @@ export type VimeoVideoBlockInput = {
 };
 
 export type YouTubeVideoBlock = {
-   __typename?: 'YouTubeVideoBlock';
+  __typename?: 'YouTubeVideoBlock';
   videoID: Scalars['String'];
 };
 
