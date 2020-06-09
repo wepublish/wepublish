@@ -3,8 +3,8 @@ FROM node:12.14.0-alpine
 RUN apk update
 
 ARG LIBVIPS_VERSION=8.7.0
-ARG LIBVIPS_SOURCE_TAR="vips-${LIBVIPS_VERSION}.tar.gz"
-ARG LIBVIPS_SOURCE_URL="https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/${LIBVIPS_SOURCE_TAR}"
+ARG LIBVIPS_SOURCE_TAR=vips-${LIBVIPS_VERSION}.tar.gz
+ARG LIBVIPS_SOURCE_URL=https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/${LIBVIPS_SOURCE_TAR}
 
 # Install build tools
 RUN apk add python gcc g++ make --update-cache
