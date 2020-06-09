@@ -52,7 +52,7 @@ const PeerPageBreakButton = cssRule({
   fontSize: pxToRem(12)
 })
 
-export interface PageBreackBlockStyleProps {
+export interface PageBreakBlockStyleProps {
   isArticle?: boolean
 }
 export interface PageBreakBlockProps {
@@ -68,7 +68,7 @@ export function PageBreakBlock({
   linkURL,
   linkText,
   isArticle = false
-}: PageBreakBlockProps & PageBreackBlockStyleProps) {
+}: PageBreakBlockProps & PageBreakBlockStyleProps) {
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>
