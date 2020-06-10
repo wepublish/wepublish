@@ -178,7 +178,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | CalloutBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -196,7 +196,29 @@ export type BlockInput = {
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
+  calloutBreak?: Maybe<CalloutBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
+};
+
+export type CalloutBreakBlock = {
+  __typename?: 'CalloutBreakBlock';
+  text?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkExternal?: Maybe<Scalars['Boolean']>;
+  bgImage?: Maybe<Scalars['String']>;
+  bgStyle?: Maybe<Scalars['String']>;
+  bgColor?: Maybe<Scalars['String']>;
+};
+
+export type CalloutBreakBlockInput = {
+  text?: Maybe<Scalars['String']>;
+  linkURL?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkExternal?: Maybe<Scalars['Boolean']>;
+  bgImage?: Maybe<Scalars['String']>;
+  bgStyle?: Maybe<Scalars['String']>;
+  bgColor?: Maybe<Scalars['String']>;
 };
 
 
@@ -1317,6 +1339,9 @@ export type ArticleQuery = (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
       ) | (
+        { __typename?: 'CalloutBreakBlock' }
+        & FullBlock_CalloutBreakBlock_Fragment
+      ) | (
         { __typename?: 'TitleBlock' }
         & FullBlock_TitleBlock_Fragment
       ) | (
@@ -1597,6 +1622,11 @@ type FullBlock_LinkPageBreakBlock_Fragment = (
   & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL'>
 );
 
+type FullBlock_CalloutBreakBlock_Fragment = (
+  { __typename: 'CalloutBreakBlock' }
+  & Pick<CalloutBreakBlock, 'text' | 'linkText' | 'linkURL' | 'linkExternal' | 'bgImage' | 'bgStyle' | 'bgColor'>
+);
+
 type FullBlock_TitleBlock_Fragment = (
   { __typename: 'TitleBlock' }
   & Pick<TitleBlock, 'title' | 'lead'>
@@ -1622,7 +1652,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_CalloutBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -1908,6 +1938,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'LinkPageBreakBlock' }
         & FullBlock_LinkPageBreakBlock_Fragment
+      ) | (
+        { __typename?: 'CalloutBreakBlock' }
+        & FullBlock_CalloutBreakBlock_Fragment
       ) | (
         { __typename?: 'TitleBlock' }
         & FullBlock_TitleBlock_Fragment
@@ -2286,6 +2319,15 @@ export const FullBlockFragmentDoc = gql`
     text
     linkText
     linkURL
+  }
+  ... on CalloutBreakBlock {
+    text
+    linkText
+    linkURL
+    linkExternal
+    bgImage
+    bgStyle
+    bgColor
   }
   ... on ImageBlock {
     caption

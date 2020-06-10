@@ -22,6 +22,7 @@ export enum BlockType {
   Quote = 'quote',
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
+  CalloutBreak = 'calloutBreak',
   TeaserGrid1 = 'teaserGrid1',
   TeaserGrid6 = 'teaserGrid6'
 }
@@ -66,6 +67,16 @@ export interface LinkPageBreakBlockValue {
   text: string
   linkURL: string
   linkText: string
+}
+
+export interface CalloutBreakBlockValue {
+  text: string
+  linkURL: string
+  linkText: string
+  linkExternal: boolean
+  bgImage: string
+  bgColor: string
+  bgStyle: string
 }
 
 export enum EmbedType {
@@ -193,6 +204,10 @@ export type LinkPageBreakBlockListValue = BlockListValue<
   BlockType.LinkPageBreak,
   LinkPageBreakBlockValue
 >
+export type CalloutBreakBlockListValue = BlockListValue<
+  BlockType.CalloutBreak,
+  CalloutBreakBlockValue
+>
 
 export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, TeaserGridBlockValue>
 
@@ -207,6 +222,7 @@ export type BlockValue =
   | QuoteBlockListValue
   | EmbedBlockListValue
   | LinkPageBreakBlockListValue
+  | CalloutBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
 
@@ -268,6 +284,19 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           text: block.value.text || undefined,
           linkText: block.value.linkText || undefined,
           linkURL: block.value.linkURL || undefined
+        }
+      }
+
+    case BlockType.CalloutBreak:
+      return {
+        calloutBreak: {
+          text: block.value.text || undefined,
+          linkText: block.value.linkText || undefined,
+          linkURL: block.value.linkURL || undefined,
+          linkExternal: block.value.linkExternal || false,
+          bgImage: block.value.bgImage,
+          bgStyle: block.value.bgStyle,
+          bgColor: block.value.bgColor
         }
       }
 
@@ -540,8 +569,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                       }
                     : null
                 ]
-
-              case 'PeerArticleTeaser':
               case 'PeerArticleTeaser':
                 return [
                   nanoid(),
@@ -591,6 +618,21 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           text: block.text ?? '',
           linkText: block.linkText ?? '',
           linkURL: block.linkURL ?? ''
+        }
+      }
+
+    case 'CalloutBreakBlock':
+      return {
+        key,
+        type: BlockType.CalloutBreak,
+        value: {
+          text: block.text ?? '',
+          linkText: block.linkText ?? '',
+          linkURL: block.linkURL ?? '',
+          linkExternal: block.linkExternal ?? false,
+          bgColor: block.bgColor ?? '',
+          bgImage: block.bgImage ?? '',
+          bgStyle: block.bgStyle ?? ''
         }
       }
 

@@ -76,6 +76,16 @@ fragment FullBlock on Block {
     linkURL
   }
 
+  ... on CalloutBreakBlock {
+    text
+    linkText
+    linkURL
+    linkExternal
+    bgImage
+    bgStyle
+    bgColor
+  }
+
   ... on ImageBlock {
     caption
     image {

@@ -7,6 +7,7 @@ import {
   MaterialIconImage,
   MaterialIconFormatQuote,
   MaterialIconViewDay,
+  MaterialIconFlag,
   MaterialIconCode,
   IconColumn1,
   IconColumn6,
@@ -22,6 +23,7 @@ import {RichTextBlock, createDefaultValue} from './richTextBlock'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'
+import {CalloutBreakBlock} from './calloutBreakBlock'
 import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
@@ -86,6 +88,21 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {text: '', linkText: '', linkURL: ''},
     label: 'Break',
     icon: MaterialIconViewDay
+  },
+
+  [BlockType.CalloutBreak]: {
+    field: props => <CalloutBreakBlock {...props} />,
+    defaultValue: {
+      text: 'I am callout',
+      linkText: '',
+      linkURL: '',
+      linkExternal: false,
+      bgImage: '',
+      bgColor: '',
+      bgStyle: ''
+    },
+    label: 'Stoerer',
+    icon: MaterialIconFlag
   },
 
   [BlockType.Embed]: {
