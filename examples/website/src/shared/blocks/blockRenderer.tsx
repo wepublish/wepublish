@@ -12,6 +12,7 @@ import {ImageTeaser} from '../teasers/imageTeaser'
 import {TextTeaser} from '../teasers/textTeaser'
 import {ArticleRoute, Route, PageRoute, PeerArticleRoute} from '../route/routeContext'
 import {PageBreakBlock} from './peerPageBreak'
+import {CalloutBreakBlock} from './calloutBreakBlock'
 import {ListicalBLock} from './listicalBlock'
 import {TitleBlock} from './titleBlock'
 import {TitleImageBlock} from './titleBlockImage'
@@ -95,6 +96,20 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           text={block.value.text}
           linkURL={block.value.linkURL}
           linkText={block.value.linkText}
+          isArticle={isArticle}
+        />
+      )
+
+    case BlockType.CalloutBreak:
+      return (
+        <CalloutBreakBlock
+          text={block.value.text}
+          linkURL={block.value.linkURL}
+          linkText={block.value.linkText}
+          linkExternal={block.value.linkExternal}
+          bgImage={block.value.bgImage}
+          bgColor={block.value.bgColor}
+          bgStyle={block.value.bgStyle}
           isArticle={isArticle}
         />
       )

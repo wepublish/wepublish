@@ -95,6 +95,21 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           }
         }
 
+      case 'CalloutBreakBlock':
+        return {
+          type: BlockType.CalloutBreak,
+          key: index,
+          value: {
+            text: block.text,
+            linkURL: block.linkURL,
+            linkText: block.linkText,
+            linkExternal: block.linkExternal,
+            bgImage: block.bgImage,
+            bgStyle: block.bgStyle,
+            bgColor: block.bgColor
+          }
+        }
+
       case 'QuoteBlock':
         return {
           type: BlockType.Quote,

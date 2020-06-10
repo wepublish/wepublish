@@ -108,6 +108,7 @@ export enum BlockType {
   Image = 'image',
   Listicle = 'listicle',
   PeerPageBreak = 'linkPageBreak',
+  CalloutBreak = 'calloutBreak',
 
   // Layout
   Grid = 'grid'

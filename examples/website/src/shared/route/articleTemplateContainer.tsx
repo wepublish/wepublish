@@ -16,6 +16,7 @@ import {
   soundCloudTrackBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
+  calloutBreakBlockDataFragment,
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
@@ -56,6 +57,7 @@ const ArticleQuery = gql`
         ...SoundCloudTrackBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
+        ...CalloutBreakBlockData
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
@@ -76,6 +78,7 @@ const ArticleQuery = gql`
   ${soundCloudTrackBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
+  ${calloutBreakBlockDataFragment}
   ${listicleBlockDataFragment}
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}
@@ -168,6 +171,7 @@ const PeerArticleQuery = gql`
         ...SoundCloudTrackBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
+        ...CalloutBreakBlockData
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
@@ -188,6 +192,7 @@ const PeerArticleQuery = gql`
   ${soundCloudTrackBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
+  ${calloutBreakBlockDataFragment}
   ${listicleBlockDataFragment}
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}

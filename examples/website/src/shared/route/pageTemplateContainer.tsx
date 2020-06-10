@@ -15,6 +15,7 @@ import {
   soundCloudTrackBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
+  calloutBreakBlockDataFragment,
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
@@ -58,6 +59,7 @@ const PageQuery = gql`
         ...SoundCloudTrackBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
+        ...CalloutBreakBlockData
         ...ListicleBlockData
         ...QuoteBlockData
         ...TitleBlockData
@@ -78,6 +80,7 @@ const PageQuery = gql`
   ${soundCloudTrackBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
+  ${calloutBreakBlockDataFragment}
   ${listicleBlockDataFragment}
   ${quoteBlockDataFragment}
   ${titleBlockDataFragment}

@@ -12,7 +12,8 @@ export enum BlockTypes {
   YouTubeVideoBlock = 'YouTubeVideoBlock',
   SoundCloudTrackBlock = 'SoundCloudTrackBlock',
   ListicleBlock = 'ListicleBlock',
-  LinkPageBreakBlock = 'LinkPageBreakBlock'
+  LinkPageBreakBlock = 'LinkPageBreakBlock',
+  CalloutBreakBlock = 'CalloutBreakBlock'
 }
 
 export const simpleImageDataFragment = gql`
@@ -295,6 +296,18 @@ export const linkPageBreakBlockDataFragment = gql`
     text
     linkURL
     linkText
+  }
+`
+export const calloutBreakBlockDataFragment = gql`
+  fragment CalloutBreakBlockData on CalloutBreakBlock {
+    __typename
+    text
+    linkURL
+    linkText
+    linkExternal
+    bgColor
+    bgImage
+    bgStyle
   }
 `
 
