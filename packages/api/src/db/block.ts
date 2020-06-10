@@ -17,6 +17,7 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
+  CalloutBreak = 'calloutBreak',
   TeaserGrid = 'teaserGrid'
 }
 
@@ -105,6 +106,17 @@ export interface LinkPageBreakBlock {
   linkText: string
 }
 
+export interface CalloutBreakBlock {
+  type: BlockType.CalloutBreak
+  text: string
+  linkURL: string
+  linkText: string
+  linkExternal: boolean
+  bgImage: string
+  bgColor: string
+  bgStyle: string
+}
+
 export interface TitleBlock {
   type: BlockType.Title
   title?: string
@@ -179,6 +191,7 @@ export type ArticleBlock =
   | QuoteBlock
   | ListicleBlock
   | LinkPageBreakBlock
+  | CalloutBreakBlock
   | FacebookPostBlock
   | InstagramPostBlock
   | TwitterTweetBlock

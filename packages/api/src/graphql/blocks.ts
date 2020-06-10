@@ -7,7 +7,8 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLUnionType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLBoolean
 } from 'graphql'
 
 import {GraphQLRichText} from './richText'
@@ -28,6 +29,7 @@ import {
   ListicleItem,
   ListicleBlock,
   LinkPageBreakBlock,
+  CalloutBreakBlock,
   TitleBlock,
   QuoteBlock,
   EmbedBlock,
@@ -449,6 +451,22 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
   })
 })
 
+export const GraphQLCalloutBreakBlock = new GraphQLObjectType<CalloutBreakBlock, Context>({
+  name: 'CalloutBreakBlock',
+  fields: {
+    text: {type: GraphQLString},
+    linkURL: {type: GraphQLString},
+    linkText: {type: GraphQLString},
+    linkExternal: {type: GraphQLBoolean},
+    bgImage: {type: GraphQLString},
+    bgStyle: {type: GraphQLString},
+    bgColor: {type: GraphQLString}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.CalloutBreak
+  })
+})
+
 export const GraphQLTitleBlock = new GraphQLObjectType<TitleBlock, Context>({
   name: 'TitleBlock',
   fields: {
@@ -541,6 +559,18 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
     text: {type: GraphQLString},
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString}
+  }
+})
+export const GraphQLCalloutBreakBlockInput = new GraphQLInputObjectType({
+  name: 'CalloutBreakBlockInput',
+  fields: {
+    text: {type: GraphQLString},
+    linkURL: {type: GraphQLString},
+    linkText: {type: GraphQLString},
+    linkExternal: {type: GraphQLBoolean},
+    bgImage: {type: GraphQLString},
+    bgStyle: {type: GraphQLString},
+    bgColor: {type: GraphQLString}
   }
 })
 
@@ -678,6 +708,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
+    [BlockType.CalloutBreak]: {type: GraphQLCalloutBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
   })
 })
@@ -698,6 +729,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLSoundCloudTrackBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
+    GraphQLCalloutBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLTeaserGridBlock
@@ -719,6 +751,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLSoundCloudTrackBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
+    GraphQLCalloutBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLPublicTeaserGridBlock
