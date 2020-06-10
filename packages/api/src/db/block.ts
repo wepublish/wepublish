@@ -17,7 +17,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  CustomContent = 'customContent'
 }
 
 export interface RichTextBlock {
@@ -171,6 +172,22 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+enum CustomContentFormat {
+  HTML = 'html',
+  JSON = 'json',
+  MARKDOWN = 'markdown',
+  Other = 'other'
+}
+
+export interface CustomContentBlock {
+  type: BlockType.CustomContent
+  kind: string
+  content: string
+  format: CustomContentFormat
+  width?: number
+  height?: number
+}
+
 export type ArticleBlock =
   | RichTextBlock
   | ImageBlock
@@ -186,6 +203,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | TeaserGridBlock
+  | CustomContentBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

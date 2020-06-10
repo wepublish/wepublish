@@ -182,7 +182,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | CustomContentBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -201,6 +201,7 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
+  customContent?: Maybe<CustomContentBlockInput>;
 };
 
 
@@ -218,6 +219,23 @@ export type CreatePeerInput = {
   slug: Scalars['String'];
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type CustomContentBlock = {
+   __typename?: 'CustomContentBlock';
+  kind: Scalars['String'];
+  content: Scalars['String'];
+  format: Scalars['String'];
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+};
+
+export type CustomContentBlockInput = {
+  kind: Scalars['String'];
+  content: Scalars['String'];
+  format: Scalars['String'];
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
 };
 
 
@@ -1329,6 +1347,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'CustomContentBlock' }
+        & FullBlock_CustomContentBlock_Fragment
       )> }
     ) }
   )> }
@@ -1626,7 +1647,12 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+type FullBlock_CustomContentBlock_Fragment = (
+  { __typename: 'CustomContentBlock' }
+  & Pick<CustomContentBlock, 'kind' | 'content' | 'format' | 'width' | 'height'>
+);
+
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_CustomContentBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -1921,6 +1947,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'CustomContentBlock' }
+        & FullBlock_CustomContentBlock_Fragment
       )> }
     ) }
   )> }
@@ -2349,6 +2378,13 @@ export const FullBlockFragmentDoc = gql`
       ...FullTeaser
     }
     numColumns
+  }
+  ... on CustomContentBlock {
+    kind
+    content
+    format
+    width
+    height
   }
 }
     ${ImageRefFragmentDoc}

@@ -16,7 +16,7 @@ import {
 
 import {BlockMapForValue} from '@karma.run/ui'
 
-import {BlockType, EmbedType, BlockValue} from './types'
+import {BlockType, EmbedType, BlockValue, CustomContentFormat} from './types'
 import {TitleBlock} from './titleBlock'
 import {RichTextBlock, createDefaultValue} from './richTextBlock'
 import {ImageBlock} from './imageBlock'
@@ -26,6 +26,7 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
+import {CustomContentBlock} from './customContentBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -117,5 +118,18 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: '6 Cols',
     icon: IconColumn6
+  },
+
+  [BlockType.CustomContent]: {
+    field: props => <CustomContentBlock {...props} />,
+    defaultValue: {
+      kind: 'MyCustomElement',
+      format: CustomContentFormat.HTML,
+      content: '<div class="my_class">Custom Content</div>',
+      width: 0,
+      height: 0
+    },
+    label: 'Custom Content',
+    icon: MaterialIconCode
   }
 }

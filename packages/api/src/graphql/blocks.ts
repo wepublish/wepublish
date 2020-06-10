@@ -39,7 +39,8 @@ import {
   PageTeaser,
   TeaserType,
   RichTextBlock,
-  FacebookVideoBlock
+  FacebookVideoBlock,
+  CustomContentBlock
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
@@ -471,6 +472,20 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
   })
 })
 
+export const GraphQLCustomContentBlock = new GraphQLObjectType<CustomContentBlock, Context>({
+  name: 'CustomContentBlock',
+  fields: {
+    kind: {type: GraphQLNonNull(GraphQLString)},
+    content: {type: GraphQLNonNull(GraphQLString)},
+    format: {type: GraphQLNonNull(GraphQLString)},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.CustomContent
+  })
+})
+
 export const GraphQLRichTextBlockInput = new GraphQLInputObjectType({
   name: 'RichTextBlockInput',
   fields: {
@@ -660,6 +675,17 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLCustomContentBlockInput = new GraphQLInputObjectType({
+  name: 'CustomContentBlockInput',
+  fields: {
+    kind: {type: GraphQLNonNull(GraphQLString)},
+    content: {type: GraphQLNonNull(GraphQLString)},
+    format: {type: GraphQLNonNull(GraphQLString)},
+    width: {type: GraphQLInt},
+    height: {type: GraphQLInt}
+  }
+})
+
 export const GraphQLBlockInput = new GraphQLInputObjectType({
   name: 'BlockInput',
   fields: () => ({
@@ -678,7 +704,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
-    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
+    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
+    [BlockType.CustomContent]: {type: GraphQLCustomContentBlockInput}
   })
 })
 
@@ -700,7 +727,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLTeaserGridBlock
+    GraphQLTeaserGridBlock,
+    GraphQLCustomContentBlock
   ]
 })
 
@@ -721,6 +749,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLPublicTeaserGridBlock
+    GraphQLPublicTeaserGridBlock,
+    GraphQLCustomContentBlock
   ]
 })

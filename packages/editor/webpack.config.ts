@@ -27,6 +27,10 @@ export default (env: any, {mode}: any) =>
     module: {
       rules: [
         {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        },
+        {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
@@ -40,6 +44,15 @@ export default (env: any, {mode}: any) =>
               '@babel/plugin-syntax-dynamic-import',
               '@babel/plugin-proposal-optional-chaining',
               '@babel/plugin-proposal-nullish-coalescing-operator',
+              [
+                'prismjs',
+                {
+                  languages: ['javascript', 'css', 'markup'],
+                  plugins: ['line-numbers'],
+                  theme: 'coy',
+                  css: true
+                }
+              ],
               ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
             ]
           }

@@ -146,4 +146,12 @@ fragment FullBlock on Block {
     }
     numColumns
   }
+
+  ... on CustomContentBlock {
+    kind
+    content
+    format
+    width
+    height
+  }
 }

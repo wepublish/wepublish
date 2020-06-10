@@ -23,7 +23,8 @@ export enum BlockType {
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid1 = 'teaserGrid1',
-  TeaserGrid6 = 'teaserGrid6'
+  TeaserGrid6 = 'teaserGrid6',
+  CustomContent = 'customContent'
 }
 
 export type RichTextBlockValue = Node[]
@@ -179,6 +180,21 @@ export interface TeaserGridBlockValue {
   numColumns: number
 }
 
+export enum CustomContentFormat {
+  HTML = 'html',
+  JSON = 'json',
+  MARKDOWN = 'markdown',
+  Other = 'other'
+}
+
+export interface CustomContentBlockValue {
+  kind: string
+  content: string
+  format: CustomContentFormat
+  width?: number
+  height?: number
+}
+
 export type RichTextBlockListValue = BlockListValue<BlockType.RichText, RichTextBlockValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
 export type ImageGalleryBlockListValue = BlockListValue<
@@ -198,6 +214,11 @@ export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, Te
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
 
+export type CustomContentBlockListValue = BlockListValue<
+  BlockType.CustomContent,
+  CustomContentBlockValue
+>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -209,6 +230,7 @@ export type BlockValue =
   | LinkPageBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
+  | CustomContentBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -384,6 +406,17 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }),
           numColumns: block.value.numColumns
+        }
+      }
+
+    case BlockType.CustomContent:
+      return {
+        customContent: {
+          content: block.value.content,
+          format: block.value.format,
+          kind: block.value.kind,
+          height: block.value.height,
+          width: block.value.width
         }
       }
   }
@@ -591,6 +624,19 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           text: block.text ?? '',
           linkText: block.linkText ?? '',
           linkURL: block.linkURL ?? ''
+        }
+      }
+
+    case 'CustomContentBlock':
+      return {
+        key,
+        type: BlockType.CustomContent,
+        value: {
+          kind: block.kind ?? '',
+          format: block.format as CustomContentFormat,
+          content: block.content ?? '',
+          width: block.width ?? 0,
+          height: block.height ?? 0
         }
       }
 
