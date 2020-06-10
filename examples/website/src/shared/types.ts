@@ -162,6 +162,21 @@ export interface PeerPageBreakBlock
     }
   > {}
 
+export interface CalloutBreakBlock
+  extends BaseBlock<
+    BlockType.CalloutBreak,
+    {
+      peer: Peer
+      text: string
+      linkURL: string
+      linkText: string
+      linkExternal: boolean
+      bgImage: string
+      bgColor: string
+      bgStyle: string
+    }
+  > {}
+
 export interface RichTextBlock extends BaseBlock<BlockType.RichText, Node[]> {}
 
 export type GalleryBlock = BaseBlock<
@@ -257,6 +272,7 @@ export type Block =
   | QuoteBlock
   | ListicleBlock
   | PeerPageBreakBlock
+  | CalloutBreakBlock
   | TitleBlock
   | TitleImageBlock
   | GridBlock

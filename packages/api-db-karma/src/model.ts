@@ -185,6 +185,16 @@ export const LinkPageBreakBlockModel = struct({
   linkText: string
 })
 
+export const CalloutBreakBlockModel = struct({
+  text: string,
+  linkURL: string,
+  linkText: string,
+  linkExternal: bool,
+  bgImage: string,
+  bgColor: string,
+  bgStyle: string
+})
+
 export const QuoteBlockModel = struct({
   quote: optional(string),
   author: optional(string)
@@ -225,6 +235,7 @@ export const ArticleBlocksModel = list(
     [BlockType.Embed]: EmbedBlockModel,
     [BlockType.Listicle]: ListicleBlockModel,
     [BlockType.LinkPageBreak]: LinkPageBreakBlockModel,
+    [BlockType.CalloutBreak]: CalloutBreakBlockModel,
     [BlockType.Quote]: QuoteBlockModel
   })
 )
@@ -269,6 +280,7 @@ export const PageBlocksModel = list(
     [BlockType.Image]: ImageBlockModel,
     [BlockType.RichText]: RichTextBlockModel,
     [BlockType.LinkPageBreak]: LinkPageBreakBlockModel,
+    [BlockType.CalloutBreak]: CalloutBreakBlockModel,
     [BlockType.ArticleTeaserGrid]: ArticleTeaserGridBlockModel
   })
 )
