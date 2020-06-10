@@ -1,4 +1,5 @@
 import React from 'react'
+import {hot} from 'react-hot-loader/root'
 
 import {useRoute, RouteType, Route} from './route'
 
@@ -11,6 +12,8 @@ import {ImageList} from './routes/imageList'
 import {PageList} from './routes/pageList'
 import {PageEditor} from './routes/pageEditor'
 import {AuthorList} from './routes/authorList'
+import {PeerList} from './routes/peerList'
+import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 
@@ -18,6 +21,16 @@ export function contentForRoute(route: Route) {
   switch (route.type) {
     case RouteType.Login:
       return <Login />
+
+    case RouteType.PeerList:
+    case RouteType.PeerProfileEdit:
+    case RouteType.PeerCreate:
+    case RouteType.PeerEdit:
+      return <PeerList />
+
+    case RouteType.TokenList:
+    case RouteType.TokenGenerate:
+      return <TokenList />
 
     case RouteType.Index:
     case RouteType.ArticleList:
@@ -82,3 +95,5 @@ export function App() {
 
   return null
 }
+
+export const HotApp = hot(App)

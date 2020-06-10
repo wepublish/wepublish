@@ -8,7 +8,9 @@ import {
   DescriptionListItem,
   NavigationButton,
   TextInput,
-  Spacing
+  Spacing,
+  Box,
+  Typography
 } from '@karma.run/ui'
 
 import {
@@ -22,6 +24,7 @@ import {dateTimeLocalString} from '../utility'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
+  pendingPublishDate?: Date
   metadata: PageMetadata
 
   onClose(): void
@@ -30,6 +33,7 @@ export interface PublishPagePanelProps {
 
 export function PublishPagePanel({
   initialPublishDate,
+  pendingPublishDate,
   metadata,
   onClose,
   onConfirm
@@ -65,6 +69,15 @@ export function PublishPagePanel({
         }
       />
       <PanelSection>
+        {pendingPublishDate && (
+          <Box marginBottom={Spacing.Small}>
+            <Typography variant="subtitle1" color="alert">
+              There is already a pending publication scheduled at{' '}
+              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
+              publishing again will override that publication.
+            </Typography>
+          </Box>
+        )}
         <TextInput
           type="datetime-local"
           label="Publish Date"

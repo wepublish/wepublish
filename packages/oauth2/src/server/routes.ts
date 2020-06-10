@@ -123,7 +123,7 @@ export function routes(app: Application, provider: Provider, dbAdapter: MongoDBA
         prompt: {name}
       } = await provider.interactionDetails(req, res)
       assert.equal(name, 'login')
-      const account = await dbAdapter.getUserForCredentials({
+      const account = await dbAdapter.user.getUserForCredentials({
         email: req.body.login,
         password: req.body.password
       })

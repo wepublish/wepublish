@@ -1,10 +1,23 @@
-import {PublishedArticle, Author, ArticleMeta} from '../types'
+import {PublishedArticle, Author, ArticleMeta, Peer} from '../types'
 import {imageAdapter, getArticleBlocks} from './blockAdapters'
+
+export function peerAdapter(peer: any): Peer {
+  return {
+    id: peer.id,
+    slug: peer.slug,
+    name: peer.profile.name,
+    logoURL: peer.profile.logo?.squareURL,
+    websiteURL: peer.profile.websiteURL,
+    themeColor: peer.profile.themeColor
+  }
+}
 
 export function authorsAdapter(authors: any): Author[] {
   return authors.map((author: any) => {
     return {
       id: author.id,
+      url: author.url,
+      slug: author.slug,
       name: author.name,
       image: author.image && imageAdapter(author.image)
     }
@@ -16,7 +29,7 @@ function articleMetaAdapter(article: any): ArticleMeta {
 
   return {
     id: article.id,
-    peer: article.peer,
+    url: article.url,
     publishedAt: new Date(publishedAt),
     updatedAt: new Date(updatedAt),
     preTitle: article.preTitle,

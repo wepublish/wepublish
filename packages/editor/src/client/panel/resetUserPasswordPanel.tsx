@@ -13,8 +13,8 @@ import {
   ToastType
 } from '@karma.run/ui'
 
-import {MaterialIconClose, MaterialIconQueryBuilder} from '@karma.run/icons'
-import {useResetUserPasswordMutation} from '../api/user'
+import {MaterialIconClose} from '@karma.run/icons'
+import {useResetUserPasswordMutation} from '../api'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string

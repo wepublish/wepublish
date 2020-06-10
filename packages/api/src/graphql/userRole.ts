@@ -31,7 +31,7 @@ export const GraphQLUserRole = new GraphQLObjectType({
     description: {type: GraphQLString},
     systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
     permissions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLPermission)),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPermission))),
       resolve({id, permissionIDs}, args, {loaders}) {
         return AllPermissions.map(permission => {
           let checked
@@ -58,7 +58,7 @@ export const GraphQLUserRole = new GraphQLObjectType({
 export const GraphQLUserRoleConnection = new GraphQLObjectType<any, Context>({
   name: 'UserRoleConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLUserRole)},
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }

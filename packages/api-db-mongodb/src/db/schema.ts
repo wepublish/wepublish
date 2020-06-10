@@ -2,8 +2,15 @@ import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from 
 
 export enum CollectionName {
   Migrations = 'migrations',
+
+  PeerProfiles = 'peerProfiles',
+  Peers = 'peers',
   Users = 'users',
+  UserRoles = 'users.roles',
+
   Sessions = 'sessions',
+  Tokens = 'tokens',
+
   Navigations = 'navigations',
   Authors = 'authors',
   Images = 'images',
@@ -22,6 +29,38 @@ export interface DBMigration {
   createdAt: Date
 }
 
+export interface DBPeerProfile {
+  _id: any
+
+  name: string
+  logoID?: string
+  themeColor: string
+}
+
+export interface DBPeer {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  slug: string
+  hostURL: string
+  token: string
+}
+
+export interface DBToken {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  token: string
+
+  roleIDs: string[]
+}
+
 export interface DBUser {
   _id: any
 
@@ -29,7 +68,23 @@ export interface DBUser {
   modifiedAt: Date
 
   email: string
+  name: string
   password: string
+
+  roleIDs: string[]
+}
+
+export interface DBUserRole {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  description?: string
+  systemRole: boolean
+
+  permissionIDs: string[]
 }
 
 export interface DBSession {

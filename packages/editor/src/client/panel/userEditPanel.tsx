@@ -25,15 +25,15 @@ import {
   MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
-import {useCreateUserMutation, User, useUpdateUserMutation, useUserQuery} from '../api/user'
-import {useListUserRolesQuery, UserRole} from '../api/userRole'
+import {useCreateUserMutation, FullUserFragment, useUpdateUserMutation, useUserQuery} from '../api'
+import {useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 export interface UserEditPanelProps {
   id?: string
 
   onClose?(): void
-  onSave?(user: User): void
+  onSave?(user: FullUserFragment): void
 }
 
 enum ConfirmAction {
@@ -45,10 +45,10 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [roles, setRoles] = useState<UserRole[]>([])
-  const [userRoles, setUserRoles] = useState<UserRole[]>([])
+  const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
 
-  const [currentUserRole, setCurrentUserRole] = useState<UserRole>()
+  const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
 
@@ -65,7 +65,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     data: userRoleData,
     loading: isUserRoleLoading,
     error: loadUserRoleError
-  } = useListUserRolesQuery({
+  } = useUserRoleListQuery({
     fetchPolicy: 'network-only',
     variables: {
       first: 200 // TODO: Pagination
@@ -82,7 +82,10 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     if (data?.user) {
       setName(data.user.name)
       setEmail(data.user.email)
-      setRoles(data.user.roles)
+      if (data.user.roles) {
+        // TODO: fix this
+        setRoles(data.user.roles as FullUserRoleFragment[])
+      }
     }
   }, [data?.user])
 
@@ -137,7 +140,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     }
   }
 
-  function handleSetCurrentUserRole(userRole: UserRole | undefined): void {
+  function handleSetCurrentUserRole(userRole: FullUserRoleFragment | undefined): void {
     if (!userRole) return
     setCurrentUserRole(userRole)
   }

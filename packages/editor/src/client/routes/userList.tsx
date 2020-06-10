@@ -34,7 +34,7 @@ import {
   MaterialIconCheck,
   MaterialIconRestoreOutlined
 } from '@karma.run/icons'
-import {useDeleteUserMutation, useListUsersQuery, User} from '../api/user'
+import {useDeleteUserMutation, FullUserFragment, useUserListQuery} from '../api'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
@@ -58,13 +58,13 @@ export function UserList() {
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentUser, setCurrentUser] = useState<User>()
+  const [currentUser, setCurrentUser] = useState<FullUserFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, refetch, loading: isLoading} = useListUsersQuery({
+  const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
-      first: 200 // TODO: Pagination
+      first: 50 // TODO: Pagination
     },
     fetchPolicy: 'network-only'
   })
@@ -82,6 +82,22 @@ export function UserList() {
       setEditModalOpen(true)
     }
   }, [current])
+
+  /*function loadMore() {
+    fetchMore({
+      variables: {first: 50, after: data?.users.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          users: {
+            ...fetchMoreResult.users,
+            nodes: [...prev.users.nodes, ...fetchMoreResult?.users.nodes]
+          }
+        }
+      }
+    })
+  }*/
 
   const users = data?.users.nodes.map(user => {
     const {id, name, email} = user

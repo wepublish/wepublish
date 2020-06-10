@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react'
 
 import {BlockProps, TypographicTextArea, Box} from '@karma.run/ui'
-import {LinkPageBreakBlockValue} from '../api/blocks'
+import {LinkPageBreakBlockValue} from './types'
 
 export interface LinkPageBreakBlockProps extends BlockProps<LinkPageBreakBlockValue> {}
 

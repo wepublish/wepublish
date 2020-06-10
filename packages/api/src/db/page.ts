@@ -1,6 +1,8 @@
 import {PageBlock} from './block'
 import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
 
+// TODO: Remove arg interfaces in favor of explicit arguments.
+
 export interface PageData {
   readonly updatedAt?: Date
   readonly publishedAt?: Date

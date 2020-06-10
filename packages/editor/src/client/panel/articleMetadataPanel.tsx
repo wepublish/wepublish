@@ -36,17 +36,16 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
-import {ImageRefData} from '../api/image'
-import {Author, useListAuthorsQuery} from '../api/author'
+import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
   readonly title: string
   readonly lead: string
-  readonly authors: Author[]
+  readonly authors: AuthorRefFragment[]
   readonly tags: string[]
-  readonly image?: ImageRefData
+  readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
 }
@@ -64,7 +63,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  function handleImageChange(image: ImageRefData) {
+  function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
   }
 
@@ -167,7 +166,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         />
                       </Box>
                     </Box>
-                    <Image src={image.previewURL} width="100%" height={200} />
+                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
                   </Box>
                 )}
               </PlaceholderInput>
@@ -205,15 +204,19 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 export interface AuthorInputProps extends MarginProps {
   label?: string
   description?: string
-  value: Author[]
-  onChange(author?: Author[]): void
+  value: AuthorRefFragment[]
+  onChange(author?: AuthorRefFragment[]): void
 }
 
 export function AuthorInput(props: AuthorInputProps) {
   return (
     <AutocompleteInput
       {...props}
-      valueToChipData={author => ({label: author.name, imageURL: author.image?.squareURL})}>
+      valueToChipData={author => ({
+        id: author.id,
+        label: author.name,
+        imageURL: author.image?.squareURL ?? undefined
+      })}>
       {props => <AuthorInputList {...props} />}
     </AutocompleteInput>
   )
@@ -226,8 +229,8 @@ function AuthorInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  const [items, setItems] = useState<Author[]>([])
-  const {data, loading: isLoading} = useListAuthorsQuery({
+  const [items, setItems] = useState<AuthorRefFragment[]>([])
+  const {data, loading: isLoading} = useAuthorListQuery({
     variables: {filter: inputValue || undefined, first: 10},
     fetchPolicy: 'network-only'
   })
@@ -248,7 +251,7 @@ function AuthorInputList({
                 {...getItemProps({item, index})}>
                 <Box display="flex">
                   <Avatar marginRight={Spacing.Tiny}>
-                    {item.image ? (
+                    {item.image?.squareURL ? (
                       <Image src={item.image.squareURL} width={20} height={20} />
                     ) : (
                       <PlaceholderImage width={20} height={20} />

@@ -11,11 +11,16 @@ import {UserSort} from '../db/user'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
     roles: {
@@ -45,7 +50,7 @@ export const GraphQLUserSort = new GraphQLEnumType({
 export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
   name: 'UserConnection',
   fields: {
-    nodes: {type: GraphQLList(GraphQLUser)},
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUser)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }

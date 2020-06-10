@@ -19,17 +19,17 @@ import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 import {
   Permission,
   useCreateUserRoleMutation,
-  useListPermissionsQuery,
-  UserRole,
+  usePermissionListQuery,
+  FullUserRoleFragment,
   useUpdateUserRoleMutation,
   useUserRoleQuery
-} from '../api/userRole'
+} from '../api'
 
 export interface UserRoleEditPanelProps {
   id?: string
 
   onClose?(): void
-  onSave?(userRole: UserRole): void
+  onSave?(userRole: FullUserRoleFragment): void
 }
 
 export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps) {
@@ -51,7 +51,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     data: permissionData,
     loading: isPermissionLoading,
     error: loadPermissionError
-  } = useListPermissionsQuery({
+  } = usePermissionListQuery({
     fetchPolicy: 'network-only',
     skip: id != undefined
   })
@@ -70,7 +70,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
   useEffect(() => {
     if (data?.userRole) {
       setName(data.userRole.name)
-      setDescription(data.userRole.description)
+      setDescription(data.userRole.description ?? '')
       setSystemRole(data.userRole.systemRole)
       setPermissions(data.userRole.permissions)
     }

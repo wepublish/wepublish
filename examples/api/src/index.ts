@@ -15,20 +15,24 @@ import {URL} from 'url'
 
 class ExampleURLAdapter implements URLAdapter {
   getPublicArticleURL(article: PublicArticle): string {
-    return `https://wepublish.ch/article/${article.id}/${article.slug}`
+    return `https://demo.wepublish.ch/article/${article.id}/${article.slug}`
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `https://wepublish.ch/page/${page.id}/${page.slug}`
+    return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `https://wepublish.ch/author/${author.id}/${author.slug}`
+    return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
 }
 
 async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
+  if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
+
+  const hostURL = process.env.HOST_URL
+  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
   const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
@@ -50,11 +54,12 @@ async function asyncMain() {
     url: process.env.MONGO_URL!,
     locale: process.env.MONGO_LOCALE ?? 'en',
     seed: async adapter => {
-      const adminUserRole = await adapter.getUserRole('Admin')
+      const adminUserRole = await adapter.userRole.getUserRole('Admin')
       const adminUserRoleId = adminUserRole ? adminUserRole.id : 'fake'
-      const editorUserRole = await adapter.getUserRole('Editor')
+      const editorUserRole = await adapter.userRole.getUserRole('Editor')
       const editorUserRoleId = editorUserRole ? editorUserRole.id : 'fake'
-      adapter.createUser({
+
+      adapter.user.createUser({
         input: {
           email: 'dev@wepublish.ch',
           name: 'Dev User',
@@ -62,7 +67,8 @@ async function asyncMain() {
         },
         password: '123'
       })
-      adapter.createUser({
+
+      adapter.user.createUser({
         input: {
           email: 'editor@wepublish.ch',
           name: 'Editor User',
@@ -98,6 +104,8 @@ async function asyncMain() {
   ]
 
   const server = new WepublishServer({
+    hostURL,
+    websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,

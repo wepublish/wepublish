@@ -29,7 +29,7 @@ import {
 
 import {RouteActionType} from '@karma.run/react'
 import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
-import {useDeleteUserRoleMutation, useListUserRolesQuery, UserRole} from '../api/userRole'
+import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 enum ConfirmAction {
@@ -51,10 +51,10 @@ export function UserRoleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentUserRole, setCurrentUserRole] = useState<UserRole>()
+  const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, refetch, loading: isLoading} = useListUserRolesQuery({
+  const {data, refetch, loading: isLoading} = useUserRoleListQuery({
     variables: {
       filter: filter || undefined,
       first: 200 // TODO: Pagination

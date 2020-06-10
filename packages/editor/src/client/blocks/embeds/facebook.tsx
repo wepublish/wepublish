@@ -102,6 +102,9 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
     }
   }, [isLoaded, isLoading])
 
+  const encodedUserID = encodeURIComponent(userID)
+  const encodedPostID = encodeURIComponent(postID)
+
   return (
     <Box
       display="flex"
@@ -111,11 +114,53 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
       ref={wrapperRef}>
       <div
         className="fb-post"
-        data-href={`https://www.facebook.com/${encodeURIComponent(
-          userID
-        )}/posts/${encodeURIComponent(postID)}/`}
+        data-href={`https://www.facebook.com/${encodedUserID}/posts/${encodedPostID}/`}
         data-show-text="true"
         data-width="200"
+      />
+    </Box>
+  )
+}
+
+export interface FacebookVideoEmbedProps {
+  userID: string
+  videoID: string
+}
+
+export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
+  const context = useContext(FacebookContext)
+
+  if (!context) {
+    throw new Error(
+      `Couldn't find FacebookContext, did you include FacebookProvider in the component tree?`
+    )
+  }
+
+  const {isLoaded, isLoading, load} = context
+
+  useEffect(() => {
+    if (isLoaded) {
+      window.FB.XFBML.parse(wrapperRef.current)
+    } else if (!isLoading) {
+      load()
+    }
+  }, [isLoaded, isLoading])
+
+  const encodedUserID = encodeURIComponent(userID)
+  const encodedVideoID = encodeURIComponent(videoID)
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      minHeight={300}
+      padding={Spacing.Small}
+      ref={wrapperRef}>
+      <div
+        className="fb-video"
+        data-href={`https://www.facebook.com/${encodedUserID}/videos/${encodedVideoID}/`}
+        data-show-text="true"
       />
     </Box>
   )
