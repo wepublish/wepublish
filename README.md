@@ -11,6 +11,12 @@
     - [@wepublish/api-media-karma](./packages/api-media-karma)
 - [@wepublish/editor](./packages/editor)
 
+## Demo
+- [Editor](https://editor.demo.wepublish.media)
+  - username: dev@wepublish.ch, password: 123
+- [Website](https://demo.wepublish.media)
+- [API](https://api.demo.wepublish.media)
+
 ## Development
 
 ### Prerequisites
