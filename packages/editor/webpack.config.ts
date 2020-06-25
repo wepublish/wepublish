@@ -47,7 +47,7 @@ export default (env: any, {mode}: any) =>
               [
                 'prismjs',
                 {
-                  languages: ['javascript', 'css', 'markup'],
+                  languages: ['javascript', 'css', 'markup', 'json', 'markdown'],
                   plugins: ['line-numbers'],
                   theme: 'coy',
                   css: true

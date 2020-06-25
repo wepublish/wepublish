@@ -125,9 +125,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {
       kind: 'MyCustomElement',
       format: CustomContentFormat.HTML,
-      content: '<div class="my_class">Custom Content</div>',
-      width: 0,
-      height: 0
+      content: '<div class="my_class">Custom Content</div>'
     },
     label: 'Custom Content',
     icon: MaterialIconCode

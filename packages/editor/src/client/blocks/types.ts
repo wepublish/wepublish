@@ -190,7 +190,7 @@ export enum CustomContentFormat {
 export interface CustomContentBlockValue {
   kind: string
   content: string
-  format: CustomContentFormat
+  format: string
   width?: number
   height?: number
 }
@@ -635,8 +635,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           kind: block.kind ?? '',
           format: block.format as CustomContentFormat,
           content: block.content ?? '',
-          width: block.width ?? 0,
-          height: block.height ?? 0
+          width: block.width ?? undefined,
+          height: block.height ?? undefined
         }
       }
 
