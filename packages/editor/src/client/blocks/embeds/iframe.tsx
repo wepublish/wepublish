@@ -8,7 +8,7 @@ export interface IframeEmbedProps {
   height?: number
   styleHeight?: string
   styleWidth?: string
-  ratio?: boolean
+  useRatio?: boolean
 }
 
 export function IframeEmbed({
@@ -18,24 +18,25 @@ export function IframeEmbed({
   height = 300,
   styleHeight,
   styleWidth,
-  ratio
+  useRatio
 }: IframeEmbedProps) {
   const ratioVal = width / height
+  const isAutoRatio = useRatio || styleHeight === undefined // if styles attributes are set in iframe and fallback fo styleHeight
   return (
     <Box width="100%">
       <Box
         position="relative"
-        paddingTop={`${ratio || styleHeight === undefined ? (1 / ratioVal) * 100 + '%' : '0'}`}
+        paddingTop={`${isAutoRatio ? (1 / ratioVal) * 100 + '%' : '0'}`}
         minHeight={'45px'}>
         <iframe
           src={url}
           title={title}
           style={{
-            position: ratio ? 'absolute' : 'relative',
+            position: isAutoRatio ? 'absolute' : 'relative',
             top: 0,
             left: 0,
-            width: !ratio ? styleWidth : '100%',
-            height: !ratio ? styleHeight : '100%'
+            width: !isAutoRatio ? styleWidth : '100%',
+            height: !isAutoRatio ? styleHeight : '100%'
           }}
           scrolling="no"
           frameBorder="0"

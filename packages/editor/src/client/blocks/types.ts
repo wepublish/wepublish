@@ -125,7 +125,7 @@ export interface OtherEmbed {
   height?: number
   styleHeight?: string
   styleWidth?: string
-  ratio?: boolean
+  useRatio?: boolean
 }
 
 export type EmbedBlockValue =
@@ -521,7 +521,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           height: block.height ?? undefined,
           styleHeight: block.styleHeight ?? undefined,
           styleWidth: block.styleWidth ?? undefined,
-          ratio: block.ratio ?? undefined
+          useRatio: block.useRatio ?? undefined
         }
       }
 

@@ -23,7 +23,7 @@ export interface EmbedEditPanel {
 
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [ratio, setRatio] = useState<boolean>(true)
+  const [useRatio, setRatio] = useState<boolean>(true)
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
 
@@ -81,7 +81,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined,
-              ratio: ratio
+              useRatio: useRatio
             }
             // Add styles if set
             if (iframe.style.height || iframe.style.width) {
