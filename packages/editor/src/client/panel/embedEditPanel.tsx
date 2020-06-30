@@ -23,7 +23,7 @@ export interface EmbedEditPanel {
 
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [useRatio, setRatio] = useState<boolean>(true)
+  const [useRatio, setUseRatio] = useState<boolean>(true)
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
 
@@ -65,17 +65,12 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
 
         if (iframe) {
           const soundCloudMatch = iframe.src.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
-          const ratioVal = iframe.hasAttribute('style')
-
           if (soundCloudMatch) {
             const [, trackID] = soundCloudMatch
             setEmbed({type: EmbedType.SoundCloudTrack, trackID})
           } else {
-            if (ratioVal) {
-              setRatio(false)
-            } else {
-              setRatio(true)
-            }
+            setUseRatio(true) // fallback to true on input
+            if (iframe.hasAttribute('style')) setUseRatio(false)
             const setEmbedOther = {
               url: iframe.src,
               title: iframe.title,
@@ -85,6 +80,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             }
             // Add styles if set
             if (iframe.style.height || iframe.style.width) {
+              setUseRatio(false)
               Object.assign(setEmbedOther, {
                 ...setEmbedOther,
                 styleHeight: iframe.style.height ? iframe.style.height : 'auto',
@@ -181,13 +177,15 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       return `https://api.soundcloud.com/tracks/${embed.trackID}`
 
     case EmbedType.Other:
+      const hasTitle = !!embed.title
+      const hasHeight = !!embed.height
+      const hasWidth = !!embed.width
+      const hasStyles = embed.styleWidth || embed.styleHeight
       return embed.url
-        ? `<iframe title="${embed.title}" src="${embed.url}" width="${embed.width}" height="${
-            embed.height
-          }" ${
-            embed.styleWidth && embed.styleHeight
-              ? `style="width:${embed.styleWidth};height:${embed.styleHeight}"`
-              : ''
+        ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
+            hasWidth ? ` width="${embed.width}"` : ''
+          } ${hasHeight ? ` height="${embed.height}"` : ''}${
+            hasStyles ? ` style="width:${embed.styleWidth};height:${embed.styleHeight}"` : ''
           } />`
         : ''
   }

@@ -203,7 +203,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
             height: block.height,
             styleHeight: block.styleHeight,
             styleWidth: block.styleWidth,
-            ratio: block.ratio
+            useRatio: block.useRatio
           }
         }
 
