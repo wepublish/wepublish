@@ -1,6 +1,5 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
-// import {IFrameEmbed} from "@wepublish/website-example/src/shared/types.js";
 
 export enum BlockType {
   Title = 'title',

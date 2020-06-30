@@ -44,7 +44,7 @@ export function IframeEmbed({
             left: 0,
             ...styles
           }}
-          scrolling="yes"
+          scrolling="no"
           frameBorder="0"
           allowFullScreen
         />
