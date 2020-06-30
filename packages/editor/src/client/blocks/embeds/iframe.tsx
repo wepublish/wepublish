@@ -21,19 +21,11 @@ export function IframeEmbed({
   ratio
 }: IframeEmbedProps) {
   const ratioVal = width / height
-  const styles = {}
-  if (!ratio) {
-    Object.assign(styles, {
-      width: styleWidth,
-      height: styleHeight
-    })
-  }
   return (
     <Box width="100%">
       <Box
         position="relative"
         paddingTop={`${ratio || styleHeight === undefined ? (1 / ratioVal) * 100 + '%' : '0'}`}
-        width="100%"
         minHeight={'45px'}>
         <iframe
           src={url}
@@ -42,7 +34,8 @@ export function IframeEmbed({
             position: ratio ? 'absolute' : 'relative',
             top: 0,
             left: 0,
-            ...styles
+            width: !ratio ? styleWidth : '100%',
+            height: !ratio ? styleHeight : '100%'
           }}
           scrolling="no"
           frameBorder="0"
