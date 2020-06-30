@@ -184,9 +184,9 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       return embed.url
         ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
             hasWidth ? ` width="${embed.width}"` : ''
-          } ${hasHeight ? ` height="${embed.height}"` : ''}${
+          }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="width:${embed.styleWidth};height:${embed.styleHeight}"` : ''
-          } />`
+          }/>`
         : ''
   }
 }
