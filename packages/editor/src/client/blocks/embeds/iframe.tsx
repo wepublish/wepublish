@@ -21,7 +21,7 @@ export function IframeEmbed({
   useRatio
 }: IframeEmbedProps) {
   const ratioVal = width / height
-  const isAutoRatio = useRatio || styleHeight === undefined // if styles attributes are set in iframe and fallback fo styleHeight
+  const isAutoRatio = useRatio || (useRatio && styleHeight === undefined) // if styles attributes are set in iframe and fallback fo styleHeight
   return (
     <Box width="100%">
       <Box

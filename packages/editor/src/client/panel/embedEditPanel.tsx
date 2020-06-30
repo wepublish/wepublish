@@ -186,7 +186,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="width:${embed.styleWidth};height:${embed.styleHeight}"` : ''
-          }/>`
+          } />`
         : ''
   }
 }
