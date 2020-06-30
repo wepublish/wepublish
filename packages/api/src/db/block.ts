@@ -1,5 +1,6 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
+// import {IFrameEmbed} from "@wepublish/website-example/src/shared/types.js";
 
 export enum BlockType {
   Title = 'title',
@@ -85,6 +86,9 @@ export interface EmbedBlock {
   title?: string
   width?: number
   height?: number
+  styleHeight?: string
+  styleWidth?: string
+  ratio?: boolean
 }
 
 export interface ListicleItem {

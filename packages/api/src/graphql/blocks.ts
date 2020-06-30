@@ -3,6 +3,7 @@ import {
   GraphQLInputObjectType,
   GraphQLNonNull,
   GraphQLString,
+  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLList,
@@ -406,7 +407,10 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     url: {type: GraphQLString},
     title: {type: GraphQLString},
     width: {type: GraphQLInt},
-    height: {type: GraphQLInt}
+    height: {type: GraphQLInt},
+    styleHeight: {type: GraphQLString},
+    styleWidth: {type: GraphQLString},
+    ratio: {type: GraphQLBoolean}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Embed
@@ -602,7 +606,10 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
     url: {type: GraphQLString},
     title: {type: GraphQLString},
     width: {type: GraphQLInt},
-    height: {type: GraphQLInt}
+    height: {type: GraphQLInt},
+    styleHeight: {type: GraphQLString},
+    styleWidth: {type: GraphQLString},
+    ratio: {type: GraphQLBoolean}
   }
 })
 
