@@ -166,7 +166,10 @@ export const EmbedBlockModel = struct({
   url: optional(string),
   title: optional(string),
   width: optional(int32),
-  height: optional(int32)
+  height: optional(int32),
+  styleHeight: optional(string),
+  styleWidth: optional(string),
+  ratio: optional(bool)
 })
 
 export const ListicleBlockModel = struct({
