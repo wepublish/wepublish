@@ -17,14 +17,13 @@ import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
-
   onClose(): void
   onConfirm(value: EmbedBlockValue): void
 }
 
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
-
+  const [ratio, setRatio] = useState<boolean>(true)
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
 
@@ -38,7 +37,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const instagramMatch = input.match(/instagram.com\/p\/([0-9a-zA-Z-_]+)/)
     const twitterMatch = input.match(/twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/)
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
-    const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
+    const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a -zA-Z-_]+)/)
 
     if (facebookPostMatch) {
       const [, userID, postID] = facebookPostMatch
@@ -66,17 +65,37 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
 
         if (iframe) {
           const soundCloudMatch = iframe.src.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
+          const ratioVal = iframe.hasAttribute('style')
 
           if (soundCloudMatch) {
             const [, trackID] = soundCloudMatch
             setEmbed({type: EmbedType.SoundCloudTrack, trackID})
           } else {
-            setEmbed({
-              type: EmbedType.Other,
+            if (ratioVal) {
+              setRatio(false)
+            } else {
+              setRatio(true)
+            }
+            const setEmbedOther = {
               url: iframe.src,
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined
+              height: iframe.height ? parseInt(iframe.height) : undefined,
+              ratio: ratio
+            }
+            // Add styles if set
+            if (iframe.style.height || iframe.style.width) {
+              Object.assign(setEmbedOther, {
+                ...setEmbedOther,
+                styleHeight: iframe.style.height ? iframe.style.height : 'auto',
+                styleWidth: iframe.style.width ? iframe.style.width : 'auto'
+              })
+            }
+
+            // Assign existing values
+            setEmbed({
+              type: EmbedType.Other,
+              ...setEmbedOther
             })
           }
         } else {
@@ -163,7 +182,13 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
 
     case EmbedType.Other:
       return embed.url
-        ? `<iframe title="${embed.title}" src="${embed.url}" width="${embed.width}" height="${embed.height}" />`
+        ? `<iframe title="${embed.title}" src="${embed.url}" width="${embed.width}" height="${
+            embed.height
+          }" ${
+            embed.styleWidth && embed.styleHeight
+              ? `style="width:${embed.styleWidth};height:${embed.styleHeight}"`
+              : ''
+          } />`
         : ''
   }
 }

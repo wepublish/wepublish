@@ -123,6 +123,9 @@ export interface OtherEmbed {
   title?: string
   width?: number
   height?: number
+  styleHeight?: string
+  styleWidth?: string
+  ratio?: boolean
 }
 
 export type EmbedBlockValue =
@@ -333,7 +336,9 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               title: value.title,
               url: value.url,
               width: value.width,
-              height: value.height
+              height: value.height,
+              styleWidth: value.styleWidth,
+              styleHeight: value.styleHeight
             }
           }
       }
@@ -513,7 +518,10 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           url: block.url ?? undefined,
           title: block.title ?? undefined,
           width: block.width ?? undefined,
-          height: block.height ?? undefined
+          height: block.height ?? undefined,
+          styleHeight: block.styleHeight ?? undefined,
+          styleWidth: block.styleWidth ?? undefined,
+          ratio: block.ratio ?? undefined
         }
       }
 

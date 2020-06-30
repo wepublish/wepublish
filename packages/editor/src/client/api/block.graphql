@@ -138,6 +138,9 @@ fragment FullBlock on Block {
     title
     width
     height
+    styleHeight
+    styleWidth
+    ratio
   }
 
   ... on TeaserGridBlock {

@@ -227,6 +227,9 @@ export type EmbedBlock = {
   title?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
+  styleHeight?: Maybe<Scalars['String']>;
+  styleWidth?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['Boolean']>;
 };
 
 export type EmbedBlockInput = {
@@ -234,6 +237,9 @@ export type EmbedBlockInput = {
   title?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
+  styleHeight?: Maybe<Scalars['String']>;
+  styleWidth?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['Boolean']>;
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -1593,7 +1599,7 @@ type FullBlock_SoundCloudTrackBlock_Fragment = (
 
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
-  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height'>
+  & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleHeight' | 'styleWidth' | 'ratio'>
 );
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
@@ -2343,6 +2349,9 @@ export const FullBlockFragmentDoc = gql`
     title
     width
     height
+    styleHeight
+    styleWidth
+    ratio
   }
   ... on TeaserGridBlock {
     teasers {

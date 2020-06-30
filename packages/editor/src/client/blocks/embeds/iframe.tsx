@@ -6,25 +6,45 @@ export interface IframeEmbedProps {
   title?: string
   width?: number
   height?: number
+  styleHeight?: string
+  styleWidth?: string
+  ratio?: boolean
 }
 
-export function IframeEmbed({url, title, width = 300, height = 300}: IframeEmbedProps) {
-  const ratio = width / height
-
+export function IframeEmbed({
+  url,
+  title,
+  width = 300,
+  height = 300,
+  styleHeight,
+  styleWidth,
+  ratio
+}: IframeEmbedProps) {
+  const ratioVal = width / height
+  const styles = {}
+  if (!ratio) {
+    Object.assign(styles, {
+      width: styleWidth,
+      height: styleHeight
+    })
+  }
   return (
     <Box width="100%">
-      <Box position="relative" paddingTop={`${(1 / ratio) * 100}%`} width="100%">
+      <Box
+        position="relative"
+        paddingTop={`${ratio || styleHeight === undefined ? (1 / ratioVal) * 100 + '%' : '0'}`}
+        width="100%"
+        minHeight={'45px'}>
         <iframe
           src={url}
           title={title}
           style={{
-            position: 'absolute',
+            position: ratio ? 'absolute' : 'relative',
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%'
+            ...styles
           }}
-          scrolling="no"
+          scrolling="yes"
           frameBorder="0"
           allowFullScreen
         />
