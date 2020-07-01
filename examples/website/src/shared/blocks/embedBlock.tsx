@@ -62,21 +62,20 @@ function embedForData(data: EmbedData) {
 
     case EmbedType.IFrame:
       // TODO: Move into component
-      const width = data.width ?? 500
-      const height = data.height ?? 300
-      const ratio = width / height
-      const noRatio = data.styleHeight || !!data.styleWidth
+
+      const ratio = !!data.width && !!data.height ? data.width / data.height : 0
+      const noRatio = !!data.styleHeight || !!data.styleWidth || ratio === 0
 
       return (
         <div style={{position: 'relative', width: '100%'}}>
           <div style={{width: '100%', paddingTop: `${noRatio ? (1 / ratio) * 100 + '%' : '0'}`}} />
           <iframe
             style={{
-              position: !!noRatio ? 'relative' : 'absolute',
+              position: noRatio ? 'relative' : 'absolute',
               top: 0,
               left: 0,
-              width: '100%',
-              height: '100%',
+              width: noRatio ? data.styleWidth : '100%',
+              height: noRatio ? data.styleWidth : '100%',
               border: 'none'
             }}
             frameBorder={0}

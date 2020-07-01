@@ -3,7 +3,6 @@ import {
   GraphQLInputObjectType,
   GraphQLNonNull,
   GraphQLString,
-  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLList,
