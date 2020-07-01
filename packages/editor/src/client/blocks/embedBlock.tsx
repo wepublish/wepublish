@@ -109,7 +109,6 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
           height={value.height}
           styleHeight={value.styleHeight}
           styleWidth={value.styleWidth}
-          useRatio={value.useRatio}
         />
       ) : null
   }

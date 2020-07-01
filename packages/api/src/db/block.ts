@@ -87,7 +87,6 @@ export interface EmbedBlock {
   height?: number
   styleHeight?: string
   styleWidth?: string
-  useRatio?: boolean
 }
 
 export interface ListicleItem {

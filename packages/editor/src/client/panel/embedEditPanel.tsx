@@ -23,10 +23,8 @@ export interface EmbedEditPanel {
 
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [useRatio, setUseRatio] = useState<boolean>(true)
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
-
   const isEmpty = embed.type === EmbedType.Other && embed.url == undefined
 
   useEffect(() => {
@@ -69,28 +67,23 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             const [, trackID] = soundCloudMatch
             setEmbed({type: EmbedType.SoundCloudTrack, trackID})
           } else {
-            setUseRatio(true) // fallback to true on input
-            if (iframe.hasAttribute('style')) setUseRatio(false)
+            // add attributes if set
             const setEmbedOther = {
-              url: iframe.src,
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined,
-              useRatio: useRatio
+              height: iframe.height ? parseInt(iframe.height) : undefined
             }
             // Add styles if set
             if (iframe.style.height || iframe.style.width) {
-              setUseRatio(false)
               Object.assign(setEmbedOther, {
                 ...setEmbedOther,
-                styleHeight: iframe.style.height ? iframe.style.height : 'auto',
-                styleWidth: iframe.style.width ? iframe.style.width : 'auto'
+                styleHeight: !!iframe.style.height ? iframe.style.height : 'auto',
+                styleWidth: !!iframe.style.width ? iframe.style.width : 'auto'
               })
             }
-
-            // Assign existing values
             setEmbed({
               type: EmbedType.Other,
+              url: iframe.src,
               ...setEmbedOther
             })
           }
@@ -134,13 +127,19 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         />
         <Box marginBottom={Spacing.ExtraSmall}>
           <Typography variant="subtitle1" spacing="small">
-            If you want to include a Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo
-            Video, YouTube Video you have to add a link e.g. https://www.facebook.com/id/posts/id/.
+            Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted
+            like e.g.
           </Typography>
+          <code>https://www.facebook.com/id/posts/id/</code>
           <Typography variant="subtitle1" spacing="small">
-            In iframe embed codes the src="", width="" and height="" are validated e.g.
-            {'<iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>'}
+            Embed codes attributes <code>title, src, width, height</code> are validated e.g.
           </Typography>
+          <code>{'<iframe width="560" height="315" src="..."></iframe>'}</code>
+          <Typography variant="subtitle1" spacing="small">
+            Alternatively Styles can be set <code>style</code> attribute by overwrite the defaults
+            and disable auto ratio size scaling.e.g.
+          </Typography>
+          <code>{'<iframe style="height:350px;width:100%" src="..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
             Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
             limited to simple iframes and supported embeds listed above.
@@ -180,7 +179,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       const hasTitle = !!embed.title
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
-      const hasStyles = embed.styleWidth || embed.styleHeight
+      const hasStyles = !!embed.styleWidth || !!embed.styleHeight
       return embed.url
         ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
             hasWidth ? ` width="${embed.width}"` : ''

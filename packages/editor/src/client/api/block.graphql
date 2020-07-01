@@ -140,7 +140,6 @@ fragment FullBlock on Block {
     height
     styleHeight
     styleWidth
-    useRatio
   }
 
   ... on TeaserGridBlock {
