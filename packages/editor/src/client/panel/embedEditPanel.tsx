@@ -133,12 +133,12 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           <Typography variant="subtitle1" spacing="small">
             Embed codes attributes <code>title, src, width, height</code> are validated e.g.
           </Typography>
-          <code>{'<iframe width="560" height="315" src="..."></iframe>'}</code>
+          <code>{'<iframe width="560" height="315" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
-            Alternatively Styles can be set <code>style</code> attribute by overwrite the defaults
-            and disable auto ratio size scaling.e.g.
+            Set <code>style</code> alternatively as attribute to overwrite the defaults and disable
+            auto ratio size scaling .e.g.
           </Typography>
-          <code>{'<iframe style="height:350px;width:100%" src="..."></iframe>'}</code>
+          <code>{'<iframe style="height:350px;width:100%" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
             Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
             limited to simple iframes and supported embeds listed above.
