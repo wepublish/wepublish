@@ -407,8 +407,7 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     title: {type: GraphQLString},
     width: {type: GraphQLInt},
     height: {type: GraphQLInt},
-    styleHeight: {type: GraphQLString},
-    styleWidth: {type: GraphQLString}
+    styleCustom: {type: GraphQLString}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Embed
@@ -605,8 +604,7 @@ export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
     title: {type: GraphQLString},
     width: {type: GraphQLInt},
     height: {type: GraphQLInt},
-    styleHeight: {type: GraphQLString},
-    styleWidth: {type: GraphQLString}
+    styleCustom: {type: GraphQLString}
   }
 })
 
