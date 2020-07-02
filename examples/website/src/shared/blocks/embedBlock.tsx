@@ -11,6 +11,7 @@ import {SoundCloudEmbed} from '../atoms/soundCloudEmbed'
 import {cssRule, useStyle} from '@karma.run/react'
 import {pxToRem, whenTablet, whenDesktop} from '../style/helpers'
 import {usePermanentVisibility} from '../utils/hooks'
+import {transformCssStringToObject} from '../utility'
 
 export interface EmbedBlockProps {
   readonly data: EmbedData
@@ -64,19 +65,24 @@ function embedForData(data: EmbedData) {
       // TODO: Move into component
 
       const ratio = !!data.width && !!data.height ? data.width / data.height : 0
-      const noRatio = !!data.styleHeight || !!data.styleWidth || ratio === 0
-
+      const noRatio = !!data.styleCustom || ratio === 0
+      const customStyleCss =
+        noRatio && data.styleCustom !== ''
+          ? transformCssStringToObject(data.styleCustom)
+          : {
+              width: '100%',
+              height: '100%'
+            }
       return (
         <div style={{position: 'relative', width: '100%'}}>
-          <div style={{width: '100%', paddingTop: `${noRatio ? (1 / ratio) * 100 + '%' : '0'}`}} />
+          <div style={{width: '100%', paddingTop: `${!noRatio ? (1 / ratio) * 100 + '%' : '0'}`}} />
           <iframe
             style={{
               position: noRatio ? 'relative' : 'absolute',
               top: 0,
               left: 0,
-              width: noRatio ? data.styleWidth : '100%',
-              height: noRatio ? data.styleWidth : '100%',
-              border: 'none'
+              border: 'none',
+              ...customStyleCss
             }}
             frameBorder={0}
             scrolling="no"

@@ -201,8 +201,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
             url: block.url,
             width: block.width,
             height: block.height,
-            styleHeight: block.styleHeight,
-            styleWidth: block.styleWidth
+            styleCustom: block.styleCustom
           }
         }
 
