@@ -74,11 +74,10 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               height: iframe.height ? parseInt(iframe.height) : undefined
             }
             // Add styles if set
-            if (iframe.style.height || iframe.style.width) {
+            if (!!iframe.style && iframe.hasAttribute('style')) {
               Object.assign(setEmbedOther, {
                 ...setEmbedOther,
-                styleHeight: !!iframe.style.height ? iframe.style.height : 'auto',
-                styleWidth: !!iframe.style.width ? iframe.style.width : 'auto'
+                styleCustom: !!iframe.style ? iframe.style.cssText : ''
               })
             }
             setEmbed({
@@ -179,12 +178,12 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       const hasTitle = !!embed.title
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
-      const hasStyles = !!embed.styleWidth || !!embed.styleHeight
+      const hasStyles = !!embed.styleCustom
       return embed.url
         ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
-            hasStyles ? ` style="width:${embed.styleWidth};height:${embed.styleHeight}"` : ''
+            hasStyles ? ` style="${embed.styleCustom}"` : ''
           } />`
         : ''
   }

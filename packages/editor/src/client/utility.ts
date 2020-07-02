@@ -108,3 +108,27 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   if (!firstOperation?.name?.value) throw new Error("Coulnd't find operation name.")
   return firstOperation.name.value
 }
+
+export function transformCssStringToObject(styleCustom: any) {
+  const styleRules = !!styleCustom ? styleCustom.split(';') : []
+  const styleCustomCss = {}
+  if (styleRules.length > 0) {
+    // Filter css string and transform to k => v styles object
+    const tuples = styleRules
+      .map((rule: any) => {
+        let [key, value] = rule.split(':')
+        if (key && value) {
+          key = key.trim()
+          value = value.trim()
+          return {[key]: value}
+        } else {
+          return null
+        }
+      })
+      .filter((x: any) => {
+        return x !== null
+      })
+    Object.assign(styleCustomCss, ...tuples)
+  }
+  return styleCustomCss
+}

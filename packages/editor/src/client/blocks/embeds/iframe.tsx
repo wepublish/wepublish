@@ -1,25 +1,26 @@
 import React from 'react'
 import {Box} from '@karma.run/ui'
+import {transformCssStringToObject} from '../../utility'
 
 export interface IframeEmbedProps {
   url?: string
   title?: string
   width?: number
   height?: number
-  styleHeight?: string
-  styleWidth?: string
+  styleCustom?: string
 }
 
-export function IframeEmbed({
-  url,
-  title,
-  width,
-  height,
-  styleHeight,
-  styleWidth
-}: IframeEmbedProps) {
+export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbedProps) {
   const ratioVal = width !== undefined && height !== undefined ? width / height : 0
-  const disableAutoRatio = !!styleHeight || !!styleWidth
+  const disableAutoRatio = !!styleCustom && ratioVal === 0
+  const styleCustomCss =
+    disableAutoRatio && styleCustom !== ''
+      ? transformCssStringToObject(styleCustom)
+      : {
+          width: '100%',
+          height: '100%'
+        }
+
   return (
     <Box width="100%">
       <Box
@@ -33,8 +34,7 @@ export function IframeEmbed({
             position: !disableAutoRatio ? 'absolute' : 'relative',
             top: 0,
             left: 0,
-            width: disableAutoRatio ? styleWidth : '100%',
-            height: disableAutoRatio ? styleHeight : '100%'
+            ...styleCustomCss
           }}
           scrolling="no"
           frameBorder="0"

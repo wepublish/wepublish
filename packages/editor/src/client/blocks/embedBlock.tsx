@@ -107,8 +107,7 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
           url={value.url}
           width={value.width}
           height={value.height}
-          styleHeight={value.styleHeight}
-          styleWidth={value.styleWidth}
+          styleCustom={value.styleCustom}
         />
       ) : null
   }
