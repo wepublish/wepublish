@@ -67,25 +67,20 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             const [, trackID] = soundCloudMatch
             setEmbed({type: EmbedType.SoundCloudTrack, trackID})
           } else {
-            // add attributes if set
+            // add iframe attributes if set in input
             const setEmbedOther = {
               title: iframe.title,
               width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined
+              height: iframe.height ? parseInt(iframe.height) : undefined,
+              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : ''
             }
-            // Check if the style attribute is set if yes add styles
-            // This function is runs on every inputs change
-            if (!!iframe.style) {
-              Object.assign(setEmbedOther, {
-                ...setEmbedOther,
-                styleCustom: !!iframe.style.cssText ? iframe.style.cssText : ''
-              })
-            }
+
             setEmbed({
               type: EmbedType.Other,
               url: iframe.src,
               ...setEmbedOther
             })
+            console.log(setEmbedOther)
           }
         } else {
           try {
@@ -185,7 +180,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
             hasWidth ? ` width="${embed.width}"` : ''
           }${hasHeight ? ` height="${embed.height}"` : ''}${
             hasStyles ? ` style="${embed.styleCustom}"` : ''
-          } />`
+          }/>`
         : ''
   }
 }
