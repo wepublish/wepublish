@@ -112,6 +112,7 @@ export function getOperationNameFromDocument(node: DocumentNode) {
 export function transformCssStringToObject(styleCustom: any) {
   const styleRules = !!styleCustom ? styleCustom.split(';') : []
   const styleCustomCss = {}
+
   if (styleRules.length > 0) {
     // Filter css string and transform to k => v styles object
     const tuples = styleRules

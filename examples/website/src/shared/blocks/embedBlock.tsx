@@ -75,7 +75,7 @@ function embedForData(data: EmbedData) {
             }
       return (
         <div style={{position: 'relative', width: '100%'}}>
-          <div style={{width: '100%', paddingTop: `${!noRatio ? (1 / ratio) * 100 + '%' : '0'}`}} />
+          <div style={{width: '100%', paddingTop: `${noRatio ? '0' : (1 / ratio) * 100 + '%'}`}} />
           <iframe
             style={{
               position: noRatio ? 'relative' : 'absolute',

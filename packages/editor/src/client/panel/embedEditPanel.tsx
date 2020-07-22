@@ -73,11 +73,12 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               width: iframe.width ? parseInt(iframe.width) : undefined,
               height: iframe.height ? parseInt(iframe.height) : undefined
             }
-            // Add styles if set
-            if (!!iframe.style && iframe.hasAttribute('style')) {
+            // Check if the style attribute is set if yes add styles
+            // This function is runs on every inputs change
+            if (!!iframe.style) {
               Object.assign(setEmbedOther, {
                 ...setEmbedOther,
-                styleCustom: !!iframe.style ? iframe.style.cssText : ''
+                styleCustom: !!iframe.style.cssText ? iframe.style.cssText : ''
               })
             }
             setEmbed({
@@ -138,7 +139,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             Set <code>style</code> alternatively as attribute to overwrite the defaults and disable
             auto ratio size scaling .e.g.
           </Typography>
-          <code>{'<iframe style="height:350px;width:100%" src="https://..."></iframe>'}</code>
+          <code>{'<iframe style="height:350px;width:100%;" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
             Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
             limited to simple iframes and supported embeds listed above.
