@@ -80,7 +80,6 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               url: iframe.src,
               ...setEmbedOther
             })
-            console.log(setEmbedOther)
           }
         } else {
           try {
