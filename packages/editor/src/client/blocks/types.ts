@@ -123,6 +123,7 @@ export interface OtherEmbed {
   title?: string
   width?: number
   height?: number
+  styleCustom?: string
 }
 
 export type EmbedBlockValue =
@@ -333,7 +334,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               title: value.title,
               url: value.url,
               width: value.width,
-              height: value.height
+              height: value.height,
+              styleCustom: value.styleCustom
             }
           }
       }
@@ -513,7 +515,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           url: block.url ?? undefined,
           title: block.title ?? undefined,
           width: block.width ?? undefined,
-          height: block.height ?? undefined
+          height: block.height ?? undefined,
+          styleCustom: block.styleCustom ?? undefined
         }
       }
 
