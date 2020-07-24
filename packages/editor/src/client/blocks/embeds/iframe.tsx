@@ -15,7 +15,7 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
   const noRatio = !!styleCustom && ratio === 0
   const styleCustomCss =
     noRatio && styleCustom !== ''
-      ? transformCssStringToObject(styleCustom)
+      ? transformCssStringToObject(styleCustom ?? '')
       : {
           width: '100%',
           height: '100%'

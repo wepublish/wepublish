@@ -68,7 +68,7 @@ function embedForData(data: EmbedData) {
       const noRatio = !!data.styleCustom || ratio === 0
       const customStyleCss =
         noRatio && data.styleCustom !== ''
-          ? transformCssStringToObject(data.styleCustom)
+          ? transformCssStringToObject(data.styleCustom ?? '')
           : {
               width: '100%',
               height: '100%'
