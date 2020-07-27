@@ -47,8 +47,15 @@ import {
   CanCreateToken,
   CanDeleteToken,
   CanCreateNavigation,
-  CanDeleteNavigation
+  CanDeleteNavigation,
+  CanCreateUser,
+  CanDeleteUser,
+  CanCreateUserRole,
+  CanDeleteUserRole,
+  CanResetUserPassword
 } from './permissions'
+import {GraphQLUser, GraphQLUserInput} from './user'
+import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
   GraphQLPeer,
@@ -282,6 +289,97 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     // User
     // ====
+
+    createUser: {
+      type: GraphQLUser,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLUserInput)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve(root, {input, password}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.user.createUser({input, password})
+      }
+    },
+
+    updateUser: {
+      type: GraphQLUser,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUserInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.user.updateUser({id, input})
+      }
+    },
+
+    resetUserPassword: {
+      type: GraphQLUser,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        password: {type: GraphQLNonNull(GraphQLString)}
+      },
+      resolve(root, {id, password}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanResetUserPassword, roles)
+        return dbAdapter.user.resetUserPassword({id, password})
+      }
+    },
+
+    deleteUser: {
+      type: GraphQLString,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteUser, roles)
+        await dbAdapter.user.deleteUser({id})
+        return id
+      }
+    },
+
+    // UserRole
+    // ====
+
+    createUserRole: {
+      type: GraphQLUserRole,
+      args: {input: {type: GraphQLNonNull(GraphQLUserRoleInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUserRole, roles)
+        return dbAdapter.userRole.createUserRole({input})
+      }
+    },
+
+    updateUserRole: {
+      type: GraphQLUserRole,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUserRoleInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUserRole, roles)
+        return dbAdapter.userRole.updateUserRole({id, input})
+      }
+    },
+
+    deleteUserRole: {
+      type: GraphQLString,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteUserRole, roles)
+        await dbAdapter.userRole.deleteUserRole({id})
+        return id
+      }
+    },
 
     // Navigation
     // ==========
