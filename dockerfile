@@ -1,4 +1,4 @@
-FROM node:12.14.0-alpine
+FROM node:12.16.0-alpine
 
 RUN apk update
 
@@ -34,6 +34,7 @@ RUN mkdir -p /home/node/wepublish
 WORKDIR /home/node/wepublish
 
 COPY --chown=node:node ./package.json ./package.json
+COPY --chown=node:node ./yarn.lock ./yarn.lock
 COPY --chown=node:node ./tsconfig.base.json ./tsconfig.base.json
 COPY --chown=node:node ./LICENSE ./LICENSE
 
