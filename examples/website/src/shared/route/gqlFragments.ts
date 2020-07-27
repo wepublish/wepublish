@@ -272,6 +272,7 @@ export const embedBlockDataFragment = gql`
     url
     width
     height
+    styleCustom
   }
 `
 

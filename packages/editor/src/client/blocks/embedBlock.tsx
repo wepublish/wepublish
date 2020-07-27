@@ -43,7 +43,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
         style={{backgroundColor: theme.colors.light}}>
         <PlaceholderInput onAddClick={() => setEmbedDialogOpen(true)}>
           {!isEmpty && (
-            <Box position="relative" width="100%" height="100%">
+            <Box position="relative" width="100%">
               <Box position="absolute" zIndex={ZIndex.Default} height="100%" right={0}>
                 <IconButton
                   icon={MaterialIconEditOutlined}
@@ -107,6 +107,7 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
           url={value.url}
           width={value.width}
           height={value.height}
+          styleCustom={value.styleCustom}
         />
       ) : null
   }

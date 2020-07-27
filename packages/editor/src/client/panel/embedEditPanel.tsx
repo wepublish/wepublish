@@ -17,17 +17,14 @@ import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
-
   onClose(): void
   onConfirm(value: EmbedBlockValue): void
 }
 
 export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
-
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
-
   const isEmpty = embed.type === EmbedType.Other && embed.url == undefined
 
   useEffect(() => {
@@ -66,17 +63,22 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
 
         if (iframe) {
           const soundCloudMatch = iframe.src.match(/api.soundcloud.com\/tracks\/([0-9]+)/)
-
           if (soundCloudMatch) {
             const [, trackID] = soundCloudMatch
             setEmbed({type: EmbedType.SoundCloudTrack, trackID})
           } else {
+            // add iframe attributes if set in input
+            const setEmbedOther = {
+              title: iframe.title,
+              width: iframe.width ? parseInt(iframe.width) : undefined,
+              height: iframe.height ? parseInt(iframe.height) : undefined,
+              styleCustom: !!iframe.style && !!iframe.style.cssText ? iframe.style.cssText : ''
+            }
+
             setEmbed({
               type: EmbedType.Other,
               url: iframe.src,
-              title: iframe.title,
-              width: iframe.width ? parseInt(iframe.width) : undefined,
-              height: iframe.height ? parseInt(iframe.height) : undefined
+              ...setEmbedOther
             })
           }
         } else {
@@ -119,13 +121,19 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         />
         <Box marginBottom={Spacing.ExtraSmall}>
           <Typography variant="subtitle1" spacing="small">
-            If you want to include a Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo
-            Video, YouTube Video you have to add a link e.g. https://www.facebook.com/id/posts/id/.
+            Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted
+            like e.g.
           </Typography>
+          <code>https://www.facebook.com/id/posts/id/</code>
           <Typography variant="subtitle1" spacing="small">
-            In iframe embed codes the src="", width="" and height="" are validated e.g.
-            {'<iframe src="https://www.youtube.com/embed/id" width="560" height="315"></iframe>'}
+            Embed codes attributes <code>title, src, width, height</code> are validated e.g.
           </Typography>
+          <code>{'<iframe width="560" height="315" src="https://..."></iframe>'}</code>
+          <Typography variant="subtitle1" spacing="small">
+            Set <code>style</code> alternatively as attribute to overwrite the defaults and disable
+            auto ratio size scaling .e.g.
+          </Typography>
+          <code>{'<iframe style="height:350px;width:100%;" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
             Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
             limited to simple iframes and supported embeds listed above.
@@ -162,8 +170,16 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
       return `https://api.soundcloud.com/tracks/${embed.trackID}`
 
     case EmbedType.Other:
+      const hasTitle = !!embed.title
+      const hasHeight = !!embed.height
+      const hasWidth = !!embed.width
+      const hasStyles = !!embed.styleCustom
       return embed.url
-        ? `<iframe title="${embed.title}" src="${embed.url}" width="${embed.width}" height="${embed.height}" />`
+        ? `<iframe src="${embed.url}"${hasTitle ? ` title="${embed.title}"` : ''}${
+            hasWidth ? ` width="${embed.width}"` : ''
+          }${hasHeight ? ` height="${embed.height}"` : ''}${
+            hasStyles ? ` style="${embed.styleCustom}"` : ''
+          }/>`
         : ''
   }
 }

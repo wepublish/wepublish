@@ -17,7 +17,7 @@
     "@karma.run/utility": "^0.1.0",
     "@types/qs": "^6.9.1",
     "abort-controller": "^3.0.0",
-    "apollo-server-express": "^2.11.0",
+    "apollo-server-express": "^2.14.2",
     "dataloader": "^2.0.0",
     "express": "^4.17.1",
     "graphql": "^14.6.0",
