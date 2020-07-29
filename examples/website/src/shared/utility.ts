@@ -114,21 +114,14 @@ export function createStyleRenderer() {
   })
 }
 
-export function transformCssStringToObject(styleCustom: string) {
-  let styleRules = !!styleCustom ? styleCustom.split(';') : []
-  let cssObj = {}
-  if (styleRules.length > 0) {
-    // remove white spaces and empty strings from array
-    const cleaned = styleRules.filter((e: string) => e !== '')
-    // assign cleaned values
-    cssObj = cleaned.reduce((p: any, c: any) => {
-      const x = c.split(':')
-      // avoid empty previous and error on trim()
-      if (!!p) {
-        p[x[0].trim()] = x[1].trim()
-        return p
-      }
-    }, {})
-  }
-  return cssObj
+export function transformCssStringToObject(styleCustom: string): object {
+  const styleRules = styleCustom.replace(/\s+/g, '').split(';')
+  if (styleRules.length === 0) return {}
+  return styleRules.reduce((previousValue: object, currentValue: string) => {
+    const [key, value] = currentValue.split(':')
+    if (key && value) {
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+    }
+    return previousValue
+  }, {})
 }

@@ -34,6 +34,7 @@ RUN mkdir -p /home/node/wepublish
 WORKDIR /home/node/wepublish
 
 COPY --chown=node:node ./package.json ./package.json
+COPY --chown=node:node ./yarn.lock ./yarn.lock
 COPY --chown=node:node ./tsconfig.base.json ./tsconfig.base.json
 COPY --chown=node:node ./LICENSE ./LICENSE
 

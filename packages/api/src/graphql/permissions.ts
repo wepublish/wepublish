@@ -243,6 +243,72 @@ export const CanDeleteToken: Permission = {
   deprecated: false
 }
 
+export const CanCreateUser: Permission = {
+  id: 'CAN_CREATE_USER',
+  description: 'Allows to create an user',
+  deprecated: false
+}
+
+export const CanResetUserPassword: Permission = {
+  id: 'CAN_RESET_USER_PASSWORD',
+  description: 'Allows to reset the password of an user',
+  deprecated: false
+}
+
+export const CanGetUser: Permission = {
+  id: 'CAN_GET_USER',
+  description: 'Allows to get an user',
+  deprecated: false
+}
+
+export const CanGetUsers: Permission = {
+  id: 'CAN_GET_USERS',
+  description: 'Allows to get all users',
+  deprecated: false
+}
+
+export const CanDeleteUser: Permission = {
+  id: 'CAN_DELETE_USER',
+  description: 'Allows to delete users',
+  deprecated: false
+}
+
+export const CanCreateUserRole: Permission = {
+  id: 'CAN_CREATE_USER_ROLE',
+  description: 'Allows to create an user role',
+  deprecated: false
+}
+
+export const CanGetUserRole: Permission = {
+  id: 'CAN_GET_USER_ROLE',
+  description: 'Allows to get an user role',
+  deprecated: false
+}
+
+export const CanGetUserRoles: Permission = {
+  id: 'CAN_GET_USER_ROLES',
+  description: 'Allows to get all user roles',
+  deprecated: false
+}
+
+export const CanDeleteUserRole: Permission = {
+  id: 'CAN_DELETE_USER_ROLE',
+  description: 'Allows to delete user role',
+  deprecated: false
+}
+
+export const CanGetPermission: Permission = {
+  id: 'CAN_GET_PERMISSION',
+  description: 'Allows to get a permission',
+  deprecated: false
+}
+
+export const CanGetPermissions: Permission = {
+  id: 'CAN_GET_PERMISSIONS',
+  description: 'Allows to get all permissions',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -275,7 +341,18 @@ export const AllPermissions: Permission[] = [
   CanGetPeers,
   CanDeletePeer,
   CanCreateToken,
-  CanGetTokens
+  CanGetTokens,
+  CanCreateUser,
+  CanResetUserPassword,
+  CanGetUser,
+  CanGetUsers,
+  CanDeleteUser,
+  CanCreateUserRole,
+  CanGetUserRole,
+  CanGetUserRoles,
+  CanDeleteUserRole,
+  CanGetPermission,
+  CanGetPermissions
 ]
 
 export const EditorPermissions: Permission[] = [
