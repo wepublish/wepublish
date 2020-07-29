@@ -119,9 +119,7 @@ export function transformCssStringToObject(styleCustom: string) {
   let cssObj = {}
   if (styleRules.length > 0) {
     // remove white spaces and empty strings from array
-    const cleaned = styleRules
-      .map((e: string) => e.replace(/\s+/g, ''))
-      .filter((e: string) => e !== '')
+    const cleaned = styleRules.filter((e: string) => e !== '')
     // assign cleaned values
     cssObj = cleaned.reduce((p: any, c: any) => {
       const x = c.split(':')
