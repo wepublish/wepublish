@@ -115,7 +115,7 @@ export function createStyleRenderer() {
 }
 
 export function transformCssStringToObject(styleCustom: string): object {
-  const styleRules = styleCustom.replace(/\s+/g, '').split(';')
+  const styleRules = styleCustom.split(';')
   if (styleRules.length === 0) return {}
   return styleRules.reduce((previousValue: object, currentValue: string) => {
     const [key, value] = currentValue.split(':')
