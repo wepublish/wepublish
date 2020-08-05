@@ -92,7 +92,9 @@ import {
   CanGetPeerProfile,
   CanGetPeers,
   CanGetPeer,
-  AllPermissions
+  AllPermissions,
+  CanGetMemberPlan,
+  CanGetMemberPlans
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -105,6 +107,13 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
+import {
+  GraphQLMemberPlan,
+  GraphQLMemberPlanConnection,
+  GraphQLMemberPlanFilter,
+  GraphQLMemberPlanSort
+} from './memberPlan'
+import {MemberPlanSort} from '../db/memberPlan'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -704,6 +713,45 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetPages, roles)
 
         return dbAdapter.page.getPages({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
+      }
+    },
+
+    // MemberPlan
+    // ======
+
+    memberPlan: {
+      type: GraphQLMemberPlan,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetMemberPlan, roles)
+
+        return loaders.memberPlansByID.load(id)
+      }
+    },
+
+    memberPlans: {
+      type: GraphQLNonNull(GraphQLMemberPlanConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLMemberPlanFilter},
+        sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetMemberPlans, roles)
+
+        return dbAdapter.memberPlan.getMemberPlans({
           filter,
           sort,
           order,

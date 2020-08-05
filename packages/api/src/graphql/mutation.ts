@@ -52,7 +52,9 @@ import {
   CanDeleteUser,
   CanCreateUserRole,
   CanDeleteUserRole,
-  CanResetUserPassword
+  CanResetUserPassword,
+  CanCreateMemberPlan,
+  CanDeleteMemberPlan
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -66,6 +68,7 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -679,6 +682,48 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    // MemberPlan
+    // ======
+
+    createMemberPlan: {
+      type: GraphQLMemberPlan,
+      args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateMemberPlan, roles)
+
+        // TODO: check for invalid data
+
+        return dbAdapter.memberPlan.createMemberPlan({input})
+      }
+    },
+
+    updateMemberPlan: {
+      type: GraphQLMemberPlan,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateMemberPlan, roles)
+        return dbAdapter.memberPlan.updateMemberPlan({id, input})
+      }
+    },
+
+    deleteMemberPlan: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteMemberPlan, roles)
+        await dbAdapter.memberPlan.deleteMemberPlan({id})
+        return id
       }
     }
   }

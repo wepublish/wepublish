@@ -309,6 +309,30 @@ export const CanGetPermissions: Permission = {
   deprecated: false
 }
 
+export const CanCreateMemberPlan: Permission = {
+  id: 'CAN_CREATE_MEMBER_PLAN',
+  description: 'Allows to create a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlan: Permission = {
+  id: 'CAN_GET_MEMBER_PLAN',
+  description: 'Allows to get a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlans: Permission = {
+  id: 'CAN_GET_MEMBER_PLANS',
+  description: 'Allows to get all member plans',
+  deprecated: false
+}
+
+export const CanDeleteMemberPlan: Permission = {
+  id: 'CAN_DELETE_MEMBER_PLAN',
+  description: 'Allows to delete member plan',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -352,7 +376,11 @@ export const AllPermissions: Permission[] = [
   CanGetUserRoles,
   CanDeleteUserRole,
   CanGetPermission,
-  CanGetPermissions
+  CanGetPermissions,
+  CanCreateMemberPlan,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanDeleteMemberPlan
 ]
 
 export const EditorPermissions: Permission[] = [

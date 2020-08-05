@@ -76,6 +76,15 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     return deletedCount !== 0 ? id : null
   }
 
+  async getMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]> {
+    const memberPlans = await this.memberPlans.find({_id: {$in: ids}}).toArray()
+    const memberPlanMap = Object.fromEntries(
+      memberPlans.map(({_id: id, ...memberPlan}) => [id, {id, ...memberPlan}])
+    )
+
+    return ids.map(id => memberPlanMap[id] ?? null)
+  }
+
   async getMemberPlans({
     filter,
     sort,

@@ -34,6 +34,7 @@ import {OptionalPage, OptionalPublicPage} from './db/page'
 
 import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
+import {OptionalMemberPlan} from './db/memberPlan'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -58,6 +59,8 @@ export interface DataLoaderContext {
 
   readonly peerSchema: DataLoader<string, GraphQLSchema | null>
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
+
+  readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
 }
 
 export interface Context {
@@ -193,7 +196,9 @@ export async function contextFromRequest(
             }
           })
         )
-      })
+      }),
+
+      memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids))
     },
 
     dbAdapter,
