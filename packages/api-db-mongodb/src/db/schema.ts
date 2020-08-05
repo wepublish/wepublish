@@ -1,5 +1,5 @@
 import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
-import {PaymentPeriodicity} from '@wepublish/api/lib/db/memberPlan'
+import {PaymentPeriodicity} from '@wepublish/api'
 
 export enum CollectionName {
   Migrations = 'migrations',
