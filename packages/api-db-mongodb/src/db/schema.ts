@@ -1,4 +1,5 @@
 import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
+import {PaymentPeriodicity} from '@wepublish/api/lib/db/memberPlan'
 
 export enum CollectionName {
   Migrations = 'migrations',
@@ -19,7 +20,9 @@ export enum CollectionName {
   ArticlesHistory = 'articles.history',
 
   Pages = 'pages',
-  PagesHistory = 'pages.history'
+  PagesHistory = 'pages.history',
+
+  MemberPlans = 'member.plans'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -238,4 +241,21 @@ export interface DBPageRevision {
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBMemberPlan {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  label: string
+  imageID?: string
+  description: RichTextNode[]
+  isActive: boolean
+  availablePaymentPeriodicity: PaymentPeriodicity[]
+  minimumDuration: number // in months
+  forceAutoRenewal: boolean
+  pricePerMonthMinimum: number
+  pricePerMonthMaximum: number
 }

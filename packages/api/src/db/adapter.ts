@@ -8,6 +8,7 @@ import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
 import {DBTokenAdapter} from './token'
 import {DBUserRoleAdapter} from './userRole'
+import {DBMemberPlanAdapter} from './memberPlan'
 
 export interface DBAdapter {
   readonly peer: DBPeerAdapter
@@ -20,4 +21,5 @@ export interface DBAdapter {
   readonly image: DBImageAdapter
   readonly article: DBArticleAdapter
   readonly page: DBPageAdapter
+  readonly memberPlan: DBMemberPlanAdapter
 }

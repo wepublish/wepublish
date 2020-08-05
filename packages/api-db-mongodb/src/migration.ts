@@ -234,6 +234,17 @@ export const Migrations: Migration[] = [
         await pages.findOneAndReplace({_id: page._id}, page)
       }
     }
+  },
+  {
+    //  Add MemberPlan Collection
+    version: 3,
+    async migrate(db, locale) {
+      const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
+        strict: true
+      })
+
+      await memberPlans.createIndex({label: 1}, {unique: true})
+    }
   }
 ]
 

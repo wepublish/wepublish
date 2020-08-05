@@ -30,6 +30,7 @@ export * from './db/common'
 export * from './db/adapter'
 export * from './db/peer'
 export * from './db/token'
+export * from './db/memberPlan'
 
 export * from './mediaAdapter'
 export * from './urlAdapter'
