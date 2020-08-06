@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "0.5.2",
+  "version": "0.9.0",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
