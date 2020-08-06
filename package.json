@@ -1,4 +1,5 @@
 {
+  "name": "wepublish",
   "private": true,
   "engines": {
     "node": "^12.0.0",
@@ -76,6 +77,5 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern '{examples,packages,services}/**/*.{js,ts,tsx,json}'"
     }
-  },
-  "name": "wepublish"
+  }
 }
