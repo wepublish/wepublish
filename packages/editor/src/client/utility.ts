@@ -108,3 +108,15 @@ export function getOperationNameFromDocument(node: DocumentNode) {
   if (!firstOperation?.name?.value) throw new Error("Coulnd't find operation name.")
   return firstOperation.name.value
 }
+
+export function transformCssStringToObject(styleCustom: string): object {
+  const styleRules = styleCustom.split(';')
+  if (styleRules.length === 0) return {}
+  return styleRules.reduce((previousValue: object, currentValue: string) => {
+    const [key, value] = currentValue.split(':')
+    if (key && value) {
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+    }
+    return previousValue
+  }, {})
+}

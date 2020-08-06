@@ -113,3 +113,15 @@ export function createStyleRenderer() {
     plugins: [felaPrefixer(), felaFallbackValue()]
   })
 }
+
+export function transformCssStringToObject(styleCustom: string): object {
+  const styleRules = styleCustom.split(';')
+  if (styleRules.length === 0) return {}
+  return styleRules.reduce((previousValue: object, currentValue: string) => {
+    const [key, value] = currentValue.split(':')
+    if (key && value) {
+      return Object.assign(previousValue, {[key.trim()]: value.trim()})
+    }
+    return previousValue
+  }, {})
+}

@@ -1,0 +1,56 @@
+fragment FullUser on User {
+    id
+    name
+    email
+    roles {
+        ...FullUserRole
+    }
+}
+
+
+
+
+query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+        nodes {
+            ...FullUser
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+query User($id: ID!) {
+    user(id: $id) {
+        ...FullUser
+    }
+}
+
+mutation CreateUser($input: UserInput!, $password: String!) {
+    createUser(input: $input, password: $password) {
+        ...FullUser
+    }
+}
+
+mutation UpdateUser($id: ID!, $input: UserInput!) {
+    updateUser(id: $id, input: $input) {
+        ...FullUser
+    }
+}
+
+mutation ResetUserPassword($id: ID!, $password: String!) {
+    resetUserPassword(id: $id, password: $password) {
+        ...FullUser
+    }
+}
+
+mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+}

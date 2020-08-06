@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.7.3",
+  "version": "0.8.3",
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
@@ -16,14 +16,14 @@
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
-    "watch:generate": "yarn generate --watch \"./src/**/*.graphql\"",
+    "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist ./assets",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
     "prepare": "run-s clean copy-license sync-package-info build crlf",
-    "generate": "graphql-codegen -r dotenv/config --config codegen.yml"
+    "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
