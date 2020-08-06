@@ -22,7 +22,8 @@
       "ignoreChanges": [
         "*.md",
         "*.txt"
-      ]
+      ],
+      "message": "chore(release): publish %s"
     }
   },
   "packages": [
