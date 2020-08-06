@@ -16,7 +16,7 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": ["master", "f/setup-lerna"]
+      "allowBranch": "master"
     },
     "publish": {
       "ignoreChanges": [
