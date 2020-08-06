@@ -418,6 +418,50 @@ export type ListicleItemInput = {
   richText: Scalars['RichText'];
 };
 
+export type MemberPlan = {
+   __typename?: 'MemberPlan';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  label: Scalars['String'];
+  image?: Maybe<Image>;
+  description?: Maybe<Scalars['RichText']>;
+  isActive: Scalars['Boolean'];
+  availablePaymentPeriodicity: Array<Scalars['String']>;
+  minimumDuration: Scalars['Int'];
+  forceAutoRenewal: Scalars['Boolean'];
+  pricePerMonthMinimum: Scalars['Int'];
+  pricePerMonthMaximum: Scalars['Int'];
+};
+
+export type MemberPlanConnection = {
+   __typename?: 'MemberPlanConnection';
+  nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type MemberPlanFilter = {
+  label?: Maybe<Scalars['String']>;
+};
+
+export type MemberPlanInput = {
+  label: Scalars['String'];
+  image?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['RichText']>;
+  isActive: Scalars['Boolean'];
+  availablePaymentPeriodicity: Array<Scalars['String']>;
+  minimumDuration: Scalars['Int'];
+  forceAutoRenewal: Scalars['Boolean'];
+  pricePerMonthMinimum: Scalars['Int'];
+  pricePerMonthMaximum: Scalars['Int'];
+};
+
+export enum MemberPlanSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
 export type Mutation = {
    __typename?: 'Mutation';
   updatePeerProfile: PeerProfile;
@@ -457,6 +501,9 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  createMemberPlan?: Maybe<MemberPlan>;
+  updateMemberPlan?: Maybe<MemberPlan>;
+  deleteMemberPlan?: Maybe<Scalars['ID']>;
 };
 
 
@@ -650,6 +697,22 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateMemberPlanArgs = {
+  input: MemberPlanInput;
+};
+
+
+export type MutationUpdateMemberPlanArgs = {
+  id: Scalars['ID'];
+  input: MemberPlanInput;
+};
+
+
+export type MutationDeleteMemberPlanArgs = {
   id: Scalars['ID'];
 };
 
@@ -873,6 +936,8 @@ export type Query = {
   peerArticles: PeerArticleConnection;
   page?: Maybe<Page>;
   pages: PageConnection;
+  memberPlan?: Maybe<MemberPlan>;
+  memberPlans: MemberPlanConnection;
 };
 
 
@@ -1000,6 +1065,22 @@ export type QueryPagesArgs = {
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryMemberPlanArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryMemberPlansArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<MemberPlanFilter>;
+  sort?: Maybe<MemberPlanSort>;
   order?: Maybe<SortOrder>;
 };
 
@@ -1856,6 +1937,95 @@ export type DeleteImageMutation = (
   & Pick<Mutation, 'deleteImage'>
 );
 
+export type MemberPlanRefFragment = (
+  { __typename?: 'MemberPlan' }
+  & Pick<MemberPlan, 'id' | 'label' | 'isActive'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )> }
+);
+
+export type FullMemberPlanFragment = (
+  { __typename?: 'MemberPlan' }
+  & Pick<MemberPlan, 'description' | 'availablePaymentPeriodicity' | 'minimumDuration' | 'forceAutoRenewal' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & MemberPlanRefFragment
+);
+
+export type MemberPlanListQueryVariables = {
+  filter?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+
+export type MemberPlanListQuery = (
+  { __typename?: 'Query' }
+  & { memberPlans: (
+    { __typename?: 'MemberPlanConnection' }
+    & Pick<MemberPlanConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'MemberPlan' }
+      & FullMemberPlanFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
+
+export type MemberPlanQueryVariables = {
+  id: Scalars['ID'];
+};
+
+
+export type MemberPlanQuery = (
+  { __typename?: 'Query' }
+  & { memberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type CreateMemberPlanMutationVariables = {
+  input: MemberPlanInput;
+};
+
+
+export type CreateMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & { createMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type UpdateMemberPlanMutationVariables = {
+  id: Scalars['ID'];
+  input: MemberPlanInput;
+};
+
+
+export type UpdateMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type DeleteMemberPlanMutationVariables = {
+  id: Scalars['ID'];
+};
+
+
+export type DeleteMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMemberPlan'>
+);
+
 export type MutationPageFragment = (
   { __typename?: 'Page' }
   & Pick<Page, 'id'>
@@ -2706,6 +2876,27 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  label
+  isActive
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullMemberPlanFragmentDoc = gql`
+    fragment FullMemberPlan on MemberPlan {
+  description
+  availablePaymentPeriodicity
+  minimumDuration
+  forceAutoRenewal
+  pricePerMonthMinimum
+  pricePerMonthMaximum
+  ...MemberPlanRef
+}
+    ${MemberPlanRefFragmentDoc}`;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -3536,6 +3727,180 @@ export function useDeleteImageMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = ApolloReactCommon.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
+export const MemberPlanListDocument = gql`
+    query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+  memberPlans(filter: {label: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    nodes {
+      ...FullMemberPlan
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanListQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *   },
+ * });
+ */
+export function useMemberPlanListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+        return ApolloReactHooks.useQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, baseOptions);
+      }
+export function useMemberPlanListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, baseOptions);
+        }
+export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
+export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
+export type MemberPlanListQueryResult = ApolloReactCommon.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
+export const MemberPlanDocument = gql`
+    query MemberPlan($id: ID!) {
+  memberPlan(id: $id) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMemberPlanQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+        return ApolloReactHooks.useQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, baseOptions);
+      }
+export function useMemberPlanLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, baseOptions);
+        }
+export type MemberPlanQueryHookResult = ReturnType<typeof useMemberPlanQuery>;
+export type MemberPlanLazyQueryHookResult = ReturnType<typeof useMemberPlanLazyQuery>;
+export type MemberPlanQueryResult = ApolloReactCommon.QueryResult<MemberPlanQuery, MemberPlanQueryVariables>;
+export const CreateMemberPlanDocument = gql`
+    mutation CreateMemberPlan($input: MemberPlanInput!) {
+  createMemberPlan(input: $input) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type CreateMemberPlanMutationFn = ApolloReactCommon.MutationFunction<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+
+/**
+ * __useCreateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useCreateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMemberPlanMutation, { data, loading, error }] = useCreateMemberPlanMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>(CreateMemberPlanDocument, baseOptions);
+      }
+export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemberPlanMutation>;
+export type CreateMemberPlanMutationResult = ApolloReactCommon.MutationResult<CreateMemberPlanMutation>;
+export type CreateMemberPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+export const UpdateMemberPlanDocument = gql`
+    mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
+  updateMemberPlan(id: $id, input: $input) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type UpdateMemberPlanMutationFn = ApolloReactCommon.MutationFunction<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+
+/**
+ * __useUpdateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useUpdateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMemberPlanMutation, { data, loading, error }] = useUpdateMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>(UpdateMemberPlanDocument, baseOptions);
+      }
+export type UpdateMemberPlanMutationHookResult = ReturnType<typeof useUpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationResult = ApolloReactCommon.MutationResult<UpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+export const DeleteMemberPlanDocument = gql`
+    mutation DeleteMemberPlan($id: ID!) {
+  deleteMemberPlan(id: $id)
+}
+    `;
+export type DeleteMemberPlanMutationFn = ApolloReactCommon.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
+
+/**
+ * __useDeleteMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useDeleteMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMemberPlanMutation, { data, loading, error }] = useDeleteMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMemberPlanMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>(DeleteMemberPlanDocument, baseOptions);
+      }
+export type DeleteMemberPlanMutationHookResult = ReturnType<typeof useDeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationResult = ApolloReactCommon.MutationResult<DeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: String, $after: ID, $first: Int) {
   pages(first: $first, after: $after, filter: {title: $filter}) {
