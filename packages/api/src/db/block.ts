@@ -17,7 +17,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  MapLeaflet = 'mapLeaflet'
 }
 
 export interface RichTextBlock {
