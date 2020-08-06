@@ -39,7 +39,9 @@ import {
   PageTeaser,
   TeaserType,
   RichTextBlock,
-  FacebookVideoBlock
+  FacebookVideoBlock,
+  MapLeafletItem,
+  MapLeafletBlock
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
@@ -413,6 +415,36 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     return value.type === BlockType.Embed
   })
 })
+// OK
+export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Context>({
+  name: 'MapLeafletItem',
+  fields: {
+    lat: {type: GraphQLNonNull(GraphQLInt)},
+    lng: {type: GraphQLNonNull(GraphQLInt)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLString},
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+  }
+})
+// OK
+export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Context>({
+  name: 'MapLeafletBlock',
+  fields: {
+    centerLat: {type: GraphQLNonNull(GraphQLInt)},
+    centerLng: {type: GraphQLNonNull(GraphQLInt)},
+    zoom: {type: GraphQLNonNull(GraphQLInt)},
+    caption: {type: GraphQLString},
+    items: {type: GraphQLList(GraphQLMapLeafletItem)},
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.MapLeaflet
+  })
+})
 
 export const GraphQLListicleItem = new GraphQLObjectType<ListicleItem, Context>({
   name: 'ListicleItem',
@@ -509,6 +541,28 @@ export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
   name: 'ImageGalleryBlockInput',
   fields: {
     images: {type: GraphQLList(GraphQLGalleryImageEdgeInput)}
+  }
+})
+// OK
+export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
+  name: 'MapLeafletItemInput',
+  fields: {
+    lat: {type: GraphQLNonNull(GraphQLInt)},
+    lng: {type: GraphQLNonNull(GraphQLInt)},
+    title: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLString},
+    imageID: {type: GraphQLString}
+  }
+})
+// OK
+export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
+  name: 'MapLeafletBlockInput',
+  fields: {
+    centerLat: {type: GraphQLNonNull(GraphQLInt)},
+    centerLng: {type: GraphQLNonNull(GraphQLInt)},
+    zoom: {type: GraphQLNonNull(GraphQLInt)},
+    caption: {type: GraphQLString},
+    items: {type: GraphQLList(GraphQLMapLeafletItemInput)}
   }
 })
 
@@ -680,7 +734,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
-    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
+    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
+    [BlockType.MapLeaflet]: {type: GraphQLMapLeafletBlockInput}
   })
 })
 
@@ -702,7 +757,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLTeaserGridBlock
+    GraphQLTeaserGridBlock,
+    GraphQLMapLeafletBlock
   ]
 })
 
@@ -723,6 +779,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLPublicTeaserGridBlock
+    GraphQLPublicTeaserGridBlock,
+    GraphQLMapLeafletBlock
   ]
 })

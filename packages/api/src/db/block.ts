@@ -89,6 +89,23 @@ export interface EmbedBlock {
   styleCustom?: string
 }
 
+export interface MapLeafletItem{
+  lat: number
+  lng: number
+  title: string
+  description?: string
+  imageID?: string
+}
+
+export interface MapLeafletBlock {
+  type: BlockType.MapLeaflet
+  centerLat: number
+  centerLng: number
+  zoom: number
+  caption?: string
+  item: MapLeafletItem[]
+}
+
 export interface ListicleItem {
   title: string
   imageID?: string
@@ -188,7 +205,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | TeaserGridBlock
-
+  | MapLeafletBlock
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock
 
