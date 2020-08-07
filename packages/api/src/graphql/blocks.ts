@@ -6,6 +6,7 @@ import {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLFloat,
   GraphQLUnionType,
   GraphQLEnumType
 } from 'graphql'
@@ -67,7 +68,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -93,7 +94,7 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -131,7 +132,7 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -183,7 +184,7 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -211,7 +212,7 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -251,7 +252,7 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-        imageID ? loaders.images.load(imageID) : null
+          imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -419,8 +420,8 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
 export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Context>({
   name: 'MapLeafletItem',
   fields: {
-    lat: {type: GraphQLNonNull(GraphQLInt)},
-    lng: {type: GraphQLNonNull(GraphQLInt)},
+    lat: {type: GraphQLNonNull(GraphQLFloat)},
+    lng: {type: GraphQLNonNull(GraphQLFloat)},
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     image: {
@@ -435,8 +436,8 @@ export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Conte
 export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Context>({
   name: 'MapLeafletBlock',
   fields: {
-    centerLat: {type: GraphQLNonNull(GraphQLInt)},
-    centerLng: {type: GraphQLNonNull(GraphQLInt)},
+    centerLat: {type: GraphQLNonNull(GraphQLFloat)},
+    centerLng: {type: GraphQLNonNull(GraphQLFloat)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLMapLeafletItem))},
@@ -547,8 +548,8 @@ export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
 export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
   name: 'MapLeafletItemInput',
   fields: {
-    lat: {type: GraphQLNonNull(GraphQLInt)},
-    lng: {type: GraphQLNonNull(GraphQLInt)},
+    lat: {type: GraphQLNonNull(GraphQLFloat)},
+    lng: {type: GraphQLNonNull(GraphQLFloat)},
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     imageID: {type: GraphQLString}
@@ -558,8 +559,8 @@ export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
 export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
   name: 'MapLeafletBlockInput',
   fields: {
-    centerLat: {type: GraphQLNonNull(GraphQLInt)},
-    centerLng: {type: GraphQLNonNull(GraphQLInt)},
+    centerLat: {type: GraphQLNonNull(GraphQLFloat)},
+    centerLng: {type: GraphQLNonNull(GraphQLFloat)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
     items: {type: GraphQLList(GraphQLMapLeafletItemInput)}
