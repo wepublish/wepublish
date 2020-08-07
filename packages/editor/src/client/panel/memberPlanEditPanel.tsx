@@ -44,6 +44,8 @@ import {
 import {generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -62,6 +64,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   >([])
   const [minimumDuration, setMinimumDuration] = useState<number>(0)
   const [forceAutoRenewal, setForceAutoRenewal] = useState<boolean>(false)
+  const [fixPrice, setFixPrice] = useState<boolean>(false)
   const [pricePerMonthMinimum, setPricePerMonthMinimum] = useState<number>(0)
   const [pricePerMonthMaximum, setPricePerMonthMaximum] = useState<number>(0)
 
@@ -144,7 +147,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             minimumDuration,
             forceAutoRenewal,
             pricePerMonthMinimum,
-            pricePerMonthMaximum
+            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
           }
         }
       })
@@ -162,7 +165,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             minimumDuration,
             forceAutoRenewal,
             pricePerMonthMinimum,
-            pricePerMonthMaximum
+            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
           }
         }
       })
@@ -294,14 +297,30 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         </PanelSection>
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              type="number"
-              label="Minimum duration"
-              value={minimumDuration}
+            <Toggle
+              label="Fix price"
+              checked={fixPrice}
               disabled={isDisabled}
-              onChange={e => {
-                setMinimumDuration(parseInt(e.target.value))
+              onChange={event => setFixPrice(event.target.checked)}
+            />
+            <InputRange
+              onChange={value => {
+                if (fixPrice) {
+                  setPricePerMonthMinimum(value as number)
+                } else {
+                  //@ts-ignore
+                  setPricePerMonthMinimum(value.min)
+                  //@ts-ignore
+                  setPricePerMonthMaximum(value.max)
+                }
               }}
+              value={
+                fixPrice
+                  ? pricePerMonthMinimum
+                  : {min: pricePerMonthMinimum, max: pricePerMonthMaximum}
+              }
+              minValue={0}
+              maxValue={100}
             />
           </Box>
         </PanelSection>

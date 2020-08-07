@@ -70,6 +70,8 @@ export function Base({children}: BaseProps) {
             active={current?.type === RouteType.ImageList}
           />
 
+          <Divider />
+
           <RouteMenuLinkButton
             icon={MaterialIconPermIdentityOutlined}
             label="Users"
