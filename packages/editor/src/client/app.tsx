@@ -16,6 +16,7 @@ import {PeerList} from './routes/peerList'
 import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
+import {MemberPlanList} from './routes/memberPlanList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -58,6 +59,11 @@ export function contentForRoute(route: Route) {
     case RouteType.UserRoleCreate:
     case RouteType.UserRoleEdit:
       return <UserRoleList />
+
+    case RouteType.MemberPlanList:
+    case RouteType.MemberPlanCreate:
+    case RouteType.MemberPlanEdit:
+      return <MemberPlanList />
 
     case RouteType.NotFound:
       return <ArticleList />

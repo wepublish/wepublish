@@ -11,7 +11,8 @@ import {
   MaterialIconShareOutlined,
   MaterialIconLockOutlined,
   MaterialIconFaceOutlined,
-  MaterialIconHowToRegOutlined
+  MaterialIconHowToRegOutlined,
+  MaterialIconFormatQuoteOutlined
 } from '@karma.run/icons'
 
 import {
@@ -26,7 +27,8 @@ import {
   PeerListRoute,
   TokenListRoute,
   UserListRoute,
-  UserRoleListRoute
+  UserRoleListRoute,
+  MemberPlanListRoute
 } from './route'
 
 export interface BaseProps {
@@ -80,6 +82,13 @@ export function Base({children}: BaseProps) {
             label="User Roles"
             route={UserRoleListRoute.create({})}
             active={current?.type === RouteType.UserRoleList}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconFormatQuoteOutlined}
+            label="Member Plans"
+            route={MemberPlanListRoute.create({})}
+            active={current?.type === RouteType.MemberPlanList}
           />
 
           {/* TODO */}
