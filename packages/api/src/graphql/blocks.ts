@@ -415,7 +415,7 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
     return value.type === BlockType.Embed
   })
 })
-// OK
+
 export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Context>({
   name: 'MapLeafletItem',
   fields: {
@@ -431,7 +431,7 @@ export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Conte
     },
   }
 })
-// OK
+
 export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Context>({
   name: 'MapLeafletBlock',
   fields: {
@@ -439,7 +439,7 @@ export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Con
     centerLng: {type: GraphQLNonNull(GraphQLInt)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
-    items: {type: GraphQLList(GraphQLMapLeafletItem)},
+    items: {type: GraphQLNonNull(GraphQLList(GraphQLMapLeafletItem))},
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.MapLeaflet
@@ -543,7 +543,7 @@ export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
     images: {type: GraphQLList(GraphQLGalleryImageEdgeInput)}
   }
 })
-// OK
+
 export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
   name: 'MapLeafletItemInput',
   fields: {
@@ -554,7 +554,7 @@ export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
     imageID: {type: GraphQLString}
   }
 })
-// OK
+
 export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
   name: 'MapLeafletBlockInput',
   fields: {
@@ -565,6 +565,7 @@ export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
     items: {type: GraphQLList(GraphQLMapLeafletItemInput)}
   }
 })
+
 
 export const GraphQLListicleItemInput = new GraphQLInputObjectType({
   name: 'ListicleItemInput',

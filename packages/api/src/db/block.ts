@@ -89,7 +89,7 @@ export interface EmbedBlock {
   styleCustom?: string
 }
 
-export interface MapLeafletItem{
+export interface MapLeafletItem {
   lat: number
   lng: number
   title: string
@@ -103,7 +103,7 @@ export interface MapLeafletBlock {
   centerLng: number
   zoom: number
   caption?: string
-  item: MapLeafletItem[]
+  items: MapLeafletItem[]
 }
 
 export interface ListicleItem {
