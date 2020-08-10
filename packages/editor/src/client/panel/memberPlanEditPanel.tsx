@@ -286,6 +286,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 if (fixPrice) {
                   setPricePerMonthMinimum(value as number)
                 } else {
+                  //TODO: fix this
                   //@ts-ignore
                   setPricePerMonthMinimum(value.min)
                   //@ts-ignore

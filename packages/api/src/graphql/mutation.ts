@@ -695,7 +695,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateMemberPlan, roles)
 
-        // TODO: check for invalid data
+        if (input.minimumDuration < 0) {
+          throw new Error('Input.minimupDuration can not be < 0')
+        } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
+          throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
+        }
 
         return dbAdapter.memberPlan.createMemberPlan({input})
       }
