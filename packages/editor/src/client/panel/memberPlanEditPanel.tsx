@@ -18,7 +18,8 @@ import {
   ZIndex,
   ListInput,
   ListValue,
-  Toggle
+  Toggle,
+  Typography
 } from '@karma.run/ui'
 
 import {
@@ -203,6 +204,15 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               }}
             />
           </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Toggle
+              label="Active"
+              description="Makes the plan available"
+              checked={isActive}
+              disabled={isDisabled}
+              onChange={event => setIsActive(event.target.checked)}
+            />
+          </Box>
         </PanelSection>
         <PanelSectionHeader title="Image" />
         <PanelSection dark>
@@ -242,35 +252,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <PanelSection>
           <RichTextBlock value={description} onChange={value => setDescription(value)} />
         </PanelSection>
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Toggle
-              label="Active"
-              description="Makes the plan available"
-              checked={isActive}
-              disabled={isDisabled}
-              onChange={event => setIsActive(event.target.checked)}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Payment Pariodicity" />
-        <PanelSection>
-          <ListInput
-            value={availablePaymentPeriodicity}
-            onChange={app => setAvailablePaymentPeriodicity(app)}
-            defaultValue={'monthly'}>
-            {({value, onChange}) => (
-              <Box display="flex" flexDirection="row">
-                <TextInput
-                  label="periodicity"
-                  flexBasis="70%"
-                  value={value}
-                  onChange={e => onChange(e.target.value)}
-                />
-              </Box>
-            )}
-          </ListInput>
-        </PanelSection>
+        <PanelSectionHeader title="Settings" />
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
@@ -283,26 +265,22 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               }}
             />
           </Box>
-        </PanelSection>
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Toggle
-              label="Force Auto Renewal"
-              description="Forces auto renewal of subscription"
-              checked={forceAutoRenewal}
-              disabled={isDisabled}
-              onChange={event => setForceAutoRenewal(event.target.checked)}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
+          <Box marginBottom={Spacing.Small}>
             <Toggle
               label="Fix price"
+              description="If false the price can be a price range"
               checked={fixPrice}
               disabled={isDisabled}
               onChange={event => setFixPrice(event.target.checked)}
             />
+          </Box>
+          <Box marginBottom={Spacing.Small}>
+            <Typography variant="subtitle1">Price-(Range) in CHF</Typography>
+          </Box>
+          <Box
+            marginBottom={Spacing.Medium}
+            marginLeft={Spacing.ExtraSmall}
+            marginRight={Spacing.ExtraSmall}>
             <InputRange
               onChange={value => {
                 if (fixPrice) {
@@ -323,6 +301,33 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               maxValue={100}
             />
           </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Toggle
+              label="Force Auto Renewal"
+              description="Forces auto renewal of subscription"
+              checked={forceAutoRenewal}
+              disabled={isDisabled}
+              onChange={event => setForceAutoRenewal(event.target.checked)}
+            />
+          </Box>
+        </PanelSection>
+        <PanelSectionHeader title="Payment Pariodicity" />
+        <PanelSection>
+          <ListInput
+            value={availablePaymentPeriodicity}
+            onChange={app => setAvailablePaymentPeriodicity(app)}
+            defaultValue={'monthly'}>
+            {({value, onChange}) => (
+              <Box display="flex" flexDirection="row">
+                <TextInput
+                  label="periodicity"
+                  flexBasis="70%"
+                  value={value}
+                  onChange={e => onChange(e.target.value)}
+                />
+              </Box>
+            )}
+          </ListInput>
         </PanelSection>
       </Panel>
       <Toast
