@@ -11,7 +11,8 @@ import {
   IconColumn1,
   IconColumn6,
   MaterialIconCollections,
-  MaterialIconList
+  MaterialIconList,
+  MaterialIconMap
 } from '@karma.run/icons'
 
 import {BlockMapForValue} from '@karma.run/ui'
@@ -26,6 +27,7 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
+import {MapLeafletBlock} from './mapLeafletBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -54,6 +56,30 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {images: [{caption: '', image: null}]},
     label: 'Gallery',
     icon: MaterialIconCollections
+  },
+
+  [BlockType.MapLeaflet]: {
+    field: props => <MapLeafletBlock {...props} />,
+    defaultValue: {
+      centerLat: 46.9480,
+      centerLng: 7.4485,
+      zoom: 8,
+      caption: '',
+      mapItems: [
+        {
+          id: nanoid(),
+          value: {
+            lat: 0,
+            lng: 0,
+            title: '',
+            description: '',
+            imageID: null
+          }
+        }
+      ]
+    },
+    label: 'MapLeaflet',
+    icon: MaterialIconMap
   },
 
   [BlockType.Listicle]: {

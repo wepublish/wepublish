@@ -23,7 +23,8 @@ export enum BlockType {
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid1 = 'teaserGrid1',
-  TeaserGrid6 = 'teaserGrid6'
+  TeaserGrid6 = 'teaserGrid6',
+  MapLeaflet = 'mapLeaflet'
 }
 
 export type RichTextBlockValue = Node[]
@@ -40,6 +41,22 @@ export interface GalleryImageEdge {
 
 export interface ImageGalleryBlockValue {
   images: GalleryImageEdge[]
+}
+
+export interface MapLeafletItem {
+  lat: number
+  lng: number
+  title: string
+  description?: string
+  imageID: ImageRefFragment | null
+}
+
+export interface MapLeafletBlockValue {
+  centerLat: number
+  centerLng: number
+  zoom: number
+  caption?: string
+  mapItems: ListValue<MapLeafletItem>[]
 }
 
 export interface ListicleItem {
@@ -187,6 +204,7 @@ export type ImageGalleryBlockListValue = BlockListValue<
   ImageGalleryBlockValue
 >
 export type ListicleBlockListValue = BlockListValue<BlockType.Listicle, ListicleBlockValue>
+export type MapLeafletBlockListValue = BlockListValue<BlockType.MapLeaflet, MapLeafletBlockValue>
 export type TitleBlockListValue = BlockListValue<BlockType.Title, TitleBlockValue>
 export type QuoteBlockListValue = BlockListValue<BlockType.Quote, QuoteBlockValue>
 export type EmbedBlockListValue = BlockListValue<BlockType.Embed, EmbedBlockValue>
@@ -210,6 +228,7 @@ export type BlockValue =
   | LinkPageBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
+  | MapLeafletBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -227,6 +246,23 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           images: block.value.images.map(item => ({
             caption: item.caption,
             imageID: item.image?.id
+          }))
+        }
+      }
+//TODO Finish this
+    case BlockType.MapLeaflet:
+      return {
+        mapLeaflet: {
+          centerLat: block.value.centerLat,
+          centerLng: block.value.centerLng,
+          zoom: block.value.zoom,
+          caption: block.value.caption,
+          mapItems: block.value.mapItems.map(({value: {lat, lng, title, description, imageID}}) => ({
+            lat: lat,
+            lng: lng,
+            title: title,
+            description: description,
+            imageID: imageID?.id
           }))
         }
       }
@@ -416,6 +452,32 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           }))
         }
       }
+    //TODO Finish this
+    case 'MapLeafletBlock':
+      return {
+        key,
+        type: BlockType.MapLeaflet,
+        value: {
+          centerLat: block.centerLat,
+          centerLng: block.centerLng,
+          zoom: block.zoom,
+          caption: block.caption ?? '',
+          /* mapItems: block.mapItems.map(({lat, lng, title, description, imageID}) => ({
+            id: nanoid(),
+            value: {
+              lat: lat,
+              lng: lng,
+              title: title,
+              description: description ?? null,
+              imageID: imageID ?? null
+            }
+          })) */
+          mapItems: block.mapItems.map(mapItem => {
+            const { lat, lng } = mapItem
+          })
+        }
+
+      }
 
     case 'ListicleBlock':
       return {
@@ -425,7 +487,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           items: block.items.map(({title, richText, image}) => ({
             id: nanoid(),
             value: {
-              title,
+              title: title,
               image: image ?? null,
               richText: richText
             }

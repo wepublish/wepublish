@@ -92,6 +92,22 @@ fragment FullBlock on Block {
     }
   }
 
+  ... on MapLeafletBlock{
+    centerLat
+    centerLng
+    zoom
+    caption
+    mapItems {
+      lat
+      lng
+      title
+      description
+      image {
+        ...ImageRef
+      }
+    }
+  }
+
   ... on ListicleBlock {
     items {
       title

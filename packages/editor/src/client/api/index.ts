@@ -182,7 +182,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock | MapLeafletBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -201,6 +201,7 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
+  mapLeaflet?: Maybe<MapLeafletBlockInput>;
 };
 
 
@@ -416,6 +417,40 @@ export type ListicleItemInput = {
   title: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   richText: Scalars['RichText'];
+};
+
+export type MapLeafletBlock = {
+   __typename?: 'MapLeafletBlock';
+  centerLat: Scalars['Float'];
+  centerLng: Scalars['Float'];
+  zoom: Scalars['Int'];
+  caption?: Maybe<Scalars['String']>;
+  mapItems: Array<Maybe<MapLeafletItem>>;
+};
+
+export type MapLeafletBlockInput = {
+  centerLat: Scalars['Float'];
+  centerLng: Scalars['Float'];
+  zoom: Scalars['Int'];
+  caption?: Maybe<Scalars['String']>;
+  mapItems?: Maybe<Array<Maybe<MapLeafletItemInput>>>;
+};
+
+export type MapLeafletItem = {
+   __typename?: 'MapLeafletItem';
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Image>;
+};
+
+export type MapLeafletItemInput = {
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -1462,6 +1497,9 @@ export type ArticleQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'MapLeafletBlock' }
+        & FullBlock_MapLeafletBlock_Fragment
       )> }
     ) }
   )> }
@@ -1759,7 +1797,20 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+type FullBlock_MapLeafletBlock_Fragment = (
+  { __typename: 'MapLeafletBlock' }
+  & Pick<MapLeafletBlock, 'centerLat' | 'centerLng' | 'zoom' | 'caption'>
+  & { mapItems: Array<Maybe<(
+    { __typename?: 'MapLeafletItem' }
+    & Pick<MapLeafletItem, 'lat' | 'lng' | 'title' | 'description'>
+    & { image?: Maybe<(
+      { __typename?: 'Image' }
+      & ImageRefFragment
+    )> }
+  )>> }
+);
+
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_MapLeafletBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -2054,6 +2105,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'TeaserGridBlock' }
         & FullBlock_TeaserGridBlock_Fragment
+      ) | (
+        { __typename?: 'MapLeafletBlock' }
+        & FullBlock_MapLeafletBlock_Fragment
       )> }
     ) }
   )> }
@@ -2630,6 +2684,21 @@ export const FullBlockFragmentDoc = gql`
   ... on ImageGalleryBlock {
     images {
       caption
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ... on MapLeafletBlock {
+    centerLat
+    centerLng
+    zoom
+    caption
+    mapItems {
+      lat
+      lng
+      title
+      description
       image {
         ...ImageRef
       }

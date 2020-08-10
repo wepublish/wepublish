@@ -103,7 +103,7 @@ export interface MapLeafletBlock {
   centerLng: number
   zoom: number
   caption?: string
-  items: MapLeafletItem[]
+  items?: MapLeafletItem[]
 }
 
 export interface ListicleItem {

@@ -440,7 +440,7 @@ export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Con
     centerLng: {type: GraphQLNonNull(GraphQLFloat)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
-    items: {type: GraphQLNonNull(GraphQLList(GraphQLMapLeafletItem))},
+    mapItems: {type: GraphQLNonNull(GraphQLList(GraphQLMapLeafletItem))},
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.MapLeaflet
@@ -563,7 +563,7 @@ export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
     centerLng: {type: GraphQLNonNull(GraphQLFloat)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
-    items: {type: GraphQLList(GraphQLMapLeafletItemInput)}
+    mapItems: {type: GraphQLList(GraphQLMapLeafletItemInput)}
   }
 })
 
