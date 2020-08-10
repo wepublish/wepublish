@@ -469,7 +469,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
               lng: lng,
               title: title,
               description: description ?? '',
-              image: image ?? null
+              image: image ?? null,
             }
           }))
         }
