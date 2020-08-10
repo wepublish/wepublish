@@ -425,7 +425,7 @@ export type MapLeafletBlock = {
   centerLng: Scalars['Float'];
   zoom: Scalars['Int'];
   caption?: Maybe<Scalars['String']>;
-  mapItems: Array<Maybe<MapLeafletItem>>;
+  mapItems: Array<MapLeafletItem>;
 };
 
 export type MapLeafletBlockInput = {
@@ -1800,14 +1800,14 @@ type FullBlock_TeaserGridBlock_Fragment = (
 type FullBlock_MapLeafletBlock_Fragment = (
   { __typename: 'MapLeafletBlock' }
   & Pick<MapLeafletBlock, 'centerLat' | 'centerLng' | 'zoom' | 'caption'>
-  & { mapItems: Array<Maybe<(
+  & { mapItems: Array<(
     { __typename?: 'MapLeafletItem' }
     & Pick<MapLeafletItem, 'lat' | 'lng' | 'title' | 'description'>
     & { image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
-  )>> }
+  )> }
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_MapLeafletBlock_Fragment;

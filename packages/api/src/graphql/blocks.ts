@@ -68,7 +68,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -94,7 +94,7 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -132,7 +132,7 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -184,7 +184,7 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -212,7 +212,7 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -252,7 +252,7 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, {}, {loaders}) =>
-          imageID ? loaders.images.load(imageID) : null
+        imageID ? loaders.images.load(imageID) : null
       )
     },
 
@@ -429,7 +429,7 @@ export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Conte
       resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
       })
-    },
+    }
   }
 })
 
@@ -440,7 +440,7 @@ export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Con
     centerLng: {type: GraphQLNonNull(GraphQLFloat)},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
-    mapItems: {type: GraphQLNonNull(GraphQLList(GraphQLMapLeafletItem))},
+    mapItems: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMapLeafletItem)))}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.MapLeaflet
@@ -566,7 +566,6 @@ export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
     mapItems: {type: GraphQLList(GraphQLMapLeafletItemInput)}
   }
 })
-
 
 export const GraphQLListicleItemInput = new GraphQLInputObjectType({
   name: 'ListicleItemInput',

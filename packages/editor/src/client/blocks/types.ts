@@ -48,7 +48,7 @@ export interface MapLeafletItem {
   lng: number
   title: string
   description?: string
-  imageID: ImageRefFragment | null
+  image: ImageRefFragment | null
 }
 
 export interface MapLeafletBlockValue {
@@ -249,7 +249,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           }))
         }
       }
-//TODO Finish this
+    //TODO Finish this
     case BlockType.MapLeaflet:
       return {
         mapLeaflet: {
@@ -257,12 +257,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           centerLng: block.value.centerLng,
           zoom: block.value.zoom,
           caption: block.value.caption,
-          mapItems: block.value.mapItems.map(({value: {lat, lng, title, description, imageID}}) => ({
+          mapItems: block.value.mapItems.map(({value: {lat, lng, title, description, image}}) => ({
             lat: lat,
             lng: lng,
             title: title,
             description: description,
-            imageID: imageID?.id
+            imageID: image?.id
           }))
         }
       }
@@ -462,21 +462,17 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           centerLng: block.centerLng,
           zoom: block.zoom,
           caption: block.caption ?? '',
-          /* mapItems: block.mapItems.map(({lat, lng, title, description, imageID}) => ({
+          mapItems: block.mapItems.map(({lat, lng, title, description, image}) => ({
             id: nanoid(),
             value: {
               lat: lat,
               lng: lng,
               title: title,
-              description: description ?? null,
-              imageID: imageID ?? null
+              description: description ?? '',
+              image: image ?? null
             }
-          })) */
-          mapItems: block.mapItems.map(mapItem => {
-            const { lat, lng } = mapItem
-          })
+          }))
         }
-
       }
 
     case 'ListicleBlock':
