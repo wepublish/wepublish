@@ -468,8 +468,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
               lat: lat,
               lng: lng,
               title: title,
-              description: description ?? "",
-              image: image ?? null,
+              description: description ?? '',
+              image: image ?? null
             }
           }))
         }
