@@ -1,9 +1,29 @@
+import React, {useState} from 'react'
+import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import '../customCSS/leaflet.css'
 
-import React, {useState, useCallback} from 'react'
+import {Icon} from 'leaflet'
+
+// stupid hack so that leaflet's images work after going through webpack
+//@ts-ignore
+import marker from 'leaflet/dist/images/marker-icon.png'
+//@ts-ignore
+import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
+//@ts-ignore
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+
+//@ts-ignore
+delete Icon.Default.prototype._getIconUrl
+
+Icon.Default.mergeOptions({
+  iconRetinaUrl: marker2x,
+  iconUrl: marker,
+  shadowUrl: markerShadow
+})
 
 import {
   BlockProps,
-  ListInput,
   FieldProps,
   Box,
   Card,
@@ -25,18 +45,28 @@ import {
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
-import {MapLeafletBlockValue, MapLeafletItem,} from './types'
-import {isFunctionalUpdate} from '@karma.run/react'
+import {MapLeafletBlockValue, MapLeafletItem} from './types'
+// import {isFunctionalUpdate} from '@karma.run/react'
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
 
-
-
 export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
+  // @ts-ignore
   const {centerLat, centerLng, zoom, caption} = value
+
   return (
     <>
-
+      <Map center={[45.4, -75.7]} zoom={12} style={{width: '100%', height: '1000px'}}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Marker position={[45.4, -75.7]}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      </Map>
     </>
   )
 }
@@ -45,7 +75,8 @@ export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletIt
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const {image, title, lat, lng, description, imageID} = value
+  //@ts-ignore
+  const {image, title, lat, lng, description} = value
 
   return (
     <>
@@ -94,8 +125,6 @@ export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletIt
               onChange(value => ({...value, title}))
             }}
           />
-
-
         </Box>
       </Box>
 

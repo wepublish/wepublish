@@ -43,6 +43,21 @@ export default (env: any, {mode}: any) =>
               ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
             ]
           }
+        },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.(gif|png|jpe?g|svg)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: 'img/[name]_[hash:7].[ext]'
+              }
+            }
+          ]
         }
       ]
     },
