@@ -46,27 +46,42 @@ import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {MapLeafletBlockValue, MapLeafletItem} from './types'
+
 // import {isFunctionalUpdate} from '@karma.run/react'
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
 
 export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
-  // @ts-ignore
-  const {centerLat, centerLng, zoom, caption} = value
+  const {zoom, centerLat, centerLng, caption} = value
 
   return (
     <>
-      <Map center={[45.4, -75.7]} zoom={12} style={{width: '100%', height: '1000px'}}>
+      <Map
+        center={[centerLat, centerLng]}
+        zoom={zoom}
+        style={{width: '100%', height: '45vh'}}
+        onViewportChange={e => {
+          if (e.center && e.zoom) {
+            onChange({...value, centerLat: e.center[0], centerLng: e.center[1], zoom: e.zoom})
+          }
+        }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[45.4, -75.7]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        <Marker position={[centerLat, centerLng]}></Marker>
       </Map>
+      <Box marginTop={Spacing.ExtraSmall}>
+        <TypographicTextArea
+          variant="subtitle2"
+          align="center"
+          placeholder="Caption"
+          value={caption}
+          onChange={e => {
+            onChange({...value, caption: e.target.value})
+          }}
+        />
+      </Box>
     </>
   )
 }
