@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "0.0.1",
+  "version": "0.8.4",
   "bin": {
     "wepublish-oauth2": "./dist/server/index.js"
   },

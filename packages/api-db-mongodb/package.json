@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-db-mongodb",
-  "version": "0.8.0",
+  "version": "0.8.4",
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
