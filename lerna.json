@@ -30,7 +30,6 @@
     "packages/api",
     "packages/api-db-mongodb",
     "packages/api-media-karma",
-    "packages/editor",
-    "packages/oauth2"
+    "packages/editor"
   ]
 }
