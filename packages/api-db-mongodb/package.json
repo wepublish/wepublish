@@ -1,6 +1,26 @@
 {
   "name": "@wepublish/api-db-mongodb",
   "version": "0.8.4",
+  "description": "We.publish Database adapter for mongoDB",
+  "keywords": [
+    "database",
+    "mongodb",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "packages/api-db-mongodb"
+  },
   "main": "./lib/",
   "license": "MIT",
   "scripts": {

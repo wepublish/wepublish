@@ -1,6 +1,26 @@
 {
   "name": "@wepublish/api",
   "version": "0.8.4",
+  "description": "API core for we.publish.",
+  "keywords": [
+    "api",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription",
+    "graphql"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "packages/api"
+  },
   "typings": "./lib/index.d.ts",
   "license": "MIT",
   "scripts": {

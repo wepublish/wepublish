@@ -1,6 +1,27 @@
 {
   "name": "@wepublish/editor",
   "version": "0.8.4",
+  "description": "We.publish CMS Editor",
+  "keywords": [
+    "editor",
+    "react",
+    "mongodb",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "packages/editor"
+  },
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
