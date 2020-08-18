@@ -1,6 +1,26 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "0.0.1",
+  "version": "0.8.4",
+  "description": "We.publish OAuth2 Provider",
+  "keywords": [
+    "oauth2",
+    "mongodb",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "packages/oauth2"
+  },
   "bin": {
     "wepublish-oauth2": "./dist/server/index.js"
   },
