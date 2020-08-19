@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
+import {Map, TileLayer, Marker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../customCSS/leaflet.css'
 
 import {Icon} from 'leaflet'
 
-// stupid hack so that leaflet's images work after going through webpack
+// workaround to ensure that leaflet's images work after going through webpack
 //@ts-ignore
 import marker from 'leaflet/dist/images/marker-icon.png'
 //@ts-ignore
@@ -32,6 +32,7 @@ import {
   IconButton,
   Spacing,
   TypographicTextArea,
+  TextInput,
   Drawer,
   Image
 } from '@karma.run/ui'
@@ -72,14 +73,14 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
         <Marker position={[centerLat, centerLng]}></Marker>
       </Map>
       <Box marginTop={Spacing.ExtraSmall}>
-        <TypographicTextArea
-          variant="subtitle2"
-          align="center"
-          placeholder="Caption"
+        <TextInput
+          label="Caption"
+          description="Map description"
           value={caption}
-          onChange={e => {
-            onChange({...value, caption: e.target.value})
+          onChange={event => {
+            onChange({...value, caption: event.target.value})
           }}
+          marginBottom={Spacing.Small}
         />
       </Box>
     </>

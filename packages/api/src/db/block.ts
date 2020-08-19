@@ -103,7 +103,7 @@ export interface MapLeafletBlock {
   centerLng: number
   zoom: number
   caption?: string
-  items?: MapLeafletItem[]
+  items: MapLeafletItem[]
 }
 
 export interface ListicleItem {
@@ -206,6 +206,7 @@ export type ArticleBlock =
   | SoundCloudTrackBlock
   | TeaserGridBlock
   | MapLeafletBlock
+
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock
 
