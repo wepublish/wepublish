@@ -85,7 +85,7 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
     </>
   )
 }
-
+// This function will be used for Map-items
 export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletItem>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
