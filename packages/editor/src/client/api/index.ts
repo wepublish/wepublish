@@ -477,8 +477,10 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
+  updateUserSubscription?: Maybe<UserSubscription>;
   resetUserPassword?: Maybe<User>;
   deleteUser?: Maybe<Scalars['String']>;
+  deleteUserSubscription?: Maybe<Scalars['String']>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
   deleteUserRole?: Maybe<Scalars['String']>;
@@ -568,6 +570,12 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationUpdateUserSubscriptionArgs = {
+  userId: Scalars['ID'];
+  input: UserSubscriptionInput;
+};
+
+
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
@@ -576,6 +584,11 @@ export type MutationResetUserPasswordArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserSubscriptionArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -1241,6 +1254,7 @@ export type User = {
   name: Scalars['String'];
   email: Scalars['String'];
   roles: Array<Maybe<UserRole>>;
+  subscription?: Maybe<UserSubscription>;
 };
 
 export type UserConnection = {
@@ -1295,6 +1309,29 @@ export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
 }
+
+export type UserSubscription = {
+   __typename?: 'UserSubscription';
+  memberPlanId: Scalars['String'];
+  paymentPeriodicity: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  payedUntil: Scalars['DateTime'];
+  paymentMethod: Scalars['String'];
+  deactivatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type UserSubscriptionInput = {
+  memberPlanId: Scalars['String'];
+  paymentPeriodicity: Scalars['String'];
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  payedUntil: Scalars['DateTime'];
+  paymentMethod: Scalars['String'];
+  deactivatedAt?: Maybe<Scalars['DateTime']>;
+};
 
 export type VimeoVideoBlock = {
    __typename?: 'VimeoVideoBlock';
@@ -2376,13 +2413,21 @@ export type DeleteTokenMutation = (
   & Pick<Mutation, 'deleteToken'>
 );
 
+export type FullUserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'memberPlanId' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'paymentMethod' | 'deactivatedAt'>
+);
+
 export type FullUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email'>
   & { roles: Array<Maybe<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>> }
+  )>>, subscription?: Maybe<(
+    { __typename?: 'UserSubscription' }
+    & FullUserSubscriptionFragment
+  )> }
 );
 
 export type UserListQueryVariables = {
@@ -2450,6 +2495,20 @@ export type UpdateUserMutation = (
   )> }
 );
 
+export type UpdateUserSubscriptionMutationVariables = {
+  userId: Scalars['ID'];
+  input: UserSubscriptionInput;
+};
+
+
+export type UpdateUserSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserSubscription?: Maybe<(
+    { __typename?: 'UserSubscription' }
+    & FullUserSubscriptionFragment
+  )> }
+);
+
 export type ResetUserPasswordMutationVariables = {
   id: Scalars['ID'];
   password: Scalars['String'];
@@ -2472,6 +2531,16 @@ export type DeleteUserMutationVariables = {
 export type DeleteUserMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteUser'>
+);
+
+export type DeleteUserSubscriptionMutationVariables = {
+  userId: Scalars['ID'];
+};
+
+
+export type DeleteUserSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteUserSubscription'>
 );
 
 export type FullPermissionFragment = (
@@ -2946,6 +3015,18 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const FullUserSubscriptionFragmentDoc = gql`
+    fragment FullUserSubscription on UserSubscription {
+  memberPlanId
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  payedUntil
+  paymentMethod
+  deactivatedAt
+}
+    `;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
@@ -2954,8 +3035,12 @@ export const FullUserFragmentDoc = gql`
   roles {
     ...FullUserRole
   }
+  subscription {
+    ...FullUserSubscription
+  }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullUserSubscriptionFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
@@ -4627,6 +4712,39 @@ export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserSubscriptionDocument = gql`
+    mutation UpdateUserSubscription($userId: ID!, $input: UserSubscriptionInput!) {
+  updateUserSubscription(userId: $userId, input: $input) {
+    ...FullUserSubscription
+  }
+}
+    ${FullUserSubscriptionFragmentDoc}`;
+export type UpdateUserSubscriptionMutationFn = ApolloReactCommon.MutationFunction<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>;
+
+/**
+ * __useUpdateUserSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSubscriptionMutation, { data, loading, error }] = useUpdateUserSubscriptionMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>(UpdateUserSubscriptionDocument, baseOptions);
+      }
+export type UpdateUserSubscriptionMutationHookResult = ReturnType<typeof useUpdateUserSubscriptionMutation>;
+export type UpdateUserSubscriptionMutationResult = ApolloReactCommon.MutationResult<UpdateUserSubscriptionMutation>;
+export type UpdateUserSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>;
 export const ResetUserPasswordDocument = gql`
     mutation ResetUserPassword($id: ID!, $password: String!) {
   resetUserPassword(id: $id, password: $password) {
@@ -4690,6 +4808,36 @@ export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = ApolloReactCommon.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const DeleteUserSubscriptionDocument = gql`
+    mutation DeleteUserSubscription($userId: ID!) {
+  deleteUserSubscription(userId: $userId)
+}
+    `;
+export type DeleteUserSubscriptionMutationFn = ApolloReactCommon.MutationFunction<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
+
+/**
+ * __useDeleteUserSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserSubscriptionMutation, { data, loading, error }] = useDeleteUserSubscriptionMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useDeleteUserSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>(DeleteUserSubscriptionDocument, baseOptions);
+      }
+export type DeleteUserSubscriptionMutationHookResult = ReturnType<typeof useDeleteUserSubscriptionMutation>;
+export type DeleteUserSubscriptionMutationResult = ApolloReactCommon.MutationResult<DeleteUserSubscriptionMutation>;
+export type DeleteUserSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
 export const UserRoleListDocument = gql`
     query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
