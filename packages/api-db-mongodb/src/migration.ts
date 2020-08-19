@@ -245,6 +245,13 @@ export const Migrations: Migration[] = [
 
       await memberPlans.createIndex({label: 1}, {unique: true})
     }
+  },
+  {
+    version: 4,
+    async migrate(db, locale) {
+      const users = db.collection(CollectionName.Users)
+      await users.createIndex({'subscription.memberPlanId': 1})
+    }
   }
 ]
 

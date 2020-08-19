@@ -5,13 +5,28 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLBoolean
 } from 'graphql'
 import {UserSort} from '../db/user'
 import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
+
+export const GraphQLUserSubscription = new GraphQLObjectType({
+  name: 'UserSubscription',
+  fields: {
+    memberPlanId: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    payedUntil: {type: GraphQLNonNull(GraphQLDateTime)},
+    paymentMethod: {type: GraphQLNonNull(GraphQLString)},
+    deactivatedAt: {type: GraphQLDateTime}
+  }
+})
 
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
@@ -28,7 +43,8 @@ export const GraphQLUser = new GraphQLObjectType({
       resolve({roleIDs}, args, {loaders}) {
         return Promise.all(roleIDs.map((roleID: string) => loaders.userRolesByID.load(roleID)))
       }
-    }
+    },
+    subscription: {type: GraphQLUserSubscription}
   }
 })
 
@@ -62,5 +78,19 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
     roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+  }
+})
+
+export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
+  name: 'UserSubscriptionInput',
+  fields: {
+    memberPlanId: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    payedUntil: {type: GraphQLNonNull(GraphQLDateTime)},
+    paymentMethod: {type: GraphQLNonNull(GraphQLString)},
+    deactivatedAt: {type: GraphQLDateTime}
   }
 })

@@ -56,7 +56,12 @@ import {
   CanCreateMemberPlan,
   CanDeleteMemberPlan
 } from './permissions'
-import {GraphQLUser, GraphQLUserInput} from './user'
+import {
+  GraphQLUser,
+  GraphQLUserInput,
+  GraphQLUserSubscription,
+  GraphQLUserSubscriptionInput
+} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
@@ -319,6 +324,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    updateUserSubscription: {
+      type: GraphQLUserSubscription,
+      args: {
+        userId: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
+      },
+      resolve(root, {userId, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.user.updateUserSubscription({userId, input})
+      }
+    },
+
     resetUserPassword: {
       type: GraphQLUser,
       args: {
@@ -342,6 +360,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanDeleteUser, roles)
         await dbAdapter.user.deleteUser({id})
         return id
+      }
+    },
+
+    deleteUserSubscription: {
+      type: GraphQLString,
+      args: {
+        userId: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {userId}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteUser, roles)
+        await dbAdapter.user.deleteUserSubscription(userId)
+        return userId
       }
     },
 

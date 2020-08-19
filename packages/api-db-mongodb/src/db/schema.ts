@@ -1,4 +1,11 @@
-import {ArticleBlock, FocalPoint, NavigationLink, PageBlock, RichTextNode} from '@wepublish/api'
+import {
+  ArticleBlock,
+  FocalPoint,
+  NavigationLink,
+  PageBlock,
+  RichTextNode,
+  UserSubscription
+} from '@wepublish/api'
 import {PaymentPeriodicity} from '@wepublish/api'
 
 export enum CollectionName {
@@ -75,6 +82,8 @@ export interface DBUser {
   password: string
 
   roleIDs: string[]
+
+  subscription?: UserSubscription
 }
 
 export interface DBUserRole {
