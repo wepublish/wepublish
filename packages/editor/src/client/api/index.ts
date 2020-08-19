@@ -425,7 +425,7 @@ export type MapLeafletBlock = {
   centerLng: Scalars['Float'];
   zoom: Scalars['Int'];
   caption?: Maybe<Scalars['String']>;
-  mapItems: Array<MapLeafletItem>;
+  items: Array<MapLeafletItem>;
 };
 
 export type MapLeafletBlockInput = {
@@ -433,7 +433,7 @@ export type MapLeafletBlockInput = {
   centerLng: Scalars['Float'];
   zoom: Scalars['Int'];
   caption?: Maybe<Scalars['String']>;
-  mapItems?: Maybe<Array<Maybe<MapLeafletItemInput>>>;
+  items?: Maybe<Array<Maybe<MapLeafletItemInput>>>;
 };
 
 export type MapLeafletItem = {
@@ -1800,7 +1800,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
 type FullBlock_MapLeafletBlock_Fragment = (
   { __typename: 'MapLeafletBlock' }
   & Pick<MapLeafletBlock, 'centerLat' | 'centerLng' | 'zoom' | 'caption'>
-  & { mapItems: Array<(
+  & { items: Array<(
     { __typename?: 'MapLeafletItem' }
     & Pick<MapLeafletItem, 'lat' | 'lng' | 'title' | 'description'>
     & { image?: Maybe<(
@@ -2694,7 +2694,7 @@ export const FullBlockFragmentDoc = gql`
     centerLng
     zoom
     caption
-    mapItems {
+    items {
       lat
       lng
       title

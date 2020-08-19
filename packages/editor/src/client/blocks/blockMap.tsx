@@ -65,7 +65,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       centerLng: 7.4485,
       zoom: 8,
       caption: '',
-      mapItems: [
+      items: [
         {
           id: nanoid(),
           value: {

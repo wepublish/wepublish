@@ -97,7 +97,7 @@ fragment FullBlock on Block {
     centerLng
     zoom
     caption
-    mapItems {
+    items {
       lat
       lng
       title
