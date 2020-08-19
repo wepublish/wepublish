@@ -61,9 +61,14 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
         center={[centerLat, centerLng]}
         zoom={zoom}
         style={{width: '100%', height: '45vh'}}
-        onViewportChange={e => {
-          if (e.center && e.zoom) {
-            onChange({...value, centerLat: e.center[0], centerLng: e.center[1], zoom: e.zoom})
+        onViewportChange={viewport => {
+          if (viewport.center && viewport.zoom) {
+            onChange({
+              ...value,
+              centerLat: viewport.center[0],
+              centerLng: viewport.center[1],
+              zoom: viewport.zoom
+            })
           }
         }}>
         <TileLayer
