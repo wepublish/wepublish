@@ -249,7 +249,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           }))
         }
       }
-    //TODO Finish this
+
     case BlockType.MapLeaflet:
       return {
         mapLeaflet: {
@@ -260,7 +260,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           items: block.value.items.map(({value: {lat, lng, title, description, image}}) => ({
             lat: lat,
             lng: lng,
-            title: title,
+            title,
             description: description,
             imageID: image?.id
           }))
