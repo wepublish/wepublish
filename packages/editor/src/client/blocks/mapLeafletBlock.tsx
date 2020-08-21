@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Map, TileLayer, Marker} from 'react-leaflet'
+import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../customCSS/leaflet.css'
 
@@ -60,9 +60,13 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
           />
           // items.map mehrere Marker setzen
           <Marker position={[centerLat, centerLng]}></Marker>
-          //@ts-ignore
           {items.map(item => (
-            <Marker position={[item.value.lat, item.value.lng]}></Marker>
+            <Marker position={[item.value.lat, item.value.lng]}>
+              <Popup>
+                <b>{item.value.title}</b> <br />
+                {item.value.description}
+              </Popup>
+            </Marker>
           ))}
         </Map>
         <Box position="absolute" zIndex={ZIndex.Default} top={0} right={0}>
