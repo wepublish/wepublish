@@ -4,12 +4,12 @@ The api is published via https://www.npmjs.com/package/@wepublish/api.
 Source files are published from [/packages/api](https://github.com/wepublish/wepublish/tree/master/packages/api) .
 We use lerna to keep all realeses and npm versions equal in this mono repo.
 
-From v0.8.4 on, releases are coming with github tags, for more see https://github.com/wepublish/wepublish/tags 
+From v0.8.4 on, releases are coming with github tags, for more see [release tags](https://github.com/wepublish/wepublish/tags). 
 
 
 ## Example requests
 
-`<API_BASE_URL>` is a placeholder for your GraphQL playground url, e.g.  
+`<API_BASE_URL>` is a placeholder for your GraphQL playground url, e.g. http://localhost:4000  
 
 #### Getting an article via `<API_BASE_URL>` enpoint
 
