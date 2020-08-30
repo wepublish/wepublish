@@ -2,10 +2,18 @@ import {RichTextNode} from '../graphql/richText'
 import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
 export enum PaymentPeriodicity {
-  Monthly = 1,
-  Quarterly = 3,
-  Yearly = 12
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Biannual = 'biannual',
+  Yearly = 'yearly'
 }
+
+export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly
+]
 
 export interface MemberPlan {
   readonly id: string

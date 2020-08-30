@@ -16,8 +16,6 @@ import {
   Image,
   Toast,
   ZIndex,
-  ListInput,
-  ListValue,
   Toggle,
   Typography
 } from '@karma.run/ui'
@@ -42,7 +40,7 @@ import {
   useUpdateMemberPlanMutation
 } from '../api'
 
-import {generateID, getOperationNameFromDocument} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 import InputRange from 'react-input-range'
@@ -61,7 +59,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [isActive, setIsActive] = useState<boolean>(false)
   const [availablePaymentPeriodicity, setAvailablePaymentPeriodicity] = useState<
-    ListValue<string>[]
+    {id: string; checked: boolean}[]
   >([])
   const [minimumDuration, setMinimumDuration] = useState<number>(0)
   const [forceAutoRenewal, setForceAutoRenewal] = useState<boolean>(false)
@@ -102,14 +100,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
       )
       setIsActive(data.memberPlan.isActive)
-      setAvailablePaymentPeriodicity(
-        data.memberPlan.availablePaymentPeriodicity
-          ? data.memberPlan.availablePaymentPeriodicity.map(paymentPeriodicity => ({
-              id: generateID(),
-              value: paymentPeriodicity
-            }))
-          : []
-      )
+      setAvailablePaymentPeriodicity(data.memberPlan.availablePaymentPeriodicity)
       setMinimumDuration(data.memberPlan.minimumDuration)
       setForceAutoRenewal(data.memberPlan.forceAutoRenewal)
       setPricePerMonthMinimum(data.memberPlan.pricePerMonthMinimum)
@@ -144,7 +135,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             image: image?.id,
             description,
             isActive,
-            availablePaymentPeriodicity: availablePaymentPeriodicity.map(({value}) => value),
+            availablePaymentPeriodicity: availablePaymentPeriodicity
+              .filter(({checked}) => checked)
+              .map(({id}) => id),
             minimumDuration,
             forceAutoRenewal,
             pricePerMonthMinimum,
@@ -162,7 +155,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             image: image?.id,
             description,
             isActive,
-            availablePaymentPeriodicity: availablePaymentPeriodicity.map(({value}) => value),
+            availablePaymentPeriodicity: availablePaymentPeriodicity
+              .filter(({checked}) => checked)
+              .map(({id}) => id),
             minimumDuration,
             forceAutoRenewal,
             pricePerMonthMinimum,
@@ -314,21 +309,27 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         </PanelSection>
         <PanelSectionHeader title="Payment Pariodicity" />
         <PanelSection>
-          <ListInput
-            value={availablePaymentPeriodicity}
-            onChange={app => setAvailablePaymentPeriodicity(app)}
-            defaultValue={'monthly'}>
-            {({value, onChange}) => (
-              <Box display="flex" flexDirection="row">
-                <TextInput
-                  label="periodicity"
-                  flexBasis="70%"
-                  value={value}
-                  onChange={e => onChange(e.target.value)}
+          {availablePaymentPeriodicity.map((paymentPeriodicity, index) => {
+            return (
+              <Box marginBottom={Spacing.ExtraSmall}>
+                <Toggle
+                  key={index}
+                  name={paymentPeriodicity.id}
+                  label={paymentPeriodicity.id}
+                  disabled={isDisabled}
+                  checked={paymentPeriodicity.checked}
+                  onChange={event => {
+                    const newAPP = availablePaymentPeriodicity.map(app => {
+                      return app.id === event.target.name
+                        ? {...app, checked: event.target.checked}
+                        : app
+                    })
+                    setAvailablePaymentPeriodicity(newAPP)
+                  }}
                 />
               </Box>
-            )}
-          </ListInput>
+            )
+          })}
         </PanelSection>
       </Panel>
       <Toast

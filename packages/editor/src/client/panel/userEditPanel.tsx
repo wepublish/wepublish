@@ -15,7 +15,8 @@ import {
   IconButton,
   Select,
   Button,
-  Dialog
+  Dialog,
+  Drawer
 } from '@karma.run/ui'
 
 import {
@@ -25,9 +26,16 @@ import {
   MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
-import {useCreateUserMutation, FullUserFragment, useUpdateUserMutation, useUserQuery} from '../api'
+import {
+  useCreateUserMutation,
+  FullUserFragment,
+  useUpdateUserMutation,
+  useUserQuery,
+  FullUserSubscriptionFragment
+} from '../api'
 import {useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
+import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 export interface UserEditPanelProps {
   id?: string
@@ -47,10 +55,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [password, setPassword] = useState('')
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
 
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
+  const [isUserSubscriptonEditOpen, setIsUserSubscriptonEditOpen] = useState(false)
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -82,6 +92,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     if (data?.user) {
       setName(data.user.name)
       setEmail(data.user.email)
+      setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
         // TODO: fix this
         setRoles(data.user.roles as FullUserRoleFragment[])
@@ -205,6 +216,28 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             )}
           </Box>
         </PanelSection>
+        <PanelSectionHeader title="Subscription" />
+        <PanelSection>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Button
+              disabled={isDisabled || id === undefined}
+              label={
+                subscription
+                  ? `Edit Subscription "${subscription.memberPlan.label}"`
+                  : 'Create Subscription'
+              }
+              variant="outlined"
+              onClick={() => setIsUserSubscriptonEditOpen(true)}
+            />
+          </Box>
+          {id === undefined && (
+            <Box marginBottom={Spacing.ExtraSmall}>
+              <Typography variant="body1">
+                Subscription can only be added once the user has been created.
+              </Typography>
+            </Box>
+          )}
+        </PanelSection>
         <PanelSectionHeader title="User Roles" />
         <PanelSection>
           {roles.map(role => {
@@ -273,6 +306,21 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           />
         )}
       </Dialog>
+      {id !== undefined && (
+        <Drawer open={isUserSubscriptonEditOpen} width={480}>
+          {() => (
+            <UserSubscriptionEditPanel
+              userId={id}
+              subscription={subscription}
+              onClose={() => setIsUserSubscriptonEditOpen(false)}
+              onSave={value => {
+                setIsUserSubscriptonEditOpen(false)
+                setUserSubscription(value)
+              }}
+            />
+          )}
+        </Drawer>
+      )}
     </>
   )
 }

@@ -13,11 +13,17 @@ import {GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {GraphQLMemberPlan} from './memberPlan'
 
 export const GraphQLUserSubscription = new GraphQLObjectType({
   name: 'UserSubscription',
   fields: {
-    memberPlanId: {type: GraphQLNonNull(GraphQLString)},
+    memberPlan: {
+      type: GraphQLNonNull(GraphQLMemberPlan),
+      resolve({memberPlanId}, args, {loaders}) {
+        return loaders.memberPlansByID.load(memberPlanId)
+      }
+    },
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},

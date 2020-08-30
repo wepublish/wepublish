@@ -1,4 +1,4 @@
-import {MemberPlan, MemberPlanSort} from '../db/memberPlan'
+import {AllPaymentPeriodicity, MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -18,6 +18,14 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
 
+export const GraphQLPaymentPeriodicity = new GraphQLObjectType({
+  name: 'PaymentPeriodicity',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLString)},
+    checked: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
   fields: {
@@ -35,7 +43,17 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     },
     description: {type: GraphQLRichText},
     isActive: {type: GraphQLNonNull(GraphQLBoolean)},
-    availablePaymentPeriodicity: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    availablePaymentPeriodicity: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity))),
+      resolve({availablePaymentPeriodicity}, args) {
+        return AllPaymentPeriodicity.map(paymentPeriodicity => {
+          return {
+            id: paymentPeriodicity,
+            checked: availablePaymentPeriodicity.includes(paymentPeriodicity)
+          }
+        })
+      }
+    },
     minimumDuration: {type: GraphQLNonNull(GraphQLInt)},
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)},
     pricePerMonthMinimum: {type: GraphQLNonNull(GraphQLInt)},

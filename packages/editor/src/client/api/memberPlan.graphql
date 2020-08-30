@@ -9,7 +9,10 @@ fragment MemberPlanRef on MemberPlan {
 
 fragment FullMemberPlan on MemberPlan {
     description
-    availablePaymentPeriodicity
+    availablePaymentPeriodicity {
+        id
+        checked
+    }
     minimumDuration
     forceAutoRenewal
     pricePerMonthMinimum

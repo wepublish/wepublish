@@ -21,8 +21,8 @@ export type Scalars = {
   DateTime: string;
   /** A hexidecimal color value. */
   Color: string;
-  Slug: string;
   RichText: Node[];
+  Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -427,7 +427,7 @@ export type MemberPlan = {
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
-  availablePaymentPeriodicity: Array<Scalars['String']>;
+  availablePaymentPeriodicity: Array<PaymentPeriodicity>;
   minimumDuration: Scalars['Int'];
   forceAutoRenewal: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
@@ -846,6 +846,12 @@ export type PageTeaserInput = {
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   pageID: Scalars['ID'];
+};
+
+export type PaymentPeriodicity = {
+   __typename?: 'PaymentPeriodicity';
+  id: Scalars['String'];
+  checked: Scalars['Boolean'];
 };
 
 export type Peer = {
@@ -1312,7 +1318,7 @@ export enum UserSort {
 
 export type UserSubscription = {
    __typename?: 'UserSubscription';
-  memberPlanId: Scalars['String'];
+  memberPlan: MemberPlan;
   paymentPeriodicity: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
@@ -1985,7 +1991,11 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'availablePaymentPeriodicity' | 'minimumDuration' | 'forceAutoRenewal' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & Pick<MemberPlan, 'description' | 'minimumDuration' | 'forceAutoRenewal' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & { availablePaymentPeriodicity: Array<(
+    { __typename?: 'PaymentPeriodicity' }
+    & Pick<PaymentPeriodicity, 'id' | 'checked'>
+  )> }
   & MemberPlanRefFragment
 );
 
@@ -2415,7 +2425,11 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'memberPlanId' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'paymentMethod' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'paymentMethod' | 'deactivatedAt'>
+  & { memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ) }
 );
 
 export type FullUserFragment = (
@@ -2945,27 +2959,6 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  label
-  isActive
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullMemberPlanFragmentDoc = gql`
-    fragment FullMemberPlan on MemberPlan {
-  description
-  availablePaymentPeriodicity
-  minimumDuration
-  forceAutoRenewal
-  pricePerMonthMinimum
-  pricePerMonthMaximum
-  ...MemberPlanRef
-}
-    ${MemberPlanRefFragmentDoc}`;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -3015,9 +3008,35 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  label
+  isActive
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullMemberPlanFragmentDoc = gql`
+    fragment FullMemberPlan on MemberPlan {
+  description
+  availablePaymentPeriodicity {
+    id
+    checked
+  }
+  minimumDuration
+  forceAutoRenewal
+  pricePerMonthMinimum
+  pricePerMonthMaximum
+  ...MemberPlanRef
+}
+    ${MemberPlanRefFragmentDoc}`;
 export const FullUserSubscriptionFragmentDoc = gql`
     fragment FullUserSubscription on UserSubscription {
-  memberPlanId
+  memberPlan {
+    ...FullMemberPlan
+  }
   paymentPeriodicity
   monthlyAmount
   autoRenew
@@ -3026,7 +3045,7 @@ export const FullUserSubscriptionFragmentDoc = gql`
   paymentMethod
   deactivatedAt
 }
-    `;
+    ${FullMemberPlanFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id

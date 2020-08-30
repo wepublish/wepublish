@@ -1,5 +1,7 @@
 fragment FullUserSubscription on UserSubscription {
-    memberPlanId
+    memberPlan {
+        ...FullMemberPlan
+    }
     paymentPeriodicity
     monthlyAmount
     autoRenew
