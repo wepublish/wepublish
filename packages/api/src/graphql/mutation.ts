@@ -371,7 +371,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {userId}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteUser, roles)
-        await dbAdapter.user.deleteUserSubscription(userId)
+        await dbAdapter.user.deleteUserSubscription({userId})
         return userId
       }
     },

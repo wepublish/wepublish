@@ -16,7 +16,9 @@ import {
   Select,
   Button,
   Dialog,
-  Drawer
+  Drawer,
+  DescriptionListItem,
+  DescriptionList
 } from '@karma.run/ui'
 
 import {
@@ -33,7 +35,7 @@ import {
   useUserQuery,
   FullUserSubscriptionFragment
 } from '../api'
-import {useUserRoleListQuery, FullUserRoleFragment} from '../api'
+import {useUserRoleListQuery, FullUserRoleFragment, useDeleteUserSubscriptionMutation} from '../api'
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
@@ -85,8 +87,19 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [createUser, {loading: isCreating, error: createError}] = useCreateUserMutation()
   const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
 
+  const [
+    deleteSubscription,
+    {loading: isDeleteingSubscription, error: deleteSubscriptionError}
+  ] = useDeleteUserSubscriptionMutation()
+
   const isDisabled =
-    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError != undefined
+    isLoading ||
+    isUserRoleLoading ||
+    isCreating ||
+    isUpdating ||
+    isDeleteingSubscription ||
+    loadError != undefined ||
+    deleteSubscriptionError != undefined
 
   useEffect(() => {
     if (data?.user) {
@@ -119,8 +132,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     } else if (loadUserRoleError) {
       setErrorToastOpen(true)
       setErrorMessage(loadUserRoleError.message)
+    } else if (deleteSubscriptionError) {
+      setErrorToastOpen(true)
+      setErrorMessage(deleteSubscriptionError.message)
     }
-  }, [loadError, createError, updateError, loadUserRoleError])
+  }, [loadError, createError, updateError, loadUserRoleError, deleteSubscriptionError])
 
   async function handleSave() {
     if (id) {
@@ -219,16 +235,47 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <PanelSectionHeader title="Subscription" />
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
-            <Button
-              disabled={isDisabled || id === undefined}
-              label={
-                subscription
-                  ? `Edit Subscription "${subscription.memberPlan.label}"`
-                  : 'Create Subscription'
-              }
-              variant="outlined"
-              onClick={() => setIsUserSubscriptonEditOpen(true)}
-            />
+            {subscription && (
+              <Box marginBottom={Spacing.ExtraSmall}>
+                <DescriptionList>
+                  <DescriptionListItem label="Started">
+                    {new Date(subscription.startsAt).toLocaleString()}
+                  </DescriptionListItem>
+                  <DescriptionListItem label="Payed Until">
+                    {new Date(subscription.payedUntil).toLocaleString()}
+                  </DescriptionListItem>
+                  <DescriptionListItem label="Member Plan">
+                    {subscription.memberPlan.label}
+                  </DescriptionListItem>
+                </DescriptionList>
+              </Box>
+            )}
+            <Box display="flex" width="100%">
+              <Button
+                marginRight={Spacing.ExtraSmall}
+                disabled={isDisabled || id === undefined}
+                label={subscription ? `Edit` : 'Create'}
+                variant="outlined"
+                onClick={() => setIsUserSubscriptonEditOpen(true)}
+              />
+              {subscription && id && (
+                <Button
+                  label="Delete"
+                  disabled={isDisabled || id === undefined}
+                  variant="outlined"
+                  onClick={async () => {
+                    const result = await deleteSubscription({
+                      variables: {
+                        userId: id
+                      }
+                    })
+                    if (result?.data?.deleteUserSubscription === id) {
+                      setUserSubscription(undefined)
+                    }
+                  }}
+                />
+              )}
+            </Box>
           </Box>
           {id === undefined && (
             <Box marginBottom={Spacing.ExtraSmall}>

@@ -298,8 +298,10 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       {_id: userId},
       {
         $set: {
-          modifiedAt: new Date(),
-          subscription: undefined
+          modifiedAt: new Date()
+        },
+        $unset: {
+          subscription: ''
         }
       }
     )

@@ -12,7 +12,9 @@ import {
   Typography,
   Select,
   Toggle,
-  PanelSectionHeader
+  PanelSectionHeader,
+  DescriptionList,
+  DescriptionListItem
 } from '@karma.run/ui'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -109,10 +111,10 @@ export function UserSubscriptionEditPanel({
           monthlyAmount,
           paymentPeriodicity,
           autoRenew,
-          startsAt: startsAt.toLocaleString(),
-          payedUntil: payedUntil.toLocaleString(),
+          startsAt: startsAt.toISOString(),
+          payedUntil: payedUntil.toISOString(),
           paymentMethod,
-          deactivatedAt: deactivatedAt ? deactivatedAt.toLocaleString() : null
+          deactivatedAt: deactivatedAt ? deactivatedAt.toISOString() : null
         }
       }
     })
@@ -150,6 +152,21 @@ export function UserSubscriptionEditPanel({
               onChange={value => setMemberPlan(value)}
             />
           </Box>
+          {memberPlan && (
+            <Box marginTop={Spacing.ExtraSmall}>
+              <DescriptionList>
+                <DescriptionListItem label="Monthly Amount (CHF)">
+                  {memberPlan.pricePerMonthMinimum}{' '}
+                  {memberPlan.pricePerMonthMinimum !== memberPlan.pricePerMonthMaximum
+                    ? `- ${memberPlan.pricePerMonthMaximum}`
+                    : ''}
+                </DescriptionListItem>
+                <DescriptionListItem label="Force Auto Renewal">
+                  {memberPlan.forceAutoRenewal ? 'Yes' : 'No'}
+                </DescriptionListItem>
+              </DescriptionList>
+            </Box>
+          )}
         </PanelSection>
         <PanelSectionHeader title="Subscription" />
         {memberPlan?.availablePaymentPeriodicity && (
@@ -162,13 +179,13 @@ export function UserSubscriptionEditPanel({
                   app => app.id === paymentPeriodicity
                 )}
                 renderListItem={value =>
-                  `${value?.id} ${value?.checked ? '- (Active in MemberPlan)' : ''}`
+                  `${value?.id} ${value?.checked ? '- (Enabled in MemberPlan)' : ''}`
                 }
                 onChange={value => (value ? setPaymentPeriodicity(value.id) : paymentPeriodicity)}
                 marginBottom={Spacing.Small}
               />
             </Box>
-            <Box marginBottom={Spacing.Small}>
+            <Box marginBottom={Spacing.ExtraSmall}>
               <TextInput
                 label="Monthly amount"
                 type="number"
