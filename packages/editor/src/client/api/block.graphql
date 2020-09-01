@@ -98,6 +98,7 @@ fragment FullBlock on Block {
     zoom
     caption
     items {
+      address
       lat
       lng
       title

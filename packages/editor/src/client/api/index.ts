@@ -438,6 +438,7 @@ export type MapLeafletBlockInput = {
 
 export type MapLeafletItem = {
    __typename?: 'MapLeafletItem';
+  address: Scalars['String'];
   lat: Scalars['Float'];
   lng: Scalars['Float'];
   title: Scalars['String'];
@@ -446,6 +447,7 @@ export type MapLeafletItem = {
 };
 
 export type MapLeafletItemInput = {
+  address: Scalars['String'];
   lat: Scalars['Float'];
   lng: Scalars['Float'];
   title: Scalars['String'];
@@ -1802,7 +1804,7 @@ type FullBlock_MapLeafletBlock_Fragment = (
   & Pick<MapLeafletBlock, 'centerLat' | 'centerLng' | 'zoom' | 'caption'>
   & { items: Array<(
     { __typename?: 'MapLeafletItem' }
-    & Pick<MapLeafletItem, 'lat' | 'lng' | 'title' | 'description'>
+    & Pick<MapLeafletItem, 'address' | 'lat' | 'lng' | 'title' | 'description'>
     & { image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
@@ -2695,6 +2697,7 @@ export const FullBlockFragmentDoc = gql`
     zoom
     caption
     items {
+      address
       lat
       lng
       title

@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {MaterialIconClose} from '@karma.run/icons'
+import {geoCodeWithOpenCage, MarkerPoint} from '../utility'
 
 import {
   NavigationButton,
@@ -28,6 +29,7 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
     initialItems.map(item => ({
       id: nanoid(),
       value: {
+        address: item.value.address,
         lat: item.value.lat,
         lng: item.value.lng,
         title: item.value.title,
@@ -53,7 +55,7 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
         <ListInput
           value={items}
           onChange={items => setItems(items)}
-          defaultValue={{lat: 0, lng: 0, title: '', description: '', image: null}}>
+          defaultValue={{address: '', lat: 0, lng: 0, title: '', description: '', image: null}}>
           {props => <MapLeafletItems {...props} />}
         </ListInput>
       </PanelSection>
@@ -62,11 +64,41 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
 }
 
 export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
-  const {lat, lng, title, description, image} = value
+  const {address, lat, lng, title, description} = value
+
+  const [addressQuery, setAddressQuery] = useState(address)
+  const [data, setData] = useState<any>([])
+
+  useEffect(() => {
+    async function asyncGeoCode() {
+      if (addressQuery != '' && addressQuery.length > 1) {
+        const data = await geoCodeWithOpenCage(addressQuery, 5)
+        setData(data)
+      }
+    }
+    asyncGeoCode()
+  }, [addressQuery])
 
   return (
     <>
+      <ul>
+        {data.map((item: any) => {
+          return <li>{item.address}</li>
+        })}
+      </ul>
       <Box display="flex" flexDirection="column">
+        <TextInput
+          value={addressQuery}
+          marginBottom={Spacing.ExtraSmall}
+          type="address"
+          label="Address"
+          onChange={e => {
+            //onChange(value => ({...value, lat}))
+            setAddressQuery(e.target.value)
+            //geoCodeWithOpenCage(address, 5)
+          }}
+          required
+        />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           type="number"
@@ -111,3 +143,59 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
     </>
   )
 }
+/*
+export function AddressInput(props: AddressInputList) {
+  return (
+    <AutocompleteInput
+      {...props}
+      valueToChipData={author => ({
+        id: author.id,
+        label: author.name,
+        imageURL: author.image?.squareURL ?? undefined
+      })}>
+      {props => <AddressInputList {...props} />}
+    </AutocompleteInput>
+  )
+}
+
+function AddressInputList({
+  isOpen,
+  inputValue,
+  highlightedIndex,
+  getItemProps,
+  getMenuProps
+}: AutocompleteInputListProps) {
+  const [items, setItems] = useState<AuthorRefFragment[]>([])
+  const {data, loading: isLoading} = useAuthorListQuery({
+    variables: {filter: inputValue || undefined, first: 10},
+    fetchPolicy: 'network-only'
+  })
+
+  useEffect(() => {
+    setItems(data?.authors.nodes ?? [])
+  }, [data])
+
+  return (
+    <SelectList {...getMenuProps()}>
+      {isOpen && inputValue ? (
+        !isLoading ? (
+          items.length ? (
+            items.map((item, index) => (
+              <SelectListItem
+                key={item.id}
+                highlighted={index === highlightedIndex}
+                {...getItemProps({item, index})}>
+                <Box display="flex">{item.name}</Box>
+              </SelectListItem>
+            ))
+          ) : (
+            <SelectListItem>No Address found</SelectListItem>
+          )
+        ) : (
+          <SelectListItem>Loading...</SelectListItem>
+        )
+      ) : null}
+    </SelectList>
+  )
+}
+*/

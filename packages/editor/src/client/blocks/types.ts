@@ -44,6 +44,7 @@ export interface ImageGalleryBlockValue {
 }
 
 export interface MapLeafletItem {
+  address: string
   lat: number
   lng: number
   title: string
@@ -257,13 +258,16 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           centerLng: block.value.centerLng,
           zoom: block.value.zoom,
           caption: block.value.caption,
-          items: block.value.items.map(({value: {lat, lng, title, description, image}}) => ({
-            lat: lat,
-            lng: lng,
-            title,
-            description: description,
-            imageID: image?.id
-          }))
+          items: block.value.items.map(
+            ({value: {address, lat, lng, title, description, image}}) => ({
+              address: address,
+              lat: lat,
+              lng: lng,
+              title,
+              description: description,
+              imageID: image?.id
+            })
+          )
         }
       }
 
@@ -462,9 +466,10 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           centerLng: block.centerLng,
           zoom: block.zoom,
           caption: block.caption ?? '',
-          items: block.items.map(({lat, lng, title, description, image}) => ({
+          items: block.items.map(({address, lat, lng, title, description, image}) => ({
             id: nanoid(),
             value: {
+              address: address,
               lat: lat,
               lng: lng,
               title,

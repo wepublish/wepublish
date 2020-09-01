@@ -120,3 +120,25 @@ export function transformCssStringToObject(styleCustom: string): object {
     return previousValue
   }, {})
 }
+
+export interface MarkerPoint {
+  lat: number
+  lng: number
+  address: string
+}
+
+export async function geoCodeWithOpenCage(address: string, limit: number): Promise<MarkerPoint[]> {
+  const api = 'ab48a007c6dd4906adcd2871a5deaebe'
+  const requestURL = `https://api.opencagedata.com/geocode/v1/json?key=${api}&q=${address}&limit=${limit}&pretty=1`
+
+  const response = await fetch(requestURL)
+  const json = await response.json()
+
+  return json.results.map((res: any) => {
+    return {
+      lat: res.geometry.lat,
+      lng: res.geometry.lng,
+      address: res.formatted
+    }
+  })
+}

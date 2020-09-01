@@ -69,6 +69,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         {
           id: nanoid(),
           value: {
+            address: '',
             lat: 0,
             lng: 0,
             title: '',
