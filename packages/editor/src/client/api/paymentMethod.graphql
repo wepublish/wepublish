@@ -1,0 +1,34 @@
+
+
+fragment FullPaymentMethod on PaymentMethod {
+    id
+    name
+    createdAt
+    modifiedAt
+    paymentAdapter
+    description
+    active
+}
+
+query PaymentMethodList {
+    paymentMethods {
+        ...FullPaymentMethod
+    }
+}
+
+
+mutation CreatePaymentMethod($input: PaymentMethodInput!) {
+    createPaymentMethod(input: $input) {
+        ...FullPaymentMethod
+    }
+}
+
+mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
+    updatePaymentMethod(id: $id, input: $input) {
+        ...FullPaymentMethod
+    }
+}
+
+mutation DeletePaymentMethod($id: ID!) {
+    deletePaymentMethod(id: $id)
+}

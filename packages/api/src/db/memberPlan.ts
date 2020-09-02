@@ -2,9 +2,24 @@ import {RichTextNode} from '../graphql/richText'
 import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
 export enum PaymentPeriodicity {
-  Monthly = 1,
-  Quarterly = 3,
-  Yearly = 12
+  Monthly = 'monthly',
+  Quarterly = 'quarterly',
+  Biannual = 'biannual',
+  Yearly = 'yearly'
+}
+
+export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly
+]
+
+export interface AvailablePaymentMethod {
+  paymentMethodId: string
+  paymentPeriodicity: PaymentPeriodicity[]
+  minimumDurationMonths: number
+  forceAutoRenewal: boolean
 }
 
 export interface MemberPlan {
@@ -15,12 +30,9 @@ export interface MemberPlan {
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly isActive: boolean
-  readonly availablePaymentPeriodicity: PaymentPeriodicity[]
-  readonly minimumDuration: number // in months
-  readonly forceAutoRenewal: boolean
   readonly pricePerMonthMinimum: number
   readonly pricePerMonthMaximum: number
-  //readonly availablePaymentMethods: string[]
+  readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
 export interface MemberPlanInput {
@@ -28,11 +40,9 @@ export interface MemberPlanInput {
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly isActive: boolean
-  readonly availablePaymentPeriodicity: PaymentPeriodicity[]
-  readonly minimumDuration: number // in months
-  readonly forceAutoRenewal: boolean
   readonly pricePerMonthMinimum: number
   readonly pricePerMonthMaximum: number
+  readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
 export type OptionalMemberPlan = MemberPlan | null

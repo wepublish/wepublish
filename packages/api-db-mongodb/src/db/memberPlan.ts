@@ -34,11 +34,9 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       imageID: input.imageID,
       description: input.description,
       isActive: input.isActive,
-      availablePaymentPeriodicity: input.availablePaymentPeriodicity,
-      minimumDuration: input.minimumDuration,
-      forceAutoRenewal: input.forceAutoRenewal,
       pricePerMonthMinimum: input.pricePerMonthMinimum,
-      pricePerMonthMaximum: input.pricePerMonthMaximum
+      pricePerMonthMaximum: input.pricePerMonthMaximum,
+      availablePaymentMethods: input.availablePaymentMethods
     })
 
     const {_id: id, ...memberPlan} = ops[0]
@@ -55,11 +53,9 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
           imageID: input.imageID,
           description: input.description,
           isActive: input.isActive,
-          availablePaymentPeriodicity: input.availablePaymentPeriodicity,
-          minimumDuration: input.minimumDuration,
-          forceAutoRenewal: input.forceAutoRenewal,
           pricePerMonthMinimum: input.pricePerMonthMinimum,
-          pricePerMonthMaximum: input.pricePerMonthMaximum
+          pricePerMonthMaximum: input.pricePerMonthMaximum,
+          availablePaymentMethods: input.availablePaymentMethods
         }
       },
       {returnOriginal: false}

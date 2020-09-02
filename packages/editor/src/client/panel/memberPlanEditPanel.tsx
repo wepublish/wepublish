@@ -19,7 +19,8 @@ import {
   ListInput,
   ListValue,
   Toggle,
-  Typography
+  Typography,
+  Select
 } from '@karma.run/ui'
 
 import {
@@ -33,12 +34,15 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 import {
+  AvailablePaymentMethod,
   FullMemberPlanFragment,
+  FullPaymentMethodFragment,
   ImageRefFragment,
   Maybe,
   MemberPlanListDocument,
   useCreateMemberPlanMutation,
   useMemberPlanQuery,
+  usePaymentMethodListQuery,
   useUpdateMemberPlanMutation
 } from '../api'
 
@@ -60,11 +64,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [isActive, setIsActive] = useState<boolean>(false)
-  const [availablePaymentPeriodicity, setAvailablePaymentPeriodicity] = useState<
-    ListValue<string>[]
+  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<
+    ListValue<AvailablePaymentMethod>[]
   >([])
-  const [minimumDuration, setMinimumDuration] = useState<number>(0)
-  const [forceAutoRenewal, setForceAutoRenewal] = useState<boolean>(false)
+  const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
   const [fixPrice, setFixPrice] = useState<boolean>(false)
   const [pricePerMonthMinimum, setPricePerMonthMinimum] = useState<number>(0)
   const [pricePerMonthMaximum, setPricePerMonthMaximum] = useState<number>(0)
@@ -81,6 +84,14 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     skip: id == undefined
   })
 
+  const {
+    data: paymentMethodData,
+    loading: isLoadingPaymentMethods,
+    error: paymentMethodLoadError
+  } = usePaymentMethodListQuery({
+    fetchPolicy: 'network-only'
+  })
+
   const [createMemberPlan, {loading: isCreating, error: createError}] = useCreateMemberPlanMutation(
     {
       refetchQueries: [getOperationNameFromDocument(MemberPlanListDocument)]
@@ -92,7 +103,13 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     {loading: isUpdating, error: updateError}
   ] = useUpdateMemberPlanMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError != undefined
+  const isDisabled =
+    isLoading ||
+    isLoadingPaymentMethods ||
+    isCreating ||
+    isUpdating ||
+    loadError != undefined ||
+    paymentMethodLoadError != undefined
 
   useEffect(() => {
     if (data?.memberPlan) {
@@ -102,20 +119,24 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
       )
       setIsActive(data.memberPlan.isActive)
-      setAvailablePaymentPeriodicity(
-        data.memberPlan.availablePaymentPeriodicity
-          ? data.memberPlan.availablePaymentPeriodicity.map(paymentPeriodicity => ({
+      setAvailablePaymentMethods(
+        data.memberPlan.availablePaymentMethods
+          ? data.memberPlan.availablePaymentMethods.map(availablePaymentMethod => ({
               id: generateID(),
-              value: paymentPeriodicity
+              value: availablePaymentMethod
             }))
           : []
       )
-      setMinimumDuration(data.memberPlan.minimumDuration)
-      setForceAutoRenewal(data.memberPlan.forceAutoRenewal)
       setPricePerMonthMinimum(data.memberPlan.pricePerMonthMinimum)
       setPricePerMonthMaximum(data.memberPlan.pricePerMonthMaximum)
     }
   }, [data?.memberPlan])
+
+  useEffect(() => {
+    if (paymentMethodData?.paymentMethods) {
+      setPaymentMethods(paymentMethodData.paymentMethods)
+    }
+  }, [paymentMethodData?.paymentMethods])
 
   useEffect(() => {
     if (loadError) {
@@ -127,8 +148,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     } else if (updateError) {
       setErrorToastOpen(true)
       setErrorMessage(updateError.message)
+    } else if (paymentMethodLoadError) {
+      setErrorToastOpen(true)
+      setErrorMessage(paymentMethodLoadError.message)
     }
-  }, [loadError, createError, updateError])
+  }, [loadError, createError, updateError, paymentMethodLoadError])
 
   function handleImageChange(image: ImageRefFragment) {
     setImage(image)
@@ -144,9 +168,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             image: image?.id,
             description,
             isActive,
-            availablePaymentPeriodicity: availablePaymentPeriodicity.map(({value}) => value),
-            minimumDuration,
-            forceAutoRenewal,
+            availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
+              ...value,
+              paymentMethodId: value.paymentMethod.id,
+              paymentPeriodicity: value.paymentPeriodicity.map(pp => pp.id)
+            })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
           }
@@ -162,9 +188,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             image: image?.id,
             description,
             isActive,
-            availablePaymentPeriodicity: availablePaymentPeriodicity.map(({value}) => value),
-            minimumDuration,
-            forceAutoRenewal,
+            availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
+              ...value,
+              paymentMethodId: value.paymentMethod.id,
+              paymentPeriodicity: value.paymentPeriodicity.map(pp => pp.id)
+            })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
           }
@@ -254,17 +282,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         </PanelSection>
         <PanelSectionHeader title="Settings" />
         <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              type="number"
-              label="Minimum duration"
-              value={minimumDuration}
-              disabled={isDisabled}
-              onChange={e => {
-                setMinimumDuration(parseInt(e.target.value))
-              }}
-            />
-          </Box>
           <Box marginBottom={Spacing.Small}>
             <Toggle
               label="Fix price"
@@ -302,29 +319,73 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               maxValue={100}
             />
           </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Toggle
-              label="Force Auto Renewal"
-              description="Forces auto renewal of subscription"
-              checked={forceAutoRenewal}
-              disabled={isDisabled}
-              onChange={event => setForceAutoRenewal(event.target.checked)}
-            />
-          </Box>
         </PanelSection>
         <PanelSectionHeader title="Payment Pariodicity" />
         <PanelSection>
           <ListInput
-            value={availablePaymentPeriodicity}
-            onChange={app => setAvailablePaymentPeriodicity(app)}
-            defaultValue={'monthly'}>
+            value={availablePaymentMethods}
+            onChange={app => setAvailablePaymentMethods(app)}
+            defaultValue={{
+              forceAutoRenewal: false,
+              minimumDurationMonths: 0,
+              paymentPeriodicity: [],
+              paymentMethod: paymentMethods?.[0]
+            }}>
             {({value, onChange}) => (
-              <Box display="flex" flexDirection="row">
-                <TextInput
-                  label="periodicity"
-                  flexBasis="70%"
-                  value={value}
-                  onChange={e => onChange(e.target.value)}
+              <Box>
+                <Box marginBottom={Spacing.ExtraSmall}>
+                  <TextInput
+                    type="number"
+                    label="Minimum duration"
+                    value={value.minimumDurationMonths}
+                    disabled={isDisabled}
+                    onChange={e => {
+                      onChange({...value, minimumDurationMonths: parseInt(e.target.value)})
+                    }}
+                  />
+                </Box>
+                <Box marginBottom={Spacing.ExtraSmall}>
+                  <Toggle
+                    label="Force Auto Renewal"
+                    description="Forces auto renewal of subscription"
+                    checked={value.forceAutoRenewal}
+                    disabled={isDisabled}
+                    onChange={e => {
+                      onChange({...value, forceAutoRenewal: e.target.checked})
+                    }}
+                  />
+                </Box>
+                {value.paymentPeriodicity.map((paymentPeriodicity, index) => {
+                  return (
+                    <Box marginBottom={Spacing.ExtraSmall}>
+                      <Toggle
+                        key={index}
+                        name={paymentPeriodicity.id}
+                        label={paymentPeriodicity.id}
+                        disabled={isDisabled}
+                        checked={paymentPeriodicity.checked}
+                        onChange={event => {
+                          const newPP = value.paymentPeriodicity.map(pp => {
+                            return pp.id === event.target.name
+                              ? {...pp, checked: event.target.checked}
+                              : pp
+                          })
+                          onChange({...value, paymentPeriodicity: newPP})
+                        }}
+                      />
+                    </Box>
+                  )
+                })}
+                <Select
+                  description="Payment Method"
+                  options={paymentMethods}
+                  value={value.paymentMethod}
+                  renderListItem={paymentMethod => paymentMethod?.name}
+                  onChange={paymentMethod => {
+                    if (paymentMethod) {
+                      onChange({...value, paymentMethod})
+                    }
+                  }}
                 />
               </Box>
             )}

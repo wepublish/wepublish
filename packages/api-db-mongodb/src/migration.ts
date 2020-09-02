@@ -236,7 +236,7 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Add MemberPlan Collection
+    //  Add MemberPlan Collection and PaymentMethod Collection
     version: 3,
     async migrate(db, locale) {
       const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
@@ -244,6 +244,13 @@ export const Migrations: Migration[] = [
       })
 
       await memberPlans.createIndex({label: 1}, {unique: true})
+
+      const paymentMethod = await db.createCollection(CollectionName.PaymentMethods, {
+        strict: true
+      })
+
+      await paymentMethod.createIndex({name: 1})
+      await paymentMethod.createIndex({paymentAdapter: 1})
     }
   }
 ]

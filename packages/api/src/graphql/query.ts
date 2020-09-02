@@ -94,7 +94,8 @@ import {
   CanGetPeer,
   AllPermissions,
   CanGetMemberPlan,
-  CanGetMemberPlans
+  CanGetMemberPlans,
+  CanGetPaymentMethods
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -114,6 +115,7 @@ import {
   GraphQLMemberPlanSort
 } from './memberPlan'
 import {MemberPlanSort} from '../db/memberPlan'
+import {GraphQLPaymentMethod} from './paymentMethod'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -758,6 +760,19 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // PaymentMethod
+    // ======
+
+    paymentMethods: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
+      resolve(root, {}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetPaymentMethods, roles)
+
+        return dbAdapter.paymentMethod.getPaymentMethods()
       }
     }
   }

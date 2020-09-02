@@ -9,12 +9,22 @@ fragment MemberPlanRef on MemberPlan {
 
 fragment FullMemberPlan on MemberPlan {
     description
-    availablePaymentPeriodicity
-    minimumDuration
-    forceAutoRenewal
     pricePerMonthMinimum
     pricePerMonthMaximum
+    availablePaymentMethods {
+        paymentMethod {
+            ...FullPaymentMethod
+        }
+        paymentPeriodicity {
+            id
+            checked
+        }
+        minimumDurationMonths
+        forceAutoRenewal
+    }
     ...MemberPlanRef
+
+
 }
 
 query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {

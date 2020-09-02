@@ -178,6 +178,21 @@ export type AuthProvider = {
   url: Scalars['String'];
 };
 
+export type AvailablePaymentMethod = {
+   __typename?: 'AvailablePaymentMethod';
+  paymentMethod: PaymentMethod;
+  paymentPeriodicity: Array<PaymentPeriodicity>;
+  minimumDurationMonths: Scalars['Int'];
+  forceAutoRenewal: Scalars['Boolean'];
+};
+
+export type AvailablePaymentMethodInput = {
+  paymentMethodId: Scalars['String'];
+  paymentPeriodicity: Array<Scalars['String']>;
+  minimumDurationMonths: Scalars['Int'];
+  forceAutoRenewal: Scalars['Boolean'];
+};
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -427,11 +442,9 @@ export type MemberPlan = {
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
-  availablePaymentPeriodicity: Array<Scalars['String']>;
-  minimumDuration: Scalars['Int'];
-  forceAutoRenewal: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
   pricePerMonthMaximum: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethod>;
 };
 
 export type MemberPlanConnection = {
@@ -450,11 +463,9 @@ export type MemberPlanInput = {
   image?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
-  availablePaymentPeriodicity: Array<Scalars['String']>;
-  minimumDuration: Scalars['Int'];
-  forceAutoRenewal: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
   pricePerMonthMaximum: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
 };
 
 export enum MemberPlanSort {
@@ -504,6 +515,9 @@ export type Mutation = {
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
   deleteMemberPlan?: Maybe<Scalars['ID']>;
+  createPaymentMethod?: Maybe<PaymentMethod>;
+  updatePaymentMethod?: Maybe<PaymentMethod>;
+  deletePaymentMethod?: Maybe<Scalars['ID']>;
 };
 
 
@@ -716,6 +730,22 @@ export type MutationDeleteMemberPlanArgs = {
   id: Scalars['ID'];
 };
 
+
+export type MutationCreatePaymentMethodArgs = {
+  input: PaymentMethodInput;
+};
+
+
+export type MutationUpdatePaymentMethodArgs = {
+  id: Scalars['ID'];
+  input: PaymentMethodInput;
+};
+
+
+export type MutationDeletePaymentMethodArgs = {
+  id: Scalars['ID'];
+};
+
 export type Navigation = {
    __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -835,6 +865,30 @@ export type PageTeaserInput = {
   pageID: Scalars['ID'];
 };
 
+export type PaymentMethod = {
+   __typename?: 'PaymentMethod';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['RichText'];
+  paymentAdapter: Scalars['String'];
+  active: Scalars['Boolean'];
+};
+
+export type PaymentMethodInput = {
+  name: Scalars['String'];
+  description: Scalars['RichText'];
+  paymentAdapter: Scalars['String'];
+  active: Scalars['Boolean'];
+};
+
+export type PaymentPeriodicity = {
+   __typename?: 'PaymentPeriodicity';
+  id: Scalars['String'];
+  checked: Scalars['Boolean'];
+};
+
 export type Peer = {
    __typename?: 'Peer';
   id: Scalars['ID'];
@@ -938,6 +992,7 @@ export type Query = {
   pages: PageConnection;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
+  paymentMethods: Array<PaymentMethod>;
 };
 
 
@@ -1948,7 +2003,18 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'availablePaymentPeriodicity' | 'minimumDuration' | 'forceAutoRenewal' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & Pick<MemberPlan, 'description' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & { availablePaymentMethods: Array<(
+    { __typename?: 'AvailablePaymentMethod' }
+    & Pick<AvailablePaymentMethod, 'minimumDurationMonths' | 'forceAutoRenewal'>
+    & { paymentMethod: (
+      { __typename?: 'PaymentMethod' }
+      & FullPaymentMethodFragment
+    ), paymentPeriodicity: Array<(
+      { __typename?: 'PaymentPeriodicity' }
+      & Pick<PaymentPeriodicity, 'id' | 'checked'>
+    )> }
+  )> }
   & MemberPlanRefFragment
 );
 
@@ -2227,6 +2293,59 @@ export type PageQuery = (
       )> }
     ) }
   )> }
+);
+
+export type FullPaymentMethodFragment = (
+  { __typename?: 'PaymentMethod' }
+  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'paymentAdapter' | 'description' | 'active'>
+);
+
+export type PaymentMethodListQueryVariables = {};
+
+
+export type PaymentMethodListQuery = (
+  { __typename?: 'Query' }
+  & { paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type CreatePaymentMethodMutationVariables = {
+  input: PaymentMethodInput;
+};
+
+
+export type CreatePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & { createPaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type UpdatePaymentMethodMutationVariables = {
+  id: Scalars['ID'];
+  input: PaymentMethodInput;
+};
+
+
+export type UpdatePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type DeletePaymentMethodMutationVariables = {
+  id: Scalars['ID'];
+};
+
+
+export type DeletePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePaymentMethod'>
 );
 
 export type FullPeerProfileFragment = (
@@ -2876,6 +2995,17 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
+export const FullPaymentMethodFragmentDoc = gql`
+    fragment FullPaymentMethod on PaymentMethod {
+  id
+  name
+  createdAt
+  modifiedAt
+  paymentAdapter
+  description
+  active
+}
+    `;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
@@ -2889,14 +3019,23 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
-  availablePaymentPeriodicity
-  minimumDuration
-  forceAutoRenewal
   pricePerMonthMinimum
   pricePerMonthMaximum
+  availablePaymentMethods {
+    paymentMethod {
+      ...FullPaymentMethod
+    }
+    paymentPeriodicity {
+      id
+      checked
+    }
+    minimumDurationMonths
+    forceAutoRenewal
+  }
   ...MemberPlanRef
 }
-    ${MemberPlanRefFragmentDoc}`;
+    ${FullPaymentMethodFragmentDoc}
+${MemberPlanRefFragmentDoc}`;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -4162,6 +4301,133 @@ export function usePageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOpt
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
 export type PageQueryResult = ApolloReactCommon.QueryResult<PageQuery, PageQueryVariables>;
+export const PaymentMethodListDocument = gql`
+    query PaymentMethodList {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+
+/**
+ * __usePaymentMethodListQuery__
+ *
+ * To run a query within a React component, call `usePaymentMethodListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentMethodListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentMethodListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePaymentMethodListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+        return ApolloReactHooks.useQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, baseOptions);
+      }
+export function usePaymentMethodListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, baseOptions);
+        }
+export type PaymentMethodListQueryHookResult = ReturnType<typeof usePaymentMethodListQuery>;
+export type PaymentMethodListLazyQueryHookResult = ReturnType<typeof usePaymentMethodListLazyQuery>;
+export type PaymentMethodListQueryResult = ApolloReactCommon.QueryResult<PaymentMethodListQuery, PaymentMethodListQueryVariables>;
+export const CreatePaymentMethodDocument = gql`
+    mutation CreatePaymentMethod($input: PaymentMethodInput!) {
+  createPaymentMethod(input: $input) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+export type CreatePaymentMethodMutationFn = ApolloReactCommon.MutationFunction<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
+
+/**
+ * __useCreatePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentMethodMutation, { data, loading, error }] = useCreatePaymentMethodMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>(CreatePaymentMethodDocument, baseOptions);
+      }
+export type CreatePaymentMethodMutationHookResult = ReturnType<typeof useCreatePaymentMethodMutation>;
+export type CreatePaymentMethodMutationResult = ApolloReactCommon.MutationResult<CreatePaymentMethodMutation>;
+export type CreatePaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
+export const UpdatePaymentMethodDocument = gql`
+    mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
+  updatePaymentMethod(id: $id, input: $input) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+export type UpdatePaymentMethodMutationFn = ApolloReactCommon.MutationFunction<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
+
+/**
+ * __useUpdatePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentMethodMutation, { data, loading, error }] = useUpdatePaymentMethodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>(UpdatePaymentMethodDocument, baseOptions);
+      }
+export type UpdatePaymentMethodMutationHookResult = ReturnType<typeof useUpdatePaymentMethodMutation>;
+export type UpdatePaymentMethodMutationResult = ApolloReactCommon.MutationResult<UpdatePaymentMethodMutation>;
+export type UpdatePaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
+export const DeletePaymentMethodDocument = gql`
+    mutation DeletePaymentMethod($id: ID!) {
+  deletePaymentMethod(id: $id)
+}
+    `;
+export type DeletePaymentMethodMutationFn = ApolloReactCommon.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
+
+/**
+ * __useDeletePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useDeletePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePaymentMethodMutation, { data, loading, error }] = useDeletePaymentMethodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePaymentMethodMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>(DeletePaymentMethodDocument, baseOptions);
+      }
+export type DeletePaymentMethodMutationHookResult = ReturnType<typeof useDeletePaymentMethodMutation>;
+export type DeletePaymentMethodMutationResult = ApolloReactCommon.MutationResult<DeletePaymentMethodMutation>;
+export type DeletePaymentMethodMutationOptions = ApolloReactCommon.BaseMutationOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 export const PeerProfileDocument = gql`
     query PeerProfile {
   peerProfile {

@@ -333,6 +333,24 @@ export const CanDeleteMemberPlan: Permission = {
   deprecated: false
 }
 
+export const CanCreatePaymentMethod: Permission = {
+  id: 'CAN_CREATE_PAYMENT_METHOD',
+  description: 'Allows to create a payment method',
+  deprecated: false
+}
+
+export const CanGetPaymentMethods: Permission = {
+  id: 'CAN_GET_PAYMENT_METHODS',
+  description: 'Allows to get all payment methods',
+  deprecated: false
+}
+
+export const CanDeletePaymentMethod: Permission = {
+  id: 'CAN_DELETE_PAYMENT_METHOD',
+  description: 'Allows to delete payment method',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -380,7 +398,10 @@ export const AllPermissions: Permission[] = [
   CanCreateMemberPlan,
   CanGetMemberPlan,
   CanGetMemberPlans,
-  CanDeleteMemberPlan
+  CanDeleteMemberPlan,
+  CanCreatePaymentMethod,
+  CanGetPaymentMethods,
+  CanDeletePaymentMethod
 ]
 
 export const EditorPermissions: Permission[] = [

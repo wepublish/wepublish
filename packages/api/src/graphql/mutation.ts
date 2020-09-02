@@ -54,7 +54,9 @@ import {
   CanDeleteUserRole,
   CanResetUserPassword,
   CanCreateMemberPlan,
-  CanDeleteMemberPlan
+  CanDeleteMemberPlan,
+  CanCreatePaymentMethod,
+  CanDeletePaymentMethod
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -69,6 +71,7 @@ import {
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
+import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -727,6 +730,53 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanDeleteMemberPlan, roles)
         await dbAdapter.memberPlan.deleteMemberPlan({id})
+        return id
+      }
+    },
+
+    // PaymentMethod
+    // ======
+
+    createPaymentMethod: {
+      type: GraphQLPaymentMethod,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+      },
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePaymentMethod, roles)
+
+        //TODO: check if payment method exists and is active
+
+        return dbAdapter.paymentMethod.createPaymentMethod({input})
+      }
+    },
+
+    updatePaymentMethod: {
+      type: GraphQLPaymentMethod,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePaymentMethod, roles)
+
+        //TODO: check if payment method exists and is active
+
+        return dbAdapter.paymentMethod.updatePaymentMethod({id, input})
+      }
+    },
+
+    deletePaymentMethod: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeletePaymentMethod, roles)
+        await dbAdapter.paymentMethod.deletePaymentMethod(id)
         return id
       }
     }
