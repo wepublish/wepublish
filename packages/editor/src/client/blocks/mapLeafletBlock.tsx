@@ -60,8 +60,8 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
           />
           // items.map mehrere Marker setzen
           <Marker position={[centerLat, centerLng]}></Marker>
-          {items.map(item => (
-            <Marker position={[item.value.lat, item.value.lng]}>
+          {items.map((item, index) => (
+            <Marker position={[item.value.lat, item.value.lng]} key={index}>
               <Popup>
                 <b>{item.value.title}</b> <br />
                 {item.value.description}

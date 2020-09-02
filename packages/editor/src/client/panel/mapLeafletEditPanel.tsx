@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {MaterialIconClose} from '@karma.run/icons'
-import {geoCodeWithOpenCage, MarkerPoint} from '../utility'
+import {MarkerPoint} from '../utility'
+import axios from 'axios'
 
 import {
   NavigationButton,
@@ -12,7 +13,12 @@ import {
   ListValue,
   ListInput,
   Box,
-  FieldProps
+  FieldProps,
+  AutocompleteInput,
+  AutocompleteInputListProps,
+  SelectList,
+  SelectListItem,
+  MarginProps
 } from '@karma.run/ui'
 
 import {MapLeafletItem} from '../blocks/types'
@@ -64,50 +70,32 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
 }
 
 export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
-  const {address, lat, lng, title, description} = value
-
-  const [addressQuery, setAddressQuery] = useState(address)
-  const [data, setData] = useState<any>([])
-
-  useEffect(() => {
-    async function asyncGeoCode() {
-      if (addressQuery != '' && addressQuery.length > 1) {
-        const data = await geoCodeWithOpenCage(addressQuery, 5)
-        setData(data)
-      }
-    }
-    asyncGeoCode()
-  }, [addressQuery])
+  const {lat, lng, title, description} = value
 
   return (
     <>
-      <ul>
-        {data.map((item: any) => {
-          return <li>{item.address}</li>
-        })}
-      </ul>
       <Box display="flex" flexDirection="column">
-        <TextInput
-          value={addressQuery}
-          marginBottom={Spacing.ExtraSmall}
-          type="address"
+        <AddressInput
           label="Address"
-          onChange={e => {
-            //onChange(value => ({...value, lat}))
-            setAddressQuery(e.target.value)
-            //geoCodeWithOpenCage(address, 5)
+          value={[{address: value.address, lat: value.lat, lng: value.lng}]}
+          marginBottom={Spacing.ExtraSmall}
+          onChange={markerPoints => {
+            markerPoints !== undefined && markerPoints.length > 0
+              ? onChange({
+                  ...value,
+                  address: markerPoints[0].address,
+                  lat: markerPoints[0].lat,
+                  lng: markerPoints[0].lng
+                })
+              : []
           }}
-          required
         />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           type="number"
           label="Latitude"
           value={lat}
-          onChange={e => {
-            const lat = Number(e.target.value)
-            onChange(value => ({...value, lat}))
-          }}
+          onChange={e => onChange({...value, lat: parseInt(e.target.value)})}
           required
         />
         <TextInput
@@ -143,17 +131,23 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
     </>
   )
 }
-/*
-export function AddressInput(props: AddressInputList) {
+
+export interface AddressInputProps extends MarginProps {
+  label?: string
+  description?: string
+  value: MarkerPoint[]
+  onChange(address?: MarkerPoint[]): void
+}
+
+export function AddressInput(props: AddressInputProps) {
   return (
     <AutocompleteInput
       {...props}
-      valueToChipData={author => ({
-        id: author.id,
-        label: author.name,
-        imageURL: author.image?.squareURL ?? undefined
+      valueToChipData={markerPoint => ({
+        id: nanoid(),
+        label: markerPoint.address
       })}>
-      {props => <AddressInputList {...props} />}
+      {propsACI => <AddressInputList {...propsACI} />}
     </AutocompleteInput>
   )
 }
@@ -165,37 +159,48 @@ function AddressInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  const [items, setItems] = useState<AuthorRefFragment[]>([])
-  const {data, loading: isLoading} = useAuthorListQuery({
-    variables: {filter: inputValue || undefined, first: 10},
-    fetchPolicy: 'network-only'
-  })
+  const [items, setItems] = useState<MarkerPoint[]>([])
+  const api = 'ab48a007c6dd4906adcd2871a5deaebe'
+  const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${api}&q=${inputValue}&limit=5&pretty=1`
 
   useEffect(() => {
-    setItems(data?.authors.nodes ?? [])
-  }, [data])
+    async function fetchData() {
+      if (inputValue !== null && inputValue.length > 1) {
+        try {
+          const request = await axios.get(fetchURL)
+          const items = request.data.results.map((res: any) => {
+            return {
+              lat: res.geometry.lat,
+              lng: res.geometry.lng,
+              address: res.formatted
+            }
+          })
+          setItems(items)
+          console.log(items)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+    fetchData()
+  }, [inputValue])
 
   return (
     <SelectList {...getMenuProps()}>
       {isOpen && inputValue ? (
-        !isLoading ? (
-          items.length ? (
-            items.map((item, index) => (
-              <SelectListItem
-                key={item.id}
-                highlighted={index === highlightedIndex}
-                {...getItemProps({item, index})}>
-                <Box display="flex">{item.name}</Box>
-              </SelectListItem>
-            ))
-          ) : (
-            <SelectListItem>No Address found</SelectListItem>
-          )
+        items.length ? (
+          items.map((item: MarkerPoint, index: number) => (
+            <SelectListItem
+              key={nanoid()}
+              highlighted={index === highlightedIndex}
+              {...getItemProps({item, index})}>
+              <Box display="flex">{item.address}</Box>
+            </SelectListItem>
+          ))
         ) : (
-          <SelectListItem>Loading...</SelectListItem>
+          <SelectListItem>No Address found</SelectListItem>
         )
       ) : null}
     </SelectList>
   )
 }
-*/
