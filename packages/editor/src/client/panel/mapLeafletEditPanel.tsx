@@ -61,7 +61,14 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
         <ListInput
           value={items}
           onChange={items => setItems(items)}
-          defaultValue={{address: '', lat: 0, lng: 0, title: '', description: '', image: null}}>
+          defaultValue={{
+            address: 'Brauerstrasse 42, Zürich',
+            lat: 47.3778762,
+            lng: 8.5271078,
+            title: '',
+            description: '',
+            image: null
+          }}>
           {props => <MapLeafletItems {...props} />}
         </ListInput>
       </PanelSection>
@@ -70,24 +77,25 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
 }
 
 export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
-  const {lat, lng, title, description} = value
+  const {address, lat, lng, title, description} = value
 
   return (
     <>
       <Box display="flex" flexDirection="column">
         <AddressInput
           label="Address"
-          value={[{address: value.address, lat: value.lat, lng: value.lng}]}
+          value={[{address: address, lat: lat, lng: lng}]}
           marginBottom={Spacing.ExtraSmall}
           onChange={markerPoints => {
-            markerPoints !== undefined && markerPoints.length > 0
-              ? onChange({
-                  ...value,
-                  address: markerPoints[0].address,
-                  lat: markerPoints[0].lat,
-                  lng: markerPoints[0].lng
-                })
-              : []
+            if (markerPoints !== undefined && markerPoints.length > 0) {
+              //debugger
+              onChange({
+                ...value,
+                address: markerPoints[1].address,
+                lat: markerPoints[1].lat,
+                lng: markerPoints[1].lng
+              })
+            }
           }}
         />
         <TextInput
@@ -143,6 +151,7 @@ export function AddressInput(props: AddressInputProps) {
   return (
     <AutocompleteInput
       {...props}
+      label={props.label}
       valueToChipData={markerPoint => ({
         id: nanoid(),
         label: markerPoint.address
@@ -176,7 +185,6 @@ function AddressInputList({
             }
           })
           setItems(items)
-          console.log(items)
         } catch (error) {
           console.error(error)
         }
@@ -189,14 +197,16 @@ function AddressInputList({
     <SelectList {...getMenuProps()}>
       {isOpen && inputValue ? (
         items.length ? (
-          items.map((item: MarkerPoint, index: number) => (
-            <SelectListItem
-              key={nanoid()}
-              highlighted={index === highlightedIndex}
-              {...getItemProps({item, index})}>
-              <Box display="flex">{item.address}</Box>
-            </SelectListItem>
-          ))
+          items.map((item: MarkerPoint, index: number) => {
+            return (
+              <SelectListItem
+                key={index}
+                highlighted={index === highlightedIndex}
+                {...getItemProps({item, index})}>
+                <Box display="flex">{item.address}</Box>
+              </SelectListItem>
+            )
+          })
         ) : (
           <SelectListItem>No Address found</SelectListItem>
         )

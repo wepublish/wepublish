@@ -2,7 +2,10 @@ import React, {useState} from 'react'
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import '../customCSS/leaflet.css'
-
+import {BlockProps, Box, ZIndex, IconButton, Spacing, TextInput, Drawer} from '@karma.run/ui'
+import {MaterialIconMoreVert} from '@karma.run/icons'
+import {MapLeafletBlockValue} from './types'
+import {MapLeafletEditPanel} from '../panel/mapLeafletEditPanel'
 import {Icon} from 'leaflet'
 
 // workaround to ensure that leaflet's images work after going through webpack
@@ -21,15 +24,6 @@ Icon.Default.mergeOptions({
   iconUrl: marker,
   shadowUrl: markerShadow
 })
-
-import {BlockProps, Box, ZIndex, IconButton, Spacing, TextInput, Drawer} from '@karma.run/ui'
-
-import {MaterialIconMoreVert} from '@karma.run/icons'
-
-import {MapLeafletBlockValue} from './types'
-import {MapLeafletEditPanel} from '../panel/mapLeafletEditPanel'
-
-// import {isFunctionalUpdate} from '@karma.run/react'
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
 
@@ -58,8 +52,6 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
-          // items.map mehrere Marker setzen
-          <Marker position={[centerLat, centerLng]}></Marker>
           {items.map((item, index) => (
             <Marker position={[item.value.lat, item.value.lng]} key={index}>
               <Popup>
