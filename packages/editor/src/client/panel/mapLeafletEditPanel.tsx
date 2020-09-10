@@ -26,23 +26,37 @@ import nanoid from 'nanoid'
 
 export interface MapLeafletEditPanel {
   initialItems: ListValue<MapLeafletItem>[]
-
   onClose?(items: ListValue<MapLeafletItem>[]): void
 }
 
 export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel) {
+  const defaultItemValue = {
+    address: 'Brauerstrasse 42, Zürich',
+    lat: 47.3778762,
+    lng: 8.5271078,
+    title: '',
+    description: '',
+    image: null
+  }
   const [items, setItems] = useState<ListValue<MapLeafletItem>[]>(() =>
-    initialItems.map(item => ({
-      id: nanoid(),
-      value: {
-        address: item.value.address,
-        lat: item.value.lat,
-        lng: item.value.lng,
-        title: item.value.title,
-        description: item.value.description,
-        image: null
-      }
-    }))
+    initialItems.map(item =>
+      item.value.address === ''
+        ? {
+            id: nanoid(),
+            value: defaultItemValue
+          }
+        : {
+            id: nanoid(),
+            value: {
+              address: item.value.address,
+              lat: item.value.lat,
+              lng: item.value.lng,
+              title: item.value.title,
+              description: item.value.description,
+              image: null
+            }
+          }
+    )
   )
 
   return (
@@ -61,14 +75,7 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
         <ListInput
           value={items}
           onChange={items => setItems(items)}
-          defaultValue={{
-            address: 'Brauerstrasse 42, Zürich',
-            lat: 47.3778762,
-            lng: 8.5271078,
-            title: '',
-            description: '',
-            image: null
-          }}>
+          defaultValue={defaultItemValue}>
           {props => <MapLeafletItems {...props} />}
         </ListInput>
       </PanelSection>
@@ -88,7 +95,6 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
           marginBottom={Spacing.ExtraSmall}
           onChange={markerPoints => {
             if (markerPoints !== undefined && markerPoints.length > 0) {
-              //debugger
               onChange({
                 ...value,
                 address: markerPoints[1].address,
@@ -111,29 +117,20 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
           type="number"
           label="Longitude"
           value={lng}
-          onChange={e => {
-            const lng = Number(e.target.value)
-            onChange(value => ({...value, lng}))
-          }}
+          onChange={e => onChange({...value, lng: parseInt(e.target.value)})}
           required
         />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           label="Title"
           value={title}
-          onChange={e => {
-            const title = e.target.value
-            onChange(value => ({...value, title}))
-          }}
+          onChange={e => onChange({...value, title: e.target.value})}
         />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           label="Description"
           value={description}
-          onChange={e => {
-            const description = e.target.value
-            onChange(value => ({...value, description}))
-          }}
+          onChange={e => onChange({...value, description: e.target.value})}
         />
       </Box>
     </>
@@ -156,7 +153,7 @@ export function AddressInput(props: AddressInputProps) {
         id: nanoid(),
         label: markerPoint.address
       })}>
-      {propsACI => <AddressInputList {...propsACI} />}
+      {propsAutocompleteInput => <AddressInputList {...propsAutocompleteInput} />}
     </AutocompleteInput>
   )
 }
