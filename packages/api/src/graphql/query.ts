@@ -341,7 +341,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      resolve(root, {id, slug}, {authenticate, loaders}) {
+      resolve(root, {id, slug}, {authenticate, loaders, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetAuthor, roles)
 
@@ -421,15 +421,20 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      async resolve(root, {id}, {authenticate, loaders}) {
-        const {roles} = authenticate()
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      async resolve(root, {id, slug}, {authenticate, loaders}) {
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
 
+        const {roles} = authenticate()
         const canGetArticle = isAuthorised(CanGetArticle, roles)
         const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
 
         if (canGetArticle || canGetSharedArticle) {
-          const article = await loaders.articles.load(id)
+          const article = id
+            ? await loaders.articlesByID.load(id)
+            : await loaders.articlesBySlug.load(slug)
 
           if (canGetArticle) {
             return article
@@ -797,9 +802,15 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLPublicArticle,
-      args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
-        const article = await loaders.publicArticles.load(id)
+      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      async resolve(root, {id, slug}, {session, loaders, dbAdapter}) {
+        if ((id == null && slug == null) || (id != null && slug != null)) {
+          throw new UserInputError('You must provide either `id` or `slug`.')
+        }
+
+        const article = id
+          ? await loaders.publicArticlesByID.load(id)
+          : await loaders.publicArticlesBySlug.load(slug)
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null

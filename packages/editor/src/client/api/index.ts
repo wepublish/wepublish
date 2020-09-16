@@ -958,7 +958,8 @@ export type QueryImagesArgs = {
 
 
 export type QueryArticleArgs = {
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['Slug']>;
 };
 
 

@@ -141,7 +141,9 @@ export interface DBArticleAdapter {
   deleteArticle(args: DeleteArticleArgs): Promise<boolean | null>
 
   getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
+  getArticlesBySlug(slugs: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
+  getPublishedArticlesBySlug(slugs: readonly string[]): Promise<OptionalPublicArticle[]>
 
   getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
   getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>

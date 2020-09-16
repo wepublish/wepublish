@@ -44,8 +44,10 @@ export interface DataLoaderContext {
 
   readonly images: DataLoader<string, OptionalImage>
 
-  readonly articles: DataLoader<string, OptionalArticle>
-  readonly publicArticles: DataLoader<string, OptionalPublicArticle>
+  readonly articlesByID: DataLoader<string, OptionalArticle>
+  readonly articlesBySlug: DataLoader<string, OptionalArticle>
+  readonly publicArticlesByID: DataLoader<string, OptionalPublicArticle>
+  readonly publicArticlesBySlug: DataLoader<string, OptionalPublicArticle>
 
   readonly pages: DataLoader<string, OptionalPage>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
@@ -127,8 +129,12 @@ export async function contextFromRequest(
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-      articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
-      publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+      articlesByID: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
+      articlesBySlug: new DataLoader(slugs => dbAdapter.article.getArticlesBySlug(slugs)),
+      publicArticlesByID: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+      publicArticlesBySlug: new DataLoader(slugs =>
+        dbAdapter.article.getPublishedArticlesBySlug(slugs)
+      ),
 
       pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
       publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),

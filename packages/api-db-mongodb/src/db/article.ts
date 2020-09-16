@@ -231,6 +231,26 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     return {id: outID, ...article}
   }
 
+  async getArticlesBySlug(slugs: readonly string[]): Promise<OptionalArticle[]> {
+    await this.updatePendingArticles()
+
+    const articles = await this.articles
+      .find({
+        $or: [{'draft.slug': {$in: slugs}}, {'published.slug': {$in: slugs}}]
+      })
+      .toArray()
+    const articleMap = Object.fromEntries(
+      articles.map(({_id: id, draft, published, ...article}) => {
+        return [
+          draft ? draft.slug : published ? published.slug : '',
+          {id, draft, published, ...article}
+        ]
+      })
+    )
+
+    return slugs.map(slug => articleMap[slug] ?? null)
+  }
+
   async getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]> {
     await this.updatePendingArticles()
 
@@ -400,6 +420,22 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     )
 
     return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
+  }
+
+  async getPublishedArticlesBySlug(slugs: readonly string[]): Promise<OptionalPublicArticle[]> {
+    await this.updatePendingArticles()
+
+    const articles = await this.articles
+      .find({'published.slug': {$in: slugs}, published: {$ne: null}})
+      .toArray()
+    const articleMap = Object.fromEntries(
+      articles.map(({_id: id, shared, published: article}) => [
+        article?.slug || '',
+        {id, shared, ...article!}
+      ])
+    )
+
+    return slugs.map(slug => (articleMap[slug] as PublicArticle) ?? null)
   }
 
   async getPublishedArticles({

@@ -53,7 +53,7 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
     article: {
       type: GraphQLArticle,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
-        return loaders.articles.load(articleID)
+        return loaders.articlesByID.load(articleID)
       })
     }
   },
@@ -119,7 +119,7 @@ export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
     article: {
       type: GraphQLPublicArticle,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
-        return loaders.publicArticles.load(articleID)
+        return loaders.publicArticlesByID.load(articleID)
       })
     }
   },

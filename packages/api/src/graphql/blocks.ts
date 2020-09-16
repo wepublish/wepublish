@@ -76,7 +76,7 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
     article: {
       type: GraphQLArticle,
       resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
-        return loaders.articles.load(articleID)
+        return loaders.articlesByID.load(articleID)
       })
     }
   }),
@@ -192,7 +192,7 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
     article: {
       type: GraphQLPublicArticle,
       resolve: createProxyingResolver(({articleID}, args, {loaders}) => {
-        return loaders.publicArticles.load(articleID)
+        return loaders.publicArticlesByID.load(articleID)
       })
     }
   }),
