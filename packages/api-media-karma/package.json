@@ -32,7 +32,7 @@
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean build",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "form-data": "^3.0.0",

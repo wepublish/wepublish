@@ -10,7 +10,17 @@ module.exports = {
   },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
-  setupTestFrameworkScriptFile: './__tests__/setup.ts',
+  setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
-  testURL: 'http://localhost/'
+  testURL: 'http://localhost/',
+  coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
+  coverageDirectory: '__tests__/coverage',
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: -10
+    }
+  }
 }
