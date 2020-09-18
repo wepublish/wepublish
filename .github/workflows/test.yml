@@ -13,6 +13,6 @@ jobs:
       - name: Install deps
         run: yarn install
       - name: Build everything
-        run: yarn build:api build:api-db-mongodb build:api-media-karma build:editor build:oauth2
+        run: yarn build:production
       - name: Run tests
         run: yarn test
