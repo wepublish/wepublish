@@ -1,4 +1,10 @@
-import {MediaAdapter, Image, UploadImage, ImageTransformation} from '@wepublish/api'
+import {
+  MediaAdapter,
+  Image,
+  UploadImage,
+  ImageTransformation,
+  ArrayBufferUpload
+} from '@wepublish/api'
 import {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
@@ -14,11 +20,26 @@ export class KarmaMediaAdapter implements MediaAdapter {
     this.token = token
   }
 
-  async uploadImage(file: Promise<FileUpload>): Promise<UploadImage> {
-    const {filename: inputFilename, mimetype, createReadStream}: FileUpload = await file
+  async uploadImage(
+    fileUpload?: Promise<FileUpload>,
+    arrayBufferUpload?: Promise<ArrayBufferUpload>
+  ): Promise<UploadImage> {
+    if (!fileUpload && !arrayBufferUpload) {
+      throw new Error('You must provide either `fileUpload` or `arrayBufferUpload`.')
+    }
     const form = new FormData()
 
-    form.append('file', createReadStream(), {filename: inputFilename, contentType: mimetype})
+    if (fileUpload) {
+      const {filename: inputFilename, mimetype, createReadStream}: FileUpload = await fileUpload
+      form.append('file', createReadStream(), {filename: inputFilename, contentType: mimetype})
+    } else if (arrayBufferUpload) {
+      const {
+        filename: inputFilename,
+        mimetype,
+        arrayBuffer
+      }: ArrayBufferUpload = await arrayBufferUpload
+      form.append('file', arrayBuffer, {filename: inputFilename, contentType: mimetype})
+    }
 
     // The form-data module reports a known length for the stream returned by createReadStream,
     // which is wrong, override it and always set it to false.
