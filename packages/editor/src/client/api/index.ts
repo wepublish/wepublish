@@ -61,6 +61,7 @@ export type ArticleInput = {
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -91,6 +92,7 @@ export type ArticleRevision = {
   lead?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
+  properties: Array<Properties>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -847,6 +849,19 @@ export type Point = {
   y: Scalars['Float'];
 };
 
+export type Properties = {
+   __typename?: 'Properties';
+  key: Scalars['String'];
+  value: Scalars['String'];
+  public: Scalars['Boolean'];
+};
+
+export type PropertiesInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+  public: Scalars['Boolean'];
+};
+
 export type Query = {
    __typename?: 'Query';
   peerProfile: PeerProfile;
@@ -1411,6 +1426,9 @@ export type ArticleQuery = (
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
+      )>, properties: Array<(
+        { __typename?: 'Properties' }
+        & Pick<Properties, 'key' | 'value' | 'public'>
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
@@ -3043,6 +3061,11 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
       authors {
         ...AuthorRef
       }

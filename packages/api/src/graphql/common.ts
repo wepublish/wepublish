@@ -3,7 +3,8 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLBoolean,
-  GraphQLObjectType
+  GraphQLObjectType,
+  GraphQLInputObjectType
 } from 'graphql'
 
 import {SortOrder} from '../db/common'
@@ -31,5 +32,31 @@ export const GraphQLUnidirectionalPageInfo = new GraphQLObjectType({
   fields: {
     endCursor: {type: GraphQLString},
     hasNextPage: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
+export const GraphQLMetadataProperty = new GraphQLObjectType({
+  name: 'Properties',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    value: {type: GraphQLNonNull(GraphQLString)},
+    public: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
+
+export const GraphQLMetadataPropertyPublic = new GraphQLObjectType({
+  name: 'PublicProperties',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    value: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
+export const GraphQLMetadataPropertyInput = new GraphQLInputObjectType({
+  name: 'PropertiesInput',
+  fields: {
+    key: {type: GraphQLNonNull(GraphQLString)},
+    value: {type: GraphQLNonNull(GraphQLString)},
+    public: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
