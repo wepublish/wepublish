@@ -1,5 +1,5 @@
 import {PageBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
+import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
 
 // TODO: Remove arg interfaces in favor of explicit arguments.
 
@@ -12,6 +12,8 @@ export interface PageData {
   readonly title: string
   readonly description?: string
   readonly tags: string[]
+
+  readonly properties: MetadataProperty[]
 
   readonly imageID?: string
   readonly blocks: PageBlock[]

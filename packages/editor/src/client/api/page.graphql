@@ -125,6 +125,11 @@ query Page($id: ID!) {
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
       blocks {
         ...FullBlock
       }

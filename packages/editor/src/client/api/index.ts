@@ -717,6 +717,7 @@ export type PageInput = {
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
@@ -743,6 +744,7 @@ export type PageRevision = {
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<Properties>;
   image?: Maybe<Image>;
   blocks: Array<Block>;
 };
@@ -2024,6 +2026,9 @@ export type PageQuery = (
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
+      )>, properties: Array<(
+        { __typename?: 'Properties' }
+        & Pick<Properties, 'key' | 'value' | 'public'>
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -3786,6 +3791,11 @@ export const PageDocument = gql`
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
       blocks {
         ...FullBlock
       }

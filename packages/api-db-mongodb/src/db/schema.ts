@@ -239,6 +239,8 @@ export interface DBPageRevision {
   description?: string
   tags: string[]
 
+  properties: MetadataProperty[]
+
   imageID?: string
 
   blocks: PageBlock[]

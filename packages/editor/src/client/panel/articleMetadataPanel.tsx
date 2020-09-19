@@ -38,7 +38,7 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
-export interface MetadataProperty {
+export interface ArticleMetadataProperty {
   readonly key: string
   readonly value: string
   readonly public: boolean
@@ -51,7 +51,7 @@ export interface ArticleMetadata {
   readonly lead: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
-  readonly properties: MetadataProperty[]
+  readonly properties: ArticleMetadataProperty[]
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
