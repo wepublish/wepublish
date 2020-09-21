@@ -1,6 +1,7 @@
 import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import axios from 'axios'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -119,6 +120,52 @@ export function transformCssStringToObject(styleCustom: string): object {
     }
     return previousValue
   }, {})
+}
+
+export function useFetchData(inputValue: string | null, fetchURL: string) {
+  const [items, setItems] = useState<MarkerPoint[]>([])
+
+  useEffect(() => {
+    async function fetchData() {
+      if (inputValue !== null && inputValue.length > 1) {
+        try {
+          const request = await axios.get(fetchURL)
+          const items = request.data.results.map((res: any) => {
+            return {
+              lat: res.geometry.lat,
+              lng: res.geometry.lng,
+              address: res.formatted
+            }
+          })
+          setItems(items)
+        } catch (error) {
+          if (error.response) {
+            /*
+             * The request was made and the server responded with a
+             * status code that falls out of the range of 2xx
+             */
+            console.log(error.response.data)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+          } else if (error.request) {
+            /*
+             * The request was made but no response was received, `error.request`
+             * is an instance of XMLHttpRequest in the browser and an instance
+             * of http.ClientRequest in Node.js
+             */
+            console.log(error.request)
+          } else {
+            // Something happened in setting up the request and triggered an Error
+            console.log('Error', error.message)
+          }
+          console.log(error)
+        }
+      }
+    }
+    fetchData()
+  }, [inputValue])
+
+  return items
 }
 
 export interface MarkerPoint {

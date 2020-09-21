@@ -7,6 +7,8 @@ import {MaterialIconMoreVert} from '@karma.run/icons'
 import {MapLeafletBlockValue} from './types'
 import {MapLeafletEditPanel} from '../panel/mapLeafletEditPanel'
 import {Icon} from 'leaflet'
+import {ElementID} from '../../shared/elementID'
+import {ClientSettings} from '../../shared/types'
 
 // workaround to ensure that leaflet's images work after going through webpack
 //@ts-ignore
@@ -30,7 +32,10 @@ export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {
 export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockValue>) {
   const {zoom, centerLat, centerLng, caption, items} = value
   const [isMapLeafletDialogOpen, setMapLeafletDialogOpen] = useState(false)
-
+  const {tilelayerURL, tilelayerAttribution}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  console.log(tilelayerURL)
   return (
     <>
       <Box position="relative" width="100%" height="100%">
@@ -48,14 +53,13 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
               })
             }
           }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          />
+          <TileLayer url={tilelayerURL} attribution={tilelayerAttribution} />
           {items.map((item, index) => (
             <Marker position={[item.value.lat, item.value.lng]} key={index}>
               <Popup>
-                <b>{item.value.title}</b> <br />
+                <p>
+                  <b>{item.value.title}</b>
+                </p>
                 {item.value.description}
               </Popup>
             </Marker>

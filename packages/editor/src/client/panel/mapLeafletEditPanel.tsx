@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {MaterialIconClose} from '@karma.run/icons'
-import {MarkerPoint} from '../utility'
-import axios from 'axios'
+import {MarkerPoint, useFetchData} from '../utility'
+import {ElementID} from '../../shared/elementID'
+import {ClientSettings} from '../../shared/types'
 
 import {
   NavigationButton,
@@ -165,30 +166,11 @@ function AddressInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  const [items, setItems] = useState<MarkerPoint[]>([])
-  const api = 'ab48a007c6dd4906adcd2871a5deaebe'
-  const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${api}&q=${inputValue}&limit=5&pretty=1`
-
-  useEffect(() => {
-    async function fetchData() {
-      if (inputValue !== null && inputValue.length > 1) {
-        try {
-          const request = await axios.get(fetchURL)
-          const items = request.data.results.map((res: any) => {
-            return {
-              lat: res.geometry.lat,
-              lng: res.geometry.lng,
-              address: res.formatted
-            }
-          })
-          setItems(items)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    }
-    fetchData()
-  }, [inputValue])
+  const {opencageApiKey}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${opencageApiKey}&q=${inputValue}&limit=5&pretty=1`
+  const items = useFetchData(inputValue, fetchURL)
 
   return (
     <SelectList {...getMenuProps()}>

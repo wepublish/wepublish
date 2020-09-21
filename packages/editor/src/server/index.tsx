@@ -24,7 +24,10 @@ async function asyncMain() {
   if (!entry) throw new Error("Couldn't find entry in asset list.")
 
   const clientSettings = {
-    apiURL: process.env.API_URL
+    apiURL: process.env.API_URL,
+    opencageApiKey: process.env.OPENCAGE_APIKEY,
+    tilelayerURL: process.env.TILELAYER_URL,
+    tilelayerAttribution: process.env.TILELAYER_ATTRIBUTION
   }
 
   const app = express()
