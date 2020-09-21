@@ -35,7 +35,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
   const {tilelayerURL, tilelayerAttribution}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
   )
-  console.log(tilelayerURL)
+
   return (
     <>
       <Box position="relative" width="100%" height="100%">
