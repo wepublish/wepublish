@@ -3,23 +3,17 @@ import {Map, TileLayer, Marker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './leaflet.css'
 
-import {Icon} from 'leaflet'
+import L from 'leaflet'
 
-// workaround to ensure that leaflet's images work after going through webpack
-//@ts-ignore
-import marker from 'leaflet/dist/images/marker-icon.png'
-//@ts-ignore
-import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
-//@ts-ignore
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import marker from './marker-icon.png'
+import marker2x from './marker-icon-2x.png'
+import markerShadow from './marker-shadow.png'
 
-//@ts-ignore
-delete Icon.Default.prototype._getIconUrl
-
-Icon.Default.mergeOptions({
+let MarkerIcon = L.icon({
   iconRetinaUrl: marker2x,
   iconUrl: marker,
-  shadowUrl: markerShadow
+  shadowUrl: markerShadow,
+  shadowAnchor: [-7, 0]
 })
 
 import {
@@ -45,10 +39,7 @@ import {
 
 import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../../panel/imageEditPanel'
-
 import {MapLeafletBlockValue, MapLeafletItem} from '../types'
-
-// import {isFunctionalUpdate} from '@karma.run/react'
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
 
@@ -70,7 +61,7 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[centerLat, centerLng]}></Marker>
+        <Marker position={[centerLat, centerLng]} icon={MarkerIcon}></Marker>
       </Map>
       <Box marginTop={Spacing.ExtraSmall}>
         <TextInput
@@ -91,7 +82,6 @@ export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletIt
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  //@ts-ignore
   const {image, title, lat, lng, description} = value
 
   return (
