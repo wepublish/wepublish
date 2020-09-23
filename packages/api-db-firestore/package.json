@@ -1,0 +1,51 @@
+{
+  "name": "@wepublish/api-db-firestore",
+  "version": "0.8.4",
+  "description": "We.publish Database adapter for Google Cloud Firestore (Firebase)",
+  "keywords": [
+    "database",
+    "firestore",
+    "google",
+    "cloud",
+    "nosql",
+    "publishing",
+    "media",
+    "newspaper",
+    "cms",
+    "subscription"
+  ],
+  "homepage": "https://github.com/wepublish/wepublish",
+  "bugs": {
+    "url": "https://github.com/wepublish/wepublish/issues",
+    "email": "development@wepublish.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wepublish/wepublish.git",
+    "directory": "packages/api-db-firestore"
+  },
+  "main": "./lib/",
+  "license": "MIT",
+  "scripts": {
+    "build": "run-s copy-license sync-package-info build:*",
+    "build:typescript": "tsc -b ./src/tsconfig.json",
+    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
+    "copy-license": "shx cp ../../LICENSE ./",
+    "clean": "shx rm -rf ./LICENSE ./lib",
+    "prepare": "run-s clean build",
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.7",
+    "npm-run-all": "^4.1.5",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "@wepublish/api": "*"
+  }
+}
