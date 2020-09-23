@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Map, TileLayer, Marker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import '../customCSS/leaflet.css'
+import './leaflet.css'
 
 import {Icon} from 'leaflet'
 
@@ -43,10 +43,10 @@ import {
   MaterialIconClose
 } from '@karma.run/icons'
 
-import {ImageSelectPanel} from '../panel/imageSelectPanel'
-import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {ImageSelectPanel} from '../../panel/imageSelectPanel'
+import {ImagedEditPanel} from '../../panel/imageEditPanel'
 
-import {MapLeafletBlockValue, MapLeafletItem} from './types'
+import {MapLeafletBlockValue, MapLeafletItem} from '../types'
 
 // import {isFunctionalUpdate} from '@karma.run/react'
 

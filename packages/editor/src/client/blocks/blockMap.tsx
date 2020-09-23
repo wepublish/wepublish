@@ -27,7 +27,7 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
-import {MapLeafletBlock} from './mapLeafletBlock'
+import {MapLeafletBlock} from './mapLeafletBlock/mapLeafletBlock'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
