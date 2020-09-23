@@ -24,6 +24,7 @@
   "typings": "./lib/index.d.ts",
   "license": "MIT",
   "scripts": {
+    "setup": "shx cp .env.example .env",
     "build": "run-s copy-license sync-package-info build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
@@ -31,7 +32,8 @@
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
     "prepare": "run-s clean build",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts",
+    "test": "node -r dotenv/config ./node_modules/.bin/jest"
   },
   "dependencies": {
     "@karma.run/utility": "^0.1.0",
@@ -55,10 +57,18 @@
     "@types/graphql": "^14.5.0",
     "@types/graphql-iso-date": "^3.3.3",
     "@types/graphql-upload": "^8.0.3",
+    "@types/jest": "^26.0.14",
     "@types/ms": "^0.7.31",
     "@types/node": "^13.7.7",
+    "apollo-server": "^2.17.0",
+    "apollo-server-testing": "^2.17.0",
+    "dotenv": "^8.2.0",
+    "graphql-tag": "^2.11.0",
+    "jest": "^26.4.2",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
-    "typescript": "^3.8.3"
+    "ts-jest": "^26.3.0",
+    "typescript": "^3.8.3",
+    "weak-napi": "^2.0.2"
   }
 }

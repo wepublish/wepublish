@@ -16,6 +16,7 @@
     "publish": "lerna publish from-package --ignore-scripts",
     "watch": "run-p --print-label watch:*",
     "start:docker": "docker-compose up mongo mongo-express",
+    "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
     "watch:api": "yarn workspace @wepublish/api watch",
