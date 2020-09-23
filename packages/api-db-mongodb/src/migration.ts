@@ -107,7 +107,7 @@ export const Migrations: Migration[] = [
 
       await userRoles.createIndex({name: 1}, {unique: true})
 
-      userRoles.insertMany([
+      await userRoles.insertMany([
         {
           _id: 'admin',
           createdAt: new Date(),
@@ -130,7 +130,7 @@ export const Migrations: Migration[] = [
 
       const user = db.collection(CollectionName.Users)
 
-      user.updateMany({}, [
+      await user.updateMany({}, [
         {
           $set: {
             name: '$email',
@@ -146,7 +146,7 @@ export const Migrations: Migration[] = [
     async migrate(db) {
       const userRoles = db.collection(CollectionName.UserRoles)
 
-      userRoles.insertOne({
+      await userRoles.insertOne({
         _id: 'peer',
         createdAt: new Date(),
         modifiedAt: new Date(),
