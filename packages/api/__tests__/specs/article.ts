@@ -1,45 +1,58 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
-import gql from 'graphql-tag'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
+import {ArticleInput, CreateArticleDocument} from '../api/private'
 
-let testClient: ApolloServerTestClient
+let testClientPublic: ApolloServerTestClient
+let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
-    testClient = setupClient.testClient
+    testClientPublic = setupClient.testClientPublic
+    testClientPrivate = setupClient.testClientPrivate
     dbAdapter = setupClient.dbAdapter
+
+    console.log('public', testClientPublic)
   } catch (error) {
     throw new Error('Error during test setup')
   }
 })
 
 describe('Articles', () => {
-  const GET_ARTICLES = gql`
-    {
-      articles(first: 5) {
-        nodes {
-          id
-          title
-          lead
+  describe('can be created/edited/deleted', () => {
+    test('can be created', async () => {
+      const {mutate} = testClientPrivate
+      const articleInput: ArticleInput = {
+        title: 'This is the best test article',
+        slug: 'my-super-seo-slug-for-the-best-article',
+        shared: false,
+        tags: ['testing', 'awesome'],
+        breaking: true,
+        lead: 'This article will rock your world. Never has there been a better article',
+        preTitle: 'Testing GraphQL',
+        properties: [
+          {key: 'testingKey', value: 'testingValue', public: true},
+          {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
+        ],
+        authorIDs: [],
+        blocks: []
+      }
+      const res = await mutate({
+        mutation: CreateArticleDocument,
+        variables: {
+          input: articleInput
         }
-      }
-    }
-  `
-
-  test('can execute query', async done => {
-    const {query} = testClient
-    const res = await query({
-      query: GET_ARTICLES,
-      variables: {
-        first: 5
-      }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          createArticle: {
+            id: expect.any(String)
+          }
+        }
+      })
     })
-
-    expect(res).toMatchSnapshot()
-    done()
   })
 })
 

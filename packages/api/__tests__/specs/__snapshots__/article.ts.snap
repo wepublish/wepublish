@@ -1,10 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Articles can execute query 1`] = `
+exports[`Articles can be created/edited/deleted can be created 1`] = `
 Object {
   "data": Object {
-    "articles": Object {
-      "nodes": Array [],
+    "createArticle": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
     },
   },
   "errors": undefined,

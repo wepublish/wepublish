@@ -1,0 +1,138 @@
+fragment MutationPage on Page {
+  id
+
+  draft {
+    publishedAt
+    updatedAt
+    revision
+  }
+
+  pending {
+    publishAt
+    revision
+  }
+
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+
+  latest {
+    publishedAt
+    updatedAt
+    revision
+  }
+}
+
+fragment PageRef on Page {
+  id
+
+  createdAt
+  modifiedAt
+
+  draft {
+    revision
+  }
+
+  pending {
+    revision
+  }
+
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+
+  latest {
+    publishedAt
+    updatedAt
+    revision
+    title
+    description
+    image {
+      ...ImageRef
+    }
+  }
+}
+
+query PageList($filter: String, $after: ID, $first: Int) {
+  pages(first: $first, after: $after, filter: {title: $filter}) {
+    nodes {
+      ...PageRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+mutation CreatePage($input: PageInput!) {
+  createPage(input: $input) {
+    ...MutationPage
+  }
+}
+
+mutation UpdatePage($id: ID!, $input: PageInput!) {
+  updatePage(id: $id, input: $input) {
+    ...MutationPage
+  }
+}
+
+mutation PublishPage($id: ID!, $publishAt: DateTime, $publishedAt: DateTime, $updatedAt: DateTime) {
+  publishPage(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+    ...MutationPage
+  }
+}
+
+mutation UnpublishPage($id: ID!) {
+  unpublishPage(id: $id) {
+    ...MutationPage
+  }
+}
+
+mutation DeletePage($id: ID!) {
+  deletePage(id: $id)
+}
+
+query Page($id: ID!) {
+  page(id: $id) {
+    id
+
+    pending {
+      publishAt
+    }
+
+    published {
+      publishedAt
+      updatedAt
+    }
+
+    latest {
+      publishedAt
+      updatedAt
+      slug
+      title
+      description
+      image {
+        ...ImageRef
+      }
+      tags
+      properties {
+        key
+        value
+        public
+      }
+      blocks {
+        ...FullBlock
+      }
+    }
+  }
+}

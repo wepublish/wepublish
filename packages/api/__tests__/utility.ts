@@ -4,6 +4,7 @@ import {
   Author,
   contextFromRequest,
   GraphQLWepublishPublicSchema,
+  GraphQLWepublishSchema,
   OptionalUserSession,
   PublicArticle,
   PublicPage,
@@ -16,7 +17,8 @@ import {KarmaMediaAdapter} from '@wepublish/api-media-karma/src'
 
 export interface TestClient {
   dbAdapter: MongoDBAdapter
-  testClient: ApolloServerTestClient
+  testClientPublic: ApolloServerTestClient
+  testClientPrivate: ApolloServerTestClient
 }
 
 class ExampleURLAdapter implements URLAdapter {
@@ -81,7 +83,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     }
   }
 
-  const apolloServer: ApolloServer = new ApolloServer({
+  const apolloServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     playground: false,
     introspection: false,
@@ -97,8 +99,28 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
       })
   })
 
+  const apolloServerPrivate = new ApolloServer({
+    schema: GraphQLWepublishSchema,
+    playground: false,
+    introspection: false,
+    tracing: false,
+    context: async () =>
+      await contextFromRequest(request, {
+        hostURL: 'https://fakeURL',
+        websiteURL: 'https://fakeurl',
+        dbAdapter,
+        mediaAdapter,
+        urlAdapter: new ExampleURLAdapter(),
+        oauth2Providers: []
+      })
+  })
+
+  const testClientPrivate = createTestClient(apolloServerPrivate)
+  const testClientPublic = createTestClient(apolloServerPublic)
+
   return {
     dbAdapter,
-    testClient: createTestClient(apolloServer)
+    testClientPublic,
+    testClientPrivate
   }
 }
