@@ -2,17 +2,10 @@ import React, {useState} from 'react'
 import {Map, TileLayer, Marker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './leaflet.css'
-import L from 'leaflet'
+import Leaflet from 'leaflet'
 import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
-
-let MarkerIcon = L.icon({
-  iconRetinaUrl: marker2x,
-  iconUrl: marker,
-  shadowUrl: markerShadow,
-  shadowAnchor: [-7, 0]
-})
 
 import {
   BlockProps,
@@ -43,6 +36,12 @@ export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {
 
 export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
   const {zoom, centerLat, centerLng, caption} = value
+  const MarkerIcon = Leaflet.icon({
+    iconRetinaUrl: marker2x,
+    iconUrl: marker,
+    shadowUrl: markerShadow,
+    shadowAnchor: [-7, 0]
+  })
 
   return (
     <>
