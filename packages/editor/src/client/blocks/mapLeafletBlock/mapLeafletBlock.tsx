@@ -1,30 +1,23 @@
 import React, {useState} from 'react'
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import '../customCSS/leaflet.css'
+import './leaflet.css'
 import {BlockProps, Box, ZIndex, IconButton, Spacing, TextInput, Drawer} from '@karma.run/ui'
 import {MaterialIconMoreVert} from '@karma.run/icons'
-import {MapLeafletBlockValue} from './types'
-import {MapLeafletEditPanel} from '../panel/mapLeafletEditPanel'
-import {Icon} from 'leaflet'
-import {ElementID} from '../../shared/elementID'
-import {ClientSettings} from '../../shared/types'
+import {MapLeafletBlockValue} from '../types'
+import {MapLeafletEditPanel} from '../../panel/mapLeafletEditPanel'
+import {ElementID} from '../../../shared/elementID'
+import {ClientSettings} from '../../../shared/types'
+import L from 'leaflet'
+import marker from './marker-icon.png'
+import marker2x from './marker-icon-2x.png'
+import markerShadow from './marker-shadow.png'
 
-// workaround to ensure that leaflet's images work after going through webpack
-//@ts-ignore
-import marker from 'leaflet/dist/images/marker-icon.png'
-//@ts-ignore
-import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
-//@ts-ignore
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
-
-//@ts-ignore
-delete Icon.Default.prototype._getIconUrl
-
-Icon.Default.mergeOptions({
+let MarkerIcon = L.icon({
   iconRetinaUrl: marker2x,
   iconUrl: marker,
-  shadowUrl: markerShadow
+  shadowUrl: markerShadow,
+  shadowAnchor: [-7, 0]
 })
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
@@ -55,7 +48,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
           }}>
           <TileLayer url={tilelayerURL} attribution={tilelayerAttribution} />
           {items.map((item, index) => (
-            <Marker position={[item.value.lat, item.value.lng]} key={index}>
+            <Marker position={[item.value.lat, item.value.lng]} key={index} icon={MarkerIcon}>
               <Popup>
                 <p>
                   <b>{item.value.title}</b>

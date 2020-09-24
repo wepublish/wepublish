@@ -34,7 +34,7 @@
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
   },
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "mongodb": "^3.5.4",
     "nanoid": "^2.1.11"
   },
