@@ -8,17 +8,10 @@ import {MapLeafletBlockValue} from '../types'
 import {MapLeafletEditPanel} from '../../panel/mapLeafletEditPanel'
 import {ElementID} from '../../../shared/elementID'
 import {ClientSettings} from '../../../shared/types'
-import L from 'leaflet'
+import Leaflet from 'leaflet'
 import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
-
-let MarkerIcon = L.icon({
-  iconRetinaUrl: marker2x,
-  iconUrl: marker,
-  shadowUrl: markerShadow,
-  shadowAnchor: [-7, 0]
-})
 
 export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
 
@@ -28,6 +21,12 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
   const {tilelayerURL, tilelayerAttribution}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
   )
+  const MarkerIcon = Leaflet.icon({
+    iconRetinaUrl: marker2x,
+    iconUrl: marker,
+    shadowUrl: markerShadow,
+    shadowAnchor: [-7, 0]
+  })
 
   return (
     <>
