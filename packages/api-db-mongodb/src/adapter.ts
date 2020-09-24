@@ -170,7 +170,10 @@ export class MongoDBAdapter implements DBAdapter {
     if (!migrationState) {
       const adapter = await this.connect({sessionTTL, bcryptHashCostFactor, url, locale})
       await seed?.(adapter)
+      await adapter.client.close()
     }
+
+    await client.close()
 
     return {
       migrated: {
