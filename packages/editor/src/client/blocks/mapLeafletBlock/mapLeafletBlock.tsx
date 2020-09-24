@@ -2,9 +2,7 @@ import React, {useState} from 'react'
 import {Map, TileLayer, Marker} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './leaflet.css'
-
 import L from 'leaflet'
-
 import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
@@ -77,10 +75,12 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
     </>
   )
 }
-// This function will be used for Map-items
+// This function will be used for Map-items and moved to another file
+// but meanwhile needs to stay here
 export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletItem>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+  // We won't need that ts-ignore anymore later on but for now it's necessary
   //@ts-ignore
   const {image, title, lat, lng, description} = value
 
