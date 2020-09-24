@@ -81,7 +81,7 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
 export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletItem>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-
+  //@ts-ignore
   const {image, title, lat, lng, description} = value
 
   return (
