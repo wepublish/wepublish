@@ -21,7 +21,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
   const {tilelayerURL, tilelayerAttribution}: ClientSettings = JSON.parse(
     document.getElementById(ElementID.Settings)!.textContent!
   )
-  const MarkerIcon = Leaflet.icon({
+  const markerIcon = Leaflet.icon({
     iconRetinaUrl: marker2x,
     iconUrl: marker,
     shadowUrl: markerShadow,
@@ -47,7 +47,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
           }}>
           <TileLayer url={tilelayerURL} attribution={tilelayerAttribution} />
           {items.map((item, index) => (
-            <Marker position={[item.value.lat, item.value.lng]} key={index} icon={MarkerIcon}>
+            <Marker position={[item.value.lat, item.value.lng]} key={index} icon={markerIcon}>
               <Popup>
                 <p>
                   <b>{item.value.title}</b>
