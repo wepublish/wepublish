@@ -177,17 +177,6 @@ function AddressInputList({
     getItems()
   }, [inputValue])
 
-  /*
-  const getItems = async () => {
-    const results = await useFetchData(inputValue, fetchURL)
-    setItems(results)
-  }
-
-  useEffect(() => {
-    getItems()
-  }, [inputValue])
-  */
-
   return (
     <SelectList {...getMenuProps()}>
       {isOpen && inputValue ? (

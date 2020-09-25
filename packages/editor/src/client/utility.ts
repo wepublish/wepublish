@@ -1,7 +1,6 @@
 import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import axios from 'axios'
 import {ClientSettings} from '../shared/types'
 import {ElementID} from '../shared/elementID'
 
@@ -130,16 +129,24 @@ export async function queryOpenCage(query: string): Promise<MarkerPoint[]> {
   )
   const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${opencageApiKey}&q=${query}&limit=5&pretty=1`
   const resultItems: MarkerPoint[] = []
-  const request = await axios.get(fetchURL)
-  const items = request.data.results.map((res: any) => {
-    return {
-      lat: res.geometry.lat,
-      lng: res.geometry.lng,
-      address: res.formatted
-    }
-  })
-  resultItems.push(...items)
-  return []
+  fetch(fetchURL)
+    .then(response => {
+      return response.json()
+    })
+    .then(json => {
+      const items = json.results.map((res: any) => {
+        return {
+          lat: res.geometry.lat,
+          lng: res.geometry.lng,
+          address: res.formatted
+        }
+      })
+      resultItems.push(...items)
+    })
+    .catch(error => {
+      return []
+    })
+  return resultItems
 }
 
 /* Deprecated
