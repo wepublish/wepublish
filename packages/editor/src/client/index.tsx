@@ -10,6 +10,8 @@ import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory
 import {createUploadLink} from 'apollo-upload-client'
 import {ApolloProvider} from '@apollo/react-hooks'
 
+import './i18n'
+
 import {createStyleRenderer} from '@karma.run/ui'
 import {UIProvider} from '@karma.run/ui'
 

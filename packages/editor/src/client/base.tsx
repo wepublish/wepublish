@@ -2,6 +2,8 @@ import React, {ReactNode} from 'react'
 
 import {NavigationTemplate, Divider} from '@karma.run/ui'
 
+import {useTranslation} from 'react-i18next'
+
 import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPowerSettingsNew,
@@ -36,13 +38,15 @@ export interface BaseProps {
 export function Base({children}: BaseProps) {
   const {current} = useRoute()
 
+  const {t} = useTranslation()
+
   return (
     <NavigationTemplate
       navigationChildren={
         <>
           <RouteMenuLinkButton
             icon={MaterialIconTextFields}
-            label="Articles"
+            label={t('Articles')}
             route={ArticleListRoute.create({})}
             active={current?.type === RouteType.ArticleList}
           />
