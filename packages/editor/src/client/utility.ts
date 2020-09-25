@@ -2,6 +2,8 @@ import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import axios from 'axios'
+import {ClientSettings} from '../shared/types'
+import {ElementID} from '../shared/elementID'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -122,28 +124,38 @@ export function transformCssStringToObject(styleCustom: string): object {
   }, {})
 }
 
-export async function useFetchData(query: string | null, fetchURL: string) {
+export async function queryOpenCage(query: string): Promise<MarkerPoint[]> {
+  const {opencageApiKey}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${opencageApiKey}&q=${query}&limit=5&pretty=1`
   const resultItems: MarkerPoint[] = []
+  const request = await axios.get(fetchURL)
+  const items = request.data.results.map((res: any) => {
+    return {
+      lat: res.geometry.lat,
+      lng: res.geometry.lng,
+      address: res.formatted
+    }
+  })
+  resultItems.push(...items)
+  return []
+}
+
+/* Deprecated
+export async function useFetchData(query: string | null, fetchURL: string) {
 
   useEffect(() => {
     async function fetchData() {
       if (query !== null && query.length > 1) {
-        const request = await axios.get(fetchURL)
-        const items = request.data.results.map((res: any) => {
-          return {
-            lat: res.geometry.lat,
-            lng: res.geometry.lng,
-            address: res.formatted
-          }
-        })
-        resultItems.push(...items)
+
       }
     }
     fetchData()
   }, [query])
-
   return resultItems
 }
+  */
 
 export interface MarkerPoint {
   lat: number
