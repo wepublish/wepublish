@@ -36,7 +36,7 @@ export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {
 
 export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
   const {zoom, centerLat, centerLng, caption} = value
-  const MarkerIcon = Leaflet.icon({
+  const markerIcon = Leaflet.icon({
     iconRetinaUrl: marker2x,
     iconUrl: marker,
     shadowUrl: markerShadow,
@@ -58,7 +58,7 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[centerLat, centerLng]} icon={MarkerIcon}></Marker>
+        <Marker position={[centerLat, centerLng]} icon={markerIcon}></Marker>
       </Map>
       <Box marginTop={Spacing.ExtraSmall}>
         <TextInput
