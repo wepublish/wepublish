@@ -12,8 +12,7 @@ import {ApolloProvider} from '@apollo/react-hooks'
 
 import './i18n'
 
-import {createStyleRenderer} from '@karma.run/ui'
-import {UIProvider} from '@karma.run/ui'
+import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
