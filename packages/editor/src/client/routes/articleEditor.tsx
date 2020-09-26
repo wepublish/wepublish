@@ -140,7 +140,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image ? image : undefined
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

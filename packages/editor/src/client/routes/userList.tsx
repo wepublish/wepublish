@@ -83,7 +83,7 @@ export function UserList() {
     }
   }, [current])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.users.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -97,7 +97,7 @@ export function UserList() {
         }
       }
     })
-  }*/
+  } */
 
   const users = data?.users.nodes.map(user => {
     const {id, name, email} = user

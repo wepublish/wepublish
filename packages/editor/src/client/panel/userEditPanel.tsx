@@ -25,8 +25,15 @@ import {
   MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
-import {useCreateUserMutation, FullUserFragment, useUpdateUserMutation, useUserQuery} from '../api'
-import {useUserRoleListQuery, FullUserRoleFragment} from '../api'
+import {
+  useCreateUserMutation,
+  FullUserFragment,
+  useUpdateUserMutation,
+  useUserQuery,
+  useUserRoleListQuery,
+  FullUserRoleFragment
+} from '../api'
+
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 export interface UserEditPanelProps {

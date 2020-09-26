@@ -120,7 +120,7 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
-        image: image ? image : undefined
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

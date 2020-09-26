@@ -63,8 +63,8 @@ export function dateTimeLocalString(date: Date) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
-export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin: boolean = false) {
-  if (typeof window != 'object') return {isLoaded: false, isLoading: false, load: () => {}}
+export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
+  if (typeof window !== 'object') return {isLoaded: false, isLoading: false, load: () => {}}
 
   const scriptRef = useRef<HTMLScriptElement | null>(null)
 

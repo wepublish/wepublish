@@ -101,7 +101,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
     try {
       const url = new URL(urlString)
       const abortController =
-        typeof AbortController != 'undefined' ? new AbortController() : undefined
+        typeof AbortController !== 'undefined' ? new AbortController() : undefined
 
       fetch(url.toString(), {
         method: 'POST',
@@ -151,7 +151,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             name,
             slug,
             hostURL: new URL(urlString).toString(),
-            token: token ? token : undefined
+            token: token || undefined
           }
         }
       })

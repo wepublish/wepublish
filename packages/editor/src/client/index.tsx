@@ -10,8 +10,7 @@ import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory
 import {createUploadLink} from 'apollo-upload-client'
 import {ApolloProvider} from '@apollo/react-hooks'
 
-import {createStyleRenderer} from '@karma.run/ui'
-import {UIProvider} from '@karma.run/ui'
+import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'

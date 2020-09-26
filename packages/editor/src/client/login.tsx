@@ -46,7 +46,7 @@ export function Login() {
 
   useEffect(() => {
     if (current !== null && current.params !== null && current.query && current.query.code) {
-      //@ts-ignore
+      // @ts-ignore
       const provider = current.params.provider
       const {code} = current!.query
       authenticateWithOAuth2Code({

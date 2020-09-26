@@ -270,7 +270,7 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 //   }
 // ])
 
-export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {}
+export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
 export const RichTextBlock = memo(function RichTextBlock({
   value,

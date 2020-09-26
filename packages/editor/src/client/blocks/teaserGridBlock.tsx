@@ -70,7 +70,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
     onChange({
       numColumns,
       teasers: Object.assign([], teasers, {
-        [index]: [nanoid(), teaserLink ? teaserLink : null]
+        [index]: [nanoid(), teaserLink || null]
       })
     })
   }
