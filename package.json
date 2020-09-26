@@ -36,6 +36,7 @@
     "clean:editor": "yarn workspace @wepublish/editor clean",
     "build:editor": "yarn workspace @wepublish/editor build",
     "watch:editor": "yarn workspace @wepublish/editor watch",
+    "lint:editor": "yarn workspace @wepublish/editor lint",
     "generate:editor:api": "yarn workspace @wepublish/editor generate:api",
     "setup:oauth2": "yarn workspace @wepublish/oauth2 setup",
     "start:oauth2": "yarn workspace @wepublish/oauth2 start",
@@ -62,16 +63,57 @@
     "examples/*"
   ],
   "devDependencies": {
+    "@babel/eslint-plugin": "^7.11.5",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.2",
+    "eslint-plugin-standard": "^4.0.1",
     "husky": "^3.0.0",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.1",
-    "pretty-quick": "^1.11.1"
+    "pretty-quick": "^1.11.1",
+    "typescript": "^4.0.3"
   },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern '{examples,packages,services}/**/*.{js,ts,tsx,json}'"
     }
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "react",
+      "standard"
+    ],
+    "extends": [
+      "standard",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "prettier",
+      "prettier/@typescript-eslint",
+      "prettier/react",
+      "prettier/standard"
+    ],
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "ignorePatterns": [
+      "node_modules",
+      "dist",
+      "lib",
+      "coverage",
+      "assets"
+    ]
   }
 }
