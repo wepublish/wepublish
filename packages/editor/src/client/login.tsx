@@ -46,6 +46,8 @@ export function Login() {
 
   useEffect(() => {
     if (current !== null && current.params !== null && current.query && current.query.code) {
+      // TODO: fix this
+      // eslint-disable-next-line
       // @ts-ignore
       const provider = current.params.provider
       const {code} = current!.query

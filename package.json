@@ -15,6 +15,7 @@
     "verison": "lerna version --conventional-commits --create-release github --force-git-tag",
     "publish": "lerna publish from-package --ignore-scripts",
     "watch": "run-p --print-label watch:*",
+    "lint": "run-p --print-label lint:*",
     "start:docker": "docker-compose up mongo mongo-express",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
@@ -69,6 +70,7 @@
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-i18next": "^5.0.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
@@ -79,8 +81,7 @@
     "lerna-changelog": "^1.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.1",
-    "pretty-quick": "^1.11.1",
-    "typescript": "^4.0.3"
+    "pretty-quick": "^1.11.1"
   },
   "husky": {
     "hooks": {
@@ -104,6 +105,14 @@
       "prettier/react",
       "prettier/standard"
     ],
+    "rules": {
+      "no-use-before-define": [
+        0
+      ],
+      "@typescript-eslint/no-use-before-define": [
+        1
+      ]
+    },
     "env": {
       "es6": true,
       "node": true

@@ -135,7 +135,7 @@ function deserialize(element: Element): any {
   if (TextTags[nodeName]) {
     const attrs = TextTags[nodeName](element)
 
-    if (!children.some(child => child.children != undefined)) {
+    if (!children.some(child => child.children !== undefined)) {
       return children.map(child => {
         return jsx('text', attrs, child)
       })
@@ -532,7 +532,7 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
     }
   }
 
-  Transforms.unwrapNodes(editor, {match: node => node.type == InlineFormat.Link})
+  Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Link})
   Transforms.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
   Transforms.collapse(editor, {edge: 'end'})
 }

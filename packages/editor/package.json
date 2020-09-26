@@ -113,6 +113,24 @@
     "webpack-dev-server": "^3.9.0"
   },
   "eslintConfig": {
+    "plugins": [
+      "i18next"
+    ],
+    "rules": {
+      "react/display-name": [
+        0
+      ],
+      "i18next/no-literal-string": [
+        2,
+        {
+          "markupOnly": true,
+          "ignoreAttribute": [
+            "display",
+            "flexDirection"
+          ]
+        }
+      ]
+    },
     "extends": [
       "../../package.json"
     ],

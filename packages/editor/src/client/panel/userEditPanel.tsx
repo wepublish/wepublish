@@ -65,7 +65,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const {
@@ -83,7 +83,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
 
   const isDisabled =
-    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError != undefined
+    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
 
   useEffect(() => {
     if (data?.user) {

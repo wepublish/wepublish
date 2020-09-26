@@ -224,7 +224,7 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
       )
     }
 
-    case TeaserType.PeerArticle:
+    case TeaserType.PeerArticle: {
       const states = []
 
       if (teaser?.article?.draft) states.push('Draft')
@@ -243,6 +243,7 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
           numColumns={numColumns}
         />
       )
+    }
 
     case TeaserType.Page: {
       const states = []

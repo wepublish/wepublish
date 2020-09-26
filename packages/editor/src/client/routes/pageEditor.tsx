@@ -79,7 +79,7 @@ export function PageEditor({id}: PageEditorProps) {
     image: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
