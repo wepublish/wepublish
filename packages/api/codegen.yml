@@ -9,7 +9,7 @@ generates:
       - add: "import {Node} from 'slate'"
       - typescript
       - typescript-operations
-      - typescript-graphql-request
+      - typescript-document-nodes
     config:
       scalars:
         DateTime: string
@@ -25,7 +25,7 @@ generates:
       - add: "import {Node} from 'slate'"
       - typescript
       - typescript-operations
-      - typescript-graphql-request
+      - typescript-document-nodes
     config:
       scalars:
         DateTime: string

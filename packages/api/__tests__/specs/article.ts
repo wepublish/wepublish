@@ -1,7 +1,7 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {ArticleInput, CreateArticleDocument} from '../api/private'
+import {ArticleInput, CreateArticle} from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -40,7 +40,7 @@ describe('Articles', () => {
         blocks: []
       }
       const res = await mutate({
-        mutation: CreateArticleDocument,
+        mutation: CreateArticle,
         variables: {
           input: articleInput
         }
