@@ -119,16 +119,6 @@
     "rules": {
       "react/display-name": [
         0
-      ],
-      "i18next/no-literal-string": [
-        2,
-        {
-          "markupOnly": true,
-          "ignoreAttribute": [
-            "display",
-            "flexDirection"
-          ]
-        }
       ]
     },
     "extends": [
