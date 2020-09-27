@@ -164,14 +164,14 @@ function AddressInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  const items: MarkerPoint[] = []
+  //const items: MarkerPoint[] = []
+  const [items, setItems] = useState<MarkerPoint[]>([])
 
   useEffect(() => {
     async function getItems() {
       if (inputValue !== null && inputValue.length > 1) {
         const response = await queryOpenCage(inputValue)
-        console.log(response)
-        items.push(...response)
+        setItems(response)
       }
     }
     getItems()

@@ -129,40 +129,22 @@ export async function queryOpenCage(query: string): Promise<MarkerPoint[]> {
   )
   const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${opencageApiKey}&q=${query}&limit=5&pretty=1`
   const resultItems: MarkerPoint[] = []
-  fetch(fetchURL)
-    .then(response => {
-      return response.json()
-    })
-    .then(json => {
-      const items = json.results.map((res: any) => {
-        return {
-          lat: res.geometry.lat,
-          lng: res.geometry.lng,
-          address: res.formatted
-        }
-      })
-      resultItems.push(...items)
-    })
-    .catch(error => {
-      return []
-    })
-  return resultItems
-}
-
-/* Deprecated
-export async function useFetchData(query: string | null, fetchURL: string) {
-
-  useEffect(() => {
-    async function fetchData() {
-      if (query !== null && query.length > 1) {
-
+  try {
+    const response = await fetch(fetchURL)
+    const json = await response.json()
+    const items = json.results.map((res: any) => {
+      return {
+        lat: res.geometry.lat,
+        lng: res.geometry.lng,
+        address: res.formatted
       }
-    }
-    fetchData()
-  }, [query])
+    })
+    resultItems.push(...items)
+  } catch (error) {
+    return []
+  }
   return resultItems
 }
-  */
 
 export interface MarkerPoint {
   lat: number
