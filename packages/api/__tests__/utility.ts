@@ -68,6 +68,7 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     url: new URL('https://fakeurl.com'),
     token: 'fake',
     getImageURL: jest.fn(),
+
     deleteImage: jest.fn(),
     uploadImage: jest.fn(),
     uploadImageFromArrayBuffer: jest.fn(),
