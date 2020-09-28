@@ -92,7 +92,11 @@ export function TeaserEditPanel({
             label="Style"
             value={{id: style}}
             options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Light}, {id: TeaserStyle.Text}]}
-            onChange={value => setStyle(value?.id!)}
+            onChange={value => {
+              if (value?.id) {
+                setStyle(value.id)
+              }
+            }}
             renderListItem={renderTeaserStyleListItem}
             marginBottom={Spacing.Small}
           />

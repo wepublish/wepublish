@@ -211,7 +211,9 @@ export function RouteProvider({children}: RouteProviderProps) {
           }
         }
 
-        return () => {}
+        return () => {
+          /* do nothing */
+        }
       }}>
       {children}
     </BaseRouteProvider>
