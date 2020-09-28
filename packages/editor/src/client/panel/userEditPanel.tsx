@@ -36,6 +36,8 @@ import {
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export interface UserEditPanelProps {
   id?: string
 
@@ -84,6 +86,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   const isDisabled =
     isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.user) {
@@ -158,7 +162,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <PanelHeader
           title={id ? 'Edit User' : 'Create User'}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             <NavigationButton
@@ -173,7 +181,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Name"
+              label={t('Name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -183,7 +191,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Email"
+              label={t('Email')}
               value={email}
               disabled={isDisabled}
               onChange={e => {
@@ -194,7 +202,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           <Box marginBottom={Spacing.ExtraSmall}>
             {!id && (
               <TextInput
-                label="Password"
+                label={t('Password')}
                 type="password"
                 value={password}
                 disabled={isDisabled}
@@ -205,14 +213,14 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             )}
             {id && (
               <Button
-                label="Reset Password"
+                label={t('Reset Password')}
                 variant="outlined"
                 onClick={() => setIsResetUserPasswordOpen(true)}
               />
             )}
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="User Roles" />
+        <PanelSectionHeader title={t('User Roles')} />
         <PanelSection>
           {roles.map(role => {
             return (
@@ -235,11 +243,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             )
           })}
           <Box marginTop={Spacing.Large}>
-            <Typography variant="h3">Add User Role</Typography>
+            <Typography variant="h3">{t('Add User Role')}</Typography>
           </Box>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Select
-              description="Select User Role"
+              description={t('Select User Role')}
               flexBasis="90%"
               options={userRoles}
               value={currentUserRole}

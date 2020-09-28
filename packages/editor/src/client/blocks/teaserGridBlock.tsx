@@ -34,6 +34,8 @@ import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 interface GridElementProps {
   numColumns: number
 }
@@ -57,6 +59,8 @@ interface GridProps {
 const Grid = SortableContainer(({children, numColumns}: GridProps) => {
   return <GridElement styleProps={{numColumns}}>{children}</GridElement>
 })
+
+const {t} = useTranslation()
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [editIndex, setEditIndex] = useState(0)
@@ -178,19 +182,19 @@ export function TeaserBlock({
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
-                title="Choose Teaser"
+                title={t('Choose Teaser')}
                 onClick={onChoose}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconEditOutlined}
-                title="Edit Teaser"
+                title={t('Edit Teaser')}
                 onClick={onEdit}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconClose}
-                title="Remove Teaser"
+                title={t('Remove Teaser')}
                 onClick={onRemove}
                 margin={Spacing.ExtraSmall}
               />

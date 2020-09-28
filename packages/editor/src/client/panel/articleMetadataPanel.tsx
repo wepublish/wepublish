@@ -38,6 +38,8 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
@@ -57,6 +59,8 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
+const {t} = useTranslation()
+
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
   const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
 
@@ -71,22 +75,26 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     <>
       <Panel>
         <PanelHeader
-          title="Metadata"
+          title={t('Metadata')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
         />
 
         <PanelSection>
           <TextInput
-            label="Pre-title"
+            label={t('Pre-title')}
             value={preTitle}
             marginBottom={Spacing.ExtraSmall}
             onChange={e => onChange?.({...value, preTitle: e.target.value})}
           />
 
           <TextInput
-            label="Title"
+            label={t('Title')}
             value={title}
             marginBottom={Spacing.ExtraSmall}
             onChange={e =>
@@ -95,22 +103,22 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           />
 
           <TextArea
-            label="Lead"
+            label={t('Lead')}
             value={lead}
             marginBottom={Spacing.ExtraSmall}
             onChange={e => onChange?.({...value, lead: e.target.value})}
           />
 
           <AuthorInput
-            label="Authors"
+            label={t('Authors')}
             value={authors}
             marginBottom={Spacing.ExtraSmall}
             onChange={authors => onChange?.({...value, authors: authors || []})}
           />
 
           <TagInput
-            label="Tags"
-            description="Press enter to add tag"
+            label={t('Tags')}
+            description={t('Press enter to add tag')}
             value={tags}
             marginBottom={Spacing.Small}
             onChange={tags => onChange?.({...value, tags: tags ?? []})}
@@ -118,13 +126,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
           <Box>
             <Toggle
-              label="Breaking News"
+              label={t('Breaking News')}
               checked={breaking}
               onChange={e => onChange?.({...value, breaking: e.target.checked})}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Image" />
+        <PanelSectionHeader title={t('Image')} />
         <PanelSection dark>
           <Box height={200}>
             <Card>
@@ -139,7 +147,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
-                          title="Choose Image"
+                          title={t('Choose Image')}
                           onClick={() => setChooseModalOpen(true)}
                         />
                       </Box>
@@ -150,7 +158,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
-                          title="Edit Image"
+                          title={t('Edit Image')}
                           onClick={() => setEditModalOpen(true)}
                         />
                       </Box>
@@ -161,7 +169,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconClose}
-                          title="Remove Image"
+                          title={t('Remove Image')}
                           onClick={() => onChange?.({...value, image: undefined})}
                         />
                       </Box>
@@ -173,11 +181,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             </Card>
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Peering" />
+        <PanelSectionHeader title={t('Peering')} />
         <PanelSection>
           <Toggle
-            label="Share with peers"
-            description="Allow peers to publish this article."
+            label={t('Share with peers')}
+            description={t('Allow peers to publish this article.')}
             checked={shared}
             onChange={e => onChange?.({...value, shared: e.target.checked})}
           />
@@ -262,10 +270,10 @@ function AuthorInputList({
               </SelectListItem>
             ))
           ) : (
-            <SelectListItem>No Authors found</SelectListItem>
+            <SelectListItem>{t('No Authors found')}</SelectListItem>
           )
         ) : (
-          <SelectListItem>Loading...</SelectListItem>
+          <SelectListItem>{t('Loading')}</SelectListItem>
         )
       ) : null}
     </SelectList>

@@ -18,6 +18,8 @@ import {
 
 import {useArticleListQuery, ArticleRefFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ArticleChoosePanelProps {
   onClose(): void
   onSelect(article: ArticleRefFragment): void
@@ -35,6 +37,8 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
   })
   const articles = data?.articles.nodes ?? []
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (error) {
       setErrorToastOpen(true)
@@ -46,11 +50,11 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
     <>
       <Panel>
         <PanelHeader
-          title="Choose Article"
+          title={t('Choose Article')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label="Close"
+              label={t('Close')}
               onClick={() => onClose()}
               disabled={loading}
             />
@@ -59,7 +63,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
         <PanelSection>
           <Box marginBottom={Spacing.Medium}>
             <SearchInput
-              placeholder="Search"
+              placeholder={t('Search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />

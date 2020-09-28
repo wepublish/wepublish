@@ -2,8 +2,6 @@ import React, {ReactNode} from 'react'
 
 import {NavigationTemplate, Divider} from '@karma.run/ui'
 
-import {useTranslation} from 'react-i18next'
-
 import {
   MaterialIconInsertDriveFileOutlined,
   MaterialIconPowerSettingsNew,
@@ -30,6 +28,8 @@ import {
   UserListRoute,
   UserRoleListRoute
 } from './route'
+
+import {useTranslation} from 'react-i18next'
 
 export interface BaseProps {
   children?: ReactNode

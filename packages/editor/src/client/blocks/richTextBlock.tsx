@@ -49,6 +49,8 @@ import {
 } from '@karma.run/ui'
 import {RichTextBlockValue} from './types'
 
+import {useTranslation} from 'react-i18next'
+
 enum BlockFormat {
   H1 = 'heading-one',
   H2 = 'heading-two',
@@ -101,6 +103,8 @@ const TextTags: any = {
   B: () => ({[TextFormat.Bold]: true}),
   U: () => ({[TextFormat.Underline]: true})
 }
+
+const {t} = useTranslation()
 
 function deserialize(element: Element): any {
   const {nodeName, nodeType} = element
@@ -319,7 +323,7 @@ export const RichTextBlock = memo(function RichTextBlock({
       </Toolbar>
       <Editable
         readOnly={disabled}
-        placeholder="Start writing..."
+        placeholder={t('Start writing')}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
       />
@@ -395,7 +399,7 @@ function LinkFormatButton() {
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setLinkDialogOpen(false)}
                 />
               }
@@ -403,7 +407,7 @@ function LinkFormatButton() {
                 <NavigationButton
                   icon={MaterialIconCheck}
                   disabled={isDisabled}
-                  label="Apply"
+                  label={t('Apply')}
                   onClick={() => {
                     insertLink(editor, selection, validatedURL!, title || undefined)
                     setLinkDialogOpen(false)
@@ -414,15 +418,15 @@ function LinkFormatButton() {
             <PanelSection>
               <Box width={300}>
                 <TextInput
-                  label="Link"
+                  label={t('Link')}
                   errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
                   value={url}
                   onChange={e => setURL(e.target.value)}
                   marginBottom={Spacing.ExtraSmall}
                 />
                 <TextInput
-                  label="Title"
-                  description="Optional description for the link"
+                  label={t('Title')}
+                  description={t('Optional description for the link')}
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                 />

@@ -1,6 +1,8 @@
 import React, {useRef, useEffect} from 'react'
 import {BlockProps, TypographicTextArea} from '@karma.run/ui'
 
+import {useTranslation} from 'react-i18next'
+
 import {TitleBlockValue} from './types'
 
 export type TitleBlockProps = BlockProps<TitleBlockValue>
@@ -8,6 +10,8 @@ export type TitleBlockProps = BlockProps<TitleBlockValue>
 export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
   const {title, lead} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
@@ -27,7 +31,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         ref={focusRef}
         variant="title"
         align="center"
-        placeholder="Title"
+        placeholder={t('Title')}
         value={title}
         disabled={disabled}
         onChange={e => onChange({...value, title: e.target.value})}
@@ -35,7 +39,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
       <TypographicTextArea
         variant="body1"
         align="center"
-        placeholder="Lead Text"
+        placeholder={t('Lead text')}
         value={lead}
         disabled={disabled}
         onChange={e => onChange({...value, lead: e.target.value})}

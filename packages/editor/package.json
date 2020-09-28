@@ -129,7 +129,14 @@
           "markupOnly": true,
           "ignoreAttribute": [
             "display",
-            "flexDirection"
+            "flexDirection",
+            "alignItems",
+            "element",
+            "variant",
+            "color",
+            "align",
+            "position",
+            "justifyContent"
           ]
         }
       ]
