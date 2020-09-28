@@ -69,7 +69,9 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
     token: 'fake',
     getImageURL: jest.fn(),
     deleteImage: jest.fn(),
-    uploadImage: jest.fn()
+    uploadImage: jest.fn(),
+    uploadImageFromArrayBuffer: jest.fn(),
+    _uploadImage: jest.fn()
   }
   if (!adminUser) {
     throw new Error('Could not get admin user')
