@@ -16,6 +16,7 @@ beforeAll(async () => {
 
     console.log('public', testClientPublic)
   } catch (error) {
+    console.log('Error', error)
     throw new Error('Error during test setup')
   }
 })
