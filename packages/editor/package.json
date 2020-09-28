@@ -44,7 +44,8 @@
     "copy-license": "shx cp ../../LICENSE ./",
     "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
     "prepare": "run-s clean copy-license sync-package-info build crlf",
-    "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml"
+    "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
@@ -110,5 +111,21 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "i18next"
+    ],
+    "rules": {
+      "react/display-name": [
+        0
+      ]
+    },
+    "extends": [
+      "../../package.json"
+    ],
+    "ignorePatterns": [
+      "src/client/api/index.ts"
+    ]
   }
 }

@@ -94,7 +94,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     image: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>(isNew ? InitialArticleBlocks : [])
 
   const articleID = id || createData?.createArticle.id
@@ -140,7 +140,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image ? image : undefined
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

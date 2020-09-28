@@ -11,7 +11,10 @@ export const UnsavedChangesDialogMessage = 'Changes you made may not be saved.'
 
 export function useUnsavedChangesDialog(hasChanges: boolean) {
   useEffect(() => {
-    if (!hasChanges) return () => {}
+    if (!hasChanges)
+      return () => {
+        /* do nothing */
+      }
 
     function handleBeforeUnload(e: BeforeUnloadEvent) {
       e.preventDefault()
