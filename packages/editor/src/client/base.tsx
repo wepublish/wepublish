@@ -60,28 +60,28 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconFaceOutlined}
-            label="Authors"
+            label={t('Authors')}
             route={AuthorListRoute.create({})}
             active={current?.type === RouteType.AuthorList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
-            label="Image Library"
+            label={t('Image Library')}
             route={ImageListRoute.create({})}
             active={current?.type === RouteType.ImageList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPermIdentityOutlined}
-            label="Users"
+            label={t('Users')}
             route={UserListRoute.create({})}
             active={current?.type === RouteType.UserList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconHowToRegOutlined}
-            label="User Roles"
+            label={t('User Roles')}
             route={UserRoleListRoute.create({})}
             active={current?.type === RouteType.UserRoleList}
           />
@@ -97,14 +97,14 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconShareOutlined}
-            label="Peering"
+            label={t('Peering')}
             route={PeerListRoute.create({})}
             active={current?.type === RouteType.PeerList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconLockOutlined}
-            label="Tokens"
+            label={t('Tokens')}
             route={TokenListRoute.create({})}
             active={current?.type === RouteType.TokenList}
           />
@@ -113,7 +113,7 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}
-            label="Logout"
+            label={t('Logout')}
             route={LogoutRoute.create({})}
           />
         </>

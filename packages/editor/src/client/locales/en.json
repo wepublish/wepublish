@@ -1,6 +1,13 @@
 {
   "translation": {
     "Articles": "Articles :)",
-    "Pages": "Some Pages"
+    "Authors": "Authors",
+    "Image Library": "Image Library",
+    "Logout": "Logout",
+    "Pages": "Some Pages",
+    "Peering": "Peering",
+    "Tokens": "Tokens",
+    "Users": "Users",
+    "User Roles": "User Roles"
   }
 }
