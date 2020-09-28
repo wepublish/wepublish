@@ -25,7 +25,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [errorMessage, setErrorMessage] = useState<string>()
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
-  const isEmpty = embed.type === EmbedType.Other && embed.url == undefined
+  const isEmpty = embed.type === EmbedType.Other && embed.url === undefined
 
   useEffect(() => {
     setErrorMessage(undefined)
@@ -169,7 +169,7 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
     case EmbedType.SoundCloudTrack:
       return `https://api.soundcloud.com/tracks/${embed.trackID}`
 
-    case EmbedType.Other:
+    case EmbedType.Other: {
       const hasTitle = !!embed.title
       const hasHeight = !!embed.height
       const hasWidth = !!embed.width
@@ -181,5 +181,6 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
             hasStyles ? ` style="${embed.styleCustom}"` : ''
           }/>`
         : ''
+    }
   }
 }
