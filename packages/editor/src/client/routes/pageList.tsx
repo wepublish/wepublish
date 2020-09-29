@@ -38,6 +38,8 @@ import {
   PageListQuery
 } from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
@@ -60,6 +62,8 @@ export function PageList() {
     variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })
+
+  const {t} = useTranslation()
 
   function loadMore() {
     fetchMore({
@@ -161,13 +165,13 @@ export function PageList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Pages</Typography>
+        <Typography variant="h1">{t('Pages')}</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label="New Page" route={PageCreateRoute.create({})} />
+        <RouteLinkButton color="primary" label={t('New Page')} route={PageCreateRoute.create({})} />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -177,12 +181,14 @@ export function PageList() {
           <>
             {pages}
             <Box display="flex" justifyContent="center">
-              {data?.pages.pageInfo.hasNextPage && <Button label="Load More" onClick={loadMore} />}
+              {data?.pages.pageInfo.hasNextPage && (
+                <Button label={t('Load More')} onClick={loadMore} />
+              )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Pages found
+            {t('No Pages found')}
           </Typography>
         ) : null}
       </Box>
@@ -194,14 +200,14 @@ export function PageList() {
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isUnpublishing || isDeleting}
                   onClick={async () => {
                     if (!currentPage) return
@@ -248,27 +254,27 @@ export function PageList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Title">
+                <DescriptionListItem label={t('Title')}>
                   {currentPage?.latest.title || 'Untitled'}
                 </DescriptionListItem>
 
                 {currentPage?.latest.description && (
-                  <DescriptionListItem label="Lead">
+                  <DescriptionListItem label={t('Lead')}>
                     {currentPage?.latest.description}
                   </DescriptionListItem>
                 )}
 
-                <DescriptionListItem label="Created At">
+                <DescriptionListItem label={t('Created At')}>
                   {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                <DescriptionListItem label="Updated At">
+                <DescriptionListItem label={t('Updated At')}>
                   {currentPage?.latest.updatedAt &&
                     new Date(currentPage.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentPage?.latest.publishedAt && (
-                  <DescriptionListItem label="Published At">
+                  <DescriptionListItem label={t('Published At')}>
                     {currentPage?.latest.publishedAt &&
                       new Date(currentPage.createdAt).toLocaleString()}
                   </DescriptionListItem>

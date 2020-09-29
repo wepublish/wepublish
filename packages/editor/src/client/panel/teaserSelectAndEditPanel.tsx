@@ -7,6 +7,8 @@ import {TeaserLink, Teaser} from '../blocks/types'
 import {TeaserStyle} from '../api'
 import {Drawer} from '@karma.run/ui'
 
+import {useTranslation} from 'react-i18next'
+
 export interface TeaserSelectAndEditPanelProps {
   onClose: () => void
   onSelect: (teaser: Teaser) => void
@@ -15,6 +17,8 @@ export interface TeaserSelectAndEditPanelProps {
 export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEditPanelProps) {
   const [teaser, setTeaser] = useState<TeaserLink>()
   const [isEditOpen, setEditOpen] = useState(false)
+
+  const {t} = useTranslation()
 
   return (
     <>
@@ -28,7 +32,7 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
       <Drawer open={isEditOpen} width={480}>
         {() => (
           <TeaserEditPanel
-            closeLabel="Back"
+            closeLabel={t('Back')}
             closeIcon={MaterialIconArrowBack}
             initialTeaser={{
               ...teaser!,

@@ -28,6 +28,9 @@ import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
 import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {isFunctionalUpdate} from '@karma.run/react'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
     <ListInput
@@ -74,19 +77,19 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
                 <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                   <IconButton
                     icon={MaterialIconImageOutlined}
-                    title="Choose Image"
+                    title={t('Choose Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setChooseModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
-                    title="Edit Image"
+                    title={t('Edit Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setEditModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconClose}
-                    title="Remove Image"
+                    title={t('Remove Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => onChange(value => ({...value, image: null}))}
                   />
@@ -99,7 +102,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         <Box flexGrow={1}>
           <TypographicTextArea
             variant="h1"
-            placeholder="Title"
+            placeholder={'Title'}
             value={title}
             onChange={e => {
               const title = e.target.value

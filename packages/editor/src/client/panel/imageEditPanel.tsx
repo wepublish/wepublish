@@ -30,6 +30,8 @@ import {
 } from '../api'
 import {getOperationNameFromDocument} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ImageEditPanelProps {
   readonly id?: string
   readonly file?: File
@@ -81,6 +83,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   const [isLoading, setLoading] = useState(true)
   const isDisabled = isLoading || isUpdating || isUploading
   const isUpload = file !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (file) {
@@ -247,27 +251,29 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 )}
               </Box>
               <DescriptionList>
-                <DescriptionListItem label="Filename">
+                <DescriptionListItem label={t('Filename')}>
                   {filename || 'untitled'}
                   {extension}
                 </DescriptionListItem>
-                <DescriptionListItem label="Dimension">
-                  {imageWidth} x {imageHeight}
+                <DescriptionListItem label={t('Dimension')}>
+                  {imageWidth} {t('x')} {imageHeight}
                 </DescriptionListItem>
                 {createdAt && (
-                  <DescriptionListItem label="Created">
+                  <DescriptionListItem label={t('Created')}>
                     {new Date(createdAt).toLocaleString()}
                   </DescriptionListItem>
                 )}
                 {updatedAt && (
-                  <DescriptionListItem label="Updated">
+                  <DescriptionListItem label={t('Updated')}>
                     {new Date(updatedAt).toLocaleString()}
                   </DescriptionListItem>
                 )}
-                <DescriptionListItem label="File Size">{prettyBytes(fileSize)}</DescriptionListItem>
+                <DescriptionListItem label={t('File Size')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
 
                 {originalImageURL && (
-                  <DescriptionListItem label="Link">
+                  <DescriptionListItem label={t('Link')}>
                     <Link href={originalImageURL} target="_blank">
                       {originalImageURL}
                     </Link>
@@ -275,24 +281,24 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 )}
               </DescriptionList>
             </PanelSection>
-            <PanelSectionHeader title="Information" />
+            <PanelSectionHeader title={t('Information')} />
             <PanelSection>
               <TextInput
-                label="Filename"
+                label={t('Filename')}
                 value={filename}
                 onChange={e => setFilename(e.target.value)}
                 disabled={isDisabled}
                 marginBottom={Spacing.Small}
               />
               <TextInput
-                label="Title"
+                label={t('Title')}
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 disabled={isDisabled}
                 marginBottom={Spacing.Small}
               />
               <TextInput
-                label="Description"
+                label={t('Description')}
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 disabled={isDisabled}
@@ -300,32 +306,32 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
               />
 
               <TagInput
-                label="Tags"
-                description="Press enter to add tag"
+                label={t('Tags')}
+                description={t('Press enter to add tag')}
                 value={tags}
                 disabled={isDisabled}
                 onChange={tags => setTags(tags ?? [])}
               />
             </PanelSection>
-            <PanelSectionHeader title="Attribution" />
+            <PanelSectionHeader title={t('Attribution')} />
             <PanelSection>
               <TextInput
-                label="Author"
+                label={t('Author')}
                 value={author}
                 onChange={e => setAuthor(e.target.value)}
                 disabled={isDisabled}
                 marginBottom={Spacing.Small}
               />
               <TextInput
-                label="Source"
-                description="Link to original source of the image."
+                label={t('Source')}
+                description={t('Link to original source of the image.')}
                 value={source}
                 onChange={e => setSource(e.target.value)}
                 disabled={isDisabled}
                 marginBottom={Spacing.Small}
               />
               <TextInput
-                label="License"
+                label={t('License')}
                 value={license}
                 onChange={e => setLicense(e.target.value)}
                 disabled={isDisabled}
@@ -349,7 +355,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         open={isSavedToastOpen}
         autoHideDuration={2000}
         onClose={() => setSavedToastOpen(false)}>
-        Image Updated
+        {t('Image Updated')}
       </Toast>
     </>
   )

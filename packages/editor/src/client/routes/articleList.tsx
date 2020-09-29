@@ -39,6 +39,8 @@ import {
   ArticleListQuery
 } from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
@@ -61,6 +63,8 @@ export function ArticleList() {
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
+
+  const {t} = useTranslation()
 
   function loadMore() {
     fetchMore({
@@ -164,17 +168,17 @@ export function ArticleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Articles</Typography>
+        <Typography variant="h1">{t('Articles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label="New Article"
+          label={t('New Article')}
           route={ArticleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -185,13 +189,13 @@ export function ArticleList() {
             {articles}
             <Box display="flex" justifyContent="center">
               {data?.articles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMore} />
+                <Button label={t('Load More')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Articles found
+            {t('No Articles found')}
           </Typography>
         ) : null}
       </Box>
@@ -206,14 +210,14 @@ export function ArticleList() {
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isUnpublishing || isDeleting}
                   onClick={async () => {
                     if (!currentArticle) return
@@ -260,27 +264,27 @@ export function ArticleList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Title">
+                <DescriptionListItem label={t('Title')}>
                   {currentArticle?.latest.title || 'Untitled'}
                 </DescriptionListItem>
 
                 {currentArticle?.latest.lead && (
-                  <DescriptionListItem label="Lead">
+                  <DescriptionListItem label={t('Lead')}>
                     {currentArticle?.latest.lead}
                   </DescriptionListItem>
                 )}
 
-                <DescriptionListItem label="Created At">
+                <DescriptionListItem label={t('Created At')}>
                   {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                <DescriptionListItem label="Updated At">
+                <DescriptionListItem label={t('Updated At')}>
                   {currentArticle?.latest.updatedAt &&
                     new Date(currentArticle.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentArticle?.latest.publishedAt && (
-                  <DescriptionListItem label="Published At">
+                  <DescriptionListItem label={t('Published At')}>
                     {new Date(currentArticle.createdAt).toLocaleString()}
                   </DescriptionListItem>
                 )}

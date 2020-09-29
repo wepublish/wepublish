@@ -38,6 +38,8 @@ import {useDeleteUserMutation, FullUserFragment, useUserListQuery} from '../api'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete'
 }
@@ -70,6 +72,8 @@ export function UserList() {
   })
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (current?.type === RouteType.UserCreate) {
@@ -148,13 +152,13 @@ export function UserList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Users</Typography>
+        <Typography variant="h1">{t('Users')}</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label="New User" route={UserCreateRoute.create({})} />
+        <RouteLinkButton color="primary" label={t('New User')} route={UserCreateRoute.create({})} />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -164,7 +168,7 @@ export function UserList() {
           users
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Users found
+            {t('No Users found')}
           </Typography>
         ) : null}
       </Box>
@@ -207,18 +211,18 @@ export function UserList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete User?"
+              title={t('Delete User?')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentUser) return
@@ -239,7 +243,7 @@ export function UserList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
+                <DescriptionListItem label={t('Name')}>
                   {currentUser?.name || 'Unknown'}
                 </DescriptionListItem>
               </DescriptionList>

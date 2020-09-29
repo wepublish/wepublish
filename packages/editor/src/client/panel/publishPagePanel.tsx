@@ -22,6 +22,8 @@ import {
 import {PageMetadata} from './pageMetadataPanel'
 import {dateTimeLocalString} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
   pendingPublishDate?: Date
@@ -52,17 +54,19 @@ export function PublishPagePanel({
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
+  const {t} = useTranslation()
+
   return (
     <Panel>
       <PanelHeader
-        title="Publish Page"
+        title={t('Publish Page')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+          <NavigationButton icon={MaterialIconClose} label={t('Close')} onClick={() => onClose()} />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label="Confirm"
+            label={t('Confirm')}
             disabled={!publishDate || !updateDate}
             onClick={() => onConfirm(publishDate!, updateDate!)}
           />
@@ -72,15 +76,15 @@ export function PublishPagePanel({
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              There is already a pending publication scheduled at{' '}
+              {t('There is already a pending publication scheduled at')}{' '}
               {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              publishing again will override that publication.
+              {t('publishing again will override that publication.')}
             </Typography>
           </Box>
         )}
         <TextInput
           type="datetime-local"
-          label="Publish Date"
+          label={t('Publish Date')}
           errorMessage={publishDateError}
           icon={MaterialIconQueryBuilder}
           marginBottom={Spacing.Small}
@@ -102,7 +106,7 @@ export function PublishPagePanel({
         />
         <TextInput
           type="datetime-local"
-          label="Update Date"
+          label={t('Update Date')}
           errorMessage={updateDateError}
           icon={MaterialIconUpdate}
           value={updateDateString}
@@ -124,10 +128,10 @@ export function PublishPagePanel({
       </PanelSection>
       <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label="Title">{metadata.title}</DescriptionListItem>
-          <DescriptionListItem label="Description">{metadata.description}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ')}</DescriptionListItem>
+          <DescriptionListItem label={t('Title')}>{metadata.title}</DescriptionListItem>
+          <DescriptionListItem label={t('Description')}>{metadata.description}</DescriptionListItem>
+          <DescriptionListItem label={t('Slug')}>{metadata.slug}</DescriptionListItem>
+          <DescriptionListItem label={t('Tags')}>{metadata.tags.join(', ')}</DescriptionListItem>
         </DescriptionList>
       </PanelSection>
     </Panel>

@@ -336,12 +336,12 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              Style: {labelForTeaserStyle(style)}
+              {t('Style')}: {labelForTeaserStyle(style)}
             </Typography>
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              Status: {states?.join(' / ')}
+              {t('Status')}: {states?.join(' / ')}
             </Typography>
           </Box>
         </Box>

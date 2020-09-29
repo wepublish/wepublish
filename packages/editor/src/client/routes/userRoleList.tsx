@@ -32,6 +32,9 @@ import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '
 import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 enum ConfirmAction {
   Delete = 'delete'
 }
@@ -119,17 +122,17 @@ export function UserRoleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">User Roles</Typography>
+        <Typography variant="h1">{t('User Roles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label="New UserRole"
+          label={t('New UserRole')}
           route={UserRoleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -139,7 +142,7 @@ export function UserRoleList() {
           userRoles
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No UserRoles found
+            {t('No UserRoles found')}
           </Typography>
         ) : null}
       </Box>
@@ -169,18 +172,18 @@ export function UserRoleList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete User Role?"
+              title={t('Delete User Role?')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentUserRole) return
@@ -201,7 +204,7 @@ export function UserRoleList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
+                <DescriptionListItem label={t('Name')}>
                   {currentUserRole?.name || 'Unknown'}
                 </DescriptionListItem>
               </DescriptionList>

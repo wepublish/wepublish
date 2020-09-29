@@ -44,6 +44,8 @@ import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../bl
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ArticleEditorProps {
   readonly id?: string
 }
@@ -122,6 +124,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setBlocks(blocks)
     setChanged(true)
   }, [])
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (articleData?.article) {
@@ -236,7 +240,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             leftChildren={
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
-                label="Back"
+                label={t('Back')}
                 route={ArticleListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -247,7 +251,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               <>
                 <NavigationButton
                   icon={MaterialIconInsertDriveFileOutlined}
-                  label="Metadata"
+                  label={t('Metadata')}
                   onClick={() => setMetaDrawerOpen(true)}
                   disabled={isDisabled}
                 />
@@ -255,7 +259,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 {isNew && createData == null ? (
                   <NavigationButton
                     icon={MaterialIconSaveOutlined}
-                    label="Create"
+                    label={t('Create')}
                     onClick={() => handleSave()}
                     disabled={isDisabled}
                   />
@@ -263,13 +267,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   <>
                     <NavigationButton
                       icon={MaterialIconSaveOutlined}
-                      label="Save"
+                      label={t('Save')}
                       onClick={() => handleSave()}
                       disabled={isDisabled}
                     />
                     <NavigationButton
                       icon={MaterialIconPublishOutlined}
-                      label="Publish"
+                      label={t('Publish')}
                       onClick={() => setPublishDialogOpen(true)}
                       disabled={isDisabled}
                     />

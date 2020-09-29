@@ -53,7 +53,7 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
-            label={t('Pages')}
+            label={t('Some Pages')}
             route={PageListRoute.create({})}
             active={current?.type === RouteType.PageList}
           />

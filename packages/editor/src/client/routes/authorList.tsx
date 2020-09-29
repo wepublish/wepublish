@@ -36,6 +36,8 @@ import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@karma.run/react'
 import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete'
 }
@@ -67,6 +69,8 @@ export function AuthorList() {
   })
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     switch (current?.type) {
@@ -144,13 +148,17 @@ export function AuthorList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Authors</Typography>
+        <Typography variant="h1">{t('Authors')}</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label="New Author" route={AuthorCreateRoute.create({})} />
+        <RouteLinkButton
+          color="primary"
+          label={t('New Author')}
+          route={AuthorCreateRoute.create({})}
+        />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -161,13 +169,13 @@ export function AuthorList() {
             {authors}
             <Box display="flex" justifyContent="center">
               {data?.authors.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMore} />
+                <Button label={t('Load More')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Authors found
+            {t('No Authors found')}
           </Typography>
         ) : null}
       </Box>
@@ -196,18 +204,18 @@ export function AuthorList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete Author?"
+              title={t('Delete Author?')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentAuthor) return
@@ -227,7 +235,7 @@ export function AuthorList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
+                <DescriptionListItem label={t('Name')}>
                   {currentAuthor?.name || 'Unknown'}
                 </DescriptionListItem>
               </DescriptionList>

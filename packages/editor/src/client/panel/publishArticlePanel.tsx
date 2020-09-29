@@ -23,6 +23,8 @@ import {
 } from '@karma.run/icons'
 import {dateTimeLocalString} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
   pendingPublishDate?: Date
@@ -53,17 +55,19 @@ export function PublishArticlePanel({
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
+  const {t} = useTranslation()
+
   return (
     <Panel>
       <PanelHeader
-        title="Publish Article"
+        title={t('Publish Article')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+          <NavigationButton icon={MaterialIconClose} label={t('Close')} onClick={() => onClose()} />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label="Confirm"
+            label={t('Confirm')}
             disabled={!publishDate || !updateDate}
             onClick={() => onConfirm(publishDate!, updateDate!)}
           />
@@ -73,15 +77,15 @@ export function PublishArticlePanel({
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              There is already a pending publication scheduled at{' '}
+              {t('There is already a pending publication scheduled at')}{' '}
               {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              publishing again will override that publication.
+              {t('publishing again will override that publication.')}
             </Typography>
           </Box>
         )}
         <TextInput
           type="datetime-local"
-          label="Publish Date"
+          label={t('Publish Date')}
           errorMessage={publishDateError}
           icon={MaterialIconQueryBuilder}
           marginBottom={Spacing.Small}
@@ -103,7 +107,7 @@ export function PublishArticlePanel({
         />
         <TextInput
           type="datetime-local"
-          label="Update Date"
+          label={t('Update Date')}
           errorMessage={updateDateError}
           icon={MaterialIconUpdate}
           value={updateDateString}
@@ -124,18 +128,22 @@ export function PublishArticlePanel({
         />
       </PanelSection>
 
-      <PanelSectionHeader title="Metadata" />
+      <PanelSectionHeader title={t('Metadata')} />
       <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label="Pre-title">{metadata.preTitle || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Title">{metadata.title || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Lead">{metadata.lead || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ') || '-'}</DescriptionListItem>
-          <DescriptionListItem label="Breaking News">
+          <DescriptionListItem label={t('Pre-title')}>
+            {metadata.preTitle || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('Title')}>{metadata.title || '-'}</DescriptionListItem>
+          <DescriptionListItem label={t('Lead')}>{metadata.lead || '-'}</DescriptionListItem>
+          <DescriptionListItem label={t('Slug')}>{metadata.slug || '-'}</DescriptionListItem>
+          <DescriptionListItem label={t('Tags')}>
+            {metadata.tags.join(', ') || '-'}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('Breaking News')}>
             {metadata.breaking ? 'Yes' : 'No'}
           </DescriptionListItem>
-          <DescriptionListItem label="Shared with peers">
+          <DescriptionListItem label={t('Shared with peers')}>
             {metadata.shared ? 'Yes' : 'No'}
           </DescriptionListItem>
         </DescriptionList>

@@ -45,6 +45,8 @@ import {slugify, generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
+import {useTranslation} from 'react-i18next'
+
 export interface AuthorEditPanelProps {
   id?: string
 
@@ -78,6 +80,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
   const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.author) {
@@ -155,7 +159,11 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <PanelHeader
           title={id ? 'Edit Author' : 'Create Author'}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             <NavigationButton
@@ -170,7 +178,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Name"
+              label={t('Name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -180,7 +188,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Image" />
+        <PanelSectionHeader title={t('Image')} />
         <PanelSection dark>
           <Box height={200}>
             <Card>
@@ -190,19 +198,20 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                     <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
                         icon={MaterialIconImageOutlined}
-                        title="Choose Image"
+                        title={t('Choose Image')}
                         margin={Spacing.ExtraSmall}
                         onClick={() => setChooseModalOpen(true)}
                       />
                       <IconButton
                         icon={MaterialIconEditOutlined}
-                        title="Edit Image"
+                        title={t('Edit Image')}
                         margin={Spacing.ExtraSmall}
                         onClick={() => setEditModalOpen(true)}
                       />
+                      {t('Image')}
                       <IconButton
                         icon={MaterialIconClose}
-                        title="Remove Image"
+                        title={t('Remove Image')}
                         margin={Spacing.ExtraSmall}
                         onClick={() => setImage(undefined)}
                       />
@@ -214,7 +223,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             </Card>
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Links" />
+        <PanelSectionHeader title={t('Links')} />
         <PanelSection>
           <ListInput
             value={links}
@@ -223,14 +232,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             {({value, onChange}) => (
               <Box display="flex" flexDirection="row">
                 <TextInput
-                  label="Title"
+                  label={t('Title')}
                   flexBasis="30%"
                   marginRight={Spacing.ExtraSmall}
                   value={value.title}
                   onChange={e => onChange({...value, title: e.target.value})}
                 />
                 <TextInput
-                  label="Link"
+                  label={t('Link')}
                   flexBasis="70%"
                   value={value.url}
                   onChange={e => onChange({...value, url: e.target.value})}
@@ -239,7 +248,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             )}
           </ListInput>
         </PanelSection>
-        <PanelSectionHeader title="Biographical Information" />
+        <PanelSectionHeader title={t('Biographical Information')} />
         <PanelSection>
           <RichTextBlock value={bio} onChange={value => setBio(value)} />
         </PanelSection>

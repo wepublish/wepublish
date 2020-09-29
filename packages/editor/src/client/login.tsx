@@ -130,7 +130,7 @@ export function Login() {
               <TextInput
                 label={t('Email')}
                 value={email}
-                autoComplete="username"
+                autoComplete={t('username')}
                 onChange={event => setEmail(event.target.value)}
                 marginBottom={Spacing.Small}
               />
@@ -138,7 +138,7 @@ export function Login() {
                 type="password"
                 label={t('Password')}
                 value={password}
-                autoComplete="current-password"
+                autoComplete={t('current-password')}
                 onChange={event => setPassword(event.target.value)}
                 marginBottom={Spacing.Small}
               />

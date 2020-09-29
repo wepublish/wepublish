@@ -24,6 +24,8 @@ import {
 import {useImageListQuery, ImageRefFragment} from '../api'
 import {ImagedEditPanel} from './imageEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ImageSelectPanelProps {
   onClose(): void
   onSelect(image: ImageRefFragment): void
@@ -49,6 +51,8 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const images = data?.images.nodes ?? []
   const missingColumns =
     images.length % 2 !== 0 ? new Array(2 - (images.length % 2)).fill(null) : []
+
+  const {t} = useTranslation()
 
   async function handleDrop(files: File[]) {
     if (files.length === 0) return
@@ -88,25 +92,29 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Choose Image"
+          title={t('Choose Image')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
           <Box height={100}>
             <FileDropInput
               icon={MaterialIconCloudUploadOutlined}
-              text="Drop Image Here"
+              text={t('Drop Image Here')}
               onDrop={handleDrop}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Images" />
+        <PanelSectionHeader title={t('Images')} />
         <PanelSection>
           <Box marginBottom={Spacing.Small}>
             <SearchInput
-              placeholder="Search"
+              placeholder={t('Search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />
@@ -153,13 +161,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               </Box>
               <Box display="flex" justifyContent="center">
                 {data?.images.pageInfo.hasNextPage && (
-                  <Button label="Load More" onClick={loadMore} />
+                  <Button label={t('Load More')} onClick={loadMore} />
                 )}
               </Box>
             </>
           ) : !isLoading ? (
             <Typography variant="body1" color="gray" align="center">
-              No Images found
+              {t('No Images found')}
             </Typography>
           ) : null}
         </PanelSection>

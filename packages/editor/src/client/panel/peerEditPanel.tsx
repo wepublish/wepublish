@@ -29,6 +29,8 @@ import {
 
 import {slugify, getOperationNameFromDocument} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ImageEditPanelProps {
   id?: string
 
@@ -64,6 +66,8 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   })
 
   const isDisabled = isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.peer) {
@@ -179,7 +183,11 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         <PanelHeader
           title={id ? 'Edit Peer' : 'Create Peer'}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             <NavigationButton
@@ -192,7 +200,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         />
         <PanelSection>
           <TextInput
-            label="Name"
+            label={t('Name')}
             marginBottom={Spacing.ExtraSmall}
             value={name}
             onChange={e => {
@@ -201,7 +209,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             }}
           />
           <TextInput
-            label="URL"
+            label={t('URL')}
             marginBottom={Spacing.ExtraSmall}
             value={urlString}
             errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
@@ -210,7 +218,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             }}
           />
           <TextInput
-            label="Token"
+            label={t('Token')}
             marginBottom={Spacing.ExtraSmall}
             value={token}
             description={id ? "Leave empty if you don't want to change it" : undefined}
@@ -219,7 +227,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             }}
           />
         </PanelSection>
-        <PanelSectionHeader title="Information" />
+        <PanelSectionHeader title={t('Information')} />
         {isLoadingPeerProfile ? null : isValidURL ? (
           <>
             <PanelSection dark>
@@ -231,8 +239,10 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
                 )}
               </Card>
               <DescriptionList>
-                <DescriptionListItem label="Name">{profile?.name}</DescriptionListItem>
-                <DescriptionListItem label="Theme Color">{profile?.themeColor}</DescriptionListItem>
+                <DescriptionListItem label={t('Name')}>{profile?.name}</DescriptionListItem>
+                <DescriptionListItem label={t('Theme Color')}>
+                  {profile?.themeColor}
+                </DescriptionListItem>
               </DescriptionList>
             </PanelSection>
           </>

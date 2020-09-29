@@ -21,6 +21,8 @@ import {
 import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
+import {useTranslation} from 'react-i18next'
+
 export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
@@ -61,6 +63,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (articleListError ?? pageListError ?? peerArticleListError) {
@@ -180,7 +184,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {articleListData?.articles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMoreArticles} />
+                <Button label={t('Load More')} onClick={loadMoreArticles} />
               )}
             </Box>
           </>
@@ -253,7 +257,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMorePeerArticles} />
+                <Button label={t('Load More')} onClick={loadMorePeerArticles} />
               )}
             </Box>
           </>
@@ -318,7 +322,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {pageListData?.pages.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMorePages} />
+                <Button label={t('Load More')} onClick={loadMorePages} />
               )}
             </Box>
           </>
@@ -330,9 +334,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Choose Teaser"
+          title={t('Choose Teaser')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
@@ -342,27 +350,27 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
               variant={type === TeaserType.Article ? 'default' : 'outlined'}
-              label="Article"
+              label={t('Article')}
               onClick={() => setType(TeaserType.Article)}
             />
             <Button
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
               variant={type === TeaserType.PeerArticle ? 'default' : 'outlined'}
-              label="Peer Article"
+              label={t('Peer Article')}
               onClick={() => setType(TeaserType.PeerArticle)}
             />
             <Button
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
               variant={type === TeaserType.Page ? 'default' : 'outlined'}
-              label="Page"
+              label={t('Page')}
               onClick={() => setType(TeaserType.Page)}
             />
           </Box>
           <Box marginBottom={Spacing.Medium}>
             <SearchInput
-              placeholder="Search"
+              placeholder={t('Search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />

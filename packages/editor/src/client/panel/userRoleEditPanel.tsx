@@ -25,6 +25,8 @@ import {
   useUserRoleQuery
 } from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 export interface UserRoleEditPanelProps {
   id?: string
 
@@ -66,6 +68,8 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     isCreating ||
     isUpdating ||
     loadError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.userRole) {
@@ -133,7 +137,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         <PanelHeader
           title={id ? 'Edit UserRole' : 'Create UserRole'}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             <NavigationButton
@@ -148,7 +156,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Name"
+              label={t('Name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -158,7 +166,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Description"
+              label={t('Description')}
               value={description}
               disabled={isDisabled}
               onChange={e => {
@@ -168,11 +176,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Box>
           {systemRole && (
             <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">is a System Role and can not be edited</Typography>
+              <Typography variant="body1">{t('is a System Role and can not be edited')}</Typography>
             </Box>
           )}
         </PanelSection>
-        <PanelSectionHeader title="Permissions" />
+        <PanelSectionHeader title={t('Permissions')} />
         <PanelSection>
           {permissions.map(permission => {
             return (

@@ -15,6 +15,9 @@ import {
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
   onClose(): void
@@ -98,14 +101,14 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   return (
     <Panel>
       <PanelHeader
-        title="Edit Embed"
+        title={t('Edit Embed')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+          <NavigationButton icon={MaterialIconClose} label={t('Close')} onClick={() => onClose()} />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label="Confirm"
+            label={t('Confirm')}
             onClick={() => onConfirm(embed)}
             disabled={isEmpty}
           />
@@ -114,29 +117,33 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       <PanelSection>
         <TextArea
           marginBottom={Spacing.ExtraSmall}
-          label="Embed"
+          label={t('Embed')}
           errorMessage={errorMessage}
           value={input}
           onChange={e => setInput(e.target.value)}
         />
         <Box marginBottom={Spacing.ExtraSmall}>
           <Typography variant="subtitle1" spacing="small">
-            Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted
-            like e.g.
+            {t(
+              'Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.'
+            )}
           </Typography>
-          <code>https://www.facebook.com/id/posts/id/</code>
+          {t('<code>https://www.facebook.com/id/posts/id/</code>')}
           <Typography variant="subtitle1" spacing="small">
-            Embed codes attributes <code>title, src, width, height</code> are validated e.g.
+            {t('Embed codes attributes <code>title, src, width, height</code> are validated e.g.')}
           </Typography>
           <code>{'<iframe width="560" height="315" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
-            Set <code>style</code> alternatively as attribute to overwrite the defaults and disable
-            auto ratio size scaling .e.g.
+            {t(
+              'Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.'
+            )}
           </Typography>
+
           <code>{'<iframe style="height:350px;width:100%;" src="https://..."></iframe>'}</code>
           <Typography variant="subtitle1" spacing="small">
-            Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently
-            limited to simple iframes and supported embeds listed above.
+            {t(
+              'Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.'
+            )}
           </Typography>
         </Box>
 

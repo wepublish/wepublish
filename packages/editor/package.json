@@ -136,7 +136,13 @@
             "color",
             "align",
             "position",
-            "justifyContent"
+            "justifyContent",
+            "overflow",
+            "target",
+            "spacing",
+            "sdkLanguage",
+            "axis",
+            "flexWrap"
           ]
         }
       ]

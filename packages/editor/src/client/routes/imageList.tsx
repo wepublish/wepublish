@@ -47,6 +47,8 @@ import {
 } from '../api'
 import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete'
 }
@@ -83,6 +85,8 @@ export function ImageList() {
   const missingColumns =
     images.length % 3 !== 0 ? new Array(3 - (images.length % 3)).fill(null) : []
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (current?.type === RouteType.ImageUpload) {
       setUploadModalOpen(true)
@@ -113,17 +117,17 @@ export function ImageList() {
   return (
     <>
       <Box flexDirection="row" marginBottom={Spacing.Small} display="flex">
-        <Typography variant="h1">Image Library</Typography>
+        <Typography variant="h1">{t('Image Library')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
-          label="Upload Image"
+          label={t('Upload Image')}
           color="primary"
           route={ImageUploadRoute.create({}, current ?? undefined)}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('Search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -185,12 +189,14 @@ export function ImageList() {
               </Grid>
             </Box>
             <Box display="flex" justifyContent="center">
-              {data?.images.pageInfo.hasNextPage && <Button label="Load More" onClick={loadMore} />}
+              {data?.images.pageInfo.hasNextPage && (
+                <Button label={t('Load More')} onClick={loadMore} />
+              )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Images found
+            {t('No Images found')}
           </Typography>
         ) : null}
       </Box>
@@ -232,18 +238,18 @@ export function ImageList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete Image?"
+              title={t('Delete Image?')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('Confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentImage) return
@@ -284,13 +290,13 @@ export function ImageList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Filename">
+                <DescriptionListItem label={t('Filename')}>
                   {`${currentImage?.filename || 'untitled'}${currentImage?.extension}` || '-'}
                 </DescriptionListItem>
-                <DescriptionListItem label="Title">
+                <DescriptionListItem label={t('Title')}>
                   {currentImage?.title || 'Untitled'}
                 </DescriptionListItem>
-                <DescriptionListItem label="Description">
+                <DescriptionListItem label={t('Description')}>
                   {currentImage?.description || '-'}
                 </DescriptionListItem>
               </DescriptionList>

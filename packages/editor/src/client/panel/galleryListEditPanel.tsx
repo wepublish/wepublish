@@ -31,6 +31,9 @@ import {ImageSelectPanel} from './imageSelectPanel'
 
 import {GalleryImageEdge} from '../blocks/types'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 export interface AuthorEditPanelProps {
   id?: string
   initialImages: GalleryImageEdge[]
@@ -49,11 +52,11 @@ export function GalleryListEditPanel({id, initialImages, onClose}: AuthorEditPan
   return (
     <Panel>
       <PanelHeader
-        title="Edit Gallery"
+        title={t('Edit Gallery')}
         leftChildren={
           <NavigationButton
             icon={MaterialIconClose}
-            label="Close"
+            label={t('Close')}
             onClick={() => onClose?.(images.map(({value}) => value))}
           />
         }
@@ -87,19 +90,19 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
                 <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                   <IconButton
                     icon={MaterialIconImageOutlined}
-                    title="Choose Image"
+                    title={t('Choose Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setChooseModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
-                    title="Edit Image"
+                    title={t('Edit Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setEditModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconClose}
-                    title="Remove Image"
+                    title={t('Remove Image')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => onChange(value => ({...value, image: null}))}
                   />
@@ -112,7 +115,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
         <TypographicTextArea
           variant="subtitle2"
           align="center"
-          placeholder="Caption"
+          placeholder={t('Caption')}
           value={caption}
           onChange={e => {
             const caption = e.target.value
