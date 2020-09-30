@@ -16,7 +16,6 @@ import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 export interface EmbedEditPanel {
   readonly value: EmbedBlockValue
@@ -29,6 +28,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   const [input, setInput] = useState(() => deriveInputFromEmbedBlockValue(value))
   const [embed, setEmbed] = useState<EmbedBlockValue>(value)
   const isEmpty = embed.type === EmbedType.Other && embed.url === undefined
+  const {t} = useTranslation()
 
   useEffect(() => {
     setErrorMessage(undefined)

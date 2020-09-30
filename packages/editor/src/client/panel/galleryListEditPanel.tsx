@@ -32,7 +32,6 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {GalleryImageEdge} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -48,6 +47,8 @@ export function GalleryListEditPanel({id, initialImages, onClose}: AuthorEditPan
       value
     }))
   )
+
+  const {t} = useTranslation()
 
   return (
     <Panel>
@@ -79,6 +80,8 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   const {image, caption} = value
+
+  const {t} = useTranslation()
 
   return (
     <>

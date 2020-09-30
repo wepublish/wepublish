@@ -29,7 +29,6 @@ import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {isFunctionalUpdate} from '@karma.run/react'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
@@ -52,6 +51,8 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
   const {image, title, richText} = value
+
+  const {t} = useTranslation()
 
   const handleRichTextChange = useCallback(
     (richText: React.SetStateAction<RichTextBlockValue>) =>

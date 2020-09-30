@@ -56,6 +56,8 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
+  const {t} = useTranslation()
+
   const dispatch = useRouteDispatch()
 
   const [
@@ -124,8 +126,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setBlocks(blocks)
     setChanged(true)
   }, [])
-
-  const {t} = useTranslation()
 
   useEffect(() => {
     if (articleData?.article) {

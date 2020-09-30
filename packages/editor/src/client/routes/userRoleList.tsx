@@ -33,13 +33,14 @@ import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} f
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 enum ConfirmAction {
   Delete = 'delete'
 }
 
 export function UserRoleList() {
+  const {t} = useTranslation()
+
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 

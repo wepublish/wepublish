@@ -59,13 +59,13 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-const {t} = useTranslation()
-
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
   const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  const {t} = useTranslation()
 
   function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
@@ -242,6 +242,8 @@ function AuthorInputList({
     variables: {filter: inputValue || undefined, first: 10},
     fetchPolicy: 'network-only'
   })
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     setItems(data?.authors.nodes ?? [])

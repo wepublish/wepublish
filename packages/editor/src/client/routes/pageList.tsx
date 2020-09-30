@@ -48,6 +48,8 @@ enum ConfirmAction {
 const PagesPerPage = 50
 
 export function PageList() {
+  const {t} = useTranslation()
+
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
@@ -62,8 +64,6 @@ export function PageList() {
     variables: {filter: filter || undefined, first: 50},
     fetchPolicy: 'no-cache'
   })
-
-  const {t} = useTranslation()
 
   function loadMore() {
     fetchMore({

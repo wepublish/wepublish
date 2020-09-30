@@ -63,7 +63,6 @@ export function ArticleList() {
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
-
   const {t} = useTranslation()
 
   function loadMore() {

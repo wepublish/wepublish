@@ -43,6 +43,7 @@ enum ConfirmAction {
 }
 
 export function AuthorList() {
+  const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
@@ -69,8 +70,6 @@ export function AuthorList() {
   })
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
-
-  const {t} = useTranslation()
 
   useEffect(() => {
     switch (current?.type) {

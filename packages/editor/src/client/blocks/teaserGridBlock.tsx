@@ -60,8 +60,6 @@ const Grid = SortableContainer(({children, numColumns}: GridProps) => {
   return <GridElement styleProps={{numColumns}}>{children}</GridElement>
 })
 
-const {t} = useTranslation()
-
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
   const [editIndex, setEditIndex] = useState(0)
 
@@ -168,6 +166,8 @@ export function TeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
+  const {t} = useTranslation()
+
   return (
     <Card
       style={{cursor: showGrabCursor ? 'grab' : ''}}
@@ -294,6 +294,8 @@ export function TeaserContent({
   peer,
   numColumns
 }: TeaserContentProps) {
+  const {t} = useTranslation()
+
   return (
     <>
       <Box position="absolute" width="100%" height="100%">

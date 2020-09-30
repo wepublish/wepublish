@@ -35,7 +35,6 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
@@ -62,6 +61,8 @@ export function TeaserEditPanel({
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  const {t} = useTranslation()
 
   return (
     <>
@@ -208,6 +209,8 @@ function previewForTeaser(teaser: Teaser) {
   let preTitle: string | undefined
   let title: string | undefined
   let lead: string | undefined
+
+  const {t} = useTranslation()
 
   switch (teaser.type) {
     case TeaserType.Article:

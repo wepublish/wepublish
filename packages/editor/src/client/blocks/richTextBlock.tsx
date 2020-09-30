@@ -104,8 +104,6 @@ const TextTags: any = {
   U: () => ({[TextFormat.Underline]: true})
 }
 
-const {t} = useTranslation()
-
 function deserialize(element: Element): any {
   const {nodeName, nodeType} = element
 
@@ -285,6 +283,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
   const [hasFocus, setFocus] = useState(false)
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (autofocus) {
       ReactEditor.focus(editor)
@@ -360,6 +360,8 @@ function LinkFormatButton() {
 
   const validatedURL = validateURL(url)
   const isDisabled = !validatedURL
+
+  const {t} = useTranslation()
 
   return (
     <>

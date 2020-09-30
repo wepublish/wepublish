@@ -24,13 +24,13 @@ import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
 import {IframeEmbed} from './embeds/iframe'
 
 import {useTranslation} from 'react-i18next'
-const {t} = useTranslation()
 
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const theme = useContext(ThemeContext)
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
   const isEmpty = value.type === EmbedType.Other && value.url === undefined
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus && isEmpty) {
