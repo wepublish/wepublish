@@ -105,7 +105,6 @@
     "clean-webpack-plugin": "^3.0.0",
     "crlf": "^1.1.1",
     "dotenv": "^8.2.0",
-    "eslint-plugin-react-hooks": "^4.1.2",
     "fork-ts-checker-webpack-plugin": "^4.1.4",
     "nodemon": "^2.0.1",
     "npm-run-all": "^4.1.5",
@@ -118,16 +117,9 @@
   },
   "eslintConfig": {
     "plugins": [
-      "i18next",
-      "react-hooks"
+      "i18next"
     ],
     "rules": {
-      "react-hooks": [
-        {
-          "react-hooks/rules-of-hooks": "error",
-          "react-hooks/exhaustive-deps": "warn"
-        }
-      ],
       "react/display-name": [
         0
       ],
