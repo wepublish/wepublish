@@ -1,12 +1,12 @@
 {
   "translation": {
-    "Articles": "Articles :)",
+    "Articles": "Articles",
     "Authors": "Authors",
     "Author": "Author",
     "Image Library": "Image Library",
     "Logout": "Logout",
     "Login": "Login",
-    "Or login with": "Or login with",
+    "Or login with:": "Or login with:",
     "Authenticating against OAuth2": "Authenticating against OAuth2",
     "Some Pages": "Some Pages",
     "Peering": "Peering",

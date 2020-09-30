@@ -151,7 +151,7 @@ export function Login() {
                   flexDirection="column"
                   marginTop={Spacing.Small}
                   alignItems="center">
-                  <p>{t('Or login with')}:</p>
+                  <p>{t('Or login with:')}</p>
                   {providerData.authProviders.map(
                     (provider: {url: string; name: string}, index: number) => {
                       return (
