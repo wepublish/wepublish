@@ -13,6 +13,7 @@ module.exports = {
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
   testURL: 'http://localhost/',
+  snapshotSerializers: ['enzyme-to-json/serializer'],
   coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
   coverageDirectory: '__tests__/coverage',
   coverageThreshold: {
