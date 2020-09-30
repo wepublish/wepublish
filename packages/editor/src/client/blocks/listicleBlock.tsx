@@ -102,7 +102,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         <Box flexGrow={1}>
           <TypographicTextArea
             variant="h1"
-            placeholder={'Title'}
+            placeholder={t('Title')}
             value={title}
             onChange={e => {
               const title = e.target.value

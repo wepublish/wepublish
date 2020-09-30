@@ -21,7 +21,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
       <TypographicTextArea
         ref={focusRef}
         variant="h1"
-        placeholder={t('Author')}
+        placeholder={t('Quote')}
         value={quote}
         disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}

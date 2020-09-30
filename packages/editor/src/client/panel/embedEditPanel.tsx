@@ -128,7 +128,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
               'Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.'
             )}
           </Typography>
-          {t('<code>https://www.facebook.com/id/posts/id/</code>')}
+          <code>https://www.facebook.com/id/posts/id/</code>
           <Typography variant="subtitle1" spacing="small">
             {t('Embed codes attributes <code>title, src, width, height</code> are validated e.g.')}
           </Typography>

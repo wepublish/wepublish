@@ -142,7 +142,14 @@
             "spacing",
             "sdkLanguage",
             "axis",
-            "flexWrap"
+            "flexWrap",
+            "minHeight"
+          ],
+          "ignoreComponent": [
+            "code"
+          ],
+          "ignore": [
+            "—"
           ]
         }
       ]

@@ -23,6 +23,9 @@ import {TwitterTweetEmbed} from './embeds/twitter'
 import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
 import {IframeEmbed} from './embeds/iframe'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 // TODO: Handle disabled prop
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const theme = useContext(ThemeContext)
@@ -47,7 +50,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
               <Box position="absolute" zIndex={ZIndex.Default} height="100%" right={0}>
                 <IconButton
                   icon={MaterialIconEditOutlined}
-                  title="Edit Embed"
+                  title={t('Edit Embed')}
                   onClick={() => setEmbedDialogOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />

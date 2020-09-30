@@ -10,6 +10,9 @@ import {renderToStaticMarkup} from 'react-dom/server'
 import {findEntryFromAssetList} from '@karma.run/webpack'
 import {ElementID} from '../shared/elementID'
 
+import {useTranslation} from 'react-i18next'
+const {t} = useTranslation()
+
 async function asyncMain() {
   if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
 
@@ -50,7 +53,7 @@ async function asyncMain() {
           <script async src={`${assetHost}/${entry}`} crossOrigin="" />
         </head>
         <body>
-          <noscript>Please enable JavaScript!</noscript>
+          <noscript>{t('Please enable JavaScript!')}</noscript>
           <div id={ElementID.ReactRoot}></div>
         </body>
       </html>

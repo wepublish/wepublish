@@ -119,7 +119,6 @@
     "Embed": "Embed",
     "Edit Embed": "Edit Embed",
     "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
-    "<code>https://www.facebook.com/id/posts/id/</code>": "<code>https://www.facebook.com/id/posts/id/</code>",
     "Embed codes attributes <code>title, src, width, height</code> are validated e.g.": "Embed codes attributes <code>title, src, width, height</code> are validated e.g.",
     "Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.": "Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.",
     "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
@@ -129,6 +128,11 @@
     "Status": "Status",
     "Link Text": "Link Text",
     "Link URL": "Link URL",
-    "Text": "Text"
+    "Text": "Text",
+    "Add": "Add",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Edit Gallery List": "Edit Gallery List",
+    "Please enable JavaScript!": "Please enable JavaScript!"
   }
 }
