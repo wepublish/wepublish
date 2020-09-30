@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "include": ["./**/*"],
   "compilerOptions": {
-    "types": ["@types/node", "@types/webpack-dev-server"],
+    "types": ["@types/node", "@types/webpack-dev-server", "@types/jest"],
     "lib": ["ES2017", "ES2018", "ES2019", "dom", "dom.iterable"]
   }
 }

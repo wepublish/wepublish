@@ -1,0 +1,475 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Author Edit Panel should render 1`] = `
+<div
+  className="Panel a b c d"
+>
+  <div
+    className="PanelHeader e f a g h i c j k l m n o"
+  >
+    <button
+      className="NavigationButton p q r b s h t j u v w x y z ab ac ae af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay"
+      onClick={[Function]}
+    >
+      <svg
+        className="Icon az g ba bb bc bd be bf bg"
+        role="img"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+      </svg>
+      <span
+        className="Box bh"
+      >
+        Close
+      </span>
+    </button>
+    <div
+      className="Box bi"
+    />
+    <span
+      className="PanelHeaderTitle bj bk bl bm bn"
+    >
+      Create Author
+    </span>
+    <button
+      className="NavigationButton p q r b s h t j u v w x y z ab ac ae af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay"
+      onClick={[Function]}
+    >
+      <svg
+        className="Icon az g ba bb bc bd be bf bg"
+        role="img"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0V0z"
+          fill="none"
+        />
+        <path
+          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+        />
+      </svg>
+      <span
+        className="Box bh"
+      >
+        Create
+      </span>
+    </button>
+  </div>
+  <div
+    className="PanelSection bo bp bq br"
+  >
+    <div
+      className="Box bs"
+    >
+      <div
+        className="bt"
+      >
+        <label
+          className="bu a h bm y"
+        >
+          <input
+            className="c z v bv bw ac bx af by bz ca cb cc cd aq ce cf cg ch ci cj ck cl cm cn co cp cq cr cs ct cu cv cw cx m l cy ar as au"
+            disabled={false}
+            onChange={[Function]}
+            placeholder="Name"
+            value=""
+          />
+          <span
+            className="cz bj da db u dc dd de df by"
+          >
+            Name
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="PanelSectionHeader e dg dh di br bp u cz k dj dk dl l m n dm"
+  >
+    Image
+  </div>
+  <div
+    className="PanelSection dn do bo bp bq br"
+  >
+    <div
+      className="Box dp"
+    >
+      <div
+        className="Card dq d dl dr n ds dk dt m du dj dv l dw"
+      >
+        <div
+          className="PlaceholderInput a c dx b h s k"
+        >
+          <button
+            className="IconButton a g ba h s dy dz ea bd eb d ec ed ag ee p ef eg eh ei ej ek el em en eo ep ca cb cc cd aq dl dr n ds dk dt m du ar as at au eq er es et"
+            onClick={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="PanelSectionHeader e dg dh di br bp u cz k dj dk dl l m n dm"
+  >
+    Links
+  </div>
+  <div
+    className="PanelSection bo bp bq br"
+  >
+    <div
+      className="Box"
+    >
+      <div
+        className="Box"
+      >
+        <div
+          className="AddBlockButton a bu h s c ew ex ey ez fa fb fc fd"
+        >
+          <div
+            className="AddBlockButtonContent dm"
+          >
+            <button
+              className="IconButton a g ba h s fe ff fg bd eb d fh ed ag ee p ef eg eh ei ej ek el em en eo ep ca cb cc cd aq dl dr n ds dk dt m du dj dv l dw eq er es et"
+              onClick={[Function]}
+              title="Add Block"
+            >
+              <svg
+                className="Icon bh g ba bb eu bd be bf bg"
+                role="img"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                />
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="PanelSectionHeader e dg dh di br bp u cz k dj dk dl l m n dm"
+  >
+    Biographical Information
+  </div>
+  <div
+    className="PanelSection bo bp bq br"
+  >
+    <div
+      className="Toolbar fi a s h e fj dm"
+    >
+      <div
+        className="ToolbarContent fk d dq fl ag dh fm di fn"
+      >
+        <div
+          className="ToolbarInnerContent a fo fl ag"
+        >
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0V0z"
+                fill="none"
+              />
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2V7h-4v2h2z"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0V0z"
+                fill="none"
+              />
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4h-4v-2h2c1.1 0 2-.89 2-2V9c0-1.11-.9-2-2-2H9v2h4v2h-2c-1.1 0-2 .89-2 2v4h6v-2z"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0V0z"
+                fill="none"
+              />
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4v-1.5c0-.83-.67-1.5-1.5-1.5.83 0 1.5-.67 1.5-1.5V9c0-1.11-.9-2-2-2H9v2h4v2h-2v2h2v2H9v2h4c1.1 0 2-.89 2-2z"
+              />
+            </svg>
+          </button>
+          <div
+            className="Divider fw fx fy fz ga gb gc"
+          />
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"
+              />
+              <path
+                d="M0 0h24v24H0V0z"
+                fill="none"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </button>
+          <div
+            className="Divider fw fx fy fz ga gb gc"
+          />
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"
+              />
+            </svg>
+          </button>
+          <div
+            className="Divider fw fx fy fz ga gb gc"
+          />
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
+              />
+            </svg>
+          </button>
+          <button
+            className="y bm p fp ac fq fr aq fs ft fu fv ar as at au"
+            disabled={true}
+            onMouseDown={[Function]}
+          >
+            <svg
+              className="Icon bh g ba bb eu bd be bf bg"
+              role="img"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0V0z"
+                fill="none"
+              />
+              <path
+                d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.43-.98 2.63-2.31 2.98l1.46 1.46C20.88 15.61 22 13.95 22 12c0-2.76-2.24-5-5-5zm-1 4h-2.19l2 2H16zM2 4.27l3.11 3.11C3.29 8.12 2 9.91 2 12c0 2.76 2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.59 1.21-2.9 2.76-3.07L8.73 11H8v2h2.73L13 15.27V17h1.73l4.01 4L20 19.74 3.27 3 2 4.27z"
+              />
+              <path
+                d="M0 24V0"
+                fill="none"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      contentEditable={true}
+      data-gramm={false}
+      data-slate-editor={true}
+      data-slate-node="value"
+      onBeforeInput={[Function]}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onCompositionEnd={[Function]}
+      onCompositionStart={[Function]}
+      onCopy={[Function]}
+      onCut={[Function]}
+      onDragOver={[Function]}
+      onDragStart={[Function]}
+      onDrop={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onPaste={[Function]}
+      role="textbox"
+      style={
+        Object {
+          "outline": "none",
+          "whiteSpace": "pre-wrap",
+          "wordWrap": "break-word",
+        }
+      }
+      suppressContentEditableWarning={true}
+    >
+      <p
+        className="gd ge bm"
+        data-slate-node="element"
+      >
+        <span
+          data-slate-node="text"
+        >
+          <span
+            data-slate-leaf={true}
+          >
+            <span
+              contentEditable={false}
+              style={
+                Object {
+                  "display": "inline-block",
+                  "maxWidth": "100%",
+                  "opacity": "0.333",
+                  "pointerEvents": "none",
+                  "verticalAlign": "text-top",
+                  "whiteSpace": "nowrap",
+                  "width": "0",
+                }
+              }
+            >
+              Start writing...
+            </span>
+            <span
+              data-slate-length={0}
+              data-slate-zero-width="n"
+            >
+              ﻿
+              <br />
+            </span>
+          </span>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+`;
