@@ -68,3 +68,9 @@ export function Limit(first?: number, last?: number): Limit {
     count: first || last!
   }
 }
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
+}

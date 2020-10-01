@@ -234,6 +234,49 @@ export const Migrations: Migration[] = [
         await pages.findOneAndReplace({_id: page._id}, page)
       }
     }
+  },
+  {
+    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
+    version: 3,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.properties = []
+        }
+
+        if (article.pending) {
+          article.pending.properties = []
+        }
+
+        if (article.published) {
+          article.published.properties = []
+        }
+
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.properties = []
+        }
+
+        if (page.pending) {
+          page.pending.properties = []
+        }
+
+        if (page.published) {
+          page.published.properties = []
+        }
+
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
+    }
   }
 ]
 

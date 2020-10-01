@@ -18,7 +18,13 @@ import {GraphQLImage} from './image'
 import {GraphQLAuthor} from './author'
 import {PublicArticle, ArticleRevision, Article, ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSlug} from './slug'
-import {GraphQLPageInfo, GraphQLUnidirectionalPageInfo} from './common'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic,
+  GraphQLPageInfo,
+  GraphQLUnidirectionalPageInfo
+} from './common'
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
@@ -72,6 +78,8 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
 
@@ -100,6 +108,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     lead: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
 
     image: {
       type: GraphQLImage,
@@ -198,6 +208,13 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) => {
+        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+      }
+    },
 
     image: {
       type: GraphQLImage,
