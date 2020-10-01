@@ -1759,9 +1759,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-type FullBlock_MapLeafletBlock_Fragment = { __typename: 'MapLeafletBlock' };
-
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_MapLeafletBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
