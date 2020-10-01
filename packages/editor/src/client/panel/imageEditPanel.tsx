@@ -69,7 +69,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   const {data, error: loadingError} = useImageQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [updateImage, {loading: isUpdating, error: savingError}] = useUpdateImageMutation()
@@ -80,7 +80,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
   const [isLoading, setLoading] = useState(true)
   const isDisabled = isLoading || isUpdating || isUploading
-  const isUpload = file != undefined
+  const isUpload = file !== undefined
 
   useEffect(() => {
     if (file) {
@@ -89,11 +89,11 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       const extension = `.${extensions.join('.')}`
       const image = new Image()
 
-      function handleReaderLoad() {
+      const handleReaderLoad = function () {
         image.src = reader.result as string
       }
 
-      function handleImageLoad() {
+      const handleImageLoad = function () {
         setCreatedAt(undefined)
         setUpdatedAt(undefined)
 
@@ -151,7 +151,9 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
       }
     }
 
-    return () => {}
+    return () => {
+      /* do nothing */
+    }
   }, [file, data])
 
   useEffect(() => {

@@ -375,6 +375,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
       }
+      break
     }
 
     case BlockType.TeaserGrid1:
@@ -602,7 +603,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                     : null
                 ]
 
-              case 'PeerArticleTeaser':
               case 'PeerArticleTeaser':
                 return [
                   nanoid(),

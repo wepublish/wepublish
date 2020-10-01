@@ -79,7 +79,7 @@ export function PageEditor({id}: PageEditorProps) {
     image: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
@@ -120,7 +120,7 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
-        image: image ? image : undefined
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))

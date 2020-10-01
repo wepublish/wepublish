@@ -9,12 +9,15 @@
     "setup": "run-s --print-label setup:**",
     "dev": "run-p start:docker watch",
     "clean": "run-p --print-label clean:**",
+    "test": "run-p --print-label test:**",
     "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:oauth2 build:api-example",
+    "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:website-example",
     "preversion": "run-s clean build",
     "verison": "lerna version --conventional-commits --create-release github --force-git-tag",
     "publish": "lerna publish from-package --ignore-scripts",
     "watch": "run-p --print-label watch:*",
+    "lint": "run-p --print-label lint:*",
     "start:docker": "docker-compose up mongo mongo-express",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
@@ -31,11 +34,13 @@
     "clean:api-media-karma": "yarn workspace @wepublish/api-media-karma clean",
     "build:api-media-karma": "yarn workspace @wepublish/api-media-karma build",
     "watch:api-media-karma": "yarn workspace @wepublish/api-media-karma watch",
+    "test:api-media-karma": "yarn workspace @wepublish/api-media-karma test",
     "setup:editor": "yarn workspace @wepublish/editor setup",
     "start:editor": "yarn workspace @wepublish/editor start",
     "clean:editor": "yarn workspace @wepublish/editor clean",
     "build:editor": "yarn workspace @wepublish/editor build",
     "watch:editor": "yarn workspace @wepublish/editor watch",
+    "lint:editor": "yarn workspace @wepublish/editor lint",
     "generate:editor:api": "yarn workspace @wepublish/editor generate:api",
     "setup:oauth2": "yarn workspace @wepublish/oauth2 setup",
     "start:oauth2": "yarn workspace @wepublish/oauth2 start",
@@ -62,6 +67,18 @@
     "examples/*"
   ],
   "devDependencies": {
+    "@babel/eslint-plugin": "^7.11.5",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-i18next": "^5.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.2",
+    "eslint-plugin-standard": "^4.0.1",
     "husky": "^3.0.0",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
@@ -73,5 +90,42 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern '{examples,packages,services}/**/*.{js,ts,tsx,json}'"
     }
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "react",
+      "standard"
+    ],
+    "extends": [
+      "standard",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "prettier",
+      "prettier/@typescript-eslint",
+      "prettier/react",
+      "prettier/standard"
+    ],
+    "rules": {
+      "no-use-before-define": [
+        0
+      ],
+      "@typescript-eslint/no-use-before-define": [
+        1
+      ]
+    },
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "ignorePatterns": [
+      "node_modules",
+      "dist",
+      "lib",
+      "coverage",
+      "assets"
+    ]
   }
 }
