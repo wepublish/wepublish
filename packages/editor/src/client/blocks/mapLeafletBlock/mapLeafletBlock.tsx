@@ -81,6 +81,8 @@ export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletIt
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   // We won't need that ts-ignore anymore later on but for now it's necessary
   const {image, title, lat, lng, description} = value
+  // WOorkaround to prevent TS6133-error; won't be necessary anymore in map-leaflet-items
+  console.log(lat, lng, description)
 
   return (
     <>
