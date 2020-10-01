@@ -10,9 +10,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Install deps
-        run: yarn install
-      - name: Build everything
-        run: yarn build:production
-      - name: Run tests
-        run: yarn test
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: '4.2'
+      - run: yarn install
+      - run: yarn build:production
+      - run: yarn test
+        env:
+          TEST_MONGO_URL: 'mongodb://localhost:27017/wepublish_test'
