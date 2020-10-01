@@ -32,7 +32,7 @@ import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../../panel/imageEditPanel'
 import {MapLeafletBlockValue, MapLeafletItem} from '../types'
 
-export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
+export type MapLeafletBlockProps = BlockProps<MapLeafletBlockValue>
 
 export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
   const {zoom, centerLat, centerLng, caption} = value
@@ -80,7 +80,6 @@ export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletIt
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   // We won't need that ts-ignore anymore later on but for now it's necessary
-  //@ts-ignore
   const {image, title, lat, lng, description} = value
 
   return (
