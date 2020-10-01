@@ -1,4 +1,3 @@
-#schema: ${API_URL}/admin
 overwrite: true
 generates:
   ./__tests__/api/private/index.ts:
