@@ -149,7 +149,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title,
         lead: lead ?? '',
         tags,
-        properties,
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
