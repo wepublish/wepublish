@@ -76,9 +76,7 @@ export function PublishPagePanel({
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              {t('There is already a pending publication scheduled at')}{' '}
-              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              {t('publishing again will override that publication.')}
+              {t('Article pending publication info', {pendingPublishDate})}
             </Typography>
           </Box>
         )}

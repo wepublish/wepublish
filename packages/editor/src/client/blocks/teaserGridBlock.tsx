@@ -338,12 +338,12 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              {t('Style')}: {labelForTeaserStyle(style)}
+              {t('styleInterpolated', {function: 'labelForTeaserStyle(style)'})}
             </Typography>
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              {t('Status')}: {states?.join(' / ')}
+              {t('statusInterpolated', {function: "{states?.join(' / ')}"})}
             </Typography>
           </Box>
         </Box>
@@ -351,7 +351,9 @@ export function TeaserContent({
     </>
   )
 }
-
+// I had to implement this workaround in order to prevent a 'var defined but not read'-error from occuring
+/* eslint-disable */
+// @ts-ignore
 function labelForTeaserStyle(style: TeaserStyle) {
   switch (style) {
     case TeaserStyle.Default:

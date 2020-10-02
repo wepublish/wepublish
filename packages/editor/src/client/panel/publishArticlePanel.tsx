@@ -73,13 +73,12 @@ export function PublishArticlePanel({
           />
         }
       />
+      {/** TODO: Insert language specific Tag here in toLocaleDateString and toLocaleTimeString */}
       <PanelSection>
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              {t('There is already a pending publication scheduled at')}{' '}
-              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              {t('publishing again will override that publication.')}
+              {t('Article pending publication info', {pendingPublishDate})}
             </Typography>
           </Box>
         )}
@@ -127,7 +126,6 @@ export function PublishArticlePanel({
           }}
         />
       </PanelSection>
-
       <PanelSectionHeader title={t('Metadata')} />
       <PanelSection>
         <DescriptionList>

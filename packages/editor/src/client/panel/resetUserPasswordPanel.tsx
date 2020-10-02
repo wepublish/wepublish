@@ -53,9 +53,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
           }
         />
         <PanelSection>
-          <Typography variant="body1">
-            {t('Reset the password for')} {userName}
-          </Typography>
+          <Typography variant="body1">{t('Reset the password for ', {userName})}</Typography>
           <TextInput
             disabled={isDisabled}
             type="password"
