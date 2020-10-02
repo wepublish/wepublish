@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Articles can be created/edited/deleted can be created 1`] = `
+Object {
+  "data": Object {
+    "createArticle": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

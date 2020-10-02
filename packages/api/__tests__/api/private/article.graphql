@@ -1,0 +1,173 @@
+fragment MutationArticle on Article {
+    id
+
+    draft {
+        publishedAt
+        updatedAt
+        revision
+    }
+
+    pending {
+        publishAt
+        revision
+    }
+
+    published {
+        publishedAt
+        updatedAt
+        revision
+    }
+
+    latest {
+        publishedAt
+        updatedAt
+        revision
+    }
+}
+
+fragment ArticleRef on Article {
+    id
+
+    createdAt
+    modifiedAt
+
+    draft {
+        revision
+    }
+
+    pending {
+        revision
+    }
+
+    published {
+        publishedAt
+        updatedAt
+        revision
+    }
+
+    latest {
+        publishedAt
+        updatedAt
+        revision
+        preTitle
+        title
+        lead
+        image {
+            ...ImageRef
+        }
+    }
+}
+
+query ArticleList($filter: String, $after: ID, $first: Int) {
+    articles(first: $first, after: $after, filter: {title: $filter}) {
+        nodes {
+            ...ArticleRef
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+query PeerArticleList($filter: String, $after: ID, $first: Int) {
+    peerArticles(first: $first, after: $after, filter: {title: $filter}) {
+        nodes {
+            peer {
+                ...PeerWithProfile
+            }
+
+            article {
+                ...ArticleRef
+            }
+        }
+
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+
+        totalCount
+    }
+}
+
+mutation CreateArticle($input: ArticleInput!) {
+    createArticle(input: $input) {
+        ...MutationArticle
+    }
+}
+
+mutation UpdateArticle($id: ID!, $input: ArticleInput!) {
+    updateArticle(id: $id, input: $input) {
+        ...MutationArticle
+    }
+}
+
+mutation PublishArticle(
+    $id: ID!
+    $publishAt: DateTime!
+    $publishedAt: DateTime!
+    $updatedAt: DateTime!
+) {
+    publishArticle(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+        ...MutationArticle
+    }
+}
+
+mutation UnpublishArticle($id: ID!) {
+    unpublishArticle(id: $id) {
+        ...MutationArticle
+    }
+}
+
+mutation DeleteArticle($id: ID!) {
+    deleteArticle(id: $id)
+}
+
+query Article($id: ID!) {
+    article(id: $id) {
+        id
+        shared
+
+        pending {
+            publishAt
+        }
+
+        published {
+            publishedAt
+            updatedAt
+        }
+
+        latest {
+            publishedAt
+            updatedAt
+
+            revision
+            slug
+            preTitle
+            title
+            lead
+            image {
+                ...ImageRef
+            }
+            tags
+            properties {
+                key
+                value
+                public
+            }
+            authors {
+                ...AuthorRef
+            }
+            breaking
+            blocks {
+                ...FullBlock
+            }
+        }
+    }
+}
