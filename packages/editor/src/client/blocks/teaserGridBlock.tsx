@@ -309,8 +309,6 @@ export function TeaserContent({
   peer,
   numColumns
 }: TeaserContentProps) {
-  const {t} = useTranslation()
-
   return (
     <>
       <Box position="absolute" width="100%" height="100%">
