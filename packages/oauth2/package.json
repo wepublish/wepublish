@@ -30,7 +30,7 @@
     "setup": "shx cp .env.example .env",
     "build": "run-p copy-assets build:*",
     "build:server": "tsc -b ./src/server",
-    "watch": "npm-run-all copy-license sync-package-info copy-assets --parallel watch:*",
+    "watch": "npm-run-all copy-license copy-assets --parallel watch:*",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9231 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/server --watch",
@@ -39,8 +39,7 @@
     "clean": "shx rm -rf ./dist",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js src/server/version.ts",
-    "prepare": "run-s clean copy-license sync-package-info build crlf"
+    "prepare": "run-s clean copy-license build crlf"
   },
   "dependencies": {
     "ejs": "^3.0.2",

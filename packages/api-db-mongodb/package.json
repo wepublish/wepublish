@@ -24,14 +24,13 @@
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
-    "build": "run-s copy-license sync-package-info build:*",
+    "build": "run-s copy-license build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
-    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean build",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+    "prepare": "run-s clean copy-license build"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
