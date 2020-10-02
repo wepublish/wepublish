@@ -358,7 +358,7 @@ export function TeaserContent({
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              {t('status')} {states?.join(' / ')}
+              {states?.join(' / ')}
             </Typography>
           </Box>
         </Box>

@@ -138,8 +138,8 @@
     "iframe1-sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
     "iframe2-sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
     "fb-posts": "https://www.facebook.com/id/posts/id/",
-    "draft": "Draft",
-    "pending": "Pending",
-    "published": "Published"
+    "draft": "Status: Draft",
+    "pending": "Status: Pending",
+    "published": "Status: Published"
   }
 }
