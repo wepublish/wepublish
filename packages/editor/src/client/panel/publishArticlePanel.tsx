@@ -73,7 +73,6 @@ export function PublishArticlePanel({
           />
         }
       />
-      {/** TODO: Insert language specific Tag here in toLocaleDateString and toLocaleTimeString */}
       <PanelSection>
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
