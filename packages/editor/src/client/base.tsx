@@ -1,4 +1,5 @@
 import React, {ReactNode} from 'react'
+import {LanguageSwitch} from './languageSwitch'
 
 import {NavigationTemplate, Divider} from '@karma.run/ui'
 
@@ -116,6 +117,8 @@ export function Base({children}: BaseProps) {
             label={t('Logout')}
             route={LogoutRoute.create({})}
           />
+
+          <LanguageSwitch />
         </>
       }>
       {children}
