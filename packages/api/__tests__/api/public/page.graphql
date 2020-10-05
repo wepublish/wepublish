@@ -1,0 +1,50 @@
+fragment PageRef on Page {
+  id
+  publishedAt
+  updatedAt
+  title
+  description
+  image {
+    ...ImageRef
+  }
+}
+
+query PageList($filter: [String!], $after: ID, $first: Int) {
+  pages(first: $first, after: $after, filter: {tags: $filter}) {
+    nodes {
+      ...PageRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+
+query Page($id: ID!) {
+  page(id: $id) {
+    id
+    publishedAt
+    updatedAt
+    slug
+    title
+    description
+    image {
+      ...ImageRef
+    }
+    tags
+    properties {
+      key
+      value
+    }
+    blocks {
+      ...FullBlock
+    }
+  }
+}

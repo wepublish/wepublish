@@ -207,13 +207,14 @@ export function TeaserBlock({
 }
 
 export function contentForTeaser(teaser: Teaser, numColumns: number) {
+  const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
       const states = []
 
-      if (teaser?.article?.draft) states.push('Draft')
-      if (teaser?.article?.pending) states.push('Pending')
-      if (teaser?.article?.published) states.push('Published')
+      if (teaser?.article?.draft) states.push(t('draft'))
+      if (teaser?.article?.pending) states.push(t('pending'))
+      if (teaser?.article?.published) states.push(t('published'))
 
       return (
         <TeaserContent
@@ -231,9 +232,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.PeerArticle: {
       const states = []
 
-      if (teaser?.article?.draft) states.push('Draft')
-      if (teaser?.article?.pending) states.push('Pending')
-      if (teaser?.article?.published) states.push('Published')
+      if (teaser?.article?.draft) states.push(t('draft'))
+      if (teaser?.article?.pending) states.push(t('pending'))
+      if (teaser?.article?.published) states.push(t('published'))
 
       return (
         <TeaserContent
@@ -252,9 +253,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.Page: {
       const states = []
 
-      if (teaser?.page?.draft) states.push('Draft')
-      if (teaser?.page?.pending) states.push('Pending')
-      if (teaser?.page?.published) states.push('Published')
+      if (teaser?.page?.draft) states.push(t('draft'))
+      if (teaser?.page?.pending) states.push(t('pending'))
+      if (teaser?.page?.published) states.push(t('published'))
 
       return (
         <TeaserContent
@@ -284,6 +285,20 @@ export interface TeaserContentProps {
   numColumns: number
 }
 
+function labelForTeaserStyle(style: TeaserStyle) {
+  const {t} = useTranslation()
+  switch (style) {
+    case TeaserStyle.Default:
+      return t('styleDefault')
+
+    case TeaserStyle.Light:
+      return t('styleLight')
+
+    case TeaserStyle.Text:
+      return t('styleText')
+  }
+}
+
 export function TeaserContent({
   style,
   preTitle,
@@ -294,8 +309,6 @@ export function TeaserContent({
   peer,
   numColumns
 }: TeaserContentProps) {
-  const {t} = useTranslation()
-
   return (
     <>
       <Box position="absolute" width="100%" height="100%">
@@ -338,29 +351,16 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              {t('Style')}: {labelForTeaserStyle(style)}
+              {labelForTeaserStyle(style)}
             </Typography>
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              {t('Status')}: {states?.join(' / ')}
+              {states?.join(' / ')}
             </Typography>
           </Box>
         </Box>
       </Overlay>
     </>
   )
-}
-
-function labelForTeaserStyle(style: TeaserStyle) {
-  switch (style) {
-    case TeaserStyle.Default:
-      return 'Default'
-
-    case TeaserStyle.Light:
-      return 'Light'
-
-    case TeaserStyle.Text:
-      return 'Text'
-  }
 }

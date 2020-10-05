@@ -93,6 +93,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     lead: '',
     authors: [],
     tags: [],
+    properties: [],
     shared: false,
     breaking: false,
     image: undefined
@@ -130,7 +131,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
-      const {slug, preTitle, title, lead, tags, breaking, authors, image, blocks} = latest
+      const {
+        slug,
+        preTitle,
+        title,
+        lead,
+        tags,
+        breaking,
+        authors,
+        image,
+        blocks,
+        properties
+      } = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -141,6 +153,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title,
         lead: lead ?? '',
         tags,
+        properties,
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -169,6 +182,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock)
     }
   }

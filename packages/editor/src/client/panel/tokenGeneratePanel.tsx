@@ -79,11 +79,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           {token ? (
             <>
               <Box marginBottom={Spacing.Small}>
-                <Typography variant="body1">
-                  {t(
-                    'Successfully created token, make sure to copy it now. You won’t be able to see it again!'
-                  )}
-                </Typography>
+                <Typography variant="body1">{t('Token creation success')}</Typography>
               </Box>
               <Card padding={Spacing.ExtraSmall}>
                 <Typography variant="body2" align="center">

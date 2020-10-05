@@ -30,12 +30,18 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
+export interface PageMetadataProperty {
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
+}
 
 export interface PageMetadata {
   readonly slug: string
   readonly title: string
   readonly description: string
   readonly tags: string[]
+  readonly properties: PageMetadataProperty[]
   readonly image?: ImageRefFragment
 }
 

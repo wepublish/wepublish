@@ -124,26 +124,20 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
         />
         <Box marginBottom={Spacing.ExtraSmall}>
           <Typography variant="subtitle1" spacing="small">
-            {t(
-              'Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.'
-            )}
+            {t('Social Media List')}
           </Typography>
-          <code>https://www.facebook.com/id/posts/id/</code>
+          <code>{t('fb-posts')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t('Embed codes attributes <code>title, src, width, height</code> are validated e.g.')}
+            {t('Embed code attributes')}
           </Typography>
-          <code>{'<iframe width="560" height="315" src="https://..."></iframe>'}</code>
+          <code>{t('iframe1-sample')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t(
-              'Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.'
-            )}
+            {t('Info alternative style setting')}
           </Typography>
 
-          <code>{'<iframe style="height:350px;width:100%;" src="https://..."></iframe>'}</code>
+          <code>{t('iframge2-sample')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t(
-              'Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.'
-            )}
+            {t('GDPR-info')}
           </Typography>
         </Box>
 

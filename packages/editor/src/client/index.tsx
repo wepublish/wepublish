@@ -4,11 +4,8 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {render as renderStyles} from 'fela-dom'
-import {ApolloClient} from 'apollo-client'
-import {ApolloLink} from 'apollo-link'
-import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory'
+import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
-import {ApolloProvider} from '@apollo/react-hooks'
 
 import './i18n'
 
@@ -49,10 +46,15 @@ export async function fetchIntrospectionQueryResultData(url: string) {
 
   const result = await response.json()
 
-  const filteredData = result.data.__schema.types.filter((type: any) => type.possibleTypes !== null)
-  result.data.__schema.types = filteredData
+  const possibleTypes: any = {}
 
-  return result.data
+  result.data.__schema.types.forEach((supertype: any) => {
+    if (supertype.possibleTypes) {
+      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
+    }
+  })
+
+  return possibleTypes
 }
 
 const onDOMContentLoaded = async () => {
@@ -62,7 +64,6 @@ const onDOMContentLoaded = async () => {
 
   const adminAPIURL = `${apiURL}/admin`
 
-  const introspectionQueryResultData = await fetchIntrospectionQueryResultData(adminAPIURL)
   const authLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(LocalStorageKey.SessionToken)
     const context = operation.getContext()
@@ -81,7 +82,7 @@ const onDOMContentLoaded = async () => {
   const client = new ApolloClient({
     link: authLink.concat(createUploadLink({uri: adminAPIURL})),
     cache: new InMemoryCache({
-      fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
+      possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
     })
   })
 
