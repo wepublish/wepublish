@@ -1,30 +1,38 @@
 /* eslint-disable i18next/no-literal-string */
 
 import React, {useState} from 'react'
-import {useThemeStyle, cssRuleWithTheme, Select, Spacing, SelectOption} from '@karma.run/ui'
+import {Select, Spacing} from '@karma.run/ui'
+import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
+//import {useTranslation} from 'react-i18next'
 
-const languageSwitcher = cssRuleWithTheme(() => ({
-  position: 'absolute',
-  bottom: '0',
-  border: '1px solid black',
-  width: '100%'
-}))
+const languageSwitcher = cssRule({
+  position: 'relative',
+  padding: 20
+})
 
 export function LanguageSwitch() {
-  const css = useThemeStyle()
-  const [value, setValue] = useState(null)
-  const values: SelectOption = ['English']
+  const css = useStyle()
+  const [uiLanguage, setUILanguage] = useState([])
+  //const {t} = useTranslation()
 
   return (
     <div className={css(languageSwitcher)}>
       <Select
         icon={MaterialIconLanguage}
-        label="Icon"
-        options={values}
-        value={value}
+        options={[
+          {id: 'en', lang: 'en_US', name: 'English'},
+          {id: 'de', lang: 'de_CH', name: 'Deutsch'},
+          {id: 'fr', lang: 'fr_FR', name: 'Français'}
+        ]}
+        value={{id: uiLanguage}}
         renderListItem={value => value?.name}
         marginBottom={Spacing.Small}
+        onChange={value => {
+          if (value?.name) {
+            setUILanguage(value)
+          }
+        }}
       />
     </div>
   )

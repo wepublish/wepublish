@@ -117,7 +117,7 @@ export function Base({children}: BaseProps) {
             label={t('Logout')}
             route={LogoutRoute.create({})}
           />
-
+          <Divider />
           <LanguageSwitch />
         </>
       }>
