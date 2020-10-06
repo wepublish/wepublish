@@ -128,7 +128,10 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
   }, {})
 }
 
-export function useStickyState(defaultValue, key) {
+export function useStickyState(
+  defaultValue: {id: string; lang: string; name: string},
+  key: string
+) {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key)
     return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue

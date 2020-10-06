@@ -1,10 +1,11 @@
 /* eslint-disable i18next/no-literal-string */
 
-import React, {useState} from 'react'
+import React from 'react'
 import {Select} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
 import {useStickyState} from './utility'
+import i18n from './i18n'
 
 export function pxToRem(px: number) {
   return `${px / 10}rem`
@@ -54,6 +55,10 @@ export function LanguageSwitch() {
     {id: 'en', lang: 'en_US', name: 'English'},
     'savedValues'
   )
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng)
+    console.log(i18n.services.resourceStore.data)
+  }
 
   return (
     <div className={css(languageSwitch)}>
@@ -69,6 +74,7 @@ export function LanguageSwitch() {
         onChange={values => {
           if (values?.name) {
             setUILanguage(values)
+            changeLanguage(values.id)
           }
         }}
       />

@@ -7,7 +7,8 @@ import {render as renderStyles} from 'fela-dom'
 import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
 
-import './i18n'
+import i18n from './i18n'
+import {I18nextProvider} from 'react-i18next'
 
 import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
@@ -100,7 +101,9 @@ const onDOMContentLoaded = async () => {
             <FacebookProvider sdkLanguage={'en_US'}>
               <InstagramProvider>
                 <TwitterProvider>
-                  <HotApp />
+                  <I18nextProvider i18n={i18n}>
+                    <HotApp />
+                  </I18nextProvider>
                 </TwitterProvider>
               </InstagramProvider>
             </FacebookProvider>
