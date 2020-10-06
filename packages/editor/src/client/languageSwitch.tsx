@@ -1,12 +1,9 @@
 /* eslint-disable i18next/no-literal-string */
 
 import React, {useState} from 'react'
-import {elementForTypographyVariant, Select, Spacing} from '@karma.run/ui'
+import {Select} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
-import {Color} from '../style/colors'
-import e from 'express'
-//import {useTranslation} from 'react-i18next'
 
 export function pxToRem(px: number) {
   return `${px / 10}rem`
@@ -53,7 +50,6 @@ const languageSwitch = cssRule({
 export function LanguageSwitch() {
   const css = useStyle()
   const [uiLanguage, setUILanguage] = useState({id: 'en', lang: 'en_US', name: 'English'})
-  //const {t} = useTranslation()
 
   return (
     <div className={css(languageSwitch)}>
