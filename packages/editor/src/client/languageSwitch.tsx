@@ -1,53 +1,15 @@
 /* eslint-disable i18next/no-literal-string */
 
-import React from 'react'
-import {Select} from '@karma.run/ui'
+import React, {useContext, useEffect, useState} from 'react'
+import {Select, NavigationContext, NavigationBar} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
 import {useStickyState} from './utility'
 import i18n from './i18n'
 
-export function pxToRem(px: number) {
+export function pxToRem(px: number): string {
   return `${px / 10}rem`
 }
-
-const languageSwitch = cssRule({
-  position: 'relative',
-  marginBottom: pxToRem(100),
-  paddingLeft: pxToRem(11),
-  paddingBottom: pxToRem(10),
-  paddingTop: pxToRem(10),
-
-  '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.025)'
-  },
-
-  '& > div ': {padding: 0},
-
-  '& > div > ul': {
-    borderRadius: 0,
-    marginTop: pxToRem(10),
-    marginLeft: pxToRem(-11),
-    width: 'calc(100% + 1.1rem)',
-
-    '& li': {
-      paddingLeft: pxToRem(13)
-    }
-  },
-
-  '& > div > label > button': {
-    paddingLeft: pxToRem(21),
-    border: 'none'
-  },
-
-  '& > div > label > svg': {
-    fontSize: '1.5em'
-  },
-
-  '& > div > label > svg > path': {
-    cursor: 'pointer'
-  }
-})
 
 export function LanguageSwitch() {
   const css = useStyle()
@@ -57,7 +19,65 @@ export function LanguageSwitch() {
   )
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)
-    console.log(i18n.services.resourceStore.data)
+  }
+
+  const context = useContext(NavigationContext)
+  const isCollapsed = context.isCollapsed
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('This will run after 1 second!')
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const languageSwitch = cssRule({
+    marginBottom: pxToRem(100),
+    paddingTop: pxToRem(7.5),
+    paddingLeft: pxToRem(11),
+    paddingBottom: pxToRem(7.5),
+
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.025)'
+    },
+
+    '& > div ': {padding: 0},
+
+    '& > div > ul': {
+      borderRadius: 0,
+      marginTop: pxToRem(10),
+      marginLeft: pxToRem(-11),
+      width: 'calc(100% + 1.1rem)',
+
+      '& li': {
+        paddingLeft: pxToRem(13)
+      }
+    },
+
+    '& > div > label > button': {
+      paddingLeft: pxToRem(21),
+      border: 'none',
+      transition: isCollapsed ? 'opacity 200ms ease-in' : 'opacity 200ms ease-in',
+      opacity: isCollapsed ? 0 : 1
+    },
+
+    '& > div > label > svg': {
+      fontSize: '1.5em',
+      cursor: 'pointer',
+
+      '&:nth-child(3)': {
+        fontSize: isCollapsed ? '1em' : '1.5em'
+      }
+    },
+
+    '& > div > label': {height: 24}
+  })
+
+  function toilet() {
+    const timer = setTimeout(() => {
+      return uiLanguage.id
+    }, 1000)
+    return () => clearTimeout(timer)
   }
 
   return (
@@ -70,7 +90,7 @@ export function LanguageSwitch() {
           {id: 'fr', lang: 'fr_FR', name: 'Français'}
         ]}
         value={{id: uiLanguage.id, lang: uiLanguage.lang, name: uiLanguage.name}}
-        renderListItem={uiLanguage => uiLanguage?.name}
+        renderListItem={uiLanguage => (isCollapsed ? toilet() : uiLanguage.name)}
         onChange={values => {
           if (values?.name) {
             setUILanguage(values)
