@@ -4,6 +4,7 @@ import React, {useState} from 'react'
 import {Select} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
+import {useStickyState} from './utility'
 
 export function pxToRem(px: number) {
   return `${px / 10}rem`
@@ -49,7 +50,10 @@ const languageSwitch = cssRule({
 
 export function LanguageSwitch() {
   const css = useStyle()
-  const [uiLanguage, setUILanguage] = useState({id: 'en', lang: 'en_US', name: 'English'})
+  const [uiLanguage, setUILanguage] = useStickyState(
+    {id: 'en', lang: 'en_US', name: 'English'},
+    'savedValues'
+  )
 
   return (
     <div className={css(languageSwitch)}>
@@ -61,10 +65,10 @@ export function LanguageSwitch() {
           {id: 'fr', lang: 'fr_FR', name: 'Français'}
         ]}
         value={{id: uiLanguage.id, lang: uiLanguage.lang, name: uiLanguage.name}}
-        renderListItem={value => value?.name}
-        onChange={value => {
-          if (value?.name) {
-            setUILanguage(value)
+        renderListItem={uiLanguage => uiLanguage?.name}
+        onChange={values => {
+          if (values?.name) {
+            setUILanguage(values)
           }
         }}
       />
