@@ -1,6 +1,6 @@
 /* eslint-disable i18next/no-literal-string */
 
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import {Select, NavigationContext} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
@@ -23,13 +23,6 @@ export function LanguageSwitch() {
 
   const context = useContext(NavigationContext)
   const isCollapsed = context.isCollapsed
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('This will run after 1 second!')
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [])
 
   const languageSwitch = cssRule({
     marginBottom: pxToRem(100),
