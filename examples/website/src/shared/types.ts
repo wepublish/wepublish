@@ -158,6 +158,7 @@ export interface PeerPageBreakBlock
       text: string
       linkURL: string
       linkText: string
+      styleOption: string
     }
   > {}
 

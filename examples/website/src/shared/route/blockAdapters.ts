@@ -91,7 +91,8 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           value: {
             text: block.text,
             linkURL: block.linkURL,
-            linkText: block.linkText
+            linkText: block.linkText,
+            styleOption: block.styleOption
           }
         }
 
@@ -111,7 +112,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           title: block.title,
           lead: block.lead
         }
-        if (articleMeta && (index == 0 || (hasTitleImage && index == 1))) {
+        if (articleMeta && (index === 0 || (hasTitleImage && index === 1))) {
           value.preTitle = articleMeta.preTitle
           value.date = new Date(articleMeta.publishedAt)
           value.isHeader = true

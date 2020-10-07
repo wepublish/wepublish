@@ -98,6 +98,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
         <PageBreakBlock
           text={block.value.text}
           linkURL={block.value.linkURL}
+          styleOption={block.value.styleOption}
           linkText={block.value.linkText}
           isArticle={isArticle}
         />

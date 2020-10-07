@@ -296,6 +296,7 @@ export const linkPageBreakBlockDataFragment = gql`
     text
     linkURL
     linkText
+    styleOption
   }
 `
 

@@ -19,6 +19,7 @@ storiesOf('Blocks|PeerPageBreak*', module)
       peer={mockPeer}
       text={'Unterstuetze uns!'}
       linkText={'Mehr'}
+      styleOption={'default'}
       linkURL={'https://wepublish.ch/'}
     />
   ))
