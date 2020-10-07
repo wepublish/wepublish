@@ -384,12 +384,14 @@ export type LinkPageBreakBlock = {
   text?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
+  styleOption?: Maybe<Scalars['String']>;
 };
 
 export type LinkPageBreakBlockInput = {
   text?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
+  styleOption?: Maybe<Scalars['String']>;
 };
 
 export type ListicleBlock = {
@@ -1745,7 +1747,7 @@ type FullBlock_EmbedBlock_Fragment = (
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
-  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL'>
+  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption'>
 );
 
 type FullBlock_TitleBlock_Fragment = (
@@ -2637,6 +2639,7 @@ export const FullBlockFragmentDoc = gql`
     text
     linkText
     linkURL
+    styleOption
   }
   ... on ImageBlock {
     caption
