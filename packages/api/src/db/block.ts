@@ -104,6 +104,7 @@ export interface LinkPageBreakBlock {
   text: string
   linkURL: string
   linkText: string
+  styleOption?: string
 }
 
 export interface TitleBlock {
