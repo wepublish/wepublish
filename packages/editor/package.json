@@ -32,7 +32,7 @@
     "build": "run-p build:*",
     "build:client": "webpack --mode production",
     "build:server": "tsc -b ./src/shared ./src/server",
-    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
@@ -42,8 +42,7 @@
     "clean": "shx rm -rf ./dist ./assets",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
-    "prepare": "run-s clean copy-license sync-package-info build crlf",
+    "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
