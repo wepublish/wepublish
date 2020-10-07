@@ -74,6 +74,7 @@ fragment FullBlock on Block {
     text
     linkText
     linkURL
+    styleOption
   }
 
   ... on ImageBlock {
