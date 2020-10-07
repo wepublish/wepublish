@@ -1,7 +1,7 @@
 /* eslint-disable i18next/no-literal-string */
 
-import React, {useContext, useEffect, useState} from 'react'
-import {Select, NavigationContext, NavigationBar} from '@karma.run/ui'
+import React, {useContext, useEffect} from 'react'
+import {Select, NavigationContext} from '@karma.run/ui'
 import {cssRule, useStyle} from '@karma.run/react'
 import {MaterialIconLanguage} from '@karma.run/icons'
 import {useStickyState} from './utility'
@@ -57,7 +57,7 @@ export function LanguageSwitch() {
     '& > div > label > button': {
       paddingLeft: pxToRem(21),
       border: 'none',
-      transition: isCollapsed ? 'opacity 200ms ease-in' : 'opacity 200ms ease-in',
+      transition: isCollapsed ? 'opacity 0ms ease-in' : 'opacity 200ms ease-in',
       opacity: isCollapsed ? 0 : 1
     },
 
@@ -73,13 +73,6 @@ export function LanguageSwitch() {
     '& > div > label': {height: 24}
   })
 
-  function toilet() {
-    const timer = setTimeout(() => {
-      return uiLanguage.id
-    }, 1000)
-    return () => clearTimeout(timer)
-  }
-
   return (
     <div className={css(languageSwitch)}>
       <Select
@@ -90,7 +83,7 @@ export function LanguageSwitch() {
           {id: 'fr', lang: 'fr_FR', name: 'Français'}
         ]}
         value={{id: uiLanguage.id, lang: uiLanguage.lang, name: uiLanguage.name}}
-        renderListItem={uiLanguage => (isCollapsed ? toilet() : uiLanguage.name)}
+        renderListItem={uiLanguage => (isCollapsed ? uiLanguage.id : uiLanguage.name)}
         onChange={values => {
           if (values?.name) {
             setUILanguage(values)
