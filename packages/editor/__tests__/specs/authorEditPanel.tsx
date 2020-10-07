@@ -4,6 +4,7 @@ import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {AuthorDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
+import {ListInput, TextInput} from '@karma.run/ui'
 
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
@@ -69,4 +70,24 @@ test('Author Edit Panel should render with id', async () => {
   })
 
   expect(wrapper).toMatchSnapshot()
+})
+
+test('Clicking add block button should display two text fields ', () => {
+  const wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider addTypename={false}>
+        <AuthorEditPanel />
+      </MockedProvider>
+    </UIProvider>
+  )
+  const button = wrapper.find(ListInput).find('button')
+  button.simulate('click')
+  expect(wrapper).toMatchSnapshot()
+
+  const inputField = wrapper.find(TextInput).at(1).find('input')
+  console.log(inputField.props())
+  inputField.props().value = 'abcd'
+
+  console.log(inputField.debug())
+  expect(inputField).toMatchSnapshot()
 })
