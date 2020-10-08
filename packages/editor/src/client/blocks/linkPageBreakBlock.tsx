@@ -86,91 +86,99 @@ export function LinkPageBreakBlock({
           onChange={e => onChange({...value, linkURL: e.target.value})}
         />
       </Box>
-      <RadioGroup
-        name={'linkTarget'}
-        onChange={e => onChange({...value, linkTarget: e.target.value || 'internal'})}
-        value={linkTarget || 'internal'}>
-        <Radio
-          value={'internal'}
-          label={'This browser tab'}
-          checked={value.linkTarget === 'internal'}
-        />
-        <Radio
-          value={'external'}
-          label={'New browser tab'}
-          checked={value.linkTarget === 'external'}
-        />
-      </RadioGroup>
-      <hr
-        style={{
-          color: 'transparent',
-          height: '1px',
-          borderBottom: '1px dotted #B9B9B9',
-          marginRight: '10px'
-        }}
-      />
       <br />
-      <Box style={{width: '50%', display: 'inline-block'}}>
-        <label style={{color: '#B9B9B9'}}>Color Style: </label>
-        <select
-          defaultValue={styleOption}
-          onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
-          <option value="default">Default Layout</option>
-          <option value="light">Light Color Style</option>
-          <option value="dark">Dark Color Style</option>
-        </select>
-      </Box>
-      <Box style={{width: '50%', display: 'inline-block'}}>
-        <label style={{color: '#B9B9B9'}}>Layout Style: </label>
-        <select
-          defaultValue={layoutOption}
-          onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
-          <option value="default">Default Layout</option>
-          <option value="left">Light Color Style</option>
-          <option value="right">Dark Color Style</option>
-        </select>
-      </Box>
-      <Card
-        overflow="hidden"
-        width={200}
-        height={150}
-        marginRight={Spacing.ExtraSmall}
-        flexShrink={0}>
-        <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-          {image && (
-            <Box position="relative" width="100%" height="100%">
-              <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                <IconButton
-                  icon={MaterialIconImageOutlined}
-                  title="Choose Image"
-                  margin={Spacing.ExtraSmall}
-                  onClick={() => setChooseModalOpen(true)}
-                />
-                <IconButton
-                  icon={MaterialIconEditOutlined}
-                  title="Edit Image"
-                  margin={Spacing.ExtraSmall}
-                  onClick={() => setEditModalOpen(true)}
-                />
-                <IconButton
-                  icon={MaterialIconClose}
-                  title="Remove Image"
-                  margin={Spacing.ExtraSmall}
-                  onClick={() => onChange(value => ({...value, image: undefined}))}
-                />
+      <br />
+      <div className={'option-wrapper'} style={{display: 'flex'}}>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          flexGrow={1}
+          marginRight={Spacing.ExtraSmall}>
+          <Box padding={'10'}>
+            <p>Colors and Styles</p>
+            <small>Styles: </small>
+            <select
+              defaultValue={styleOption}
+              onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
+              <option value="default">Default Color</option>
+              <option value="light">Light Color Style</option>
+              <option value="dark">Dark Color Style</option>
+            </select>
+          </Box>
+          <Box padding={'10'}>
+            <small>Layouts: </small>
+            <select
+              defaultValue={layoutOption}
+              onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
+              <option value="default">Default Layout</option>
+              <option value="left">Light Color Style</option>
+              <option value="right">Dark Color Style</option>
+            </select>
+          </Box>
+        </Card>
+        <Card overflow="hidden" width={200} height={150} marginRight={Spacing.ExtraSmall}>
+          <Box padding={'10'}>
+            <p>Link Settings</p>
+            <RadioGroup
+              name={'linkTarget'}
+              onChange={e => onChange({...value, linkTarget: e.target.value || 'internal'})}
+              value={linkTarget || 'internal'}>
+              <Radio
+                value={'internal'}
+                label={'This browser tab'}
+                checked={value.linkTarget === 'internal'}
+              />
+              <Radio
+                value={'external'}
+                label={'New browser tab'}
+                checked={value.linkTarget === 'external'}
+              />
+            </RadioGroup>
+          </Box>
+        </Card>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          marginRight={Spacing.ExtraSmall}
+          flexShrink={0}>
+          <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
+            {image && (
+              <Box position="relative" width="100%" height="100%">
+                <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
+                  <IconButton
+                    icon={MaterialIconImageOutlined}
+                    title="Choose Image"
+                    margin={Spacing.ExtraSmall}
+                    onClick={() => setChooseModalOpen(true)}
+                  />
+                  <IconButton
+                    icon={MaterialIconEditOutlined}
+                    title="Edit Image"
+                    margin={Spacing.ExtraSmall}
+                    onClick={() => setEditModalOpen(true)}
+                  />
+                  <IconButton
+                    icon={MaterialIconClose}
+                    title="Remove Image"
+                    margin={Spacing.ExtraSmall}
+                    onClick={() => onChange(value => ({...value, image: value.image || undefined}))}
+                  />
+                </Box>
+                {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
               </Box>
-              {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
-            </Box>
-          )}
-        </PlaceholderInput>
-      </Card>
+            )}
+          </PlaceholderInput>
+        </Card>
+      </div>
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (
           <ImageSelectPanel
             onClose={() => setChooseModalOpen(false)}
             onSelect={image => {
               setChooseModalOpen(false)
-              onChange(value => ({...value, image}))
+              onChange(value => ({...value, image: value.image}))
             }}
           />
         )}
@@ -178,7 +186,7 @@ export function LinkPageBreakBlock({
       <Drawer open={isEditModalOpen} width={480}>
         {() => (
           <ImagedEditPanel
-            id={image!.id}
+            id={value.image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />
