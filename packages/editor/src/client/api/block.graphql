@@ -75,7 +75,7 @@ fragment FullBlock on Block {
     linkText
     linkURL
     styleOption
-    richText
+    htmlText
     linkTarget
     layoutOption
     image {

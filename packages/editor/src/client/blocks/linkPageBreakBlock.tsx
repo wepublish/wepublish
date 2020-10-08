@@ -32,7 +32,7 @@ export function LinkPageBreakBlock({
   autofocus,
   disabled
 }: LinkPageBreakBlockProps) {
-  const {text, linkText, linkURL, styleOption, layoutOption, richText, linkTarget, image} = value
+  const {text, linkText, linkURL, styleOption, layoutOption, htmlText, linkTarget, image} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
   const focusInputRef = useRef<HTMLInputElement>(null)
 
@@ -62,8 +62,8 @@ export function LinkPageBreakBlock({
           variant="body1"
           placeholder="Optional Text"
           align="left"
-          value={richText}
-          onChange={e => onChange({...value, richText: e.target.value})}
+          value={htmlText}
+          onChange={e => onChange({...value, htmlText: e.target.value})}
         />
       </Box>
       <Box style={{width: '50%', display: 'inline-block'}}>

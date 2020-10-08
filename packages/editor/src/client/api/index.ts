@@ -387,7 +387,7 @@ export type LinkPageBreakBlock = {
   linkTarget?: Maybe<Scalars['String']>;
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['String']>;
+  htmlText?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
 };
 
@@ -398,8 +398,8 @@ export type LinkPageBreakBlockInput = {
   linkTarget?: Maybe<Scalars['String']>;
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['String']>;
-  image?: Maybe<Image>;
+  htmlText?: Maybe<Scalars['String']>;
+  image?: Maybe<ImageRefFragment>;
 };
 
 export type ListicleBlock = {
@@ -1755,7 +1755,9 @@ type FullBlock_EmbedBlock_Fragment = (
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
-  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'layoutOption' | 'image'>
+  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'htmlText' | 'linkTarget' | 'layoutOption'> & {
+   image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 );
 
 type FullBlock_TitleBlock_Fragment = (
@@ -2648,7 +2650,7 @@ export const FullBlockFragmentDoc = gql`
     linkText
     linkURL
     styleOption
-    richText
+    htmlText
     linkTarget
     layoutOption
     image {

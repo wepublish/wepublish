@@ -90,7 +90,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       linkURL: '',
       styleOption: 'default',
       layoutOption: 'default',
-      richText: '',
+      htmlText: '',
       image: null
     },
     label: 'Break',
