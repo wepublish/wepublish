@@ -64,7 +64,7 @@ export interface PageBreakBlockProps {
   linkTarget: string
   styleOption: string
   layoutOption: string
-  image: string
+  imageID: string
 }
 
 export function PageBreakBlock({
@@ -75,7 +75,7 @@ export function PageBreakBlock({
   linkText,
   linkTarget,
   styleOption,
-  image,
+  imageID,
   layoutOption,
   isArticle = false
 }: PageBreakBlockProps & PageBreakBlockStyleProps) {
@@ -93,7 +93,7 @@ export function PageBreakBlock({
           {{linkTarget}}
           {{layoutOption}}
           {{styleOption}}
-          {{image}}
+          {{imageID}}
         </pre>
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>
         {linkText && linkURL && (

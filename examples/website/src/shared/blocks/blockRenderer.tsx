@@ -103,7 +103,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           layoutOption={block.value.layoutOption}
           linkText={block.value.linkText}
           linkTarget={block.value.linkTarget}
-          image={block.value.image}
+          imageID={block.value.imageID}
           isArticle={isArticle}
         />
       )
