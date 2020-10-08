@@ -156,7 +156,7 @@ export function LinkPageBreakBlock({
                   icon={MaterialIconClose}
                   title="Remove Image"
                   margin={Spacing.ExtraSmall}
-                  onClick={() => onChange(value => ({...value, image: null}))}
+                  onClick={() => onChange(value => ({...value, image: undefined}))}
                 />
               </Box>
               {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}

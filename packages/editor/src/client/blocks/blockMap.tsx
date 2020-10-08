@@ -91,7 +91,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       styleOption: 'default',
       layoutOption: 'default',
       htmlText: '',
-      image: null
+      image: undefined
     },
     label: 'Break',
     icon: MaterialIconViewDay

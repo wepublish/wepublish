@@ -96,6 +96,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
             linkTarget: block.linkTarget,
             styleOption: block.styleOption,
             layoutOption: block.layoutOption,
+            imageID: block.image?.id,
             image: block.image
           }
         }

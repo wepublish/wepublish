@@ -108,7 +108,7 @@ export interface LinkPageBreakBlock {
   linkTarget: string
   styleOption?: string
   layoutOption?: string
-  image?: string
+  imageID?: string
 }
 
 export interface TitleBlock {

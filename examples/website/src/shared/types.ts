@@ -162,7 +162,8 @@ export interface PeerPageBreakBlock
       linkTarget: string
       styleOption: string
       layoutOption: string
-      image: string
+      imageID: string
+      image: undefined
     }
   > {}
 
