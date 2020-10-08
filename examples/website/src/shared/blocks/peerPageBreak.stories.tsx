@@ -10,6 +10,7 @@ storiesOf('Blocks|PeerPageBreak*', module)
   .add('Default', () => (
     <PageBreakBlock
       text={'Unterstuetze uns!'}
+      htmlText={'Dein Commitment zählt.'}
       linkText={'Mehr'}
       linkURL={'https://wepublish.ch/'}
       linkTarget={'internal'}
