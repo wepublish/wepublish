@@ -881,7 +881,7 @@ export type Point = {
 };
 
 export type Properties = {
-   __typename?: 'Properties';
+  __typename?: 'Properties';
   key: Scalars['String'];
   value: Scalars['String'];
   public: Scalars['Boolean'];
