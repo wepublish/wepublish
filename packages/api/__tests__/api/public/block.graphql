@@ -72,9 +72,15 @@ fragment FullBlock on Block {
 
   ... on LinkPageBreakBlock {
     text
+    richText
     linkText
+    linkTarget
     linkURL
     styleOption
+    layoutOption
+    image {
+      ...ImageRef
+    }
   }
 
   ... on ImageBlock {

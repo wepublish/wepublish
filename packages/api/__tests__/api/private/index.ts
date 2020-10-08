@@ -394,16 +394,24 @@ export type InstagramPostBlockInput = {
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
+  richText?: Maybe<Scalars['String']>
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
+  linkTarget?: Maybe<Scalars['String']>
   styleOption?: Maybe<Scalars['String']>
+  layoutOption?: Maybe<Scalars['String']>
+  image?: Maybe<Image>
 }
 
 export type LinkPageBreakBlockInput = {
   text?: Maybe<Scalars['String']>
+  richText?: Maybe<Scalars['String']>
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
+  linkTarget?: Maybe<Scalars['String']>
   styleOption?: Maybe<Scalars['String']>
+  layoutOption?: Maybe<Scalars['String']>
+  image?: Maybe<Image>
 }
 
 export type ListicleBlock = {
@@ -1530,7 +1538,14 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
 
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
-  'text' | 'linkText' | 'linkURL' | 'styleOption'
+  | 'text'
+  | 'linkText'
+  | 'linkURL'
+  | 'styleOption'
+  | 'layoutOption'
+  | 'richText'
+  | 'linkTarget'
+  | 'image'
 >
 
 type FullBlock_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<TitleBlock, 'title' | 'lead'>
@@ -2069,7 +2084,13 @@ export const FullBlock = gql`
       text
       linkText
       linkURL
+      linkTarget
       styleOption
+      layoutOption
+      richText
+      image {
+        ...ImageRef
+      }
     }
     ... on ImageBlock {
       caption

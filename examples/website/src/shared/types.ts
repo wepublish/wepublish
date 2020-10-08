@@ -158,7 +158,10 @@ export interface PeerPageBreakBlock
       text: string
       linkURL: string
       linkText: string
+      linkTarget: string
       styleOption: string
+      layoutOption: string
+      image: ImageR
     }
   > {}
 

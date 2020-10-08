@@ -67,6 +67,10 @@ export interface LinkPageBreakBlockValue {
   linkURL: string
   linkText: string
   styleOption?: string
+  richText?: string
+  linkTarget?: string
+  layoutOption?: string
+  image: ImageRefFragment | null
 }
 
 export enum EmbedType {
@@ -270,7 +274,11 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           text: block.value.text || undefined,
           linkText: block.value.linkText || undefined,
           linkURL: block.value.linkURL || undefined,
-          styleOption: block.value.styleOption || undefined
+          styleOption: block.value.styleOption || undefined,
+          layoutOption: block.value.layoutOption || undefined,
+          richText: block.value.richText || undefined,
+          linkTarget: block.value.linkTarget || undefined,
+          image: null
         }
       }
 
@@ -596,7 +604,11 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           text: block.text ?? '',
           linkText: block.linkText ?? '',
           linkURL: block.linkURL ?? '',
-          styleOption: block.styleOption ?? ''
+          styleOption: block.styleOption ?? '',
+          layoutOption: block.layoutOption ?? '',
+          richText: block.richText ?? '',
+          linkTarget: block.linkTarget ?? '',
+          image: null
         }
       }
 

@@ -541,9 +541,12 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
   name: 'LinkPageBreakBlockInput',
   fields: {
     text: {type: GraphQLString},
+    richText: {type: GraphQLString},
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString},
-    styleOption: {type: GraphQLString}
+    linkTarget: {type: GraphQLString},
+    styleOption: {type: GraphQLString},
+    layoutOption: {type: GraphQLString}
   }
 })
 

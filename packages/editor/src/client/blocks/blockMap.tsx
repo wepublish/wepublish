@@ -83,7 +83,16 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.LinkPageBreak]: {
     field: props => <LinkPageBreakBlock {...props} />,
-    defaultValue: {text: '', linkText: '', linkURL: '', styleOption: 'volvo'},
+    defaultValue: {
+      text: '',
+      linkText: '',
+      linkTarget: '',
+      linkURL: '',
+      styleOption: 'default',
+      layoutOption: 'default',
+      richText: '',
+      image: null
+    },
     label: 'Break',
     icon: MaterialIconViewDay
   },

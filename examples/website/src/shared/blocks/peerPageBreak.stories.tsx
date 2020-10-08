@@ -12,6 +12,10 @@ storiesOf('Blocks|PeerPageBreak*', module)
       text={'Unterstuetze uns!'}
       linkText={'Mehr'}
       linkURL={'https://wepublish.ch/'}
+      linkTarget={'internal'}
+      styleOption={'default'}
+      layoutOption={'default'}
+      image={null}
     />
   ))
   .add('Peer', () => (
@@ -19,7 +23,10 @@ storiesOf('Blocks|PeerPageBreak*', module)
       peer={mockPeer}
       text={'Unterstuetze uns!'}
       linkText={'Mehr'}
-      styleOption={'default'}
       linkURL={'https://wepublish.ch/'}
+      linkTarget={'internal'}
+      styleOption={'default'}
+      layoutOption={'default'}
+      image={null}
     />
   ))
