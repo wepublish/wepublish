@@ -25,7 +25,7 @@ fragment MutationArticle on Article {
     }
 }
 
-fragment ArticleRef on Article {
+fragment  ArticleRef on Article {
     id
 
     createdAt

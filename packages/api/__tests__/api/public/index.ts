@@ -220,7 +220,7 @@ export type InstagramPostBlock = {
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
-  richText?: Maybe<Scalars['String']>
+  htmlText?: Maybe<Scalars['String']>
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
   linkTarget?: Maybe<Scalars['String']>
@@ -726,8 +726,9 @@ type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} 
   | 'styleOption'
   | 'layoutOption'
   | 'linkTarget'
-  | 'richText'
-  | 'image'
+  | ('htmlText' & {
+      image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    })
 >
 
 type FullBlock_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<TitleBlock, 'title' | 'lead'>
@@ -1049,7 +1050,7 @@ export const FullBlock = gql`
     }
     ... on LinkPageBreakBlock {
       text
-      richtText
+      htmlText
       linkText
       linkTarget
       linkURL

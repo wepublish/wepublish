@@ -72,7 +72,7 @@ fragment FullBlock on Block {
 
   ... on LinkPageBreakBlock {
     text
-    richText
+    htmlText
     linkText
     linkTarget
     linkURL
