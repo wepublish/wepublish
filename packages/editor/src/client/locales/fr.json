@@ -19,7 +19,7 @@
     "Select User Role": "Select User Role",
     "Start writing": "Start writing ...",
     "Cancel": "Cancel",
-    "Close": "Close",
+    "Close": "Fermer",
     "Title": "Title",
     "Pre-title": "Pre-title",
     "Optional description for the link": "Optional description for the link",
@@ -138,8 +138,9 @@
     "iframe1-sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
     "iframe2-sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
     "fb-posts": "https://www.facebook.com/id/posts/id/",
-    "draft": "Status: Draft",
-    "pending": "Status: Pending",
-    "published": "Status: Published"
+    "state_draft": "Status: Draft",
+    "state_pending": "Status: Pending",
+    "state_published": "Status: Published",
+    "Select new language": "Choisir nouvelle langue"
   }
 }

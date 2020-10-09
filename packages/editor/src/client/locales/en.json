@@ -138,6 +138,7 @@
     "fb-posts": "https://www.facebook.com/id/posts/id/",
     "state_draft": "Status: Draft",
     "state_pending": "Status: Pending",
-    "state_published": "Status: Published"
+    "state_published": "Status: Published",
+    "Select new language": "Select new language"
   }
 }
