@@ -71,7 +71,6 @@ export interface LinkPageBreakBlockValue {
   styleOption?: string
   layoutOption?: string
   image?: ImageRefFragment
-  imageID?: string
 }
 
 export enum EmbedType {
@@ -609,7 +608,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           layoutOption: block.layoutOption ?? '',
           htmlText: block.htmlText ?? '',
           linkTarget: block.linkTarget ?? '',
-          imageID: block.image?.id ?? undefined
+          image: block.image ?? undefined
         }
       }
 

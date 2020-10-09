@@ -399,7 +399,7 @@ export type LinkPageBreakBlockInput = {
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   htmlText?: Maybe<Scalars['String']>;
-  imageID?: Maybe<Scalars['String']>;
+  imageID?: Maybe<Scalars['ID']>;
 };
 
 export type ListicleBlock = {

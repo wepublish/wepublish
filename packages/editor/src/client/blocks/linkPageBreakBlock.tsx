@@ -117,7 +117,12 @@ export function LinkPageBreakBlock({
             </select>
           </Box>
         </Card>
-        <Card overflow="hidden" width={200} height={150} marginRight={Spacing.ExtraSmall}>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          marginRight={Spacing.ExtraSmall}
+          onClick={() => console.log(value)}>
           <Box padding={'10'}>
             <p>Link Settings</p>
             <RadioGroup
@@ -142,7 +147,8 @@ export function LinkPageBreakBlock({
           width={200}
           height={150}
           marginRight={Spacing.ExtraSmall}
-          flexShrink={0}>
+          flexShrink={0}
+          onClick={() => console.log(value, image)}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
             {image && (
               <Box position="relative" width="100%" height="100%">
@@ -163,7 +169,7 @@ export function LinkPageBreakBlock({
                     icon={MaterialIconClose}
                     title="Remove Image"
                     margin={Spacing.ExtraSmall}
-                    onClick={() => onChange(value => ({...value, image: value.image || undefined}))}
+                    onClick={() => onChange(value => ({...value, image: undefined}))}
                   />
                 </Box>
                 {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
@@ -178,7 +184,7 @@ export function LinkPageBreakBlock({
             onClose={() => setChooseModalOpen(false)}
             onSelect={image => {
               setChooseModalOpen(false)
-              onChange(value => ({...value, image: value.image}))
+              onChange(value => ({...value, image, imageID: image.id}))
             }}
           />
         )}
@@ -186,7 +192,7 @@ export function LinkPageBreakBlock({
       <Drawer open={isEditModalOpen} width={480}>
         {() => (
           <ImagedEditPanel
-            id={value.image!.id}
+            id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />
