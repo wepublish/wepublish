@@ -448,7 +448,12 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
     linkTarget: {type: GraphQLString},
     styleOption: {type: GraphQLString},
     layoutOption: {type: GraphQLString},
-    imageID: {type: GraphQLID}
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    }
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.LinkPageBreak
