@@ -114,6 +114,8 @@ export function LinkPageBreakBlock({
               <option value="default">Default Layout</option>
               <option value="left">Light Color Style</option>
               <option value="right">Dark Color Style</option>
+              <option value="center">Centered with Button</option>
+              <option value="center-no-btn">Centered no Button</option>
             </select>
           </Box>
         </Card>
