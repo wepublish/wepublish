@@ -256,7 +256,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                   {extension}
                 </DescriptionListItem>
                 <DescriptionListItem label={t('Dimension')}>
-                  {imageWidth} {t('x')} {imageHeight}
+                  {t('imageDimension', {imageWidth, imageHeight})}
                 </DescriptionListItem>
                 {createdAt && (
                   <DescriptionListItem label={t('Created')}>

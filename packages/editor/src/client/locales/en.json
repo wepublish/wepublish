@@ -83,10 +83,7 @@
     "is a System Role and can not be edited": "is a System Role and can not be edited",
     "Permissions": "Permissions",
     "Peer Article": "Peer Article",
-    "style": "Style: ",
-    "styleDefault": "Style: Default",
-    "styleLight": "Style: Light",
-    "styleText": "Style: Text",
+    "teaserStyle": "Style: {{label}}",
     "Type": "Type",
     "Leave empty to use original image.": "Leave empty to use original image.",
     "Leave empty to use original lead.": "Leave empty to use original lead.",
@@ -113,6 +110,7 @@
     "Image Updated": "Image Updated",
     "File Size": "File Size",
     "Dimension": "Dimension",
+    "imageDimension": "{{imageWidth}} x {{imageHeight}}",
     "Created": "Created",
     "Updated": "Updated",
     "Caption": "Caption",
@@ -126,7 +124,7 @@
     "Biographical Information": "Biographical Information",
     "username": "username",
     "current-password": "current-password",
-    "status": "Status: ",
+    "status": "Status: {{stateJoin}}",
     "Link Text": "Link Text",
     "Link URL": "Link URL",
     "Text": "Text",
@@ -138,8 +136,8 @@
     "iframe1-sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
     "iframe2-sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
     "fb-posts": "https://www.facebook.com/id/posts/id/",
-    "draft": "Status: Draft",
-    "pending": "Status: Pending",
-    "published": "Status: Published"
+    "state_draft": "Status: Draft",
+    "state_pending": "Status: Pending",
+    "state_published": "Status: Published"
   }
 }
