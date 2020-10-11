@@ -156,8 +156,14 @@ export interface PeerPageBreakBlock
     {
       peer: Peer
       text: string
+      htmlText: string
       linkURL: string
       linkText: string
+      linkTarget: string
+      styleOption: string
+      layoutOption: string
+      imageID: string
+      image: undefined
     }
   > {}
 

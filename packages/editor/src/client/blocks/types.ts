@@ -64,8 +64,13 @@ export interface QuoteBlockValue {
 
 export interface LinkPageBreakBlockValue {
   text: string
+  htmlText?: string
   linkURL: string
   linkText: string
+  linkTarget?: string
+  styleOption?: string
+  layoutOption?: string
+  image?: ImageRefFragment
 }
 
 export enum EmbedType {
@@ -268,7 +273,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         linkPageBreak: {
           text: block.value.text || undefined,
           linkText: block.value.linkText || undefined,
-          linkURL: block.value.linkURL || undefined
+          linkURL: block.value.linkURL || undefined,
+          styleOption: block.value.styleOption || undefined,
+          layoutOption: block.value.layoutOption || undefined,
+          htmlText: block.value.htmlText || undefined,
+          linkTarget: block.value.linkTarget || undefined,
+          imageID: block.value.image?.id || undefined
         }
       }
 
@@ -593,7 +603,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           text: block.text ?? '',
           linkText: block.linkText ?? '',
-          linkURL: block.linkURL ?? ''
+          linkURL: block.linkURL ?? '',
+          styleOption: block.styleOption ?? '',
+          layoutOption: block.layoutOption ?? '',
+          htmlText: block.htmlText ?? '',
+          linkTarget: block.linkTarget ?? '',
+          image: block.image ?? undefined
         }
       }
 

@@ -52,23 +52,33 @@ const PeerPageBreakButton = cssRule({
   fontSize: pxToRem(12)
 })
 
-export interface PageBreackBlockStyleProps {
+export interface PageBreakBlockStyleProps {
   isArticle?: boolean
 }
 export interface PageBreakBlockProps {
   peer?: Peer
   text: string
+  htmlText: string
   linkURL: string
   linkText: string
+  linkTarget: string
+  styleOption: string
+  layoutOption: string
+  imageID: string
 }
 
 export function PageBreakBlock({
   peer,
   text,
+  htmlText,
   linkURL,
   linkText,
+  linkTarget,
+  styleOption,
+  imageID,
+  layoutOption,
   isArticle = false
-}: PageBreakBlockProps & PageBreackBlockStyleProps) {
+}: PageBreakBlockProps & PageBreakBlockStyleProps) {
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>
@@ -78,6 +88,13 @@ export function PageBreakBlock({
             <Image src={peer.logoURL} height={90} width={90} />
           </div>
         )}
+        <pre>
+          {{htmlText}}
+          {{linkTarget}}
+          {{layoutOption}}
+          {{styleOption}}
+          {{imageID}}
+        </pre>
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>
         {linkText && linkURL && (
           <Link className={css(PeerPageBreakButton)} href={linkURL}>
