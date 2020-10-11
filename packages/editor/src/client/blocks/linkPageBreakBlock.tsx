@@ -93,6 +93,31 @@ export function LinkPageBreakBlock({
           overflow="hidden"
           width={200}
           height={150}
+          marginRight={Spacing.ExtraSmall}
+          onClick={() => console.log(value)}>
+          <Box padding={'10'}>
+            <p>Link Settings</p>
+            <RadioGroup
+              name={'linkTarget'}
+              onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
+              value={linkTarget || 'internal'}>
+              <Radio
+                value={'_self'}
+                label={'This browser tab'}
+                checked={value.linkTarget === '_self'}
+              />
+              <Radio
+                value={'_blank'}
+                label={'New browser tab'}
+                checked={value.linkTarget === '_blank'}
+              />
+            </RadioGroup>
+          </Box>
+        </Card>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
           flexGrow={1}
           marginRight={Spacing.ExtraSmall}>
           <Box padding={'10'}>
@@ -101,9 +126,9 @@ export function LinkPageBreakBlock({
             <select
               defaultValue={styleOption}
               onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
-              <option value="default">Default Color</option>
-              <option value="light">Light Color Style</option>
-              <option value="dark">Dark Color Style</option>
+              <option value="default">Default Style</option>
+              <option value="dark">Dark Style</option>
+              <option value="image">Image Background</option>
             </select>
           </Box>
           <Box padding={'10'}>
@@ -112,36 +137,10 @@ export function LinkPageBreakBlock({
               defaultValue={layoutOption}
               onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
               <option value="default">Default Layout</option>
-              <option value="left">Light Color Style</option>
-              <option value="right">Dark Color Style</option>
-              <option value="center">Centered with Button</option>
-              <option value="center-no-btn">Centered no Button</option>
+              <option value="right">Right Aligned</option>
+              <option value="center">Centered</option>
+              <option value="no-cta">Hide CTA Button</option>
             </select>
-          </Box>
-        </Card>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
-          onClick={() => console.log(value)}>
-          <Box padding={'10'}>
-            <p>Link Settings</p>
-            <RadioGroup
-              name={'linkTarget'}
-              onChange={e => onChange({...value, linkTarget: e.target.value || 'internal'})}
-              value={linkTarget || 'internal'}>
-              <Radio
-                value={'internal'}
-                label={'This browser tab'}
-                checked={value.linkTarget === 'internal'}
-              />
-              <Radio
-                value={'external'}
-                label={'New browser tab'}
-                checked={value.linkTarget === 'external'}
-              />
-            </RadioGroup>
           </Box>
         </Card>
         <Card

@@ -4543,6 +4543,44 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wepublish/api-db-mongodb@*":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-db-mongodb/-/api-db-mongodb-0.8.5.tgz#692ed6c309168bacfcdf1a4f29b48090d8cbf875"
+  integrity sha512-klyU4NF0IuOVL6kIQamhrI/VSfbCuUpcdTFyZLIsx8jINAOejVOPEoqzqAU+/Zag2GNy3WMfO45jDf0xpMyE6A==
+  dependencies:
+    bcrypt "^5.0.0"
+    mongodb "^3.5.4"
+    nanoid "^2.1.11"
+
+"@wepublish/api-media-karma@*":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-media-karma/-/api-media-karma-0.8.5.tgz#27bdf4c9eda1f63700c970acf7256787fb0ba93b"
+  integrity sha512-oSgbOHZNoSI5+5vhn6u+oaZgNeWMIMg8jAldEte7BKujf/J1TTX0qiHHtBZopEo5lF/shcLh2xBHpn0i0JJHHg==
+  dependencies:
+    form-data "^3.0.0"
+    node-fetch "^2.6.0"
+
+"@wepublish/api@*":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@wepublish/api/-/api-0.8.5.tgz#1b5a9d202eb17f157836360b348211e948adff9f"
+  integrity sha512-GzcU0xU6R6LveXbRBiBSoS4oE5z3ibBmNENnUMJlsg0DS4vOHEXcchfsn5Hhclh0ix9xp8venes0XyUNrm7D7A==
+  dependencies:
+    "@karma.run/utility" "^0.1.0"
+    "@types/qs" "^6.9.1"
+    abort-controller "^3.0.0"
+    apollo-server-express "^2.14.2"
+    dataloader "^2.0.0"
+    express "^4.17.1"
+    graphql "^14.6.0"
+    graphql-iso-date "^3.6.1"
+    graphql-tag "^2.10.3"
+    graphql-tools "^5.0.0"
+    ms "^2.1.2"
+    node-fetch "^2.6.0"
+    oidc-provider "^6.23.4"
+    openid-client "^3.14.0"
+    qs "^6.9.1"
+
 "@wry/context@^0.4.0":
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.4.4.tgz#e50f5fa1d6cfaabf2977d1fda5ae91717f8815f8"
@@ -10205,7 +10243,7 @@ graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
 
-graphql-tag@^2.11.0:
+graphql-tag@^2.10.3, graphql-tag@^2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
   integrity sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
