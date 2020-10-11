@@ -11,7 +11,7 @@
     "clean": "run-p --print-label clean:**",
     "test": "run-p --print-label test:**",
     "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:oauth2 build:api-example",
-    "build:dev": "run-s --print-label build:dev:api build:dev:api-db-mongodb build:dev:editor",
+    "build:dev": "run-s --print-label build:api build:api-db-mongodb build:editor",
     "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:website-example",
     "prerelease": "run-s clean build",
