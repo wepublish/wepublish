@@ -68,6 +68,7 @@ export interface LinkPageBreakBlockValue {
   linkURL: string
   linkText: string
   linkTarget?: string
+  hideButton?: boolean
   styleOption?: string
   layoutOption?: string
   image?: ImageRefFragment
@@ -278,6 +279,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           layoutOption: block.value.layoutOption || undefined,
           htmlText: block.value.htmlText || undefined,
           linkTarget: block.value.linkTarget || undefined,
+          hideButton: block.value.hideButton || undefined,
           imageID: block.value.image?.id || undefined
         }
       }
@@ -608,6 +610,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           layoutOption: block.layoutOption ?? '',
           htmlText: block.htmlText ?? '',
           linkTarget: block.linkTarget ?? '',
+          hideButton: block.hideButton ?? false,
           image: block.image ?? undefined
         }
       }

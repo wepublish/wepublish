@@ -13,7 +13,8 @@ import {
   ZIndex,
   IconButton,
   Image,
-  Drawer
+  Drawer,
+  Toggle
 } from '@karma.run/ui'
 import {LinkPageBreakBlockValue} from './types'
 import {
@@ -32,7 +33,17 @@ export function LinkPageBreakBlock({
   autofocus,
   disabled
 }: LinkPageBreakBlockProps) {
-  const {text, linkText, linkURL, styleOption, layoutOption, htmlText, linkTarget, image} = value
+  const {
+    text,
+    linkText,
+    linkURL,
+    styleOption,
+    layoutOption,
+    htmlText,
+    linkTarget,
+    hideButton,
+    image
+  } = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
   const focusInputRef = useRef<HTMLInputElement>(null)
 
@@ -94,60 +105,6 @@ export function LinkPageBreakBlock({
           width={200}
           height={150}
           marginRight={Spacing.ExtraSmall}
-          onClick={() => console.log(value)}>
-          <Box padding={'10'}>
-            <p>Link Settings</p>
-            <RadioGroup
-              name={'linkTarget'}
-              onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
-              value={linkTarget || 'internal'}>
-              <Radio
-                value={'_self'}
-                label={'This browser tab'}
-                checked={value.linkTarget === '_self'}
-              />
-              <Radio
-                value={'_blank'}
-                label={'New browser tab'}
-                checked={value.linkTarget === '_blank'}
-              />
-            </RadioGroup>
-          </Box>
-        </Card>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          flexGrow={1}
-          marginRight={Spacing.ExtraSmall}>
-          <Box padding={'10'}>
-            <p>Colors and Styles</p>
-            <small>Styles: </small>
-            <select
-              defaultValue={styleOption}
-              onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
-              <option value="default">Default Style</option>
-              <option value="dark">Dark Style</option>
-              <option value="image">Image Background</option>
-            </select>
-          </Box>
-          <Box padding={'10'}>
-            <small>Layouts: </small>
-            <select
-              defaultValue={layoutOption}
-              onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
-              <option value="default">Default Layout</option>
-              <option value="right">Right Aligned</option>
-              <option value="center">Centered</option>
-              <option value="no-cta">Hide CTA Button</option>
-            </select>
-          </Box>
-        </Card>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
           flexShrink={0}
           onClick={() => console.log(value, image)}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
@@ -177,6 +134,67 @@ export function LinkPageBreakBlock({
               </Box>
             )}
           </PlaceholderInput>
+        </Card>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          marginRight={Spacing.ExtraSmall}
+          onClick={() => console.log(value)}>
+          <Box padding={'10'}>
+            <p>Link Settings</p>
+            <RadioGroup
+              name={'linkTarget'}
+              onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
+              value={linkTarget || 'internal'}>
+              <Radio
+                value={'_self'}
+                label={'This browser tab'}
+                checked={value.linkTarget === '_self'}
+              />
+              <Radio
+                value={'_blank'}
+                label={'New browser tab'}
+                checked={value.linkTarget === '_blank'}
+              />
+            </RadioGroup>
+            <Toggle
+              label={'Hide CTA Button'}
+              description={'Hide button an make whole elemenr clickable.'}
+              onChange={e => onChange({...value, hideButton: e.target.checked})}
+              checked={!!hideButton || false}
+            />
+          </Box>
+        </Card>
+        <Card
+          overflow="hidden"
+          width={200}
+          height={150}
+          flexGrow={1}
+          marginRight={Spacing.ExtraSmall}>
+          <Box padding={'10'}>
+            <p>Colors and Styles</p>
+            <small>Styles: </small>
+            <select
+              defaultValue={styleOption}
+              onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
+              <option value="default">Default Style</option>
+              <option value="dark">Dark Style</option>
+              <option value="image">Image Background</option>
+            </select>
+          </Box>
+          <Box padding={'10'}>
+            <small>Layouts: </small>
+            <select
+              defaultValue={layoutOption}
+              onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
+              <option value="default">Default Layout</option>
+              <option value="right">Right Aligned</option>
+              <option value="center">Centered</option>
+              <option value="image-right">Image Right</option>
+              <option value="image-left">Image Left</option>
+            </select>
+          </Box>
         </Card>
       </div>
       <Drawer open={isChooseModalOpen} width={480}>

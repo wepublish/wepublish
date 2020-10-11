@@ -106,6 +106,7 @@ export interface LinkPageBreakBlock {
   linkURL: string
   linkText: string
   linkTarget: string
+  hideButton: boolean
   styleOption?: string
   layoutOption?: string
   imageID?: string

@@ -7,7 +7,8 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLUnionType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLBoolean
 } from 'graphql'
 
 import {GraphQLRichText} from './richText'
@@ -446,6 +447,7 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
+    hideButton: {type: GraphQLBoolean},
     styleOption: {type: GraphQLString},
     layoutOption: {type: GraphQLString},
     image: {
@@ -554,6 +556,7 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
+    hideButton: {type: GraphQLBoolean},
     styleOption: {type: GraphQLString},
     layoutOption: {type: GraphQLString},
     imageID: {type: GraphQLID}
