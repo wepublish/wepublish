@@ -1,7 +1,7 @@
 {
   "version": "0.8.5",
   "changelog": {
-    "repo": "wepublish/wepublish",
+    "repo": "bajour/wepublish",
     "cacheDir": ".changelog",
     "labels": {
       "PR: Breaking Change :boom:": ":boom: Breaking Change",
