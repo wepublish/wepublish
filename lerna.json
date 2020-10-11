@@ -16,7 +16,7 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": "dev-release"
     },
     "publish": {
       "ignoreChanges": [
@@ -29,7 +29,6 @@
   "packages": [
     "packages/api",
     "packages/api-db-mongodb",
-    "packages/api-media-karma",
     "packages/editor"
   ]
 }
