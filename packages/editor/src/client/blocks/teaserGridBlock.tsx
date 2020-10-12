@@ -354,7 +354,7 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              {t('teaserStyle', {label: label})}
+              {t('teaserStyle', {label})}
             </Typography>
           </Box>
           <Box flexShrink={0}>
