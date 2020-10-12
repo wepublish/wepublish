@@ -1,6 +1,5 @@
 import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
-import {useQuery} from '@apollo/react-hooks'
-import gql from 'graphql-tag'
+import {useQuery, gql} from '@apollo/client'
 
 import {LocalStorageKey} from './utility'
 

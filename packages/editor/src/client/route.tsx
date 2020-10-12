@@ -13,9 +13,8 @@ import {
 
 import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
-import {useMutation} from '@apollo/react-hooks'
+import {useMutation, gql} from '@apollo/client'
 import {LocalStorageKey} from './utility'
-import gql from 'graphql-tag'
 
 export enum RouteType {
   Login = 'login',
@@ -211,7 +210,9 @@ export function RouteProvider({children}: RouteProviderProps) {
           }
         }
 
-        return () => {}
+        return () => {
+          /* do nothing */
+        }
       }}>
       {children}
     </BaseRouteProvider>

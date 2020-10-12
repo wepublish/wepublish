@@ -44,8 +44,8 @@ export function UserRoleList() {
     current?.type === RouteType.UserRoleEdit || current?.type === RouteType.UserRoleCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.UserRoleEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.UserRoleEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -66,7 +66,7 @@ export function UserRoleList() {
 
   useEffect(() => {
     if (current?.type === RouteType.UserRoleCreate) {
-      setEditID(null)
+      setEditID(undefined)
       setEditModalOpen(true)
     }
 

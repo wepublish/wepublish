@@ -27,7 +27,7 @@ import {IframeEmbed} from './embeds/iframe'
 export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockValue>) {
   const theme = useContext(ThemeContext)
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
-  const isEmpty = value.type === EmbedType.Other && value.url == undefined
+  const isEmpty = value.type === EmbedType.Other && value.url === undefined
 
   useEffect(() => {
     if (autofocus && isEmpty) {

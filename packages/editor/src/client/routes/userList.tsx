@@ -50,8 +50,8 @@ export function UserList() {
     current?.type === RouteType.UserEdit || current?.type === RouteType.UserCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.UserEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.UserEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -73,7 +73,7 @@ export function UserList() {
 
   useEffect(() => {
     if (current?.type === RouteType.UserCreate) {
-      setEditID(null)
+      setEditID(undefined)
       setEditModalOpen(true)
     }
 
@@ -83,7 +83,7 @@ export function UserList() {
     }
   }, [current])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.users.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -97,7 +97,7 @@ export function UserList() {
         }
       }
     })
-  }*/
+  } */
 
   const users = data?.users.nodes.map(user => {
     const {id, name, email} = user

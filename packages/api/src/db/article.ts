@@ -1,5 +1,5 @@
 import {ArticleBlock} from './block'
-import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
+import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
 
 export interface ArticleData {
   readonly preTitle?: string
@@ -7,6 +7,8 @@ export interface ArticleData {
   readonly lead?: string
   readonly slug: string
   readonly tags: string[]
+
+  readonly properties: MetadataProperty[]
 
   readonly imageID?: string
   readonly authorIDs: string[]

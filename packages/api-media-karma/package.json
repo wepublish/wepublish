@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api-media-karma",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "We.publish media service",
   "keywords": [
     "images",
@@ -24,14 +24,14 @@
   "main": "./lib/",
   "license": "MIT",
   "scripts": {
-    "build": "run-s copy-license sync-package-info build:*",
+    "build": "run-s copy-license build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
-    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
-    "prepare": "run-s clean build",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/version.ts"
+    "prepare": "run-s clean copy-license build",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "form-data": "^3.0.0",
@@ -39,9 +39,12 @@
   },
   "devDependencies": {
     "@types/graphql-upload": "^8.0.3",
+    "@types/jest": "^26.0.14",
     "@types/node-fetch": "^2.5.5",
+    "jest": "^26.4.2",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.2",
+    "ts-jest": "^26.3.0",
     "typescript": "^3.8.3"
   },
   "peerDependencies": {

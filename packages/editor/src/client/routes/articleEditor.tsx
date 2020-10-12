@@ -89,12 +89,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     lead: '',
     authors: [],
     tags: [],
+    properties: [],
     shared: false,
     breaking: false,
     image: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>(isNew ? InitialArticleBlocks : [])
 
   const articleID = id || createData?.createArticle.id
@@ -126,7 +127,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
-      const {slug, preTitle, title, lead, tags, breaking, authors, image, blocks} = latest
+      const {
+        slug,
+        preTitle,
+        title,
+        lead,
+        tags,
+        breaking,
+        authors,
+        image,
+        blocks,
+        properties
+      } = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -137,10 +149,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title,
         lead: lead ?? '',
         tags,
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image ? image : undefined
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -165,6 +182,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock)
     }
   }

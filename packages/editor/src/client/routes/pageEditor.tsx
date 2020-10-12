@@ -76,10 +76,11 @@ export function PageEditor({id}: PageEditorProps) {
     title: '',
     description: '',
     tags: [],
+    properties: [],
     image: undefined
   })
 
-  const isNew = id == undefined
+  const isNew = id === undefined
   const [blocks, setBlocks] = useState<BlockValue[]>([])
 
   const pageID = id || createData?.createPage.id
@@ -110,7 +111,7 @@ export function PageEditor({id}: PageEditorProps) {
   useEffect(() => {
     if (pageData?.page) {
       const {latest, published} = pageData.page
-      const {slug, title, description, tags, image, blocks} = latest
+      const {slug, title, description, tags, image, blocks, properties} = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -120,7 +121,12 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
-        image: image ? image : undefined
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
+        image: image || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -141,6 +147,7 @@ export function PageEditor({id}: PageEditorProps) {
       description: metadata.description,
       imageID: metadata.image?.id,
       tags: metadata.tags,
+      properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock)
     }
   }

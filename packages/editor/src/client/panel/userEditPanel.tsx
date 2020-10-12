@@ -25,8 +25,15 @@ import {
   MaterialIconSaveOutlined
 } from '@karma.run/icons'
 
-import {useCreateUserMutation, FullUserFragment, useUpdateUserMutation, useUserQuery} from '../api'
-import {useUserRoleListQuery, FullUserRoleFragment} from '../api'
+import {
+  useCreateUserMutation,
+  FullUserFragment,
+  useUpdateUserMutation,
+  useUserQuery,
+  useUserRoleListQuery,
+  FullUserRoleFragment
+} from '../api'
+
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 
 export interface UserEditPanelProps {
@@ -58,7 +65,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const {
@@ -76,7 +83,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [updateUser, {loading: isUpdating, error: updateError}] = useUpdateUserMutation()
 
   const isDisabled =
-    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError != undefined
+    isLoading || isUserRoleLoading || isCreating || isUpdating || loadError !== undefined
 
   useEffect(() => {
     if (data?.user) {
