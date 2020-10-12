@@ -13,7 +13,7 @@ import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
 
-export interface MapLeafletBlockProps extends BlockProps<MapLeafletBlockValue> {}
+export type MapLeafletBlockProps = BlockProps<MapLeafletBlockValue>
 
 export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockValue>) {
   const {zoom, centerLat, centerLng, caption, items} = value
