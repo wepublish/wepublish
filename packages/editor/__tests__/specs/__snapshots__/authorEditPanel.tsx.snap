@@ -72634,7 +72634,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                         value={
                           Array [
                             Object {
-                              "id": "b5XvDmqA-Uj311gk4K73f",
+                              "id": "fakeNanoid1",
                               "value": Object {
                                 "title": "",
                                 "url": "",
@@ -72658,7 +72658,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                               value={
                                 Array [
                                   Object {
-                                    "id": "b5XvDmqA-Uj311gk4K73f",
+                                    "id": "fakeNanoid1",
                                     "value": Object {
                                       "title": "",
                                       "url": "",
@@ -72672,12 +72672,12 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                   <Component
                                     index={0}
                                     itemIndex={0}
-                                    key="b5XvDmqA-Uj311gk4K73f"
+                                    key="fakeNanoid1"
                                     onChange={[Function]}
                                     onRemove={[Function]}
                                     value={
                                       Object {
-                                        "id": "b5XvDmqA-Uj311gk4K73f",
+                                        "id": "fakeNanoid1",
                                         "value": Object {
                                           "title": "",
                                           "url": "",
