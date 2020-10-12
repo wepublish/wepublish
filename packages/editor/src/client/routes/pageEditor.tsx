@@ -125,7 +125,11 @@ export function PageEditor({id}: PageEditorProps) {
         title,
         description: description ?? '',
         tags,
-        properties,
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
         image: image || undefined
       })
 
