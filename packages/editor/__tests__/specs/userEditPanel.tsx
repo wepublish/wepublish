@@ -24,9 +24,34 @@ const styleRenderer: fela.IRenderer = {
 }
 
 test('User Edit Panel should render', () => {
+  const mocks = [
+    {
+      request: {
+        query: UserRoleListDocument,
+        variables: {
+          first: 200
+        }
+      },
+      result: () => {
+        return {
+          data: {
+            userRoles: {
+              nodes: [],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false
+              },
+              totalCount: 0
+            }
+          }
+        }
+      }
+    }
+  ]
+
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     </UIProvider>
@@ -62,18 +87,20 @@ test('User Edit Panel should render with id', async () => {
           first: 200
         }
       },
-      result: () => ({
-        data: {
-          userRoles: {
-            nodes: [],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false
-            },
-            totalCount: 0
+      result: () => {
+        return {
+          data: {
+            userRoles: {
+              nodes: [],
+              pageInfo: {
+                hasNextPage: false,
+                hasPreviousPage: false
+              },
+              totalCount: 0
+            }
           }
         }
-      })
+      }
     }
   ]
   let wrapper
