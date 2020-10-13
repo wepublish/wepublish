@@ -16,7 +16,7 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": "dev-release"
+      "allowBranch": ["dev-release", "test-*"]
     },
     "publish": {
       "ignoreChanges": [
