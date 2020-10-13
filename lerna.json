@@ -1,5 +1,5 @@
 {
-  "version": "0.8.6",
+  "version": "0.8.7-next.0",
   "changelog": {
     "repo": "bajour/wepublish",
     "cacheDir": ".changelog",
@@ -16,7 +16,10 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": ["dev-release", "test-*"]
+      "allowBranch": [
+        "dev-release",
+        "test-*"
+      ]
     },
     "publish": {
       "ignoreChanges": [
