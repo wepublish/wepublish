@@ -158,12 +158,6 @@ export function LinkPageBreakBlock({
                 checked={value.linkTarget === '_blank'}
               />
             </RadioGroup>
-            <Toggle
-              label={'Hide CTA Button'}
-              description={'Hide button an make whole elemenr clickable.'}
-              onChange={e => onChange({...value, hideButton: e.target.checked})}
-              checked={!!hideButton || false}
-            />
           </Box>
         </Card>
         <Card
@@ -194,6 +188,14 @@ export function LinkPageBreakBlock({
               <option value="image-right">Image Right</option>
               <option value="image-left">Image Left</option>
             </select>
+          </Box>
+          <Box padding={'10'}>
+            <Toggle
+              label={'Hide CTA Button'}
+              description={'Hide button an make whole element clickable.'}
+              onChange={e => onChange({...value, hideButton: e.target.checked})}
+              checked={!!hideButton || false}
+            />
           </Box>
         </Card>
       </div>

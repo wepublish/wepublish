@@ -1757,7 +1757,7 @@ type FullBlock_EmbedBlock_Fragment = (
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
-  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'htmlText' | 'linkTarget' | 'layoutOption' | 'hideButton'>
+  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'htmlText' | 'linkTarget' | 'hideButton' | 'layoutOption'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
