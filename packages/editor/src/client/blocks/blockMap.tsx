@@ -90,7 +90,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       linkURL: '',
       styleOption: 'default',
       layoutOption: 'default',
-      htmlText: '',
+      richText: createDefaultValue(),
       image: undefined,
       hideButton: false
     },

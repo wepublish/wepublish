@@ -1,8 +1,7 @@
-import React, {useRef, useEffect, useState} from 'react'
+import React, {useRef, useEffect, useState, useCallback} from 'react'
 
 import {
   BlockProps,
-  TypographicTextArea,
   Box,
   TextInput,
   Radio,
@@ -16,14 +15,16 @@ import {
   Drawer,
   Toggle
 } from '@karma.run/ui'
-import {LinkPageBreakBlockValue} from './types'
+import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
 import {
   MaterialIconClose,
   MaterialIconEditOutlined,
   MaterialIconImageOutlined
 } from '@karma.run/icons'
+import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
+import {isFunctionalUpdate} from '@karma.run/react'
 
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
@@ -39,7 +40,7 @@ export function LinkPageBreakBlock({
     linkURL,
     styleOption,
     layoutOption,
-    htmlText,
+    richText,
     linkTarget,
     hideButton,
     image
@@ -50,6 +51,15 @@ export function LinkPageBreakBlock({
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
   }, [])
+
+  const handleRichTextChange = useCallback(
+    (richText: React.SetStateAction<RichTextBlockValue>) =>
+      onChange(value => ({
+        ...value,
+        richText: isFunctionalUpdate(richText) ? richText(value.richText) : richText
+      })),
+    [onChange]
+  )
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -68,14 +78,7 @@ export function LinkPageBreakBlock({
         />
       </Box>
       <Box flexGrow={1}>
-        <TypographicTextArea
-          ref={focusRef}
-          variant="body1"
-          placeholder="Optional Text"
-          align="left"
-          value={htmlText}
-          onChange={e => onChange({...value, htmlText: e.target.value})}
-        />
+        <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
       </Box>
       <Box style={{width: '50%', display: 'inline-block'}}>
         <TextInput
