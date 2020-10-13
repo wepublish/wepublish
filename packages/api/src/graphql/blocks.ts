@@ -443,7 +443,7 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
   name: 'LinkPageBreakBlock',
   fields: {
     text: {type: GraphQLString},
-    htmlText: {type: GraphQLString},
+    richText: {type: GraphQLNonNull(GraphQLRichText)},
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
@@ -552,7 +552,7 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
   name: 'LinkPageBreakBlockInput',
   fields: {
     text: {type: GraphQLString},
-    htmlText: {type: GraphQLString},
+    richText: {type: GraphQLNonNull(GraphQLRichText)},
     linkURL: {type: GraphQLString},
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},

@@ -90,7 +90,7 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           key: index,
           value: {
             text: block.text,
-            htmlText: block.htmlText,
+            richText: block.richText,
             linkURL: block.linkURL,
             linkText: block.linkText,
             linkTarget: block.linkTarget,

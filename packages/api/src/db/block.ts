@@ -102,7 +102,7 @@ export interface ListicleBlock {
 export interface LinkPageBreakBlock {
   type: BlockType.LinkPageBreak
   text: string
-  htmlText: string
+  richText: RichTextNode[]
   linkURL: string
   linkText: string
   linkTarget: string

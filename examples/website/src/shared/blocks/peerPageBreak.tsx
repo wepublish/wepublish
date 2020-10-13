@@ -6,6 +6,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
+import {RichTextBlockValue} from '@dev7ch/wepublish-editor/src/client/blocks/types.js'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
   backgroundColor: Color.SecondaryLight,
@@ -58,7 +59,7 @@ export interface PageBreakBlockStyleProps {
 export interface PageBreakBlockProps {
   peer?: Peer
   text: string
-  htmlText: string
+  richText: RichTextBlockValue
   linkURL: string
   linkText: string
   linkTarget: string
@@ -70,7 +71,7 @@ export interface PageBreakBlockProps {
 export function PageBreakBlock({
   peer,
   text,
-  htmlText,
+  richText,
   linkURL,
   linkText,
   linkTarget,
@@ -89,7 +90,7 @@ export function PageBreakBlock({
           </div>
         )}
         <pre>
-          {{htmlText}}
+          {{richText}}
           {{linkTarget}}
           {{layoutOption}}
           {{styleOption}}
