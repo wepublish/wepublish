@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6](https://github.com/wepublish/wepublish/compare/v0.8.6-alpha.9...v0.8.6) (2020-10-13)
+
+**Note:** Version bump only for package @dev7ch/wepublish-editor
+
+
+
+
+
 ## [0.8.6-alpha.9](https://github.com/wepublish/wepublish/compare/v0.8.6-alpha.8...v0.8.6-alpha.9) (2020-10-13)
 
 **Note:** Version bump only for package @dev7ch/wepublish-editor
