@@ -167,7 +167,6 @@ export function LinkPageBreakBlock({
           flexGrow={1}
           marginRight={Spacing.ExtraSmall}>
           <Box padding={'10'}>
-            <p>Colors and Styles</p>
             <small>Styles: </small>
             <select
               defaultValue={styleOption}
@@ -189,7 +188,7 @@ export function LinkPageBreakBlock({
               <option value="image-left">Image Left</option>
             </select>
           </Box>
-          <Box padding={'10'}>
+          <Box padding={'0 10'}>
             <Toggle
               label={'Hide CTA Button'}
               description={'Hide button an make whole element clickable.'}
