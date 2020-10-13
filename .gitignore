@@ -3,6 +3,7 @@
 lib/
 dist/
 assets/
+website/static/sitemap*
 examples/**/LICENSE
 packages/**/LICENSE
 node_modules

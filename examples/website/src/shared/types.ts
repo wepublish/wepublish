@@ -1,6 +1,6 @@
 import {Node} from 'slate'
 import {Route} from './route/routeContext'
-import {RichTextBlockValue} from '@dev7ch/wepublish-editor/src/client/blocks/types'
+import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
 
 export enum VersionState {
   Draft = 'draft',

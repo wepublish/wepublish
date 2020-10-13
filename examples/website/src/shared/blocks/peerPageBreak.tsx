@@ -6,7 +6,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
-import {RichTextBlockValue} from '@dev7ch/wepublish-editor/src/client/blocks/types.js'
+import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
   backgroundColor: Color.SecondaryLight,
