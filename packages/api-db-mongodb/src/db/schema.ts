@@ -5,7 +5,7 @@ import {
   NavigationLink,
   PageBlock,
   RichTextNode
-} from '@wepublish/api'
+} from '../../../api'
 
 export enum CollectionName {
   Migrations = 'migrations',

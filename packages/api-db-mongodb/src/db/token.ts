@@ -1,4 +1,4 @@
-import {DBTokenAdapter, Token, TokenInput} from '@wepublish/api'
+import {DBTokenAdapter, Token, TokenInput} from '../../../api'
 import {Collection, Db} from 'mongodb'
 
 import {CollectionName, DBToken} from './schema'

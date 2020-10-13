@@ -41,7 +41,7 @@
     "setup:editor": "yarn workspace @dev7ch/wepublish-editor setup",
     "start:editor": "yarn workspace @dev7ch/wepublish-editor start",
     "clean:editor": "yarn workspace @dev7ch/wepublish-editor clean",
-    "build:editor": "yarn workspace @@dev7ch/wepublish-editor build",
+    "build:editor": "yarn workspace @dev7ch/wepublish-editor build",
     "watch:editor": "yarn workspace @dev7ch/wepublish-editor watch",
     "lint:editor": "yarn workspace @dev7ch/wepublish-editor lint",
     "generate:editor:api": "yarn workspace @dev7ch/wepublish-editor generate:api",
