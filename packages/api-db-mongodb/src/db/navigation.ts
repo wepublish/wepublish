@@ -1,4 +1,4 @@
-import {DBNavigationAdapter, NavigationInput, OptionalNavigation, Navigation} from '@wepublish/api'
+import {DBNavigationAdapter, NavigationInput, OptionalNavigation, Navigation} from '../../../api'
 import {Collection, Db, MongoError} from 'mongodb'
 
 import {CollectionName, DBNavigation} from './schema'

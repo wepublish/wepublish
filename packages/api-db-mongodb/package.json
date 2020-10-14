@@ -1,6 +1,6 @@
 {
-  "name": "@wepublish/api-db-mongodb",
-  "version": "0.8.5",
+  "name": "@dev7ch/wepublish-api-db-mongodb",
+  "version": "0.8.7-next.0",
   "description": "We.publish Database adapter for mongoDB",
   "keywords": [
     "database",
@@ -47,6 +47,6 @@
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "@wepublish/api": "*"
+    "@wepublish/api": "npm:@dev7ch/wepublish-api@*"
   }
 }

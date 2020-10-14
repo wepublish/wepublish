@@ -11,7 +11,7 @@ import {
   SortOrder,
   LimitType,
   AuthorSort
-} from '@wepublish/api'
+} from '../../../api'
 
 import {Collection, Db, MongoCountPreferences, FilterQuery} from 'mongodb'
 

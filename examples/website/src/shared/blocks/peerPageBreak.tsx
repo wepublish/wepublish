@@ -6,6 +6,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
+import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
   backgroundColor: Color.SecondaryLight,
@@ -52,23 +53,33 @@ const PeerPageBreakButton = cssRule({
   fontSize: pxToRem(12)
 })
 
-export interface PageBreackBlockStyleProps {
+export interface PageBreakBlockStyleProps {
   isArticle?: boolean
 }
 export interface PageBreakBlockProps {
   peer?: Peer
   text: string
+  richText: RichTextBlockValue
   linkURL: string
   linkText: string
+  linkTarget: string
+  styleOption: string
+  layoutOption: string
+  imageID: string
 }
 
 export function PageBreakBlock({
   peer,
   text,
+  richText,
   linkURL,
   linkText,
+  linkTarget,
+  styleOption,
+  imageID,
+  layoutOption,
   isArticle = false
-}: PageBreakBlockProps & PageBreackBlockStyleProps) {
+}: PageBreakBlockProps & PageBreakBlockStyleProps) {
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>
@@ -78,6 +89,13 @@ export function PageBreakBlock({
             <Image src={peer.logoURL} height={90} width={90} />
           </div>
         )}
+        <pre>
+          {{richText}}
+          {{linkTarget}}
+          {{layoutOption}}
+          {{styleOption}}
+          {{imageID}}
+        </pre>
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>
         {linkText && linkURL && (
           <Link className={css(PeerPageBreakButton)} href={linkURL}>

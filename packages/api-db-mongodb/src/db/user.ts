@@ -15,7 +15,7 @@ import {
   LimitType,
   InputCursorType,
   UserSort
-} from '@wepublish/api'
+} from '../../../api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
 

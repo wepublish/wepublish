@@ -274,7 +274,7 @@ export interface TeaserContentProps {
   preTitle?: string
   title?: string
   lead?: string
-  image?: ImageRefFragment
+  image?: ImageRefFragment | null
   states?: string[]
   peer?: PeerWithProfileFragment
   numColumns: number

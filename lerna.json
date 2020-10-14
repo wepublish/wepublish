@@ -1,7 +1,7 @@
 {
-  "version": "0.8.5",
+  "version": "0.8.7-next.0",
   "changelog": {
-    "repo": "wepublish/wepublish",
+    "repo": "bajour/wepublish",
     "cacheDir": ".changelog",
     "labels": {
       "PR: Breaking Change :boom:": ":boom: Breaking Change",
@@ -16,7 +16,10 @@
   "npmClient": "yarn",
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": [
+        "dev-release",
+        "test-*"
+      ]
     },
     "publish": {
       "ignoreChanges": [
@@ -29,7 +32,6 @@
   "packages": [
     "packages/api",
     "packages/api-db-mongodb",
-    "packages/api-media-karma",
     "packages/editor"
   ]
 }

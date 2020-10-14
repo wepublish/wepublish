@@ -74,6 +74,14 @@ fragment FullBlock on Block {
     text
     linkText
     linkURL
+    linkTarget
+    hideButton
+    styleOption
+    layoutOption
+    richText
+    image {
+      ...ImageRef
+    }
   }
 
   ... on ImageBlock {
