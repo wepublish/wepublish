@@ -1,6 +1,6 @@
 {
   "name": "@dev7ch/wepublish-api-db-mongodb",
-  "version": "0.8.7-next.0",
+  "version": "0.8.6",
   "description": "We.publish Database adapter for mongoDB",
   "keywords": [
     "database",
