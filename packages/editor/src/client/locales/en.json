@@ -1,6 +1,10 @@
 {
   "translation": {
-    "Articles": "Articles",
+    "Articles": {
+      "articles": "Articles",
+      "newArticle": "New Article",
+      "search": "Search"
+    },
     "Authors": "Authors",
     "Author": "Author",
     "Image Library": "Image Library",
@@ -35,7 +39,6 @@
     "Password": "Password",
     "Reset Password": "Reset Password",
     "Choose Article": "Choose Article",
-    "Search": "Search",
     "Generate Token": "Generate Token",
     "Delete Token?": "Delete Token?",
     "Generate": "Generate",
@@ -78,7 +81,6 @@
     "Description": "Description",
     "New Author": "New Author",
     "Delete Author?": "Delete Author?",
-    "New Article": "New Article",
     "No Articles found": "No Articles found",
     "is a System Role and can not be edited": "is a System Role and can not be edited",
     "Permissions": "Permissions",

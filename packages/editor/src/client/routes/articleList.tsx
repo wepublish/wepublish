@@ -167,17 +167,17 @@ export function ArticleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('Articles')}</Typography>
+        <Typography variant="h1">{t('Articles.articles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label={t('New Article')}
+          label={t('Articles.newArticle')}
           route={ArticleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('Articles.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
