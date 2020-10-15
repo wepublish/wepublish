@@ -8,7 +8,7 @@ import Adapter from 'enzyme-adapter-react-16'
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
 
-import {UIProvider} from '@karma.run/ui'
+import {UIProvider, IconButton, Select} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
 import wait from 'waait'
@@ -23,35 +23,52 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-test('User Edit Panel should render', () => {
-  const mocks = [
-    {
-      request: {
-        query: UserRoleListDocument,
-        variables: {
-          first: 200
-        }
-      },
-      result: () => {
-        return {
-          data: {
-            userRoles: {
-              nodes: [],
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false
+const MOCKS = [
+  {
+    request: {
+      query: UserRoleListDocument,
+      variables: {
+        first: 200
+      }
+    },
+    result: () => {
+      return {
+        data: {
+          userRoles: {
+            nodes: [
+              {
+                __typename: 'UserRole',
+                id: 'roleId1',
+                name: 'Role 1',
+                description: 'Description for role 1',
+                systemRole: false,
+                permissions: []
               },
-              totalCount: 0
-            }
+              {
+                __typename: 'UserRole',
+                id: 'roleId2',
+                name: 'Role 2',
+                description: 'Description for role 2',
+                systemRole: false,
+                permissions: []
+              }
+            ],
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false
+            },
+            totalCount: 0
           }
         }
       }
     }
-  ]
+  }
+]
 
+test('User Edit Panel should render', () => {
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={MOCKS} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     </UIProvider>
@@ -119,24 +136,35 @@ test('User Edit Panel should render with id', async () => {
 
   expect(wrapper).toMatchSnapshot()
 })
-/*
-test('Clicking add block button should display two text fields ', () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider addTypename={false}>
-        <UserEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  const button = wrapper.find(ListInput).find('button')
-  button.simulate('click')
+
+test('User should be able to select and add roles', async () => {
+  let wrapper
+
+  await act(async () => {
+    wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={MOCKS} addTypename={false}>
+          <UserEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await wait(100)
+    wrapper.update()
+  })
+  if (wrapper === null) {
+    return
+  }
+  const rolesDropdown = wrapper.find(Select)
+  rolesDropdown.find('button').simulate('click')
+  rolesDropdown.props().onChange({value: 'roleId1'})
+
+  // .simulate('keyDown', {key: 'ArrowDown', keyCode: 40})
+  // .simulate('keyDown', {key: 'Enter', keyCode: 13})
+
+  console.log(rolesDropdown.find('button').props())
+  //console.log(rolesDropdown.props().options)
+
+  const addButton = wrapper.find(IconButton).find('button')
+  addButton.simulate('click')
   expect(wrapper).toMatchSnapshot()
-
-  const inputField = wrapper.find(TextInput).at(1).find('input')
-  console.log(inputField.props())
-  inputField.props().value = 'abcd'
-
-  console.log(inputField.debug())
-  expect(inputField).toMatchSnapshot()
 })
-*/
