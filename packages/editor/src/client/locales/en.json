@@ -1,9 +1,32 @@
 {
   "translation": {
-    "Articles": {
-      "articles": "Articles",
-      "newArticle": "New Article",
-      "search": "Search"
+    "articles": {
+      "overview": {
+        "articles": "Articles",
+        "newArticle": "New Article",
+        "search": "Search",
+        "loadMore": "Load More",
+        "noArticlesFound": "No Articles found",
+        "untitled": "Untitled",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published"
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "deleteArticle": "Delete Article?",
+        "unpublishArticle": "Unpublish Article?",
+        "confirm": "Confirm",
+        "unpublish": "Unpublish",
+        "title": "Title",
+        "untitled": "Untitled",
+        "lead": "Lead",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "publishedAt": "Published At"
+      }
     },
     "Authors": "Authors",
     "Author": "Author",
@@ -22,9 +45,6 @@
     "Add User Role": "Add User Role",
     "Select User Role": "Select User Role",
     "Start writing": "Start writing ...",
-    "Cancel": "Cancel",
-    "Close": "Close",
-    "Title": "Title",
     "Pre-title": "Pre-title",
     "Optional description for the link": "Optional description for the link",
     "Link": "Link",
@@ -65,11 +85,7 @@
     "No Users found": "No Users found",
     "Delete User?": "Delete User?",
     "Pages": "Pages",
-    "Created At": "Created At",
-    "Updated At": "Updated At",
-    "Published At": "Published At",
     "No Pages found": "No Pages found",
-    "Load More": "Load More",
     "New Page": "New Page",
     "Create": "Create",
     "Save": "Save",
@@ -81,7 +97,6 @@
     "Description": "Description",
     "New Author": "New Author",
     "Delete Author?": "Delete Author?",
-    "No Articles found": "No Articles found",
     "is a System Role and can not be edited": "is a System Role and can not be edited",
     "Permissions": "Permissions",
     "Peer Article": "Peer Article",
