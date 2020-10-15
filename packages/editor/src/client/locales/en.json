@@ -28,20 +28,55 @@
         "publishedAt": "Published At"
       }
     },
-    "Authors": "Authors",
+    "pages": {
+      "overview": {
+        "pages": "Pages",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published",
+        "untitled": "Untitled",
+        "newPage": "New Page",
+        "search": "Search",
+        "loadMore": "Load More",
+        "noPages": "No Pages found"
+      },
+      "panels": {
+        "unpublish": "Unpublish",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "unpublishPage": "Unpublish Page?",
+        "deletePage": "Delete Page?",
+        "confirm": "Confirm",
+        "title": "Title",
+        "untitled": "Untitled",
+        "lead": "Lead",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "publishedAt": "Published At"
+      }
+    },
+    "navbar": {
+      "articles": "Articles",
+      "pages": "Pages",
+      "authors": "Authors",
+      "imageLibrary": "Image Library",
+      "users": "Users",
+      "userRoles": "User Roles",
+      "peering": "Peering",
+      "tokens": "Tokens",
+      "logout": "Logout"
+    },
+
     "Author": "Author",
-    "Image Library": "Image Library",
-    "Logout": "Logout",
+
     "Login": "Login",
     "Or login with:": "Or login with:",
     "Authenticating against OAuth2": "Authenticating against OAuth2",
-    "Peering": "Peering",
+
     "Peers": "Peers",
     "Share with peers": "Share with peers",
     "Allow peers to publish this article.": "Allow peers to publish this article.",
-    "Tokens": "Tokens",
-    "Users": "Users",
-    "User Roles": "User Roles",
+
     "Add User Role": "Add User Role",
     "Select User Role": "Select User Role",
     "Start writing": "Start writing ...",
@@ -74,7 +109,6 @@
     "Breaking News": "Breaking News",
     "Press enter to add tag": "Press enter to add tag",
     "Tags": "Tags",
-    "Lead": "Lead",
     "New UserRole": "New UserRole",
     "No UserRoles found": "No UserRoles found",
     "Delete User Role?": "Delete User Role?",
@@ -84,9 +118,6 @@
     "No peers found": "No peers found",
     "No Users found": "No Users found",
     "Delete User?": "Delete User?",
-    "Pages": "Pages",
-    "No Pages found": "No Pages found",
-    "New Page": "New Page",
     "Create": "Create",
     "Save": "Save",
     "Publish": "Publish",

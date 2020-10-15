@@ -94,16 +94,16 @@ export function PageList() {
 
     const states = []
 
-    if (draft) states.push('Draft')
-    if (pending) states.push('Pending')
-    if (published) states.push('Published')
+    if (draft) states.push(t('pages.overview.draft'))
+    if (pending) states.push(t('pages.overview.pending'))
+    if (published) states.push(t('pages.overview.published'))
 
     return (
       <Box key={id} marginBottom={Spacing.Small}>
         <Box marginBottom={Spacing.ExtraSmall}>
           <Link route={PageEditRoute.create({id})}>
             <Typography variant="h3" color={title ? 'dark' : 'gray'}>
-              {title || 'Untitled'}
+              {title || t('pages.overview.untitled')}
             </Typography>
           </Link>
         </Box>
@@ -143,12 +143,22 @@ export function PageList() {
                 ? [
                     {
                       id: ConfirmAction.Unpublish,
-                      label: 'Unpublish',
+                      label: t('pages.panels.unpublish'),
                       icon: MaterialIconGetAppOutlined
                     },
-                    {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                    {
+                      id: ConfirmAction.Delete,
+                      label: t('pages.panels.delete'),
+                      icon: MaterialIconDeleteOutlined
+                    }
                   ]
-                : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
+                : [
+                    {
+                      id: ConfirmAction.Delete,
+                      label: t('pages.panels.delete'),
+                      icon: MaterialIconDeleteOutlined
+                    }
+                  ]
             }
             onMenuItemClick={item => {
               setCurrentPage(page)
@@ -165,13 +175,17 @@ export function PageList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('Pages')}</Typography>
+        <Typography variant="h1">{t('pages.overview.pages')}</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label={t('New Page')} route={PageCreateRoute.create({})} />
+        <RouteLinkButton
+          color="primary"
+          label={t('pages.overview.newPage')}
+          route={PageCreateRoute.create({})}
+        />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('pages.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -182,13 +196,13 @@ export function PageList() {
             {pages}
             <Box display="flex" justifyContent="center">
               {data?.pages.pageInfo.hasNextPage && (
-                <Button label={t('Load More')} onClick={loadMore} />
+                <Button label={t('pages.overview.loadMore')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No Pages found')}
+            {t('pages.overview.noPages')}
           </Typography>
         ) : null}
       </Box>
@@ -196,18 +210,22 @@ export function PageList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={confirmAction === ConfirmAction.Unpublish ? 'Unpublish Page?' : 'Delete Page?'}
+              title={
+                confirmAction === ConfirmAction.Unpublish
+                  ? t('pages.panels.unpublishPage')
+                  : t('pages.panels.deletePage')
+              }
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('pages.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('pages.panels.confirm')}
                   disabled={isUnpublishing || isDeleting}
                   onClick={async () => {
                     if (!currentPage) return
@@ -254,27 +272,27 @@ export function PageList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Title')}>
-                  {currentPage?.latest.title || 'Untitled'}
+                <DescriptionListItem label={t('pages.panels.title')}>
+                  {currentPage?.latest.title || t('pages.panels.untitled')}
                 </DescriptionListItem>
 
                 {currentPage?.latest.description && (
-                  <DescriptionListItem label={t('Lead')}>
+                  <DescriptionListItem label={t('pages.panels.lead')}>
                     {currentPage?.latest.description}
                   </DescriptionListItem>
                 )}
 
-                <DescriptionListItem label={t('Created At')}>
+                <DescriptionListItem label={t('pages.panels.createdAt')}>
                   {currentPage?.createdAt && new Date(currentPage.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                <DescriptionListItem label={t('Updated At')}>
+                <DescriptionListItem label={t('pages.panels.updatedAt')}>
                   {currentPage?.latest.updatedAt &&
                     new Date(currentPage.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentPage?.latest.publishedAt && (
-                  <DescriptionListItem label={t('Published At')}>
+                  <DescriptionListItem label={t('pages.panels.publishedAt')}>
                     {currentPage?.latest.publishedAt &&
                       new Date(currentPage.createdAt).toLocaleString()}
                   </DescriptionListItem>
