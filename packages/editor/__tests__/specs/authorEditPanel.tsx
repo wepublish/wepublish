@@ -85,9 +85,7 @@ test('Clicking add block button should display two text fields ', () => {
   expect(wrapper).toMatchSnapshot()
 
   const inputField = wrapper.find(TextInput).at(1).find('input')
-  console.log(inputField.props())
   inputField.props().value = 'abcd'
 
-  console.log(inputField.debug())
   expect(inputField).toMatchSnapshot()
 })

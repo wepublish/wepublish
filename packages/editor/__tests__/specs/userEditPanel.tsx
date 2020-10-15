@@ -8,10 +8,29 @@ import Adapter from 'enzyme-adapter-react-16'
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
 
-import {UIProvider, IconButton, Select} from '@karma.run/ui'
+import {UIProvider /*, Select*/} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
-import wait from 'waait'
+
+// https://github.com/wesbos/waait/blob/master/index.js
+export function wait(amount = 0) {
+  return new Promise(resolve => setTimeout(resolve, amount))
+}
+
+// Use this in your test after mounting if you need just need to let the query finish without updating the wrapper
+export async function actWait(amount = 0) {
+  await act(async () => {
+    await wait(amount)
+  })
+}
+
+// Use this in your test after mounting if you want the query to finish and update the wrapper
+export async function updateWrapper(wrapper: Enzyme.ReactWrapper, amount = 0) {
+  await act(async () => {
+    await wait(amount)
+    wrapper.update()
+  })
+}
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -120,51 +139,33 @@ test('User Edit Panel should render with id', async () => {
       }
     }
   ]
-  let wrapper
-
-  await act(async () => {
-    wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={true}>
-          <UserEditPanel id={'fakeId3'} />
-        </MockedProvider>
-      </UIProvider>
-    )
-    await wait(100)
-    wrapper.update()
-  })
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={true}>
+        <UserEditPanel id={'fakeId3'} />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
 
   expect(wrapper).toMatchSnapshot()
 })
 
 test('User should be able to select and add roles', async () => {
-  let wrapper
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={MOCKS} addTypename={false}>
+        <UserEditPanel />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
 
-  await act(async () => {
-    wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={MOCKS} addTypename={false}>
-          <UserEditPanel />
-        </MockedProvider>
-      </UIProvider>
-    )
-    await wait(100)
-    wrapper.update()
-  })
-  if (wrapper === null) {
-    return
-  }
-  const rolesDropdown = wrapper.find(Select)
-  rolesDropdown.find('button').simulate('click')
-  rolesDropdown.props().onChange({value: 'roleId1'})
-
+  wrapper.find('Select[description="Select User Role"] button').simulate('click')
+  wrapper.find('li[role="option"]').last().simulate('click')
   // .simulate('keyDown', {key: 'ArrowDown', keyCode: 40})
   // .simulate('keyDown', {key: 'Enter', keyCode: 13})
 
-  console.log(rolesDropdown.find('button').props())
-  //console.log(rolesDropdown.props().options)
-
-  const addButton = wrapper.find(IconButton).find('button')
-  addButton.simulate('click')
+  wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
   expect(wrapper).toMatchSnapshot()
 })
