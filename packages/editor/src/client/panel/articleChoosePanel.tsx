@@ -50,11 +50,11 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
     <>
       <Panel>
         <PanelHeader
-          title={t('Choose Article')}
+          title={t('articleEditor.panels.chooseArticle')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('articleEditor.panels.close')}
               onClick={() => onClose()}
               disabled={loading}
             />
@@ -63,7 +63,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
         <PanelSection>
           <Box marginBottom={Spacing.Medium}>
             <SearchInput
-              placeholder={t('Search')}
+              placeholder={t('articleEditor.panels.search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />
@@ -71,9 +71,9 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
           {articles.map(article => {
             const states = []
 
-            if (article.draft) states.push('Draft')
-            if (article.pending) states.push('Pending')
-            if (article.published) states.push('Published')
+            if (article.draft) states.push('articleEditor.panels.draft')
+            if (article.pending) states.push('articleEditor.panels.pending')
+            if (article.published) states.push('articleEditor.panels.published')
 
             return (
               <Box key={article.id} marginBottom={Spacing.Small}>
@@ -82,7 +82,7 @@ export function ArticleChoosePanel({onClose, onSelect}: ArticleChoosePanelProps)
                     // TODO: Clickable
                     <div {...props} style={{cursor: 'pointer'}} onClick={() => onSelect(article)}>
                       <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                        {article.latest.title || 'Untitled'}
+                        {article.latest.title || 'articleEditor.panels.untitled'}
                       </Typography>
                     </div>
                   )}

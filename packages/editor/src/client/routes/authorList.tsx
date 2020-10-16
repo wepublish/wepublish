@@ -122,7 +122,7 @@ export function AuthorList() {
 
           <Link route={AuthorEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
+              {name || t('authors.overview.unknown')}
             </Typography>
           </Link>
 
@@ -130,7 +130,11 @@ export function AuthorList() {
           <OptionButton
             position="left"
             menuItems={[
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+              {
+                id: ConfirmAction.Delete,
+                label: t('authors.overview.delete'),
+                icon: MaterialIconDeleteOutlined
+              }
             ]}
             onMenuItemClick={item => {
               setCurrentAuthor(author)
@@ -147,17 +151,17 @@ export function AuthorList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('Authors')}</Typography>
+        <Typography variant="h1">{t('authors.overview.authors')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label={t('New Author')}
+          label={t('authors.overview.newAuthor')}
           route={AuthorCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('authors.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -168,13 +172,13 @@ export function AuthorList() {
             {authors}
             <Box display="flex" justifyContent="center">
               {data?.authors.pageInfo.hasNextPage && (
-                <Button label={t('Load More')} onClick={loadMore} />
+                <Button label={t('authors.overview.loadMore')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No Authors found')}
+            {t('authors.overview.noAuthorsFound')}
           </Typography>
         ) : null}
       </Box>
@@ -203,18 +207,18 @@ export function AuthorList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete Author?')}
+              title={t('authors.overview.deleteAuthor')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('authors.overview.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('authors.overview.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentAuthor) return
@@ -234,8 +238,8 @@ export function AuthorList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Name')}>
-                  {currentAuthor?.name || 'Unknown'}
+                <DescriptionListItem label={t('authors.overview.name')}>
+                  {currentAuthor?.name || t('authors.overview.unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

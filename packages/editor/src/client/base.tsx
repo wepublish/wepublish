@@ -46,42 +46,42 @@ export function Base({children}: BaseProps) {
         <>
           <RouteMenuLinkButton
             icon={MaterialIconTextFields}
-            label={t('Articles')}
+            label={t('navbar.articles')}
             route={ArticleListRoute.create({})}
             active={current?.type === RouteType.ArticleList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
-            label={t('Pages')}
+            label={t('navbar.pages')}
             route={PageListRoute.create({})}
             active={current?.type === RouteType.PageList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconFaceOutlined}
-            label={t('Authors')}
+            label={t('navbar.authors')}
             route={AuthorListRoute.create({})}
             active={current?.type === RouteType.AuthorList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
-            label={t('Image Library')}
+            label={t('navbar.imageLibrary')}
             route={ImageListRoute.create({})}
             active={current?.type === RouteType.ImageList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPermIdentityOutlined}
-            label={t('Users')}
+            label={t('navbar.users')}
             route={UserListRoute.create({})}
             active={current?.type === RouteType.UserList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconHowToRegOutlined}
-            label={t('User Roles')}
+            label={t('navbar.userRoles')}
             route={UserRoleListRoute.create({})}
             active={current?.type === RouteType.UserRoleList}
           />
@@ -97,14 +97,14 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconShareOutlined}
-            label={t('Peering')}
+            label={t('navbar.peering')}
             route={PeerListRoute.create({})}
             active={current?.type === RouteType.PeerList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconLockOutlined}
-            label={t('Tokens')}
+            label={t('navbar.tokens')}
             route={TokenListRoute.create({})}
             active={current?.type === RouteType.TokenList}
           />
@@ -113,7 +113,7 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}
-            label={t('Logout')}
+            label={t('navbar.logout')}
             route={LogoutRoute.create({})}
           />
         </>

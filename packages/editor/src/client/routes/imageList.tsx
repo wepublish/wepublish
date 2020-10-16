@@ -117,17 +117,17 @@ export function ImageList() {
   return (
     <>
       <Box flexDirection="row" marginBottom={Spacing.Small} display="flex">
-        <Typography variant="h1">{t('Image Library')}</Typography>
+        <Typography variant="h1">{t('images.overview.imageLibrary')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
-          label={t('Upload Image')}
+          label={t('images.overview.uploadImage')}
           color="primary"
           route={ImageUploadRoute.create({}, current ?? undefined)}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('images.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -172,10 +172,10 @@ export function ImageList() {
                             maxHeight="50%"
                             padding={Spacing.ExtraSmall}>
                             <Typography variant="subtitle1" color="gray" ellipsize>
-                              {`${filename || 'untitled'}${extension}`}
+                              {`${filename || t('images.panels.untitled')}${extension}`}
                             </Typography>
                             <Typography variant="body2" color="white" ellipsize>
-                              {title || 'Untitled'}
+                              {title || t('images.panels.Untitled')}
                             </Typography>
                           </Overlay>
                         </Link>
@@ -190,13 +190,13 @@ export function ImageList() {
             </Box>
             <Box display="flex" justifyContent="center">
               {data?.images.pageInfo.hasNextPage && (
-                <Button label={t('Load More')} onClick={loadMore} />
+                <Button label={t('images.overview.loadMore')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No Images found')}
+            {t('images.overview.noImagesFound')}
           </Typography>
         ) : null}
       </Box>
@@ -238,18 +238,18 @@ export function ImageList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete Image?')}
+              title={t('images.panels.deleteImage')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('images.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('images.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentImage) return
@@ -290,13 +290,15 @@ export function ImageList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Filename')}>
-                  {`${currentImage?.filename || 'untitled'}${currentImage?.extension}` || '-'}
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {`${currentImage?.filename || t('images.panels.untitled')}${
+                    currentImage?.extension
+                  }` || '-'}
                 </DescriptionListItem>
-                <DescriptionListItem label={t('Title')}>
-                  {currentImage?.title || 'Untitled'}
+                <DescriptionListItem label={t('images.panels.title')}>
+                  {currentImage?.title || t('images.panels.untitled')}
                 </DescriptionListItem>
-                <DescriptionListItem label={t('Description')}>
+                <DescriptionListItem label={t('images.panels.description')}>
                   {currentImage?.description || '-'}
                 </DescriptionListItem>
               </DescriptionList>

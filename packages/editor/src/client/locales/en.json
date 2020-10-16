@@ -28,6 +28,54 @@
         "publishedAt": "Published At"
       }
     },
+    "articleEditor": {
+      "overview": {
+        "draftSaved": "Article Draft Saved",
+        "draftCreated": "Article Draft Created",
+        "articlePublished": "Article Published",
+        "notFound": "Article Not Found",
+        "back": "Back",
+        "metadata": "Metadata",
+        "create": "Create",
+        "save": "Save",
+        "publish": "Publish"
+      },
+      "panels": {
+        "metadata": "Metadata",
+        "search": "Search",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published",
+        "publishDate": "Publish Date",
+        "untitled": "Untitled",
+        "close": "Close",
+        "preTitle": "Pre-title",
+        "title": "Title",
+        "authors": "Authors",
+        "tags": "Tags",
+        "slug": "Slug",
+        "lead": "Lead",
+        "addTag": "Press enter to add tag",
+        "breakingNews": "Breaking News",
+        "image": "Image",
+        "chooseImage": "Choose Image",
+        "editImage": "Edit Image",
+        "removeImage": "Remove Image",
+        "chooseArticle": "Choose Article",
+        "peering": "Peering",
+        "peerShare": "Share with peers",
+        "allowPeerPublishing": "Allow peers to publish this article.",
+        "noAuthorsFound": "No Authors found",
+        "loading": "Loading ...",
+        "publishArticle": "Publish Article",
+        "confirm": "Confirm",
+        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "invalidDate": "Invalid Date",
+        "updateDate": "Update Date",
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
     "pages": {
       "overview": {
         "pages": "Pages",
@@ -55,6 +103,56 @@
         "publishedAt": "Published At"
       }
     },
+    "authors": {
+      "overview": {
+        "delete": "Delete",
+        "unknown": "Unknown",
+        "newAuthor": "New Author",
+        "search": "Search",
+        "authors": "Authors",
+        "noAuthorsFound": "No Authors found",
+        "deleteAuthor": "Delete Author?",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "name": "Name",
+        "loadMore": "Load More"
+      },
+      "panels": {
+        "editAuthor": "Edit Author",
+        "createAuthor": "Create Author",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "name": "Name",
+        "image": "Image",
+        "chooseImage": "Choose Image",
+        "editImage": "Remove Image",
+        "removeImage": "Remove Image",
+        "links": "Links",
+        "title": "Title",
+        "link": "Link",
+        "bioInformation": "Biographical Information"
+      }
+    },
+    "images": {
+      "overview": {
+        "imageLibrary": "Image Library",
+        "uploadImage": "Upload Image",
+        "search": "Search",
+        "noImagesFound": "No Images found",
+        "loadMore": "Load More"
+      },
+      "panels": {
+        "untitled": "untitled",
+        "Untitled": "Untitled",
+        "deleteImage": "Delete image?",
+        "confirm": "Confirm",
+        "filename": "Filename",
+        "title": "Title",
+        "description": "Description",
+        "cancel": "Cancel"
+      }
+    },
     "navbar": {
       "articles": "Articles",
       "pages": "Pages",
@@ -72,10 +170,6 @@
     "Login": "Login",
     "Or login with:": "Or login with:",
     "Authenticating against OAuth2": "Authenticating against OAuth2",
-
-    "Peers": "Peers",
-    "Share with peers": "Share with peers",
-    "Allow peers to publish this article.": "Allow peers to publish this article.",
 
     "Add User Role": "Add User Role",
     "Select User Role": "Select User Role",
@@ -100,15 +194,12 @@
     "Token creation success": "Successfully created token, make sure to copy it now. You won’t be able to see it again!",
     "Metadata": "Metadata",
     "Loading": "Loading ...",
-    "No Authors found": "No Authors found",
     "Image": "Image",
     "Choose Image": "Choose Image",
     "Edit Image": "Edit Image",
     "Delete Image?": "Delete Image?",
     "Remove Image": "Remove Image",
-    "Breaking News": "Breaking News",
-    "Press enter to add tag": "Press enter to add tag",
-    "Tags": "Tags",
+
     "New UserRole": "New UserRole",
     "No UserRoles found": "No UserRoles found",
     "Delete User Role?": "Delete User Role?",
@@ -144,8 +235,6 @@
     "Publish Date": "Publish Date",
     "Update Date": "Update Date",
     "Publish Page": "Publish Page",
-    "Article pending publication info": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
-    "Publish Article": "Publish Article",
     "Shared with peers": "Shared with peers",
     "Edit Peer Info": "Edit Peer Info",
     "Theme Color": "Theme Color",
