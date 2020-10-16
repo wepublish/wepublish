@@ -276,6 +276,24 @@ export const Migrations: Migration[] = [
 
         await pages.findOneAndReplace({_id: page._id}, page)
       }
+
+      // Add RTE to page break block if not exists
+
+      const rteFilter = {
+        $or: [
+          {'draft.blocks.type': 'linkPageBreak'},
+          {'published.blocks.type': 'linkPageBreak'},
+          {'pending.blocks.type': 'linkPageBreak'}
+        ],
+        $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
+      }
+      const rteData = {
+        $set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}
+      }
+      await db.collection(CollectionName.Articles).updateMany(rteFilter, rteData)
+      await db.collection(CollectionName.Articles).updateMany(rteFilter, rteData)
+      await db.collection(CollectionName.Pages).updateMany(rteFilter, rteData)
+      await db.collection(CollectionName.Pages).updateMany(rteFilter, rteData)
     }
   }
 ]
