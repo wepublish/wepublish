@@ -326,17 +326,15 @@ export const Migrations: Migration[] = [
     // Add RTE to page break block if not exists in articles and pages
     version: 4,
     async migrate(db) {
-      await db
-        .collection(CollectionName.Articles)
-        .updateMany(
-          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {
-            $set: {
-              'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
-            }
-          },
-          {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
-        )
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
       await db.collection(CollectionName.Articles).updateMany(
         {
           'published.blocks': {
@@ -357,17 +355,15 @@ export const Migrations: Migration[] = [
       )
 
       // Add RTE to page break block if not exists in pages
-      await db
-        .collection(CollectionName.Pages)
-        .updateMany(
-          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {
-            $set: {
-              'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
-            }
-          },
-          {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
-        )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
       await db.collection(CollectionName.Pages).updateMany(
         {
           'published.blocks': {
@@ -375,19 +371,17 @@ export const Migrations: Migration[] = [
           }
         },
         {
-          $set: {'published.blocks.$[type].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+          $set: {'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
         },
         {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
       )
-      await db
-        .collection(CollectionName.Pages)
-        .updateMany(
-          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {
-            $set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
-          },
-          {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
-        )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
     }
   }
 ]
