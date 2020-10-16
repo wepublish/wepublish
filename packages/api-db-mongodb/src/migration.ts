@@ -317,7 +317,7 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Pages)
         .updateMany(
-          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: true}}}},
+          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'pending.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
     }
@@ -365,7 +365,7 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Pages)
         .updateMany(
-          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: true}}}},
+          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'pending.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
     }
