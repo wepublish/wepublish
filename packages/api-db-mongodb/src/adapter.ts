@@ -1,6 +1,6 @@
 import {MongoClient, Db} from 'mongodb'
 
-import {DBAdapter, SortOrder} from '../../api'
+import {DBAdapter, SortOrder} from '@dev7ch/wepublish-api'
 
 import {Migrations, LatestMigration} from './migration'
 import {generateID} from './utility'

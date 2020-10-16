@@ -47,6 +47,6 @@
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "@wepublish/api": "npm:@dev7ch/wepublish-api@*"
+    "@wepublish/api": "*"
   }
 }
