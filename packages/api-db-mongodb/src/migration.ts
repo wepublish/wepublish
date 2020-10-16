@@ -281,12 +281,12 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Articles)
         .updateMany(
-          {'draft.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
       await db.collection(CollectionName.Articles).updateMany(
         {
-          'published.blocks.type': {
+          'published.blocks': {
             $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
           }
         },
@@ -303,12 +303,12 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Pages)
         .updateMany(
-          {'draft.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
       await db.collection(CollectionName.Pages).updateMany(
         {
-          'published.blocks.type': {
+          'published.blocks': {
             $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
           }
         },
@@ -329,12 +329,12 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Articles)
         .updateMany(
-          {'draft.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
       await db.collection(CollectionName.Articles).updateMany(
         {
-          'published.blocks.type': {
+          'published.blocks': {
             $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
           }
         },
@@ -342,7 +342,7 @@ export const Migrations: Migration[] = [
       )
       await db.collection(CollectionName.Articles).updateMany(
         {
-          'pending.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}
         },
         {$set: {'pending.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
       )
@@ -351,12 +351,12 @@ export const Migrations: Migration[] = [
       await db
         .collection(CollectionName.Pages)
         .updateMany(
-          {'draft.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
           {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
         )
       await db.collection(CollectionName.Pages).updateMany(
         {
-          'published.blocks.type': {
+          'published.blocks': {
             $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
           }
         },
