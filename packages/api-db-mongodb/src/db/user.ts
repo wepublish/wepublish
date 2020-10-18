@@ -15,7 +15,7 @@ import {
   LimitType,
   InputCursorType,
   UserSort
-} from '@dev7ch/wepublish-api'
+} from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
 

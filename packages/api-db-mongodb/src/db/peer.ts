@@ -6,7 +6,7 @@ import {
   PeerProfileInput,
   UpdatePeerInput,
   CreatePeerInput
-} from '@dev7ch/wepublish-api'
+} from '@wepublish/api'
 
 import {Collection, Db} from 'mongodb'
 

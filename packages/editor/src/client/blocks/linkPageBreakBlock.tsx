@@ -25,7 +25,7 @@ import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 import {isFunctionalUpdate} from '@karma.run/react'
-
+import {v4 as uuidv4} from 'uuid'
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({
@@ -108,8 +108,7 @@ export function LinkPageBreakBlock({
           width={200}
           height={150}
           marginRight={Spacing.ExtraSmall}
-          flexShrink={0}
-          onClick={() => console.log(value, image)}>
+          flexShrink={0}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
             {image && (
               <Box position="relative" width="100%" height="100%">
@@ -138,27 +137,22 @@ export function LinkPageBreakBlock({
             )}
           </PlaceholderInput>
         </Card>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
-          onClick={() => console.log(value)}>
+        <Card overflow="hidden" width={200} height={150} marginRight={Spacing.ExtraSmall}>
           <Box padding={'10'}>
             <p>Link Settings</p>
             <RadioGroup
-              name={'linkTarget'}
+              name={'radiogroup-' + uuidv4()}
               onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
-              value={linkTarget || 'internal'}>
+              value={linkTarget || '_self'}>
               <Radio
                 value={'_self'}
                 label={'This browser tab'}
-                checked={value.linkTarget === '_self'}
+                checked={(value.linkTarget || linkTarget) === '_self'}
               />
               <Radio
                 value={'_blank'}
                 label={'New browser tab'}
-                checked={value.linkTarget === '_blank'}
+                checked={(value.linkTarget || linkTarget) === '_blank'}
               />
             </RadioGroup>
           </Box>

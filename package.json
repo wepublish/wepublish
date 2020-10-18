@@ -73,9 +73,9 @@
     "examples/*"
   ],
   "dependencies": {
-    "@wepublish/api" : "npm:@dev7ch/wepublish-api@*",
-    "@wepublish/editor" : "npm:@dev7ch/wepublish-editor@*",
-    "@wepublish/api-db-mongodb" : "npm:@dev7ch/wepublish-api-db-mongodb@*"
+    "@wepublish/api" : "npm:@dev7ch/wepublish-api@latest",
+    "@wepublish/editor" : "npm:@dev7ch/wepublish-editor@latest",
+    "@wepublish/api-db-mongodb" : "npm:@dev7ch/wepublish-api-db-mongodb@latest"
   },
   "devDependencies": {
     "@babel/eslint-plugin": "^7.11.5",
