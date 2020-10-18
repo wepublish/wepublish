@@ -276,50 +276,6 @@ export const Migrations: Migration[] = [
 
         await pages.findOneAndReplace({_id: page._id}, page)
       }
-
-      // Add RTE to page break block if not exists in articles
-      await db
-        .collection(CollectionName.Articles)
-        .updateMany(
-          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-        )
-      await db.collection(CollectionName.Articles).updateMany(
-        {
-          'published.blocks': {
-            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
-          }
-        },
-        {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-      )
-      await db.collection(CollectionName.Articles).updateMany(
-        {
-          'pending.blocks.type': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}
-        },
-        {$set: {'pending.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-      )
-
-      // Add RTE to page break block if not exists in pages
-      await db
-        .collection(CollectionName.Pages)
-        .updateMany(
-          {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-        )
-      await db.collection(CollectionName.Pages).updateMany(
-        {
-          'published.blocks': {
-            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
-          }
-        },
-        {$set: {'published.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-      )
-      await db
-        .collection(CollectionName.Pages)
-        .updateMany(
-          {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
-          {$set: {'pending.blocks.$.richText': [{children: [{text: ''}], type: 'paragraph'}]}}
-        )
     }
   },
   {

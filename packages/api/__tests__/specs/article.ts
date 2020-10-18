@@ -1,4 +1,4 @@
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
+import {MongoDBAdapter} from '@dev7ch/wepublish-api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {ArticleInput, CreateArticle} from '../api/private'
