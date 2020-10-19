@@ -17,7 +17,7 @@
     "prerelease": "run-s clean build",
     "release:dev": "node -r dotenv/config ./node_modules/.bin/lerna version --allow-branch dev-release --conventional-graduate --conventional-commits --include-merged-tags --create-release github --force-git-tag",
     "release:next": "node -r dotenv/config ./node_modules/.bin/lerna version --tag-version-prefix='next' prepatch --preid next --conventional-commits --include-merged-tags --create-release github --force-git-tag",
-    "release": "node -r dotenv/config ./node_modules/.bin/lerna version --allow-branch dev-release --conventional-graduate --conventional-commits --create-release github --force-git-tag --yes",
+    "release": "node -r dotenv/config ./node_modules/.bin/lerna version --allow-branch dev-release --conventional-graduate --conventional-commits --create-release github --force-git-tag",
     "publish:next": "lerna publish from-package --ignore-scripts --tag-version-prefix='next'",
     "publish": "lerna publish from-package --ignore-scripts",
     "watch": "run-p --print-label watch:*",
