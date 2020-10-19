@@ -7,7 +7,7 @@ import {
   ImageOutput,
   ImageRotation,
   ImageTransformation
-} from '@dev7ch/wepublish-api'
+} from '@wepublish/api'
 import {FileUpload} from 'graphql-upload'
 import fetch from 'node-fetch'
 import FormData = require('form-data')
