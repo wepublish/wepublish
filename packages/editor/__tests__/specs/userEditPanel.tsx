@@ -11,6 +11,7 @@ Enzyme.configure({adapter: new Adapter()})
 import {UIProvider /*, Select*/} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
+import {MaterialIconFirstPage} from '@karma.run/icons'
 
 // https://github.com/wesbos/waait/blob/master/index.js
 export function wait(amount = 0) {
@@ -42,52 +43,80 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-const MOCKS = [
-  {
-    request: {
-      query: UserRoleListDocument,
-      variables: {
-        first: 200
-      }
-    },
-    result: () => {
-      return {
-        data: {
-          userRoles: {
-            nodes: [
-              {
-                __typename: 'UserRole',
-                id: 'roleId1',
-                name: 'Role 1',
-                description: 'Description for role 1',
-                systemRole: false,
-                permissions: []
-              },
-              {
-                __typename: 'UserRole',
-                id: 'roleId2',
-                name: 'Role 2',
-                description: 'Description for role 2',
-                systemRole: false,
-                permissions: []
-              }
-            ],
-            pageInfo: {
-              hasNextPage: false,
-              hasPreviousPage: false
+const userRoleListDocumentQuery = {
+  request: {
+    query: UserRoleListDocument,
+    variables: {
+      first: 200
+    }
+  },
+  result: () => {
+    return {
+      data: {
+        userRoles: {
+          nodes: [
+            {
+              __typename: 'UserRole',
+              id: 'roleId1',
+              name: 'Role 1',
+              description: 'Description for role 1',
+              systemRole: false,
+              permissions: []
             },
-            totalCount: 0
-          }
+            {
+              __typename: 'UserRole',
+              id: 'roleId2',
+              name: 'Role 2',
+              description: 'Description for role 2',
+              systemRole: false,
+              permissions: []
+            }
+          ],
+          pageInfo: {
+            hasNextPage: false,
+            hasPreviousPage: false
+          },
+          totalCount: 0
         }
       }
     }
   }
-]
+}
+
+const userDocumentQuery = {
+  request: {
+    query: UserDocument,
+    variables: {
+      id: 'fakeId3'
+    }
+  },
+  result: () => ({
+    data: {
+      user: {
+        __typename: 'User',
+        id: 'fakeId3',
+        name: 'Peter Parker',
+        email: 'peter@parker.com',
+        roles: [
+          {
+            __typename: 'UserRole',
+            id: 'roleId1',
+            name: 'Role 1',
+            description: 'Description for role 1',
+            systemRole: false,
+            permissions: []
+          }
+        ]
+      }
+    }
+  })
+}
 
 test('User Edit Panel should render', () => {
+  const mocks = [userRoleListDocumentQuery]
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={MOCKS} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     </UIProvider>
@@ -96,49 +125,8 @@ test('User Edit Panel should render', () => {
 })
 
 test('User Edit Panel should render with id', async () => {
-  const mocks = [
-    {
-      request: {
-        query: UserDocument,
-        variables: {
-          id: 'fakeId3'
-        }
-      },
-      result: () => ({
-        data: {
-          user: {
-            __typename: 'User',
-            id: 'fakeId3',
-            name: 'Peter Parker',
-            email: 'peter@parker.com',
-            roles: []
-          }
-        }
-      })
-    },
-    {
-      request: {
-        query: UserRoleListDocument,
-        variables: {
-          first: 200
-        }
-      },
-      result: () => {
-        return {
-          data: {
-            userRoles: {
-              nodes: [],
-              pageInfo: {
-                hasNextPage: false,
-                hasPreviousPage: false
-              },
-              totalCount: 0
-            }
-          }
-        }
-      }
-    }
-  ]
+  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
+
   let wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={true}>
@@ -152,9 +140,11 @@ test('User Edit Panel should render with id', async () => {
 })
 
 test('User should be able to select and add roles', async () => {
+  const mocks = [userRoleListDocumentQuery]
+
   let wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={MOCKS} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
       </MockedProvider>
     </UIProvider>
@@ -163,9 +153,27 @@ test('User should be able to select and add roles', async () => {
 
   wrapper.find('Select[description="Select User Role"] button').simulate('click')
   wrapper.find('li[role="option"]').last().simulate('click')
-  // .simulate('keyDown', {key: 'ArrowDown', keyCode: 40})
-  // .simulate('keyDown', {key: 'Enter', keyCode: 13})
 
   wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
   expect(wrapper).toMatchSnapshot()
 })
+
+test('User should be able to remove user role', async () => {
+  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
+
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={true}>
+        <UserEditPanel id={'fakeId3'} />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
+
+  wrapper.find('ForwardRef(IconButton)').first().simulate('click')
+  wrapper.find('ForwardRef(MenuButton)').simulate('click')
+
+  expect(wrapper).toMatchSnapshot()
+})
+
+//TODO: clean code and refactor
