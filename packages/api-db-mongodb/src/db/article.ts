@@ -97,6 +97,8 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
             'draft.tags': data.tags,
             'draft.breaking': data.breaking,
 
+            'draft.properties': data.properties,
+
             'draft.blocks': data.blocks
           }
         }

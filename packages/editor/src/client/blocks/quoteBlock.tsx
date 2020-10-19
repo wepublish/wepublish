@@ -3,7 +3,7 @@ import React, {useRef, useEffect} from 'react'
 import {BlockProps, TypographicTextArea, Box, Spacing} from '@karma.run/ui'
 import {QuoteBlockValue} from './types'
 
-export interface QuoteBlockProps extends BlockProps<QuoteBlockValue> {}
+export type QuoteBlockProps = BlockProps<QuoteBlockValue>
 
 export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockProps) {
   const {quote, author} = value

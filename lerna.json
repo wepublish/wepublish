@@ -1,0 +1,35 @@
+{
+  "version": "0.8.5",
+  "changelog": {
+    "repo": "wepublish/wepublish",
+    "cacheDir": ".changelog",
+    "labels": {
+      "PR: Breaking Change :boom:": ":boom: Breaking Change",
+      "PR: New Feature :heart:": ":heart: New Feature",
+      "PR: Bug Fix :bug:": ":bug: Bug Fix",
+      "PR: Polish :nail_care:": ":nail_care: Polish",
+      "PR: Docs :memo:": ":memo: Documentation",
+      "PR: Internal :house:": ":house: Internal",
+      "PR: Revert :leftwards_arrow_with_hook:": ":leftwards_arrow_with_hook: Revert"
+    }
+  },
+  "npmClient": "yarn",
+  "command": {
+    "version": {
+      "allowBranch": "master"
+    },
+    "publish": {
+      "ignoreChanges": [
+        "*.md",
+        "*.txt"
+      ],
+      "message": "chore(release): publish %s"
+    }
+  },
+  "packages": [
+    "packages/api",
+    "packages/api-db-mongodb",
+    "packages/api-media-karma",
+    "packages/editor"
+  ]
+}

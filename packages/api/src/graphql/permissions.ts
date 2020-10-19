@@ -20,13 +20,13 @@ export function isAuthorised(neededPermission: Permission, userRoles: UserRole[]
 
   const userPermissions = userRoles.reduce<string[]>((permissions, role) => {
     if (role.id === 'admin') {
-      return role.permissionIDs.concat(AllPermissions.map(permission => permission.id))
+      return [...permissions, ...AllPermissions.map(permission => permission.id)]
     } else if (role.id === 'editor') {
-      return role.permissionIDs.concat(EditorPermissions.map(permission => permission.id))
+      return [...permissions, ...EditorPermissions.map(permission => permission.id)]
     } else if (role.id === 'peer') {
-      return role.permissionIDs.concat(PeerPermissions.map(permission => permission.id))
+      return [...permissions, ...PeerPermissions.map(permission => permission.id)]
     } else {
-      return role.permissionIDs.concat(permissions)
+      return [...permissions, ...role.permissionIDs]
     }
   }, [])
 

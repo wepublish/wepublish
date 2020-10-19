@@ -1,3 +1,4 @@
+/* eslint i18next/no-literal-string: [0] */
 import path from 'path'
 import webpack from 'webpack'
 

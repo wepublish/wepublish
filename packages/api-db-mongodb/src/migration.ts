@@ -107,7 +107,7 @@ export const Migrations: Migration[] = [
 
       await userRoles.createIndex({name: 1}, {unique: true})
 
-      userRoles.insertMany([
+      await userRoles.insertMany([
         {
           _id: 'admin',
           createdAt: new Date(),
@@ -130,7 +130,7 @@ export const Migrations: Migration[] = [
 
       const user = db.collection(CollectionName.Users)
 
-      user.updateMany({}, [
+      await user.updateMany({}, [
         {
           $set: {
             name: '$email',
@@ -146,7 +146,7 @@ export const Migrations: Migration[] = [
     async migrate(db) {
       const userRoles = db.collection(CollectionName.UserRoles)
 
-      userRoles.insertOne({
+      await userRoles.insertOne({
         _id: 'peer',
         createdAt: new Date(),
         modifiedAt: new Date(),
@@ -236,8 +236,51 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Add MemberPlan Collection and PaymentMethod Collection
+    // Add peering and token collections and migrate ArticleTeaserGridBlock to TeaserGridBlock.
     version: 3,
+    async migrate(db) {
+      const articles = db.collection(CollectionName.Articles)
+      const migrationArticles = await articles.find().toArray()
+
+      for (const article of migrationArticles) {
+        if (article.draft) {
+          article.draft.properties = []
+        }
+
+        if (article.pending) {
+          article.pending.properties = []
+        }
+
+        if (article.published) {
+          article.published.properties = []
+        }
+
+        await articles.findOneAndReplace({_id: article._id}, article)
+      }
+
+      const pages = db.collection(CollectionName.Pages)
+      const migrationPages = await pages.find().toArray()
+
+      for (const page of migrationPages) {
+        if (page.draft) {
+          page.draft.properties = []
+        }
+
+        if (page.pending) {
+          page.pending.properties = []
+        }
+
+        if (page.published) {
+          page.published.properties = []
+        }
+
+        await pages.findOneAndReplace({_id: page._id}, page)
+      }
+    }
+  },
+  {
+    //  Add MemberPlan Collection and PaymentMethod Collection
+    version: 4,
     async migrate(db, locale) {
       const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
         strict: true

@@ -90,6 +90,8 @@ export class MongoDBPageAdapter implements DBPageAdapter {
             'draft.imageID': data.imageID,
             'draft.tags': data.tags,
 
+            'draft.properties': data.properties,
+
             'draft.blocks': data.blocks
           }
         }

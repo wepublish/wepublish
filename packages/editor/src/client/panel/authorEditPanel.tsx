@@ -68,7 +68,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const {data, loading: isLoading, error: loadError} = useAuthorQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [createAuthor, {loading: isCreating, error: createError}] = useCreateAuthorMutation({
@@ -77,7 +77,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [updateAuthor, {loading: isUpdating, error: updateError}] = useUpdateAuthorMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError != undefined
+  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
 
   useEffect(() => {
     if (data?.author) {

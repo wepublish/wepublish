@@ -34,7 +34,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
 
   const isDisabled = isCreating
   const token = data?.createToken.token
-  const hasGeneratedToken = token != undefined
+  const hasGeneratedToken = token !== undefined
 
   useEffect(() => {
     if (createError) {

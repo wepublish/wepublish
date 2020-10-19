@@ -44,7 +44,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
   const {data, loading: isLoading, error: loadError} = useUserRoleQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const {
@@ -53,7 +53,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     error: loadPermissionError
   } = usePermissionListQuery({
     fetchPolicy: 'network-only',
-    skip: id != undefined
+    skip: id !== undefined
   })
 
   const [createUserRole, {loading: isCreating, error: createError}] = useCreateUserRoleMutation()
@@ -65,7 +65,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     isPermissionLoading ||
     isCreating ||
     isUpdating ||
-    loadError != undefined
+    loadError !== undefined
 
   useEffect(() => {
     if (data?.userRole) {
@@ -168,7 +168,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Box>
           {systemRole && (
             <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">is a System Role and can't be edited</Typography>
+              <Typography variant="body1">is a System Role and can not be edited</Typography>
             </Box>
           )}
         </PanelSection>

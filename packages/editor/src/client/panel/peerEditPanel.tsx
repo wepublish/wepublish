@@ -52,7 +52,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   const {data, loading: isLoading, error: loadError} = usePeerQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [createPeer, {loading: isCreating, error: createError}] = useCreatePeerMutation({
@@ -94,14 +94,14 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   }, [loadError, createError, updateError])
 
   useEffect(() => {
-    if (urlString == '') return
+    if (urlString === '') return
 
     // NOTICE: `useQuery` refetch doesn't cancel and tends to clog up on timeout.
     // So we manually handle the preview request.
     try {
       const url = new URL(urlString)
       const abortController =
-        typeof AbortController != 'undefined' ? new AbortController() : undefined
+        typeof AbortController !== 'undefined' ? new AbortController() : undefined
 
       fetch(url.toString(), {
         method: 'POST',
@@ -138,7 +138,9 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
     } catch (err) {
       setLoadingPeerProfile(false)
       setValidURL(false)
-      return () => {}
+      return () => {
+        /* do nothing */
+      }
     }
   }, [urlString])
 
@@ -151,7 +153,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             name,
             slug,
             hostURL: new URL(urlString).toString(),
-            token: token ? token : undefined
+            token: token || undefined
           }
         }
       })

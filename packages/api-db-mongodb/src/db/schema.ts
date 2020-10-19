@@ -2,6 +2,7 @@ import {
   ArticleBlock,
   AvailablePaymentMethod,
   FocalPoint,
+  MetadataProperty,
   NavigationLink,
   PageBlock,
   RichTextNode
@@ -203,6 +204,8 @@ export interface DBArticleRevision {
   lead?: string
   tags: string[]
 
+  properties: MetadataProperty[]
+
   imageID?: string
   authorIDs: string[]
 
@@ -239,6 +242,8 @@ export interface DBPageRevision {
   title: string
   description?: string
   tags: string[]
+
+  properties: MetadataProperty[]
 
   imageID?: string
 

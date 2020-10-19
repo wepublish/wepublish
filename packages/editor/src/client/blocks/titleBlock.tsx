@@ -3,7 +3,7 @@ import {BlockProps, TypographicTextArea} from '@karma.run/ui'
 
 import {TitleBlockValue} from './types'
 
-export interface TitleBlockProps extends BlockProps<TitleBlockValue> {}
+export type TitleBlockProps = BlockProps<TitleBlockValue>
 
 export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockProps) {
   const {title, lead} = value
