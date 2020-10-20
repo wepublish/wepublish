@@ -22,6 +22,8 @@ import {
 import {PageMetadata} from './pageMetadataPanel'
 import {dateTimeLocalString} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
   pendingPublishDate?: Date
@@ -52,17 +54,23 @@ export function PublishPagePanel({
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
+  const {t} = useTranslation()
+
   return (
     <Panel>
       <PanelHeader
-        title="Publish Page"
+        title={t('pageEditor.panels.publishPage')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+          <NavigationButton
+            icon={MaterialIconClose}
+            label={t('pageEditor.panels.close')}
+            onClick={() => onClose()}
+          />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label="Confirm"
+            label={t('pageEditor.panels.confirm')}
             disabled={!publishDate || !updateDate}
             onClick={() => onConfirm(publishDate!, updateDate!)}
           />
@@ -72,15 +80,13 @@ export function PublishPagePanel({
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              There is already a pending publication scheduled at{' '}
-              {pendingPublishDate.toLocaleDateString()} {pendingPublishDate.toLocaleTimeString()}{' '}
-              publishing again will override that publication.
+              {t('pageEditor.panels.pagePending', {pendingPublishDate})}
             </Typography>
           </Box>
         )}
         <TextInput
           type="datetime-local"
-          label="Publish Date"
+          label={t('pageEditor.panels.publishDate')}
           errorMessage={publishDateError}
           icon={MaterialIconQueryBuilder}
           marginBottom={Spacing.Small}
@@ -93,7 +99,7 @@ export function PublishPagePanel({
               setPublishDateError('')
               setPublishDate(publishDate)
             } else {
-              setPublishDateError('Invalid Date')
+              setPublishDateError(t('pageEditor.panels.invalidDate'))
               setPublishDate(undefined)
             }
 
@@ -102,7 +108,7 @@ export function PublishPagePanel({
         />
         <TextInput
           type="datetime-local"
-          label="Update Date"
+          label={t('pageEditor.panels.updateDate')}
           errorMessage={updateDateError}
           icon={MaterialIconUpdate}
           value={updateDateString}
@@ -114,7 +120,7 @@ export function PublishPagePanel({
               setPublishDateError('')
               setUpdateDate(updateDate)
             } else {
-              setUpdateDateError('Invalid Date')
+              setUpdateDateError('pageEditor.panels.invalidDate')
               setUpdateDate(undefined)
             }
 
@@ -124,10 +130,18 @@ export function PublishPagePanel({
       </PanelSection>
       <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label="Title">{metadata.title}</DescriptionListItem>
-          <DescriptionListItem label="Description">{metadata.description}</DescriptionListItem>
-          <DescriptionListItem label="Slug">{metadata.slug}</DescriptionListItem>
-          <DescriptionListItem label="Tags">{metadata.tags.join(', ')}</DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.title')}>
+            {metadata.title}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.description')}>
+            {metadata.description}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.slug')}>
+            {metadata.slug}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.tags')}>
+            {metadata.tags.join(', ')}
+          </DescriptionListItem>
         </DescriptionList>
       </PanelSection>
     </Panel>

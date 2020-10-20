@@ -12,6 +12,8 @@ import {
   Toast
 } from '@karma.run/ui'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ImageUploadPanelProps {
   onClose(): void
   onUpload(file: File): void
@@ -21,6 +23,8 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
   const [errorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const {t} = useTranslation()
+
   async function handleDrop(files: File[]) {
     if (files.length === 0) return
 
@@ -28,7 +32,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
 
     if (!file.type.startsWith('image')) {
       setErrorToastOpen(true)
-      setErrorMessage('Invalid Image')
+      setErrorMessage('articleEditor.panels.învalidImage')
       return
     }
 
@@ -39,16 +43,20 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Upload Image"
+          title={t('articleEditor.panels.uploadImage')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('articleEditor.panels.close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
           <Box height={100}>
             <FileDropInput
               icon={MaterialIconCloudUploadOutlined}
-              text="Drop Image Here"
+              text={t('articleEditor.panels.dropImage')}
               onDrop={handleDrop}
             />
           </Box>
