@@ -39,6 +39,8 @@ import {
 import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
+import {useTranslation} from 'react-i18next'
+
 export function TokenList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
@@ -66,6 +68,8 @@ export function TokenList() {
     refetchQueries: [getOperationNameFromDocument(TokenListDocument)]
   })
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (tokenListError) {
       setErrorToastOpen(true)
@@ -89,11 +93,11 @@ export function TokenList() {
     <>
       <Box>
         <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-          <Typography variant="h1">Tokens</Typography>
+          <Typography variant="h1">{t('tokenList.overview.tokens')}</Typography>
           <Box flexGrow={1} />
           <RouteLinkButton
             color="primary"
-            label="Generate Token"
+            label={t('tokenList.overview.generateToken')}
             disabled={isTokenListLoading}
             route={TokenGenerateRoute.create({})}
           />
@@ -135,18 +139,18 @@ export function TokenList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete Token?"
+              title={t('tokenList.panels.deleteToken')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('tokenList.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('tokenList.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentToken) return
@@ -159,8 +163,8 @@ export function TokenList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentToken?.name || 'Unknown'}
+                <DescriptionListItem label={t('tokenList.panels.name')}>
+                  {currentToken?.name || t('tokenList.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

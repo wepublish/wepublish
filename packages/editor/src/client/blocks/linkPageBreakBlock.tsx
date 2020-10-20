@@ -3,6 +3,8 @@ import React, {useRef, useEffect} from 'react'
 import {BlockProps, TypographicTextArea, Box} from '@karma.run/ui'
 import {LinkPageBreakBlockValue} from './types'
 
+import {useTranslation} from 'react-i18next'
+
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({
@@ -14,6 +16,8 @@ export function LinkPageBreakBlock({
   const {text, linkText, linkURL} = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
   }, [])
@@ -24,7 +28,7 @@ export function LinkPageBreakBlock({
         <TypographicTextArea
           ref={focusRef}
           variant="h2"
-          placeholder="Text"
+          placeholder={t('blocks.linkPageBreak.text')}
           align="center"
           value={text}
           disabled={disabled}
@@ -34,7 +38,7 @@ export function LinkPageBreakBlock({
       <TypographicTextArea
         ref={focusRef}
         variant="body1"
-        placeholder="Link Text"
+        placeholder={t('blocks.linkPageBreak.linkText')}
         align="center"
         value={linkText}
         disabled={disabled}
@@ -43,7 +47,7 @@ export function LinkPageBreakBlock({
       <TypographicTextArea
         ref={focusRef}
         variant="subtitle2"
-        placeholder="Link URL"
+        placeholder={t('blocks.linkPageBreak.linkURL')}
         align="center"
         value={linkURL}
         disabled={disabled}

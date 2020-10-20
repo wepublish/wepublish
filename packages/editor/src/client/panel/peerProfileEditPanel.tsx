@@ -36,6 +36,8 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {ImagedEditPanel} from './imageEditPanel'
 import {getOperationNameFromDocument} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
 export interface ImageEditPanelProps {
@@ -66,6 +68,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   })
   const isDisabled = isLoading || isSaving
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (data?.peerProfile) {
       setLogoImage(data.peerProfile.logo)
@@ -93,25 +97,25 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
     })
 
     setSuccessToastOpen(true)
-    setSuccessMessage('Peer Info Updated')
+    setSuccessMessage('peerList.panels.peerInfoUpdated')
   }
 
   return (
     <>
       <Panel>
         <PanelHeader
-          title={'Edit Peer Info'}
+          title={t('peerList.panels.editPeerInfo')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={'Close'}
+              label={t('peerList.panels.close')}
               onClick={() => onClose?.()}
             />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label={'Save'}
+              label={t('peerList.panels.save')}
               onClick={() => handleSave()}
               disabled={isDisabled}
             />
@@ -132,7 +136,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                           display="flex">
                           <IconButton
                             icon={MaterialIconImageOutlined}
-                            title="Choose Image"
+                            title={t('peerList.panels.chooseImage')}
                             onClick={() => setChooseModalOpen(true)}
                           />
                         </Box>
@@ -143,7 +147,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                           display="flex">
                           <IconButton
                             icon={MaterialIconEditOutlined}
-                            title="Edit Image"
+                            title={t('peerList.panels.editImage')}
                             onClick={() => setEditModalOpen(true)}
                           />
                         </Box>
@@ -154,7 +158,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                           display="flex">
                           <IconButton
                             icon={MaterialIconClose}
-                            title="Remove Image"
+                            title={t('peerList.panels.removeImage')}
                             onClick={() => setLogoImage(undefined)}
                           />
                         </Box>
@@ -167,16 +171,16 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 </PlaceholderInput>
               </Card>
             </PanelSection>
-            <PanelSectionHeader title="Information" />
+            <PanelSectionHeader title={t('peerList.panels.information')} />
             <PanelSection>
               <TextInput
-                label="Name"
+                label={t('peerList.panels.name')}
                 marginBottom={Spacing.ExtraSmall}
                 value={name}
                 onChange={e => setName(e.target.value)}
               />
               <TextInput
-                label="Theme Color"
+                label={t('peerList.panels.themeColor')}
                 marginBottom={Spacing.ExtraSmall}
                 value={themeColor}
                 onChange={e => setThemeColor(e.target.value)}

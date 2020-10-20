@@ -29,6 +29,8 @@ import {
   UserRoleListRoute
 } from './route'
 
+import {useTranslation} from 'react-i18next'
+
 export interface BaseProps {
   children?: ReactNode
 }
@@ -36,48 +38,50 @@ export interface BaseProps {
 export function Base({children}: BaseProps) {
   const {current} = useRoute()
 
+  const {t} = useTranslation()
+
   return (
     <NavigationTemplate
       navigationChildren={
         <>
           <RouteMenuLinkButton
             icon={MaterialIconTextFields}
-            label="Articles"
+            label={t('navbar.articles')}
             route={ArticleListRoute.create({})}
             active={current?.type === RouteType.ArticleList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconInsertDriveFileOutlined}
-            label="Pages"
+            label={t('navbar.pages')}
             route={PageListRoute.create({})}
             active={current?.type === RouteType.PageList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconFaceOutlined}
-            label="Authors"
+            label={t('navbar.authors')}
             route={AuthorListRoute.create({})}
             active={current?.type === RouteType.AuthorList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPhotoLibraryOutlined}
-            label="Image Library"
+            label={t('navbar.imageLibrary')}
             route={ImageListRoute.create({})}
             active={current?.type === RouteType.ImageList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconPermIdentityOutlined}
-            label="Users"
+            label={t('navbar.users')}
             route={UserListRoute.create({})}
             active={current?.type === RouteType.UserList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconHowToRegOutlined}
-            label="User Roles"
+            label={t('navbar.userRoles')}
             route={UserRoleListRoute.create({})}
             active={current?.type === RouteType.UserRoleList}
           />
@@ -93,14 +97,14 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconShareOutlined}
-            label="Peering"
+            label={t('navbar.peering')}
             route={PeerListRoute.create({})}
             active={current?.type === RouteType.PeerList}
           />
 
           <RouteMenuLinkButton
             icon={MaterialIconLockOutlined}
-            label="Tokens"
+            label={t('navbar.tokens')}
             route={TokenListRoute.create({})}
             active={current?.type === RouteType.TokenList}
           />
@@ -109,7 +113,7 @@ export function Base({children}: BaseProps) {
 
           <RouteMenuLinkButton
             icon={MaterialIconPowerSettingsNew}
-            label="Logout"
+            label={t('navbar.logout')}
             route={LogoutRoute.create({})}
           />
         </>

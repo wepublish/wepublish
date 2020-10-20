@@ -20,11 +20,15 @@ import {ImagedEditPanel} from '../panel/imageEditPanel'
 import {ImageRefFragment} from '../api'
 import {ImageBlockValue} from './types'
 
+import {useTranslation} from 'react-i18next'
+
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const {image, caption} = value
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus && !value.image) {
@@ -45,13 +49,13 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
               <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                 <IconButton
                   icon={MaterialIconImageOutlined}
-                  title="Choose Image"
+                  title={t('blocks.image.overview.chooseImage')}
                   onClick={() => setChooseModalOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />
                 <IconButton
                   icon={MaterialIconEditOutlined}
-                  title="Edit Image"
+                  title={t('blocks.image.overview.editImage')}
                   onClick={() => setEditModalOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />
@@ -71,7 +75,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         <TypographicTextArea
           variant="subtitle2"
           align="center"
-          placeholder="Caption"
+          placeholder={t('blocks.image.overview.caption')}
           value={caption}
           onChange={e => {
             onChange({...value, caption: e.target.value})

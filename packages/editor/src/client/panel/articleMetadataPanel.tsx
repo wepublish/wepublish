@@ -38,6 +38,7 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
 export interface ArticleMetadataProperty {
   readonly key: string
   readonly value: string
@@ -70,6 +71,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  const {t} = useTranslation()
+
   function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
   }
@@ -78,22 +81,26 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     <>
       <Panel>
         <PanelHeader
-          title="Metadata"
+          title={t('articleEditor.panels.metadata')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('articleEditor.panels.close')}
+              onClick={() => onClose?.()}
+            />
           }
         />
 
         <PanelSection>
           <TextInput
-            label="Pre-title"
+            label={t('articleEditor.panels.preTitle')}
             value={preTitle}
             marginBottom={Spacing.ExtraSmall}
             onChange={e => onChange?.({...value, preTitle: e.target.value})}
           />
 
           <TextInput
-            label="Title"
+            label={t('articleEditor.panels.title')}
             value={title}
             marginBottom={Spacing.ExtraSmall}
             onChange={e =>
@@ -102,22 +109,22 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           />
 
           <TextArea
-            label="Lead"
+            label={t('articleEditor.panels.lead')}
             value={lead}
             marginBottom={Spacing.ExtraSmall}
             onChange={e => onChange?.({...value, lead: e.target.value})}
           />
 
           <AuthorInput
-            label="Authors"
+            label={t('articleEditor.panels.authors')}
             value={authors}
             marginBottom={Spacing.ExtraSmall}
             onChange={authors => onChange?.({...value, authors: authors || []})}
           />
 
           <TagInput
-            label="Tags"
-            description="Press enter to add tag"
+            label={t('articleEditor.panels.tags')}
+            description={t('articleEditor.panels.addTag')}
             value={tags}
             marginBottom={Spacing.Small}
             onChange={tags => onChange?.({...value, tags: tags ?? []})}
@@ -125,13 +132,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
           <Box>
             <Toggle
-              label="Breaking News"
+              label={t('articleEditor.panels.breakingNews')}
               checked={breaking}
               onChange={e => onChange?.({...value, breaking: e.target.checked})}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Image" />
+        <PanelSectionHeader title={t('articleEditor.panels.image')} />
         <PanelSection dark>
           <Box height={200}>
             <Card>
@@ -146,7 +153,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
-                          title="Choose Image"
+                          title={t('articleEditor.panels.chooseImage')}
                           onClick={() => setChooseModalOpen(true)}
                         />
                       </Box>
@@ -157,7 +164,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
-                          title="Edit Image"
+                          title={t('articleEditor.panels.editImage')}
                           onClick={() => setEditModalOpen(true)}
                         />
                       </Box>
@@ -168,7 +175,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                         display="flex">
                         <IconButton
                           icon={MaterialIconClose}
-                          title="Remove Image"
+                          title={t('articleEditor.panels.removeImage')}
                           onClick={() => onChange?.({...value, image: undefined})}
                         />
                       </Box>
@@ -180,11 +187,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             </Card>
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Peering" />
+        <PanelSectionHeader title={t('articleEditor.panels.peering')} />
         <PanelSection>
           <Toggle
-            label="Share with peers"
-            description="Allow peers to publish this article."
+            label={t('articleEditor.panels.peerShare')}
+            description={t('articleEditor.panels.allowPeerPublishing')}
             checked={shared}
             onChange={e => onChange?.({...value, shared: e.target.checked})}
           />
@@ -242,6 +249,8 @@ function AuthorInputList({
     fetchPolicy: 'network-only'
   })
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     setItems(data?.authors.nodes ?? [])
   }, [data])
@@ -269,10 +278,10 @@ function AuthorInputList({
               </SelectListItem>
             ))
           ) : (
-            <SelectListItem>No Authors found</SelectListItem>
+            <SelectListItem>{t('articleEditor.panels.noAuthorsFound')}</SelectListItem>
           )
         ) : (
-          <SelectListItem>Loading...</SelectListItem>
+          <SelectListItem>{t('articleEditor.panels.loading')}</SelectListItem>
         )
       ) : null}
     </SelectList>

@@ -29,6 +29,7 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
 export interface PageMetadataProperty {
   readonly key: string
   readonly value: string
@@ -57,6 +58,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  const {t} = useTranslation()
+
   function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
   }
@@ -65,15 +68,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     <>
       <Panel>
         <PanelHeader
-          title="Metadata"
+          title={t('pageEditor.panels.metadata')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('pageEditor.panels.close')}
+              onClick={() => onClose?.()}
+            />
           }
         />
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Slug"
+              label={t('pageEditor.panels.slug')}
               value={slug}
               onChange={e => onChange?.({...value, slug: e.target.value})}
             />
@@ -81,7 +88,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Title"
+              label={t('pageEditor.panels.title')}
               value={title}
               onChange={e => onChange?.({...value, title: e.target.value})}
             />
@@ -89,7 +96,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextArea
-              label="Description"
+              label={t('pageEditor.panels.description')}
               value={description}
               onChange={e => onChange?.({...value, description: e.target.value})}
             />
@@ -97,14 +104,14 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.Small}>
             <TagInput
-              label="Tags"
-              description="Press enter to add tag"
+              label={t('pageEditor.panels.tags')}
+              description={t('pageEditor.panels.addTag')}
               value={tags}
               onChange={tags => onChange?.({...value, tags: tags ?? []})}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Image" />
+        <PanelSectionHeader title={t('pageEditor.panels.image')} />
         <PanelSection dark>
           <Box height={200}>
             <Card>
@@ -114,19 +121,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
                         icon={MaterialIconImageOutlined}
-                        title="Choose Image"
+                        title={t('pageEditor.panels.chooseImage')}
                         onClick={() => setChooseModalOpen(true)}
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
                         icon={MaterialIconEditOutlined}
-                        title="Edit Image"
+                        title={t('pageEditor.panels.editImage')}
                         onClick={() => setEditModalOpen(true)}
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
                         icon={MaterialIconClose}
-                        title="Remove Image"
+                        title={t('pageEditor.panels.removeImage')}
                         onClick={() => onChange?.({...value, image: undefined})}
                         margin={Spacing.ExtraSmall}
                       />

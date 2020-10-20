@@ -18,6 +18,8 @@ import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
 
+import {useTranslation} from 'react-i18next'
+
 export interface TokenGeneratePanelProps {
   onClose?(): void
 }
@@ -36,6 +38,8 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   const token = data?.createToken.token
   const hasGeneratedToken = token !== undefined
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (createError) {
       setErrorToastOpen(true)
@@ -51,15 +55,19 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Generate Token"
+          title={t('tokenList.panels.generateToken')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('Close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             !hasGeneratedToken && (
               <NavigationButton
                 icon={MaterialIconSaveOutlined}
-                label="Generate"
+                label={t('tokenList.panels.generate')}
                 disabled={isDisabled}
                 onClick={handleSave}
               />
@@ -71,10 +79,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           {token ? (
             <>
               <Box marginBottom={Spacing.Small}>
-                <Typography variant="body1">
-                  Successfully created token, make sure to copy it now. You won’t be able to see it
-                  again!
-                </Typography>
+                <Typography variant="body1">{t('tokenList.panels.creationSuccess')}</Typography>
               </Box>
               <Card padding={Spacing.ExtraSmall}>
                 <Typography variant="body2" align="center">
@@ -85,7 +90,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           ) : (
             <TextInput
               marginBottom={Spacing.ExtraSmall}
-              label="Name"
+              label={t('tokenList.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
