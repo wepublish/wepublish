@@ -323,7 +323,7 @@ export const RichTextBlock = memo(function RichTextBlock({
       </Toolbar>
       <Editable
         readOnly={disabled}
-        placeholder={t('Start writing')}
+        placeholder={t('blocks.richText.startWriting')}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
       />
@@ -420,15 +420,15 @@ function LinkFormatButton() {
             <PanelSection>
               <Box width={300}>
                 <TextInput
-                  label={t('Link')}
+                  label={t('blocks.richText.link')}
                   errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
                   value={url}
                   onChange={e => setURL(e.target.value)}
                   marginBottom={Spacing.ExtraSmall}
                 />
                 <TextInput
-                  label={t('Title')}
-                  description={t('Optional description for the link')}
+                  label={t('blocks.richText.title')}
+                  description={t('blocks.richText.optionalDescription')}
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                 />

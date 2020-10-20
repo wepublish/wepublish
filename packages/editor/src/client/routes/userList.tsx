@@ -116,10 +116,10 @@ export function UserList() {
           alignItems="center">
           <Link route={UserEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
+              {name || t('userList.overview.unknown')}
             </Typography>
             <Typography variant="body1" color={email ? 'dark' : 'gray'}>
-              {email || 'No Description'}
+              {email || t('userList.overview.noDescription')}
             </Typography>
           </Link>
 
@@ -127,8 +127,16 @@ export function UserList() {
           <OptionButton
             position="left"
             menuItems={[
-              {id: 'resetUserPassword', label: 'Reset Password', icon: MaterialIconRestoreOutlined},
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+              {
+                id: 'resetUserPassword',
+                label: t('userList.overview.resetPassword'),
+                icon: MaterialIconRestoreOutlined
+              },
+              {
+                id: ConfirmAction.Delete,
+                label: t('userList.overview.delete'),
+                icon: MaterialIconDeleteOutlined
+              }
             ]}
             onMenuItemClick={item => {
               setCurrentUser(user)
@@ -152,13 +160,17 @@ export function UserList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('Users')}</Typography>
+        <Typography variant="h1">{t('userList.overview.users')}</Typography>
         <Box flexGrow={1} />
-        <RouteLinkButton color="primary" label={t('New User')} route={UserCreateRoute.create({})} />
+        <RouteLinkButton
+          color="primary"
+          label={t('userList.overview.newUser')}
+          route={UserCreateRoute.create({})}
+        />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('userList.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -168,7 +180,7 @@ export function UserList() {
           users
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No Users found')}
+            {t('userList.overview.noUsersFound')}
           </Typography>
         ) : null}
       </Box>
@@ -211,18 +223,18 @@ export function UserList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete User?')}
+              title={t('userList.panels.deleteUser')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('userList.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('userList.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentUser) return
@@ -243,8 +255,8 @@ export function UserList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Name')}>
-                  {currentUser?.name || 'Unknown'}
+                <DescriptionListItem label={t('userList.panels.name')}>
+                  {currentUser?.name || t('userList.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

@@ -128,17 +128,17 @@ export function Login() {
           <>
             <LoginForm onSubmit={login}>
               <TextInput
-                label={t('Email')}
+                label={t('login.email')}
                 value={email}
-                autoComplete={t('username')}
+                autoComplete={t('login.username')}
                 onChange={event => setEmail(event.target.value)}
                 marginBottom={Spacing.Small}
               />
               <TextInput
                 type="password"
-                label={t('Password')}
+                label={t('login.password')}
                 value={password}
-                autoComplete={t('current-password')}
+                autoComplete={t('login.currentPassword')}
                 onChange={event => setPassword(event.target.value)}
                 marginBottom={Spacing.Small}
               />
@@ -151,7 +151,7 @@ export function Login() {
                   flexDirection="column"
                   marginTop={Spacing.Small}
                   alignItems="center">
-                  <p>{t('Or login with:')}</p>
+                  <p>{t('login.alternativeLogin')}</p>
                   {providerData.authProviders.map(
                     (provider: {url: string; name: string}, index: number) => {
                       return (
@@ -170,7 +170,7 @@ export function Login() {
         )}
         {loadingOAuth2 && (
           <div>
-            <p>{t('Authenticating against OAuth2')}</p>
+            <p>{t('login.OAuth2')}</p>
           </div>
         )}
       </LoginTemplate>

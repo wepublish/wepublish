@@ -42,6 +42,7 @@
       },
       "panels": {
         "metadata": "Metadata",
+        "article": "Article",
         "search": "Search",
         "draft": "Draft",
         "pending": "Pending",
@@ -67,13 +68,39 @@
         "allowPeerPublishing": "Allow peers to publish this article.",
         "noAuthorsFound": "No Authors found",
         "loading": "Loading ...",
+        "loadMore": "Load More",
         "publishArticle": "Publish Article",
         "confirm": "Confirm",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
         "invalidDate": "Invalid Date",
         "updateDate": "Update Date",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "noImagesFound": "No Images found",
+        "invalidImage": "Invalid Image",
+        "dropImage": "Drop Image Here",
+        "images": "Images",
+        "Untitled": "Untitled",
+        "chooseTeaser": "Choose Teaser",
+        "default": "Default",
+        "outlined": "Outlined",
+        "peerArticle": "Peer Article",
+        "page": "Page",
+        "back": "Back",
+        "editTeaser": "Edit Teaser",
+        "displayOptions": "Display Options",
+        "style": "Style",
+        "type": "Type",
+        "emptyPreTitle": "Leave empty to use original pre-title",
+        "emptyTitle": "Leave empty to use original title",
+        "emptyLead": "Leave empty to use original lead.",
+        "emptyImage": "Leave empty to use original image.",
+        "stateDraft": "Status: Draft",
+        "statePending": "Status: Pending",
+        "statePublished": "Status: Published",
+        "teaserStyle": "Style: {{label}}",
+        "status": "Status: {{stateJoin}}",
+        "uploadImage": "Upload Image"
       }
     },
     "pages": {
@@ -92,6 +119,7 @@
         "unpublish": "Unpublish",
         "delete": "Delete",
         "cancel": "Cancel",
+        "close": "Close",
         "unpublishPage": "Unpublish Page?",
         "deletePage": "Delete Page?",
         "confirm": "Confirm",
@@ -101,6 +129,28 @@
         "createdAt": "Created At",
         "updatedAt": "Updated At",
         "publishedAt": "Published At"
+      }
+    },
+    "pageEditor": {
+      "overview": {},
+      "panels": {
+        "metadata": "Metadata",
+        "title": "Title",
+        "slug": "Slug",
+        "description": "Description",
+        "tags": "Tags",
+        "addTag": "Press enter to add tag",
+        "image": "Image",
+        "close": "Close",
+        "chooseImage": "Choose Image",
+        "removeImage": "Remove Image",
+        "editImage": "Edit Image",
+        "publishPage": "Publish Page",
+        "confirm": "Confirm",
+        "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "publishDate": "Publish Date",
+        "invalidDate": "Invalid Date",
+        "updateDate": "Update Date"
       }
     },
     "authors": {
@@ -145,12 +195,210 @@
       "panels": {
         "untitled": "untitled",
         "Untitled": "Untitled",
+        "uploadImage": "Upload Image",
         "deleteImage": "Delete image?",
+        "chooseIMage": "Choose image",
+        "editImage": "Edit Image",
         "confirm": "Confirm",
         "filename": "Filename",
         "title": "Title",
         "description": "Description",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "close": "Close",
+        "upload": "Upload",
+        "save": "Save",
+        "notFound": "Image not found!",
+        "dimension": "Dimension",
+        "imageDimension": "{{imageWidth}} x {{imageHeight}}",
+        "created": "Created",
+        "updated": "Updated",
+        "fileSize": "File size",
+        "link": "Link",
+        "information": "Information",
+        "tags": "Tags",
+        "addTag": "Press enter to add tag",
+        "attribution": "Attribution",
+        "author": "Author",
+        "source": "Source",
+        "sourceLink": "Link to original source of the image.",
+        "license": "License",
+        "imageUpdated": "Image Updated"
+      }
+    },
+    "userList": {
+      "overview": {
+        "unknown": "Unknown",
+        "noDescription": "No Description",
+        "resetPassword": "Reset Password",
+        "delete": "Delete",
+        "users": "Users",
+        "newUser": "New User",
+        "search": "Search",
+        "noUsersFound": "No Users found"
+      },
+      "panels": {
+        "deleteUser": "Delete User?",
+        "save": "Save",
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "name": "Name",
+        "email": "Email",
+        "Unknown": "Unknown",
+        "resetPassword": "Reset Password",
+        "password": "Password",
+        "resetPasswordFor": "Reset the password for {{userName}}",
+        "passwordChangeSuccess": "Password successfuly changed!",
+        "editUser": "Edit User",
+        "userRoles": "User Roles",
+        "remove": "Remove",
+        "addUserRole": "Add User Role",
+        "selectUserRole": "Select User Role"
+      }
+    },
+    "userRoles": {
+      "overview": {
+        "userRoles": "User Roles",
+        "noDescription": "No Description",
+        "newUserRole": "New UserRole",
+        "delete": "Delete",
+        "search": "Search",
+        "noUserRolesFound": "No UserRoles found",
+        "Unknown": "Unknown"
+      },
+      "panels": {
+        "deleteUserRole": "Delete User Role?",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "editUserRole": "Edit User Role",
+        "createUserRole": "Create User Role",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "description": "Description",
+        "permissions": "Permissions",
+        "systemRole": "is a System Role and can not be edited"
+      }
+    },
+    "peerList": {
+      "overview": {
+        "peers": "Peers",
+        "newPeer": "New Peer",
+        "noPeersFound": "No peers found"
+      },
+      "panels": {
+        "peerUpdated": "Peer updated",
+        "peerCreated": "Peer created",
+        "editPeerInfo": "Edit Peer Info",
+        "peerInfoUpdated": "Peer Info Updated",
+        "deletePeer": "Delete Peer",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "editPeer": "Edit Peer",
+        "createPeer": "Create Peer",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "URL": "URL",
+        "token": "Token",
+        "information": "Information",
+        "themeColor": "Theme Color",
+        "chooseImage": "Choose Image",
+        "editImage": "Edit Image",
+        "removeImage": "Remove Image"
+      }
+    },
+    "tokenList": {
+      "overview": {
+        "generateToken": "Generate Token",
+        "tokens": "Tokens"
+      },
+      "panels": {
+        "deleteToken": "Delete Token?",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "generateToken": "Generate Token",
+        "generate": "Generate",
+        "creationSuccess": "Token creation success"
+      }
+    },
+    "blocks": {
+      "imageGallery": {
+        "overview": {
+          "editGalleryList": "Edit Gallery List",
+          "previous": "Previous",
+          "next": "Next",
+          "add": "Add",
+          "chooseImage": "Choose Image",
+          "editImage": "Edit Image",
+          "removeImage": "Remove Image",
+          "caption": "Caption"
+        },
+        "panels": {
+          "editGallery": "Edit Gallery",
+          "close": "Close",
+          "chooseImage": "Choose Image",
+          "editImage": "Edit Image",
+          "removeImage": "Remove Image",
+          "caption": "Caption"
+        }
+      },
+      "embeds": {
+        "overview": {
+          "editEmbed": "Edit Embed"
+        },
+        "panels": {
+          "invalidURL": "Invalid URL or iframe code",
+          "GDPRInfo": "Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.",
+          "close": "Close",
+          "confirm": "Confirm",
+          "embed": "Embed",
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
+          "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
+          "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
+          "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
+          "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
+          "fbPosts": "https://www.facebook.com/id/posts/id/",
+          "editEmbed": "Edit Embed"
+        }
+      },
+      "image": {
+        "overview": {
+          "chooseImage": "Choose Image",
+          "caption": "Caption",
+          "editImage": "Edit Image"
+        }
+      },
+      "linkPageBreak": {
+        "text": "Text",
+        "linkText": "Link Text",
+        "linkURL": "Link URL"
+      },
+      "listicle": {
+        "title": "Title",
+        "editImage": "Edit Image",
+        "chooseImage": "Choose Image",
+        "removeImage": "Remove Image"
+      },
+      "quote": {
+        "quote": "Quote",
+        "author": "Author"
+      },
+      "richText": {
+        "startWriting": "Start writing ...",
+        "optionalDescription": "Optional description for the link",
+        "link": "Link",
+        "title": "Title"
+      },
+      "title": {
+        "title": "Title",
+        "leadText": "Lead Text "
       }
     },
     "navbar": {
@@ -164,12 +412,14 @@
       "tokens": "Tokens",
       "logout": "Logout"
     },
-
-    "Author": "Author",
-
-    "Login": "Login",
-    "Or login with:": "Or login with:",
-    "Authenticating against OAuth2": "Authenticating against OAuth2",
+    "login": {
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "currentPassword": "Current password",
+      "alternativeLogin": "Or login with: ",
+      "O2Auth": "Authenticating against OAuth2: "
+    },
 
     "Add User Role": "Add User Role",
     "Select User Role": "Select User Role",
@@ -208,7 +458,6 @@
     "Delete Peer?": "Delete Peer?",
     "No peers found": "No peers found",
     "No Users found": "No Users found",
-    "Delete User?": "Delete User?",
     "Create": "Create",
     "Save": "Save",
     "Publish": "Publish",
@@ -219,18 +468,8 @@
     "Description": "Description",
     "New Author": "New Author",
     "Delete Author?": "Delete Author?",
-    "is a System Role and can not be edited": "is a System Role and can not be edited",
-    "Permissions": "Permissions",
     "Peer Article": "Peer Article",
-    "teaserStyle": "Style: {{label}}",
-    "Type": "Type",
-    "Leave empty to use original image.": "Leave empty to use original image.",
-    "Leave empty to use original lead.": "Leave empty to use original lead.",
-    "Leave empty to use original title.": "Leave empty to use original title.",
-    "Leave empty to use original pre-title.": "Leave empty to use original pre-title.",
-    "Display Options": "Display Options",
-    "Reset the password for": "Reset the password for {{userName}}",
-    "Password successfuly changed!": "Password successfuly changed!",
+
     "Slug": "Slug",
     "Publish Date": "Publish Date",
     "Update Date": "Update Date",
@@ -239,29 +478,16 @@
     "Edit Peer Info": "Edit Peer Info",
     "Theme Color": "Theme Color",
     "URL": "URL",
-    "Drop Image Here": "Drop Image Here",
-    "Attribution": "Attribution",
-    "License": "License",
-    "Source": "Source",
-    "Link to original source of the image.": "Link to original source of the image.",
-    "Image Updated": "Image Updated",
-    "File Size": "File Size",
-    "Dimension": "Dimension",
-    "imageDimension": "{{imageWidth}} x {{imageHeight}}",
+
     "Created": "Created",
     "Updated": "Updated",
     "Caption": "Caption",
     "Edit Gallery": "Edit Gallery",
     "Embed": "Embed",
     "Edit Embed": "Edit Embed",
-    "Social Media List": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
-    "Embed code attributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
-    "GDPR-info": "Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.",
-    "Info alternative style setting": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
     "Biographical Information": "Biographical Information",
     "username": "username",
-    "current-password": "current-password",
-    "status": "Status: {{stateJoin}}",
+
     "Link Text": "Link Text",
     "Link URL": "Link URL",
     "Text": "Text",
@@ -269,12 +495,6 @@
     "Previous": "Previous",
     "Next": "Next",
     "Edit Gallery List": "Edit Gallery List",
-    "Please enable JavaScript!": "Please enable JavaScript!",
-    "iframe1-sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
-    "iframe2-sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
-    "fb-posts": "https://www.facebook.com/id/posts/id/",
-    "state_draft": "Status: Draft",
-    "state_pending": "Status: Pending",
-    "state_published": "Status: Published"
+    "Please enable JavaScript!": "Please enable JavaScript!"
   }
 }

@@ -53,11 +53,11 @@ export function GalleryListEditPanel({id, initialImages, onClose}: AuthorEditPan
   return (
     <Panel>
       <PanelHeader
-        title={t('Edit Gallery')}
+        title={t('blocks.imageGallery.panels.editGallery')}
         leftChildren={
           <NavigationButton
             icon={MaterialIconClose}
-            label={t('Close')}
+            label={t('blocks.imageGallery.panels.close')}
             onClick={() => onClose?.(images.map(({value}) => value))}
           />
         }
@@ -93,19 +93,19 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
                 <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                   <IconButton
                     icon={MaterialIconImageOutlined}
-                    title={t('Choose Image')}
+                    title={t('blocks.imageGallery.panels.chooseImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setChooseModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
-                    title={t('Edit Image')}
+                    title={t('blocks.imageGallery.panels.editImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setEditModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconClose}
-                    title={t('Remove Image')}
+                    title={t('blocks.imageGallery.panels.removeImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => onChange(value => ({...value, image: null}))}
                   />
@@ -118,7 +118,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
         <TypographicTextArea
           variant="subtitle2"
           align="center"
-          placeholder={t('Caption')}
+          placeholder={t('blocks.imageGallery.panels.caption')}
           value={caption}
           onChange={e => {
             const caption = e.target.value

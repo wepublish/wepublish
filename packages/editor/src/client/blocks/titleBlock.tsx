@@ -31,7 +31,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         ref={focusRef}
         variant="title"
         align="center"
-        placeholder={t('Title')}
+        placeholder={t('blocks.title.title')}
         value={title}
         disabled={disabled}
         onChange={e => onChange({...value, title: e.target.value})}
@@ -39,7 +39,7 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
       <TypographicTextArea
         variant="body1"
         align="center"
-        placeholder={t('Lead text')}
+        placeholder={t('blocks.title.leadText')}
         value={lead}
         disabled={disabled}
         onChange={e => onChange({...value, lead: e.target.value})}

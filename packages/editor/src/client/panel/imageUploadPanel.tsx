@@ -32,7 +32,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
 
     if (!file.type.startsWith('image')) {
       setErrorToastOpen(true)
-      setErrorMessage('Invalid Image')
+      setErrorMessage('articleEditor.panels.învalidImage')
       return
     }
 
@@ -43,11 +43,11 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title={t('Upload Image')}
+          title={t('articleEditor.panels.uploadImage')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('articleEditor.panels.close')}
               onClick={() => onClose()}
             />
           }
@@ -56,7 +56,7 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
           <Box height={100}>
             <FileDropInput
               icon={MaterialIconCloudUploadOutlined}
-              text={t('Drop Image Here')}
+              text={t('articleEditor.panels.dropImage')}
               onDrop={handleDrop}
             />
           </Box>

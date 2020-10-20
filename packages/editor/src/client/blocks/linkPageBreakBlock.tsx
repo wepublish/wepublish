@@ -28,7 +28,7 @@ export function LinkPageBreakBlock({
         <TypographicTextArea
           ref={focusRef}
           variant="h2"
-          placeholder={t('Text')}
+          placeholder={t('blocks.linkPageBreak.text')}
           align="center"
           value={text}
           disabled={disabled}
@@ -38,7 +38,7 @@ export function LinkPageBreakBlock({
       <TypographicTextArea
         ref={focusRef}
         variant="body1"
-        placeholder={t('Link Text')}
+        placeholder={t('blocks.linkPageBreak.linkText')}
         align="center"
         value={linkText}
         disabled={disabled}
@@ -47,7 +47,7 @@ export function LinkPageBreakBlock({
       <TypographicTextArea
         ref={focusRef}
         variant="subtitle2"
-        placeholder={t('Link URL')}
+        placeholder={t('blocks.linkPageBreak.linkURL')}
         align="center"
         value={linkURL}
         disabled={disabled}

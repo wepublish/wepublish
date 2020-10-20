@@ -93,11 +93,11 @@ export function TokenList() {
     <>
       <Box>
         <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-          <Typography variant="h1">{t('Tokens')}</Typography>
+          <Typography variant="h1">{t('tokenList.overview.tokens')}</Typography>
           <Box flexGrow={1} />
           <RouteLinkButton
             color="primary"
-            label={t('Generate Token')}
+            label={t('tokenList.overview.generateToken')}
             disabled={isTokenListLoading}
             route={TokenGenerateRoute.create({})}
           />
@@ -139,18 +139,18 @@ export function TokenList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete Token?')}
+              title={t('tokenList.panels.deleteToken')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('tokenList.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('tokenList.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentToken) return
@@ -163,8 +163,8 @@ export function TokenList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Name')}>
-                  {currentToken?.name || 'Unknown'}
+                <DescriptionListItem label={t('tokenList.panels.name')}>
+                  {currentToken?.name || t('tokenList.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>
