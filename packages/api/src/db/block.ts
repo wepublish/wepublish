@@ -90,6 +90,7 @@ export interface EmbedBlock {
 }
 
 export interface MapLeafletItem {
+  address: string
   lat: number
   lng: number
   title: string

@@ -1,41 +1,26 @@
 import React, {useState} from 'react'
-import {Map, TileLayer, Marker} from 'react-leaflet'
+import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './leaflet.css'
+import {BlockProps, Box, ZIndex, IconButton, Spacing, TextInput, Drawer} from '@karma.run/ui'
+import {MaterialIconMoreVert} from '@karma.run/icons'
+import {MapLeafletBlockValue} from '../types'
+import {MapLeafletEditPanel} from '../../panel/mapLeafletEditPanel'
+import {ElementID} from '../../../shared/elementID'
+import {ClientSettings} from '../../../shared/types'
 import Leaflet from 'leaflet'
 import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
 
-import {
-  BlockProps,
-  FieldProps,
-  Box,
-  Card,
-  PlaceholderInput,
-  ZIndex,
-  IconButton,
-  Spacing,
-  TypographicTextArea,
-  TextInput,
-  Drawer,
-  Image
-} from '@karma.run/ui'
-
-import {
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconClose
-} from '@karma.run/icons'
-
-import {ImageSelectPanel} from '../../panel/imageSelectPanel'
-import {ImagedEditPanel} from '../../panel/imageEditPanel'
-import {MapLeafletBlockValue, MapLeafletItem} from '../types'
-
 export type MapLeafletBlockProps = BlockProps<MapLeafletBlockValue>
 
-export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafletBlockValue>) {
-  const {zoom, centerLat, centerLng, caption} = value
+export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockValue>) {
+  const {zoom, centerLat, centerLng, caption, items} = value
+  const [isMapLeafletDialogOpen, setMapLeafletDialogOpen] = useState(false)
+  const {tilelayerURL, tilelayerAttribution}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
   const markerIcon = Leaflet.icon({
     iconRetinaUrl: marker2x,
     iconUrl: marker,
@@ -45,112 +30,64 @@ export function MapLeafletBlock({value, onChange, disabled}: BlockProps<MapLeafl
 
   return (
     <>
-      <Map
-        center={[centerLat, centerLng]}
-        zoom={zoom}
-        style={{width: '100%', height: '45vh'}}
-        onViewportChange={e => {
-          if (e.center && e.zoom) {
-            onChange({...value, centerLat: e.center[0], centerLng: e.center[1], zoom: e.zoom})
-          }
-        }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <Marker position={[centerLat, centerLng]} icon={markerIcon}></Marker>
-      </Map>
-      <Box marginTop={Spacing.ExtraSmall}>
-        <TextInput
-          label="Caption"
-          description="Map description"
-          value={caption}
-          onChange={event => {
-            onChange({...value, caption: event.target.value})
-          }}
-          marginBottom={Spacing.Small}
-        />
-      </Box>
-    </>
-  )
-}
-// This function will be used for Map-items and moved to another file
-// but meanwhile needs to stay here
-export function MapLeafletItemElement({value, onChange}: FieldProps<MapLeafletItem>) {
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const [isEditModalOpen, setEditModalOpen] = useState(false)
-  // We won't need that ts-ignore anymore later on but for now it's necessary
-  const {image, title, lat, lng, description} = value
-  // WOorkaround to prevent TS6133-error; won't be necessary anymore in map-leaflet-items
-  console.log(lat, lng, description)
-
-  return (
-    <>
-      <Box display="flex" flexDirection="row">
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
-          flexShrink={0}>
-          <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-            {image && (
-              <Box position="relative" width="100%" height="100%">
-                <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                  <IconButton
-                    icon={MaterialIconImageOutlined}
-                    title="Choose Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setChooseModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconEditOutlined}
-                    title="Edit Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setEditModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconClose}
-                    title="Remove Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => onChange(value => ({...value, image: null}))}
-                  />
-                </Box>
-                {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
-              </Box>
-            )}
-          </PlaceholderInput>
-        </Card>
-        <Box flexGrow={1}>
-          <TypographicTextArea
-            variant="h1"
-            placeholder="Title"
-            value={title}
-            onChange={e => {
-              const title = e.target.value
-              onChange(value => ({...value, title}))
+      <Box position="relative" width="100%" height="100%">
+        <Map
+          center={[centerLat, centerLng]}
+          zoom={zoom}
+          style={{width: '100%', height: '45vh'}}
+          onViewportChange={viewport => {
+            if (viewport.center && viewport.zoom) {
+              onChange({
+                ...value,
+                centerLat: viewport.center[0],
+                centerLng: viewport.center[1],
+                zoom: viewport.zoom
+              })
+            }
+          }}>
+          <TileLayer url={tilelayerURL} attribution={tilelayerAttribution} />
+          {items.map((item, index) => (
+            <Marker position={[item.value.lat, item.value.lng]} key={index} icon={markerIcon}>
+              <Popup>
+                <p>
+                  <b>{item.value.title}</b>
+                </p>
+                {item.value.description}
+              </Popup>
+            </Marker>
+          ))}
+        </Map>
+        <Box position="absolute" zIndex={ZIndex.Default} top={0} right={0}>
+          <IconButton
+            icon={MaterialIconMoreVert}
+            title={'Add point of interest'}
+            variant="large"
+            active
+            onClick={() => setMapLeafletDialogOpen(true)}
+            margin={Spacing.ExtraSmall}
+          />
+        </Box>
+        <Box marginTop={Spacing.ExtraSmall}>
+          <TextInput
+            label="Caption"
+            description="Map description"
+            value={caption}
+            onChange={event => {
+              onChange({...value, caption: event.target.value})
             }}
+            marginBottom={Spacing.Small}
           />
         </Box>
       </Box>
 
-      <Drawer open={isChooseModalOpen} width={480}>
+      <Drawer open={isMapLeafletDialogOpen} width={480}>
         {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={image => {
-              setChooseModalOpen(false)
-              onChange(value => ({...value, image}))
+          <MapLeafletEditPanel
+            initialItems={value.items}
+            onClose={items => {
+              onChange({...value, items})
+              setMapLeafletDialogOpen(false)
             }}
-          />
-        )}
-      </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <ImagedEditPanel
-            id={image!.id}
-            onClose={() => setEditModalOpen(false)}
-            onSave={() => setEditModalOpen(false)}
           />
         )}
       </Drawer>

@@ -1,6 +1,8 @@
 import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {ClientSettings} from '../shared/types'
+import {ElementID} from '../shared/elementID'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -126,4 +128,33 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
     }
     return previousValue
   }, {})
+}
+
+export async function queryOpenCage(query: string): Promise<MarkerPoint[]> {
+  const {opencageApiKey}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
+  const fetchURL = `https://api.opencagedata.com/geocode/v1/json?key=${opencageApiKey}&q=${query}&limit=5&pretty=1`
+  const resultItems: MarkerPoint[] = []
+  try {
+    const response = await fetch(fetchURL)
+    const json = await response.json()
+    const items = json.results.map((res: any) => {
+      return {
+        lat: res.geometry.lat,
+        lng: res.geometry.lng,
+        address: res.formatted
+      }
+    })
+    resultItems.push(...items)
+  } catch (error) {
+    return []
+  }
+  return resultItems
+}
+
+export interface MarkerPoint {
+  lat: number
+  lng: number
+  address: string
 }

@@ -420,6 +420,7 @@ export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
 export const GraphQLMapLeafletItem = new GraphQLObjectType<MapLeafletItem, Context>({
   name: 'MapLeafletItem',
   fields: {
+    address: {type: GraphQLNonNull(GraphQLString)},
     lat: {type: GraphQLNonNull(GraphQLFloat)},
     lng: {type: GraphQLNonNull(GraphQLFloat)},
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -548,6 +549,7 @@ export const GraphQLImageGalleryBlockInput = new GraphQLInputObjectType({
 export const GraphQLMapLeafletItemInput = new GraphQLInputObjectType({
   name: 'MapLeafletItemInput',
   fields: {
+    address: {type: GraphQLNonNull(GraphQLString)},
     lat: {type: GraphQLNonNull(GraphQLFloat)},
     lng: {type: GraphQLNonNull(GraphQLFloat)},
     title: {type: GraphQLNonNull(GraphQLString)},
