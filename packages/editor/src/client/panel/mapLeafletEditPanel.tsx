@@ -164,7 +164,7 @@ function AddressInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  //const items: MarkerPoint[] = []
+  // const items: MarkerPoint[] = []
   const [items, setItems] = useState<MarkerPoint[]>([])
 
   useEffect(() => {
