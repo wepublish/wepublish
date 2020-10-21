@@ -30,6 +30,8 @@ import {ImageRefFragment} from '../api'
 import {ImageGalleryBlockValue} from './types'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export function ImageGalleryBlock({
   value,
   onChange,
@@ -52,6 +54,8 @@ export function ImageGalleryBlock({
   const hasNext = index < value.images.length - 1
 
   const isNewIndex = !image && !caption && index >= value.images.length
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus) {
@@ -89,7 +93,7 @@ export function ImageGalleryBlock({
         <Box flexBasis="0" flexGrow={1} flexShrink={1}>
           <IconButton
             icon={MaterialIconList}
-            title="Edit Gallery List"
+            title={t('blocks.imageGallery.overview.editGalleryList')}
             onClick={() => setGalleryListEditModalOpen(true)}
             marginRight={Spacing.Tiny}
             disabled={disabled}
@@ -103,21 +107,21 @@ export function ImageGalleryBlock({
         <Box flexBasis="0" display="flex" justifyContent="flex-end" flexGrow={1} flexShrink={1}>
           <IconButton
             icon={MaterialIconChevronLeft}
-            title="Previous"
+            title={t('blocks.imageGallery.overview.previous')}
             onClick={() => setIndex(index => index - 1)}
             disabled={disabled || !hasPrevious}
             marginRight={Spacing.Tiny}
           />
           <IconButton
             icon={MaterialIconChevronRight}
-            title="Next"
+            title={t('blocks.imageGallery.overview.next')}
             onClick={() => setIndex(index => index + 1)}
             disabled={disabled || !hasNext}
             marginRight={Spacing.ExtraSmall}
           />
           <IconButton
             icon={MaterialIconAdd}
-            title="Add"
+            title={t('blocks.imageGallery.overview.add')}
             onClick={() => setIndex(value.images.length)}
             disabled={disabled || isNewIndex}
           />
@@ -131,21 +135,21 @@ export function ImageGalleryBlock({
                 <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                   <IconButton
                     icon={MaterialIconImageOutlined}
-                    title="Choose Image"
+                    title={t('blocks.imageGallery.overview.chooseImage')}
                     onClick={() => setChooseModalOpen(true)}
                     disabled={disabled}
                     margin={Spacing.ExtraSmall}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
-                    title="Edit Image"
+                    title={t('blocks.imageGallery.overview.editImage')}
                     onClick={() => setEditModalOpen(true)}
                     disabled={disabled}
                     margin={Spacing.ExtraSmall}
                   />
                   <IconButton
                     icon={MaterialIconClose}
-                    title="Remove Image"
+                    title={t('blocks.imageGallery.overview.removeImage')}
                     margin={Spacing.ExtraSmall}
                     disabled={disabled}
                     onClick={() => handleImageChange(null)}
@@ -162,7 +166,7 @@ export function ImageGalleryBlock({
         <TypographicTextArea
           variant="subtitle2"
           align="center"
-          placeholder="Caption"
+          placeholder={t('blocks.imageGallery.overview.caption')}
           value={caption}
           disabled={disabled}
           onChange={e => {

@@ -55,6 +55,7 @@ export type ArticleInput = {
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
@@ -85,6 +86,7 @@ export type ArticleRevision = {
   lead?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
+  properties: Array<Properties>;
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
@@ -709,6 +711,7 @@ export type PageInput = {
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
@@ -735,6 +738,7 @@ export type PageRevision = {
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
+  properties: Array<Properties>;
   image?: Maybe<Image>;
   blocks: Array<Block>;
 };
@@ -839,6 +843,19 @@ export type Point = {
   __typename?: 'Point';
   x: Scalars['Float'];
   y: Scalars['Float'];
+};
+
+export type Properties = {
+  __typename?: 'Properties';
+  key: Scalars['String'];
+  value: Scalars['String'];
+  public: Scalars['Boolean'];
+};
+
+export type PropertiesInput = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+  public: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -1405,6 +1422,9 @@ export type ArticleQuery = (
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
+      )>, properties: Array<(
+        { __typename?: 'Properties' }
+        & Pick<Properties, 'key' | 'value' | 'public'>
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
@@ -2000,6 +2020,9 @@ export type PageQuery = (
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
+      )>, properties: Array<(
+        { __typename?: 'Properties' }
+        & Pick<Properties, 'key' | 'value' | 'public'>
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -3037,6 +3060,11 @@ export const ArticleDocument = gql`
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
       authors {
         ...AuthorRef
       }
@@ -3757,6 +3785,11 @@ export const PageDocument = gql`
         ...ImageRef
       }
       tags
+      properties {
+        key
+        value
+        public
+      }
       blocks {
         ...FullBlock
       }

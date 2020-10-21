@@ -44,6 +44,8 @@ import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../bl
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ArticleEditorProps {
   readonly id?: string
 }
@@ -54,6 +56,8 @@ const InitialArticleBlocks: BlockValue[] = [
 ]
 
 export function ArticleEditor({id}: ArticleEditorProps) {
+  const {t} = useTranslation()
+
   const dispatch = useRouteDispatch()
 
   const [
@@ -89,6 +93,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     lead: '',
     authors: [],
     tags: [],
+    properties: [],
     shared: false,
     breaking: false,
     image: undefined
@@ -126,7 +131,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
-      const {slug, preTitle, title, lead, tags, breaking, authors, image, blocks} = latest
+      const {
+        slug,
+        preTitle,
+        title,
+        lead,
+        tags,
+        breaking,
+        authors,
+        image,
+        blocks,
+        properties
+      } = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -137,6 +153,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title,
         lead: lead ?? '',
         tags,
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -165,6 +186,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
+      properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock)
     }
   }
@@ -177,7 +199,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Saved')
+      setSuccessMessage(t('articleEditor.overview.draftSaved'))
     } else {
       const {data} = await createArticle({variables: {input}})
 
@@ -187,10 +209,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           route: ArticleEditRoute.create({id: data?.createArticle.id})
         })
       }
-
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Created')
+      setSuccessMessage(t('articleEditor.overview.draftCreated'))
     }
   }
 
@@ -217,13 +238,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Published')
+      setSuccessMessage(t('articleEditor.overview.articlePublished'))
     }
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage('Article Not Found')
+      setErrorMessage(t('articleEditor.overview.notFound'))
       setErrorToastOpen(true)
     }
   }, [isNotFound])
@@ -236,7 +257,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             leftChildren={
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
-                label="Back"
+                label={t('articleEditor.overview.back')}
                 route={ArticleListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -247,7 +268,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               <>
                 <NavigationButton
                   icon={MaterialIconInsertDriveFileOutlined}
-                  label="Metadata"
+                  label={t('articleEditor.overview.metadata')}
                   onClick={() => setMetaDrawerOpen(true)}
                   disabled={isDisabled}
                 />
@@ -255,7 +276,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 {isNew && createData == null ? (
                   <NavigationButton
                     icon={MaterialIconSaveOutlined}
-                    label="Create"
+                    label={t('articleEditor.overview.create')}
                     onClick={() => handleSave()}
                     disabled={isDisabled}
                   />
@@ -263,13 +284,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   <>
                     <NavigationButton
                       icon={MaterialIconSaveOutlined}
-                      label="Save"
+                      label={t('articleEditor.overview.save')}
                       onClick={() => handleSave()}
                       disabled={isDisabled}
                     />
                     <NavigationButton
                       icon={MaterialIconPublishOutlined}
-                      label="Publish"
+                      label={t('articleEditor.overview.publish')}
                       onClick={() => setPublishDialogOpen(true)}
                       disabled={isDisabled}
                     />

@@ -17,7 +17,12 @@ import {Context} from '../context'
 import {GraphQLImage} from './image'
 import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
 import {GraphQLSlug} from './slug'
-import {GraphQLPageInfo} from './common'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLMetadataPropertyPublic,
+  GraphQLPageInfo
+} from './common'
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
@@ -68,6 +73,8 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
     imageID: {type: GraphQLID},
 
     blocks: {
@@ -92,6 +99,8 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
 
     image: {
       type: GraphQLImage,
@@ -158,6 +167,13 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
     title: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    properties: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) => {
+        return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
+      }
+    },
 
     image: {
       type: GraphQLImage,

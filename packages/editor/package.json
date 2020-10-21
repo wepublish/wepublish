@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -32,7 +32,7 @@
     "build": "run-p build:*",
     "build:client": "webpack --mode production",
     "build:server": "tsc -b ./src/shared ./src/server",
-    "watch": "npm-run-all copy-license sync-package-info --parallel watch:*",
+    "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
@@ -42,8 +42,7 @@
     "clean": "shx rm -rf ./dist ./assets",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
-    "sync-package-info": "node ./../../scripts/syncPackageInfo.js ./src/shared/version.ts",
-    "prepare": "run-s clean copy-license sync-package-info build crlf",
+    "prepare": "run-s clean copy-license build crlf",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest --coverage"
@@ -59,11 +58,15 @@
     "core-js": "^3.4.8",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "i18next": "^19.7.0",
+    "i18next-browser-languagedetector": "^6.0.1",
     "nanoid": "^2.1.7",
     "pretty-bytes": "5.3.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.18",
+    "react-i18next": "^11.7.3",
     "react-sortable-hoc": "^1.11.0",
     "regenerator-runtime": "^0.13.3",
     "slate": "^0.58.1",
@@ -124,6 +127,38 @@
     "rules": {
       "react/display-name": [
         0
+      ],
+      "i18next/no-literal-string": [
+        2,
+        {
+          "markupOnly": true,
+          "ignoreAttribute": [
+            "display",
+            "flexDirection",
+            "alignItems",
+            "element",
+            "variant",
+            "color",
+            "align",
+            "position",
+            "justifyContent",
+            "overflow",
+            "target",
+            "spacing",
+            "sdkLanguage",
+            "axis",
+            "flexWrap",
+            "minHeight",
+            "href"
+          ],
+          "ignoreComponent": [
+            "code"
+          ],
+          "ignore": [
+            "—",
+            "&"
+          ]
+        }
       ]
     },
     "extends": [

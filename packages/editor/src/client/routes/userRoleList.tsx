@@ -32,11 +32,15 @@ import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '
 import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete'
 }
 
 export function UserRoleList() {
+  const {t} = useTranslation()
+
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
@@ -44,8 +48,8 @@ export function UserRoleList() {
     current?.type === RouteType.UserRoleEdit || current?.type === RouteType.UserRoleCreate
   )
 
-  const [editID, setEditID] = useState<string | null>(
-    current?.type === RouteType.UserRoleEdit ? current.params.id : null
+  const [editID, setEditID] = useState<string | undefined>(
+    current?.type === RouteType.UserRoleEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -66,7 +70,7 @@ export function UserRoleList() {
 
   useEffect(() => {
     if (current?.type === RouteType.UserRoleCreate) {
-      setEditID(null)
+      setEditID(undefined)
       setEditModalOpen(true)
     }
 
@@ -89,10 +93,10 @@ export function UserRoleList() {
           alignItems="center">
           <Link route={UserRoleEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
+              {name || t('userRoles.overview.Unknown')}
             </Typography>
             <Typography variant="body1" color={description ? 'dark' : 'gray'}>
-              {description || 'No Description'}
+              {description || t('userRoles.overview.noDescription')}
             </Typography>
           </Link>
 
@@ -101,7 +105,11 @@ export function UserRoleList() {
             <OptionButton
               position="left"
               menuItems={[
-                {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                {
+                  id: ConfirmAction.Delete,
+                  label: t('userRoles.overview.delete'),
+                  icon: MaterialIconDeleteOutlined
+                }
               ]}
               onMenuItemClick={item => {
                 setCurrentUserRole(userRole)
@@ -119,17 +127,17 @@ export function UserRoleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">User Roles</Typography>
+        <Typography variant="h1">{t('userRoles.overview.userRoles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label="New UserRole"
+          label={t('userRoles.overview.newUserRole')}
           route={UserRoleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('userRoles.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -139,7 +147,7 @@ export function UserRoleList() {
           userRoles
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No UserRoles found
+            {t('noUserRolesFound')}
           </Typography>
         ) : null}
       </Box>
@@ -169,18 +177,18 @@ export function UserRoleList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete User Role?"
+              title={t('userRoles.panels.deleteUserRole')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('userRoles.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('userRoles.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentUserRole) return
@@ -201,8 +209,8 @@ export function UserRoleList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentUserRole?.name || 'Unknown'}
+                <DescriptionListItem label={t('userRoles.panels.name')}>
+                  {currentUserRole?.name || t('userRoles.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

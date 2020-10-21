@@ -7,6 +7,8 @@ import {render as renderStyles} from 'fela-dom'
 import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
 
+import './i18n'
+
 import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
 import {ElementID} from '../shared/elementID'
@@ -18,6 +20,42 @@ import {TwitterProvider} from './blocks/embeds/twitter'
 import {InstagramProvider} from './blocks/embeds/instagram'
 import {FacebookProvider} from './blocks/embeds/facebook'
 import {HotApp} from './app'
+
+// See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
+export async function fetchIntrospectionQueryResultData(url: string) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      variables: {},
+      query: `
+      {
+        __schema {
+          types {
+            kind
+            name
+            possibleTypes {
+              name
+            }
+          }
+        }
+      }
+    `
+    })
+  })
+
+  const result = await response.json()
+
+  const possibleTypes: any = {}
+
+  result.data.__schema.types.forEach((supertype: any) => {
+    if (supertype.possibleTypes) {
+      possibleTypes[supertype.name] = supertype.possibleTypes.map((subtype: any) => subtype.name)
+    }
+  })
+
+  return possibleTypes
+}
 
 const onDOMContentLoaded = async () => {
   const {apiURL}: ClientSettings = JSON.parse(
@@ -43,7 +81,9 @@ const onDOMContentLoaded = async () => {
 
   const client = new ApolloClient({
     link: authLink.concat(createUploadLink({uri: adminAPIURL})),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      possibleTypes: await fetchIntrospectionQueryResultData(adminAPIURL)
+    })
   })
 
   const styleRenderer = createStyleRenderer()

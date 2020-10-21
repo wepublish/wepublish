@@ -40,7 +40,6 @@ COPY --chown=node:node ./LICENSE ./LICENSE
 
 COPY --chown=node:node ./examples/ ./examples/
 COPY --chown=node:node ./packages/ ./packages/
-COPY --chown=node:node ./scripts/ ./scripts/
 
 RUN yarn install
 RUN yarn build:demo
