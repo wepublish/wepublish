@@ -21,6 +21,8 @@ import {
 import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
+import {useTranslation} from 'react-i18next'
+
 export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
@@ -61,6 +63,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const articles = articleListData?.articles.nodes ?? []
   const peerArticles = peerArticleListData?.peerArticles.nodes ?? []
   const pages = pageListData?.pages.nodes ?? []
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (articleListError ?? pageListError ?? peerArticleListError) {
@@ -127,9 +131,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             {articles.map(article => {
               const states = []
 
-              if (article.draft) states.push('Draft')
-              if (article.pending) states.push('Pending')
-              if (article.published) states.push('Published')
+              if (article.draft) states.push(t('articleEditor.panels.draft'))
+              if (article.pending) states.push(t('articleEditor.panels.pending'))
+              if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
                 <Box key={article.id} marginBottom={Spacing.Small}>
@@ -138,7 +142,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     style={{cursor: 'pointer'}}
                     onClick={() => onSelect({type: TeaserType.Article, article})}>
                     <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                      {article.latest.title || 'Untitled'}
+                      {article.latest.title || t('articleEditor.panels.untitled')}
                     </Typography>
                   </Box>
                   <Box
@@ -180,7 +184,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {articleListData?.articles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMoreArticles} />
+                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMoreArticles} />
               )}
             </Box>
           </>
@@ -192,9 +196,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             {peerArticles.map(({peer, article}) => {
               const states = []
 
-              if (article.draft) states.push('Draft')
-              if (article.pending) states.push('Pending')
-              if (article.published) states.push('Published')
+              if (article.draft) states.push(t('articleEditor.panels.draft'))
+              if (article.pending) states.push(t('articleEditor.panels.pending'))
+              if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
                 <Box key={`${peer.id}.${article.id}`} marginBottom={Spacing.Small}>
@@ -205,7 +209,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                       onSelect({type: TeaserType.PeerArticle, peer, articleID: article.id, article})
                     }>
                     <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                      {article.latest.title || 'Untitled'}
+                      {article.latest.title || t('articleEditor.panels.untitled')}
                     </Typography>
                   </Box>
                   <Box
@@ -253,7 +257,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMorePeerArticles} />
+                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMorePeerArticles} />
               )}
             </Box>
           </>
@@ -265,9 +269,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             {pages.map(page => {
               const states = []
 
-              if (page.draft) states.push('Draft')
-              if (page.pending) states.push('Pending')
-              if (page.published) states.push('Published')
+              if (page.draft) states.push('articleEditor.panels.draft')
+              if (page.pending) states.push('articleEditor.panels.pending')
+              if (page.published) states.push('articleEditor.panels.published')
 
               return (
                 <Box key={page.id} marginBottom={Spacing.Small}>
@@ -276,7 +280,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                     style={{cursor: 'pointer'}}
                     onClick={() => onSelect({type: TeaserType.Page, page})}>
                     <Typography variant="body2" color={page.latest.title ? 'dark' : 'gray'}>
-                      {page.latest.title || 'Untitled'}
+                      {page.latest.title || t('articleEditor.panels.untitled')}
                     </Typography>
                   </Box>
                   <Box
@@ -318,7 +322,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             })}
             <Box display="flex" justifyContent="center">
               {pageListData?.pages.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMorePages} />
+                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMorePages} />
               )}
             </Box>
           </>
@@ -330,9 +334,13 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Choose Teaser"
+          title={t('articleEditor.panels.chooseTeaser')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('articleEditor.panels.close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
@@ -341,28 +349,40 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
             <Button
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
-              variant={type === TeaserType.Article ? 'default' : 'outlined'}
-              label="Article"
+              variant={
+                type === TeaserType.Article
+                  ? t('articleEditor.panels.default')
+                  : t('articleEditor.panels.outlined')
+              }
+              label={t('articleEditor.panels.article')}
               onClick={() => setType(TeaserType.Article)}
             />
             <Button
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
-              variant={type === TeaserType.PeerArticle ? 'default' : 'outlined'}
-              label="Peer Article"
+              variant={
+                type === TeaserType.PeerArticle
+                  ? t('articleEditor.panels.default')
+                  : t('articleEditor.panels.outlined')
+              }
+              label={t('articleEditor.panels.peerArticle')}
               onClick={() => setType(TeaserType.PeerArticle)}
             />
             <Button
               flexGrow={1}
               marginRight={Spacing.ExtraSmall}
-              variant={type === TeaserType.Page ? 'default' : 'outlined'}
-              label="Page"
+              variant={
+                type === TeaserType.Page
+                  ? t('articleEditor.panels.default')
+                  : t('articleEditor.panels.outlined')
+              }
+              label={t('articleEditor.panels.page')}
               onClick={() => setType(TeaserType.Page)}
             />
           </Box>
           <Box marginBottom={Spacing.Medium}>
             <SearchInput
-              placeholder="Search"
+              placeholder={t('articleEditor.panels.search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />

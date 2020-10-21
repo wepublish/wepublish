@@ -7,6 +7,8 @@ import {render as renderStyles} from 'fela-dom'
 import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
 
+import './i18n'
+
 import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
 import {ElementID} from '../shared/elementID'
