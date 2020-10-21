@@ -1,7 +1,7 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
 import {UserEditPanel} from '../../src/client/panel/userEditPanel'
-import {UserDocument, UserRoleListDocument} from '../../src/client/api'
+import {UserDocument, CreateUserDocument, UserRoleListDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -11,7 +11,6 @@ Enzyme.configure({adapter: new Adapter()})
 import {UIProvider /*, Select*/} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
-import {MaterialIconFirstPage} from '@karma.run/icons'
 
 // https://github.com/wesbos/waait/blob/master/index.js
 export function wait(amount = 0) {
@@ -172,6 +171,63 @@ test('User should be able to remove user role', async () => {
 
   wrapper.find('ForwardRef(IconButton)').first().simulate('click')
   wrapper.find('ForwardRef(MenuButton)').simulate('click')
+
+  expect(wrapper).toMatchSnapshot()
+})
+
+test('User should be able to create a new user', async () => {
+  const mocks = [
+    {
+      request: {
+        query: CreateUserDocument,
+        variables: {
+          input: {
+            name: 'Testing Müller',
+            email: 'testing@mueller.com',
+            roleIDs: []
+          },
+          password: 'superSecret'
+        }
+      },
+      result: () => ({
+        data: {
+          user: {
+            __typename: 'User',
+            id: 'fakeId4',
+            name: 'Testing Müller',
+            email: 'testing@mueller.com',
+            roles: []
+          }
+        }
+      })
+    },
+    userRoleListDocumentQuery
+  ]
+
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserEditPanel />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
+
+  act(() => {
+    wrapper
+      .find('input[placeholder="Name"]')
+      .simulate('change', {target: {value: 'Testing Müller'}})
+    wrapper
+      .find('input[placeholder="Email"]')
+      .simulate('change', {target: {value: 'testing@mueller.com'}})
+    wrapper
+      .find('input[placeholder="Password"]')
+      .simulate('change', {target: {value: 'superSecret'}})
+  })
+
+  act(() => {
+    wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+  })
 
   expect(wrapper).toMatchSnapshot()
 })
