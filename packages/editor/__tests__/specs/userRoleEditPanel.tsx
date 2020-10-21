@@ -1,7 +1,7 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
 import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {UserRoleListDocument, PermissionListDocument} from '../../src/client/api'
+import {UserRoleDocument, PermissionListDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -42,48 +42,23 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-const userRoleListDocumentQuery = {
+const userRoleDocumentQuery = {
   request: {
-    query: UserRoleListDocument,
+    query: UserRoleDocument,
     variables: {
-      first: 200
+      id: 'roleId1'
     }
   },
   result: () => {
     return {
       data: {
-        userRoles: {
-          nodes: [
-            {
-              __typename: 'UserRole',
-              id: 'roleId1',
-              name: 'Role 1',
-              description: 'Description for role 1',
-              systemRole: false,
-              permissions: []
-            },
-            {
-              __typename: 'UserRole',
-              id: 'roleId2',
-              name: 'Role 2',
-              description: 'Description for role 2',
-              systemRole: false,
-              permissions: []
-            },
-            {
-              __typename: 'UserRole',
-              id: 'roleId3',
-              name: 'Admin',
-              description: 'Description for role 3',
-              systemRole: false,
-              permissions: []
-            }
-          ],
-          pageInfo: {
-            hasNextPage: false,
-            hasPreviousPage: false
-          },
-          totalCount: 0
+        userRole: {
+          __typename: 'UserRole',
+          id: 'roleId1',
+          name: 'Role 1',
+          description: 'Description for role 1',
+          systemRole: false,
+          permissions: []
         }
       }
     }
@@ -136,7 +111,7 @@ const permissions = [
 ]
 
 test('Role Panel should render', async () => {
-  const mocks = [userRoleListDocumentQuery, permissionListQuery]
+  const mocks = [permissionListQuery]
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
@@ -150,7 +125,7 @@ test('Role Panel should render', async () => {
 })
 
 test('Role Panel should render with role', async () => {
-  const mocks = [userRoleListDocumentQuery, permissionListQuery]
+  const mocks = [userRoleDocumentQuery, permissionListQuery]
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
