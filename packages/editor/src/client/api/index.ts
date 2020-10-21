@@ -416,7 +416,7 @@ export type ListicleItemInput = {
 };
 
 export type MapLeafletBlock = {
-   __typename?: 'MapLeafletBlock';
+  __typename?: 'MapLeafletBlock';
   centerLat: Scalars['Float'];
   centerLng: Scalars['Float'];
   zoom: Scalars['Int'];
@@ -433,7 +433,7 @@ export type MapLeafletBlockInput = {
 };
 
 export type MapLeafletItem = {
-   __typename?: 'MapLeafletItem';
+  __typename?: 'MapLeafletItem';
   address: Scalars['String'];
   lat: Scalars['Float'];
   lng: Scalars['Float'];

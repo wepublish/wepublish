@@ -399,6 +399,22 @@
       "title": {
         "title": "Title",
         "leadText": "Lead Text "
+      },
+      "mapLeafler": {
+        "overview": {},
+        "panels": {
+          "editMapMarkers": "Edit map markers",
+          "close": "Close",
+          "address": "Address",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "title": "Title",
+          "description": "Description",
+          "noAddressFound": "No Address found",
+          "addPOI": "Add point of interest",
+          "caption": "Caption",
+          "mapDescription": "Map description"
+        }
       }
     },
     "navbar": {

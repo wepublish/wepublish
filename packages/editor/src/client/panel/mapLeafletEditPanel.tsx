@@ -22,6 +22,7 @@ import {
 
 import {MapLeafletItem} from '../blocks/types'
 import nanoid from 'nanoid'
+import {useTranslation} from 'react-i18next'
 
 export interface MapLeafletEditPanel {
   initialItems: ListValue<MapLeafletItem>[]
@@ -29,6 +30,8 @@ export interface MapLeafletEditPanel {
 }
 
 export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel) {
+  const {t} = useTranslation()
+
   const defaultItemValue = {
     address: 'Brauerstrasse 42, Zürich',
     lat: 47.3778762,
@@ -61,11 +64,11 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
   return (
     <Panel>
       <PanelHeader
-        title="Edit map markers"
+        title={t('blocks.mapLeaflet.panels.editMapMarkers')}
         leftChildren={
           <NavigationButton
             icon={MaterialIconClose}
-            label="Close"
+            label={t('blocks.mapLeaflet.panels.close')}
             onClick={() => onClose?.(items)}
           />
         }
@@ -83,13 +86,14 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
 }
 
 export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
+  const {t} = useTranslation()
   const {address, lat, lng, title, description} = value
 
   return (
     <>
       <Box display="flex" flexDirection="column">
         <AddressInput
-          label="Address"
+          label={t('blocks.mapLeaflet.panels.address')}
           value={[{address: address, lat: lat, lng: lng}]}
           marginBottom={Spacing.ExtraSmall}
           onChange={markerPoints => {
@@ -106,7 +110,7 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           type="number"
-          label="Latitude"
+          label={t('blocks.mapLeaflet.panels.latitude')}
           value={lat}
           onChange={e => onChange({...value, lat: parseInt(e.target.value)})}
           required
@@ -114,20 +118,20 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
         <TextInput
           marginBottom={Spacing.ExtraSmall}
           type="number"
-          label="Longitude"
+          label={t('blocks.mapLeaflet.panels.longitude')}
           value={lng}
           onChange={e => onChange({...value, lng: parseInt(e.target.value)})}
           required
         />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
-          label="Title"
+          label={t('blocks.mapLeaflet.panels.title')}
           value={title}
           onChange={e => onChange({...value, title: e.target.value})}
         />
         <TextInput
           marginBottom={Spacing.ExtraSmall}
-          label="Description"
+          label={t('blocks.mapLeaflet.panels.description')}
           value={description}
           onChange={e => onChange({...value, description: e.target.value})}
         />
@@ -164,7 +168,7 @@ function AddressInputList({
   getItemProps,
   getMenuProps
 }: AutocompleteInputListProps) {
-  // const items: MarkerPoint[] = []
+  const {t} = useTranslation()
   const [items, setItems] = useState<MarkerPoint[]>([])
 
   useEffect(() => {
@@ -192,7 +196,7 @@ function AddressInputList({
             )
           })
         ) : (
-          <SelectListItem>No Address found</SelectListItem>
+          <SelectListItem>{t('blocks.mapLeaflet.panels.noAddressFound')}</SelectListItem>
         )
       ) : null}
     </SelectList>

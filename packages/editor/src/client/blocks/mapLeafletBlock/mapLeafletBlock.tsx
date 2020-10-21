@@ -12,6 +12,7 @@ import Leaflet from 'leaflet'
 import marker from './marker-icon.png'
 import marker2x from './marker-icon-2x.png'
 import markerShadow from './marker-shadow.png'
+import {useTranslation} from 'react-i18next'
 
 export type MapLeafletBlockProps = BlockProps<MapLeafletBlockValue>
 
@@ -27,6 +28,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
     shadowUrl: markerShadow,
     shadowAnchor: [-7, 0]
   })
+  const {t} = useTranslation()
 
   return (
     <>
@@ -60,7 +62,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
         <Box position="absolute" zIndex={ZIndex.Default} top={0} right={0}>
           <IconButton
             icon={MaterialIconMoreVert}
-            title={'Add point of interest'}
+            title={t('blocks.mapLeaflet.overview.addPOI')}
             variant="large"
             active
             onClick={() => setMapLeafletDialogOpen(true)}
@@ -69,8 +71,8 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
         </Box>
         <Box marginTop={Spacing.ExtraSmall}>
           <TextInput
-            label="Caption"
-            description="Map description"
+            label={t('blocks.mapLeaflet.overview.caption')}
+            description={t('blocks.mapLeaflet.overview.mapDescription')}
             value={caption}
             onChange={event => {
               onChange({...value, caption: event.target.value})
