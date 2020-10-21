@@ -1,7 +1,7 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
-import {UserEditPanel} from '../../src/client/panel/userEditPanel'
-import {UserDocument, UserRoleListDocument} from '../../src/client/api'
+import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
+import {UserRoleListDocument, PermissionListDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -11,7 +11,6 @@ Enzyme.configure({adapter: new Adapter()})
 import {UIProvider /*, Select*/} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
-import {MaterialIconFirstPage} from '@karma.run/icons'
 
 // https://github.com/wesbos/waait/blob/master/index.js
 export function wait(amount = 0) {
@@ -70,6 +69,14 @@ const userRoleListDocumentQuery = {
               description: 'Description for role 2',
               systemRole: false,
               permissions: []
+            },
+            {
+              __typename: 'UserRole',
+              id: 'roleId3',
+              name: 'Admin',
+              description: 'Description for role 3',
+              systemRole: false,
+              permissions: []
             }
           ],
           pageInfo: {
@@ -83,54 +90,57 @@ const userRoleListDocumentQuery = {
   }
 }
 
-const userDocumentQuery = {
+//mock user role
+const permissionListQuery = {
   request: {
-    query: UserDocument,
-    variables: {
-      id: 'fakeId3'
-    }
+    query: PermissionListDocument
   },
-  result: () => ({
-    data: {
-      user: {
-        __typename: 'User',
-        id: 'fakeId3',
-        name: 'Peter Parker',
-        email: 'peter@parker.com',
-        roles: [
-          {
-            __typename: 'UserRole',
-            id: 'roleId1',
-            name: 'Role 1',
-            description: 'Description for role 1',
-            systemRole: false,
-            permissions: []
-          }
-        ]
+  result: () => {
+    return {
+      data: {
+        permissions: permissions
       }
     }
-  })
+  }
 }
 
-test('User Edit Panel should render', () => {
-  const mocks = [userRoleListDocumentQuery]
+const permissions = [
+  {
+    __typename: 'Permission',
+    id: 'permissionId1',
+    description: 'permission description 1',
+    checked: false,
+    deprecated: false
+  },
+  {
+    __typename: 'Permission',
+    id: 'permissionId2',
+    description: 'permission description 2',
+    checked: false,
+    deprecated: false
+  },
+  {
+    __typename: 'Permission',
+    id: 'permissionId3',
+    description: 'permission description 3',
+    checked: false,
+    deprecated: false
+  },
+  {
+    __typename: 'Permission',
+    id: 'permissionId4',
+    description: 'permission description 4',
+    checked: false,
+    deprecated: false
+  }
+]
+
+test('Role Panel should render', async () => {
+  const mocks = [userRoleListDocumentQuery, permissionListQuery]
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  expect(wrapper).toMatchSnapshot()
-})
-
-test('User Edit Panel should render with id', async () => {
-  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
-
-  let wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
+        <UserRoleEditPanel />
       </MockedProvider>
     </UIProvider>
   )
@@ -139,39 +149,18 @@ test('User Edit Panel should render with id', async () => {
   expect(wrapper).toMatchSnapshot()
 })
 
-test('User should be able to select and add roles', async () => {
-  const mocks = [userRoleListDocumentQuery]
-
-  let wrapper = mount(
+test('Role Panel should render with role', async () => {
+  const mocks = [userRoleListDocumentQuery, permissionListQuery]
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
+        <UserRoleEditPanel id={'roleId1'} />
       </MockedProvider>
     </UIProvider>
   )
   await updateWrapper(wrapper, 100)
 
-  wrapper.find('Select[description="Select User Role"] button').simulate('click')
-  wrapper.find('li[role="option"]').last().simulate('click')
-
-  wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
   expect(wrapper).toMatchSnapshot()
 })
-
-test('User should be able to remove user role', async () => {
-  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
-
-  let wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
-
-  wrapper.find('ForwardRef(IconButton)').first().simulate('click')
-  wrapper.find('ForwardRef(MenuButton)').simulate('click')
-
-  expect(wrapper).toMatchSnapshot()
-})
+//TODO test render existing user role panel without system role
+//TODO test render existing user role panel with system role true - slider buttons should be disabled
