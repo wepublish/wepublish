@@ -231,5 +231,3 @@ test('User should be able to create a new user', async () => {
 
   expect(wrapper).toMatchSnapshot()
 })
-
-//TODO: clean code and refactor
