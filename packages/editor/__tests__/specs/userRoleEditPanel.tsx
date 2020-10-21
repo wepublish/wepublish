@@ -1,7 +1,11 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
 import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {UserRoleDocument, PermissionListDocument} from '../../src/client/api'
+import {
+  UserRoleDocument,
+  PermissionListDocument,
+  CreateUserRoleDocument
+} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -11,6 +15,8 @@ Enzyme.configure({adapter: new Adapter()})
 import {UIProvider /*, Select*/} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
+import {act} from 'react-dom/test-utils'
+import {MaterialIconFormatListBulletedTwoTone} from '@karma.run/icons'
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -22,7 +28,7 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-const userRoleDocumentQuery = {
+let userRoleDocumentQuery = {
   request: {
     query: UserRoleDocument,
     variables: {
@@ -38,7 +44,36 @@ const userRoleDocumentQuery = {
           name: 'Role 1',
           description: 'Description for role 1',
           systemRole: false,
-          permissions: []
+          permissions: [
+            {
+              __typename: 'Permission',
+              id: 'permissionId1',
+              description: 'permission description 1',
+              checked: true,
+              deprecated: false
+            },
+            {
+              __typename: 'Permission',
+              id: 'permissionId2',
+              description: 'permission description 2',
+              checked: false,
+              deprecated: false
+            },
+            {
+              __typename: 'Permission',
+              id: 'permissionId3',
+              description: 'permission description 3',
+              checked: false,
+              deprecated: false
+            },
+            {
+              __typename: 'Permission',
+              id: 'permissionId4',
+              description: 'permission description 4',
+              checked: true,
+              deprecated: false
+            }
+          ]
         }
       }
     }
@@ -117,5 +152,105 @@ test('Role Panel should render with role', async () => {
 
   expect(wrapper).toMatchSnapshot()
 })
-//TODO test render existing user role panel without system role
-//TODO test render existing user role panel with system role true - slider buttons should be disabled
+
+test('Toggle sliders should be disabled with System Role', async () => {
+  userRoleDocumentQuery.result = () => {
+    return {
+      data: {
+        userRole: {
+          __typename: 'UserRole',
+          id: 'roleId1',
+          name: 'Role 1',
+          description: 'Description for role 1',
+          systemRole: true,
+          permissions: [
+            {
+              __typename: 'Permission',
+              id: 'permissionId1',
+              description: 'permission description 1',
+              checked: true,
+              deprecated: false
+            },
+            {
+              __typename: 'Permission',
+              id: 'permissionId2',
+              description: 'permission description 2',
+              checked: false,
+              deprecated: false
+            }
+          ]
+        }
+      }
+    }
+  }
+  const mocks = [userRoleDocumentQuery, permissionListQuery]
+  const wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel id={'roleId1'} />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
+
+  expect(wrapper).toMatchSnapshot()
+})
+
+test('User should be able to create a new role', async () => {
+  const userRole = {
+    __typename: 'UserRole',
+    id: 'fakeId4',
+    name: 'Brand New User Role',
+    description: 'A user role to be added to snapshot',
+    systemRole: false
+  }
+  const mocks = [
+    {
+      request: {
+        query: CreateUserRoleDocument,
+        variables: {
+          input: {
+            name: userRole.name,
+            description: userRole.description,
+            permissionIDs: []
+          }
+        }
+      },
+      result: () => ({
+        data: {
+          userRole: {
+            __typename: userRole.__typename,
+            id: userRole.id,
+            name: userRole.description,
+            description: userRole.description,
+            systemRole: userRole.systemRole,
+            permissions: []
+          }
+        }
+      })
+    },
+    permissionListQuery
+  ]
+
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel />
+      </MockedProvider>
+    </UIProvider>
+  )
+  await updateWrapper(wrapper, 100)
+
+  act(() => {
+    wrapper.find('input[placeholder="Name"]').simulate('change', {target: {value: userRole.name}})
+    wrapper
+      .find('input[placeholder="Description"]')
+      .simulate('change', {target: {value: userRole.description}})
+  })
+
+  act(() => {
+    wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+  })
+
+  expect(wrapper).toMatchSnapshot()
+})
