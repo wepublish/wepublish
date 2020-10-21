@@ -182,19 +182,19 @@ export function TeaserBlock({
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
-                title={t('Choose Teaser')}
+                title={t('articleEditor.panels.chooseTeaser')}
                 onClick={onChoose}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconEditOutlined}
-                title={t('Edit Teaser')}
+                title={t('articleEditor.panels.editTeaser')}
                 onClick={onEdit}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconClose}
-                title={t('Remove Teaser')}
+                title={t('articleEditor.panels.removeTeaser')}
                 onClick={onRemove}
                 margin={Spacing.ExtraSmall}
               />
@@ -212,9 +212,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.Article: {
       const states = []
 
-      if (teaser?.article?.draft) states.push(t('state_draft'))
-      if (teaser?.article?.pending) states.push(t('state_pending'))
-      if (teaser?.article?.published) states.push(t('state_published'))
+      if (teaser?.article?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.article?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.article?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -232,9 +232,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.PeerArticle: {
       const states = []
 
-      if (teaser?.article?.draft) states.push(t('state_draft'))
-      if (teaser?.article?.pending) states.push(t('state_pending'))
-      if (teaser?.article?.published) states.push(t('state_published'))
+      if (teaser?.article?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.article?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.article?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -253,9 +253,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.Page: {
       const states = []
 
-      if (teaser?.page?.draft) states.push(t('state_draft'))
-      if (teaser?.page?.pending) states.push(t('state_pending'))
-      if (teaser?.page?.published) states.push(t('state_published'))
+      if (teaser?.page?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.page?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.page?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -335,7 +335,7 @@ export function TeaserContent({
             </Typography>
           )}
           <Typography variant="body2" color="white" spacing="small">
-            {title || 'Untitled'}
+            {title || t('articleEditor.panels.untitled')}
           </Typography>
           {lead && (
             <Typography variant="subtitle1" color="white" ellipsize>
@@ -354,12 +354,12 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              {t('teaserStyle', {label})}
+              {t('articleEditor.panels.teaserStyle', {label})}
             </Typography>
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              {t('status', {stateJoin})}
+              {t('articleEditor.panels.status', {stateJoin})}
             </Typography>
           </Box>
         </Box>

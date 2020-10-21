@@ -49,13 +49,13 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
               <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                 <IconButton
                   icon={MaterialIconImageOutlined}
-                  title={t('Choose Image')}
+                  title={t('blocks.image.overview.chooseImage')}
                   onClick={() => setChooseModalOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />
                 <IconButton
                   icon={MaterialIconEditOutlined}
-                  title={t('Edit Image')}
+                  title={t('blocks.image.overview.editImage')}
                   onClick={() => setEditModalOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />
@@ -75,7 +75,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         <TypographicTextArea
           variant="subtitle2"
           align="center"
-          placeholder={t('Caption')}
+          placeholder={t('blocks.image.overview.caption')}
           value={caption}
           onChange={e => {
             onChange({...value, caption: e.target.value})

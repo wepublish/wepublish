@@ -89,7 +89,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             setEmbed({type: EmbedType.Other, url: new URL(input).toString()})
           } catch {
             setEmbed({type: EmbedType.Other})
-            setErrorMessage('Invalid URL or iframe code')
+            setErrorMessage(t('embeds.panels.invalidURL'))
           }
         }
       } else {
@@ -101,14 +101,18 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   return (
     <Panel>
       <PanelHeader
-        title={t('Edit Embed')}
+        title={t('blocks.embeds.panels.editEmbed')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label={t('Close')} onClick={() => onClose()} />
+          <NavigationButton
+            icon={MaterialIconClose}
+            label={t('blocks.embeds.panels.close')}
+            onClick={() => onClose()}
+          />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label={t('Confirm')}
+            label={t('blocks.embeds.panels.confirm')}
             onClick={() => onConfirm(embed)}
             disabled={isEmpty}
           />
@@ -117,27 +121,27 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       <PanelSection>
         <TextArea
           marginBottom={Spacing.ExtraSmall}
-          label={t('Embed')}
+          label={t('blocks.embeds.panels.embed')}
           errorMessage={errorMessage}
           value={input}
           onChange={e => setInput(e.target.value)}
         />
         <Box marginBottom={Spacing.ExtraSmall}>
           <Typography variant="subtitle1" spacing="small">
-            {t('Social Media List')}
+            {t('blocks.embeds.panels.socialMediaList')}
           </Typography>
-          <code>{t('fb-posts')}</code>
+          <code>{t('blocks.embeds.panels.fbPosts')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t('Embed code attributes')}
+            {t('blocks.embeds.panels.embedCodeAttributes')}
           </Typography>
-          <code>{t('iframe1-sample')}</code>
+          <code>{t('blocks.embeds.panels.iframe1Sample')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t('Info alternative style setting')}
+            {t('blocks.embeds.panels.alternativeStyling')}
           </Typography>
 
-          <code>{t('iframge2-sample')}</code>
+          <code>{t('blocks.embeds.panels.iframe2Sample')}</code>
           <Typography variant="subtitle1" spacing="small">
-            {t('GDPR-info')}
+            {t('blocks.embeds.panels.GDPRInfo')}
           </Typography>
         </Box>
 

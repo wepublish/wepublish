@@ -93,10 +93,10 @@ export function UserRoleList() {
           alignItems="center">
           <Link route={UserRoleEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
+              {name || t('userRoles.overview.Unknown')}
             </Typography>
             <Typography variant="body1" color={description ? 'dark' : 'gray'}>
-              {description || 'No Description'}
+              {description || t('userRoles.overview.noDescription')}
             </Typography>
           </Link>
 
@@ -105,7 +105,11 @@ export function UserRoleList() {
             <OptionButton
               position="left"
               menuItems={[
-                {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                {
+                  id: ConfirmAction.Delete,
+                  label: t('userRoles.overview.delete'),
+                  icon: MaterialIconDeleteOutlined
+                }
               ]}
               onMenuItemClick={item => {
                 setCurrentUserRole(userRole)
@@ -123,17 +127,17 @@ export function UserRoleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('User Roles')}</Typography>
+        <Typography variant="h1">{t('userRoles.overview.userRoles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label={t('New UserRole')}
+          label={t('userRoles.overview.newUserRole')}
           route={UserRoleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('Search')}
+          placeholder={t('userRoles.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -143,7 +147,7 @@ export function UserRoleList() {
           userRoles
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No UserRoles found')}
+            {t('noUserRolesFound')}
           </Typography>
         ) : null}
       </Box>
@@ -173,18 +177,18 @@ export function UserRoleList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete User Role?')}
+              title={t('userRoles.panels.deleteUserRole')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('userRoles.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('userRoles.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentUserRole) return
@@ -205,8 +209,8 @@ export function UserRoleList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Name')}>
-                  {currentUserRole?.name || 'Unknown'}
+                <DescriptionListItem label={t('userRoles.panels.name')}>
+                  {currentUserRole?.name || t('userRoles.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

@@ -78,19 +78,19 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
                 <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                   <IconButton
                     icon={MaterialIconImageOutlined}
-                    title={t('Choose Image')}
+                    title={t('blocks.listicle.chooseImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setChooseModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconEditOutlined}
-                    title={t('Edit Image')}
+                    title={t('blocks.listicle.editImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => setEditModalOpen(true)}
                   />
                   <IconButton
                     icon={MaterialIconClose}
-                    title={t('Remove Image')}
+                    title={t('blocks.listicle.removeImage')}
                     margin={Spacing.ExtraSmall}
                     onClick={() => onChange(value => ({...value, image: null}))}
                   />
@@ -103,7 +103,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         <Box flexGrow={1}>
           <TypographicTextArea
             variant="h1"
-            placeholder={t('Title')}
+            placeholder={t('blocks.listicle.title')}
             value={title}
             onChange={e => {
               const title = e.target.value

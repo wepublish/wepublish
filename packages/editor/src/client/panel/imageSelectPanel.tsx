@@ -61,7 +61,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
     if (!file.type.startsWith('image')) {
       setErrorToastOpen(true)
-      setErrorMessage('Invalid Image')
+      setErrorMessage(t('articleEditor.panels.invalidImage'))
       return
     }
 
@@ -92,11 +92,11 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title={t('Choose Image')}
+          title={t('articleEditor.panels.chooseImage')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('articleEditor.panels.close')}
               onClick={() => onClose()}
             />
           }
@@ -105,16 +105,16 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
           <Box height={100}>
             <FileDropInput
               icon={MaterialIconCloudUploadOutlined}
-              text={t('Drop Image Here')}
+              text={t('articleEditor.panels.dropImage')}
               onDrop={handleDrop}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title={t('Images')} />
+        <PanelSectionHeader title={t('articleEditor.panels.images')} />
         <PanelSection>
           <Box marginBottom={Spacing.Small}>
             <SearchInput
-              placeholder={t('Search')}
+              placeholder={t('articleEditor.panels.search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />
@@ -144,10 +144,10 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                             maxHeight="50%"
                             padding={Spacing.ExtraSmall}>
                             <Typography variant="subtitle1" color="gray" ellipsize>
-                              {`${filename || 'untitled'}${extension}`}
+                              {`${filename || t('articleEditor.panels.untitled')}${extension}`}
                             </Typography>
                             <Typography variant="body2" color="white" ellipsize>
-                              {title || 'Untitled'}
+                              {title || t('articleEditor.panels.untitled')}
                             </Typography>
                           </Overlay>
                         </Card>
@@ -161,13 +161,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               </Box>
               <Box display="flex" justifyContent="center">
                 {data?.images.pageInfo.hasNextPage && (
-                  <Button label={t('Load More')} onClick={loadMore} />
+                  <Button label={t('articleEditor.loadMore')} onClick={loadMore} />
                 )}
               </Box>
             </>
           ) : !isLoading ? (
             <Typography variant="body1" color="gray" align="center">
-              {t('No Images found')}
+              {t('articleEditor.panels.noImagesFound')}
             </Typography>
           ) : null}
         </PanelSection>

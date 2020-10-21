@@ -59,14 +59,18 @@ export function PublishPagePanel({
   return (
     <Panel>
       <PanelHeader
-        title={t('Publish Page')}
+        title={t('pageEditor.panels.publishPage')}
         leftChildren={
-          <NavigationButton icon={MaterialIconClose} label={t('Close')} onClick={() => onClose()} />
+          <NavigationButton
+            icon={MaterialIconClose}
+            label={t('pageEditor.panels.close')}
+            onClick={() => onClose()}
+          />
         }
         rightChildren={
           <NavigationButton
             icon={MaterialIconCheck}
-            label={t('Confirm')}
+            label={t('pageEditor.panels.confirm')}
             disabled={!publishDate || !updateDate}
             onClick={() => onConfirm(publishDate!, updateDate!)}
           />
@@ -76,13 +80,13 @@ export function PublishPagePanel({
         {pendingPublishDate && (
           <Box marginBottom={Spacing.Small}>
             <Typography variant="subtitle1" color="alert">
-              {t('Article pending publication info', {pendingPublishDate})}
+              {t('pageEditor.panels.pagePending', {pendingPublishDate})}
             </Typography>
           </Box>
         )}
         <TextInput
           type="datetime-local"
-          label={t('Publish Date')}
+          label={t('pageEditor.panels.publishDate')}
           errorMessage={publishDateError}
           icon={MaterialIconQueryBuilder}
           marginBottom={Spacing.Small}
@@ -95,7 +99,7 @@ export function PublishPagePanel({
               setPublishDateError('')
               setPublishDate(publishDate)
             } else {
-              setPublishDateError('Invalid Date')
+              setPublishDateError(t('pageEditor.panels.invalidDate'))
               setPublishDate(undefined)
             }
 
@@ -104,7 +108,7 @@ export function PublishPagePanel({
         />
         <TextInput
           type="datetime-local"
-          label={t('Update Date')}
+          label={t('pageEditor.panels.updateDate')}
           errorMessage={updateDateError}
           icon={MaterialIconUpdate}
           value={updateDateString}
@@ -116,7 +120,7 @@ export function PublishPagePanel({
               setPublishDateError('')
               setUpdateDate(updateDate)
             } else {
-              setUpdateDateError('Invalid Date')
+              setUpdateDateError('pageEditor.panels.invalidDate')
               setUpdateDate(undefined)
             }
 
@@ -126,10 +130,18 @@ export function PublishPagePanel({
       </PanelSection>
       <PanelSection>
         <DescriptionList>
-          <DescriptionListItem label={t('Title')}>{metadata.title}</DescriptionListItem>
-          <DescriptionListItem label={t('Description')}>{metadata.description}</DescriptionListItem>
-          <DescriptionListItem label={t('Slug')}>{metadata.slug}</DescriptionListItem>
-          <DescriptionListItem label={t('Tags')}>{metadata.tags.join(', ')}</DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.title')}>
+            {metadata.title}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.description')}>
+            {metadata.description}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.slug')}>
+            {metadata.slug}
+          </DescriptionListItem>
+          <DescriptionListItem label={t('pageEditor.panels.tags')}>
+            {metadata.tags.join(', ')}
+          </DescriptionListItem>
         </DescriptionList>
       </PanelSection>
     </Panel>

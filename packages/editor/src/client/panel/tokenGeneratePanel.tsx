@@ -55,7 +55,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title={t('Generate Token')}
+          title={t('tokenList.panels.generateToken')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
@@ -67,7 +67,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
             !hasGeneratedToken && (
               <NavigationButton
                 icon={MaterialIconSaveOutlined}
-                label={t('Generate')}
+                label={t('tokenList.panels.generate')}
                 disabled={isDisabled}
                 onClick={handleSave}
               />
@@ -79,7 +79,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           {token ? (
             <>
               <Box marginBottom={Spacing.Small}>
-                <Typography variant="body1">{t('Token creation success')}</Typography>
+                <Typography variant="body1">{t('tokenList.panels.creationSuccess')}</Typography>
               </Box>
               <Card padding={Spacing.ExtraSmall}>
                 <Typography variant="body2" align="center">
@@ -90,7 +90,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           ) : (
             <TextInput
               marginBottom={Spacing.ExtraSmall}
-              label={t('Name')}
+              label={t('tokenList.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {

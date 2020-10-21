@@ -178,11 +178,11 @@ export function PeerList() {
 
       <Box marginBottom={Spacing.Large}>
         <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-          <Typography variant="h1">{t('Peers')}</Typography>
+          <Typography variant="h1">{t('peerList.overview.peers')}</Typography>
           <Box flexGrow={1} />
           <RouteLinkButton
             color="primary"
-            label={t('New Peer')}
+            label={t('peerList.overview.newPeer')}
             disabled={isPeerInfoLoading}
             route={PeerCreateRoute.create({})}
           />
@@ -191,7 +191,7 @@ export function PeerList() {
           peers
         ) : !isPeerListLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('No peers found')}
+            {t('peerList.overview.noPeersFound')}
           </Typography>
         ) : null}
       </Box>
@@ -227,7 +227,9 @@ export function PeerList() {
               setEditModalOpen(false)
 
               setSuccessToastOpen(true)
-              setSuccessMessage(editID ? 'Peer Updated' : 'Peer Created')
+              setSuccessMessage(
+                editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated')
+              )
 
               dispatch({
                 type: RouteActionType.PushRoute,
@@ -242,18 +244,18 @@ export function PeerList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Delete Peer')}
+              title={t('peerList.panels.deletePeer')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Cancel')}
+                  label={t('peerList.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('Confirm')}
+                  label={t('peerList.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentPeer) return
@@ -281,8 +283,8 @@ export function PeerList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('Name')}>
-                  {currentPeer?.name || 'Unknown'}
+                <DescriptionListItem label={t('peerList.panels.name')}>
+                  {currentPeer?.name || t('peerList.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

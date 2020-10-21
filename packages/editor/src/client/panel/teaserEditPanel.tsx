@@ -68,14 +68,14 @@ export function TeaserEditPanel({
     <>
       <Panel>
         <PanelHeader
-          title={t('Edit Teaser')}
+          title={t('articleEditor.panels.editTeaser')}
           leftChildren={
             <NavigationButton icon={closeIcon} label={closeLabel} onClick={() => onClose()} />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconCheck}
-              label={t('Confirm')}
+              label={t('articleEditor.panels.confirm')}
               onClick={() =>
                 onConfirm({
                   ...initialTeaser,
@@ -90,10 +90,10 @@ export function TeaserEditPanel({
           }
         />
         <PanelSection dark>{previewForTeaser(initialTeaser)}</PanelSection>
-        <PanelSectionHeader title={t('Display Options')} />
+        <PanelSectionHeader title={t('articleEditor.panels.displayOptions')} />
         <PanelSection>
           <Select
-            label={t('Style')}
+            label={t('articleEditor.panels.style')}
             value={{id: style}}
             options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Light}, {id: TeaserStyle.Text}]}
             onChange={value => {
@@ -106,32 +106,32 @@ export function TeaserEditPanel({
           />
 
           <TextInput
-            label={t('Pre-title')}
+            label={t('articleEditor.panels.preTitle')}
             value={preTitle}
             onChange={e => setPreTitle(e.target.value)}
             marginBottom={Spacing.Small}
-            description={t('Leave empty to use original pre-title.')}
+            description={t('articleEditor.panels.emptyPreTitle')}
           />
 
           <TextInput
-            label={t('Title')}
+            label={t('articleEditor.panels.title')}
             value={title}
             onChange={e => setTitle(e.target.value)}
             marginBottom={Spacing.Small}
-            description={t('Leave empty to use original title.')}
+            description={t('articleEditor.panels.emptyTitle')}
           />
 
           <TextInput
-            label={t('Lead')}
+            label={t('articleEditor.panels.lead')}
             value={lead}
             onChange={e => setLead(e.target.value)}
             marginBottom={Spacing.Small}
-            description={t('Leave empty to use original lead.')}
+            description={t('articleEditor.panels.emptyLead')}
           />
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              {t('Image')}
+              {t('articleEditor.panels.image')}
             </Typography>
           </Box>
           <Box height={200} marginBottom={Spacing.ExtraSmall}>
@@ -147,7 +147,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
-                          title={t('Choose Image')}
+                          title={t('articleEditor.panels.chooseImage')}
                           onClick={() => setChooseModalOpen(true)}
                         />
                       </Box>
@@ -158,7 +158,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
-                          title={t('Edit Image')}
+                          title={t('articleEditor.panels.editImage')}
                           onClick={() => setEditModalOpen(true)}
                         />
                       </Box>
@@ -169,7 +169,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconClose}
-                          title={t('Remove Image')}
+                          title={t('articleEditor.panels.removeImage')}
                           onClick={() => setImage(undefined)}
                         />
                       </Box>
@@ -181,7 +181,7 @@ export function TeaserEditPanel({
             </Card>
           </Box>
           <Typography variant="subtitle1" color="gray">
-            {t('Leave empty to use original image.')}
+            {t('articleEditor.panels.emptyImage')}
           </Typography>
         </PanelSection>
       </Panel>
@@ -247,10 +247,16 @@ function previewForTeaser(teaser: Teaser) {
         )}
       </Card>
       <DescriptionList>
-        <DescriptionListItem label={t('Type')}>{type}</DescriptionListItem>
-        <DescriptionListItem label={t('Pre-title')}>{preTitle || '-'}</DescriptionListItem>
-        <DescriptionListItem label={t('Title')}>{title || '-'}</DescriptionListItem>
-        <DescriptionListItem label={t('Lead')}>{lead || '-'}</DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.type')}>{type}</DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
+          {preTitle || '-'}
+        </DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.title')}>
+          {title || '-'}
+        </DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.lead')}>
+          {lead || '-'}
+        </DescriptionListItem>
       </DescriptionList>
     </>
   )

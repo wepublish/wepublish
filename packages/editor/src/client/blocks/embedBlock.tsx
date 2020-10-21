@@ -50,7 +50,7 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
               <Box position="absolute" zIndex={ZIndex.Default} height="100%" right={0}>
                 <IconButton
                   icon={MaterialIconEditOutlined}
-                  title={t('Edit Embed')}
+                  title={t('blocks.embeds.overview.editEmbed')}
                   onClick={() => setEmbedDialogOpen(true)}
                   margin={Spacing.ExtraSmall}
                 />

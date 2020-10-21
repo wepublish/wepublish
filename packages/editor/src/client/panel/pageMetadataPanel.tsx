@@ -68,11 +68,11 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     <>
       <Panel>
         <PanelHeader
-          title={t('Metadata')}
+          title={t('pageEditor.panels.metadata')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('pageEditor.panels.close')}
               onClick={() => onClose?.()}
             />
           }
@@ -80,7 +80,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('Slug')}
+              label={t('pageEditor.panels.slug')}
               value={slug}
               onChange={e => onChange?.({...value, slug: e.target.value})}
             />
@@ -88,7 +88,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('Title')}
+              label={t('pageEditor.panels.title')}
               value={title}
               onChange={e => onChange?.({...value, title: e.target.value})}
             />
@@ -96,7 +96,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextArea
-              label={t('Description')}
+              label={t('pageEditor.panels.description')}
               value={description}
               onChange={e => onChange?.({...value, description: e.target.value})}
             />
@@ -104,14 +104,14 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
           <Box marginBottom={Spacing.Small}>
             <TagInput
-              label={t('Tags')}
-              description={t('Press enter to add tag')}
+              label={t('pageEditor.panels.tags')}
+              description={t('pageEditor.panels.addTag')}
               value={tags}
               onChange={tags => onChange?.({...value, tags: tags ?? []})}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title={t('Image')} />
+        <PanelSectionHeader title={t('pageEditor.panels.image')} />
         <PanelSection dark>
           <Box height={200}>
             <Card>
@@ -121,19 +121,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
                       <IconButton
                         icon={MaterialIconImageOutlined}
-                        title={t('Choose Image')}
+                        title={t('pageEditor.panels.chooseImage')}
                         onClick={() => setChooseModalOpen(true)}
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
                         icon={MaterialIconEditOutlined}
-                        title={t('Edit Image')}
+                        title={t('pageEditor.panels.editImage')}
                         onClick={() => setEditModalOpen(true)}
                         margin={Spacing.ExtraSmall}
                       />
                       <IconButton
                         icon={MaterialIconClose}
-                        title={t('Remove Image')}
+                        title={t('pageEditor.panels.removeImage')}
                         onClick={() => onChange?.({...value, image: undefined})}
                         margin={Spacing.ExtraSmall}
                       />

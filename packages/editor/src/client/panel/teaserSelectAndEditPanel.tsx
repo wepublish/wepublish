@@ -32,7 +32,7 @@ export function TeaserSelectAndEditPanel({onClose, onSelect}: TeaserSelectAndEdi
       <Drawer open={isEditOpen} width={480}>
         {() => (
           <TeaserEditPanel
-            closeLabel={t('Back')}
+            closeLabel={t('articleEditor.panels.back')}
             closeIcon={MaterialIconArrowBack}
             initialTeaser={{
               ...teaser!,

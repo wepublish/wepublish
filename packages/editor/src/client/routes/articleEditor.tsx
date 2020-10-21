@@ -153,7 +153,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         title,
         lead: lead ?? '',
         tags,
-        properties,
+        properties: properties.map(property => ({
+          key: property.key,
+          value: property.value,
+          public: property.public
+        })),
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
@@ -195,7 +199,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Saved')
+      setSuccessMessage(t('articleEditor.overview.draftSaved'))
     } else {
       const {data} = await createArticle({variables: {input}})
 
@@ -205,10 +209,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           route: ArticleEditRoute.create({id: data?.createArticle.id})
         })
       }
-
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Draft Created')
+      setSuccessMessage(t('articleEditor.overview.draftCreated'))
     }
   }
 
@@ -235,13 +238,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Article Published')
+      setSuccessMessage(t('articleEditor.overview.articlePublished'))
     }
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage('Article Not Found')
+      setErrorMessage(t('articleEditor.overview.notFound'))
       setErrorToastOpen(true)
     }
   }, [isNotFound])
@@ -254,7 +257,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             leftChildren={
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
-                label={t('Back')}
+                label={t('articleEditor.overview.back')}
                 route={ArticleListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -265,7 +268,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               <>
                 <NavigationButton
                   icon={MaterialIconInsertDriveFileOutlined}
-                  label={t('Metadata')}
+                  label={t('articleEditor.overview.metadata')}
                   onClick={() => setMetaDrawerOpen(true)}
                   disabled={isDisabled}
                 />
@@ -273,7 +276,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 {isNew && createData == null ? (
                   <NavigationButton
                     icon={MaterialIconSaveOutlined}
-                    label={t('Create')}
+                    label={t('articleEditor.overview.create')}
                     onClick={() => handleSave()}
                     disabled={isDisabled}
                   />
@@ -281,13 +284,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   <>
                     <NavigationButton
                       icon={MaterialIconSaveOutlined}
-                      label={t('Save')}
+                      label={t('articleEditor.overview.save')}
                       onClick={() => handleSave()}
                       disabled={isDisabled}
                     />
                     <NavigationButton
                       icon={MaterialIconPublishOutlined}
-                      label={t('Publish')}
+                      label={t('articleEditor.overview.publish')}
                       onClick={() => setPublishDialogOpen(true)}
                       disabled={isDisabled}
                     />

@@ -135,18 +135,18 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
     <>
       <Panel>
         <PanelHeader
-          title={id ? 'Edit UserRole' : 'Create UserRole'}
+          title={id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('userRoles.panels.close')}
               onClick={() => onClose?.()}
             />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
+              label={id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
               disabled={isDisabled}
               onClick={handleSave}
             />
@@ -156,7 +156,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('Name')}
+              label={t('userRoles.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -166,7 +166,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('Description')}
+              label={t('userRoles.panels.description')}
               value={description}
               disabled={isDisabled}
               onChange={e => {
@@ -176,11 +176,11 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           </Box>
           {systemRole && (
             <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">{t('is a System Role and can not be edited')}</Typography>
+              <Typography variant="body1">{t('userRoles.panels.systemRole')}</Typography>
             </Box>
           )}
         </PanelSection>
-        <PanelSectionHeader title={t('Permissions')} />
+        <PanelSectionHeader title={t('userRoles.panels.permissions')} />
         <PanelSection>
           {permissions.map(permission => {
             return (
