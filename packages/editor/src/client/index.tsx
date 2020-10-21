@@ -11,8 +11,6 @@ import './i18n'
 
 import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
-import './i18n'
-
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
 import {RouteProvider} from './route'
