@@ -413,7 +413,11 @@
       "peering": "Peering",
       "tokens": "Tokens",
       "logout": "Logout",
-      "languageSwitch": "Français"
+      "languageSwitch": {
+        "currentLanguage": "Français",
+        "close": "Fermer",
+        "selectNewLanguage": "Choisir nouvelle langue"
+      }
     },
     "login": {
       "username": "Username",

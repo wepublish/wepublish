@@ -75,7 +75,7 @@ export function LanguageSwitch() {
     <>
       <MenuButton
         icon={MaterialIconLanguage}
-        label={t('navbar.languageSwitch')}
+        label={t('navbar.languageSwitch.currentLanguage')}
         onClick={() => setIsLanguageSwitchDialogOpen(true)}
       />
       <Dialog
@@ -86,11 +86,11 @@ export function LanguageSwitch() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('Select new language')}
+              title={t('navbar.languageSwitch.selectNewLanguage')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('Close')}
+                  label={t('navbar.languageSwitch.close')}
                   onClick={() => setIsLanguageSwitchDialogOpen(false)}
                 />
               }
