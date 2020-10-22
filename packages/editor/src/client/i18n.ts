@@ -6,21 +6,14 @@ import en from './locales/en.json'
 import fr from './locales/fr.json'
 import de from './locales/de.json'
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: 'en',
-    debug: true,
-    resources: {
-      en,
-      fr,
-      de
-    },
-
-    interpolation: {
-      escapeValue: false // not needed for react as it escapes by default
-    }
-  })
+i18n.use(LanguageDetector).use(initReactI18next).init({
+  fallbackLng: 'en',
+  debug: false,
+  resources: {
+    en,
+    fr,
+    de
+  }
+})
 
 export default i18n
