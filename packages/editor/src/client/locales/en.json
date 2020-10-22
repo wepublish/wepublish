@@ -400,8 +400,11 @@
         "title": "Title",
         "leadText": "Lead Text "
       },
-      "mapLeafler": {
-        "overview": {},
+      "mapLeaflet": {
+        "overview": {
+          "caption": "Caption",
+          "mapDescription": "Map description"
+        },
         "panels": {
           "editMapMarkers": "Edit map markers",
           "close": "Close",
@@ -411,9 +414,7 @@
           "title": "Title",
           "description": "Description",
           "noAddressFound": "No Address found",
-          "addPOI": "Add point of interest",
-          "caption": "Caption",
-          "mapDescription": "Map description"
+          "addPOI": "Add point of interest"
         }
       }
     },

@@ -2,7 +2,15 @@ import React, {useState} from 'react'
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './leaflet.css'
-import {BlockProps, Box, ZIndex, IconButton, Spacing, TextInput, Drawer} from '@karma.run/ui'
+import {
+  BlockProps,
+  Box,
+  ZIndex,
+  IconButton,
+  Spacing,
+  Drawer,
+  TypographicTextArea
+} from '@karma.run/ui'
 import {MaterialIconMoreVert} from '@karma.run/icons'
 import {MapLeafletBlockValue} from '../types'
 import {MapLeafletEditPanel} from '../../panel/mapLeafletEditPanel'
@@ -69,15 +77,16 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
             margin={Spacing.ExtraSmall}
           />
         </Box>
+
         <Box marginTop={Spacing.ExtraSmall}>
-          <TextInput
-            label={t('blocks.mapLeaflet.overview.caption')}
-            description={t('blocks.mapLeaflet.overview.mapDescription')}
+          <TypographicTextArea
+            variant="subtitle2"
+            align="center"
+            placeholder={t('blocks.mapLeaflet.overview.caption')}
             value={caption}
-            onChange={event => {
-              onChange({...value, caption: event.target.value})
+            onChange={e => {
+              onChange({...value, caption: e.target.value})
             }}
-            marginBottom={Spacing.Small}
           />
         </Box>
       </Box>

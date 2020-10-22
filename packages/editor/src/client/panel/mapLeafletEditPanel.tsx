@@ -17,7 +17,8 @@ import {
   AutocompleteInputListProps,
   SelectList,
   SelectListItem,
-  MarginProps
+  MarginProps,
+  PanelSectionHeader
 } from '@karma.run/ui'
 
 import {MapLeafletItem} from '../blocks/types'
@@ -74,6 +75,8 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
         }
       />
       <PanelSection>
+        <PanelSectionHeader title="Map Center" />
+        <PanelSectionHeader title="Map Markers" />
         <ListInput
           value={items}
           onChange={items => setItems(items)}
