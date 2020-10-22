@@ -412,7 +412,8 @@
       "userRoles": "User Roles",
       "peering": "Peering",
       "tokens": "Tokens",
-      "logout": "Logout"
+      "logout": "Logout",
+      "languageSwitch": "Français"
     },
     "login": {
       "username": "Username",

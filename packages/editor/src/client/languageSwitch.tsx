@@ -32,17 +32,18 @@ export function useStickyState(
   return [value, setValue]
 }
 
+let AVAILABLE_LANG: {id: string; lang: string; name: string}[] = []
+
 export function LanguageSelector() {
-  const [uiLanguage, setUILanguage] = useStickyState(
+  AVAILABLE_LANG = [
     {id: 'en', lang: 'en_US', name: 'English'},
-    'savedValues'
-  )
+    {id: 'fr', lang: 'fr_FR', name: 'Français'},
+    {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+  ]
 
-  const [, i18n] = useTranslation()
+  const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0], 'localStorageValues')
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng)
-  }
+  const {i18n} = useTranslation()
 
   const css = useStyle()
   const languageSelector = cssRule({
@@ -52,17 +53,13 @@ export function LanguageSelector() {
   return (
     <div className={css(languageSelector)}>
       <Select
-        options={[
-          {id: 'en', lang: 'en_US', name: 'English'},
-          {id: 'de', lang: 'de_CH', name: 'Deutsch'},
-          {id: 'fr', lang: 'fr_FR', name: 'Français'}
-        ]}
-        value={{id: uiLanguage.id, lang: uiLanguage.lang, name: uiLanguage.name}}
+        options={AVAILABLE_LANG}
+        value={AVAILABLE_LANG.find(lang => lang.id === uiLanguage.id)}
         renderListItem={uiLanguage => uiLanguage.name}
         onChange={values => {
           if (values?.name) {
             setUILanguage(values)
-            changeLanguage(values.id)
+            i18n.changeLanguage(values.id)
           }
         }}
       />
@@ -71,7 +68,6 @@ export function LanguageSelector() {
 }
 
 export function LanguageSwitch() {
-  const currentLanguage = JSON.parse(localStorage.getItem('savedValues') || '{}')
   const [isLanguageSwitchDialogOpen, setIsLanguageSwitchDialogOpen] = useState(false)
   const {t} = useTranslation()
 
@@ -79,7 +75,7 @@ export function LanguageSwitch() {
     <>
       <MenuButton
         icon={MaterialIconLanguage}
-        label={currentLanguage.name}
+        label={t('navbar.languageSwitch')}
         onClick={() => setIsLanguageSwitchDialogOpen(true)}
       />
       <Dialog
