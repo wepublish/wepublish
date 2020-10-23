@@ -1,9 +1,25 @@
+fragment FullUserSubscription on UserSubscription {
+    memberPlan {
+        ...FullMemberPlan
+    }
+    paymentPeriodicity
+    monthlyAmount
+    autoRenew
+    startsAt
+    payedUntil
+    paymentMethod
+    deactivatedAt
+}
+
 fragment FullUser on User {
     id
     name
     email
     roles {
         ...FullUserRole
+    }
+    subscription {
+        ...FullUserSubscription
     }
 }
 
@@ -45,6 +61,12 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
     }
 }
 
+mutation UpdateUserSubscription($userId: ID!, $input: UserSubscriptionInput!) {
+    updateUserSubscription(userId: $userId, input: $input) {
+        ...FullUserSubscription
+    }
+}
+
 mutation ResetUserPassword($id: ID!, $password: String!) {
     resetUserPassword(id: $id, password: $password) {
         ...FullUser
@@ -53,4 +75,8 @@ mutation ResetUserPassword($id: ID!, $password: String!) {
 
 mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
+}
+
+mutation DeleteUserSubscription($userId: ID!) {
+    deleteUserSubscription(userId: $userId)
 }

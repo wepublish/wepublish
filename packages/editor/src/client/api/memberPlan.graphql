@@ -23,8 +23,6 @@ fragment FullMemberPlan on MemberPlan {
         forceAutoRenewal
     }
     ...MemberPlanRef
-
-
 }
 
 query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {

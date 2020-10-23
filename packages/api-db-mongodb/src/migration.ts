@@ -295,6 +295,13 @@ export const Migrations: Migration[] = [
       await paymentMethod.createIndex({name: 1})
       await paymentMethod.createIndex({paymentAdapter: 1})
     }
+  },
+  {
+    version: 4,
+    async migrate(db, locale) {
+      const users = db.collection(CollectionName.Users)
+      await users.createIndex({'subscription.memberPlanId': 1})
+    }
   }
 ]
 

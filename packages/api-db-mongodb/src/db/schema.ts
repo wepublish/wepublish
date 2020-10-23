@@ -5,7 +5,8 @@ import {
   MetadataProperty,
   NavigationLink,
   PageBlock,
-  RichTextNode
+  RichTextNode,
+  UserSubscription
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -83,6 +84,8 @@ export interface DBUser {
   password: string
 
   roleIDs: string[]
+
+  subscription?: UserSubscription
 }
 
 export interface DBUserRole {

@@ -14,7 +14,10 @@ import {
   ConnectionResult,
   LimitType,
   InputCursorType,
-  UserSort
+  UserSort,
+  OptionalUserSubscription,
+  UpdateUserSubscriptionArgs,
+  DeleteUserSubscriptionArgs
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -121,7 +124,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        roleIDs: user.roleIDs,
+        subscription: user.subscription
       }
     })
   }
@@ -134,7 +138,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        roleIDs: user.roleIDs,
+        subscription: user.subscription
       }
     }
 
@@ -148,7 +153,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        roleIDs: user.roleIDs,
+        subscription: user.subscription
       }
     } else {
       return null
@@ -250,6 +256,57 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
       totalCount
     }
+  }
+
+  async updateUserSubscription({
+    userId,
+    input
+  }: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription> {
+    const {
+      memberPlanId,
+      paymentPeriodicity,
+      monthlyAmount,
+      autoRenew,
+      startsAt,
+      payedUntil,
+      paymentMethod,
+      deactivatedAt
+    } = input
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userId},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.memberPlanId': memberPlanId,
+          'subscription.paymentPeriodicity': paymentPeriodicity,
+          'subscription.monthlyAmount': monthlyAmount,
+          'subscription.autoRenew': autoRenew,
+          'subscription.startsAt': startsAt,
+          'subscription.payedUntil': payedUntil,
+          'subscription.paymentMethod': paymentMethod,
+          'subscription.deactivatedAt': deactivatedAt
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async deleteUserSubscription({userId}: DeleteUserSubscriptionArgs): Promise<string | null> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userId},
+      {
+        $set: {
+          modifiedAt: new Date()
+        },
+        $unset: {
+          subscription: ''
+        }
+      }
+    )
+
+    return value?._id
   }
 }
 
