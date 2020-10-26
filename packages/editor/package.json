@@ -29,9 +29,10 @@
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
-    "build": "run-p build:*",
-    "build:client": "webpack --mode production",
+    "build": "run-p build:client build:server",
+    "build:client": "webpack --mode development",
     "build:server": "tsc -b ./src/shared ./src/server",
+    "build:production": "webpack --mode production && yarn build:server",
     "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
