@@ -408,13 +408,17 @@
         "panels": {
           "editMapMarkers": "Edit map markers",
           "close": "Close",
+          "confirm": "Confirm",
           "address": "Address",
           "latitude": "Latitude",
           "longitude": "Longitude",
+          "zoom": "Zoom",
           "title": "Title",
           "description": "Description",
           "noAddressFound": "No Address found",
-          "addPOI": "Add point of interest"
+          "addPOI": "Add point of interest",
+          "mapCenter": "Map Center",
+          "mapMarkers": "Map Markers"
         }
       }
     },

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import {MaterialIconClose} from '@karma.run/icons'
+import {MaterialIconCheck, MaterialIconClose} from '@karma.run/icons'
 import {MarkerPoint, queryOpenCage} from '../utility'
+import {MapLeafletBlockValue, MapLeafletItem} from '../blocks/types'
 
 import {
   NavigationButton,
@@ -21,16 +22,16 @@ import {
   PanelSectionHeader
 } from '@karma.run/ui'
 
-import {MapLeafletItem} from '../blocks/types'
 import nanoid from 'nanoid'
 import {useTranslation} from 'react-i18next'
 
 export interface MapLeafletEditPanel {
-  initialItems: ListValue<MapLeafletItem>[]
-  onClose?(items: ListValue<MapLeafletItem>[]): void
+  mapLeaflet: MapLeafletBlockValue
+  onClose(): void
+  onConfirm?(mapLeaflet: MapLeafletBlockValue): void
 }
 
-export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel) {
+export function MapLeafletEditPanel({onClose, onConfirm, mapLeaflet}: MapLeafletEditPanel) {
   const {t} = useTranslation()
 
   const defaultItemValue = {
@@ -41,6 +42,13 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
     description: '',
     image: null
   }
+
+  const initialItems = mapLeaflet.items
+
+  const [zoomLevel, setZoomLevel] = useState<number>(mapLeaflet.zoom)
+  const [centerLat, setCenterLat] = useState<number>(mapLeaflet.centerLat)
+  const [centerLng, setCenterLng] = useState<number>(mapLeaflet.centerLng)
+
   const [items, setItems] = useState<ListValue<MapLeafletItem>[]>(() =>
     initialItems.map(item =>
       item.value.address === ''
@@ -70,19 +78,67 @@ export function MapLeafletEditPanel({onClose, initialItems}: MapLeafletEditPanel
           <NavigationButton
             icon={MaterialIconClose}
             label={t('blocks.mapLeaflet.panels.close')}
-            onClick={() => onClose?.(items)}
+            onClick={() => onClose()}
+          />
+        }
+        rightChildren={
+          <NavigationButton
+            icon={MaterialIconCheck}
+            label={t('blocks.mapLeaflet.panels.confirm')}
+            onClick={() =>
+              onConfirm?.({
+                zoom: zoomLevel,
+                centerLat,
+                centerLng,
+                items
+              })
+            }
           />
         }
       />
       <PanelSection>
-        <PanelSectionHeader title="Map Center" />
-        <PanelSectionHeader title="Map Markers" />
-        <ListInput
-          value={items}
-          onChange={items => setItems(items)}
-          defaultValue={defaultItemValue}>
-          {props => <MapLeafletItems {...props} />}
-        </ListInput>
+        <PanelSectionHeader title={t('blocks.mapLeaflet.panels.mapCenter')} />
+        <Box position="relative" paddingLeft={Spacing.Small} paddingRight={Spacing.Small}>
+          <AddressInput
+            label={t('blocks.mapLeaflet.panels.address')}
+            value={[{address: defaultItemValue.address, lat: centerLat, lng: centerLng}]}
+            marginBottom={Spacing.ExtraSmall}
+          />
+          <TextInput
+            marginBottom={Spacing.ExtraSmall}
+            marginTop={Spacing.ExtraSmall}
+            type="number"
+            label={t('blocks.mapLeaflet.panels.latitude')}
+            value={centerLat}
+            onChange={e => setCenterLat(parseInt(e.target.value))}
+            required
+          />
+          <TextInput
+            marginBottom={Spacing.ExtraSmall}
+            type="number"
+            label={t('blocks.mapLeaflet.panels.longitude')}
+            value={centerLng}
+            onChange={e => setCenterLng(parseInt(e.target.value))}
+            required
+          />
+          <TextInput
+            marginBottom={Spacing.ExtraSmall}
+            type="number"
+            label={t('blocks.mapLeaflet.panels.zoom')}
+            value={zoomLevel}
+            onChange={e => setZoomLevel(parseInt(e.target.value))}
+            required
+          />
+        </Box>
+        <PanelSectionHeader title={t('blocks.mapLeaflet.panels.mapMarkers')} />
+        <Box position="relative" marginTop={Spacing.ExtraSmall}>
+          <ListInput
+            value={items}
+            onChange={items => setItems(items)}
+            defaultValue={defaultItemValue}>
+            {props => <MapLeafletItems {...props} />}
+          </ListInput>
+        </Box>
       </PanelSection>
     </Panel>
   )
@@ -146,6 +202,7 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
 export interface AddressInputProps extends MarginProps {
   label?: string
   description?: string
+  centerAddress?: string
   value: MarkerPoint[]
   onChange(address?: MarkerPoint[]): void
 }

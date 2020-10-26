@@ -42,6 +42,7 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
     <>
       <Box position="relative" width="100%" height="100%">
         <Map
+          dragging={false}
           center={[centerLat, centerLng]}
           zoom={zoom}
           style={{width: '100%', height: '45vh'}}
@@ -94,9 +95,10 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
       <Drawer open={isMapLeafletDialogOpen} width={480}>
         {() => (
           <MapLeafletEditPanel
-            initialItems={value.items}
-            onClose={items => {
-              onChange({...value, items})
+            mapLeaflet={value}
+            onClose={() => setMapLeafletDialogOpen(false)}
+            onConfirm={mapleaflet => {
+              onChange(mapleaflet)
               setMapLeafletDialogOpen(false)
             }}
           />

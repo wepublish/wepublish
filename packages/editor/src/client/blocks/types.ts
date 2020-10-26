@@ -55,6 +55,7 @@ export interface MapLeafletItem {
 export interface MapLeafletBlockValue {
   centerLat: number
   centerLng: number
+  centerAddress?: string
   zoom: number
   caption?: string
   items: ListValue<MapLeafletItem>[]
