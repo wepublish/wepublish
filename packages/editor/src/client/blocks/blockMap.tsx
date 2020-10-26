@@ -61,8 +61,9 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.MapLeaflet]: {
     field: props => <MapLeafletBlock {...props} />,
     defaultValue: {
-      centerLat: 46.948,
-      centerLng: 7.4485,
+      centerLat: 47.3778762,
+      centerLng: 8.5271078,
+      centerAddress: '',
       zoom: 8,
       caption: '',
       items: [

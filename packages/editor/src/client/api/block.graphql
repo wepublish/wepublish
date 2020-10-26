@@ -92,9 +92,10 @@ fragment FullBlock on Block {
     }
   }
 
-  ... on MapLeafletBlock{
+  ... on MapLeafletBlock {
     centerLat
     centerLng
+    centerAddress
     zoom
     caption
     items {

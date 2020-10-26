@@ -439,6 +439,7 @@ export const GraphQLMapLeafletBlock = new GraphQLObjectType<MapLeafletBlock, Con
   fields: {
     centerLat: {type: GraphQLNonNull(GraphQLFloat)},
     centerLng: {type: GraphQLNonNull(GraphQLFloat)},
+    centerAddress: {type: GraphQLString},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMapLeafletItem)))}
@@ -563,6 +564,7 @@ export const GraphQLMapLeafletBlockInput = new GraphQLInputObjectType({
   fields: {
     centerLat: {type: GraphQLNonNull(GraphQLFloat)},
     centerLng: {type: GraphQLNonNull(GraphQLFloat)},
+    centerAddress: {type: GraphQLString},
     zoom: {type: GraphQLNonNull(GraphQLInt)},
     caption: {type: GraphQLString},
     items: {type: GraphQLList(GraphQLMapLeafletItemInput)}

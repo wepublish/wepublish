@@ -24,6 +24,7 @@ import {
 
 import nanoid from 'nanoid'
 import {useTranslation} from 'react-i18next'
+// import {marker} from 'leaflet'
 
 export interface MapLeafletEditPanel {
   mapLeaflet: MapLeafletBlockValue
@@ -48,6 +49,9 @@ export function MapLeafletEditPanel({onClose, onConfirm, mapLeaflet}: MapLeaflet
   const [zoomLevel, setZoomLevel] = useState<number>(mapLeaflet.zoom)
   const [centerLat, setCenterLat] = useState<number>(mapLeaflet.centerLat)
   const [centerLng, setCenterLng] = useState<number>(mapLeaflet.centerLng)
+  const [centerAddress, setCenterAddress] = useState<string>(
+    mapLeaflet.centerAddress || defaultItemValue.address
+  )
 
   const [items, setItems] = useState<ListValue<MapLeafletItem>[]>(() =>
     initialItems.map(item =>
@@ -90,6 +94,7 @@ export function MapLeafletEditPanel({onClose, onConfirm, mapLeaflet}: MapLeaflet
                 zoom: zoomLevel,
                 centerLat,
                 centerLng,
+                centerAddress,
                 items
               })
             }
@@ -98,11 +103,19 @@ export function MapLeafletEditPanel({onClose, onConfirm, mapLeaflet}: MapLeaflet
       />
       <PanelSection>
         <PanelSectionHeader title={t('blocks.mapLeaflet.panels.mapCenter')} />
+        {console.log(centerAddress)}
         <Box position="relative" paddingLeft={Spacing.Small} paddingRight={Spacing.Small}>
           <AddressInput
             label={t('blocks.mapLeaflet.panels.address')}
-            value={[{address: defaultItemValue.address, lat: centerLat, lng: centerLng}]}
+            value={[{address: centerAddress, lat: centerLat, lng: centerLng}]}
             marginBottom={Spacing.ExtraSmall}
+            onChange={markerPoints => {
+              if (markerPoints !== undefined && markerPoints.length > 0) {
+                setCenterAddress(markerPoints[1].address)
+                setCenterLat(markerPoints[1].lat)
+                setCenterLng(markerPoints[1].lng)
+              }
+            }}
           />
           <TextInput
             marginBottom={Spacing.ExtraSmall}
@@ -202,7 +215,6 @@ export function MapLeafletItems({value, onChange}: FieldProps<MapLeafletItem>) {
 export interface AddressInputProps extends MarginProps {
   label?: string
   description?: string
-  centerAddress?: string
   value: MarkerPoint[]
   onChange(address?: MarkerPoint[]): void
 }
@@ -251,7 +263,9 @@ function AddressInputList({
                 key={index}
                 highlighted={index === highlightedIndex}
                 {...getItemProps({item, index})}>
-                <Box display="flex">{item.address}</Box>
+                <Box display="flex">
+                  {item.address} {item.lat} {item.lng}
+                </Box>
               </SelectListItem>
             )
           })

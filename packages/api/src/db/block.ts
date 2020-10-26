@@ -102,6 +102,7 @@ export interface MapLeafletBlock {
   type: BlockType.MapLeaflet
   centerLat: number
   centerLng: number
+  centerAddress?: string
   zoom: number
   caption?: string
   items: MapLeafletItem[]

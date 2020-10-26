@@ -43,10 +43,14 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
       <Box position="relative" width="100%" height="100%">
         <Map
           dragging={false}
+          zoomControl={false}
+          boxZoom={false}
+          doubleClickZoom={false}
+          scrollWheelZoom={false}
           center={[centerLat, centerLng]}
           zoom={zoom}
           style={{width: '100%', height: '45vh'}}
-          onViewportChange={viewport => {
+          /* onViewportChange={viewport => {
             if (viewport.center && viewport.zoom) {
               onChange({
                 ...value,
@@ -55,7 +59,8 @@ export function MapLeafletBlock({value, onChange}: BlockProps<MapLeafletBlockVal
                 zoom: viewport.zoom
               })
             }
-          }}>
+          }} */
+        >
           <TileLayer url={tilelayerURL} attribution={tilelayerAttribution} />
           {items.map((item, index) => (
             <Marker position={[item.value.lat, item.value.lng]} key={index} icon={markerIcon}>

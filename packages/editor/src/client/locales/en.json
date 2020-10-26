@@ -403,7 +403,8 @@
       "mapLeaflet": {
         "overview": {
           "caption": "Caption",
-          "mapDescription": "Map description"
+          "mapDescription": "Map description",
+          "addPOI": "Add point of interest"
         },
         "panels": {
           "editMapMarkers": "Edit map markers",
@@ -416,7 +417,7 @@
           "title": "Title",
           "description": "Description",
           "noAddressFound": "No Address found",
-          "addPOI": "Add point of interest",
+
           "mapCenter": "Map Center",
           "mapMarkers": "Map Markers"
         }

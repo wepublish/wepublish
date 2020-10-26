@@ -257,6 +257,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         mapLeaflet: {
           centerLat: block.value.centerLat,
           centerLng: block.value.centerLng,
+          centerAddress: block.value.centerAddress,
           zoom: block.value.zoom,
           caption: block.value.caption,
           items: block.value.items.map(
@@ -466,6 +467,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           centerLat: block.centerLat,
           centerLng: block.centerLng,
+          centerAddress: block.centerAddress ?? '',
           zoom: block.zoom,
           caption: block.caption ?? '',
           items: block.items.map(({address, lat, lng, title, description, image}) => ({
