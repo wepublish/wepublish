@@ -25,10 +25,6 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({t: key => key})
-}))
-
 test('Author Edit Panel should render', () => {
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>

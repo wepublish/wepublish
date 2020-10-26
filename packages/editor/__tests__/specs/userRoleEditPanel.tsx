@@ -124,10 +124,6 @@ const permissions = [
   }
 ]
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({t: key => key})
-}))
-
 test('Role Panel should render', async () => {
   const mocks = [permissionListQuery]
   const wrapper = mount(
