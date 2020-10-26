@@ -23,6 +23,10 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({t: key => key})
+}))
+
 const userRoleListDocumentQuery = {
   request: {
     query: UserRoleListDocument,
