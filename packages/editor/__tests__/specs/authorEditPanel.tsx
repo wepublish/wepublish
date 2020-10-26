@@ -10,9 +10,10 @@ import {ListInput, TextInput} from '@karma.run/ui'
 Enzyme.configure({adapter: new Adapter()})
 
 import {UIProvider} from '@karma.run/ui'
-import {act} from 'react-dom/test-utils'
+//import {act} from 'react-dom/test-utils'
+import {updateWrapper} from '../utils'
 import * as fela from 'fela'
-import wait from 'waait'
+//import wait from 'waait'
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -55,24 +56,20 @@ test('Author Edit Panel should render with id', async () => {
       })
     }
   ]
-  let wrapper
 
-  await act(async () => {
-    wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={true}>
-          <AuthorEditPanel id={'fakeId2'} />
-        </MockedProvider>
-      </UIProvider>
-    )
-    await wait(100)
-    wrapper.update()
-  })
+  const wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={true}>
+        <AuthorEditPanel id={'fakeId2'} />
+      </MockedProvider>
+    </UIProvider>
+  )
 
+  await updateWrapper(wrapper, 100)
   expect(wrapper).toMatchSnapshot()
 })
 
-test('Clicking add block button should display two text fields ', () => {
+test('Clicking add block button should display two text fields ', async () => {
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider addTypename={false}>
@@ -80,11 +77,13 @@ test('Clicking add block button should display two text fields ', () => {
       </MockedProvider>
     </UIProvider>
   )
+  await updateWrapper(wrapper, 100)
+
   const button = wrapper.find(ListInput).find('button')
   button.simulate('click')
   expect(wrapper).toMatchSnapshot()
 
-  const inputField = wrapper.find(TextInput).at(1).find('input')
+  const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
   inputField.props().value = 'abcd'
 
   expect(inputField).toMatchSnapshot()

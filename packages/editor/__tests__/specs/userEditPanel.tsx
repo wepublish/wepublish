@@ -92,7 +92,7 @@ const userDocumentQuery = {
   })
 }
 
-test('User Edit Panel should render', () => {
+test('User Edit Panel should render', async () => {
   const mocks = [userRoleListDocumentQuery]
   const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
@@ -101,6 +101,8 @@ test('User Edit Panel should render', () => {
       </MockedProvider>
     </UIProvider>
   )
+  await updateWrapper(wrapper, 100)
+
   expect(wrapper).toMatchSnapshot()
 })
 
@@ -122,7 +124,7 @@ test('User Edit Panel should render with id', async () => {
 test('User should be able to select and add roles', async () => {
   const mocks = [userRoleListDocumentQuery]
 
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
@@ -131,7 +133,7 @@ test('User should be able to select and add roles', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  wrapper.find('Select[description="Select User Role"] button').simulate('click')
+  wrapper.find('Select button').simulate('click')
   wrapper.find('li[role="option"]').last().simulate('click')
 
   wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
@@ -149,7 +151,6 @@ test('User should be able to remove user role', async () => {
     </UIProvider>
   )
   await updateWrapper(wrapper, 100)
-
   wrapper.find('ForwardRef(IconButton)').first().simulate('click')
   wrapper.find('ForwardRef(MenuButton)').simulate('click')
 
@@ -196,13 +197,13 @@ test('User should be able to create a new user', async () => {
 
   act(() => {
     wrapper
-      .find('input[placeholder="Name"]')
+      .find('input[placeholder="userList.panels.name"]')
       .simulate('change', {target: {value: 'Testing Müller'}})
     wrapper
-      .find('input[placeholder="Email"]')
+      .find('input[placeholder="userList.panels.email"]')
       .simulate('change', {target: {value: 'testing@mueller.com'}})
     wrapper
-      .find('input[placeholder="Password"]')
+      .find('input[placeholder="userList.panels.password"]')
       .simulate('change', {target: {value: 'superSecret'}})
   })
 

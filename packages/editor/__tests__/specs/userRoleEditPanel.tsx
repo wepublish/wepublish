@@ -16,7 +16,6 @@ import {UIProvider /*, Select*/} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
-import {MaterialIconFormatListBulletedTwoTone} from '@karma.run/icons'
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -242,9 +241,11 @@ test('User should be able to create a new role', async () => {
   await updateWrapper(wrapper, 100)
 
   act(() => {
-    wrapper.find('input[placeholder="Name"]').simulate('change', {target: {value: userRole.name}})
     wrapper
-      .find('input[placeholder="Description"]')
+      .find('input[placeholder="userRoles.panels.name"]')
+      .simulate('change', {target: {value: userRole.name}})
+    wrapper
+      .find('input[placeholder="userRoles.panels.description"]')
       .simulate('change', {target: {value: userRole.description}})
   })
 

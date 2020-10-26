@@ -8483,7 +8483,7 @@ exports[`Role Panel should render 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="userRoles.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -8491,17 +8491,17 @@ exports[`Role Panel should render 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Create"
+                      label="userRoles.panels.create"
                       onClick={[Function]}
                     />
                   }
-                  title="Create UserRole"
+                  title="userRoles.panels.createUserRole"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="userRoles.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -8542,7 +8542,7 @@ exports[`Role Panel should render 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                userRoles.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -8555,13 +8555,13 @@ exports[`Role Panel should render 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Create UserRole
+                          userRoles.panels.createUserRole
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Create"
+                        label="userRoles.panels.create"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -8602,7 +8602,7 @@ exports[`Role Panel should render 1`] = `
                               element="span"
                             >
                               <span>
-                                Create
+                                userRoles.panels.create
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -8626,7 +8626,7 @@ exports[`Role Panel should render 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="userRoles.panels.name"
                             onChange={[Function]}
                             value=""
                           >
@@ -8639,7 +8639,7 @@ exports[`Role Panel should render 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="userRoles.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -8651,7 +8651,7 @@ exports[`Role Panel should render 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="userRoles.panels.name"
                                         value=""
                                       />
                                     </Styled(input)>
@@ -8664,7 +8664,7 @@ exports[`Role Panel should render 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        userRoles.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -8680,7 +8680,7 @@ exports[`Role Panel should render 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Description"
+                            label="userRoles.panels.description"
                             onChange={[Function]}
                             value=""
                           >
@@ -8693,7 +8693,7 @@ exports[`Role Panel should render 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Description"
+                                      placeholder="userRoles.panels.description"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -8705,7 +8705,7 @@ exports[`Role Panel should render 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Description"
+                                        placeholder="userRoles.panels.description"
                                         value=""
                                       />
                                     </Styled(input)>
@@ -8718,7 +8718,7 @@ exports[`Role Panel should render 1`] = `
                                       }
                                     >
                                       <span>
-                                        Description
+                                        userRoles.panels.description
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -8732,11 +8732,11 @@ exports[`Role Panel should render 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Permissions"
+                  title="userRoles.panels.permissions"
                 >
                   <Styled(div)>
                     <div>
-                      Permissions
+                      userRoles.panels.permissions
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -23803,7 +23803,7 @@ exports[`Role Panel should render with role 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="userRoles.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -23811,17 +23811,17 @@ exports[`Role Panel should render with role 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Save"
+                      label="userRoles.panels.save"
                       onClick={[Function]}
                     />
                   }
-                  title="Edit UserRole"
+                  title="userRoles.panels.editUserRole"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="userRoles.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -23862,7 +23862,7 @@ exports[`Role Panel should render with role 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                userRoles.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -23875,13 +23875,13 @@ exports[`Role Panel should render with role 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Edit UserRole
+                          userRoles.panels.editUserRole
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Save"
+                        label="userRoles.panels.save"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -23922,7 +23922,7 @@ exports[`Role Panel should render with role 1`] = `
                               element="span"
                             >
                               <span>
-                                Save
+                                userRoles.panels.save
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -23946,7 +23946,7 @@ exports[`Role Panel should render with role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="userRoles.panels.name"
                             onChange={[Function]}
                             value="Role 1"
                           >
@@ -23959,7 +23959,7 @@ exports[`Role Panel should render with role 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="userRoles.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -23971,7 +23971,7 @@ exports[`Role Panel should render with role 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="userRoles.panels.name"
                                         value="Role 1"
                                       />
                                     </Styled(input)>
@@ -23984,7 +23984,7 @@ exports[`Role Panel should render with role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        userRoles.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -24000,7 +24000,7 @@ exports[`Role Panel should render with role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Description"
+                            label="userRoles.panels.description"
                             onChange={[Function]}
                             value="Description for role 1"
                           >
@@ -24013,7 +24013,7 @@ exports[`Role Panel should render with role 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Description"
+                                      placeholder="userRoles.panels.description"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -24025,7 +24025,7 @@ exports[`Role Panel should render with role 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Description"
+                                        placeholder="userRoles.panels.description"
                                         value="Description for role 1"
                                       />
                                     </Styled(input)>
@@ -24038,7 +24038,7 @@ exports[`Role Panel should render with role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Description
+                                        userRoles.panels.description
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -24052,11 +24052,11 @@ exports[`Role Panel should render with role 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Permissions"
+                  title="userRoles.panels.permissions"
                 >
                   <Styled(div)>
                     <div>
-                      Permissions
+                      userRoles.panels.permissions
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -42767,7 +42767,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="userRoles.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -42775,17 +42775,17 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={true}
                       icon={[Function]}
-                      label="Save"
+                      label="userRoles.panels.save"
                       onClick={[Function]}
                     />
                   }
-                  title="Edit UserRole"
+                  title="userRoles.panels.editUserRole"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="userRoles.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -42826,7 +42826,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                userRoles.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -42839,13 +42839,13 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Edit UserRole
+                          userRoles.panels.editUserRole
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={true}
                         icon={[Function]}
-                        label="Save"
+                        label="userRoles.panels.save"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -42886,7 +42886,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                               element="span"
                             >
                               <span>
-                                Save
+                                userRoles.panels.save
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -42910,7 +42910,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={true}
-                            label="Name"
+                            label="userRoles.panels.name"
                             onChange={[Function]}
                             value="Role 1"
                           >
@@ -42923,7 +42923,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                     <Styled(input)
                                       disabled={true}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="userRoles.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -42935,7 +42935,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                       <input
                                         disabled={true}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="userRoles.panels.name"
                                         value="Role 1"
                                       />
                                     </Styled(input)>
@@ -42948,7 +42948,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        userRoles.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -42964,7 +42964,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={true}
-                            label="Description"
+                            label="userRoles.panels.description"
                             onChange={[Function]}
                             value="Description for role 1"
                           >
@@ -42977,7 +42977,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                     <Styled(input)
                                       disabled={true}
                                       onChange={[Function]}
-                                      placeholder="Description"
+                                      placeholder="userRoles.panels.description"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -42989,7 +42989,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                       <input
                                         disabled={true}
                                         onChange={[Function]}
-                                        placeholder="Description"
+                                        placeholder="userRoles.panels.description"
                                         value="Description for role 1"
                                       />
                                     </Styled(input)>
@@ -43002,7 +43002,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Description
+                                        userRoles.panels.description
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -43020,7 +43020,7 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                             variant="body1"
                           >
                             <p>
-                              is a System Role and can not be edited
+                              userRoles.panels.systemRole
                             </p>
                           </ForwardRef(Typography)>
                         </div>
@@ -43029,11 +43029,11 @@ exports[`Toggle sliders should be disabled with System Role 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Permissions"
+                  title="userRoles.panels.permissions"
                 >
                   <Styled(div)>
                     <div>
-                      Permissions
+                      userRoles.panels.permissions
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -70112,7 +70112,7 @@ exports[`User should be able to create a new role 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="userRoles.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -70120,17 +70120,17 @@ exports[`User should be able to create a new role 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Create"
+                      label="userRoles.panels.create"
                       onClick={[Function]}
                     />
                   }
-                  title="Create UserRole"
+                  title="userRoles.panels.createUserRole"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="userRoles.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -70171,7 +70171,7 @@ exports[`User should be able to create a new role 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                userRoles.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -70184,13 +70184,13 @@ exports[`User should be able to create a new role 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Create UserRole
+                          userRoles.panels.createUserRole
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Create"
+                        label="userRoles.panels.create"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -70231,7 +70231,7 @@ exports[`User should be able to create a new role 1`] = `
                               element="span"
                             >
                               <span>
-                                Create
+                                userRoles.panels.create
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -70255,7 +70255,7 @@ exports[`User should be able to create a new role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="userRoles.panels.name"
                             onChange={[Function]}
                             value="Brand New User Role"
                           >
@@ -70268,7 +70268,7 @@ exports[`User should be able to create a new role 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="userRoles.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -70280,7 +70280,7 @@ exports[`User should be able to create a new role 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="userRoles.panels.name"
                                         value="Brand New User Role"
                                       />
                                     </Styled(input)>
@@ -70293,7 +70293,7 @@ exports[`User should be able to create a new role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        userRoles.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -70309,7 +70309,7 @@ exports[`User should be able to create a new role 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Description"
+                            label="userRoles.panels.description"
                             onChange={[Function]}
                             value="A user role to be added to snapshot"
                           >
@@ -70322,7 +70322,7 @@ exports[`User should be able to create a new role 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Description"
+                                      placeholder="userRoles.panels.description"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -70334,7 +70334,7 @@ exports[`User should be able to create a new role 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Description"
+                                        placeholder="userRoles.panels.description"
                                         value="A user role to be added to snapshot"
                                       />
                                     </Styled(input)>
@@ -70347,7 +70347,7 @@ exports[`User should be able to create a new role 1`] = `
                                       }
                                     >
                                       <span>
-                                        Description
+                                        userRoles.panels.description
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -70361,11 +70361,11 @@ exports[`User should be able to create a new role 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Permissions"
+                  title="userRoles.panels.permissions"
                 >
                   <Styled(div)>
                     <div>
-                      Permissions
+                      userRoles.panels.permissions
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>

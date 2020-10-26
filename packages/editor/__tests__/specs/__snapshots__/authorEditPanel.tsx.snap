@@ -5723,7 +5723,7 @@ exports[`Author Edit Panel should render 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="authors.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -5731,17 +5731,17 @@ exports[`Author Edit Panel should render 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Create"
+                      label="authors.panels.create"
                       onClick={[Function]}
                     />
                   }
-                  title="Create Author"
+                  title="authors.panels.createAuthor"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="authors.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -5782,7 +5782,7 @@ exports[`Author Edit Panel should render 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                authors.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -5795,13 +5795,13 @@ exports[`Author Edit Panel should render 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Create Author
+                          authors.panels.createAuthor
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Create"
+                        label="authors.panels.create"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -5842,7 +5842,7 @@ exports[`Author Edit Panel should render 1`] = `
                               element="span"
                             >
                               <span>
-                                Create
+                                authors.panels.create
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -5866,7 +5866,7 @@ exports[`Author Edit Panel should render 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="authors.panels.name"
                             onChange={[Function]}
                             value=""
                           >
@@ -5879,7 +5879,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="authors.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -5891,7 +5891,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="authors.panels.name"
                                         value=""
                                       />
                                     </Styled(input)>
@@ -5904,7 +5904,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        authors.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -5918,11 +5918,11 @@ exports[`Author Edit Panel should render 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Image"
+                  title="authors.panels.image"
                 >
                   <Styled(div)>
                     <div>
-                      Image
+                      authors.panels.image
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -6003,11 +6003,11 @@ exports[`Author Edit Panel should render 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Links"
+                  title="authors.panels.links"
                 >
                   <Styled(div)>
                     <div>
-                      Links
+                      authors.panels.links
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -6109,11 +6109,11 @@ exports[`Author Edit Panel should render 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Biographical Information"
+                  title="authors.panels.bioInformation"
                 >
                   <Styled(div)>
                     <div>
-                      Biographical Information
+                      authors.panels.bioInformation
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -6758,7 +6758,7 @@ exports[`Author Edit Panel should render 1`] = `
                             </Styled(div)>
                           </Toolbar>
                           <Editable
-                            placeholder="Start writing..."
+                            placeholder="blocks.richText.startWriting"
                             renderElement={[Function]}
                             renderLeaf={[Function]}
                           >
@@ -6809,7 +6809,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           0,
                                         ],
                                       },
-                                      "placeholder": "Start writing...",
+                                      "placeholder": "blocks.richText.startWriting",
                                       Symbol(placeholder): true,
                                     },
                                   ]
@@ -6877,7 +6877,7 @@ exports[`Author Edit Panel should render 1`] = `
                                             0,
                                           ],
                                         },
-                                        "placeholder": "Start writing...",
+                                        "placeholder": "blocks.richText.startWriting",
                                         Symbol(placeholder): true,
                                       },
                                     ]
@@ -6924,7 +6924,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                   0,
                                                 ],
                                               },
-                                              "placeholder": "Start writing...",
+                                              "placeholder": "blocks.richText.startWriting",
                                               Symbol(placeholder): true,
                                             },
                                           ]
@@ -6961,7 +6961,7 @@ exports[`Author Edit Panel should render 1`] = `
                                                     0,
                                                   ],
                                                 },
-                                                "placeholder": "Start writing...",
+                                                "placeholder": "blocks.richText.startWriting",
                                                 Symbol(placeholder): true,
                                               },
                                             ]
@@ -6993,7 +6993,7 @@ exports[`Author Edit Panel should render 1`] = `
                                               key="1-0"
                                               leaf={
                                                 Object {
-                                                  "placeholder": "Start writing...",
+                                                  "placeholder": "blocks.richText.startWriting",
                                                   "text": "",
                                                   Symbol(placeholder): true,
                                                 }
@@ -7032,13 +7032,13 @@ exports[`Author Edit Panel should render 1`] = `
                                                     }
                                                   }
                                                 >
-                                                  Start writing...
+                                                  blocks.richText.startWriting
                                                 </span>
                                                 <String
                                                   isLast={true}
                                                   leaf={
                                                     Object {
-                                                      "placeholder": "Start writing...",
+                                                      "placeholder": "blocks.richText.startWriting",
                                                       "text": "",
                                                       Symbol(placeholder): true,
                                                     }
@@ -48027,7 +48027,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="authors.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -48035,17 +48035,17 @@ exports[`Author Edit Panel should render with id 1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Save"
+                      label="authors.panels.save"
                       onClick={[Function]}
                     />
                   }
-                  title="Edit Author"
+                  title="authors.panels.editAuthor"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="authors.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -48086,7 +48086,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                authors.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -48099,13 +48099,13 @@ exports[`Author Edit Panel should render with id 1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Edit Author
+                          authors.panels.editAuthor
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Save"
+                        label="authors.panels.save"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -48146,7 +48146,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                               element="span"
                             >
                               <span>
-                                Save
+                                authors.panels.save
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -48170,7 +48170,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="authors.panels.name"
                             onChange={[Function]}
                             value="Douglas Cole"
                           >
@@ -48183,7 +48183,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="authors.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -48195,7 +48195,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="authors.panels.name"
                                         value="Douglas Cole"
                                       />
                                     </Styled(input)>
@@ -48208,7 +48208,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        authors.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -48222,11 +48222,11 @@ exports[`Author Edit Panel should render with id 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Image"
+                  title="authors.panels.image"
                 >
                   <Styled(div)>
                     <div>
-                      Image
+                      authors.panels.image
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -48307,11 +48307,11 @@ exports[`Author Edit Panel should render with id 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Links"
+                  title="authors.panels.links"
                 >
                   <Styled(div)>
                     <div>
-                      Links
+                      authors.panels.links
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -48413,11 +48413,11 @@ exports[`Author Edit Panel should render with id 1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Biographical Information"
+                  title="authors.panels.bioInformation"
                 >
                   <Styled(div)>
                     <div>
-                      Biographical Information
+                      authors.panels.bioInformation
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -49062,7 +49062,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                             </Styled(div)>
                           </Toolbar>
                           <Editable
-                            placeholder="Start writing..."
+                            placeholder="blocks.richText.startWriting"
                             renderElement={[Function]}
                             renderLeaf={[Function]}
                           >
@@ -49113,7 +49113,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                           0,
                                         ],
                                       },
-                                      "placeholder": "Start writing...",
+                                      "placeholder": "blocks.richText.startWriting",
                                       Symbol(placeholder): true,
                                     },
                                   ]
@@ -49181,7 +49181,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                             0,
                                           ],
                                         },
-                                        "placeholder": "Start writing...",
+                                        "placeholder": "blocks.richText.startWriting",
                                         Symbol(placeholder): true,
                                       },
                                     ]
@@ -49228,7 +49228,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                                   0,
                                                 ],
                                               },
-                                              "placeholder": "Start writing...",
+                                              "placeholder": "blocks.richText.startWriting",
                                               Symbol(placeholder): true,
                                             },
                                           ]
@@ -49265,7 +49265,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                                     0,
                                                   ],
                                                 },
-                                                "placeholder": "Start writing...",
+                                                "placeholder": "blocks.richText.startWriting",
                                                 Symbol(placeholder): true,
                                               },
                                             ]
@@ -49297,7 +49297,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                                               key="5-0"
                                               leaf={
                                                 Object {
-                                                  "placeholder": "Start writing...",
+                                                  "placeholder": "blocks.richText.startWriting",
                                                   "text": "",
                                                   Symbol(placeholder): true,
                                                 }
@@ -49336,13 +49336,13 @@ exports[`Author Edit Panel should render with id 1`] = `
                                                     }
                                                   }
                                                 >
-                                                  Start writing...
+                                                  blocks.richText.startWriting
                                                 </span>
                                                 <String
                                                   isLast={true}
                                                   leaf={
                                                     Object {
-                                                      "placeholder": "Start writing...",
+                                                      "placeholder": "blocks.richText.startWriting",
                                                       "text": "",
                                                       Symbol(placeholder): true,
                                                     }
@@ -72326,7 +72326,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                   leftChildren={
                     <ForwardRef(NavigationButton)
                       icon={[Function]}
-                      label="Close"
+                      label="authors.panels.close"
                       onClick={[Function]}
                     />
                   }
@@ -72334,17 +72334,17 @@ exports[`Clicking add block button should display two text fields  1`] = `
                     <ForwardRef(NavigationButton)
                       disabled={false}
                       icon={[Function]}
-                      label="Create"
+                      label="authors.panels.create"
                       onClick={[Function]}
                     />
                   }
-                  title="Create Author"
+                  title="authors.panels.createAuthor"
                 >
                   <Styled(div)>
                     <div>
                       <ForwardRef(NavigationButton)
                         icon={[Function]}
-                        label="Close"
+                        label="authors.panels.close"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -72385,7 +72385,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                               element="span"
                             >
                               <span>
-                                Close
+                                authors.panels.close
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -72398,13 +72398,13 @@ exports[`Clicking add block button should display two text fields  1`] = `
                       </ForwardRef(Box)>
                       <Styled(span)>
                         <span>
-                          Create Author
+                          authors.panels.createAuthor
                         </span>
                       </Styled(span)>
                       <ForwardRef(NavigationButton)
                         disabled={false}
                         icon={[Function]}
-                        label="Create"
+                        label="authors.panels.create"
                         onClick={[Function]}
                       >
                         <Styled(button)
@@ -72445,7 +72445,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                               element="span"
                             >
                               <span>
-                                Create
+                                authors.panels.create
                               </span>
                             </ForwardRef(Box)>
                           </button>
@@ -72469,7 +72469,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                         <div>
                           <ForwardRef(TextInput)
                             disabled={false}
-                            label="Name"
+                            label="authors.panels.name"
                             onChange={[Function]}
                             value=""
                           >
@@ -72482,7 +72482,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                     <Styled(input)
                                       disabled={false}
                                       onChange={[Function]}
-                                      placeholder="Name"
+                                      placeholder="authors.panels.name"
                                       styleProps={
                                         Object {
                                           "hasError": false,
@@ -72494,7 +72494,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                       <input
                                         disabled={false}
                                         onChange={[Function]}
-                                        placeholder="Name"
+                                        placeholder="authors.panels.name"
                                         value=""
                                       />
                                     </Styled(input)>
@@ -72507,7 +72507,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                       }
                                     >
                                       <span>
-                                        Name
+                                        authors.panels.name
                                       </span>
                                     </Styled(span)>
                                   </label>
@@ -72521,11 +72521,11 @@ exports[`Clicking add block button should display two text fields  1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Image"
+                  title="authors.panels.image"
                 >
                   <Styled(div)>
                     <div>
-                      Image
+                      authors.panels.image
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -72606,11 +72606,11 @@ exports[`Clicking add block button should display two text fields  1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Links"
+                  title="authors.panels.links"
                 >
                   <Styled(div)>
                     <div>
-                      Links
+                      authors.panels.links
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -72763,7 +72763,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                     <div>
                                                       <ForwardRef(TextInput)
                                                         flexBasis="30%"
-                                                        label="Title"
+                                                        label="authors.panels.title"
                                                         marginRight={10}
                                                         onChange={[Function]}
                                                         value=""
@@ -72781,7 +72781,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                               <label>
                                                                 <Styled(input)
                                                                   onChange={[Function]}
-                                                                  placeholder="Title"
+                                                                  placeholder="authors.panels.title"
                                                                   styleProps={
                                                                     Object {
                                                                       "hasError": false,
@@ -72792,7 +72792,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                                 >
                                                                   <input
                                                                     onChange={[Function]}
-                                                                    placeholder="Title"
+                                                                    placeholder="authors.panels.title"
                                                                     value=""
                                                                   />
                                                                 </Styled(input)>
@@ -72805,7 +72805,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                                   }
                                                                 >
                                                                   <span>
-                                                                    Title
+                                                                    authors.panels.title
                                                                   </span>
                                                                 </Styled(span)>
                                                               </label>
@@ -72815,7 +72815,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                       </ForwardRef(TextInput)>
                                                       <ForwardRef(TextInput)
                                                         flexBasis="70%"
-                                                        label="Link"
+                                                        label="authors.panels.link"
                                                         onChange={[Function]}
                                                         value=""
                                                       >
@@ -72831,7 +72831,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                               <label>
                                                                 <Styled(input)
                                                                   onChange={[Function]}
-                                                                  placeholder="Link"
+                                                                  placeholder="authors.panels.link"
                                                                   styleProps={
                                                                     Object {
                                                                       "hasError": false,
@@ -72842,7 +72842,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                                 >
                                                                   <input
                                                                     onChange={[Function]}
-                                                                    placeholder="Link"
+                                                                    placeholder="authors.panels.link"
                                                                     value=""
                                                                   />
                                                                 </Styled(input)>
@@ -72855,7 +72855,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                                   }
                                                                 >
                                                                   <span>
-                                                                    Link
+                                                                    authors.panels.link
                                                                   </span>
                                                                 </Styled(span)>
                                                               </label>
@@ -72986,11 +72986,11 @@ exports[`Clicking add block button should display two text fields  1`] = `
                   </Styled(div)>
                 </PanelSection>
                 <PanelSectionHeader
-                  title="Biographical Information"
+                  title="authors.panels.bioInformation"
                 >
                   <Styled(div)>
                     <div>
-                      Biographical Information
+                      authors.panels.bioInformation
                     </div>
                   </Styled(div)>
                 </PanelSectionHeader>
@@ -73635,7 +73635,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                             </Styled(div)>
                           </Toolbar>
                           <Editable
-                            placeholder="Start writing..."
+                            placeholder="blocks.richText.startWriting"
                             renderElement={[Function]}
                             renderLeaf={[Function]}
                           >
@@ -73686,7 +73686,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                           0,
                                         ],
                                       },
-                                      "placeholder": "Start writing...",
+                                      "placeholder": "blocks.richText.startWriting",
                                       Symbol(placeholder): true,
                                     },
                                   ]
@@ -73754,7 +73754,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                             0,
                                           ],
                                         },
-                                        "placeholder": "Start writing...",
+                                        "placeholder": "blocks.richText.startWriting",
                                         Symbol(placeholder): true,
                                       },
                                     ]
@@ -73801,7 +73801,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                   0,
                                                 ],
                                               },
-                                              "placeholder": "Start writing...",
+                                              "placeholder": "blocks.richText.startWriting",
                                               Symbol(placeholder): true,
                                             },
                                           ]
@@ -73838,7 +73838,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                     0,
                                                   ],
                                                 },
-                                                "placeholder": "Start writing...",
+                                                "placeholder": "blocks.richText.startWriting",
                                                 Symbol(placeholder): true,
                                               },
                                             ]
@@ -73870,7 +73870,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                               key="7-0"
                                               leaf={
                                                 Object {
-                                                  "placeholder": "Start writing...",
+                                                  "placeholder": "blocks.richText.startWriting",
                                                   "text": "",
                                                   Symbol(placeholder): true,
                                                 }
@@ -73909,13 +73909,13 @@ exports[`Clicking add block button should display two text fields  1`] = `
                                                     }
                                                   }
                                                 >
-                                                  Start writing...
+                                                  blocks.richText.startWriting
                                                 </span>
                                                 <String
                                                   isLast={true}
                                                   leaf={
                                                     Object {
-                                                      "placeholder": "Start writing...",
+                                                      "placeholder": "blocks.richText.startWriting",
                                                       "text": "",
                                                       Symbol(placeholder): true,
                                                     }
@@ -74047,7 +74047,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
 exports[`Clicking add block button should display two text fields  2`] = `
 <input
   onChange={[Function]}
-  placeholder="Title"
+  placeholder="authors.panels.title"
   value="abcd"
 />
 `;
