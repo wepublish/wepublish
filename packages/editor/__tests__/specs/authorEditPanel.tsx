@@ -4,7 +4,7 @@ import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {AuthorDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import {ListInput, TextInput} from '@karma.run/ui'
+import {ListInput} from '@karma.run/ui'
 
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
@@ -24,6 +24,10 @@ const styleRenderer: fela.IRenderer = {
   subscribe: jest.fn(),
   clear: jest.fn()
 }
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({t: key => key})
+}))
 
 test('Author Edit Panel should render', () => {
   const wrapper = mount(
