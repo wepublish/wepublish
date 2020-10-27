@@ -39,6 +39,8 @@ import {
   ArticleListQuery
 } from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
@@ -61,6 +63,7 @@ export function ArticleList() {
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
+  const {t} = useTranslation()
 
   function loadMore() {
     fetchMore({
@@ -93,16 +96,16 @@ export function ArticleList() {
 
     const states = []
 
-    if (draft) states.push('Draft')
-    if (pending) states.push('Pending')
-    if (published) states.push('Published')
+    if (draft) states.push(t('articles.overview.draft'))
+    if (pending) states.push(t('articles.overview.pending'))
+    if (published) states.push(t('articles.overview.published'))
 
     return (
       <Box key={id} marginBottom={Spacing.Small}>
         <Box marginBottom={Spacing.ExtraSmall}>
           <Link route={ArticleEditRoute.create({id})}>
             <Typography variant="h3" color={title ? 'dark' : 'gray'}>
-              {title || 'Untitled'}
+              {title || t('articles.overview.untitled')}
             </Typography>
           </Link>
         </Box>
@@ -142,12 +145,22 @@ export function ArticleList() {
                 ? [
                     {
                       id: ConfirmAction.Unpublish,
-                      label: 'Unpublish',
+                      label: t('articles.panels.unpublish'),
                       icon: MaterialIconGetAppOutlined
                     },
-                    {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
+                    {
+                      id: ConfirmAction.Delete,
+                      label: t('articles.panels.delete'),
+                      icon: MaterialIconDeleteOutlined
+                    }
                   ]
-                : [{id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}]
+                : [
+                    {
+                      id: ConfirmAction.Delete,
+                      label: t('articles.panels.delete'),
+                      icon: MaterialIconDeleteOutlined
+                    }
+                  ]
             }
             onMenuItemClick={item => {
               setCurrentArticle(article)
@@ -164,17 +177,17 @@ export function ArticleList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Articles</Typography>
+        <Typography variant="h1">{t('articles.overview.articles')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label="New Article"
+          label={t('articles.overview.newArticle')}
           route={ArticleCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder="Search"
+          placeholder={t('articles.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -185,13 +198,13 @@ export function ArticleList() {
             {articles}
             <Box display="flex" justifyContent="center">
               {data?.articles.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMore} />
+                <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
               )}
             </Box>
           </>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No Articles found
+            {t('articles.overview.noArticlesFound')}
           </Typography>
         ) : null}
       </Box>
@@ -201,19 +214,21 @@ export function ArticleList() {
           <Panel>
             <PanelHeader
               title={
-                confirmAction === ConfirmAction.Unpublish ? 'Unpublish Article?' : 'Delete Article?'
+                confirmAction === ConfirmAction.Unpublish
+                  ? t('articles.panels.unpublishArticle')
+                  : t('articles.panels.deleteArticle')
               }
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('articles.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('articles.panels.confirm')}
                   disabled={isUnpublishing || isDeleting}
                   onClick={async () => {
                     if (!currentArticle) return
@@ -260,27 +275,27 @@ export function ArticleList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Title">
-                  {currentArticle?.latest.title || 'Untitled'}
+                <DescriptionListItem label={t('articles.panels.title')}>
+                  {currentArticle?.latest.title || t('articles.panels.untitled')}
                 </DescriptionListItem>
 
                 {currentArticle?.latest.lead && (
-                  <DescriptionListItem label="Lead">
+                  <DescriptionListItem label={t('articles.panels.lead')}>
                     {currentArticle?.latest.lead}
                   </DescriptionListItem>
                 )}
 
-                <DescriptionListItem label="Created At">
+                <DescriptionListItem label={t('articles.panels.createdAt')}>
                   {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
                 </DescriptionListItem>
 
-                <DescriptionListItem label="Updated At">
+                <DescriptionListItem label={t('articles.panels.updatedAt')}>
                   {currentArticle?.latest.updatedAt &&
                     new Date(currentArticle.latest.updatedAt).toLocaleString()}
                 </DescriptionListItem>
 
                 {currentArticle?.latest.publishedAt && (
-                  <DescriptionListItem label="Published At">
+                  <DescriptionListItem label={t('articles.panels.publishedAt')}>
                     {new Date(currentArticle.createdAt).toLocaleString()}
                   </DescriptionListItem>
                 )}

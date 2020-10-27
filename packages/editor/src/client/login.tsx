@@ -13,6 +13,8 @@ import {
   useGetAuthProvidersQuery
 } from './api'
 
+import {useTranslation} from 'react-i18next'
+
 const LoginForm = styled('form', () => ({
   display: 'flex',
   flexDirection: 'column',
@@ -43,6 +45,8 @@ export function Login() {
       redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     }
   })
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (current !== null && current.params !== null && current.query && current.query.code) {
@@ -124,21 +128,21 @@ export function Login() {
           <>
             <LoginForm onSubmit={login}>
               <TextInput
-                label="Email"
+                label={t('login.email')}
                 value={email}
-                autoComplete="username"
+                autoComplete={t('login.username')}
                 onChange={event => setEmail(event.target.value)}
                 marginBottom={Spacing.Small}
               />
               <TextInput
                 type="password"
-                label="Password"
+                label={t('login.password')}
                 value={password}
-                autoComplete="current-password"
+                autoComplete={t('login.currentPassword')}
                 onChange={event => setPassword(event.target.value)}
                 marginBottom={Spacing.Small}
               />
-              <Button color="primary" label="Login" disabled={loading} />
+              <Button color="primary" label={t('Login')} disabled={loading} />
             </LoginForm>
             {!!providerData?.authProviders?.length && (
               <>
@@ -147,7 +151,7 @@ export function Login() {
                   flexDirection="column"
                   marginTop={Spacing.Small}
                   alignItems="center">
-                  <p>Or Login with:</p>
+                  <p>{t('login.alternativeLogin')}</p>
                   {providerData.authProviders.map(
                     (provider: {url: string; name: string}, index: number) => {
                       return (
@@ -166,7 +170,7 @@ export function Login() {
         )}
         {loadingOAuth2 && (
           <div>
-            <p>Authenticating against OAuth2</p>
+            <p>{t('login.OAuth2')}</p>
           </div>
         )}
       </LoginTemplate>

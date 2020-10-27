@@ -42,6 +42,8 @@ import {
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export interface UserEditPanelProps {
   id?: string
 
@@ -103,6 +105,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     isDeleteingSubscription ||
     loadError !== undefined ||
     deleteSubscriptionError !== undefined
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (data?.user) {
@@ -179,14 +183,18 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title={id ? 'Edit User' : 'Create User'}
+          title={id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('userList.panels.close')}
+              onClick={() => onClose?.()}
+            />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
+              label={id ? t('userList.panels.save') : t('userList.panels.create')}
               disabled={isDisabled}
               onClick={handleSave}
             />
@@ -196,7 +204,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Name"
+              label={t('userList.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -206,7 +214,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Email"
+              label={t('userList.panels.email')}
               value={email}
               disabled={isDisabled}
               onChange={e => {
@@ -217,7 +225,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           <Box marginBottom={Spacing.ExtraSmall}>
             {!id && (
               <TextInput
-                label="Password"
+                label={t('userList.panels.password')}
                 type="password"
                 value={password}
                 disabled={isDisabled}
@@ -228,7 +236,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             )}
             {id && (
               <Button
-                label="Reset Password"
+                label={t('userList.panels.resetPassword')}
                 variant="outlined"
                 onClick={() => setIsResetUserPasswordOpen(true)}
               />
@@ -288,7 +296,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             </Box>
           )}
         </PanelSection>
-        <PanelSectionHeader title="User Roles" />
+        <PanelSectionHeader title={t('userList.panels.userRoles')} />
         <PanelSection>
           {roles.map(role => {
             return (
@@ -301,7 +309,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 <OptionButton
                   position="left"
                   menuItems={[
-                    {id: ConfirmAction.Remove, label: 'Remove', icon: MaterialIconRemoveOutlined}
+                    {
+                      id: ConfirmAction.Remove,
+                      label: t('userList.panels.remove'),
+                      icon: MaterialIconRemoveOutlined
+                    }
                   ]}
                   onMenuItemClick={item => {
                     setRoles(roles.filter(_role => _role.id !== role.id))
@@ -311,11 +323,11 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             )
           })}
           <Box marginTop={Spacing.Large}>
-            <Typography variant="h3">Add User Role</Typography>
+            <Typography variant="h3">{t('userList.panels.addUserRole')}</Typography>
           </Box>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Select
-              description="Select User Role"
+              description={t('userList.panels.selectUserRole')}
               flexBasis="90%"
               options={userRoles}
               value={currentUserRole}

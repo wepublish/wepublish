@@ -49,6 +49,8 @@ import {
 } from '@karma.run/ui'
 import {RichTextBlockValue} from './types'
 
+import {useTranslation} from 'react-i18next'
+
 enum BlockFormat {
   H1 = 'heading-one',
   H2 = 'heading-two',
@@ -281,6 +283,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
   const [hasFocus, setFocus] = useState(false)
 
+  const {t} = useTranslation()
+
   useEffect(() => {
     if (autofocus) {
       ReactEditor.focus(editor)
@@ -319,7 +323,7 @@ export const RichTextBlock = memo(function RichTextBlock({
       </Toolbar>
       <Editable
         readOnly={disabled}
-        placeholder="Start writing..."
+        placeholder={t('blocks.richText.startWriting')}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
       />
@@ -356,6 +360,8 @@ function LinkFormatButton() {
 
   const validatedURL = validateURL(url)
   const isDisabled = !validatedURL
+
+  const {t} = useTranslation()
 
   return (
     <>
@@ -395,7 +401,7 @@ function LinkFormatButton() {
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('Cancel')}
                   onClick={() => setLinkDialogOpen(false)}
                 />
               }
@@ -403,7 +409,7 @@ function LinkFormatButton() {
                 <NavigationButton
                   icon={MaterialIconCheck}
                   disabled={isDisabled}
-                  label="Apply"
+                  label={t('Apply')}
                   onClick={() => {
                     insertLink(editor, selection, validatedURL!, title || undefined)
                     setLinkDialogOpen(false)
@@ -414,15 +420,15 @@ function LinkFormatButton() {
             <PanelSection>
               <Box width={300}>
                 <TextInput
-                  label="Link"
+                  label={t('blocks.richText.link')}
                   errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
                   value={url}
                   onChange={e => setURL(e.target.value)}
                   marginBottom={Spacing.ExtraSmall}
                 />
                 <TextInput
-                  label="Title"
-                  description="Optional description for the link"
+                  label={t('blocks.richText.title')}
+                  description={t('blocks.richText.optionalDescription')}
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                 />

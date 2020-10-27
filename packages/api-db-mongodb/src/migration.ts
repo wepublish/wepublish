@@ -297,7 +297,7 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    version: 4,
+    version: 5,
     async migrate(db, locale) {
       const users = db.collection(CollectionName.Users)
       await users.createIndex({'subscription.memberPlanId': 1})

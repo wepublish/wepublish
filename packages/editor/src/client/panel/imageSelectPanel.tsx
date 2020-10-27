@@ -24,6 +24,8 @@ import {
 import {useImageListQuery, ImageRefFragment} from '../api'
 import {ImagedEditPanel} from './imageEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ImageSelectPanelProps {
   onClose(): void
   onSelect(image: ImageRefFragment): void
@@ -50,6 +52,8 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   const missingColumns =
     images.length % 2 !== 0 ? new Array(2 - (images.length % 2)).fill(null) : []
 
+  const {t} = useTranslation()
+
   async function handleDrop(files: File[]) {
     if (files.length === 0) return
 
@@ -57,7 +61,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
 
     if (!file.type.startsWith('image')) {
       setErrorToastOpen(true)
-      setErrorMessage('Invalid Image')
+      setErrorMessage(t('articleEditor.panels.invalidImage'))
       return
     }
 
@@ -88,25 +92,29 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
     <>
       <Panel>
         <PanelHeader
-          title="Choose Image"
+          title={t('articleEditor.panels.chooseImage')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('articleEditor.panels.close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
           <Box height={100}>
             <FileDropInput
               icon={MaterialIconCloudUploadOutlined}
-              text="Drop Image Here"
+              text={t('articleEditor.panels.dropImage')}
               onDrop={handleDrop}
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title="Images" />
+        <PanelSectionHeader title={t('articleEditor.panels.images')} />
         <PanelSection>
           <Box marginBottom={Spacing.Small}>
             <SearchInput
-              placeholder="Search"
+              placeholder={t('articleEditor.panels.search')}
               value={filter}
               onChange={e => setFilter(e.target.value)}
             />
@@ -136,10 +144,10 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                             maxHeight="50%"
                             padding={Spacing.ExtraSmall}>
                             <Typography variant="subtitle1" color="gray" ellipsize>
-                              {`${filename || 'untitled'}${extension}`}
+                              {`${filename || t('articleEditor.panels.untitled')}${extension}`}
                             </Typography>
                             <Typography variant="body2" color="white" ellipsize>
-                              {title || 'Untitled'}
+                              {title || t('articleEditor.panels.untitled')}
                             </Typography>
                           </Overlay>
                         </Card>
@@ -153,13 +161,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               </Box>
               <Box display="flex" justifyContent="center">
                 {data?.images.pageInfo.hasNextPage && (
-                  <Button label="Load More" onClick={loadMore} />
+                  <Button label={t('articleEditor.loadMore')} onClick={loadMore} />
                 )}
               </Box>
             </>
           ) : !isLoading ? (
             <Typography variant="body1" color="gray" align="center">
-              No Images found
+              {t('articleEditor.panels.noImagesFound')}
             </Typography>
           ) : null}
         </PanelSection>
