@@ -4,7 +4,6 @@ import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {AuthorDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import {ListInput} from '@karma.run/ui'
 
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
@@ -33,7 +32,8 @@ test('Author Edit Panel should render', () => {
       </MockedProvider>
     </UIProvider>
   )
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('AuthorEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('Author Edit Panel should render with id', async () => {
@@ -66,7 +66,8 @@ test('Author Edit Panel should render with id', async () => {
   )
 
   await updateWrapper(wrapper, 100)
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('AuthorEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('Clicking add block button should display two text fields ', async () => {
@@ -79,12 +80,12 @@ test('Clicking add block button should display two text fields ', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  const button = wrapper.find(ListInput).find('button')
+  const button = wrapper.find('button[title="Add Block"]')
   button.simulate('click')
-  expect(wrapper).toMatchSnapshot()
 
   const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
   inputField.props().value = 'abcd'
 
-  expect(inputField).toMatchSnapshot()
+  const panel = wrapper.find('AuthorEditPanel')
+  expect(panel).toMatchSnapshot()
 })
