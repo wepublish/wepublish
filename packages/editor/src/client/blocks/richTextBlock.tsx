@@ -27,7 +27,9 @@ import {
   MaterialIconLink,
   MaterialIconLinkOff,
   MaterialIconClose,
-  MaterialIconCheck
+  MaterialIconCheck,
+  MaterialIconDone,
+  MaterialIconDoneAll
 } from '@karma.run/icons'
 
 import {
@@ -66,10 +68,13 @@ enum InlineFormat {
 }
 
 enum TextFormat {
+  // TODO add hrizontalline <hr>
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
-  Strikethrough = 'strikethrough'
+  Strikethrough = 'strikethrough',
+  Superscript = 'superscript',
+  Subscript = 'subscript'
 }
 
 type Format = BlockFormat | InlineFormat | TextFormat
@@ -101,7 +106,9 @@ const TextTags: any = {
   I: () => ({[TextFormat.Italic]: true}),
   STRONG: () => ({[TextFormat.Bold]: true}),
   B: () => ({[TextFormat.Bold]: true}),
-  U: () => ({[TextFormat.Underline]: true})
+  U: () => ({[TextFormat.Underline]: true}),
+  SUP: () => ({[TextFormat.Superscript]: true}),
+  SUB: () => ({[TextFormat.Subscript]: true})
 }
 
 function deserialize(element: Element): any {
@@ -216,6 +223,14 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
     children = <del {...attributes}>{children}</del>
   }
 
+  if (leaf[TextFormat.Superscript]) {
+    children = <sup {...attributes}>{children}</sup>
+  }
+
+  if (leaf[TextFormat.Subscript]) {
+    children = <sub {...attributes}>{children}</sub>
+  }
+
   return <span {...attributes}>{children}</span>
 }
 
@@ -315,6 +330,11 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
         <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
         <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
+
+        <ToolbarDivider />
+
+        <FormatButton icon={MaterialIconDone} format={TextFormat.Superscript} />
+        <FormatButton icon={MaterialIconDoneAll} format={TextFormat.Subscript} />
 
         <ToolbarDivider />
 
