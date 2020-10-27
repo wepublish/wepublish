@@ -58,7 +58,8 @@ enum BlockFormat {
   Paragraph = 'paragraph',
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
-  ListItem = 'list-item'
+  ListItem = 'list-item',
+  HorizontalLine = 'horizontal-line'
 }
 
 enum InlineFormat {
@@ -94,7 +95,8 @@ const ElementTags: any = {
   P: () => ({type: BlockFormat.Paragraph}),
   LI: () => ({type: BlockFormat.ListItem}),
   OL: () => ({type: BlockFormat.OrderedList}),
-  UL: () => ({type: BlockFormat.UnorderedList})
+  UL: () => ({type: BlockFormat.UnorderedList}),
+  HR: () => ({type: BlockFormat.HorizontalLine})
 }
 
 const TextTags: any = {
@@ -184,6 +186,9 @@ function renderElement({attributes, children, element}: RenderElementProps) {
     case BlockFormat.ListItem:
       return <li {...attributes}>{children}</li>
 
+    case BlockFormat.HorizontalLine:
+      return <hr />
+
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
       // const title = element.title ? `${element.title}: ${element.url}` : element.url
@@ -226,6 +231,9 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
   }
 
   if (leaf[TextFormat.Subscript]) {
+    children = <sub {...attributes}>{children}</sub>
+  }
+  if (leaf.text === '😄') {
     children = <sub {...attributes}>{children}</sub>
   }
 
@@ -324,6 +332,10 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
+        <InsertButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
+
+        <ToolbarDivider />
+
         <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
         <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
         <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
@@ -363,6 +375,20 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
       onMouseDown={e => {
         e.preventDefault()
         toggleFormat(editor, format)
+      }}
+    />
+  )
+}
+
+function InsertButton({icon}: SlateBlockButtonProps) {
+  const editor = useSlate()
+
+  return (
+    <ToolbarButton
+      icon={icon}
+      onMouseDown={e => {
+        e.preventDefault()
+        insertText(editor)
       }}
     />
   )
@@ -535,6 +561,10 @@ function toggleFormat(editor: Editor, format: Format) {
   }
 }
 
+function insertText(editor: Editor) {
+  editor.insertText('😄')
+}
+
 function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
   if (selection) {
     if (Range.isCollapsed(selection)) {
@@ -615,6 +645,22 @@ function MaterialIconFormatSubscript() {
       <g>
         <rect fill="none" height="24" width="24" />
         <path d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z" />
+      </g>
+    </svg>
+  )
+}
+
+function MaterialIconHorizontalRule() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      enableBackground="new 0 0 24 24"
+      height="24"
+      viewBox="0 0 24 24"
+      width="24">
+      <g>
+        <rect fill="none" fillRule="evenodd" height="24" width="24" />
+        <rect fillRule="evenodd" height="2" width="16" x="4" y="11" />
       </g>
     </svg>
   )
