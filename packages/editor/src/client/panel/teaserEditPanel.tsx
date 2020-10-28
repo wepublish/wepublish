@@ -34,6 +34,8 @@ import {TeaserStyle} from '../api'
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
+import {useTranslation} from 'react-i18next'
+
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
 
@@ -60,18 +62,20 @@ export function TeaserEditPanel({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  const {t} = useTranslation()
+
   return (
     <>
       <Panel>
         <PanelHeader
-          title="Edit Teaser"
+          title={t('articleEditor.panels.editTeaser')}
           leftChildren={
             <NavigationButton icon={closeIcon} label={closeLabel} onClick={() => onClose()} />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconCheck}
-              label="Confirm"
+              label={t('articleEditor.panels.confirm')}
               onClick={() =>
                 onConfirm({
                   ...initialTeaser,
@@ -86,10 +90,10 @@ export function TeaserEditPanel({
           }
         />
         <PanelSection dark>{previewForTeaser(initialTeaser)}</PanelSection>
-        <PanelSectionHeader title="Display Options" />
+        <PanelSectionHeader title={t('articleEditor.panels.displayOptions')} />
         <PanelSection>
           <Select
-            label="Style"
+            label={t('articleEditor.panels.style')}
             value={{id: style}}
             options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Light}, {id: TeaserStyle.Text}]}
             onChange={value => {
@@ -102,32 +106,32 @@ export function TeaserEditPanel({
           />
 
           <TextInput
-            label="Pre-title"
+            label={t('articleEditor.panels.preTitle')}
             value={preTitle}
             onChange={e => setPreTitle(e.target.value)}
             marginBottom={Spacing.Small}
-            description="Leave empty to use original pre-title."
+            description={t('articleEditor.panels.emptyPreTitle')}
           />
 
           <TextInput
-            label="Title"
+            label={t('articleEditor.panels.title')}
             value={title}
             onChange={e => setTitle(e.target.value)}
             marginBottom={Spacing.Small}
-            description="Leave empty to use original title."
+            description={t('articleEditor.panels.emptyTitle')}
           />
 
           <TextInput
-            label="Lead"
+            label={t('articleEditor.panels.lead')}
             value={lead}
             onChange={e => setLead(e.target.value)}
             marginBottom={Spacing.Small}
-            description="Leave empty to use original lead."
+            description={t('articleEditor.panels.emptyLead')}
           />
 
           <Box marginBottom={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              Image
+              {t('articleEditor.panels.image')}
             </Typography>
           </Box>
           <Box height={200} marginBottom={Spacing.ExtraSmall}>
@@ -143,7 +147,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconImageOutlined}
-                          title="Choose Image"
+                          title={t('articleEditor.panels.chooseImage')}
                           onClick={() => setChooseModalOpen(true)}
                         />
                       </Box>
@@ -154,7 +158,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconEditOutlined}
-                          title="Edit Image"
+                          title={t('articleEditor.panels.editImage')}
                           onClick={() => setEditModalOpen(true)}
                         />
                       </Box>
@@ -165,7 +169,7 @@ export function TeaserEditPanel({
                         display="flex">
                         <IconButton
                           icon={MaterialIconClose}
-                          title="Remove Image"
+                          title={t('articleEditor.panels.removeImage')}
                           onClick={() => setImage(undefined)}
                         />
                       </Box>
@@ -177,7 +181,7 @@ export function TeaserEditPanel({
             </Card>
           </Box>
           <Typography variant="subtitle1" color="gray">
-            Leave empty to use original image.
+            {t('articleEditor.panels.emptyImage')}
           </Typography>
         </PanelSection>
       </Panel>
@@ -205,6 +209,8 @@ function previewForTeaser(teaser: Teaser) {
   let preTitle: string | undefined
   let title: string | undefined
   let lead: string | undefined
+
+  const {t} = useTranslation()
 
   switch (teaser.type) {
     case TeaserType.Article:
@@ -241,10 +247,16 @@ function previewForTeaser(teaser: Teaser) {
         )}
       </Card>
       <DescriptionList>
-        <DescriptionListItem label="Type">{type}</DescriptionListItem>
-        <DescriptionListItem label="Pre-title">{preTitle || '-'}</DescriptionListItem>
-        <DescriptionListItem label="Title">{title || '-'}</DescriptionListItem>
-        <DescriptionListItem label="Lead">{lead || '-'}</DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.type')}>{type}</DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
+          {preTitle || '-'}
+        </DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.title')}>
+          {title || '-'}
+        </DescriptionListItem>
+        <DescriptionListItem label={t('articleEditor.panels.lead')}>
+          {lead || '-'}
+        </DescriptionListItem>
       </DescriptionList>
     </>
   )

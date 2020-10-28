@@ -16,6 +16,8 @@ import {
 import {MaterialIconClose} from '@karma.run/icons'
 import {useResetUserPasswordMutation} from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 export interface ResetUserPasswordPanelProps {
   userID?: string
   userName?: string
@@ -35,21 +37,29 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
 
   const isDisabled = isUpdating
 
+  const {t} = useTranslation()
+
   return (
     <>
       <Panel>
         <PanelHeader
-          title="Reset Password"
+          title={t('userList.panels.resetPassword')}
           leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose()} />
+            <NavigationButton
+              icon={MaterialIconClose}
+              label={t('userList.panels.close')}
+              onClick={() => onClose()}
+            />
           }
         />
         <PanelSection>
-          <Typography variant="body1">Reset the password for {userName}</Typography>
+          <Typography variant="body1">
+            {t('userList.panels.resetPasswordFor', {userName})}
+          </Typography>
           <TextInput
             disabled={isDisabled}
             type="password"
-            label="Password"
+            label={t('userList.panels.password')}
             errorMessage={updateError?.message}
             marginBottom={Spacing.Small}
             value={password}
@@ -57,7 +67,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
           />
           <Button
             disabled={isDisabled}
-            label="Reset Password"
+            label={t('userList.panels.resetPassword')}
             variant="outlined"
             color="primary"
             onClick={async () => {
@@ -80,7 +90,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
         </PanelSection>
       </Panel>
       <Toast type={type} open={open} onClose={() => setOpen(false)} autoHideDuration={2000}>
-        Password successfuly changed!
+        {t('userList.panels.passwordChangeSuccess')}
       </Toast>
     </>
   )

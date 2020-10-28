@@ -53,6 +53,8 @@ import {
 import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
+import {useTranslation} from 'react-i18next'
+
 type Peer = NonNullable<PeerListQuery['peers']>[number]
 
 export function PeerList() {
@@ -90,6 +92,8 @@ export function PeerList() {
   })
 
   const [deletePeer, {loading: isDeleting}] = useDeletePeerMutation()
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (peerInfoError ?? peerListError) {
@@ -174,11 +178,11 @@ export function PeerList() {
 
       <Box marginBottom={Spacing.Large}>
         <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-          <Typography variant="h1">Peers</Typography>
+          <Typography variant="h1">{t('peerList.overview.peers')}</Typography>
           <Box flexGrow={1} />
           <RouteLinkButton
             color="primary"
-            label="New Peer"
+            label={t('peerList.overview.newPeer')}
             disabled={isPeerInfoLoading}
             route={PeerCreateRoute.create({})}
           />
@@ -187,7 +191,7 @@ export function PeerList() {
           peers
         ) : !isPeerListLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            No peers found
+            {t('peerList.overview.noPeersFound')}
           </Typography>
         ) : null}
       </Box>
@@ -223,7 +227,9 @@ export function PeerList() {
               setEditModalOpen(false)
 
               setSuccessToastOpen(true)
-              setSuccessMessage(editID ? 'Peer Updated' : 'Peer Created')
+              setSuccessMessage(
+                editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated')
+              )
 
               dispatch({
                 type: RouteActionType.PushRoute,
@@ -238,18 +244,18 @@ export function PeerList() {
         {() => (
           <Panel>
             <PanelHeader
-              title="Delete Peer?"
+              title={t('peerList.panels.deletePeer')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label="Cancel"
+                  label={t('peerList.panels.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label="Confirm"
+                  label={t('peerList.panels.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentPeer) return
@@ -277,8 +283,8 @@ export function PeerList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentPeer?.name || 'Unknown'}
+                <DescriptionListItem label={t('peerList.panels.name')}>
+                  {currentPeer?.name || t('peerList.panels.Unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

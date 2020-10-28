@@ -34,6 +34,8 @@ import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 interface GridElementProps {
   numColumns: number
 }
@@ -164,6 +166,8 @@ export function TeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
+  const {t} = useTranslation()
+
   return (
     <Card
       style={{cursor: showGrabCursor ? 'grab' : ''}}
@@ -178,19 +182,19 @@ export function TeaserBlock({
             <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
               <IconButton
                 icon={MaterialIconInsertDriveFileOutlined}
-                title="Choose Teaser"
+                title={t('articleEditor.panels.chooseTeaser')}
                 onClick={onChoose}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconEditOutlined}
-                title="Edit Teaser"
+                title={t('articleEditor.panels.editTeaser')}
                 onClick={onEdit}
                 margin={Spacing.ExtraSmall}
               />
               <IconButton
                 icon={MaterialIconClose}
-                title="Remove Teaser"
+                title={t('articleEditor.panels.removeTeaser')}
                 onClick={onRemove}
                 margin={Spacing.ExtraSmall}
               />
@@ -203,13 +207,14 @@ export function TeaserBlock({
 }
 
 export function contentForTeaser(teaser: Teaser, numColumns: number) {
+  const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
       const states = []
 
-      if (teaser?.article?.draft) states.push('Draft')
-      if (teaser?.article?.pending) states.push('Pending')
-      if (teaser?.article?.published) states.push('Published')
+      if (teaser?.article?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.article?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.article?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -227,9 +232,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.PeerArticle: {
       const states = []
 
-      if (teaser?.article?.draft) states.push('Draft')
-      if (teaser?.article?.pending) states.push('Pending')
-      if (teaser?.article?.published) states.push('Published')
+      if (teaser?.article?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.article?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.article?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -248,9 +253,9 @@ export function contentForTeaser(teaser: Teaser, numColumns: number) {
     case TeaserType.Page: {
       const states = []
 
-      if (teaser?.page?.draft) states.push('Draft')
-      if (teaser?.page?.pending) states.push('Pending')
-      if (teaser?.page?.published) states.push('Published')
+      if (teaser?.page?.draft) states.push(t('articleEditor.panels.stateDraft'))
+      if (teaser?.page?.pending) states.push(t('articleEditor.panels.statePending'))
+      if (teaser?.page?.published) states.push(t('articleEditor.panels.statePublished'))
 
       return (
         <TeaserContent
@@ -280,6 +285,19 @@ export interface TeaserContentProps {
   numColumns: number
 }
 
+function labelForTeaserStyle(style: TeaserStyle) {
+  switch (style) {
+    case TeaserStyle.Default:
+      return 'Default'
+
+    case TeaserStyle.Light:
+      return 'Light'
+
+    case TeaserStyle.Text:
+      return 'Text'
+  }
+}
+
 export function TeaserContent({
   style,
   preTitle,
@@ -290,6 +308,10 @@ export function TeaserContent({
   peer,
   numColumns
 }: TeaserContentProps) {
+  const label = labelForTeaserStyle(style)
+  const {t} = useTranslation()
+  const stateJoin = states?.join(' / ')
+
   return (
     <>
       <Box position="absolute" width="100%" height="100%">
@@ -313,7 +335,7 @@ export function TeaserContent({
             </Typography>
           )}
           <Typography variant="body2" color="white" spacing="small">
-            {title || 'Untitled'}
+            {title || t('articleEditor.panels.untitled')}
           </Typography>
           {lead && (
             <Typography variant="subtitle1" color="white" ellipsize>
@@ -332,29 +354,16 @@ export function TeaserContent({
         <Box display="flex" flexWrap="wrap">
           <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
             <Typography variant="subtitle1" color="gray">
-              Style: {labelForTeaserStyle(style)}
+              {t('articleEditor.panels.teaserStyle', {label})}
             </Typography>
           </Box>
           <Box flexShrink={0}>
             <Typography variant="subtitle1" color="gray">
-              Status: {states?.join(' / ')}
+              {t('articleEditor.panels.status', {stateJoin})}
             </Typography>
           </Box>
         </Box>
       </Overlay>
     </>
   )
-}
-
-function labelForTeaserStyle(style: TeaserStyle) {
-  switch (style) {
-    case TeaserStyle.Default:
-      return 'Default'
-
-    case TeaserStyle.Light:
-      return 'Light'
-
-    case TeaserStyle.Text:
-      return 'Text'
-  }
 }

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable i18next/no-literal-string */
+
 import React from 'react'
 
 import fs from 'fs'
