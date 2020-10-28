@@ -43,7 +43,8 @@ export function LinkPageBreakBlock({
     richText,
     linkTarget,
     hideButton,
-    image
+    image,
+    templateOption
   } = value
   const focusRef = useRef<HTMLTextAreaElement>(null)
   const focusInputRef = useRef<HTMLInputElement>(null)
@@ -71,134 +72,152 @@ export function LinkPageBreakBlock({
 
   return (
     <>
-      <Box flexGrow={1} style={{marginBottom: '20px'}}>
-        <TextInput
-          ref={focusInputRef}
-          placeholder="Title"
-          label="Title"
-          style={{fontSize: '24px'}}
-          value={text}
-          disabled={disabled}
-          onChange={e => onChange({...value, text: e.target.value})}
-        />
-      </Box>
-      <Box flexGrow={1}>
-        <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
-      </Box>
-      <Box style={{width: '50%', display: 'inline-block'}}>
-        <TextInput
-          ref={focusInputRef}
-          placeholder="Link Text"
-          label="Button label"
-          value={linkText}
-          disabled={disabled}
-          onChange={e => onChange({...value, linkText: e.target.value})}
-        />
-      </Box>
-      <Box style={{width: '50%', display: 'inline-block', padding: '10px'}}>
-        <TextInput
-          ref={focusInputRef}
-          placeholder="Link URL"
-          label="Button link"
-          value={linkURL}
-          disabled={disabled}
-          onChange={e => onChange({...value, linkURL: e.target.value})}
-        />
-      </Box>
-      <br />
-      <br />
-      <div className={'option-wrapper'} style={{display: 'flex'}}>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
-          flexShrink={0}>
-          <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-            {image && (
-              <Box position="relative" width="100%" height="100%">
-                <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                  <IconButton
-                    icon={MaterialIconImageOutlined}
-                    title="Choose Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setChooseModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconEditOutlined}
-                    title="Edit Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setEditModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconClose}
-                    title="Remove Image"
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => onChange(value => ({...value, image: undefined}))}
-                  />
+      <div style={{display: 'flex', flexFlow: 'row wrap'}}>
+        <div style={{flex: '1 0 25%', alignSelf: 'center', marginBottom: '10px'}}>
+          <Card overflow="hidden" width={'100%'} height={150} padding={0}>
+            <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
+              {image && (
+                <Box position="relative" width="100%" height="100%">
+                  <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
+                    <IconButton
+                      icon={MaterialIconImageOutlined}
+                      title="Choose Image"
+                      margin={Spacing.ExtraSmall}
+                      onClick={() => setChooseModalOpen(true)}
+                    />
+                    <IconButton
+                      icon={MaterialIconEditOutlined}
+                      title="Edit Image"
+                      margin={Spacing.ExtraSmall}
+                      onClick={() => setEditModalOpen(true)}
+                    />
+                    <IconButton
+                      icon={MaterialIconClose}
+                      title="Remove Image"
+                      margin={Spacing.ExtraSmall}
+                      onClick={() => onChange(value => ({...value, image: undefined}))}
+                    />
+                  </Box>
+                  {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
                 </Box>
-                {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
+              )}
+            </PlaceholderInput>
+          </Card>
+          <Box overflow="hidden" width={'100%'} height={'auto'} flexGrow={1}>
+            <Box padding={'10 10 2 10'}>
+              <small>Styles: </small>
+              <br />
+              <select
+                style={{width: '195px'}}
+                defaultValue={styleOption}
+                onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
+                <option value="default">Default Style</option>
+                <option value="dark">Dark Style</option>
+                <option value="image">Image Background</option>
+              </select>
+            </Box>
+            <Box padding={'2 10'}>
+              <small>Layouts: </small>
+              <br />
+              <select
+                disabled={styleOption === 'image'}
+                style={{width: '195px'}}
+                defaultValue={layoutOption}
+                onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
+                <option value="default">Default Layout</option>
+                <option value="right">Right Aligned</option>
+                <option value="center">Centered</option>
+                <option value="image-right">Image Right</option>
+                <option value="image-left">Image Left</option>
+              </select>
+            </Box>
+            <Box padding={'2 10'}>
+              <small>Templates: </small>
+              <br />
+              <select
+                style={{width: '195px'}}
+                defaultValue={templateOption}
+                onChange={e => onChange({...value, templateOption: e.target.value || ''})}>
+                <option value="none">None</option>
+                <option value="donation">Donation</option>
+                <option value="membership">Membership</option>
+                <option value="subscription">Subscription</option>
+              </select>
+            </Box>
+          </Box>
+        </div>
+        <div style={{flex: '1 0 70%'}}>
+          <Box padding={Spacing.ExtraSmall} marginBottom={Spacing.ExtraSmall}>
+            <Box>
+              <TextInput
+                ref={focusInputRef}
+                placeholder="Title"
+                label="Title"
+                style={{fontSize: '24px'}}
+                value={text}
+                disabled={disabled}
+                onChange={e => onChange({...value, text: e.target.value})}
+              />
+            </Box>
+            <Box flexGrow={1}>
+              <RichTextBlock
+                value={richText || createDefaultValue()}
+                onChange={handleRichTextChange}
+              />
+            </Box>
+          </Box>
+          <Card padding={Spacing.ExtraSmall}>
+            <Box style={{width: '50%', display: 'inline-block'}}>
+              <TextInput
+                ref={focusInputRef}
+                placeholder="https://..."
+                label="CTA Button url"
+                value={linkURL}
+                disabled={disabled}
+                onChange={e => onChange({...value, linkURL: e.target.value})}
+              />
+            </Box>
+            {!hideButton && (
+              <Box style={{width: '50%', display: 'inline-block'}}>
+                <TextInput
+                  ref={focusInputRef}
+                  placeholder="CTA Button label"
+                  label="CTA Button label"
+                  value={linkText}
+                  disabled={disabled}
+                  onChange={e => onChange({...value, linkText: e.target.value})}
+                />
               </Box>
             )}
-          </PlaceholderInput>
-        </Card>
-        <Card overflow="hidden" width={200} height={150} marginRight={Spacing.ExtraSmall}>
-          <Box padding={'10'}>
-            <p>Link Settings</p>
-            <RadioGroup
-              name={'radiogroup-' + uuidv4()}
-              onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
-              value={linkTarget || '_self'}>
-              <Radio
-                value={'_self'}
-                label={'This browser tab'}
-                checked={(value.linkTarget || linkTarget) === '_self'}
-              />
-              <Radio
-                value={'_blank'}
-                label={'New browser tab'}
-                checked={(value.linkTarget || linkTarget) === '_blank'}
-              />
-            </RadioGroup>
-          </Box>
-        </Card>
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          flexGrow={1}
-          marginRight={Spacing.ExtraSmall}>
-          <Box padding={'10'}>
-            <small>Styles: </small>
-            <select
-              defaultValue={styleOption}
-              onChange={e => onChange({...value, styleOption: e.target.value || ''})}>
-              <option value="default">Default Style</option>
-              <option value="dark">Dark Style</option>
-              <option value="image">Image Background</option>
-            </select>
-          </Box>
-          <Box padding={'10'}>
-            <small>Layouts: </small>
-            <select
-              defaultValue={layoutOption}
-              onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
-              <option value="default">Default Layout</option>
-              <option value="right">Right Aligned</option>
-              <option value="center">Centered</option>
-              <option value="image-right">Image Right</option>
-              <option value="image-left">Image Left</option>
-            </select>
-          </Box>
-          <Box padding={'0 10'}>
-            <Toggle
-              label={'Hide CTA Button'}
-              description={'Hide button an make whole element clickable.'}
-              onChange={e => onChange({...value, hideButton: e.target.checked})}
-              checked={!!hideButton || false}
-            />
-          </Box>
-        </Card>
+            <div style={{display: 'flex', marginTop: Spacing.ExtraSmall}}>
+              <Box width={'50%'}>
+                <RadioGroup
+                  name={'radiogroup-' + uuidv4()}
+                  onChange={e => onChange({...value, linkTarget: e.target.value || '_self'})}
+                  value={linkTarget || '_self'}>
+                  <Radio
+                    value={'_self'}
+                    label={'This browser tab'}
+                    checked={(value.linkTarget || linkTarget) === '_self'}
+                  />
+                  <Radio
+                    value={'_blank'}
+                    label={'New browser tab'}
+                    checked={(value.linkTarget || linkTarget) === '_blank'}
+                  />
+                </RadioGroup>
+              </Box>
+              <Box width={'50%'}>
+                <Toggle
+                  label={'Hide CTA Button'}
+                  description={'Hide button an make whole element clickable.'}
+                  onChange={e => onChange({...value, hideButton: e.target.checked})}
+                  checked={!!hideButton || false}
+                />
+              </Box>
+            </div>
+          </Card>
+        </div>
       </div>
       <Drawer open={isChooseModalOpen} width={480}>
         {() => (

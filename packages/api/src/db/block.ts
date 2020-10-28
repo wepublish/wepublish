@@ -109,6 +109,7 @@ export interface LinkPageBreakBlock {
   hideButton: boolean
   styleOption?: string
   layoutOption?: string
+  templateOption?: string
   imageID?: string
 }
 

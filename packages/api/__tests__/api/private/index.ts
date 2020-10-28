@@ -401,6 +401,7 @@ export type LinkPageBreakBlock = {
   hideButton?: Maybe<Scalars['Boolean']>
   styleOption?: Maybe<Scalars['String']>
   layoutOption?: Maybe<Scalars['String']>
+  templateOption?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -413,6 +414,7 @@ export type LinkPageBreakBlockInput = {
   hideButton?: Maybe<Scalars['Boolean']>
   styleOption?: Maybe<Scalars['String']>
   layoutOption?: Maybe<Scalars['String']>
+  templateOption?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
 }
 
@@ -1548,6 +1550,7 @@ type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} 
   | 'richText'
   | 'linkTarget'
   | 'hideButton'
+  | 'templateOption'
 > & {
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
   }
@@ -2092,6 +2095,7 @@ export const FullBlock = gql`
       hideButton
       styleOption
       layoutOption
+      templateOption
       richText
       image {
         ...ImageRef

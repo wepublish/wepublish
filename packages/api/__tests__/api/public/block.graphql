@@ -79,6 +79,7 @@ fragment FullBlock on Block {
     linkURL
     styleOption
     layoutOption
+    templateOption
     image {
       ...ImageRef
     }
