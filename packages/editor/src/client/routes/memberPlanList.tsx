@@ -99,7 +99,7 @@ export function MemberPlanList() {
   }
 
   const memberPlans = data?.memberPlans.nodes.map(memberPlan => {
-    const {id, label, image} = memberPlan
+    const {id, name, image} = memberPlan
 
     return (
       <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
@@ -118,8 +118,8 @@ export function MemberPlanList() {
           </Avatar>
 
           <Link route={MemberPlanEditRoute.create({id})}>
-            <Typography variant="h3" color={label ? 'dark' : 'gray'}>
-              {label || 'Unknown'}
+            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
+              {name || 'Unknown'}
             </Typography>
           </Link>
 
@@ -232,7 +232,7 @@ export function MemberPlanList() {
             <PanelSection>
               <DescriptionList>
                 <DescriptionListItem label="Name">
-                  {currentMemberPlan?.label || 'Unknown'}
+                  {currentMemberPlan?.name || 'Unknown'}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

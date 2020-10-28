@@ -264,7 +264,7 @@ export interface DBMemberPlan {
   createdAt: Date
   modifiedAt: Date
 
-  label: string
+  name: string
   imageID?: string
   description: RichTextNode[]
   isActive: boolean

@@ -1,6 +1,6 @@
 fragment MemberPlanRef on MemberPlan {
     id
-    label
+    name
     isActive
     image {
         ...ImageRef
@@ -12,10 +12,10 @@ fragment FullMemberPlan on MemberPlan {
     pricePerMonthMinimum
     pricePerMonthMaximum
     availablePaymentMethods {
-        paymentMethod {
+        paymentMethods {
             ...FullPaymentMethod
         }
-        paymentPeriodicity {
+        paymentPeriodicities {
             id
             checked
         }
@@ -26,7 +26,7 @@ fragment FullMemberPlan on MemberPlan {
 }
 
 query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    memberPlans(filter: {label: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
         nodes {
             ...FullMemberPlan
         }

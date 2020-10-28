@@ -16,8 +16,8 @@ export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
 ]
 
 export interface AvailablePaymentMethod {
-  paymentMethodId: string
-  paymentPeriodicity: PaymentPeriodicity[]
+  paymentMethodIDs: string[]
+  paymentPeriodicities: PaymentPeriodicity[]
   minimumDurationMonths: number
   forceAutoRenewal: boolean
 }
@@ -26,7 +26,7 @@ export interface MemberPlan {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly label: string
+  readonly name: string
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly isActive: boolean
@@ -36,7 +36,7 @@ export interface MemberPlan {
 }
 
 export interface MemberPlanInput {
-  readonly label: string
+  readonly name: string
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly isActive: boolean
@@ -66,7 +66,7 @@ export enum MemberPlanSort {
 }
 
 export interface MemberPlanFilter {
-  label?: string
+  name?: string
 }
 
 export interface GetMemberPlansArgs {

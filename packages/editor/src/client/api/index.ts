@@ -176,15 +176,15 @@ export type AuthProvider = {
 
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
-  paymentMethod: PaymentMethod;
-  paymentPeriodicity: Array<PaymentPeriodicity>;
+  paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   minimumDurationMonths: Scalars['Int'];
   forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
-  paymentMethodId: Scalars['String'];
-  paymentPeriodicity: Array<Scalars['String']>;
+  paymentMethods: Array<Scalars['String']>;
+  paymentPeriodicities: Array<Scalars['String']>;
   minimumDurationMonths: Scalars['Int'];
   forceAutoRenewal: Scalars['Boolean'];
 };
@@ -434,7 +434,7 @@ export type MemberPlan = {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
-  label: Scalars['String'];
+  name: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
@@ -451,11 +451,11 @@ export type MemberPlanConnection = {
 };
 
 export type MemberPlanFilter = {
-  label?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type MemberPlanInput = {
-  label: Scalars['String'];
+  name: Scalars['String'];
   image?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
@@ -2045,7 +2045,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'label' | 'isActive'>
+  & Pick<MemberPlan, 'id' | 'name' | 'isActive'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2058,10 +2058,10 @@ export type FullMemberPlanFragment = (
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'minimumDurationMonths' | 'forceAutoRenewal'>
-    & { paymentMethod: (
+    & { paymentMethods: Array<(
       { __typename?: 'PaymentMethod' }
       & FullPaymentMethodFragment
-    ), paymentPeriodicity: Array<(
+    )>, paymentPeriodicities: Array<(
       { __typename?: 'PaymentPeriodicity' }
       & Pick<PaymentPeriodicity, 'id' | 'checked'>
     )> }
@@ -3148,7 +3148,7 @@ export const FullPaymentMethodFragmentDoc = gql`
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
-  label
+  name
   isActive
   image {
     ...ImageRef
@@ -3161,10 +3161,10 @@ export const FullMemberPlanFragmentDoc = gql`
   pricePerMonthMinimum
   pricePerMonthMaximum
   availablePaymentMethods {
-    paymentMethod {
+    paymentMethods {
       ...FullPaymentMethod
     }
-    paymentPeriodicity {
+    paymentPeriodicities {
       id
       checked
     }
@@ -3981,7 +3981,7 @@ export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutatio
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  memberPlans(filter: {label: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
     nodes {
       ...FullMemberPlan
     }

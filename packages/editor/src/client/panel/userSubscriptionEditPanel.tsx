@@ -45,7 +45,7 @@ export function UserSubscriptionEditPanel({
 }: UserSubscriptionEditPanelProps) {
   const [memberPlan, setMemberPlan] = useState(subscription?.memberPlan)
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-  const [paymentPeriodicity, setPaymentPeriodicity] = useState(
+  const [paymentPeriodicity /*setPaymentPeriodicity*/] = useState(
     subscription?.paymentPeriodicity ?? 'monthly'
   ) //TODO: find smart default
   const [monthlyAmount, setMonthlyAmount] = useState(subscription?.monthlyAmount ?? 0)
@@ -148,7 +148,7 @@ export function UserSubscriptionEditPanel({
               description={'Choose a Member Plan'}
               disabled={isDisabled}
               value={memberPlans.find(mPlan => mPlan.id === memberPlan?.id)}
-              renderListItem={value => value.label}
+              renderListItem={value => value.name}
               onChange={value => setMemberPlan(value)}
             />
           </Box>
@@ -161,86 +161,67 @@ export function UserSubscriptionEditPanel({
                     ? `- ${memberPlan.pricePerMonthMaximum}`
                     : ''}
                 </DescriptionListItem>
-                <DescriptionListItem label="Force Auto Renewal">
-                  {memberPlan.forceAutoRenewal ? 'Yes' : 'No'}
-                </DescriptionListItem>
               </DescriptionList>
             </Box>
           )}
         </PanelSection>
         <PanelSectionHeader title="Subscription" />
-        {memberPlan?.availablePaymentPeriodicity && (
-          <PanelSection>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Select
-                label="Payment Periodicity"
-                options={memberPlan.availablePaymentPeriodicity}
-                value={memberPlan.availablePaymentPeriodicity.find(
-                  app => app.id === paymentPeriodicity
-                )}
-                renderListItem={value =>
-                  `${value?.id} ${value?.checked ? '- (Enabled in MemberPlan)' : ''}`
-                }
-                onChange={value => (value ? setPaymentPeriodicity(value.id) : paymentPeriodicity)}
-                marginBottom={Spacing.Small}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <TextInput
-                label="Monthly amount"
-                type="number"
-                value={monthlyAmount}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={e => {
-                  setMonthlyAmount(parseInt(e.target.value))
-                }}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Toggle
-                label="Auto Renew"
-                description="Renew the subscription automatically"
-                checked={autoRenew}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={event => setAutoRenew(event.target.checked)}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">Subscription Start</Typography>
-              <DatePicker
-                selected={startsAt}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={date => setStartsAt(date as Date)}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">Payed Until</Typography>
-              <DatePicker
-                selected={payedUntil}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={date => setPayedUntil(date as Date)}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <TextInput
-                label="Payment Method"
-                value={paymentMethod}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={e => {
-                  setPaymentMethod(e.target.value)
-                }}
-              />
-            </Box>
-            <Box marginBottom={Spacing.ExtraSmall}>
-              <Typography variant="body1">Deactivated</Typography>
-              <DatePicker
-                selected={deactivatedAt}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={date => setDeactivatedAt(date as Date)}
-              />
-            </Box>
-          </PanelSection>
-        )}
+        <PanelSection>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <TextInput
+              label="Monthly amount"
+              type="number"
+              value={monthlyAmount}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={e => {
+                setMonthlyAmount(parseInt(e.target.value))
+              }}
+            />
+          </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Toggle
+              label="Auto Renew"
+              description="Renew the subscription automatically"
+              checked={autoRenew}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={event => setAutoRenew(event.target.checked)}
+            />
+          </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Typography variant="body1">Subscription Start</Typography>
+            <DatePicker
+              selected={startsAt}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={date => setStartsAt(date as Date)}
+            />
+          </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Typography variant="body1">Payed Until</Typography>
+            <DatePicker
+              selected={payedUntil}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={date => setPayedUntil(date as Date)}
+            />
+          </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <TextInput
+              label="Payment Method"
+              value={paymentMethod}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={e => {
+                setPaymentMethod(e.target.value)
+              }}
+            />
+          </Box>
+          <Box marginBottom={Spacing.ExtraSmall}>
+            <Typography variant="body1">Deactivated</Typography>
+            <DatePicker
+              selected={deactivatedAt}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={date => setDeactivatedAt(date as Date)}
+            />
+          </Box>
+        </PanelSection>
       </Panel>
       <Toast
         type="error"

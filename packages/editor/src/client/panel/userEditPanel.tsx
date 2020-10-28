@@ -256,7 +256,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                     {new Date(subscription.payedUntil).toLocaleString()}
                   </DescriptionListItem>
                   <DescriptionListItem label="Member Plan">
-                    {subscription.memberPlan.label}
+                    {subscription.memberPlan.name}
                   </DescriptionListItem>
                 </DescriptionList>
               </Box>

@@ -36,16 +36,16 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
   {
     name: 'AvailablePaymentMethod',
     fields: {
-      paymentMethod: {
-        type: GraphQLNonNull(GraphQLPaymentMethod),
-        async resolve({paymentMethodId}, args, {dbAdapter}) {
+      paymentMethods: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
+        async resolve({paymentMethodIDs}, args, {dbAdapter}) {
           const paymentMethods = await dbAdapter.paymentMethod.getPaymentMethods()
-          return paymentMethods.find(paymentMethod => paymentMethod.id === paymentMethodId)
+          return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
         }
       },
-      paymentPeriodicity: {
+      paymentPeriodicities: {
         type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity))),
-        resolve({paymentPeriodicity: selectedPaymentPeriodicity}, args) {
+        resolve({paymentPeriodicities: selectedPaymentPeriodicity}, args) {
           return AllPaymentPeriodicity.map(paymentPeriodicity => {
             return {
               id: paymentPeriodicity,
@@ -68,7 +68,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    label: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
@@ -88,7 +88,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
   fields: {
-    label: {type: GraphQLString}
+    name: {type: GraphQLString}
   }
 })
 
@@ -112,8 +112,8 @@ export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
 export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
   fields: {
-    paymentMethodId: {type: GraphQLNonNull(GraphQLString)},
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentMethods: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     minimumDurationMonths: {type: GraphQLNonNull(GraphQLInt)},
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
@@ -122,7 +122,7 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
 export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
     image: {type: GraphQLID},
     description: {type: GraphQLRichText},
     isActive: {type: GraphQLNonNull(GraphQLBoolean)},

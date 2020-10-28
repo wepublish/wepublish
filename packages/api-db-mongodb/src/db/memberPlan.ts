@@ -30,7 +30,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     const {ops} = await this.memberPlans.insertOne({
       createdAt: new Date(),
       modifiedAt: new Date(),
-      label: input.label,
+      name: input.name,
       imageID: input.imageID,
       description: input.description,
       isActive: input.isActive,
@@ -49,7 +49,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       {
         $set: {
           modifiedAt: new Date(),
-          label: input.label,
+          name: input.name,
           imageID: input.imageID,
           description: input.description,
           isActive: input.isActive,
@@ -115,8 +115,8 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
     let textFilter: FilterQuery<any> = {}
 
     // TODO: Rename to search
-    if (filter?.label != undefined) {
-      textFilter['$or'] = [{label: {$regex: filter.label, $options: 'i'}}]
+    if (filter?.name != undefined) {
+      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
     }
 
     const [totalCount, memberPlans] = await Promise.all([

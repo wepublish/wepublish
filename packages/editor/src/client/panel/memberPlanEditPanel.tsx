@@ -18,7 +18,7 @@ import {
   ZIndex,
   Toggle,
   Typography,
-  Select,
+  //Select,
   ListValue,
   ListInput
 } from '@karma.run/ui'
@@ -52,6 +52,13 @@ import {RichTextBlockValue} from '../blocks/types'
 import InputRange from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 
+const ALL_PAYMENT_PERIODICITIES = [
+  {id: 'monthly', checked: false},
+  {id: 'quarterly', checked: false},
+  {id: 'biannual', checked: false},
+  {id: 'yearly', checked: false}
+]
+
 export interface MemberPlanEditPanelProps {
   id?: string
 
@@ -60,7 +67,7 @@ export interface MemberPlanEditPanelProps {
 }
 
 export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
-  const [label, setLabel] = useState('')
+  const [name, setName] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [isActive, setIsActive] = useState<boolean>(false)
@@ -113,7 +120,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   useEffect(() => {
     if (data?.memberPlan) {
-      setLabel(data.memberPlan.label)
+      setName(data.memberPlan.name)
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
@@ -164,14 +171,14 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         variables: {
           id,
           input: {
-            label,
+            name,
             image: image?.id,
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               ...value,
-              paymentMethodId: value.paymentMethod.id,
-              paymentPeriodicity: value.paymentPeriodicity.map(pp => pp.id)
+              paymentMethods: value.paymentMethods.map(pm => pm.id),
+              paymentPeriodicities: value.paymentPeriodicities.map(pp => pp.id)
             })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
@@ -184,14 +191,14 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
       const {data} = await createMemberPlan({
         variables: {
           input: {
-            label,
+            name,
             image: image?.id,
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               ...value,
-              paymentMethodId: value.paymentMethod.id,
-              paymentPeriodicity: value.paymentPeriodicity.map(pp => pp.id)
+              paymentMethods: value.paymentMethods.map(pm => pm.id),
+              paymentPeriodicities: value.paymentPeriodicities.map(pp => pp.id)
             })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
@@ -224,11 +231,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label="Label"
-              value={label}
+              label="Name"
+              value={name}
               disabled={isDisabled}
               onChange={e => {
-                setLabel(e.target.value)
+                setName(e.target.value)
               }}
             />
           </Box>
@@ -328,8 +335,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             defaultValue={{
               forceAutoRenewal: false,
               minimumDurationMonths: 0,
-              paymentPeriodicity: [],
-              paymentMethod: paymentMethods?.[0]
+              paymentPeriodicities: ALL_PAYMENT_PERIODICITIES,
+              paymentMethods: [paymentMethods?.[0]]
             }}>
             {({value, onChange}) => (
               <Box>
@@ -355,7 +362,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                     }}
                   />
                 </Box>
-                {value.paymentPeriodicity.map((paymentPeriodicity, index) => {
+                {value.paymentPeriodicities.map((paymentPeriodicity, index) => {
                   return (
                     <Box marginBottom={Spacing.ExtraSmall}>
                       <Toggle
@@ -365,28 +372,18 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                         disabled={isDisabled}
                         checked={paymentPeriodicity.checked}
                         onChange={event => {
-                          const newPP = value.paymentPeriodicity.map(pp => {
+                          const newPP = value.paymentPeriodicities.map(pp => {
                             return pp.id === event.target.name
                               ? {...pp, checked: event.target.checked}
                               : pp
                           })
-                          onChange({...value, paymentPeriodicity: newPP})
+                          onChange({...value, paymentPeriodicities: newPP})
                         }}
                       />
                     </Box>
                   )
                 })}
-                <Select
-                  description="Payment Method"
-                  options={paymentMethods}
-                  value={value.paymentMethod}
-                  renderListItem={paymentMethod => paymentMethod?.name}
-                  onChange={paymentMethod => {
-                    if (paymentMethod) {
-                      onChange({...value, paymentMethod})
-                    }
-                  }}
-                />
+                PaymentMethod
               </Box>
             )}
           </ListInput>
