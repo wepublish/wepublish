@@ -170,8 +170,8 @@ export function LinkPageBreakBlock({
             <Box style={{width: '50%', display: 'inline-block'}}>
               <TextInput
                 ref={focusInputRef}
-                placeholder="Link URL"
-                label="Button link"
+                placeholder="https://..."
+                label="CTA Button url"
                 value={linkURL}
                 disabled={disabled}
                 onChange={e => onChange({...value, linkURL: e.target.value})}
@@ -181,8 +181,8 @@ export function LinkPageBreakBlock({
               <Box style={{width: '50%', display: 'inline-block'}}>
                 <TextInput
                   ref={focusInputRef}
-                  placeholder="Link Text"
-                  label="Button label"
+                  placeholder="CTA Button label"
+                  label="CTA Button label"
                   value={linkText}
                   disabled={disabled}
                   onChange={e => onChange({...value, linkText: e.target.value})}
