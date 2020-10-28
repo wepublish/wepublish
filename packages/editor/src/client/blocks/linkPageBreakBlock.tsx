@@ -48,7 +48,9 @@ export function LinkPageBreakBlock({
   const focusRef = useRef<HTMLTextAreaElement>(null)
   const focusInputRef = useRef<HTMLInputElement>(null)
 
-  const {t} = useTranslation()
+  // const {t} = useTranslation()
+  /* eslint-disable i18next/no-literal-string */
+  /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
@@ -203,7 +205,7 @@ export function LinkPageBreakBlock({
             onClose={() => setChooseModalOpen(false)}
             onSelect={image => {
               setChooseModalOpen(false)
-              onChange(value => ({...value, image, imageID: image.id}))
+              onChange(value => ({...value, imageID: image.id}))
             }}
           />
         )}
