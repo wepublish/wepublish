@@ -178,14 +178,12 @@ export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   paymentMethods: Array<PaymentMethod>;
   paymentPeriodicities: Array<PaymentPeriodicity>;
-  minimumDurationMonths: Scalars['Int'];
   forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
   paymentMethods: Array<Scalars['String']>;
   paymentPeriodicities: Array<Scalars['String']>;
-  minimumDurationMonths: Scalars['Int'];
   forceAutoRenewal: Scalars['Boolean'];
 };
 
@@ -456,7 +454,7 @@ export type MemberPlanFilter = {
 
 export type MemberPlanInput = {
   name: Scalars['String'];
-  image?: Maybe<Scalars['ID']>;
+  imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
   isActive: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
@@ -2057,7 +2055,7 @@ export type FullMemberPlanFragment = (
   & Pick<MemberPlan, 'description' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
-    & Pick<AvailablePaymentMethod, 'minimumDurationMonths' | 'forceAutoRenewal'>
+    & Pick<AvailablePaymentMethod, 'forceAutoRenewal'>
     & { paymentMethods: Array<(
       { __typename?: 'PaymentMethod' }
       & FullPaymentMethodFragment
@@ -3168,7 +3166,6 @@ export const FullMemberPlanFragmentDoc = gql`
       id
       checked
     }
-    minimumDurationMonths
     forceAutoRenewal
   }
   ...MemberPlanRef

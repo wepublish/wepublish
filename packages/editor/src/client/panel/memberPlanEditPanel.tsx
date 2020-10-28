@@ -172,7 +172,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           id,
           input: {
             name,
-            image: image?.id,
+            imageID: image?.id,
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
@@ -192,7 +192,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         variables: {
           input: {
             name,
-            image: image?.id,
+            imageID: image?.id,
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
@@ -334,23 +334,11 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             onChange={app => setAvailablePaymentMethods(app)}
             defaultValue={{
               forceAutoRenewal: false,
-              minimumDurationMonths: 0,
               paymentPeriodicities: ALL_PAYMENT_PERIODICITIES,
               paymentMethods: [paymentMethods?.[0]]
             }}>
             {({value, onChange}) => (
               <Box>
-                <Box marginBottom={Spacing.ExtraSmall}>
-                  <TextInput
-                    type="number"
-                    label="Minimum duration"
-                    value={value.minimumDurationMonths}
-                    disabled={isDisabled}
-                    onChange={e => {
-                      onChange({...value, minimumDurationMonths: parseInt(e.target.value)})
-                    }}
-                  />
-                </Box>
                 <Box marginBottom={Spacing.ExtraSmall}>
                   <Toggle
                     label="Force Auto Renewal"
@@ -362,6 +350,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                     }}
                   />
                 </Box>
+                <Typography variant="h3">Possible Payment Periodicities</Typography>
                 {value.paymentPeriodicities.map((paymentPeriodicity, index) => {
                   return (
                     <Box marginBottom={Spacing.ExtraSmall}>
@@ -383,7 +372,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                     </Box>
                   )
                 })}
-                PaymentMethod
+                <Typography variant="h3">Possible Payment Methods</Typography>
               </Box>
             )}
           </ListInput>

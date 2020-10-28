@@ -19,7 +19,6 @@ fragment FullMemberPlan on MemberPlan {
             id
             checked
         }
-        minimumDurationMonths
         forceAutoRenewal
     }
     ...MemberPlanRef

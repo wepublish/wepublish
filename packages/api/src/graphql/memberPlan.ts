@@ -54,7 +54,6 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
           })
         }
       },
-      minimumDurationMonths: {type: GraphQLNonNull(GraphQLInt)},
       forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
     }
   }
@@ -114,7 +113,6 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   fields: {
     paymentMethods: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    minimumDurationMonths: {type: GraphQLNonNull(GraphQLInt)},
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -123,7 +121,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    image: {type: GraphQLID},
+    imageID: {type: GraphQLID},
     description: {type: GraphQLRichText},
     isActive: {type: GraphQLNonNull(GraphQLBoolean)},
     pricePerMonthMinimum: {type: GraphQLNonNull(GraphQLInt)},
