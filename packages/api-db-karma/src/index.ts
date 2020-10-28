@@ -372,11 +372,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
       define('article', all(tag(ModelTag.Article))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
-      define('articleVersion', scope('article')
-        .field('versions')
-        .slice(version, 1)
-        .first()
-        .get()),
+      define('articleVersion', scope('article').field('versions').slice(version, 1).first().get()),
       update(
         refTo(scope('articleVersion')),
         data(d =>
@@ -430,11 +426,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
       define('article', all(tag(ModelTag.Article))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
-      define('articleVersion', scope('article')
-        .field('versions')
-        .slice(version, 1)
-        .first()
-        .get()),
+      define('articleVersion', scope('article').field('versions').slice(version, 1).first().get()),
       update(
         refTo(scope('articleVersion')),
         scope('articleVersion').setField(
@@ -764,11 +756,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
       define('page', all(tag(ModelTag.Page))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
-      define('pageVersion', scope('page')
-        .field('versions')
-        .slice(version, 1)
-        .first()
-        .get()),
+      define('pageVersion', scope('page').field('versions').slice(version, 1).first().get()),
       get(
         update(
           refTo(scope('pageVersion')),
@@ -818,11 +806,7 @@ export class KarmaStorageAdapter implements StorageAdapter {
       define('page', all(tag(ModelTag.Page))
         .filterList((index, value) => value.field('id').equal(string(id)))
         .first()),
-      define('pageVersion', scope('page')
-        .field('versions')
-        .slice(version, 1)
-        .first()
-        .get()),
+      define('pageVersion', scope('page').field('versions').slice(version, 1).first().get()),
       update(
         refTo(scope('pageVersion')),
         scope('pageVersion').setField(

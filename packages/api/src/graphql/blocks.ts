@@ -450,6 +450,7 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
     hideButton: {type: GraphQLBoolean},
     styleOption: {type: GraphQLString},
     layoutOption: {type: GraphQLString},
+    templateOption: {type: GraphQLString},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
@@ -558,6 +559,7 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
     linkTarget: {type: GraphQLString},
     hideButton: {type: GraphQLBoolean},
     styleOption: {type: GraphQLString},
+    templateOption: {type: GraphQLString},
     layoutOption: {type: GraphQLString},
     imageID: {type: GraphQLID}
   }
