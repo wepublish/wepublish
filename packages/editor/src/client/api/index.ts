@@ -1014,6 +1014,7 @@ export type Query = {
   pages: PageConnection;
   memberPlan?: Maybe<MemberPlan>;
   memberPlans: MemberPlanConnection;
+  paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
 };
 
@@ -1159,6 +1160,11 @@ export type QueryMemberPlansArgs = {
   filter?: Maybe<MemberPlanFilter>;
   sort?: Maybe<MemberPlanSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type QuoteBlock = {
@@ -2358,6 +2364,19 @@ export type PaymentMethodListQueryVariables = Exact<{ [key: string]: never; }>;
 export type PaymentMethodListQuery = (
   { __typename?: 'Query' }
   & { paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type PaymentMethodQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type PaymentMethodQuery = (
+  { __typename?: 'Query' }
+  & { paymentMethod?: Maybe<(
     { __typename?: 'PaymentMethod' }
     & FullPaymentMethodFragment
   )> }
@@ -4448,6 +4467,39 @@ export function usePaymentMethodListLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type PaymentMethodListQueryHookResult = ReturnType<typeof usePaymentMethodListQuery>;
 export type PaymentMethodListLazyQueryHookResult = ReturnType<typeof usePaymentMethodListLazyQuery>;
 export type PaymentMethodListQueryResult = Apollo.QueryResult<PaymentMethodListQuery, PaymentMethodListQueryVariables>;
+export const PaymentMethodDocument = gql`
+    query PaymentMethod($id: ID!) {
+  paymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+
+/**
+ * __usePaymentMethodQuery__
+ *
+ * To run a query within a React component, call `usePaymentMethodQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentMethodQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentMethodQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePaymentMethodQuery(baseOptions?: Apollo.QueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+        return Apollo.useQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, baseOptions);
+      }
+export function usePaymentMethodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+          return Apollo.useLazyQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, baseOptions);
+        }
+export type PaymentMethodQueryHookResult = ReturnType<typeof usePaymentMethodQuery>;
+export type PaymentMethodLazyQueryHookResult = ReturnType<typeof usePaymentMethodLazyQuery>;
+export type PaymentMethodQueryResult = Apollo.QueryResult<PaymentMethodQuery, PaymentMethodQueryVariables>;
 export const CreatePaymentMethodDocument = gql`
     mutation CreatePaymentMethod($input: PaymentMethodInput!) {
   createPaymentMethod(input: $input) {

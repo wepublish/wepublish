@@ -57,7 +57,11 @@ export enum RouteType {
 
   MemberPlanList = 'memberPlanList',
   MemberPlanEdit = 'memberPlanEdit',
-  MemberPlanCreate = 'memberPlanCreate'
+  MemberPlanCreate = 'memberPlanCreate',
+
+  PaymentMethodList = 'paymentMethodList',
+  PaymentMethodEdit = 'paymentMethodEdit',
+  PaymentMethodCreate = 'paymentMethodCreate'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
@@ -121,6 +125,16 @@ export const MemberPlanCreateRoute = route(
   routePath`/memberplan/create`
 )
 
+export const PaymentMethodListRoute = route(RouteType.PaymentMethodList, routePath`/paymentmethods`)
+export const PaymentMethodEditRoute = route(
+  RouteType.PaymentMethodEdit,
+  routePath`/paymentmethod/edit/${required('id')}`
+)
+export const PaymentMethodCreateRoute = route(
+  RouteType.PaymentMethodCreate,
+  routePath`/paymentmethod/create`
+)
+
 export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('path')}`, null)
 
 export const routes = [
@@ -154,6 +168,9 @@ export const routes = [
   MemberPlanListRoute,
   MemberPlanEditRoute,
   MemberPlanCreateRoute,
+  PaymentMethodListRoute,
+  PaymentMethodEditRoute,
+  PaymentMethodCreateRoute,
   NotFoundRoute
 ] as const
 

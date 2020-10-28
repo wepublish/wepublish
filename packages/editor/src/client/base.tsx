@@ -28,7 +28,8 @@ import {
   TokenListRoute,
   UserListRoute,
   UserRoleListRoute,
-  MemberPlanListRoute
+  MemberPlanListRoute,
+  PaymentMethodListRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -95,6 +96,13 @@ export function Base({children}: BaseProps) {
             label="Member Plans"
             route={MemberPlanListRoute.create({})}
             active={current?.type === RouteType.MemberPlanList}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconFormatQuoteOutlined}
+            label="Payment Methods"
+            route={PaymentMethodListRoute.create({})}
+            active={current?.type === RouteType.PaymentMethodList}
           />
 
           {/* TODO */}

@@ -17,6 +17,7 @@ import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {MemberPlanList} from './routes/memberPlanList'
+import {PaymentMethodList} from './routes/paymentMethodList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -64,6 +65,11 @@ export function contentForRoute(route: Route) {
     case RouteType.MemberPlanCreate:
     case RouteType.MemberPlanEdit:
       return <MemberPlanList />
+
+    case RouteType.PaymentMethodList:
+    case RouteType.PaymentMethodCreate:
+    case RouteType.PaymentMethodEdit:
+      return <PaymentMethodList />
 
     case RouteType.NotFound:
       return <ArticleList />

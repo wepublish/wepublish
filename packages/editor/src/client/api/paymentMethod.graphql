@@ -16,6 +16,11 @@ query PaymentMethodList {
     }
 }
 
+query PaymentMethod($id: ID!) {
+    paymentMethod(id: $id) {
+        ...FullPaymentMethod
+    }
+}
 
 mutation CreatePaymentMethod($input: PaymentMethodInput!) {
     createPaymentMethod(input: $input) {

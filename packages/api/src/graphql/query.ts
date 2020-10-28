@@ -95,7 +95,8 @@ import {
   AllPermissions,
   CanGetMemberPlan,
   CanGetMemberPlans,
-  CanGetPaymentMethods
+  CanGetPaymentMethods,
+  CanGetPaymentMethod
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -765,6 +766,17 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // PaymentMethod
     // ======
+
+    paymentMethod: {
+      type: GraphQLPaymentMethod,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetPaymentMethod, roles)
+
+        return loaders.paymentMethodsByID.load(id)
+      }
+    },
 
     paymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),

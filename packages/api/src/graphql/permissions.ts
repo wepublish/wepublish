@@ -339,6 +339,12 @@ export const CanCreatePaymentMethod: Permission = {
   deprecated: false
 }
 
+export const CanGetPaymentMethod: Permission = {
+  id: 'CAN_GET_PAYMENT_METHOD',
+  description: 'Allows to get a payment method',
+  deprecated: false
+}
+
 export const CanGetPaymentMethods: Permission = {
   id: 'CAN_GET_PAYMENT_METHODS',
   description: 'Allows to get all payment methods',
@@ -400,6 +406,7 @@ export const AllPermissions: Permission[] = [
   CanGetMemberPlans,
   CanDeleteMemberPlan,
   CanCreatePaymentMethod,
+  CanGetPaymentMethod,
   CanGetPaymentMethods,
   CanDeletePaymentMethod
 ]
