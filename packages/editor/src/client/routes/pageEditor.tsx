@@ -38,6 +38,8 @@ import {blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
+import {useTranslation} from 'react-i18next'
+
 export interface PageEditorProps {
   readonly id?: string
 }
@@ -107,6 +109,8 @@ export function PageEditor({id}: PageEditorProps) {
     setBlocks(blocks)
     setChanged(true)
   }, [])
+
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (pageData?.page) {
@@ -219,7 +223,7 @@ export function PageEditor({id}: PageEditorProps) {
             leftChildren={
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
-                label="Back"
+                label={t('Back')}
                 route={PageListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -230,7 +234,7 @@ export function PageEditor({id}: PageEditorProps) {
               <>
                 <NavigationButton
                   icon={MaterialIconInsertDriveFileOutlined}
-                  label="Metadata"
+                  label={t('Metadata')}
                   onClick={() => setMetaDrawerOpen(true)}
                   disabled={isDisabled}
                 />
@@ -238,7 +242,7 @@ export function PageEditor({id}: PageEditorProps) {
                 {isNew && createData == null ? (
                   <NavigationButton
                     icon={MaterialIconSaveOutlined}
-                    label="Create"
+                    label={t('Create')}
                     onClick={() => handleSave()}
                     disabled={isDisabled}
                   />
@@ -246,13 +250,13 @@ export function PageEditor({id}: PageEditorProps) {
                   <>
                     <NavigationButton
                       icon={MaterialIconSaveOutlined}
-                      label="Save"
+                      label={t('Save')}
                       onClick={() => handleSave()}
                       disabled={isDisabled}
                     />
                     <NavigationButton
                       icon={MaterialIconPublishOutlined}
-                      label="Publish"
+                      label={t('Publish')}
                       onClick={() => setPublishDialogOpen(true)}
                       disabled={isDisabled}
                     />

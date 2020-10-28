@@ -63,7 +63,7 @@ The following servers will be available:
 - **Editor:** [http://localhost:3000](http://localhost:3000)
 - **Webpack Dev Server:** [http://localhost:3001](http://localhost:3001)
 - **MongoDB:** [http://localhost:27017](http://localhost:27017)
-- **MongoDB Express:** [http://localhost:5000](http://localhost:4005)
+- **MongoDB Express:** [http://localhost:8000](http://localhost:8000)
 
 If you want to build/watch only certain packages just have a look inside the [package.json][package-json-url],
 to find commands for each package.
