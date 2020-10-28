@@ -78,6 +78,7 @@ fragment FullBlock on Block {
     richText
     linkTarget
     hideButton
+    templateOption
     layoutOption
     image {
       ...ImageRef
