@@ -48,9 +48,10 @@ export function LinkPageBreakBlock({
   const focusRef = useRef<HTMLTextAreaElement>(null)
   const focusInputRef = useRef<HTMLInputElement>(null)
 
-  // const {t} = useTranslation()
   /* eslint-disable i18next/no-literal-string */
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
+
+  // const {t} = useTranslation()
 
   useEffect(() => {
     if (autofocus) focusRef.current?.focus()
