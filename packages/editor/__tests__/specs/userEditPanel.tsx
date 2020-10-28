@@ -103,7 +103,8 @@ test('User Edit Panel should render', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('User Edit Panel should render with id', async () => {
@@ -118,7 +119,8 @@ test('User Edit Panel should render with id', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('User should be able to select and add roles', async () => {
@@ -135,9 +137,10 @@ test('User should be able to select and add roles', async () => {
 
   wrapper.find('Select button').simulate('click')
   wrapper.find('li[role="option"]').last().simulate('click')
-
   wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
-  expect(wrapper).toMatchSnapshot()
+
+  const panel = wrapper.find('UserEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('User should be able to remove user role', async () => {
@@ -151,10 +154,12 @@ test('User should be able to remove user role', async () => {
     </UIProvider>
   )
   await updateWrapper(wrapper, 100)
+
   wrapper.find('ForwardRef(IconButton)').first().simulate('click')
   wrapper.find('ForwardRef(MenuButton)').simulate('click')
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('User should be able to create a new user', async () => {
@@ -211,5 +216,6 @@ test('User should be able to create a new user', async () => {
     wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
   })
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserEditPanel')
+  expect(panel).toMatchSnapshot()
 })

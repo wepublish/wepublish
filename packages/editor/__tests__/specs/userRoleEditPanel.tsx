@@ -135,7 +135,8 @@ test('Role Panel should render', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserRoleEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('Role Panel should render with role', async () => {
@@ -149,7 +150,8 @@ test('Role Panel should render with role', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserRoleEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('Toggle sliders should be disabled with System Role', async () => {
@@ -192,7 +194,8 @@ test('Toggle sliders should be disabled with System Role', async () => {
   )
   await updateWrapper(wrapper, 100)
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserRoleEditPanel')
+  expect(panel).toMatchSnapshot()
 })
 
 test('User should be able to create a new role', async () => {
@@ -253,5 +256,6 @@ test('User should be able to create a new role', async () => {
     wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
   })
 
-  expect(wrapper).toMatchSnapshot()
+  const panel = wrapper.find('UserRoleEditPanel')
+  expect(panel).toMatchSnapshot()
 })
