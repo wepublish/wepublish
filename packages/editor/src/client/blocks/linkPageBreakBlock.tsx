@@ -225,7 +225,7 @@ export function LinkPageBreakBlock({
             onClose={() => setChooseModalOpen(false)}
             onSelect={image => {
               setChooseModalOpen(false)
-              onChange(value => ({...value, imageID: image.id}))
+              onChange(value => ({...value, image, imageID: image.id}))
             }}
           />
         )}
