@@ -44,6 +44,7 @@
     "build:editor:production": "yarn workspace @wepublish/editor build:production",
     "watch:editor": "yarn workspace @wepublish/editor watch",
     "lint:editor": "yarn workspace @wepublish/editor lint",
+    "test:editor": "yarn workspace @wepublish/editor test",
     "generate:editor:api": "yarn workspace @wepublish/editor generate:api",
     "setup:oauth2": "yarn workspace @wepublish/oauth2 setup",
     "start:oauth2": "yarn workspace @wepublish/oauth2 start",
