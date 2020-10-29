@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.23](https://github.com/wepublish/wepublish/compare/v0.8.22...v0.8.23) (2020-10-29)
+
+**Note:** Version bump only for package @dev7ch/wepublish-api
+
+
+
+
+
 ## [0.8.21](https://github.com/wepublish/wepublish/compare/v0.8.16...v0.8.21) (2020-10-28)
 
 **Note:** Version bump only for package @dev7ch/wepublish-api
