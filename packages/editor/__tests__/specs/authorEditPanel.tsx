@@ -5,14 +5,14 @@ import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-
 import {UIProvider} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
 import * as fela from 'fela'
-//import wait from 'waait'
+
+// React 16 Enzyme adapter
+Enzyme.configure({adapter: new Adapter()})
+// import wait from 'waait'
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -129,7 +129,7 @@ test('User should be able to create a new author', async () => {
       })
     }
   ]
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthorEditPanel />

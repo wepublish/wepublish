@@ -9,13 +9,13 @@ import {
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-
 import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
+
+// React 16 Enzyme adapter
+Enzyme.configure({adapter: new Adapter()})
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -27,7 +27,7 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-let userRoleDocumentQuery = {
+const userRoleDocumentQuery = {
   request: {
     query: UserRoleDocument,
     variables: {
@@ -79,7 +79,7 @@ let userRoleDocumentQuery = {
   }
 }
 
-//mock user role
+// mock user role
 const permissionListQuery = {
   request: {
     query: PermissionListDocument
@@ -234,7 +234,7 @@ test('User should be able to create a new role', async () => {
     permissionListQuery
   ]
 
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />

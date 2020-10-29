@@ -5,13 +5,13 @@ import {UserDocument, CreateUserDocument, UserRoleListDocument} from '../../src/
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-
-import {UIProvider /*, Select*/} from '@karma.run/ui'
+import {UIProvider /*, Select */} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
+
+// React 16 Enzyme adapter
+Enzyme.configure({adapter: new Adapter()})
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -110,7 +110,7 @@ test('User Edit Panel should render', async () => {
 test('User Edit Panel should render with id', async () => {
   const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={true}>
         <UserEditPanel id={'fakeId3'} />
@@ -146,7 +146,7 @@ test('User should be able to select and add roles', async () => {
 test('User should be able to remove user role', async () => {
   const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={true}>
         <UserEditPanel id={'fakeId3'} />
@@ -198,7 +198,7 @@ test('User should be able to create a new user', async () => {
     userRoleListDocumentQuery
   ]
 
-  let wrapper = mount(
+  const wrapper = mount(
     <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserEditPanel />
