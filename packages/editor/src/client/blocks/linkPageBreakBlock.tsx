@@ -178,7 +178,7 @@ export function LinkPageBreakBlock({
               <TextInput
                 ref={focusInputRef}
                 placeholder="https://..."
-                label="CTA Button url"
+                label="CTA Button link URL"
                 value={linkURL}
                 disabled={disabled}
                 onChange={e => onChange({...value, linkURL: e.target.value})}
@@ -216,7 +216,7 @@ export function LinkPageBreakBlock({
               </Box>
               <Box width={'50%'}>
                 <Toggle
-                  label={'Hide CTA Button label'}
+                  label={'Hide CTA Button'}
                   description={'Hide button an make whole element clickable.'}
                   onChange={e => onChange({...value, hideButton: e.target.checked})}
                   checked={!!hideButton || false}
