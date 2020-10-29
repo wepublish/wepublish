@@ -23,6 +23,8 @@ import {
   ListInput
 } from '@karma.run/ui'
 
+import Select from 'react-select'
+
 import {
   MaterialIconClose,
   MaterialIconImageOutlined,
@@ -40,6 +42,7 @@ import {
   ImageRefFragment,
   Maybe,
   MemberPlanListDocument,
+  PaymentMethod,
   useCreateMemberPlanMutation,
   useMemberPlanQuery,
   usePaymentMethodListQuery,
@@ -176,9 +179,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
-              ...value,
-              paymentMethods: value.paymentMethods.map(pm => pm.id),
-              paymentPeriodicities: value.paymentPeriodicities.map(pp => pp.id)
+              paymentPeriodicities: value.paymentPeriodicities,
+              forceAutoRenewal: value.forceAutoRenewal,
+              paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
@@ -196,9 +199,9 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             description,
             isActive,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
-              ...value,
-              paymentMethods: value.paymentMethods.map(pm => pm.id),
-              paymentPeriodicities: value.paymentPeriodicities.map(pp => pp.id)
+              paymentPeriodicities: value.paymentPeriodicities,
+              forceAutoRenewal: value.forceAutoRenewal,
+              paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
             pricePerMonthMinimum,
             pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
@@ -334,8 +337,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             onChange={app => setAvailablePaymentMethods(app)}
             defaultValue={{
               forceAutoRenewal: false,
-              paymentPeriodicities: ALL_PAYMENT_PERIODICITIES,
-              paymentMethods: [paymentMethods?.[0]]
+              paymentPeriodicities: [],
+              paymentMethods: []
             }}>
             {({value, onChange}) => (
               <Box>
@@ -351,28 +354,43 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                   />
                 </Box>
                 <Typography variant="h3">Possible Payment Periodicities</Typography>
-                {value.paymentPeriodicities.map((paymentPeriodicity, index) => {
-                  return (
-                    <Box marginBottom={Spacing.ExtraSmall}>
-                      <Toggle
-                        key={index}
-                        name={paymentPeriodicity.id}
-                        label={paymentPeriodicity.id}
-                        disabled={isDisabled}
-                        checked={paymentPeriodicity.checked}
-                        onChange={event => {
-                          const newPP = value.paymentPeriodicities.map(pp => {
-                            return pp.id === event.target.name
-                              ? {...pp, checked: event.target.checked}
-                              : pp
-                          })
-                          onChange({...value, paymentPeriodicities: newPP})
-                        }}
-                      />
-                    </Box>
-                  )
-                })}
+                <Box marginBottom={Spacing.ExtraSmall}>
+                  <Select
+                    value={value.paymentPeriodicities.map(pp => ({value: pp, label: pp}))}
+                    isMulti={true}
+                    options={ALL_PAYMENT_PERIODICITIES.map(pp => ({value: pp.id, label: pp.id}))}
+                    onChange={(changedPaymentPeriodicities, action) => {
+                      if (Array.isArray(changedPaymentPeriodicities)) {
+                        onChange({
+                          ...value,
+                          paymentPeriodicities: changedPaymentPeriodicities.map(cpp => cpp.value)
+                        })
+                      }
+                      console.log('change', changedPaymentPeriodicities)
+                      console.log('action', action)
+                    }}
+                  />
+                </Box>
                 <Typography variant="h3">Possible Payment Methods</Typography>
+                <Box marginBottom={Spacing.ExtraSmall}>
+                  <Select
+                    value={value.paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                    isMulti={true}
+                    options={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                    onChange={(changedPaymentMethods, action) => {
+                      if (Array.isArray(changedPaymentMethods)) {
+                        const newMethods = changedPaymentMethods
+                          .map(cpm => paymentMethods.find(pm => cpm.value === pm.id))
+                          .filter(pm => pm !== null)
+                          .map(cpm => cpm as PaymentMethod)
+                        onChange({
+                          ...value,
+                          paymentMethods: newMethods
+                        })
+                      }
+                    }}
+                  />
+                </Box>
               </Box>
             )}
           </ListInput>

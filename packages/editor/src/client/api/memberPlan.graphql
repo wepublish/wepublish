@@ -15,10 +15,7 @@ fragment FullMemberPlan on MemberPlan {
         paymentMethods {
             ...FullPaymentMethod
         }
-        paymentPeriodicities {
-            id
-            checked
-        }
+        paymentPeriodicities
         forceAutoRenewal
     }
     ...MemberPlanRef

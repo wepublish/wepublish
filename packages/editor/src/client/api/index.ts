@@ -177,12 +177,12 @@ export type AuthProvider = {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<PaymentPeriodicity>;
+  paymentPeriodicities: Array<Scalars['String']>;
   forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
-  paymentMethods: Array<Scalars['String']>;
+  paymentMethodIDs: Array<Scalars['String']>;
   paymentPeriodicities: Array<Scalars['String']>;
   forceAutoRenewal: Scalars['Boolean'];
 };
@@ -890,12 +890,6 @@ export type PaymentMethodInput = {
   description: Scalars['RichText'];
   paymentAdapter: Scalars['String'];
   active: Scalars['Boolean'];
-};
-
-export type PaymentPeriodicity = {
-  __typename?: 'PaymentPeriodicity';
-  id: Scalars['String'];
-  checked: Scalars['Boolean'];
 };
 
 export type Peer = {
@@ -2061,13 +2055,10 @@ export type FullMemberPlanFragment = (
   & Pick<MemberPlan, 'description' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
-    & Pick<AvailablePaymentMethod, 'forceAutoRenewal'>
+    & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
     & { paymentMethods: Array<(
       { __typename?: 'PaymentMethod' }
       & FullPaymentMethodFragment
-    )>, paymentPeriodicities: Array<(
-      { __typename?: 'PaymentPeriodicity' }
-      & Pick<PaymentPeriodicity, 'id' | 'checked'>
     )> }
   )> }
   & MemberPlanRefFragment
@@ -3181,10 +3172,7 @@ export const FullMemberPlanFragmentDoc = gql`
     paymentMethods {
       ...FullPaymentMethod
     }
-    paymentPeriodicities {
-      id
-      checked
-    }
+    paymentPeriodicities
     forceAutoRenewal
   }
   ...MemberPlanRef

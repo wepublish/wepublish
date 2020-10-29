@@ -1,9 +1,4 @@
-import {
-  AllPaymentPeriodicity,
-  AvailablePaymentMethod,
-  MemberPlan,
-  MemberPlanSort
-} from '../db/memberPlan'
+import {AvailablePaymentMethod, MemberPlan, MemberPlanSort} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -24,14 +19,6 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod} from './paymentMethod'
 
-export const GraphQLPaymentPeriodicity = new GraphQLObjectType({
-  name: 'PaymentPeriodicity',
-  fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    checked: {type: GraphQLNonNull(GraphQLBoolean)}
-  }
-})
-
 export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaymentMethod, Context>(
   {
     name: 'AvailablePaymentMethod',
@@ -43,17 +30,7 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
           return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
         }
       },
-      paymentPeriodicities: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity))),
-        resolve({paymentPeriodicities: selectedPaymentPeriodicity}, args) {
-          return AllPaymentPeriodicity.map(paymentPeriodicity => {
-            return {
-              id: paymentPeriodicity,
-              checked: selectedPaymentPeriodicity.includes(paymentPeriodicity)
-            }
-          })
-        }
-      },
+      paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
       forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
     }
   }
@@ -111,7 +88,7 @@ export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
 export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
   fields: {
-    paymentMethods: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentMethodIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
