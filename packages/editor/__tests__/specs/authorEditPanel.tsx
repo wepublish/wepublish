@@ -120,8 +120,6 @@ test('User should be able to create a new author', async () => {
             __typename: 'Author',
             id: author.id,
             name: author.name,
-            //createdAt: '2019-12-03T10:15:30Z',
-            //modifiedAt: '2019-12-03T10:15:30Z',
             slug: author.slug,
             url: author.url,
             links: author.links,

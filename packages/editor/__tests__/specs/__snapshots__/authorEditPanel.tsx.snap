@@ -1319,7 +1319,7 @@ exports[`Author Edit Panel should render with id 1`] = `
                   disabled={false}
                   label="authors.panels.name"
                   onChange={[Function]}
-                  value=""
+                  value="Douglas Cole"
                 >
                   <Styled(div)
                     styleProps={Object {}}
@@ -1337,13 +1337,13 @@ exports[`Author Edit Panel should render with id 1`] = `
                                 "hasIcon": false,
                               }
                             }
-                            value=""
+                            value="Douglas Cole"
                           >
                             <input
                               disabled={false}
                               onChange={[Function]}
                               placeholder="authors.panels.name"
-                              value=""
+                              value="Douglas Cole"
                             />
                           </Styled(input)>
                           <Styled(span)
@@ -1579,7 +1579,18 @@ exports[`Author Edit Panel should render with id 1`] = `
           <div>
             <Memo(RichTextBlock)
               onChange={[Function]}
-              value={Array []}
+              value={
+                Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "text": "",
+                      },
+                    ],
+                    "type": "paragraph",
+                  },
+                ]
+              }
             >
               <Slate
                 editor={
@@ -1623,7 +1634,18 @@ exports[`Author Edit Panel should render with id 1`] = `
                   }
                 }
                 onChange={[Function]}
-                value={Array []}
+                value={
+                  Array [
+                    Object {
+                      "children": Array [
+                        Object {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                  ]
+                }
               >
                 <Toolbar
                   fadeOut={true}
@@ -2221,7 +2243,28 @@ exports[`Author Edit Panel should render with id 1`] = `
                   >
                     <Children
                       decorate={[Function]}
-                      decorations={Array []}
+                      decorations={
+                        Array [
+                          Object {
+                            "anchor": Object {
+                              "offset": 0,
+                              "path": Array [
+                                0,
+                                0,
+                              ],
+                            },
+                            "focus": Object {
+                              "offset": 0,
+                              "path": Array [
+                                0,
+                                0,
+                              ],
+                            },
+                            "placeholder": "blocks.richText.startWriting",
+                            Symbol(placeholder): true,
+                          },
+                        ]
+                      }
                       node={
                         Object {
                           "addMark": [Function],
@@ -2265,7 +2308,229 @@ exports[`Author Edit Panel should render with id 1`] = `
                       renderElement={[Function]}
                       renderLeaf={[Function]}
                       selection={null}
-                    />
+                    >
+                      <Element
+                        decorate={[Function]}
+                        decorations={
+                          Array [
+                            Object {
+                              "anchor": Object {
+                                "offset": 0,
+                                "path": Array [
+                                  0,
+                                  0,
+                                ],
+                              },
+                              "focus": Object {
+                                "offset": 0,
+                                "path": Array [
+                                  0,
+                                  0,
+                                ],
+                              },
+                              "placeholder": "blocks.richText.startWriting",
+                              Symbol(placeholder): true,
+                            },
+                          ]
+                        }
+                        element={
+                          Object {
+                            "children": Array [
+                              Object {
+                                "text": "",
+                              },
+                            ],
+                            "type": "paragraph",
+                          }
+                        }
+                        key="0"
+                        renderElement={[Function]}
+                        renderLeaf={[Function]}
+                        selection={null}
+                      >
+                        <ForwardRef(Typography)
+                          data-slate-node="element"
+                          spacing="large"
+                          variant="body1"
+                        >
+                          <p
+                            data-slate-node="element"
+                          >
+                            <Children
+                              decorate={[Function]}
+                              decorations={
+                                Array [
+                                  Object {
+                                    "anchor": Object {
+                                      "offset": 0,
+                                      "path": Array [
+                                        0,
+                                        0,
+                                      ],
+                                    },
+                                    "focus": Object {
+                                      "offset": 0,
+                                      "path": Array [
+                                        0,
+                                        0,
+                                      ],
+                                    },
+                                    "placeholder": "blocks.richText.startWriting",
+                                    Symbol(placeholder): true,
+                                  },
+                                ]
+                              }
+                              node={
+                                Object {
+                                  "children": Array [
+                                    Object {
+                                      "text": "",
+                                    },
+                                  ],
+                                  "type": "paragraph",
+                                }
+                              }
+                              renderElement={[Function]}
+                              renderLeaf={[Function]}
+                              selection={null}
+                            >
+                              <Text
+                                decorations={
+                                  Array [
+                                    Object {
+                                      "anchor": Object {
+                                        "offset": 0,
+                                        "path": Array [
+                                          0,
+                                          0,
+                                        ],
+                                      },
+                                      "focus": Object {
+                                        "offset": 0,
+                                        "path": Array [
+                                          0,
+                                          0,
+                                        ],
+                                      },
+                                      "placeholder": "blocks.richText.startWriting",
+                                      Symbol(placeholder): true,
+                                    },
+                                  ]
+                                }
+                                isLast={true}
+                                key="1"
+                                parent={
+                                  Object {
+                                    "children": Array [
+                                      Object {
+                                        "text": "",
+                                      },
+                                    ],
+                                    "type": "paragraph",
+                                  }
+                                }
+                                renderLeaf={[Function]}
+                                text={
+                                  Object {
+                                    "text": "",
+                                  }
+                                }
+                              >
+                                <span
+                                  data-slate-node="text"
+                                >
+                                  <Leaf
+                                    isLast={true}
+                                    key="1-0"
+                                    leaf={
+                                      Object {
+                                        "placeholder": "blocks.richText.startWriting",
+                                        "text": "",
+                                        Symbol(placeholder): true,
+                                      }
+                                    }
+                                    parent={
+                                      Object {
+                                        "children": Array [
+                                          Object {
+                                            "text": "",
+                                          },
+                                        ],
+                                        "type": "paragraph",
+                                      }
+                                    }
+                                    renderLeaf={[Function]}
+                                    text={
+                                      Object {
+                                        "text": "",
+                                      }
+                                    }
+                                  >
+                                    <span
+                                      data-slate-leaf={true}
+                                    >
+                                      <span
+                                        contentEditable={false}
+                                        style={
+                                          Object {
+                                            "display": "inline-block",
+                                            "maxWidth": "100%",
+                                            "opacity": "0.333",
+                                            "pointerEvents": "none",
+                                            "verticalAlign": "text-top",
+                                            "whiteSpace": "nowrap",
+                                            "width": "0",
+                                          }
+                                        }
+                                      >
+                                        blocks.richText.startWriting
+                                      </span>
+                                      <String
+                                        isLast={true}
+                                        leaf={
+                                          Object {
+                                            "placeholder": "blocks.richText.startWriting",
+                                            "text": "",
+                                            Symbol(placeholder): true,
+                                          }
+                                        }
+                                        parent={
+                                          Object {
+                                            "children": Array [
+                                              Object {
+                                                "text": "",
+                                              },
+                                            ],
+                                            "type": "paragraph",
+                                          }
+                                        }
+                                        text={
+                                          Object {
+                                            "text": "",
+                                          }
+                                        }
+                                      >
+                                        <ZeroWidthString
+                                          isLineBreak={true}
+                                        >
+                                          <span
+                                            data-slate-length={0}
+                                            data-slate-zero-width="n"
+                                          >
+                                            ﻿
+                                            <br />
+                                          </span>
+                                        </ZeroWidthString>
+                                      </String>
+                                    </span>
+                                  </Leaf>
+                                </span>
+                              </Text>
+                            </Children>
+                          </p>
+                        </ForwardRef(Typography)>
+                      </Element>
+                    </Children>
                   </div>
                 </Editable>
               </Slate>

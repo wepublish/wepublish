@@ -12,7 +12,7 @@ import Adapter from 'enzyme-adapter-react-16'
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
 
-import {UIProvider /*, Select*/} from '@karma.run/ui'
+import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
@@ -252,7 +252,7 @@ test('User should be able to create a new role', async () => {
       .simulate('change', {target: {value: userRole.description}})
   })
 
-  act(() => {
+  await act(async () => {
     wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
   })
 

@@ -163,17 +163,24 @@ test('User should be able to remove user role', async () => {
 })
 
 test('User should be able to create a new user', async () => {
+  const user = {
+    name: 'Testing Müller',
+    email: 'testing@mueller.com',
+    roleIDs: [],
+    password: 'superSecret'
+  }
+
   const mocks = [
     {
       request: {
         query: CreateUserDocument,
         variables: {
           input: {
-            name: 'Testing Müller',
-            email: 'testing@mueller.com',
-            roleIDs: []
+            name: user.name,
+            email: user.email,
+            roleIDs: user.roleIDs
           },
-          password: 'superSecret'
+          password: user.password
         }
       },
       result: () => ({
@@ -181,9 +188,9 @@ test('User should be able to create a new user', async () => {
           user: {
             __typename: 'User',
             id: 'fakeId4',
-            name: 'Testing Müller',
-            email: 'testing@mueller.com',
-            roles: []
+            name: user.name,
+            email: user.email,
+            roles: user.roleIDs
           }
         }
       })
@@ -203,16 +210,16 @@ test('User should be able to create a new user', async () => {
   act(() => {
     wrapper
       .find('input[placeholder="userList.panels.name"]')
-      .simulate('change', {target: {value: 'Testing Müller'}})
+      .simulate('change', {target: {value: user.name}})
     wrapper
       .find('input[placeholder="userList.panels.email"]')
-      .simulate('change', {target: {value: 'testing@mueller.com'}})
+      .simulate('change', {target: {value: user.email}})
     wrapper
       .find('input[placeholder="userList.panels.password"]')
-      .simulate('change', {target: {value: 'superSecret'}})
+      .simulate('change', {target: {value: user.password}})
   })
 
-  act(() => {
+  await act(async () => {
     wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
   })
 
