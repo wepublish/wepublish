@@ -184,6 +184,26 @@
         "bioInformation": "Biographical Information"
       }
     },
+    "navigations": {
+      "overview": {
+        "unknown": "Unknown",
+        "navigations": "Navigations",
+        "newNavigation": "New Navigation",
+        "search": "Search",
+        "noNavigationsFound": "No navigations found",
+        "deleteNavigation": "Delete navigation",
+        "cancel": "Cancel",
+        "name": "Name"
+      },
+      "panels": {
+        "close": "Close",
+        "createNavigation": "Create Navigation",
+        "create": "Create",
+        "name": "Name",
+        "key": "Key",
+        "links": "Links"
+      }
+    },
     "images": {
       "overview": {
         "imageLibrary": "Image Library",
@@ -405,6 +425,7 @@
       "articles": "Articles",
       "pages": "Pages",
       "authors": "Authors",
+      "navigations": "Navigations",
       "imageLibrary": "Image Library",
       "users": "Users",
       "userRoles": "User Roles",

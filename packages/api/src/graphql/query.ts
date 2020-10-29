@@ -326,7 +326,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     navigations: {
-      type: GraphQLList(GraphQLNavigation),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigation))),
       resolve(root, args, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetNavigations, roles)

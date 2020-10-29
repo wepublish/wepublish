@@ -873,7 +873,7 @@ export type Query = {
   permissions?: Maybe<Array<Permission>>;
   tokens: Array<Token>;
   navigation?: Maybe<Navigation>;
-  navigations?: Maybe<Array<Maybe<Navigation>>>;
+  navigations: Array<Navigation>;
   author?: Maybe<Author>;
   authors: AuthorConnection;
   image?: Maybe<Image>;
@@ -1870,6 +1870,93 @@ export type DeleteImageMutation = (
   & Pick<Mutation, 'deleteImage'>
 );
 
+export type FullNavigationFragment = (
+  { __typename?: 'Navigation' }
+  & Pick<Navigation, 'id' | 'name' | 'key'>
+  & { links: Array<(
+    { __typename: 'PageNavigationLink' }
+    & Pick<PageNavigationLink, 'label'>
+    & { page?: Maybe<(
+      { __typename?: 'Page' }
+      & PageRefFragment
+    )> }
+  ) | (
+    { __typename: 'ArticleNavigationLink' }
+    & Pick<ArticleNavigationLink, 'label'>
+    & { article?: Maybe<(
+      { __typename?: 'Article' }
+      & ArticleRefFragment
+    )> }
+  ) | (
+    { __typename: 'ExternalNavigationLink' }
+    & Pick<ExternalNavigationLink, 'label' | 'url'>
+  )> }
+);
+
+export type NavigationsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NavigationsListQuery = (
+  { __typename?: 'Query' }
+  & { navigations: Array<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
+);
+
+export type NavigationQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type NavigationQuery = (
+  { __typename?: 'Query' }
+  & { navigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
+);
+
+export type CreateNavigationMutationVariables = Exact<{
+  input: NavigationInput;
+}>;
+
+
+export type CreateNavigationMutation = (
+  { __typename?: 'Mutation' }
+  & { createNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
+);
+
+export type UpdateNavigationMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: NavigationInput;
+}>;
+
+
+export type UpdateNavigationMutation = (
+  { __typename?: 'Mutation' }
+  & { updateNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
+);
+
+export type DeleteNavigationMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteNavigationMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteNavigation?: Maybe<(
+    { __typename?: 'Navigation' }
+    & FullNavigationFragment
+  )> }
+);
+
 export type MutationPageFragment = (
   { __typename?: 'Page' }
   & Pick<Page, 'id'>
@@ -2723,6 +2810,33 @@ export const FullImageFragmentDoc = gql`
   ...ImageRef
 }
     ${ImageRefFragmentDoc}`;
+export const FullNavigationFragmentDoc = gql`
+    fragment FullNavigation on Navigation {
+  id
+  name
+  key
+  links {
+    __typename
+    ... on PageNavigationLink {
+      label
+      page {
+        ...PageRef
+      }
+    }
+    ... on ArticleNavigationLink {
+      label
+      article {
+        ...ArticleRef
+      }
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
+}
+    ${PageRefFragmentDoc}
+${ArticleRefFragmentDoc}`;
 export const MutationPageFragmentDoc = gql`
     fragment MutationPage on Page {
   id
@@ -3558,6 +3672,168 @@ export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
+export const NavigationsListDocument = gql`
+    query NavigationsList {
+  navigations {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+
+/**
+ * __useNavigationsListQuery__
+ *
+ * To run a query within a React component, call `useNavigationsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNavigationsListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNavigationsListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationsListQuery, NavigationsListQueryVariables>) {
+        return Apollo.useQuery<NavigationsListQuery, NavigationsListQueryVariables>(NavigationsListDocument, baseOptions);
+      }
+export function useNavigationsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationsListQuery, NavigationsListQueryVariables>) {
+          return Apollo.useLazyQuery<NavigationsListQuery, NavigationsListQueryVariables>(NavigationsListDocument, baseOptions);
+        }
+export type NavigationsListQueryHookResult = ReturnType<typeof useNavigationsListQuery>;
+export type NavigationsListLazyQueryHookResult = ReturnType<typeof useNavigationsListLazyQuery>;
+export type NavigationsListQueryResult = Apollo.QueryResult<NavigationsListQuery, NavigationsListQueryVariables>;
+export const NavigationDocument = gql`
+    query Navigation($id: ID!) {
+  navigation(id: $id) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+
+/**
+ * __useNavigationQuery__
+ *
+ * To run a query within a React component, call `useNavigationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNavigationQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNavigationQuery(baseOptions?: Apollo.QueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+        return Apollo.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, baseOptions);
+      }
+export function useNavigationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+          return Apollo.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, baseOptions);
+        }
+export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
+export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
+export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
+export const CreateNavigationDocument = gql`
+    mutation CreateNavigation($input: NavigationInput!) {
+  createNavigation(input: $input) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type CreateNavigationMutationFn = Apollo.MutationFunction<CreateNavigationMutation, CreateNavigationMutationVariables>;
+
+/**
+ * __useCreateNavigationMutation__
+ *
+ * To run a mutation, you first call `useCreateNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNavigationMutation, { data, loading, error }] = useCreateNavigationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNavigationMutation, CreateNavigationMutationVariables>) {
+        return Apollo.useMutation<CreateNavigationMutation, CreateNavigationMutationVariables>(CreateNavigationDocument, baseOptions);
+      }
+export type CreateNavigationMutationHookResult = ReturnType<typeof useCreateNavigationMutation>;
+export type CreateNavigationMutationResult = Apollo.MutationResult<CreateNavigationMutation>;
+export type CreateNavigationMutationOptions = Apollo.BaseMutationOptions<CreateNavigationMutation, CreateNavigationMutationVariables>;
+export const UpdateNavigationDocument = gql`
+    mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+  updateNavigation(id: $id, input: $input) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type UpdateNavigationMutationFn = Apollo.MutationFunction<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
+
+/**
+ * __useUpdateNavigationMutation__
+ *
+ * To run a mutation, you first call `useUpdateNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNavigationMutation, { data, loading, error }] = useUpdateNavigationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>) {
+        return Apollo.useMutation<UpdateNavigationMutation, UpdateNavigationMutationVariables>(UpdateNavigationDocument, baseOptions);
+      }
+export type UpdateNavigationMutationHookResult = ReturnType<typeof useUpdateNavigationMutation>;
+export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigationMutation>;
+export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
+export const DeleteNavigationDocument = gql`
+    mutation DeleteNavigation($id: ID!) {
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+
+/**
+ * __useDeleteNavigationMutation__
+ *
+ * To run a mutation, you first call `useDeleteNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNavigationMutation, { data, loading, error }] = useDeleteNavigationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>) {
+        return Apollo.useMutation<DeleteNavigationMutation, DeleteNavigationMutationVariables>(DeleteNavigationDocument, baseOptions);
+      }
+export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
+export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
+export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PageListDocument = gql`
     query PageList($filter: String, $after: ID, $first: Int) {
   pages(first: $first, after: $after, filter: {title: $filter}) {

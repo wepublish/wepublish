@@ -11,7 +11,8 @@ import {
   MaterialIconShareOutlined,
   MaterialIconLockOutlined,
   MaterialIconFaceOutlined,
-  MaterialIconHowToRegOutlined
+  MaterialIconHowToRegOutlined,
+  MaterialIconMenuOutlined
 } from '@karma.run/icons'
 
 import {
@@ -26,7 +27,8 @@ import {
   PeerListRoute,
   TokenListRoute,
   UserListRoute,
-  UserRoleListRoute
+  UserRoleListRoute,
+  NavigationsListRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -63,6 +65,13 @@ export function Base({children}: BaseProps) {
             label={t('navbar.authors')}
             route={AuthorListRoute.create({})}
             active={current?.type === RouteType.AuthorList}
+          />
+
+          <RouteMenuLinkButton
+            icon={MaterialIconMenuOutlined}
+            label={t('navbar.navigations')}
+            route={NavigationsListRoute.create({})}
+            active={current?.type === RouteType.NavigationsList}
           />
 
           <RouteMenuLinkButton
