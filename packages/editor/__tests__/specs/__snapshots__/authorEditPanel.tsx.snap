@@ -3939,7 +3939,7 @@ exports[`User should be able to create a new author 1`] = `
                   disabled={false}
                   label="authors.panels.name"
                   onChange={[Function]}
-                  value="Lois Lane"
+                  value="Clark Kent"
                 >
                   <Styled(div)
                     styleProps={Object {}}
@@ -3957,13 +3957,13 @@ exports[`User should be able to create a new author 1`] = `
                                 "hasIcon": false,
                               }
                             }
-                            value="Lois Lane"
+                            value="Clark Kent"
                           >
                             <input
                               disabled={false}
                               onChange={[Function]}
                               placeholder="authors.panels.name"
-                              value="Lois Lane"
+                              value="Clark Kent"
                             />
                           </Styled(input)>
                           <Styled(span)

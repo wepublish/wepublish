@@ -92,11 +92,13 @@ test('Clicking add block button should display two text fields ', async () => {
 
 test('User should be able to create a new author', async () => {
   const author = {
-    name: 'Lois Lane',
+    name: 'Clark Kent',
     id: 'fakeId3',
     slug: 'clark-kent',
     url: 'url',
-    links: []
+    links: [],
+    bio: [],
+    imageID: undefined
   }
   const mocks = [
     {
@@ -104,10 +106,11 @@ test('User should be able to create a new author', async () => {
         query: CreateAuthorDocument,
         variables: {
           input: {
-            name: 'Clark Kent',
+            name: author.name,
             slug: author.slug,
-            links: [],
-            bio: []
+            links: author.links,
+            bio: author.bio,
+            imageID: author.imageID
           }
         }
       },
@@ -120,7 +123,9 @@ test('User should be able to create a new author', async () => {
             //createdAt: '2019-12-03T10:15:30Z',
             //modifiedAt: '2019-12-03T10:15:30Z',
             slug: author.slug,
-            url: author.url
+            url: author.url,
+            links: author.links,
+            bio: author.bio
           }
         }
       })
@@ -133,14 +138,15 @@ test('User should be able to create a new author', async () => {
       </MockedProvider>
     </UIProvider>
   )
+  await updateWrapper(wrapper, 100)
 
-  await act(async () => {
+  act(() => {
     wrapper
       .find('input[placeholder="authors.panels.name"]')
       .simulate('change', {target: {value: author.name}})
   })
 
-  act(() => {
+  await act(async () => {
     wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
   })
 
