@@ -120,15 +120,23 @@ export function LinkPageBreakBlock({
               <small>Layouts: </small>
               <br />
               <select
-                disabled={styleOption === 'image'}
                 style={{width: '195px'}}
                 defaultValue={layoutOption}
+                value={styleOption === 'image' ? 'default' : layoutOption}
                 onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
                 <option value="default">Default Layout</option>
-                <option value="right">Right Aligned</option>
-                <option value="center">Centered</option>
-                <option value="image-right">Image Right</option>
-                <option value="image-left">Image Left</option>
+                <option disabled={styleOption === 'image'} value="right">
+                  Right Aligned
+                </option>
+                <option disabled={styleOption === 'image'} value="center">
+                  Centered
+                </option>
+                <option disabled={styleOption === 'image'} value="image-right">
+                  Image Right
+                </option>
+                <option disabled={styleOption === 'image'} value="image-left">
+                  Image Left
+                </option>
               </select>
             </Box>
             <Box padding={'2 10'}>
@@ -209,7 +217,7 @@ export function LinkPageBreakBlock({
               </Box>
               <Box width={'50%'}>
                 <Toggle
-                  label={'Hide CTA Button'}
+                  label={'Hide CTA Button label'}
                   description={'Hide button an make whole element clickable.'}
                   onChange={e => onChange({...value, hideButton: e.target.checked})}
                   checked={!!hideButton || false}
