@@ -1,7 +1,7 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
 import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
-import {AuthorDocument} from '../../src/client/api'
+import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
@@ -9,7 +9,7 @@ import Adapter from 'enzyme-adapter-react-16'
 Enzyme.configure({adapter: new Adapter()})
 
 import {UIProvider} from '@karma.run/ui'
-//import {act} from 'react-dom/test-utils'
+import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
 import * as fela from 'fela'
 //import wait from 'waait'
@@ -85,6 +85,64 @@ test('Clicking add block button should display two text fields ', async () => {
 
   const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
   inputField.props().value = 'abcd'
+
+  const panel = wrapper.find('AuthorEditPanel')
+  expect(panel).toMatchSnapshot()
+})
+
+test('User should be able to create a new author', async () => {
+  const author = {
+    name: 'Lois Lane',
+    id: 'fakeId3',
+    slug: 'clark-kent',
+    url: 'url',
+    links: []
+  }
+  const mocks = [
+    {
+      request: {
+        query: CreateAuthorDocument,
+        variables: {
+          input: {
+            name: 'Clark Kent',
+            slug: author.slug,
+            links: [],
+            bio: []
+          }
+        }
+      },
+      result: () => ({
+        data: {
+          author: {
+            __typename: 'Author',
+            id: author.id,
+            name: author.name,
+            //createdAt: '2019-12-03T10:15:30Z',
+            //modifiedAt: '2019-12-03T10:15:30Z',
+            slug: author.slug,
+            url: author.url
+          }
+        }
+      })
+    }
+  ]
+  let wrapper = mount(
+    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AuthorEditPanel />
+      </MockedProvider>
+    </UIProvider>
+  )
+
+  await act(async () => {
+    wrapper
+      .find('input[placeholder="authors.panels.name"]')
+      .simulate('change', {target: {value: author.name}})
+  })
+
+  act(() => {
+    wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
+  })
 
   const panel = wrapper.find('AuthorEditPanel')
   expect(panel).toMatchSnapshot()
