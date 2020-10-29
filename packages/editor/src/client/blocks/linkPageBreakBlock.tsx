@@ -121,7 +121,6 @@ export function LinkPageBreakBlock({
               <br />
               <select
                 style={{width: '195px'}}
-                defaultValue={layoutOption}
                 value={styleOption === 'image' ? 'default' : layoutOption}
                 onChange={e => onChange({...value, layoutOption: e.target.value || ''})}>
                 <option value="default">Default Layout</option>
