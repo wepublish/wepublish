@@ -19,15 +19,15 @@ import {
 import {
   RouteLinkButton,
   Link,
-  NavigationsEditRoute,
+  NavigationEditRoute,
   RouteType,
   useRoute,
   useRouteDispatch,
-  NavigationsListRoute,
-  NavigationsCreateRoute
+  NavigationListRoute,
+  NavigationCreateRoute
 } from '../route'
 
-import {useNavigationsListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
+import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
 import {RouteActionType} from '@karma.run/react'
 import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
@@ -38,18 +38,17 @@ enum ConfirmAction {
   Delete = 'delete'
 }
 
-export function NavigationsList() {
-  console.log('test')
+export function NavigationList() {
   const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
 
   const [isEditModalOpen, setEditModalOpen] = useState(
-    current?.type === RouteType.NavigationsEdit || current?.type === RouteType.NavigationsCreate
+    current?.type === RouteType.NavigationEdit || current?.type === RouteType.NavigationCreate
   )
 
   const [editID, setEditID] = useState<string | undefined>(
-    current?.type === RouteType.NavigationsEdit ? current.params.id : undefined
+    current?.type === RouteType.NavigationEdit ? current.params.id : undefined
   )
 
   const [filter, setFilter] = useState('')
@@ -58,7 +57,7 @@ export function NavigationsList() {
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, loading: isLoading} = useNavigationsListQuery({
+  const {data, loading: isLoading} = useNavigationListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -66,12 +65,12 @@ export function NavigationsList() {
 
   useEffect(() => {
     switch (current?.type) {
-      case RouteType.NavigationsCreate:
+      case RouteType.NavigationCreate:
         setEditID(undefined)
         setEditModalOpen(true)
         break
 
-      case RouteType.NavigationsEdit:
+      case RouteType.NavigationEdit:
         setEditID(current.params.id)
         setEditModalOpen(true)
         break
@@ -89,9 +88,9 @@ export function NavigationsList() {
           display="flex"
           flexDirection="row"
           alignItems="center">
-          <Link route={NavigationsEditRoute.create({id})}>
+          <Link route={NavigationEditRoute.create({id})}>
             <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || t('navigations.overview.unknown')}
+              {name || t('navigation.overview.unknown')}
             </Typography>
           </Link>
 
@@ -101,7 +100,7 @@ export function NavigationsList() {
             menuItems={[
               {
                 id: ConfirmAction.Delete,
-                label: t('navigations.overview.delete'),
+                label: t('navigation.overview.delete'),
                 icon: MaterialIconDeleteOutlined
               }
             ]}
@@ -120,17 +119,17 @@ export function NavigationsList() {
   return (
     <>
       <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('navigations.overview.navigations')}</Typography>
+        <Typography variant="h1">{t('navigation.overview.navigations')}</Typography>
         <Box flexGrow={1} />
         <RouteLinkButton
           color="primary"
-          label={t('navigations.overview.newNavigation')}
-          route={NavigationsCreateRoute.create({})}
+          label={t('navigation.overview.newNavigation')}
+          route={NavigationCreateRoute.create({})}
         />
       </Box>
       <Box marginBottom={Spacing.Large}>
         <SearchInput
-          placeholder={t('navigations.overview.search')}
+          placeholder={t('navigation.overview.search')}
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
@@ -140,7 +139,7 @@ export function NavigationsList() {
           <>{navigations}</>
         ) : !isLoading ? (
           <Typography variant="body1" color="gray" align="center">
-            {t('navigations.overview.noNavigationsFound')}
+            {t('navigation.overview.noNavigationsFound')} {console.log(data)}
           </Typography>
         ) : null}
       </Box>
@@ -152,14 +151,14 @@ export function NavigationsList() {
               setEditModalOpen(false)
               dispatch({
                 type: RouteActionType.PushRoute,
-                route: NavigationsListRoute.create({}, current ?? undefined)
+                route: NavigationListRoute.create({}, current ?? undefined)
               })
             }}
             onSave={() => {
               setEditModalOpen(false)
               dispatch({
                 type: RouteActionType.PushRoute,
-                route: NavigationsListRoute.create({}, current ?? undefined)
+                route: NavigationListRoute.create({}, current ?? undefined)
               })
             }}
           />
@@ -169,18 +168,18 @@ export function NavigationsList() {
         {() => (
           <Panel>
             <PanelHeader
-              title={t('navigations.overview.deleteNavigation')}
+              title={t('navigation.overview.deleteNavigation')}
               leftChildren={
                 <NavigationButton
                   icon={MaterialIconClose}
-                  label={t('navigations.overview.cancel')}
+                  label={t('navigation.overview.cancel')}
                   onClick={() => setConfirmationDialogOpen(false)}
                 />
               }
               rightChildren={
                 <NavigationButton
                   icon={MaterialIconCheck}
-                  label={t('navigations.overview.confirm')}
+                  label={t('navigation.overview.confirm')}
                   disabled={isDeleting}
                   onClick={async () => {
                     if (!currentNavigation) return
@@ -200,8 +199,8 @@ export function NavigationsList() {
             />
             <PanelSection>
               <DescriptionList>
-                <DescriptionListItem label={t('navigations.overview.name')}>
-                  {currentNavigation?.name || t('navigations.overview.unknown')}
+                <DescriptionListItem label={t('navigation.overview.name')}>
+                  {currentNavigation?.name || t('navigation.overview.unknown')}
                 </DescriptionListItem>
               </DescriptionList>
             </PanelSection>

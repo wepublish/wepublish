@@ -19,7 +19,7 @@ import {
   useNavigationQuery,
   useUpdateNavigationMutation,
   FullNavigationFragment,
-  NavigationsListDocument
+  NavigationListDocument
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
@@ -48,7 +48,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
   const [createNavigation, {loading: isCreating, error: createError}] = useCreateNavigationMutation(
     {
-      refetchQueries: [getOperationNameFromDocument(NavigationsListDocument)]
+      refetchQueries: [getOperationNameFromDocument(NavigationListDocument)]
     }
   )
 
@@ -64,6 +64,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   useEffect(() => {
     if (data?.navigation) {
       setName(data.navigation.name)
+      setKey(data.navigation.key)
     }
   }, [data?.navigation])
 
@@ -114,19 +115,19 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       <Panel>
         <PanelHeader
           title={
-            id ? t('navigations.panels.editNavigation') : t('navigations.panels.createNavigation')
+            id ? t('navigation.panels.editNavigation') : t('navigation.panels.createNavigation')
           }
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('navigations.panels.close')}
+              label={t('navigation.panels.close')}
               onClick={() => onClose?.()}
             />
           }
           rightChildren={
             <NavigationButton
               icon={MaterialIconSaveOutlined}
-              label={id ? t('navigations.panels.save') : t('navigations.panels.create')}
+              label={id ? t('navigation.panels.save') : t('navigation.panels.create')}
               disabled={isDisabled}
               onClick={handleSave}
             />
@@ -136,7 +137,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         <PanelSection>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('navigations.panels.name')}
+              label={t('navigation.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={e => {
@@ -146,7 +147,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           </Box>
           <Box marginBottom={Spacing.ExtraSmall}>
             <TextInput
-              label={t('navigations.panels.key')}
+              label={t('navigation.panels.key')}
               value={key}
               disabled={isDisabled}
               onChange={e => {
@@ -155,7 +156,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
             />
           </Box>
         </PanelSection>
-        <PanelSectionHeader title={t('navigations.panels.links')} />
+        <PanelSectionHeader title={t('navigation.panels.links')} />
       </Panel>
       <Toast
         type="error"

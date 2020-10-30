@@ -1,7 +1,7 @@
 fragment FullNavigation on Navigation {
   id
-  name
   key
+  name
   links {
     __typename
 
@@ -24,7 +24,7 @@ fragment FullNavigation on Navigation {
   }
 }
 
-query NavigationsList {
+query NavigationList {
   navigations {
     ...FullNavigation
   }

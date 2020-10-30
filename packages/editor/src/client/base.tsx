@@ -28,7 +28,7 @@ import {
   TokenListRoute,
   UserListRoute,
   UserRoleListRoute,
-  NavigationsListRoute
+  NavigationListRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -70,8 +70,8 @@ export function Base({children}: BaseProps) {
           <RouteMenuLinkButton
             icon={MaterialIconMenuOutlined}
             label={t('navbar.navigations')}
-            route={NavigationsListRoute.create({})}
-            active={current?.type === RouteType.NavigationsList}
+            route={NavigationListRoute.create({})}
+            active={current?.type === RouteType.NavigationList}
           />
 
           <RouteMenuLinkButton

@@ -39,9 +39,9 @@ export enum RouteType {
   AuthorEdit = 'authorEdit',
   AuthorCreate = 'authorCreate',
 
-  NavigationsList = 'navigationsList',
-  NavigationsEdit = 'navigationsEdit',
-  NavigationsCreate = 'navigationsCreate',
+  NavigationList = 'navigationList',
+  NavigationEdit = 'navigationEdit',
+  NavigationCreate = 'navigationCreate',
 
   PeerList = 'peerList',
   PeerProfileEdit = 'peerProfileEdit',
@@ -92,14 +92,14 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
-export const NavigationsCreateRoute = route(
-  RouteType.NavigationsCreate,
-  routePath`/navigations/create`
+export const NavigationCreateRoute = route(
+  RouteType.NavigationCreate,
+  routePath`/navigation/create`
 )
-export const NavigationsListRoute = route(RouteType.NavigationsList, routePath`/navigations`)
-export const NavigationsEditRoute = route(
-  RouteType.NavigationsEdit,
-  routePath`/navigations/edit/${required('id')}`
+export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigation`)
+export const NavigationEditRoute = route(
+  RouteType.NavigationEdit,
+  routePath`/navigation/edit/${required('id')}`
 )
 
 export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
@@ -139,9 +139,9 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
-  NavigationsListRoute,
-  NavigationsEditRoute,
-  NavigationsCreateRoute,
+  NavigationListRoute,
+  NavigationEditRoute,
+  NavigationCreateRoute,
   PeerListRoute,
   PeerInfoEditRoute,
   PeerCreateRoute,
@@ -193,7 +193,6 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         // TODO: Handle UnsavedChangesDialog popstate
         // TODO: Add a way to discard next route
-        // eslint-disable-next-line no-debugger
         if (next.type === RouteType.Logout) {
           if (session) {
             logout({variables: {token: session.sessionToken}})

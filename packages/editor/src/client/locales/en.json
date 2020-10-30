@@ -184,7 +184,7 @@
         "bioInformation": "Biographical Information"
       }
     },
-    "navigations": {
+    "navigation": {
       "overview": {
         "unknown": "Unknown",
         "navigations": "Navigations",

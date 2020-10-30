@@ -1872,7 +1872,7 @@ export type DeleteImageMutation = (
 
 export type FullNavigationFragment = (
   { __typename?: 'Navigation' }
-  & Pick<Navigation, 'id' | 'name' | 'key'>
+  & Pick<Navigation, 'id' | 'key' | 'name'>
   & { links: Array<(
     { __typename: 'PageNavigationLink' }
     & Pick<PageNavigationLink, 'label'>
@@ -1893,10 +1893,10 @@ export type FullNavigationFragment = (
   )> }
 );
 
-export type NavigationsListQueryVariables = Exact<{ [key: string]: never; }>;
+export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NavigationsListQuery = (
+export type NavigationListQuery = (
   { __typename?: 'Query' }
   & { navigations: Array<(
     { __typename?: 'Navigation' }
@@ -2813,8 +2813,8 @@ export const FullImageFragmentDoc = gql`
 export const FullNavigationFragmentDoc = gql`
     fragment FullNavigation on Navigation {
   id
-  name
   key
+  name
   links {
     __typename
     ... on PageNavigationLink {
@@ -3672,8 +3672,8 @@ export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
-export const NavigationsListDocument = gql`
-    query NavigationsList {
+export const NavigationListDocument = gql`
+    query NavigationList {
   navigations {
     ...FullNavigation
   }
@@ -3681,29 +3681,29 @@ export const NavigationsListDocument = gql`
     ${FullNavigationFragmentDoc}`;
 
 /**
- * __useNavigationsListQuery__
+ * __useNavigationListQuery__
  *
- * To run a query within a React component, call `useNavigationsListQuery` and pass it any options that fit your needs.
- * When your component renders, `useNavigationsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useNavigationListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationListQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useNavigationsListQuery({
+ * const { data, loading, error } = useNavigationListQuery({
  *   variables: {
  *   },
  * });
  */
-export function useNavigationsListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationsListQuery, NavigationsListQueryVariables>) {
-        return Apollo.useQuery<NavigationsListQuery, NavigationsListQueryVariables>(NavigationsListDocument, baseOptions);
+export function useNavigationListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+        return Apollo.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, baseOptions);
       }
-export function useNavigationsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationsListQuery, NavigationsListQueryVariables>) {
-          return Apollo.useLazyQuery<NavigationsListQuery, NavigationsListQueryVariables>(NavigationsListDocument, baseOptions);
+export function useNavigationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+          return Apollo.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, baseOptions);
         }
-export type NavigationsListQueryHookResult = ReturnType<typeof useNavigationsListQuery>;
-export type NavigationsListLazyQueryHookResult = ReturnType<typeof useNavigationsListLazyQuery>;
-export type NavigationsListQueryResult = Apollo.QueryResult<NavigationsListQuery, NavigationsListQueryVariables>;
+export type NavigationListQueryHookResult = ReturnType<typeof useNavigationListQuery>;
+export type NavigationListLazyQueryHookResult = ReturnType<typeof useNavigationListLazyQuery>;
+export type NavigationListQueryResult = Apollo.QueryResult<NavigationListQuery, NavigationListQueryVariables>;
 export const NavigationDocument = gql`
     query Navigation($id: ID!) {
   navigation(id: $id) {
