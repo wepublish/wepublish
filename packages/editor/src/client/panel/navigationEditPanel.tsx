@@ -9,7 +9,10 @@ import {
   Box,
   Spacing,
   PanelSectionHeader,
-  Toast
+  Toast,
+  Select,
+  ListInput,
+  ListValue
 } from '@karma.run/ui'
 
 import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
@@ -19,11 +22,14 @@ import {
   useNavigationQuery,
   useUpdateNavigationMutation,
   FullNavigationFragment,
-  NavigationListDocument
+  NavigationListDocument,
+  NavigationLink,
+  PageNavigationLink
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {getOperationNameFromDocument} from '../utility'
+import {generateID, getOperationNameFromDocument} from '../utility'
+import {render} from 'react-dom'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -32,10 +38,21 @@ export interface NavigationEditPanelProps {
   onSave?(navigation: FullNavigationFragment): void
 }
 
+export interface LinkTypeProps {
+  id: string
+  name: string
+}
+
 export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
-  const links: never[] = []
+  const [links, setLinks] = useState<ListValue[]>([])
+  const [currentLinkType, setCurrentLinkType] = useState<LinkTypeProps>()
+  const linkTypes = [
+    {id: 'PageNavigationLink', name: 'Page Link'},
+    {id: 'ArticleNavigationLink', name: 'Article Link'},
+    {id: 'ExternalNavigationLink', name: 'External Link'}
+  ]
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -65,6 +82,16 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     if (data?.navigation) {
       setName(data.navigation.name)
       setKey(data.navigation.key)
+      setLinks(
+        data.navigation.links
+          ? data.navigation.links.map(link => ({
+              id: generateID(),
+              value: {
+                label: link.label
+              }
+            }))
+          : []
+      )
     }
   }, [data?.navigation])
 
@@ -107,6 +134,46 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       })
 
       if (data?.createNavigation) onSave?.(data.createNavigation)
+    }
+  }
+
+  function secondSelectorSwitch(currentLinkType: string | undefined) {
+    switch (currentLinkType) {
+      case 'PageNavigationLink':
+        return (
+          <Box display="flex" flexDirection="row">
+            <TextInput
+              label={t('navigation.panels.page')}
+              flexBasis="70%"
+              // value={this.value.page}
+              // onChange={e => onChange({...value, page: e.target.value})}
+            />
+          </Box>
+        )
+      case 'ArticleNavigationLink':
+        return (
+          <Box display="flex" flexDirection="row">
+            <TextInput
+              label={t('navigation.panels.article')}
+              flexBasis="70%"
+              // value={value.article}
+              // onChange={e => onChange({...value, article: e.target.value})}
+            />
+          </Box>
+        )
+      case 'ExternalNavigationLink':
+        return (
+          <Box display="flex" flexDirection="row">
+            <TextInput
+              label={t('navigation.panels.url')}
+              flexBasis="70%"
+              // value={value.url}
+              // onChange={e => onChange({...value, url: e.target.value})}
+            />
+          </Box>
+        )
+      default:
+        return ''
     }
   }
 
@@ -157,6 +224,39 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           </Box>
         </PanelSection>
         <PanelSectionHeader title={t('navigation.panels.links')} />
+        <PanelSection>
+          <ListInput
+            value={links}
+            onChange={links => setLinks(links)}
+            defaultValue={{label: '', url: ''}}>
+            {({value, onChange}) => (
+              <>
+                <TextInput
+                  label={t('navigation.panels.label')}
+                  flexBasis="30%"
+                  marginBottom={Spacing.Small}
+                  value={value.label}
+                  onChange={e => onChange({...value, label: e.target.value})}
+                />
+                <Select
+                  label={t('navigation.panels.linkType')}
+                  options={linkTypes.map(linkType => {
+                    return linkType
+                  })}
+                  value={currentLinkType}
+                  renderListItem={linkType => linkType?.name}
+                  onChange={linkType => {
+                    if (linkType?.id) {
+                      setCurrentLinkType(linkType)
+                    }
+                  }}
+                  marginBottom={Spacing.Small}
+                />
+                {secondSelectorSwitch(currentLinkType?.id)}
+              </>
+            )}
+          </ListInput>
+        </PanelSection>
       </Panel>
       <Toast
         type="error"

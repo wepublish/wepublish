@@ -193,7 +193,8 @@
         "noNavigationsFound": "No navigations found",
         "deleteNavigation": "Delete navigation",
         "cancel": "Cancel",
-        "name": "Name"
+        "name": "Name",
+        "delete": "Delete"
       },
       "panels": {
         "close": "Close",
@@ -201,7 +202,12 @@
         "create": "Create",
         "name": "Name",
         "key": "Key",
-        "links": "Links"
+        "links": "Links",
+        "linkType": "Link Type",
+        "label": "Label",
+        "article": "Article",
+        "page": "Page",
+        "url": "URL"
       }
     },
     "images": {
