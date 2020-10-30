@@ -9,7 +9,7 @@
     "setup": "run-s --print-label setup:**",
     "dev": "run-p start:docker watch",
     "clean": "run-p --print-label clean:**",
-    "test": "run-p --print-label test:**",
+    "test": "run-s --print-label test:**",
     "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example",
     "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production",
     "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:website-example",
