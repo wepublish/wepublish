@@ -5,10 +5,10 @@ import {UserDocument, CreateUserDocument, UserRoleListDocument} from '../../src/
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-import {UIProvider /*, Select */} from '@karma.run/ui'
-import {act} from 'react-dom/test-utils'
+import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
+import {act} from 'react-dom/test-utils'
 
 // React 16 Enzyme adapter
 Enzyme.configure({adapter: new Adapter()})
