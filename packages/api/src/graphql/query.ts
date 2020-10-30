@@ -331,7 +331,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetNavigations, roles)
 
-        dbAdapter.navigation.getNavigations()
+        return dbAdapter.navigation.getNavigations()
       }
     },
 
