@@ -1,19 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  Toast,
-  Typography,
-  Card
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
+import {Button, Drawer, Input, Notification} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
@@ -27,9 +14,6 @@ export interface TokenGeneratePanelProps {
 export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   const [name, setName] = useState('')
 
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
-
   const [createToken, {data, loading: isCreating, error: createError}] = useCreateTokenMutation({
     refetchQueries: [getOperationNameFromDocument(TokenListDocument)]
   })
@@ -42,8 +26,11 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
 
   useEffect(() => {
     if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
+      Notification.error({
+        title: 'Could not create Token',
+        description: createError.message,
+        duration: 5000
+      })
     }
   }, [createError])
 
@@ -53,60 +40,37 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('tokenList.panels.generateToken')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('Close')}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            !hasGeneratedToken && (
-              <NavigationButton
-                icon={MaterialIconSaveOutlined}
-                label={t('tokenList.panels.generate')}
-                disabled={isDisabled}
-                onClick={handleSave}
-              />
-            )
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>{t('tokenList.panels.generateToken')}</Drawer.Title>
+      </Drawer.Header>
+      <Drawer.Body>
+        {token ? (
+          <>
+            <h2>{t('tokenList.panels.creationSuccess')}</h2>
+            <p>Token: {token}</p>
+          </>
+        ) : (
+          <Input
+            placeholder={t('tokenList.panels.name')}
+            value={name}
+            disabled={isDisabled}
+            onChange={value => {
+              setName(value)
+            }}
+          />
+        )}
+      </Drawer.Body>
 
-        <PanelSection>
-          {token ? (
-            <>
-              <Box marginBottom={Spacing.Small}>
-                <Typography variant="body1">{t('tokenList.panels.creationSuccess')}</Typography>
-              </Box>
-              <Card padding={Spacing.ExtraSmall}>
-                <Typography variant="body2" align="center">
-                  {token}
-                </Typography>
-              </Card>
-            </>
-          ) : (
-            <TextInput
-              marginBottom={Spacing.ExtraSmall}
-              label={t('tokenList.panels.name')}
-              value={name}
-              disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
-            />
-          )}
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+      <Drawer.Footer>
+        {!hasGeneratedToken && (
+          <Button disabled={isDisabled} onClick={handleSave} appearance="primary">
+            {t('tokenList.panels.generate')}
+          </Button>
+        )}
+        <Button onClick={() => onClose?.()} appearance="subtle">
+          {t('Close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

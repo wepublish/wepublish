@@ -342,6 +342,7 @@ export const AllPermissions: Permission[] = [
   CanDeletePeer,
   CanCreateToken,
   CanGetTokens,
+  CanDeleteToken,
   CanCreateUser,
   CanResetUserPassword,
   CanGetUser,
