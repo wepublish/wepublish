@@ -309,7 +309,8 @@
         "themeColor": "Theme Color",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
-        "removeImage": "Remove Image"
+        "removeImage": "Remove Image",
+        "infoEditError": "Edit Token Error"
       }
     },
     "tokenList": {
