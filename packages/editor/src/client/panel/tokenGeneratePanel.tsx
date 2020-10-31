@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Button, Drawer, Input, Notification} from 'rsuite'
+import {Button, Drawer, Input, Notification, Panel} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
@@ -27,7 +27,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
   useEffect(() => {
     if (createError) {
       Notification.error({
-        title: 'Could not create Token',
+        title: t('tokenList.panels.generateError'),
         description: createError.message,
         duration: 5000
       })
@@ -46,8 +46,8 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
       <Drawer.Body>
         {token ? (
           <>
-            <h2>{t('tokenList.panels.creationSuccess')}</h2>
-            <p>Token: {token}</p>
+            <p>{t('tokenList.panels.creationSuccess')}</p>
+            <Panel bordered>{token}</Panel>
           </>
         ) : (
           <Input

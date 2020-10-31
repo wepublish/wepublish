@@ -155,7 +155,9 @@ export function TokenList() {
         <Modal.Header>
           <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Delete: {currentToken?.name || t('tokenList.panels.Unknown')}</Modal.Body>
+        <Modal.Body>
+          {t('tokenList.panels.deleteTokenText', {name: currentToken?.name || currentToken?.id})}
+        </Modal.Body>
         <Modal.Footer>
           <Button
             disabled={isDeleting}

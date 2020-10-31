@@ -319,13 +319,15 @@
       },
       "panels": {
         "deleteToken": "Delete Token?",
+        "deleteTokenText": "Do you want to delete {{name}}",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
         "Unknown": "Unknown",
         "generateToken": "Generate Token",
         "generate": "Generate",
-        "creationSuccess": "Token creation success"
+        "creationSuccess": "Token creation success",
+        "generateError": "Could not create Token"
       }
     },
     "blocks": {
