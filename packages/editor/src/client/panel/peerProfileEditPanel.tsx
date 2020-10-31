@@ -86,7 +86,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       title: t('peerList.panels.peerInfoUpdated'),
       duration: 2000
     })
-    if (onClose) onClose()
+    onClose?.()
   }
 
   return (

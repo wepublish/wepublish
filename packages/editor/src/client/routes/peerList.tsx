@@ -213,7 +213,7 @@ export function PeerList() {
         />
       </Drawer>
 
-      <Drawer show={isEditModalOpen} size={'sm'}>
+      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <PeerEditPanel
           id={editID}
           onClose={() => {
