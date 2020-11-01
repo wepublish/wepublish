@@ -82,7 +82,7 @@ export function UserRoleList() {
           icon={<Icon icon="wrench" />}
           circle
           size="sm"
-          onClick={e => {
+          onClick={() => {
             dispatch({
               type: RouteActionType.PushRoute,
               route: UserRoleEditRoute.create({id: rowData.id})

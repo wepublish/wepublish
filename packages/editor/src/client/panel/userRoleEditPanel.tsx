@@ -164,7 +164,8 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
                 label: permission.description
               }))}
               onChange={value => {
-                setPermissions(value)
+                //setPermissions(value)
+                setPermissions(allPermissions.filter(permissions => value.includes(permissions.id)))
               }}
             />
           </FormGroup>
