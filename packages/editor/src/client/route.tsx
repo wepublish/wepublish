@@ -15,6 +15,7 @@ import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation, gql} from '@apollo/client'
 import {LocalStorageKey} from './utility'
+import {Button} from 'rsuite'
 
 export enum RouteType {
   Login = 'login',
@@ -150,6 +151,7 @@ export const {
 } = createRouteContext(routes)
 
 export const RouteLinkButton = routeLink(LinkButton)
+export const ButtonLink = routeLink(Button)
 export const RouteLinkIconButton = routeLink(LinkIconButton)
 export const RouteMenuLinkButton = routeLink(MenuLinkButton)
 export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)

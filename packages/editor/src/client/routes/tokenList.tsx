@@ -8,7 +8,7 @@ import {
   useRouteDispatch,
   TokenListRoute,
   TokenGenerateRoute,
-  routeLink
+  ButtonLink
 } from '../route'
 
 import {
@@ -33,8 +33,6 @@ import {
   Modal,
   Notification
 } from 'rsuite'
-
-const ButtonLink = routeLink(Button)
 
 export function TokenList() {
   const {current} = useRoute()
