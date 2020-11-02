@@ -58,7 +58,7 @@
     "core-js": "^3.4.8",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
-    "graphql-tag": "^2.10.1",
+    "graphql-tag": "^2.11.0",
     "i18next": "^19.7.0",
     "i18next-browser-languagedetector": "^6.0.1",
     "nanoid": "^2.1.7",
