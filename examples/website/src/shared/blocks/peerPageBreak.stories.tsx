@@ -10,12 +10,14 @@ storiesOf('Blocks|PeerPageBreak*', module)
   .add('Default', () => (
     <PageBreakBlock
       text={'Unterstuetze uns!'}
-      htmlText={'Dein Commitment zählt.'}
+      richText={[]}
       linkText={'Mehr'}
       linkURL={'https://wepublish.ch/'}
-      linkTarget={'internal'}
+      linkTarget={'_self'}
       styleOption={'default'}
       layoutOption={'default'}
+      templateOption={'default'}
+      imageID={undefined}
       image={null}
     />
   ))
@@ -24,10 +26,13 @@ storiesOf('Blocks|PeerPageBreak*', module)
       peer={mockPeer}
       text={'Unterstuetze uns!'}
       linkText={'Mehr'}
+      richText={[]}
       linkURL={'https://wepublish.ch/'}
-      linkTarget={'internal'}
+      linkTarget={'_self'}
       styleOption={'default'}
       layoutOption={'default'}
+      templateOption={'default'}
+      imageID={undefined}
       image={null}
     />
   ))
