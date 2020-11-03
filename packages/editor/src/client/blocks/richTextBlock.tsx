@@ -332,7 +332,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
+        <InsertTextButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
 
         <ToolbarDivider />
 
@@ -343,13 +343,17 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
-        <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
+        <LinkFormatButton />
+        <RemoveLinkFormatButton />
 
         <ToolbarDivider />
 
-        <LinkFormatButton />
-        <RemoveLinkFormatButton />
+        <InsertTextButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
+
+        <ToolbarDivider />
+
+        <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
+        <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
       </Toolbar>
       <Editable
         readOnly={disabled}
@@ -380,7 +384,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-function InsertButton({icon}: SlateBlockButtonProps) {
+function InsertTextButton({icon}: SlateBlockButtonProps) {
   const editor = useSlate()
 
   return (
@@ -388,7 +392,7 @@ function InsertButton({icon}: SlateBlockButtonProps) {
       icon={icon}
       onMouseDown={e => {
         e.preventDefault()
-        insertText(editor)
+        editor.insertText('😄')
       }}
     />
   )
@@ -559,10 +563,6 @@ function toggleFormat(editor: Editor, format: Format) {
       Transforms.wrapNodes(editor, {type: format, children: []})
     }
   }
-}
-
-function insertText(editor: Editor) {
-  editor.insertText('😄')
 }
 
 function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
