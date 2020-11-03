@@ -1,8 +1,7 @@
 import React from 'react'
-import {MockedProvider} from '@apollo/client/testing'
+import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {TokenGeneratePanel} from '../../src/client/panel/tokenGeneratePanel'
-import Enzyme, {mount} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import {mount} from 'enzyme'
 
 import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
@@ -10,8 +9,7 @@ import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
 import {CreateTokenDocument} from '../../src/client/api'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
+const MockedProvider = MockedProviderBase as any
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -23,65 +21,67 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-test('Generate Token Panel should render', async () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider addTypename={false}>
-        <TokenGeneratePanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+describe('Token Generate Panel', () => {
+  test('should render', async () => {
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider addTypename={false}>
+          <TokenGeneratePanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('TokenGeneratePanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('TokenGeneratePanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to generate new token', async () => {
-  const tokenName = 'New Test Token Name'
-  const mocks = [
-    {
-      request: {
-        query: CreateTokenDocument,
-        variables: {
-          input: {
-            name: tokenName
+  test('should be able to generate a new token', async () => {
+    const tokenName = 'New Test Token Name'
+    const mocks = [
+      {
+        request: {
+          query: CreateTokenDocument,
+          variables: {
+            input: {
+              name: tokenName
+            }
           }
-        }
-      },
-      result: () => {
-        return {
-          data: {
-            createToken: {
-              __typename: 'CreatedToken',
-              id: 'testId123',
-              name: tokenName,
-              token: 'iXBGZLn7L5bAg455FQiCrd7RUQJtgWZ5'
+        },
+        result: () => {
+          return {
+            data: {
+              createToken: {
+                __typename: 'CreatedToken',
+                id: 'testId123',
+                name: tokenName,
+                token: 'iXBGZLn7L5bAg455FQiCrd7RUQJtgWZ5'
+              }
             }
           }
         }
       }
-    }
-  ]
+    ]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <TokenGeneratePanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <TokenGeneratePanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  wrapper
-    .find('input[placeholder="tokenList.panels.name"]')
-    .simulate('change', {target: {value: tokenName}})
+    wrapper
+      .find('input[placeholder="tokenList.panels.name"]')
+      .simulate('change', {target: {value: tokenName}})
 
-  await act(async () => {
-    wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+    await act(async () => {
+      wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+    })
+    await updateWrapper(wrapper, 100)
+
+    const panel = wrapper.find('TokenGeneratePanel')
+    expect(panel).toMatchSnapshot()
   })
-  await updateWrapper(wrapper, 100)
-
-  const panel = wrapper.find('TokenGeneratePanel')
-  expect(panel).toMatchSnapshot()
 })

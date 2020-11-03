@@ -1,6 +1,159 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Generate Token Panel should render 1`] = `
+exports[`Token Generate Panel should be able to generate a new token 1`] = `
+<TokenGeneratePanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="Close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={false}
+        title="tokenList.panels.generateToken"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="Close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      Close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                tokenList.panels.generateToken
+              </span>
+            </Styled(span)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={20}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="body1"
+                >
+                  <p>
+                    tokenList.panels.creationSuccess
+                  </p>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Card)
+              padding={10}
+            >
+              <Styled(div)
+                styleProps={
+                  Object {
+                    "padding": 10,
+                  }
+                }
+              >
+                <div>
+                  <ForwardRef(Typography)
+                    align="center"
+                    variant="body2"
+                  >
+                    <p>
+                      iXBGZLn7L5bAg455FQiCrd7RUQJtgWZ5
+                    </p>
+                  </ForwardRef(Typography)>
+                </div>
+              </Styled(div)>
+            </ForwardRef(Card)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+</TokenGeneratePanel>
+`;
+
+exports[`Token Generate Panel should render 1`] = `
 <TokenGeneratePanel>
   <Styled(div)>
     <div>
@@ -198,159 +351,6 @@ exports[`Generate Token Panel should render 1`] = `
                 </div>
               </Styled(div)>
             </ForwardRef(TextInput)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-    </div>
-  </Styled(div)>
-  <Toast
-    autoHideDuration={5000}
-    onClose={[Function]}
-    open={false}
-    type="error"
-  >
-    <Transition
-      appear={false}
-      enter={true}
-      exit={true}
-      in={false}
-      mountOnEnter={false}
-      onEnter={[Function]}
-      onEntered={[Function]}
-      onEntering={[Function]}
-      onExit={[Function]}
-      onExited={[Function]}
-      onExiting={[Function]}
-      timeout={200}
-      unmountOnExit={true}
-    />
-  </Toast>
-</TokenGeneratePanel>
-`;
-
-exports[`User should be able to generate new token 1`] = `
-<TokenGeneratePanel>
-  <Styled(div)>
-    <div>
-      <PanelHeader
-        leftChildren={
-          <ForwardRef(NavigationButton)
-            icon={[Function]}
-            label="Close"
-            onClick={[Function]}
-          />
-        }
-        rightChildren={false}
-        title="tokenList.panels.generateToken"
-      >
-        <Styled(div)>
-          <div>
-            <ForwardRef(NavigationButton)
-              icon={[Function]}
-              label="Close"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": undefined,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconClose
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                      </svg>
-                    </MaterialIconClose>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      Close
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-            <ForwardRef(Box)
-              flexGrow={1}
-            >
-              <div />
-            </ForwardRef(Box)>
-            <Styled(span)>
-              <span>
-                tokenList.panels.generateToken
-              </span>
-            </Styled(span)>
-          </div>
-        </Styled(div)>
-      </PanelHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(Box)
-              marginBottom={20}
-            >
-              <div>
-                <ForwardRef(Typography)
-                  variant="body1"
-                >
-                  <p>
-                    tokenList.panels.creationSuccess
-                  </p>
-                </ForwardRef(Typography)>
-              </div>
-            </ForwardRef(Box)>
-            <ForwardRef(Card)
-              padding={10}
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "padding": 10,
-                  }
-                }
-              >
-                <div>
-                  <ForwardRef(Typography)
-                    align="center"
-                    variant="body2"
-                  >
-                    <p>
-                      iXBGZLn7L5bAg455FQiCrd7RUQJtgWZ5
-                    </p>
-                  </ForwardRef(Typography)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(Card)>
           </div>
         </Styled(div)>
       </PanelSection>
