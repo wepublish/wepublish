@@ -27,7 +27,8 @@ import {
   MaterialIconLink,
   MaterialIconLinkOff,
   MaterialIconClose,
-  MaterialIconCheck
+  MaterialIconCheck,
+  MaterialIconFace
 } from '@karma.run/icons'
 
 import {
@@ -58,8 +59,8 @@ enum BlockFormat {
   Paragraph = 'paragraph',
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  HorizontalLine = 'horizontal-line'
+  ListItem = 'list-item'
+  // HorizontalLine = 'horizontal-line'
 }
 
 enum InlineFormat {
@@ -95,8 +96,8 @@ const ElementTags: any = {
   P: () => ({type: BlockFormat.Paragraph}),
   LI: () => ({type: BlockFormat.ListItem}),
   OL: () => ({type: BlockFormat.OrderedList}),
-  UL: () => ({type: BlockFormat.UnorderedList}),
-  HR: () => ({type: BlockFormat.HorizontalLine})
+  UL: () => ({type: BlockFormat.UnorderedList})
+  // HR: () => ({type: BlockFormat.HorizontalLine})
 }
 
 const TextTags: any = {
@@ -186,8 +187,8 @@ function renderElement({attributes, children, element}: RenderElementProps) {
     case BlockFormat.ListItem:
       return <li {...attributes}>{children}</li>
 
-    case BlockFormat.HorizontalLine:
-      return <hr />
+    // case BlockFormat.HorizontalLine: TODO won't work, put into insertHTML...
+    //   return <hr />
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -332,7 +333,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertTextButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
+        <InsertHtmlElementButton icon={MaterialIconHorizontalRule} />
 
         <ToolbarDivider />
 
@@ -348,7 +349,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertTextButton icon={MaterialIconHorizontalRule} format={BlockFormat.HorizontalLine} />
+        <InsertTextButton icon={MaterialIconFace} />
 
         <ToolbarDivider />
 
@@ -384,7 +385,24 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-function InsertTextButton({icon}: SlateBlockButtonProps) {
+function InsertTextButton({icon}: ToolbarButtonProps) {
+  // TODO
+  // set some text-emoji dropdown choice
+  const editor = useSlate()
+
+  // in toolbar.tsx: create export toolbartextbutton = <toolbarbuttonEl>emoji</..>
+  return (
+    <ToolbarButton
+      icon={icon}
+      onMouseDown={e => {
+        e.preventDefault()
+        editor.insertText('😄')
+      }}
+    />
+  )
+}
+
+function InsertHtmlElementButton({icon}: ToolbarButtonProps) {
   const editor = useSlate()
 
   return (
@@ -392,7 +410,8 @@ function InsertTextButton({icon}: SlateBlockButtonProps) {
       icon={icon}
       onMouseDown={e => {
         e.preventDefault()
-        editor.insertText('😄')
+        editor.insertText('-------TODO------<hr />----------------')
+        // TODO editor.insertHtml(<hr />)
       }}
     />
   )
