@@ -97,8 +97,8 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
     throw createRichTextError(`Expected object, found ${value}.`, path)
   }
 
-  const isTextNode = value.text != undefined
-  const isElementNode = value.children != undefined
+  const isTextNode = value.text !== undefined
+  const isElementNode = value.children !== undefined
 
   if (isTextNode && isElementNode) {
     throw createRichTextError(`Field "text" and "children" are mutually exclusive.`, path)
@@ -115,44 +115,44 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       throw createRichTextError(`Expected string found ${value.text}`, [...path, 'text'])
     }
 
-    if (value.bold != undefined && !isBoolean(value.bold)) {
+    if (value.bold !== undefined && !isBoolean(value.bold)) {
       throw createRichTextError(`Expected boolean found ${value.bold}`, [...path, 'bold'])
     }
 
-    if (value.italic != undefined && !isBoolean(value.italic)) {
+    if (value.italic !== undefined && !isBoolean(value.italic)) {
       throw createRichTextError(`Expected boolean found ${value.italic}`, [...path, 'italic'])
     }
 
-    if (value.underline != undefined && !isBoolean(value.underline)) {
+    if (value.underline !== undefined && !isBoolean(value.underline)) {
       throw createRichTextError(`Expected boolean found ${value.underline}`, [...path, 'underline'])
     }
 
-    if (value.strikethrough != undefined && !isBoolean(value.strikethrough)) {
+    if (value.strikethrough !== undefined && !isBoolean(value.strikethrough)) {
       throw createRichTextError(`Expected boolean found ${value.strikethrough}`, [
         ...path,
         'strikethrough'
       ])
     }
 
-    if (value.superscript != undefined && !isBoolean(value.superscript)) {
+    if (value.superscript !== undefined && !isBoolean(value.superscript)) {
       throw createRichTextError(`Expected boolean found ${value.superscript}`, [
         ...path,
         'superscript'
       ])
     }
 
-    if (value.subscript != undefined && !isBoolean(value.subscript)) {
+    if (value.subscript !== undefined && !isBoolean(value.subscript)) {
       throw createRichTextError(`Expected boolean found ${value.subscript}`, [...path, 'subscript'])
     }
 
     return Object.assign(
       {text: value.text},
-      value.bold != undefined ? {bold: value.bold as boolean} : {},
-      value.italic != undefined ? {italic: value.italic as boolean} : {},
-      value.underline != undefined ? {underline: value.underline as boolean} : {},
-      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {},
-      value.superscript != undefined ? {superscript: value.superscript as boolean} : {},
-      value.subscript != undefined ? {subscript: value.subscript as boolean} : {}
+      value.bold !== undefined ? {bold: value.bold as boolean} : {},
+      value.italic !== undefined ? {italic: value.italic as boolean} : {},
+      value.underline !== undefined ? {underline: value.underline as boolean} : {},
+      value.strikethrough !== undefined ? {strikethrough: value.strikethrough as boolean} : {},
+      value.superscript !== undefined ? {superscript: value.superscript as boolean} : {},
+      value.subscript !== undefined ? {subscript: value.subscript as boolean} : {}
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
@@ -189,7 +189,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
           throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
         }
 
-        if (value.title != undefined && !isString(value.title)) {
+        if (value.title !== undefined && !isString(value.title)) {
           throw createRichTextError(`Expected string found ${value.title}`, [...path, 'title'])
         }
 
@@ -199,7 +199,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
             url: value.url,
             children: parseRichTextNodes(value.children, [...path, 'children'])
           },
-          value.title != undefined ? {title: value.title as string} : {}
+          value.title !== undefined ? {title: value.title as string} : {}
         )
       }
 
