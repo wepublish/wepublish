@@ -124,7 +124,7 @@ const permissions = [
   }
 ]
 
-describe('User Role Edit Panel Tests', () => {
+xdescribe('User Role Edit Panel Tests', () => {
   test('Role Panel should render', async () => {
     const mocks = [permissionListQuery]
     const wrapper = mount(
