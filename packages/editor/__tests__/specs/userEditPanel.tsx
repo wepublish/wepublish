@@ -90,8 +90,8 @@ const userDocumentQuery = {
   })
 }
 
-describe('User Edit Panel Tests', () => {
-  test('User Edit Panel should render', async () => {
+describe('User Edit Panel', () => {
+  test('should render', async () => {
     const mocks = [userRoleListDocumentQuery]
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
@@ -106,7 +106,7 @@ describe('User Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User Edit Panel should render with id', async () => {
+  test('should render with ID', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -122,7 +122,7 @@ describe('User Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User should be able to select and add roles', async () => {
+  test('should allow user role to be added', async () => {
     const mocks = [userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -142,7 +142,7 @@ describe('User Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User should be able to remove user role', async () => {
+  test('should allow user role to be removed', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -161,7 +161,7 @@ describe('User Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User should be able to create a new user', async () => {
+  test('should allow a new user to be created', async () => {
     const user = {
       name: 'Testing Müller',
       email: 'testing@mueller.com',

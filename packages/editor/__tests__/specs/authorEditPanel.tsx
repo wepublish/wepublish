@@ -22,8 +22,8 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-describe('Author Edit Panel Tests', () => {
-  test('Author Edit Panel should render', () => {
+describe('Author Edit Panel', () => {
+  test('should render', () => {
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
         <MockedProvider addTypename={false}>
@@ -35,7 +35,7 @@ describe('Author Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('Author Edit Panel should render with id', async () => {
+  test('should render with ID', async () => {
     const mocks = [
       {
         request: {
@@ -69,7 +69,7 @@ describe('Author Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('Clicking add block button should display two text fields ', async () => {
+  test('should expand links fields when Add Block button is clicked', async () => {
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
         <MockedProvider addTypename={false}>
@@ -89,7 +89,7 @@ describe('Author Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User should be able to create a new author', async () => {
+  test('should allow a new author to be created ', async () => {
     const author = {
       name: 'Clark Kent',
       id: 'fakeId3',

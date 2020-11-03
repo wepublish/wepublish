@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
+exports[`Author Edit Panel should allow a new author to be created  1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
@@ -153,7 +153,7 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
                   disabled={false}
                   label="authors.panels.name"
                   onChange={[Function]}
-                  value=""
+                  value="Clark Kent"
                 >
                   <Styled(div)
                     styleProps={Object {}}
@@ -171,13 +171,13 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
                                 "hasIcon": false,
                               }
                             }
-                            value=""
+                            value="Clark Kent"
                           >
                             <input
                               disabled={false}
                               onChange={[Function]}
                               placeholder="authors.panels.name"
-                              value=""
+                              value="Clark Kent"
                             />
                           </Styled(input)>
                           <Styled(span)
@@ -1177,7 +1177,7 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
                             "type": "paragraph",
                           }
                         }
-                        key="0"
+                        key="8"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                         selection={null}
@@ -1252,7 +1252,7 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
                                   ]
                                 }
                                 isLast={true}
-                                key="1"
+                                key="9"
                                 parent={
                                   Object {
                                     "children": Array [
@@ -1275,7 +1275,7 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
                                 >
                                   <Leaf
                                     isLast={true}
-                                    key="1-0"
+                                    key="9-0"
                                     leaf={
                                       Object {
                                         "placeholder": "blocks.richText.startWriting",
@@ -1447,1456 +1447,7 @@ exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
 </AuthorEditPanel>
 `;
 
-exports[`Author Edit Panel Tests Author Edit Panel should render with id 1`] = `
-<AuthorEditPanel
-  id="fakeId2"
->
-  <Styled(div)>
-    <div>
-      <PanelHeader
-        leftChildren={
-          <ForwardRef(NavigationButton)
-            icon={[Function]}
-            label="authors.panels.close"
-            onClick={[Function]}
-          />
-        }
-        rightChildren={
-          <ForwardRef(NavigationButton)
-            disabled={false}
-            icon={[Function]}
-            label="authors.panels.save"
-            onClick={[Function]}
-          />
-        }
-        title="authors.panels.editAuthor"
-      >
-        <Styled(div)>
-          <div>
-            <ForwardRef(NavigationButton)
-              icon={[Function]}
-              label="authors.panels.close"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": undefined,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconClose
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                      </svg>
-                    </MaterialIconClose>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      authors.panels.close
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-            <ForwardRef(Box)
-              flexGrow={1}
-            >
-              <div />
-            </ForwardRef(Box)>
-            <Styled(span)>
-              <span>
-                authors.panels.editAuthor
-              </span>
-            </Styled(span)>
-            <ForwardRef(NavigationButton)
-              disabled={false}
-              icon={[Function]}
-              label="authors.panels.save"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": false,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconSaveOutlined
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M0 0h24v24H0V0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
-                        />
-                      </svg>
-                    </MaterialIconSaveOutlined>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      authors.panels.save
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-          </div>
-        </Styled(div)>
-      </PanelHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(Box)
-              marginBottom={10}
-            >
-              <div>
-                <ForwardRef(TextInput)
-                  disabled={false}
-                  label="authors.panels.name"
-                  onChange={[Function]}
-                  value="Douglas Cole"
-                >
-                  <Styled(div)
-                    styleProps={Object {}}
-                  >
-                    <div>
-                      <Styled(label)>
-                        <label>
-                          <Styled(input)
-                            disabled={false}
-                            onChange={[Function]}
-                            placeholder="authors.panels.name"
-                            styleProps={
-                              Object {
-                                "hasError": false,
-                                "hasIcon": false,
-                              }
-                            }
-                            value="Douglas Cole"
-                          >
-                            <input
-                              disabled={false}
-                              onChange={[Function]}
-                              placeholder="authors.panels.name"
-                              value="Douglas Cole"
-                            />
-                          </Styled(input)>
-                          <Styled(span)
-                            styleProps={
-                              Object {
-                                "hasError": false,
-                                "hasIcon": false,
-                              }
-                            }
-                          >
-                            <span>
-                              authors.panels.name
-                            </span>
-                          </Styled(span)>
-                        </label>
-                      </Styled(label)>
-                    </div>
-                  </Styled(div)>
-                </ForwardRef(TextInput)>
-              </div>
-            </ForwardRef(Box)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="authors.panels.image"
-      >
-        <Styled(div)>
-          <div>
-            authors.panels.image
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-      <PanelSection
-        dark={true}
-      >
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": true,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(Box)
-              height={200}
-            >
-              <div>
-                <ForwardRef(Card)>
-                  <Styled(div)
-                    styleProps={Object {}}
-                  >
-                    <div>
-                      <PlaceholderInput
-                        onAddClick={[Function]}
-                      >
-                        <div>
-                          <ForwardRef(IconButton)
-                            icon={[Function]}
-                            onClick={[Function]}
-                            variant="large"
-                          >
-                            <Styled(button)
-                              onClick={[Function]}
-                              styleProps={
-                                Object {
-                                  "active": undefined,
-                                  "disabled": undefined,
-                                  "variant": "large",
-                                }
-                              }
-                            >
-                              <button
-                                onClick={[Function]}
-                              >
-                                <Icon
-                                  block={true}
-                                  element={[Function]}
-                                >
-                                  <MaterialIconAdd
-                                    role="img"
-                                  >
-                                    <svg
-                                      role="img"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                                      />
-                                      <path
-                                        d="M0 0h24v24H0z"
-                                        fill="none"
-                                      />
-                                    </svg>
-                                  </MaterialIconAdd>
-                                </Icon>
-                              </button>
-                            </Styled(button)>
-                          </ForwardRef(IconButton)>
-                        </div>
-                      </PlaceholderInput>
-                    </div>
-                  </Styled(div)>
-                </ForwardRef(Card)>
-              </div>
-            </ForwardRef(Box)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="authors.panels.links"
-      >
-        <Styled(div)>
-          <div>
-            authors.panels.links
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ListInput
-              defaultValue={
-                Object {
-                  "title": "",
-                  "url": "",
-                }
-              }
-              onChange={[Function]}
-              value={Array []}
-            >
-              <ForwardRef(Box)>
-                <div>
-                  <Component
-                    defaultValue={
-                      Object {
-                        "title": "",
-                        "url": "",
-                      }
-                    }
-                    onChange={[Function]}
-                    onSortEnd={[Function]}
-                    useDragHandle={true}
-                    value={Array []}
-                  >
-                    <ForwardRef(Box)>
-                      <div>
-                        <AddBlockButton
-                          onClick={[Function]}
-                        >
-                          <div>
-                            <div>
-                              <ForwardRef(IconButton)
-                                active={false}
-                                icon={[Function]}
-                                onClick={[Function]}
-                                title="Add Block"
-                              >
-                                <Styled(button)
-                                  onClick={[Function]}
-                                  styleProps={
-                                    Object {
-                                      "active": false,
-                                      "disabled": undefined,
-                                      "variant": "default",
-                                    }
-                                  }
-                                  title="Add Block"
-                                >
-                                  <button
-                                    onClick={[Function]}
-                                    title="Add Block"
-                                  >
-                                    <Icon
-                                      block={true}
-                                      element={[Function]}
-                                    >
-                                      <MaterialIconAdd
-                                        role="img"
-                                      >
-                                        <svg
-                                          role="img"
-                                          viewBox="0 0 24 24"
-                                        >
-                                          <path
-                                            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                                          />
-                                          <path
-                                            d="M0 0h24v24H0z"
-                                            fill="none"
-                                          />
-                                        </svg>
-                                      </MaterialIconAdd>
-                                    </Icon>
-                                  </button>
-                                </Styled(button)>
-                              </ForwardRef(IconButton)>
-                            </div>
-                          </div>
-                        </AddBlockButton>
-                      </div>
-                    </ForwardRef(Box)>
-                  </Component>
-                </div>
-              </ForwardRef(Box)>
-            </ListInput>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="authors.panels.bioInformation"
-      >
-        <Styled(div)>
-          <div>
-            authors.panels.bioInformation
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <Memo(RichTextBlock)
-              onChange={[Function]}
-              value={
-                Array [
-                  Object {
-                    "children": Array [
-                      Object {
-                        "text": "",
-                      },
-                    ],
-                    "type": "paragraph",
-                  },
-                ]
-              }
-            >
-              <Slate
-                editor={
-                  Object {
-                    "addMark": [Function],
-                    "apply": [Function],
-                    "children": Array [
-                      Object {
-                        "children": Array [
-                          Object {
-                            "text": "",
-                          },
-                        ],
-                        "type": "paragraph",
-                      },
-                    ],
-                    "deleteBackward": [Function],
-                    "deleteForward": [Function],
-                    "deleteFragment": [Function],
-                    "getFragment": [Function],
-                    "history": Object {
-                      "redos": Array [],
-                      "undos": Array [],
-                    },
-                    "insertBreak": [Function],
-                    "insertData": [Function],
-                    "insertFragment": [Function],
-                    "insertNode": [Function],
-                    "insertText": [Function],
-                    "isInline": [Function],
-                    "isVoid": [Function],
-                    "marks": null,
-                    "normalizeNode": [Function],
-                    "onChange": [Function],
-                    "operations": Array [],
-                    "redo": [Function],
-                    "removeMark": [Function],
-                    "selection": null,
-                    "setFragmentData": [Function],
-                    "undo": [Function],
-                  }
-                }
-                onChange={[Function]}
-                value={
-                  Array [
-                    Object {
-                      "children": Array [
-                        Object {
-                          "text": "",
-                        },
-                      ],
-                      "type": "paragraph",
-                    },
-                  ]
-                }
-              >
-                <Toolbar
-                  fadeOut={true}
-                >
-                  <Styled(div)>
-                    <div>
-                      <Styled(div)>
-                        <div>
-                          <Styled(div)
-                            styleProps={
-                              Object {
-                                "fadeOut": true,
-                              }
-                            }
-                          >
-                            <div>
-                              <FormatButton
-                                format="heading-one"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconLooksOneOutlined
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0V0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2V7h-4v2h2z"
-                                            />
-                                          </svg>
-                                        </MaterialIconLooksOneOutlined>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="heading-two"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconLooksTwoOutlined
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0V0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4h-4v-2h2c1.1 0 2-.89 2-2V9c0-1.11-.9-2-2-2H9v2h4v2h-2c-1.1 0-2 .89-2 2v4h6v-2z"
-                                            />
-                                          </svg>
-                                        </MaterialIconLooksTwoOutlined>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="heading-three"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconLooks3Outlined
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0V0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4v-1.5c0-.83-.67-1.5-1.5-1.5.83 0 1.5-.67 1.5-1.5V9c0-1.11-.9-2-2-2H9v2h4v2h-2v2h2v2H9v2h4c1.1 0 2-.89 2-2z"
-                                            />
-                                          </svg>
-                                        </MaterialIconLooks3Outlined>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <Styled(div)>
-                                <div />
-                              </Styled(div)>
-                              <FormatButton
-                                format="unordered-list"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatListBulleted
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"
-                                            />
-                                            <path
-                                              d="M0 0h24v24H0V0z"
-                                              fill="none"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatListBulleted>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="ordered-list"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatListNumbered
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"
-                                            />
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatListNumbered>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <Styled(div)>
-                                <div />
-                              </Styled(div)>
-                              <FormatButton
-                                format="bold"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatBold
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"
-                                            />
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatBold>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="italic"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatItalic
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatItalic>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="underline"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatUnderlined
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatUnderlined>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <FormatButton
-                                format="strikethrough"
-                                icon={[Function]}
-                              >
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconFormatStrikethrough
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"
-                                            />
-                                          </svg>
-                                        </MaterialIconFormatStrikethrough>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </FormatButton>
-                              <Styled(div)>
-                                <div />
-                              </Styled(div)>
-                              <LinkFormatButton>
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconLink
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-                                            />
-                                          </svg>
-                                        </MaterialIconLink>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                                <Dialog
-                                  open={false}
-                                >
-                                  <Modal
-                                    open={false}
-                                  >
-                                    <Transition
-                                      appear={false}
-                                      enter={true}
-                                      exit={true}
-                                      in={false}
-                                      mountOnEnter={false}
-                                      onEnter={[Function]}
-                                      onEntered={[Function]}
-                                      onEntering={[Function]}
-                                      onExit={[Function]}
-                                      onExited={[Function]}
-                                      onExiting={[Function]}
-                                      timeout={200}
-                                      unmountOnExit={true}
-                                    />
-                                  </Modal>
-                                </Dialog>
-                              </LinkFormatButton>
-                              <RemoveLinkFormatButton>
-                                <ForwardRef(ToolbarButton)
-                                  active={false}
-                                  disabled={true}
-                                  icon={[Function]}
-                                  onMouseDown={[Function]}
-                                >
-                                  <Styled(button)
-                                    disabled={true}
-                                    onMouseDown={[Function]}
-                                    styleProps={
-                                      Object {
-                                        "isActive": false,
-                                      }
-                                    }
-                                  >
-                                    <button
-                                      disabled={true}
-                                      onMouseDown={[Function]}
-                                    >
-                                      <Icon
-                                        block={true}
-                                        element={[Function]}
-                                        scale="1em"
-                                      >
-                                        <MaterialIconLinkOff
-                                          role="img"
-                                        >
-                                          <svg
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                          >
-                                            <path
-                                              d="M0 0h24v24H0V0z"
-                                              fill="none"
-                                            />
-                                            <path
-                                              d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.43-.98 2.63-2.31 2.98l1.46 1.46C20.88 15.61 22 13.95 22 12c0-2.76-2.24-5-5-5zm-1 4h-2.19l2 2H16zM2 4.27l3.11 3.11C3.29 8.12 2 9.91 2 12c0 2.76 2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.59 1.21-2.9 2.76-3.07L8.73 11H8v2h2.73L13 15.27V17h1.73l4.01 4L20 19.74 3.27 3 2 4.27z"
-                                            />
-                                            <path
-                                              d="M0 24V0"
-                                              fill="none"
-                                            />
-                                          </svg>
-                                        </MaterialIconLinkOff>
-                                      </Icon>
-                                    </button>
-                                  </Styled(button)>
-                                </ForwardRef(ToolbarButton)>
-                              </RemoveLinkFormatButton>
-                            </div>
-                          </Styled(div)>
-                        </div>
-                      </Styled(div)>
-                    </div>
-                  </Styled(div)>
-                </Toolbar>
-                <Editable
-                  placeholder="blocks.richText.startWriting"
-                  renderElement={[Function]}
-                  renderLeaf={[Function]}
-                >
-                  <div
-                    contentEditable={true}
-                    data-gramm={false}
-                    data-slate-editor={true}
-                    data-slate-node="value"
-                    onBeforeInput={[Function]}
-                    onBlur={[Function]}
-                    onClick={[Function]}
-                    onCompositionEnd={[Function]}
-                    onCompositionStart={[Function]}
-                    onCopy={[Function]}
-                    onCut={[Function]}
-                    onDragOver={[Function]}
-                    onDragStart={[Function]}
-                    onDrop={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onPaste={[Function]}
-                    role="textbox"
-                    style={
-                      Object {
-                        "outline": "none",
-                        "whiteSpace": "pre-wrap",
-                        "wordWrap": "break-word",
-                      }
-                    }
-                    suppressContentEditableWarning={true}
-                  >
-                    <Children
-                      decorate={[Function]}
-                      decorations={
-                        Array [
-                          Object {
-                            "anchor": Object {
-                              "offset": 0,
-                              "path": Array [
-                                0,
-                                0,
-                              ],
-                            },
-                            "focus": Object {
-                              "offset": 0,
-                              "path": Array [
-                                0,
-                                0,
-                              ],
-                            },
-                            "placeholder": "blocks.richText.startWriting",
-                            Symbol(placeholder): true,
-                          },
-                        ]
-                      }
-                      node={
-                        Object {
-                          "addMark": [Function],
-                          "apply": [Function],
-                          "children": Array [
-                            Object {
-                              "children": Array [
-                                Object {
-                                  "text": "",
-                                },
-                              ],
-                              "type": "paragraph",
-                            },
-                          ],
-                          "deleteBackward": [Function],
-                          "deleteForward": [Function],
-                          "deleteFragment": [Function],
-                          "getFragment": [Function],
-                          "history": Object {
-                            "redos": Array [],
-                            "undos": Array [],
-                          },
-                          "insertBreak": [Function],
-                          "insertData": [Function],
-                          "insertFragment": [Function],
-                          "insertNode": [Function],
-                          "insertText": [Function],
-                          "isInline": [Function],
-                          "isVoid": [Function],
-                          "marks": null,
-                          "normalizeNode": [Function],
-                          "onChange": [Function],
-                          "operations": Array [],
-                          "redo": [Function],
-                          "removeMark": [Function],
-                          "selection": null,
-                          "setFragmentData": [Function],
-                          "undo": [Function],
-                        }
-                      }
-                      renderElement={[Function]}
-                      renderLeaf={[Function]}
-                      selection={null}
-                    >
-                      <Element
-                        decorate={[Function]}
-                        decorations={
-                          Array [
-                            Object {
-                              "anchor": Object {
-                                "offset": 0,
-                                "path": Array [
-                                  0,
-                                  0,
-                                ],
-                              },
-                              "focus": Object {
-                                "offset": 0,
-                                "path": Array [
-                                  0,
-                                  0,
-                                ],
-                              },
-                              "placeholder": "blocks.richText.startWriting",
-                              Symbol(placeholder): true,
-                            },
-                          ]
-                        }
-                        element={
-                          Object {
-                            "children": Array [
-                              Object {
-                                "text": "",
-                              },
-                            ],
-                            "type": "paragraph",
-                          }
-                        }
-                        key="4"
-                        renderElement={[Function]}
-                        renderLeaf={[Function]}
-                        selection={null}
-                      >
-                        <ForwardRef(Typography)
-                          data-slate-node="element"
-                          spacing="large"
-                          variant="body1"
-                        >
-                          <p
-                            data-slate-node="element"
-                          >
-                            <Children
-                              decorate={[Function]}
-                              decorations={
-                                Array [
-                                  Object {
-                                    "anchor": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "focus": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "placeholder": "blocks.richText.startWriting",
-                                    Symbol(placeholder): true,
-                                  },
-                                ]
-                              }
-                              node={
-                                Object {
-                                  "children": Array [
-                                    Object {
-                                      "text": "",
-                                    },
-                                  ],
-                                  "type": "paragraph",
-                                }
-                              }
-                              renderElement={[Function]}
-                              renderLeaf={[Function]}
-                              selection={null}
-                            >
-                              <Text
-                                decorations={
-                                  Array [
-                                    Object {
-                                      "anchor": Object {
-                                        "offset": 0,
-                                        "path": Array [
-                                          0,
-                                          0,
-                                        ],
-                                      },
-                                      "focus": Object {
-                                        "offset": 0,
-                                        "path": Array [
-                                          0,
-                                          0,
-                                        ],
-                                      },
-                                      "placeholder": "blocks.richText.startWriting",
-                                      Symbol(placeholder): true,
-                                    },
-                                  ]
-                                }
-                                isLast={true}
-                                key="5"
-                                parent={
-                                  Object {
-                                    "children": Array [
-                                      Object {
-                                        "text": "",
-                                      },
-                                    ],
-                                    "type": "paragraph",
-                                  }
-                                }
-                                renderLeaf={[Function]}
-                                text={
-                                  Object {
-                                    "text": "",
-                                  }
-                                }
-                              >
-                                <span
-                                  data-slate-node="text"
-                                >
-                                  <Leaf
-                                    isLast={true}
-                                    key="5-0"
-                                    leaf={
-                                      Object {
-                                        "placeholder": "blocks.richText.startWriting",
-                                        "text": "",
-                                        Symbol(placeholder): true,
-                                      }
-                                    }
-                                    parent={
-                                      Object {
-                                        "children": Array [
-                                          Object {
-                                            "text": "",
-                                          },
-                                        ],
-                                        "type": "paragraph",
-                                      }
-                                    }
-                                    renderLeaf={[Function]}
-                                    text={
-                                      Object {
-                                        "text": "",
-                                      }
-                                    }
-                                  >
-                                    <span
-                                      data-slate-leaf={true}
-                                    >
-                                      <span
-                                        contentEditable={false}
-                                        style={
-                                          Object {
-                                            "display": "inline-block",
-                                            "maxWidth": "100%",
-                                            "opacity": "0.333",
-                                            "pointerEvents": "none",
-                                            "verticalAlign": "text-top",
-                                            "whiteSpace": "nowrap",
-                                            "width": "0",
-                                          }
-                                        }
-                                      >
-                                        blocks.richText.startWriting
-                                      </span>
-                                      <String
-                                        isLast={true}
-                                        leaf={
-                                          Object {
-                                            "placeholder": "blocks.richText.startWriting",
-                                            "text": "",
-                                            Symbol(placeholder): true,
-                                          }
-                                        }
-                                        parent={
-                                          Object {
-                                            "children": Array [
-                                              Object {
-                                                "text": "",
-                                              },
-                                            ],
-                                            "type": "paragraph",
-                                          }
-                                        }
-                                        text={
-                                          Object {
-                                            "text": "",
-                                          }
-                                        }
-                                      >
-                                        <ZeroWidthString
-                                          isLineBreak={true}
-                                        >
-                                          <span
-                                            data-slate-length={0}
-                                            data-slate-zero-width="n"
-                                          >
-                                            ﻿
-                                            <br />
-                                          </span>
-                                        </ZeroWidthString>
-                                      </String>
-                                    </span>
-                                  </Leaf>
-                                </span>
-                              </Text>
-                            </Children>
-                          </p>
-                        </ForwardRef(Typography)>
-                      </Element>
-                    </Children>
-                  </div>
-                </Editable>
-              </Slate>
-            </Memo(RichTextBlock)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-    </div>
-  </Styled(div)>
-  <Toast
-    autoHideDuration={5000}
-    onClose={[Function]}
-    open={false}
-    type="error"
-  >
-    <Transition
-      appear={false}
-      enter={true}
-      exit={true}
-      in={false}
-      mountOnEnter={false}
-      onEnter={[Function]}
-      onEntered={[Function]}
-      onEntering={[Function]}
-      onExit={[Function]}
-      onExited={[Function]}
-      onExiting={[Function]}
-      timeout={200}
-      unmountOnExit={true}
-    />
-  </Toast>
-  <Drawer
-    open={false}
-    width={480}
-  >
-    <Modal
-      open={false}
-    >
-      <Transition
-        appear={false}
-        enter={true}
-        exit={true}
-        in={false}
-        mountOnEnter={false}
-        onEnter={[Function]}
-        onEntered={[Function]}
-        onEntering={[Function]}
-        onExit={[Function]}
-        onExited={[Function]}
-        onExiting={[Function]}
-        timeout={200}
-        unmountOnExit={true}
-      />
-    </Modal>
-  </Drawer>
-  <Drawer
-    open={false}
-    width={480}
-  >
-    <Modal
-      open={false}
-    >
-      <Transition
-        appear={false}
-        enter={true}
-        exit={true}
-        in={false}
-        mountOnEnter={false}
-        onEnter={[Function]}
-        onEntered={[Function]}
-        onEntering={[Function]}
-        onExit={[Function]}
-        onExited={[Function]}
-        onExiting={[Function]}
-        timeout={200}
-        unmountOnExit={true}
-      />
-    </Modal>
-  </Drawer>
-</AuthorEditPanel>
-`;
-
-exports[`Author Edit Panel Tests Clicking add block button should display two text fields  1`] = `
+exports[`Author Edit Panel should expand links fields when Add Block button is clicked 1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
@@ -4617,7 +3168,7 @@ exports[`Author Edit Panel Tests Clicking add block button should display two te
 </AuthorEditPanel>
 `;
 
-exports[`Author Edit Panel Tests User should be able to create a new author 1`] = `
+exports[`Author Edit Panel should render 1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
@@ -4770,7 +3321,7 @@ exports[`Author Edit Panel Tests User should be able to create a new author 1`] 
                   disabled={false}
                   label="authors.panels.name"
                   onChange={[Function]}
-                  value="Clark Kent"
+                  value=""
                 >
                   <Styled(div)
                     styleProps={Object {}}
@@ -4788,13 +3339,13 @@ exports[`Author Edit Panel Tests User should be able to create a new author 1`] 
                                 "hasIcon": false,
                               }
                             }
-                            value="Clark Kent"
+                            value=""
                           >
                             <input
                               disabled={false}
                               onChange={[Function]}
                               placeholder="authors.panels.name"
-                              value="Clark Kent"
+                              value=""
                             />
                           </Styled(input)>
                           <Styled(span)
@@ -5794,7 +4345,7 @@ exports[`Author Edit Panel Tests User should be able to create a new author 1`] 
                             "type": "paragraph",
                           }
                         }
-                        key="8"
+                        key="0"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                         selection={null}
@@ -5869,7 +4420,7 @@ exports[`Author Edit Panel Tests User should be able to create a new author 1`] 
                                   ]
                                 }
                                 isLast={true}
-                                key="9"
+                                key="1"
                                 parent={
                                   Object {
                                     "children": Array [
@@ -5892,7 +4443,1456 @@ exports[`Author Edit Panel Tests User should be able to create a new author 1`] 
                                 >
                                   <Leaf
                                     isLast={true}
-                                    key="9-0"
+                                    key="1-0"
+                                    leaf={
+                                      Object {
+                                        "placeholder": "blocks.richText.startWriting",
+                                        "text": "",
+                                        Symbol(placeholder): true,
+                                      }
+                                    }
+                                    parent={
+                                      Object {
+                                        "children": Array [
+                                          Object {
+                                            "text": "",
+                                          },
+                                        ],
+                                        "type": "paragraph",
+                                      }
+                                    }
+                                    renderLeaf={[Function]}
+                                    text={
+                                      Object {
+                                        "text": "",
+                                      }
+                                    }
+                                  >
+                                    <span
+                                      data-slate-leaf={true}
+                                    >
+                                      <span
+                                        contentEditable={false}
+                                        style={
+                                          Object {
+                                            "display": "inline-block",
+                                            "maxWidth": "100%",
+                                            "opacity": "0.333",
+                                            "pointerEvents": "none",
+                                            "verticalAlign": "text-top",
+                                            "whiteSpace": "nowrap",
+                                            "width": "0",
+                                          }
+                                        }
+                                      >
+                                        blocks.richText.startWriting
+                                      </span>
+                                      <String
+                                        isLast={true}
+                                        leaf={
+                                          Object {
+                                            "placeholder": "blocks.richText.startWriting",
+                                            "text": "",
+                                            Symbol(placeholder): true,
+                                          }
+                                        }
+                                        parent={
+                                          Object {
+                                            "children": Array [
+                                              Object {
+                                                "text": "",
+                                              },
+                                            ],
+                                            "type": "paragraph",
+                                          }
+                                        }
+                                        text={
+                                          Object {
+                                            "text": "",
+                                          }
+                                        }
+                                      >
+                                        <ZeroWidthString
+                                          isLineBreak={true}
+                                        >
+                                          <span
+                                            data-slate-length={0}
+                                            data-slate-zero-width="n"
+                                          >
+                                            ﻿
+                                            <br />
+                                          </span>
+                                        </ZeroWidthString>
+                                      </String>
+                                    </span>
+                                  </Leaf>
+                                </span>
+                              </Text>
+                            </Children>
+                          </p>
+                        </ForwardRef(Typography)>
+                      </Element>
+                    </Children>
+                  </div>
+                </Editable>
+              </Slate>
+            </Memo(RichTextBlock)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Drawer
+    open={false}
+    width={480}
+  >
+    <Modal
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Drawer>
+  <Drawer
+    open={false}
+    width={480}
+  >
+    <Modal
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Drawer>
+</AuthorEditPanel>
+`;
+
+exports[`Author Edit Panel should render with ID 1`] = `
+<AuthorEditPanel
+  id="fakeId2"
+>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="authors.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="authors.panels.save"
+            onClick={[Function]}
+          />
+        }
+        title="authors.panels.editAuthor"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="authors.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      authors.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                authors.panels.editAuthor
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="authors.panels.save"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      authors.panels.save
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="authors.panels.name"
+                  onChange={[Function]}
+                  value="Douglas Cole"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="authors.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Douglas Cole"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="authors.panels.name"
+                              value="Douglas Cole"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              authors.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="authors.panels.image"
+      >
+        <Styled(div)>
+          <div>
+            authors.panels.image
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection
+        dark={true}
+      >
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": true,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              height={200}
+            >
+              <div>
+                <ForwardRef(Card)>
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <PlaceholderInput
+                        onAddClick={[Function]}
+                      >
+                        <div>
+                          <ForwardRef(IconButton)
+                            icon={[Function]}
+                            onClick={[Function]}
+                            variant="large"
+                          >
+                            <Styled(button)
+                              onClick={[Function]}
+                              styleProps={
+                                Object {
+                                  "active": undefined,
+                                  "disabled": undefined,
+                                  "variant": "large",
+                                }
+                              }
+                            >
+                              <button
+                                onClick={[Function]}
+                              >
+                                <Icon
+                                  block={true}
+                                  element={[Function]}
+                                >
+                                  <MaterialIconAdd
+                                    role="img"
+                                  >
+                                    <svg
+                                      role="img"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                                      />
+                                      <path
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                      />
+                                    </svg>
+                                  </MaterialIconAdd>
+                                </Icon>
+                              </button>
+                            </Styled(button)>
+                          </ForwardRef(IconButton)>
+                        </div>
+                      </PlaceholderInput>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(Card)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="authors.panels.links"
+      >
+        <Styled(div)>
+          <div>
+            authors.panels.links
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ListInput
+              defaultValue={
+                Object {
+                  "title": "",
+                  "url": "",
+                }
+              }
+              onChange={[Function]}
+              value={Array []}
+            >
+              <ForwardRef(Box)>
+                <div>
+                  <Component
+                    defaultValue={
+                      Object {
+                        "title": "",
+                        "url": "",
+                      }
+                    }
+                    onChange={[Function]}
+                    onSortEnd={[Function]}
+                    useDragHandle={true}
+                    value={Array []}
+                  >
+                    <ForwardRef(Box)>
+                      <div>
+                        <AddBlockButton
+                          onClick={[Function]}
+                        >
+                          <div>
+                            <div>
+                              <ForwardRef(IconButton)
+                                active={false}
+                                icon={[Function]}
+                                onClick={[Function]}
+                                title="Add Block"
+                              >
+                                <Styled(button)
+                                  onClick={[Function]}
+                                  styleProps={
+                                    Object {
+                                      "active": false,
+                                      "disabled": undefined,
+                                      "variant": "default",
+                                    }
+                                  }
+                                  title="Add Block"
+                                >
+                                  <button
+                                    onClick={[Function]}
+                                    title="Add Block"
+                                  >
+                                    <Icon
+                                      block={true}
+                                      element={[Function]}
+                                    >
+                                      <MaterialIconAdd
+                                        role="img"
+                                      >
+                                        <svg
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                                          />
+                                          <path
+                                            d="M0 0h24v24H0z"
+                                            fill="none"
+                                          />
+                                        </svg>
+                                      </MaterialIconAdd>
+                                    </Icon>
+                                  </button>
+                                </Styled(button)>
+                              </ForwardRef(IconButton)>
+                            </div>
+                          </div>
+                        </AddBlockButton>
+                      </div>
+                    </ForwardRef(Box)>
+                  </Component>
+                </div>
+              </ForwardRef(Box)>
+            </ListInput>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="authors.panels.bioInformation"
+      >
+        <Styled(div)>
+          <div>
+            authors.panels.bioInformation
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <Memo(RichTextBlock)
+              onChange={[Function]}
+              value={
+                Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "text": "",
+                      },
+                    ],
+                    "type": "paragraph",
+                  },
+                ]
+              }
+            >
+              <Slate
+                editor={
+                  Object {
+                    "addMark": [Function],
+                    "apply": [Function],
+                    "children": Array [
+                      Object {
+                        "children": Array [
+                          Object {
+                            "text": "",
+                          },
+                        ],
+                        "type": "paragraph",
+                      },
+                    ],
+                    "deleteBackward": [Function],
+                    "deleteForward": [Function],
+                    "deleteFragment": [Function],
+                    "getFragment": [Function],
+                    "history": Object {
+                      "redos": Array [],
+                      "undos": Array [],
+                    },
+                    "insertBreak": [Function],
+                    "insertData": [Function],
+                    "insertFragment": [Function],
+                    "insertNode": [Function],
+                    "insertText": [Function],
+                    "isInline": [Function],
+                    "isVoid": [Function],
+                    "marks": null,
+                    "normalizeNode": [Function],
+                    "onChange": [Function],
+                    "operations": Array [],
+                    "redo": [Function],
+                    "removeMark": [Function],
+                    "selection": null,
+                    "setFragmentData": [Function],
+                    "undo": [Function],
+                  }
+                }
+                onChange={[Function]}
+                value={
+                  Array [
+                    Object {
+                      "children": Array [
+                        Object {
+                          "text": "",
+                        },
+                      ],
+                      "type": "paragraph",
+                    },
+                  ]
+                }
+              >
+                <Toolbar
+                  fadeOut={true}
+                >
+                  <Styled(div)>
+                    <div>
+                      <Styled(div)>
+                        <div>
+                          <Styled(div)
+                            styleProps={
+                              Object {
+                                "fadeOut": true,
+                              }
+                            }
+                          >
+                            <div>
+                              <FormatButton
+                                format="heading-one"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconLooksOneOutlined
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0V0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-7-2h2V7h-4v2h2z"
+                                            />
+                                          </svg>
+                                        </MaterialIconLooksOneOutlined>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="heading-two"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconLooksTwoOutlined
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0V0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4h-4v-2h2c1.1 0 2-.89 2-2V9c0-1.11-.9-2-2-2H9v2h4v2h-2c-1.1 0-2 .89-2 2v4h6v-2z"
+                                            />
+                                          </svg>
+                                        </MaterialIconLooksTwoOutlined>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="heading-three"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconLooks3Outlined
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0V0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4v-1.5c0-.83-.67-1.5-1.5-1.5.83 0 1.5-.67 1.5-1.5V9c0-1.11-.9-2-2-2H9v2h4v2h-2v2h2v2H9v2h4c1.1 0 2-.89 2-2z"
+                                            />
+                                          </svg>
+                                        </MaterialIconLooks3Outlined>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="unordered-list"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatListBulleted
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"
+                                            />
+                                            <path
+                                              d="M0 0h24v24H0V0z"
+                                              fill="none"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatListBulleted>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="ordered-list"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatListNumbered
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"
+                                            />
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatListNumbered>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="bold"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatBold
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"
+                                            />
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatBold>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="italic"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatItalic
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatItalic>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="underline"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatUnderlined
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatUnderlined>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="strikethrough"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatStrikethrough
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"
+                                            />
+                                          </svg>
+                                        </MaterialIconFormatStrikethrough>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <LinkFormatButton>
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconLink
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
+                                            />
+                                          </svg>
+                                        </MaterialIconLink>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                                <Dialog
+                                  open={false}
+                                >
+                                  <Modal
+                                    open={false}
+                                  >
+                                    <Transition
+                                      appear={false}
+                                      enter={true}
+                                      exit={true}
+                                      in={false}
+                                      mountOnEnter={false}
+                                      onEnter={[Function]}
+                                      onEntered={[Function]}
+                                      onEntering={[Function]}
+                                      onExit={[Function]}
+                                      onExited={[Function]}
+                                      onExiting={[Function]}
+                                      timeout={200}
+                                      unmountOnExit={true}
+                                    />
+                                  </Modal>
+                                </Dialog>
+                              </LinkFormatButton>
+                              <RemoveLinkFormatButton>
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  disabled={true}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    disabled={true}
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      disabled={true}
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconLinkOff
+                                          role="img"
+                                        >
+                                          <svg
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0V0z"
+                                              fill="none"
+                                            />
+                                            <path
+                                              d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.43-.98 2.63-2.31 2.98l1.46 1.46C20.88 15.61 22 13.95 22 12c0-2.76-2.24-5-5-5zm-1 4h-2.19l2 2H16zM2 4.27l3.11 3.11C3.29 8.12 2 9.91 2 12c0 2.76 2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.59 1.21-2.9 2.76-3.07L8.73 11H8v2h2.73L13 15.27V17h1.73l4.01 4L20 19.74 3.27 3 2 4.27z"
+                                            />
+                                            <path
+                                              d="M0 24V0"
+                                              fill="none"
+                                            />
+                                          </svg>
+                                        </MaterialIconLinkOff>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </RemoveLinkFormatButton>
+                            </div>
+                          </Styled(div)>
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Toolbar>
+                <Editable
+                  placeholder="blocks.richText.startWriting"
+                  renderElement={[Function]}
+                  renderLeaf={[Function]}
+                >
+                  <div
+                    contentEditable={true}
+                    data-gramm={false}
+                    data-slate-editor={true}
+                    data-slate-node="value"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onCompositionEnd={[Function]}
+                    onCompositionStart={[Function]}
+                    onCopy={[Function]}
+                    onCut={[Function]}
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    role="textbox"
+                    style={
+                      Object {
+                        "outline": "none",
+                        "whiteSpace": "pre-wrap",
+                        "wordWrap": "break-word",
+                      }
+                    }
+                    suppressContentEditableWarning={true}
+                  >
+                    <Children
+                      decorate={[Function]}
+                      decorations={
+                        Array [
+                          Object {
+                            "anchor": Object {
+                              "offset": 0,
+                              "path": Array [
+                                0,
+                                0,
+                              ],
+                            },
+                            "focus": Object {
+                              "offset": 0,
+                              "path": Array [
+                                0,
+                                0,
+                              ],
+                            },
+                            "placeholder": "blocks.richText.startWriting",
+                            Symbol(placeholder): true,
+                          },
+                        ]
+                      }
+                      node={
+                        Object {
+                          "addMark": [Function],
+                          "apply": [Function],
+                          "children": Array [
+                            Object {
+                              "children": Array [
+                                Object {
+                                  "text": "",
+                                },
+                              ],
+                              "type": "paragraph",
+                            },
+                          ],
+                          "deleteBackward": [Function],
+                          "deleteForward": [Function],
+                          "deleteFragment": [Function],
+                          "getFragment": [Function],
+                          "history": Object {
+                            "redos": Array [],
+                            "undos": Array [],
+                          },
+                          "insertBreak": [Function],
+                          "insertData": [Function],
+                          "insertFragment": [Function],
+                          "insertNode": [Function],
+                          "insertText": [Function],
+                          "isInline": [Function],
+                          "isVoid": [Function],
+                          "marks": null,
+                          "normalizeNode": [Function],
+                          "onChange": [Function],
+                          "operations": Array [],
+                          "redo": [Function],
+                          "removeMark": [Function],
+                          "selection": null,
+                          "setFragmentData": [Function],
+                          "undo": [Function],
+                        }
+                      }
+                      renderElement={[Function]}
+                      renderLeaf={[Function]}
+                      selection={null}
+                    >
+                      <Element
+                        decorate={[Function]}
+                        decorations={
+                          Array [
+                            Object {
+                              "anchor": Object {
+                                "offset": 0,
+                                "path": Array [
+                                  0,
+                                  0,
+                                ],
+                              },
+                              "focus": Object {
+                                "offset": 0,
+                                "path": Array [
+                                  0,
+                                  0,
+                                ],
+                              },
+                              "placeholder": "blocks.richText.startWriting",
+                              Symbol(placeholder): true,
+                            },
+                          ]
+                        }
+                        element={
+                          Object {
+                            "children": Array [
+                              Object {
+                                "text": "",
+                              },
+                            ],
+                            "type": "paragraph",
+                          }
+                        }
+                        key="4"
+                        renderElement={[Function]}
+                        renderLeaf={[Function]}
+                        selection={null}
+                      >
+                        <ForwardRef(Typography)
+                          data-slate-node="element"
+                          spacing="large"
+                          variant="body1"
+                        >
+                          <p
+                            data-slate-node="element"
+                          >
+                            <Children
+                              decorate={[Function]}
+                              decorations={
+                                Array [
+                                  Object {
+                                    "anchor": Object {
+                                      "offset": 0,
+                                      "path": Array [
+                                        0,
+                                        0,
+                                      ],
+                                    },
+                                    "focus": Object {
+                                      "offset": 0,
+                                      "path": Array [
+                                        0,
+                                        0,
+                                      ],
+                                    },
+                                    "placeholder": "blocks.richText.startWriting",
+                                    Symbol(placeholder): true,
+                                  },
+                                ]
+                              }
+                              node={
+                                Object {
+                                  "children": Array [
+                                    Object {
+                                      "text": "",
+                                    },
+                                  ],
+                                  "type": "paragraph",
+                                }
+                              }
+                              renderElement={[Function]}
+                              renderLeaf={[Function]}
+                              selection={null}
+                            >
+                              <Text
+                                decorations={
+                                  Array [
+                                    Object {
+                                      "anchor": Object {
+                                        "offset": 0,
+                                        "path": Array [
+                                          0,
+                                          0,
+                                        ],
+                                      },
+                                      "focus": Object {
+                                        "offset": 0,
+                                        "path": Array [
+                                          0,
+                                          0,
+                                        ],
+                                      },
+                                      "placeholder": "blocks.richText.startWriting",
+                                      Symbol(placeholder): true,
+                                    },
+                                  ]
+                                }
+                                isLast={true}
+                                key="5"
+                                parent={
+                                  Object {
+                                    "children": Array [
+                                      Object {
+                                        "text": "",
+                                      },
+                                    ],
+                                    "type": "paragraph",
+                                  }
+                                }
+                                renderLeaf={[Function]}
+                                text={
+                                  Object {
+                                    "text": "",
+                                  }
+                                }
+                              >
+                                <span
+                                  data-slate-node="text"
+                                >
+                                  <Leaf
+                                    isLast={true}
+                                    key="5-0"
                                     leaf={
                                       Object {
                                         "placeholder": "blocks.richText.startWriting",

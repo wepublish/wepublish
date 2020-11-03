@@ -122,8 +122,8 @@ const permissions = [
   }
 ]
 
-describe('User Role Edit Panel Tests', () => {
-  test('Role Panel should render', async () => {
+describe('User Role Edit Panel', () => {
+  test('should render', async () => {
     const mocks = [permissionListQuery]
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
@@ -138,7 +138,7 @@ describe('User Role Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('Role Panel should render with role', async () => {
+  test('should render with role', async () => {
     const mocks = [userRoleDocumentQuery, permissionListQuery]
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
@@ -153,7 +153,7 @@ describe('User Role Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('Toggle sliders should be disabled with System Role', async () => {
+  test('should have Toggle sliders disabled with System Role', async () => {
     userRoleDocumentQuery.result = () => {
       return {
         data: {
@@ -197,7 +197,7 @@ describe('User Role Edit Panel Tests', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  test('User should be able to create a new role', async () => {
+  test('should allow a new role to be created', async () => {
     const userRole = {
       __typename: 'UserRole',
       id: 'fakeId4',
