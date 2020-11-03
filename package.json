@@ -12,7 +12,7 @@
     "test": "run-s --print-label test:**",
     "build": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example",
     "build:production": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production",
-    "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor build:api-example build:media-example build:website-example",
+    "build:demo": "run-s --print-label build:api build:api-db-mongodb build:api-media-karma build:oauth2 build:editor:production build:api-example build:media-example build:website-example",
     "prerelease": "run-s clean build:production",
     "release": "node -r dotenv/config ./node_modules/.bin/lerna version --conventional-commits --create-release github --force-git-tag",
     "publish": "lerna publish from-package --ignore-scripts",
