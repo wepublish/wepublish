@@ -1,17 +1,13 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
-import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
-import {
-  UserRoleDocument,
-  PermissionListDocument,
-  CreateUserRoleDocument
-} from '../../src/client/api'
+import {UserRoleEditPanel} from '../src/client/panel/userRoleEditPanel'
+import {UserRoleDocument, PermissionListDocument, CreateUserRoleDocument} from '../src/client/api'
 import Enzyme, {mount} from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
 import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
-import {updateWrapper} from '../utils'
+import {updateWrapper} from './utils'
 import {act} from 'react-dom/test-utils'
 
 // React 16 Enzyme adapter
