@@ -54,7 +54,7 @@ const userRoleListDocumentQuery = {
             hasNextPage: false,
             hasPreviousPage: false
           },
-          totalCount: 0
+          totalCount: 2
         }
       }
     }
