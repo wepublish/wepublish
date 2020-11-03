@@ -1,5 +1,4 @@
 import React from 'react'
-import {MockedProvider} from '@apollo/client/testing'
 import {UserEditPanel} from '../../src/client/panel/userEditPanel'
 import {UserDocument, CreateUserDocument, UserRoleListDocument} from '../../src/client/api'
 import {mount} from 'enzyme'
@@ -8,6 +7,9 @@ import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
+import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+
+const MockedProvider = MockedProviderBase as any
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
