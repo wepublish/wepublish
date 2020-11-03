@@ -2,7 +2,7 @@ import React from 'react'
 
 import {Button, Drawer, Icon, Notification} from 'rsuite'
 
-import {FileDropInput} from '../atoms/FileDropInput'
+import {FileDropInput} from '../atoms/fileDropInput'
 
 import {useTranslation} from 'react-i18next'
 

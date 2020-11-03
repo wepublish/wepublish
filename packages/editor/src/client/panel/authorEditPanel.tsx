@@ -1,31 +1,21 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
+  ControlLabel,
   Drawer,
+  Dropdown,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
+  Panel,
   IconButton,
-  Image,
-  Toast,
-  ZIndex,
-  ListInput,
-  ListValue
-} from '@karma.run/ui'
+  Input,
+  Notification
+} from 'rsuite'
 
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+import {ListInput, ListValue} from '../atoms/listInput'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -60,9 +50,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -105,14 +92,20 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   useEffect(() => {
     if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
+      Notification.error({
+        title: loadError.message,
+        duration: 5000
+      })
     } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
+      Notification.error({
+        title: createError.message,
+        duration: 5000
+      })
     } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
+      Notification.error({
+        title: updateError.message,
+        duration: 5000
+      })
     }
   }, [loadError, createError, updateError])
 
@@ -155,130 +148,106 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('authors.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? t('authors.panels.save') : t('authors.panels.create')}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('authors.panels.name')}
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('authors.panels.name')}</ControlLabel>
+            <FormControl
               value={name}
               disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-                setSlug(slugify(e.target.value))
+              onChange={value => {
+                setName(value)
+                setSlug(slugify(value))
               }}
             />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('authors.panels.image')} />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <IconButton
-                        icon={MaterialIconImageOutlined}
-                        title={t('authors.panels.chooseImage')}
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setChooseModalOpen(true)}
-                      />
-                      <IconButton
-                        icon={MaterialIconEditOutlined}
-                        title={t('authors.panels.editImage')}
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setEditModalOpen(true)}
-                      />
-                      {t('Image')}
-                      <IconButton
-                        icon={MaterialIconClose}
-                        title={t('authors.panels.removeImage')}
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setImage(undefined)}
-                      />
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('authors.panels.links')} />
-        <PanelSection>
+          </FormGroup>
+        </Form>
+        <Panel
+          bordered={true}
+          style={{
+            height: '200px',
+            backgroundSize: 'cover',
+            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
+          }}>
+          <Dropdown
+            renderTitle={() => {
+              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+            }}>
+            <Dropdown.Item disabled={isLoading} onClick={() => setChooseModalOpen(true)}>
+              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
+            </Dropdown.Item>
+            <Dropdown.Item disabled={isLoading || !image} onClick={() => setEditModalOpen(true)}>
+              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
+            </Dropdown.Item>
+            <Dropdown.Item disabled={isLoading || !image} onClick={() => setImage(undefined)}>
+              <Icon icon="close" /> {t('peerList.panels.removeImage')}
+            </Dropdown.Item>
+          </Dropdown>
+        </Panel>
+
+        <Panel header={t('authors.panels.links')}>
           <ListInput
             value={links}
             onChange={links => setLinks(links)}
             defaultValue={{title: '', url: ''}}>
             {({value, onChange}) => (
-              <Box display="flex" flexDirection="row">
-                <TextInput
-                  label={t('authors.panels.title')}
-                  flexBasis="30%"
-                  marginRight={Spacing.ExtraSmall}
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <Input
+                  placeholder={t('authors.panels.title')}
+                  style={{
+                    flexBasis: '30%',
+                    marginRight: '10px'
+                  }}
                   value={value.title}
-                  onChange={e => onChange({...value, title: e.target.value})}
+                  onChange={title => onChange({...value, title})}
                 />
-                <TextInput
-                  label={t('authors.panels.link')}
-                  flexBasis="70%"
+                <Input
+                  placeholder={t('authors.panels.link')}
+                  style={{
+                    flexBasis: '70%'
+                  }}
                   value={value.url}
-                  onChange={e => onChange({...value, url: e.target.value})}
+                  onChange={url => onChange({...value, url})}
                 />
-              </Box>
+              </div>
             )}
           </ListInput>
-        </PanelSection>
-        <PanelSectionHeader title={t('authors.panels.bioInformation')} />
-        <PanelSection>
+        </Panel>
+        <Panel header={t('authors.panels.bioInformation')}>
           <RichTextBlock value={bio} onChange={value => setBio(value)} />
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
+        </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('authors.panels.save') : t('authors.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('authors.panels.close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <ImagedEditPanel
-            id={image!.id}
-            onClose={() => setEditModalOpen(false)}
-            onSave={() => setEditModalOpen(false)}
-          />
-        )}
+      <Drawer show={isEditModalOpen} size={'sm'}>
+        <ImagedEditPanel
+          id={image?.id}
+          onClose={() => setEditModalOpen(false)}
+          onSave={() => setEditModalOpen(false)}
+        />
       </Drawer>
     </>
   )
