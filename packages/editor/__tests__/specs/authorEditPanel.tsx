@@ -2,17 +2,12 @@ import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
 import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
-import Enzyme, {mount} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import {mount} from 'enzyme'
 
 import {UIProvider} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
 import * as fela from 'fela'
-
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-// import wait from 'waait'
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),

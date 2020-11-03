@@ -1,17 +1,17 @@
 import React from 'react'
 import {MockedProvider} from '@apollo/client/testing'
-import {UserRoleEditPanel} from '../src/client/panel/userRoleEditPanel'
-import {UserRoleDocument, PermissionListDocument, CreateUserRoleDocument} from '../src/client/api'
-import Enzyme, {mount} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
+import {
+  UserRoleDocument,
+  PermissionListDocument,
+  CreateUserRoleDocument
+} from '../../src/client/api'
+import {mount} from 'enzyme'
 
 import {UIProvider} from '@karma.run/ui'
 import * as fela from 'fela'
-import {updateWrapper} from './utils'
+import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
-
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
 
 const styleRenderer: fela.IRenderer = {
   renderRule: jest.fn(),
@@ -120,7 +120,7 @@ const permissions = [
   }
 ]
 
-xdescribe('User Role Edit Panel Tests', () => {
+describe('User Role Edit Panel Tests', () => {
   test('Role Panel should render', async () => {
     const mocks = [permissionListQuery]
     const wrapper = mount(
