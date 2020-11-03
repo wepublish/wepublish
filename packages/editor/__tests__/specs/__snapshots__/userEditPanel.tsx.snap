@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`User Edit Panel should render 1`] = `
+exports[`User Edit Panel Tests User Edit Panel should render 1`] = `
 <UserEditPanel>
   <Styled(div)>
     <div>
@@ -589,7 +589,7 @@ exports[`User Edit Panel should render 1`] = `
 </UserEditPanel>
 `;
 
-exports[`User Edit Panel should render with id 1`] = `
+exports[`User Edit Panel Tests User Edit Panel should render with id 1`] = `
 <UserEditPanel
   id="fakeId3"
 >
@@ -1241,7 +1241,7 @@ exports[`User Edit Panel should render with id 1`] = `
 </UserEditPanel>
 `;
 
-exports[`User should be able to create a new user 1`] = `
+exports[`User Edit Panel Tests User should be able to create a new user 1`] = `
 <UserEditPanel>
   <Styled(div)>
     <div>
@@ -1830,7 +1830,7 @@ exports[`User should be able to create a new user 1`] = `
 </UserEditPanel>
 `;
 
-exports[`User should be able to remove user role 1`] = `
+exports[`User Edit Panel Tests User should be able to remove user role 1`] = `
 <UserEditPanel
   id="fakeId3"
 >
@@ -2392,7 +2392,7 @@ exports[`User should be able to remove user role 1`] = `
 </UserEditPanel>
 `;
 
-exports[`User should be able to select and add roles 1`] = `
+exports[`User Edit Panel Tests User should be able to select and add roles 1`] = `
 <UserEditPanel>
   <Styled(div)>
     <div>

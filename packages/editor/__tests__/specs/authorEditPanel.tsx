@@ -24,130 +24,132 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-test('Author Edit Panel should render', () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
-
-test('Author Edit Panel should render with id', async () => {
-  const mocks = [
-    {
-      request: {
-        query: AuthorDocument,
-        variables: {
-          id: 'fakeId2'
-        }
-      },
-      result: () => ({
-        data: {
-          author: {
-            __typename: 'Author',
-            id: 'fakeId2',
-            name: 'Douglas Cole'
-          }
-        }
-      })
-    }
-  ]
-
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <AuthorEditPanel id={'fakeId2'} />
-      </MockedProvider>
-    </UIProvider>
-  )
-
-  await updateWrapper(wrapper, 100)
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
-
-test('Clicking add block button should display two text fields ', async () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
-
-  const button = wrapper.find('button[title="Add Block"]')
-  button.simulate('click')
-
-  const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
-  inputField.props().value = 'abcd'
-
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
-
-test('User should be able to create a new author', async () => {
-  const author = {
-    name: 'Clark Kent',
-    id: 'fakeId3',
-    slug: 'clark-kent',
-    url: 'url',
-    links: [],
-    bio: [],
-    imageID: undefined
-  }
-  const mocks = [
-    {
-      request: {
-        query: CreateAuthorDocument,
-        variables: {
-          input: {
-            name: author.name,
-            slug: author.slug,
-            links: author.links,
-            bio: author.bio,
-            imageID: author.imageID
-          }
-        }
-      },
-      result: () => ({
-        data: {
-          author: {
-            __typename: 'Author',
-            id: author.id,
-            name: author.name,
-            slug: author.slug,
-            url: author.url,
-            links: author.links,
-            bio: author.bio
-          }
-        }
-      })
-    }
-  ]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthorEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
-
-  act(() => {
-    wrapper
-      .find('input[placeholder="authors.panels.name"]')
-      .simulate('change', {target: {value: author.name}})
+describe('Author Edit Panel Tests', () => {
+  test('Author Edit Panel should render', () => {
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
   })
 
-  await act(async () => {
-    wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
+  test('Author Edit Panel should render with id', async () => {
+    const mocks = [
+      {
+        request: {
+          query: AuthorDocument,
+          variables: {
+            id: 'fakeId2'
+          }
+        },
+        result: () => ({
+          data: {
+            author: {
+              __typename: 'Author',
+              id: 'fakeId2',
+              name: 'Douglas Cole'
+            }
+          }
+        })
+      }
+    ]
+
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={true}>
+          <AuthorEditPanel id={'fakeId2'} />
+        </MockedProvider>
+      </UIProvider>
+    )
+
+    await updateWrapper(wrapper, 100)
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
   })
 
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
+  test('Clicking add block button should display two text fields ', async () => {
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
+
+    const button = wrapper.find('button[title="Add Block"]')
+    button.simulate('click')
+
+    const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
+    inputField.props().value = 'abcd'
+
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
+
+  test('User should be able to create a new author', async () => {
+    const author = {
+      name: 'Clark Kent',
+      id: 'fakeId3',
+      slug: 'clark-kent',
+      url: 'url',
+      links: [],
+      bio: [],
+      imageID: undefined
+    }
+    const mocks = [
+      {
+        request: {
+          query: CreateAuthorDocument,
+          variables: {
+            input: {
+              name: author.name,
+              slug: author.slug,
+              links: author.links,
+              bio: author.bio,
+              imageID: author.imageID
+            }
+          }
+        },
+        result: () => ({
+          data: {
+            author: {
+              __typename: 'Author',
+              id: author.id,
+              name: author.name,
+              slug: author.slug,
+              url: author.url,
+              links: author.links,
+              bio: author.bio
+            }
+          }
+        })
+      }
+    ]
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <AuthorEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
+
+    act(() => {
+      wrapper
+        .find('input[placeholder="authors.panels.name"]')
+        .simulate('change', {target: {value: author.name}})
+    })
+
+    await act(async () => {
+      wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
+    })
+
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 })

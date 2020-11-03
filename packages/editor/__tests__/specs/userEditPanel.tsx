@@ -92,137 +92,139 @@ const userDocumentQuery = {
   })
 }
 
-test('User Edit Panel should render', async () => {
-  const mocks = [userRoleListDocumentQuery]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+describe('User Edit Panel Tests', () => {
+  test('User Edit Panel should render', async () => {
+    const mocks = [userRoleListDocumentQuery]
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('UserEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User Edit Panel should render with id', async () => {
-  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
+  test('User Edit Panel should render with id', async () => {
+    const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={true}>
+          <UserEditPanel id={'fakeId3'} />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('UserEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to select and add roles', async () => {
-  const mocks = [userRoleListDocumentQuery]
+  test('User should be able to select and add roles', async () => {
+    const mocks = [userRoleListDocumentQuery]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  wrapper.find('Select button').simulate('click')
-  wrapper.find('li[role="option"]').last().simulate('click')
-  wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
+    wrapper.find('Select button').simulate('click')
+    wrapper.find('li[role="option"]').last().simulate('click')
+    wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
 
-  const panel = wrapper.find('UserEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to remove user role', async () => {
-  const mocks = [userDocumentQuery, userRoleListDocumentQuery]
+  test('User should be able to remove user role', async () => {
+    const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={true}>
-        <UserEditPanel id={'fakeId3'} />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={true}>
+          <UserEditPanel id={'fakeId3'} />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  wrapper.find('ForwardRef(IconButton)').first().simulate('click')
-  wrapper.find('ForwardRef(MenuButton)').simulate('click')
+    wrapper.find('ForwardRef(IconButton)').first().simulate('click')
+    wrapper.find('ForwardRef(MenuButton)').simulate('click')
 
-  const panel = wrapper.find('UserEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to create a new user', async () => {
-  const user = {
-    name: 'Testing Müller',
-    email: 'testing@mueller.com',
-    roleIDs: [],
-    password: 'superSecret'
-  }
+  test('User should be able to create a new user', async () => {
+    const user = {
+      name: 'Testing Müller',
+      email: 'testing@mueller.com',
+      roleIDs: [],
+      password: 'superSecret'
+    }
 
-  const mocks = [
-    {
-      request: {
-        query: CreateUserDocument,
-        variables: {
-          input: {
-            name: user.name,
-            email: user.email,
-            roleIDs: user.roleIDs
-          },
-          password: user.password
-        }
-      },
-      result: () => ({
-        data: {
-          user: {
-            __typename: 'User',
-            id: 'fakeId4',
-            name: user.name,
-            email: user.email,
-            roles: user.roleIDs
+    const mocks = [
+      {
+        request: {
+          query: CreateUserDocument,
+          variables: {
+            input: {
+              name: user.name,
+              email: user.email,
+              roleIDs: user.roleIDs
+            },
+            password: user.password
           }
-        }
-      })
-    },
-    userRoleListDocumentQuery
-  ]
+        },
+        result: () => ({
+          data: {
+            user: {
+              __typename: 'User',
+              id: 'fakeId4',
+              name: user.name,
+              email: user.email,
+              roles: user.roleIDs
+            }
+          }
+        })
+      },
+      userRoleListDocumentQuery
+    ]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <UserEditPanel />
-      </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    const wrapper = mount(
+      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <UserEditPanel />
+        </MockedProvider>
+      </UIProvider>
+    )
+    await updateWrapper(wrapper, 100)
 
-  act(() => {
-    wrapper
-      .find('input[placeholder="userList.panels.name"]')
-      .simulate('change', {target: {value: user.name}})
-    wrapper
-      .find('input[placeholder="userList.panels.email"]')
-      .simulate('change', {target: {value: user.email}})
-    wrapper
-      .find('input[placeholder="userList.panels.password"]')
-      .simulate('change', {target: {value: user.password}})
+    act(() => {
+      wrapper
+        .find('input[placeholder="userList.panels.name"]')
+        .simulate('change', {target: {value: user.name}})
+      wrapper
+        .find('input[placeholder="userList.panels.email"]')
+        .simulate('change', {target: {value: user.email}})
+      wrapper
+        .find('input[placeholder="userList.panels.password"]')
+        .simulate('change', {target: {value: user.password}})
+    })
+
+    await act(async () => {
+      wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+    })
+
+    const panel = wrapper.find('UserEditPanel')
+    expect(panel).toMatchSnapshot()
   })
-
-  await act(async () => {
-    wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
-  })
-
-  const panel = wrapper.find('UserEditPanel')
-  expect(panel).toMatchSnapshot()
 })

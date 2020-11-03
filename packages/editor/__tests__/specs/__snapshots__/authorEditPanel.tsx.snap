@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Author Edit Panel should render 1`] = `
+exports[`Author Edit Panel Tests Author Edit Panel should render 1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
@@ -1164,7 +1164,7 @@ exports[`Author Edit Panel should render 1`] = `
 </AuthorEditPanel>
 `;
 
-exports[`Author Edit Panel should render with id 1`] = `
+exports[`Author Edit Panel Tests Author Edit Panel should render with id 1`] = `
 <AuthorEditPanel
   id="fakeId2"
 >
@@ -2613,7 +2613,7 @@ exports[`Author Edit Panel should render with id 1`] = `
 </AuthorEditPanel>
 `;
 
-exports[`Clicking add block button should display two text fields  1`] = `
+exports[`Author Edit Panel Tests Clicking add block button should display two text fields  1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
@@ -4051,7 +4051,7 @@ exports[`Clicking add block button should display two text fields  1`] = `
 </AuthorEditPanel>
 `;
 
-exports[`User should be able to create a new author 1`] = `
+exports[`Author Edit Panel Tests User should be able to create a new author 1`] = `
 <AuthorEditPanel>
   <Styled(div)>
     <div>
