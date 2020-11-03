@@ -1,0 +1,1598 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Role Edit Panel should allow a new role to be created 1`] = `
+<UserRoleEditPanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userRoles.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userRoles.panels.create"
+            onClick={[Function]}
+          />
+        }
+        title="userRoles.panels.createUserRole"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userRoles.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userRoles.panels.createUserRole
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userRoles.panels.create"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.create
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.name"
+                  onChange={[Function]}
+                  value="Brand New User Role"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Brand New User Role"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.name"
+                              value="Brand New User Role"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.description"
+                  onChange={[Function]}
+                  value="A user role to be added to snapshot"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.description"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="A user role to be added to snapshot"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.description"
+                              value="A user role to be added to snapshot"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.description
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userRoles.panels.permissions"
+      >
+        <Styled(div)>
+          <div>
+            userRoles.panels.permissions
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <Toggle
+              checked={false}
+              description="permission description 1"
+              disabled={false}
+              key="permissionId1"
+              label="permissionId1"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId1
+                  </span>
+                  <span>
+                    permission description 1
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 2"
+              disabled={false}
+              key="permissionId2"
+              label="permissionId2"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId2
+                  </span>
+                  <span>
+                    permission description 2
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 3"
+              disabled={false}
+              key="permissionId3"
+              label="permissionId3"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId3
+                  </span>
+                  <span>
+                    permission description 3
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 4"
+              disabled={false}
+              key="permissionId4"
+              label="permissionId4"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId4
+                  </span>
+                  <span>
+                    permission description 4
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+</UserRoleEditPanel>
+`;
+
+exports[`User Role Edit Panel should have Toggle sliders disabled with System Role 1`] = `
+<UserRoleEditPanel
+  id="roleId1"
+>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userRoles.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={true}
+            icon={[Function]}
+            label="userRoles.panels.save"
+            onClick={[Function]}
+          />
+        }
+        title="userRoles.panels.editUserRole"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userRoles.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userRoles.panels.editUserRole
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={true}
+              icon={[Function]}
+              label="userRoles.panels.save"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": true,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.save
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={true}
+                  label="userRoles.panels.name"
+                  onChange={[Function]}
+                  value="Role 1"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={true}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Role 1"
+                          >
+                            <input
+                              disabled={true}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.name"
+                              value="Role 1"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={true}
+                  label="userRoles.panels.description"
+                  onChange={[Function]}
+                  value="Description for role 1"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={true}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.description"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Description for role 1"
+                          >
+                            <input
+                              disabled={true}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.description"
+                              value="Description for role 1"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.description
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="body1"
+                >
+                  <p>
+                    userRoles.panels.systemRole
+                  </p>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userRoles.panels.permissions"
+      >
+        <Styled(div)>
+          <div>
+            userRoles.panels.permissions
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <Toggle
+              checked={true}
+              description="permission description 1"
+              disabled={true}
+              key="permissionId1"
+              label="permissionId1"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId1
+                  </span>
+                  <span>
+                    permission description 1
+                  </span>
+                </span>
+                <input
+                  checked={true}
+                  disabled={true}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 2"
+              disabled={true}
+              key="permissionId2"
+              label="permissionId2"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId2
+                  </span>
+                  <span>
+                    permission description 2
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={true}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+</UserRoleEditPanel>
+`;
+
+exports[`User Role Edit Panel should render 1`] = `
+<UserRoleEditPanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userRoles.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userRoles.panels.create"
+            onClick={[Function]}
+          />
+        }
+        title="userRoles.panels.createUserRole"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userRoles.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userRoles.panels.createUserRole
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userRoles.panels.create"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.create
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.name"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.name"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.description"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.description"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.description"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.description
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userRoles.panels.permissions"
+      >
+        <Styled(div)>
+          <div>
+            userRoles.panels.permissions
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <Toggle
+              checked={false}
+              description="permission description 1"
+              disabled={false}
+              key="permissionId1"
+              label="permissionId1"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId1
+                  </span>
+                  <span>
+                    permission description 1
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 2"
+              disabled={false}
+              key="permissionId2"
+              label="permissionId2"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId2
+                  </span>
+                  <span>
+                    permission description 2
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 3"
+              disabled={false}
+              key="permissionId3"
+              label="permissionId3"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId3
+                  </span>
+                  <span>
+                    permission description 3
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 4"
+              disabled={false}
+              key="permissionId4"
+              label="permissionId4"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId4
+                  </span>
+                  <span>
+                    permission description 4
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+</UserRoleEditPanel>
+`;
+
+exports[`User Role Edit Panel should render with role 1`] = `
+<UserRoleEditPanel
+  id="roleId1"
+>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userRoles.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userRoles.panels.save"
+            onClick={[Function]}
+          />
+        }
+        title="userRoles.panels.editUserRole"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userRoles.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userRoles.panels.editUserRole
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userRoles.panels.save"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userRoles.panels.save
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.name"
+                  onChange={[Function]}
+                  value="Role 1"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Role 1"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.name"
+                              value="Role 1"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userRoles.panels.description"
+                  onChange={[Function]}
+                  value="Description for role 1"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userRoles.panels.description"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Description for role 1"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userRoles.panels.description"
+                              value="Description for role 1"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userRoles.panels.description
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userRoles.panels.permissions"
+      >
+        <Styled(div)>
+          <div>
+            userRoles.panels.permissions
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <Toggle
+              checked={true}
+              description="permission description 1"
+              disabled={false}
+              key="permissionId1"
+              label="permissionId1"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId1
+                  </span>
+                  <span>
+                    permission description 1
+                  </span>
+                </span>
+                <input
+                  checked={true}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 2"
+              disabled={false}
+              key="permissionId2"
+              label="permissionId2"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId2
+                  </span>
+                  <span>
+                    permission description 2
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={false}
+              description="permission description 3"
+              disabled={false}
+              key="permissionId3"
+              label="permissionId3"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId3
+                  </span>
+                  <span>
+                    permission description 3
+                  </span>
+                </span>
+                <input
+                  checked={false}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+            <Toggle
+              checked={true}
+              description="permission description 4"
+              disabled={false}
+              key="permissionId4"
+              label="permissionId4"
+              onChange={[Function]}
+            >
+              <label>
+                <span>
+                  <span>
+                    permissionId4
+                  </span>
+                  <span>
+                    permission description 4
+                  </span>
+                </span>
+                <input
+                  checked={true}
+                  disabled={false}
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <span />
+              </label>
+            </Toggle>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+</UserRoleEditPanel>
+`;

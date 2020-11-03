@@ -6,7 +6,7 @@
     "composite": true,
     "outDir": "../../dist/shared",
     "module": "commonjs",
-    "types": [],
+    "types": ["@types/jest"],
     "lib": ["es2017"]
   }
 }
