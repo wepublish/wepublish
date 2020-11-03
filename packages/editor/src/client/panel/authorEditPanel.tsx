@@ -58,9 +58,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
-  // const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
-
-  const [bio, setBio] = useState<RichTextBlockValue>([])
+  const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
+  //const [bio, setBio] = useState<RichTextBlockValue>([])
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([])
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
