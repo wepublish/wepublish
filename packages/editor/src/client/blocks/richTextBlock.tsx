@@ -27,14 +27,15 @@ import {
   MaterialIconLink,
   MaterialIconLinkOff,
   MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconFace
+  MaterialIconCheck
 } from '@karma.run/icons'
 
 import {
   Typography,
   ToolbarButtonProps,
   ToolbarButton,
+  Button,
+  BaseButtonProps,
   ToolbarDivider,
   Link,
   BlockProps,
@@ -349,7 +350,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertTextButton icon={MaterialIconFace} />
+        {'😄 😁 🤯 🎸 ¿ å etc'.split(' ').map((txt, i) => (
+          <InsertTextButton key={i} label={txt} />
+        ))}
 
         <ToolbarDivider />
 
@@ -385,18 +388,17 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-function InsertTextButton({icon}: ToolbarButtonProps) {
-  // TODO
-  // set some text-emoji dropdown choice
+function InsertTextButton({label}: BaseButtonProps) {
   const editor = useSlate()
 
-  // in toolbar.tsx: create export toolbartextbutton = <toolbarbuttonEl>emoji</..>
   return (
-    <ToolbarButton
-      icon={icon}
+    <Button
+      variant="text"
+      style={{padding: '0px'}}
+      label={label}
       onMouseDown={e => {
         e.preventDefault()
-        editor.insertText('😄')
+        label && editor.insertText(label as string)
       }}
     />
   )
