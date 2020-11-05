@@ -9,7 +9,11 @@ export enum ElementNodeType {
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
   ListItem = 'list-item',
-  Link = 'link'
+  Link = 'link',
+  // HorizontalLine = 'horizontal-line', // TODO
+  Table = 'table',
+  TableRow = 'table-row',
+  TableCell = 'table-cell'
 }
 
 export enum TextNodeFields {
@@ -41,6 +45,11 @@ export interface RichTextBlockNode {
     | ElementNodeType.UnorderedList
     | ElementNodeType.OrderedList
     | ElementNodeType.ListItem
+    // | HorizontalLine = 'horizontal-line', // TODO
+    | ElementNodeType.Table
+    | ElementNodeType.TableRow
+    | ElementNodeType.TableCell
+
   readonly children: RichTextNode[]
 }
 
