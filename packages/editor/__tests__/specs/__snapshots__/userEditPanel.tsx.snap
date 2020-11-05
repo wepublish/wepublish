@@ -1,0 +1,3074 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User Edit Panel should allow a new user to be created 1`] = `
+<UserEditPanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userList.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userList.panels.create"
+            onClick={[Function]}
+          />
+        }
+        title="userList.panels.createUser"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userList.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userList.panels.createUser
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userList.panels.create"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.create
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.name"
+                  onChange={[Function]}
+                  value="Testing Müller"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Testing Müller"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.name"
+                              value="Testing Müller"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.email"
+                  onChange={[Function]}
+                  value="testing@mueller.com"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.email"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="testing@mueller.com"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.email"
+                              value="testing@mueller.com"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.email
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.password"
+                  onChange={[Function]}
+                  type="password"
+                  value="superSecret"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.password"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            type="password"
+                            value="superSecret"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.password"
+                              type="password"
+                              value="superSecret"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.password
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userList.panels.userRoles"
+      >
+        <Styled(div)>
+          <div>
+            userList.panels.userRoles
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginTop={40}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="h3"
+                >
+                  <h3>
+                    userList.panels.addUserRole
+                  </h3>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+            >
+              <div>
+                <Select
+                  description="userList.panels.selectUserRole"
+                  flexBasis="90%"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 1",
+                        "id": "roleId1",
+                        "name": "Role 1",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 2",
+                        "id": "roleId2",
+                        "name": "Role 2",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                    ]
+                  }
+                  renderListItem={[Function]}
+                >
+                  <Styled(div)
+                    styleProps={
+                      Object {
+                        "flexBasis": "90%",
+                      }
+                    }
+                  >
+                    <div>
+                      <Styled(label)
+                        htmlFor="downshift-19-toggle-button"
+                        id="downshift-19-label"
+                      >
+                        <label
+                          htmlFor="downshift-19-toggle-button"
+                          id="downshift-19-label"
+                        >
+                          <Styled(button)
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-labelledby="downshift-19-label downshift-19-toggle-button"
+                            id="downshift-19-toggle-button"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <button
+                              aria-expanded={false}
+                              aria-haspopup="listbox"
+                              aria-labelledby="downshift-19-label downshift-19-toggle-button"
+                              id="downshift-19-toggle-button"
+                              onClick={[Function]}
+                              onKeyDown={[Function]}
+                            />
+                          </Styled(button)>
+                          <Icon
+                            element={[Function]}
+                            style={[Function]}
+                          >
+                            <MaterialIconKeyboardArrowDown
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                                />
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                              </svg>
+                            </MaterialIconKeyboardArrowDown>
+                          </Icon>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <span />
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                      <Styled(ul)
+                        aria-labelledby="downshift-19-label"
+                        id="downshift-19-menu"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseLeave={[Function]}
+                        role="listbox"
+                        tabIndex={-1}
+                      >
+                        <ul
+                          aria-labelledby="downshift-19-label"
+                          id="downshift-19-menu"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseLeave={[Function]}
+                          role="listbox"
+                          tabIndex={-1}
+                        />
+                      </Styled(ul)>
+                      <Styled(div)>
+                        <div>
+                          userList.panels.selectUserRole
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Select>
+                <ForwardRef(IconButton)
+                  flexBasis="10%"
+                  icon={[Function]}
+                  margin={5}
+                  onClick={[Function]}
+                  variant="large"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "active": undefined,
+                        "disabled": undefined,
+                        "flexBasis": "10%",
+                        "margin": 5,
+                        "variant": "large",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        block={true}
+                        element={[Function]}
+                      >
+                        <MaterialIconAdd
+                          role="img"
+                        >
+                          <svg
+                            role="img"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                            />
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                          </svg>
+                        </MaterialIconAdd>
+                      </Icon>
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(IconButton)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Dialog
+    closeOnBackgroundClick={true}
+    onClose={[Function]}
+    open={false}
+    width={480}
+  >
+    <Modal
+      closeOnBackgroundClick={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Dialog>
+</UserEditPanel>
+`;
+
+exports[`User Edit Panel should allow user role to be added 1`] = `
+<UserEditPanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userList.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userList.panels.create"
+            onClick={[Function]}
+          />
+        }
+        title="userList.panels.createUser"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userList.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userList.panels.createUser
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userList.panels.create"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.create
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.name"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.name"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.email"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.email"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.email"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.email
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.password"
+                  onChange={[Function]}
+                  type="password"
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.password"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            type="password"
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.password"
+                              type="password"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.password
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userList.panels.userRoles"
+      >
+        <Styled(div)>
+          <div>
+            userList.panels.userRoles
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              key="roleId2"
+            >
+              <div>
+                <ForwardRef(Box)>
+                  <div>
+                    <ForwardRef(Typography)
+                      variant="h3"
+                    >
+                      <h3>
+                        Role 2
+                      </h3>
+                    </ForwardRef(Typography)>
+                    <ForwardRef(Typography)
+                      variant="body1"
+                    >
+                      <p>
+                        Description for role 2
+                      </p>
+                    </ForwardRef(Typography)>
+                  </div>
+                </ForwardRef(Box)>
+                <ForwardRef(Box)
+                  flexGrow={1}
+                >
+                  <div />
+                </ForwardRef(Box)>
+                <OptionButton
+                  menuItems={
+                    Array [
+                      Object {
+                        "icon": [Function],
+                        "id": "remove",
+                        "label": "userList.panels.remove",
+                      },
+                    ]
+                  }
+                  onMenuItemClick={[Function]}
+                  position="left"
+                >
+                  <div>
+                    <ForwardRef(IconButton)
+                      active={false}
+                      icon={[Function]}
+                      onClick={[Function]}
+                    >
+                      <Styled(button)
+                        onClick={[Function]}
+                        styleProps={
+                          Object {
+                            "active": false,
+                            "disabled": undefined,
+                            "variant": "default",
+                          }
+                        }
+                      >
+                        <button
+                          onClick={[Function]}
+                        >
+                          <Icon
+                            block={true}
+                            element={[Function]}
+                          >
+                            <MaterialIconMoreVert
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                                />
+                              </svg>
+                            </MaterialIconMoreVert>
+                          </Icon>
+                        </button>
+                      </Styled(button)>
+                    </ForwardRef(IconButton)>
+                  </div>
+                </OptionButton>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginTop={40}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="h3"
+                >
+                  <h3>
+                    userList.panels.addUserRole
+                  </h3>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+            >
+              <div>
+                <Select
+                  description="userList.panels.selectUserRole"
+                  flexBasis="90%"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 1",
+                        "id": "roleId1",
+                        "name": "Role 1",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 2",
+                        "id": "roleId2",
+                        "name": "Role 2",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                    ]
+                  }
+                  renderListItem={[Function]}
+                >
+                  <Styled(div)
+                    styleProps={
+                      Object {
+                        "flexBasis": "90%",
+                      }
+                    }
+                  >
+                    <div>
+                      <Styled(label)
+                        htmlFor="downshift-7-toggle-button"
+                        id="downshift-7-label"
+                      >
+                        <label
+                          htmlFor="downshift-7-toggle-button"
+                          id="downshift-7-label"
+                        >
+                          <Styled(button)
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-labelledby="downshift-7-label downshift-7-toggle-button"
+                            id="downshift-7-toggle-button"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": false,
+                              }
+                            }
+                          >
+                            <button
+                              aria-expanded={false}
+                              aria-haspopup="listbox"
+                              aria-labelledby="downshift-7-label downshift-7-toggle-button"
+                              id="downshift-7-toggle-button"
+                              onClick={[Function]}
+                              onKeyDown={[Function]}
+                            >
+                              Role 2
+                            </button>
+                          </Styled(button)>
+                          <Icon
+                            element={[Function]}
+                            style={[Function]}
+                          >
+                            <MaterialIconKeyboardArrowDown
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                                />
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                              </svg>
+                            </MaterialIconKeyboardArrowDown>
+                          </Icon>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": false,
+                              }
+                            }
+                          >
+                            <span />
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                      <Styled(ul)
+                        aria-labelledby="downshift-7-label"
+                        id="downshift-7-menu"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseLeave={[Function]}
+                        role="listbox"
+                        tabIndex={-1}
+                      >
+                        <ul
+                          aria-labelledby="downshift-7-label"
+                          id="downshift-7-menu"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseLeave={[Function]}
+                          role="listbox"
+                          tabIndex={-1}
+                        />
+                      </Styled(ul)>
+                      <Styled(div)>
+                        <div>
+                          userList.panels.selectUserRole
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Select>
+                <ForwardRef(IconButton)
+                  flexBasis="10%"
+                  icon={[Function]}
+                  margin={5}
+                  onClick={[Function]}
+                  variant="large"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "active": undefined,
+                        "disabled": undefined,
+                        "flexBasis": "10%",
+                        "margin": 5,
+                        "variant": "large",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        block={true}
+                        element={[Function]}
+                      >
+                        <MaterialIconAdd
+                          role="img"
+                        >
+                          <svg
+                            role="img"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                            />
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                          </svg>
+                        </MaterialIconAdd>
+                      </Icon>
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(IconButton)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Dialog
+    closeOnBackgroundClick={true}
+    onClose={[Function]}
+    open={false}
+    width={480}
+  >
+    <Modal
+      closeOnBackgroundClick={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Dialog>
+</UserEditPanel>
+`;
+
+exports[`User Edit Panel should allow user role to be removed 1`] = `
+<UserEditPanel
+  id="fakeId3"
+>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userList.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userList.panels.save"
+            onClick={[Function]}
+          />
+        }
+        title="userList.panels.editUser"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userList.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userList.panels.editUser
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userList.panels.save"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.save
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.name"
+                  onChange={[Function]}
+                  value="Peter Parker"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Peter Parker"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.name"
+                              value="Peter Parker"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.email"
+                  onChange={[Function]}
+                  value="peter@parker.com"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.email"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="peter@parker.com"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.email"
+                              value="peter@parker.com"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.email
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(Button)
+                  label="userList.panels.resetPassword"
+                  onClick={[Function]}
+                  variant="outlined"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "color": "default",
+                        "disabled": undefined,
+                        "variant": "outlined",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      userList.panels.resetPassword
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(Button)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userList.panels.userRoles"
+      >
+        <Styled(div)>
+          <div>
+            userList.panels.userRoles
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginTop={40}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="h3"
+                >
+                  <h3>
+                    userList.panels.addUserRole
+                  </h3>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+            >
+              <div>
+                <Select
+                  description="userList.panels.selectUserRole"
+                  flexBasis="90%"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 1",
+                        "id": "roleId1",
+                        "name": "Role 1",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 2",
+                        "id": "roleId2",
+                        "name": "Role 2",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                    ]
+                  }
+                  renderListItem={[Function]}
+                >
+                  <Styled(div)
+                    styleProps={
+                      Object {
+                        "flexBasis": "90%",
+                      }
+                    }
+                  >
+                    <div>
+                      <Styled(label)
+                        htmlFor="downshift-14-toggle-button"
+                        id="downshift-14-label"
+                      >
+                        <label
+                          htmlFor="downshift-14-toggle-button"
+                          id="downshift-14-label"
+                        >
+                          <Styled(button)
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-labelledby="downshift-14-label downshift-14-toggle-button"
+                            id="downshift-14-toggle-button"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <button
+                              aria-expanded={false}
+                              aria-haspopup="listbox"
+                              aria-labelledby="downshift-14-label downshift-14-toggle-button"
+                              id="downshift-14-toggle-button"
+                              onClick={[Function]}
+                              onKeyDown={[Function]}
+                            />
+                          </Styled(button)>
+                          <Icon
+                            element={[Function]}
+                            style={[Function]}
+                          >
+                            <MaterialIconKeyboardArrowDown
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                                />
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                              </svg>
+                            </MaterialIconKeyboardArrowDown>
+                          </Icon>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <span />
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                      <Styled(ul)
+                        aria-labelledby="downshift-14-label"
+                        id="downshift-14-menu"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseLeave={[Function]}
+                        role="listbox"
+                        tabIndex={-1}
+                      >
+                        <ul
+                          aria-labelledby="downshift-14-label"
+                          id="downshift-14-menu"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseLeave={[Function]}
+                          role="listbox"
+                          tabIndex={-1}
+                        />
+                      </Styled(ul)>
+                      <Styled(div)>
+                        <div>
+                          userList.panels.selectUserRole
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Select>
+                <ForwardRef(IconButton)
+                  flexBasis="10%"
+                  icon={[Function]}
+                  margin={5}
+                  onClick={[Function]}
+                  variant="large"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "active": undefined,
+                        "disabled": undefined,
+                        "flexBasis": "10%",
+                        "margin": 5,
+                        "variant": "large",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        block={true}
+                        element={[Function]}
+                      >
+                        <MaterialIconAdd
+                          role="img"
+                        >
+                          <svg
+                            role="img"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                            />
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                          </svg>
+                        </MaterialIconAdd>
+                      </Icon>
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(IconButton)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Dialog
+    closeOnBackgroundClick={true}
+    onClose={[Function]}
+    open={false}
+    width={480}
+  >
+    <Modal
+      closeOnBackgroundClick={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Dialog>
+</UserEditPanel>
+`;
+
+exports[`User Edit Panel should render 1`] = `
+<UserEditPanel>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userList.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userList.panels.create"
+            onClick={[Function]}
+          />
+        }
+        title="userList.panels.createUser"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userList.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userList.panels.createUser
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userList.panels.create"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.create
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.name"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.name"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.email"
+                  onChange={[Function]}
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.email"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.email"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.email
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.password"
+                  onChange={[Function]}
+                  type="password"
+                  value=""
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.password"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            type="password"
+                            value=""
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.password"
+                              type="password"
+                              value=""
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.password
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userList.panels.userRoles"
+      >
+        <Styled(div)>
+          <div>
+            userList.panels.userRoles
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginTop={40}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="h3"
+                >
+                  <h3>
+                    userList.panels.addUserRole
+                  </h3>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+            >
+              <div>
+                <Select
+                  description="userList.panels.selectUserRole"
+                  flexBasis="90%"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 1",
+                        "id": "roleId1",
+                        "name": "Role 1",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 2",
+                        "id": "roleId2",
+                        "name": "Role 2",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                    ]
+                  }
+                  renderListItem={[Function]}
+                >
+                  <Styled(div)
+                    styleProps={
+                      Object {
+                        "flexBasis": "90%",
+                      }
+                    }
+                  >
+                    <div>
+                      <Styled(label)
+                        htmlFor="downshift-0-toggle-button"
+                        id="downshift-0-label"
+                      >
+                        <label
+                          htmlFor="downshift-0-toggle-button"
+                          id="downshift-0-label"
+                        >
+                          <Styled(button)
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-labelledby="downshift-0-label downshift-0-toggle-button"
+                            id="downshift-0-toggle-button"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <button
+                              aria-expanded={false}
+                              aria-haspopup="listbox"
+                              aria-labelledby="downshift-0-label downshift-0-toggle-button"
+                              id="downshift-0-toggle-button"
+                              onClick={[Function]}
+                              onKeyDown={[Function]}
+                            />
+                          </Styled(button)>
+                          <Icon
+                            element={[Function]}
+                            style={[Function]}
+                          >
+                            <MaterialIconKeyboardArrowDown
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                                />
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                              </svg>
+                            </MaterialIconKeyboardArrowDown>
+                          </Icon>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <span />
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                      <Styled(ul)
+                        aria-labelledby="downshift-0-label"
+                        id="downshift-0-menu"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseLeave={[Function]}
+                        role="listbox"
+                        tabIndex={-1}
+                      >
+                        <ul
+                          aria-labelledby="downshift-0-label"
+                          id="downshift-0-menu"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseLeave={[Function]}
+                          role="listbox"
+                          tabIndex={-1}
+                        />
+                      </Styled(ul)>
+                      <Styled(div)>
+                        <div>
+                          userList.panels.selectUserRole
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Select>
+                <ForwardRef(IconButton)
+                  flexBasis="10%"
+                  icon={[Function]}
+                  margin={5}
+                  onClick={[Function]}
+                  variant="large"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "active": undefined,
+                        "disabled": undefined,
+                        "flexBasis": "10%",
+                        "margin": 5,
+                        "variant": "large",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        block={true}
+                        element={[Function]}
+                      >
+                        <MaterialIconAdd
+                          role="img"
+                        >
+                          <svg
+                            role="img"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                            />
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                          </svg>
+                        </MaterialIconAdd>
+                      </Icon>
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(IconButton)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Dialog
+    closeOnBackgroundClick={true}
+    onClose={[Function]}
+    open={false}
+    width={480}
+  >
+    <Modal
+      closeOnBackgroundClick={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Dialog>
+</UserEditPanel>
+`;
+
+exports[`User Edit Panel should render with ID 1`] = `
+<UserEditPanel
+  id="fakeId3"
+>
+  <Styled(div)>
+    <div>
+      <PanelHeader
+        leftChildren={
+          <ForwardRef(NavigationButton)
+            icon={[Function]}
+            label="userList.panels.close"
+            onClick={[Function]}
+          />
+        }
+        rightChildren={
+          <ForwardRef(NavigationButton)
+            disabled={false}
+            icon={[Function]}
+            label="userList.panels.save"
+            onClick={[Function]}
+          />
+        }
+        title="userList.panels.editUser"
+      >
+        <Styled(div)>
+          <div>
+            <ForwardRef(NavigationButton)
+              icon={[Function]}
+              label="userList.panels.close"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": undefined,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconClose
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                        />
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                        />
+                      </svg>
+                    </MaterialIconClose>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.close
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+            <ForwardRef(Box)
+              flexGrow={1}
+            >
+              <div />
+            </ForwardRef(Box)>
+            <Styled(span)>
+              <span>
+                userList.panels.editUser
+              </span>
+            </Styled(span)>
+            <ForwardRef(NavigationButton)
+              disabled={false}
+              icon={[Function]}
+              label="userList.panels.save"
+              onClick={[Function]}
+            >
+              <Styled(button)
+                onClick={[Function]}
+                styleProps={
+                  Object {
+                    "active": undefined,
+                    "disabled": false,
+                  }
+                }
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  <Icon
+                    element={[Function]}
+                    scale="2em"
+                  >
+                    <MaterialIconSaveOutlined
+                      role="img"
+                    >
+                      <svg
+                        role="img"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M0 0h24v24H0V0z"
+                          fill="none"
+                        />
+                        <path
+                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+                        />
+                      </svg>
+                    </MaterialIconSaveOutlined>
+                  </Icon>
+                  <ForwardRef(Box)
+                    display="block"
+                    element="span"
+                  >
+                    <span>
+                      userList.panels.save
+                    </span>
+                  </ForwardRef(Box)>
+                </button>
+              </Styled(button)>
+            </ForwardRef(NavigationButton)>
+          </div>
+        </Styled(div)>
+      </PanelHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.name"
+                  onChange={[Function]}
+                  value="Peter Parker"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.name"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="Peter Parker"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.name"
+                              value="Peter Parker"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.name
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(TextInput)
+                  disabled={false}
+                  label="userList.panels.email"
+                  onChange={[Function]}
+                  value="peter@parker.com"
+                >
+                  <Styled(div)
+                    styleProps={Object {}}
+                  >
+                    <div>
+                      <Styled(label)>
+                        <label>
+                          <Styled(input)
+                            disabled={false}
+                            onChange={[Function]}
+                            placeholder="userList.panels.email"
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                            value="peter@parker.com"
+                          >
+                            <input
+                              disabled={false}
+                              onChange={[Function]}
+                              placeholder="userList.panels.email"
+                              value="peter@parker.com"
+                            />
+                          </Styled(input)>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasIcon": false,
+                              }
+                            }
+                          >
+                            <span>
+                              userList.panels.email
+                            </span>
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                    </div>
+                  </Styled(div)>
+                </ForwardRef(TextInput)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginBottom={10}
+            >
+              <div>
+                <ForwardRef(Button)
+                  label="userList.panels.resetPassword"
+                  onClick={[Function]}
+                  variant="outlined"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "color": "default",
+                        "disabled": undefined,
+                        "variant": "outlined",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      userList.panels.resetPassword
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(Button)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+      <PanelSectionHeader
+        title="userList.panels.userRoles"
+      >
+        <Styled(div)>
+          <div>
+            userList.panels.userRoles
+          </div>
+        </Styled(div)>
+      </PanelSectionHeader>
+      <PanelSection>
+        <Styled(div)
+          styleProps={
+            Object {
+              "dark": undefined,
+            }
+          }
+        >
+          <div>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              key="roleId1"
+            >
+              <div>
+                <ForwardRef(Box)>
+                  <div>
+                    <ForwardRef(Typography)
+                      variant="h3"
+                    >
+                      <h3>
+                        Role 1
+                      </h3>
+                    </ForwardRef(Typography)>
+                    <ForwardRef(Typography)
+                      variant="body1"
+                    >
+                      <p>
+                        Description for role 1
+                      </p>
+                    </ForwardRef(Typography)>
+                  </div>
+                </ForwardRef(Box)>
+                <ForwardRef(Box)
+                  flexGrow={1}
+                >
+                  <div />
+                </ForwardRef(Box)>
+                <OptionButton
+                  menuItems={
+                    Array [
+                      Object {
+                        "icon": [Function],
+                        "id": "remove",
+                        "label": "userList.panels.remove",
+                      },
+                    ]
+                  }
+                  onMenuItemClick={[Function]}
+                  position="left"
+                >
+                  <div>
+                    <ForwardRef(IconButton)
+                      active={false}
+                      icon={[Function]}
+                      onClick={[Function]}
+                    >
+                      <Styled(button)
+                        onClick={[Function]}
+                        styleProps={
+                          Object {
+                            "active": false,
+                            "disabled": undefined,
+                            "variant": "default",
+                          }
+                        }
+                      >
+                        <button
+                          onClick={[Function]}
+                        >
+                          <Icon
+                            block={true}
+                            element={[Function]}
+                          >
+                            <MaterialIconMoreVert
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M0 0h24v24H0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                                />
+                              </svg>
+                            </MaterialIconMoreVert>
+                          </Icon>
+                        </button>
+                      </Styled(button)>
+                    </ForwardRef(IconButton)>
+                  </div>
+                </OptionButton>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              marginTop={40}
+            >
+              <div>
+                <ForwardRef(Typography)
+                  variant="h3"
+                >
+                  <h3>
+                    userList.panels.addUserRole
+                  </h3>
+                </ForwardRef(Typography)>
+              </div>
+            </ForwardRef(Box)>
+            <ForwardRef(Box)
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+            >
+              <div>
+                <Select
+                  description="userList.panels.selectUserRole"
+                  flexBasis="90%"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 1",
+                        "id": "roleId1",
+                        "name": "Role 1",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                      Object {
+                        "__typename": "UserRole",
+                        "description": "Description for role 2",
+                        "id": "roleId2",
+                        "name": "Role 2",
+                        "permissions": Array [],
+                        "systemRole": false,
+                      },
+                    ]
+                  }
+                  renderListItem={[Function]}
+                >
+                  <Styled(div)
+                    styleProps={
+                      Object {
+                        "flexBasis": "90%",
+                      }
+                    }
+                  >
+                    <div>
+                      <Styled(label)
+                        htmlFor="downshift-3-toggle-button"
+                        id="downshift-3-label"
+                      >
+                        <label
+                          htmlFor="downshift-3-toggle-button"
+                          id="downshift-3-label"
+                        >
+                          <Styled(button)
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-labelledby="downshift-3-label downshift-3-toggle-button"
+                            id="downshift-3-toggle-button"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <button
+                              aria-expanded={false}
+                              aria-haspopup="listbox"
+                              aria-labelledby="downshift-3-label downshift-3-toggle-button"
+                              id="downshift-3-toggle-button"
+                              onClick={[Function]}
+                              onKeyDown={[Function]}
+                            />
+                          </Styled(button)>
+                          <Icon
+                            element={[Function]}
+                            style={[Function]}
+                          >
+                            <MaterialIconKeyboardArrowDown
+                              role="img"
+                            >
+                              <svg
+                                role="img"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                                />
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                              </svg>
+                            </MaterialIconKeyboardArrowDown>
+                          </Icon>
+                          <Styled(span)
+                            styleProps={
+                              Object {
+                                "hasError": false,
+                                "hasFocus": false,
+                                "hasIcon": false,
+                                "isOpen": false,
+                                "isPlaceholderShown": true,
+                              }
+                            }
+                          >
+                            <span />
+                          </Styled(span)>
+                        </label>
+                      </Styled(label)>
+                      <Styled(ul)
+                        aria-labelledby="downshift-3-label"
+                        id="downshift-3-menu"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseLeave={[Function]}
+                        role="listbox"
+                        tabIndex={-1}
+                      >
+                        <ul
+                          aria-labelledby="downshift-3-label"
+                          id="downshift-3-menu"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseLeave={[Function]}
+                          role="listbox"
+                          tabIndex={-1}
+                        />
+                      </Styled(ul)>
+                      <Styled(div)>
+                        <div>
+                          userList.panels.selectUserRole
+                        </div>
+                      </Styled(div)>
+                    </div>
+                  </Styled(div)>
+                </Select>
+                <ForwardRef(IconButton)
+                  flexBasis="10%"
+                  icon={[Function]}
+                  margin={5}
+                  onClick={[Function]}
+                  variant="large"
+                >
+                  <Styled(button)
+                    onClick={[Function]}
+                    styleProps={
+                      Object {
+                        "active": undefined,
+                        "disabled": undefined,
+                        "flexBasis": "10%",
+                        "margin": 5,
+                        "variant": "large",
+                      }
+                    }
+                  >
+                    <button
+                      onClick={[Function]}
+                    >
+                      <Icon
+                        block={true}
+                        element={[Function]}
+                      >
+                        <MaterialIconAdd
+                          role="img"
+                        >
+                          <svg
+                            role="img"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                            />
+                            <path
+                              d="M0 0h24v24H0z"
+                              fill="none"
+                            />
+                          </svg>
+                        </MaterialIconAdd>
+                      </Icon>
+                    </button>
+                  </Styled(button)>
+                </ForwardRef(IconButton)>
+              </div>
+            </ForwardRef(Box)>
+          </div>
+        </Styled(div)>
+      </PanelSection>
+    </div>
+  </Styled(div)>
+  <Toast
+    autoHideDuration={5000}
+    onClose={[Function]}
+    open={false}
+    type="error"
+  >
+    <Transition
+      appear={false}
+      enter={true}
+      exit={true}
+      in={false}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={200}
+      unmountOnExit={true}
+    />
+  </Toast>
+  <Dialog
+    closeOnBackgroundClick={true}
+    onClose={[Function]}
+    open={false}
+    width={480}
+  >
+    <Modal
+      closeOnBackgroundClick={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <Transition
+        appear={false}
+        enter={true}
+        exit={true}
+        in={false}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={200}
+        unmountOnExit={true}
+      />
+    </Modal>
+  </Dialog>
+</UserEditPanel>
+`;
