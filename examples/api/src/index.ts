@@ -6,7 +6,7 @@ import {
   PublicPage,
   Author,
   Oauth2Provider
-} from '@wepublish/packages/api'
+} from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
