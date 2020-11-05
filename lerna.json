@@ -1,7 +1,7 @@
 {
   "version": "0.8.24",
   "changelog": {
-    "repo": "bajour/wepublish",
+    "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
     "labels": {
       "PR: Breaking Change :boom:": ":boom: Breaking Change",
@@ -32,6 +32,7 @@
   "packages": [
     "packages/api",
     "packages/api-db-mongodb",
-    "packages/editor"
+    "packages/editor",
+    "packages/api-media-karma"
   ]
 }
