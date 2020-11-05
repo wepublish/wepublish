@@ -62,12 +62,12 @@ export interface PageBreakBlockProps {
   richText: RichTextBlockValue
   linkURL: string
   linkText: string
-  linkTarget: string
-  styleOption: string
-  templateOption: string
-  layoutOption: string
-  imageID: string
-  image: null
+  linkTarget?: string
+  styleOption?: string
+  templateOption?: string
+  layoutOption?: string
+  imageID?: string | undefined
+  image?: null
 }
 
 export function PageBreakBlock({

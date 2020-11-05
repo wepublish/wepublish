@@ -97,14 +97,16 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return (
         <PageBreakBlock
           text={block.value.text}
-          htmlText={block.value.htmlText}
+          richText={[]}
           linkURL={block.value.linkURL}
           styleOption={block.value.styleOption}
           layoutOption={block.value.layoutOption}
+          templateOption={block.value.layoutOption}
           linkText={block.value.linkText}
           linkTarget={block.value.linkTarget}
           imageID={block.value.imageID}
           isArticle={isArticle}
+          image={null}
         />
       )
 
