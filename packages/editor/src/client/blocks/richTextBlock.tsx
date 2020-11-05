@@ -459,7 +459,8 @@ function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
         // TODO editor.insertHtml(<hr />)
       )
     case BlockFormat.Table:
-      return btn(() =>
+      return btn(() => {
+        editor.insertBreak()
         editor.insertFragment([
           {
             children: [
@@ -544,7 +545,11 @@ function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
             ]
           }
         ])
-      )
+      })
+    default:
+      return btn(() => {
+        console.error(`Unavailable block format ${format}`)
+      })
   }
 }
 
