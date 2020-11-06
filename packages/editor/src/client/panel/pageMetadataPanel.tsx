@@ -80,6 +80,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           <FormGroup>
             <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
             <TagPicker
+              style={{width: '100%'}}
               creatable={true}
               data={tags.map(tag => ({label: tag, value: tag}))}
               onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}

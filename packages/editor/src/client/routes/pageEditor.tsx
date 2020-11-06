@@ -234,6 +234,9 @@ export function PageEditor({id}: PageEditorProps) {
 
                 {isNew && createData == null ? (
                   <IconButton
+                    style={{
+                      marginLeft: '10px'
+                    }}
                     size={'lg'}
                     icon={<Icon icon="save" />}
                     disabled={isDisabled}
@@ -243,6 +246,9 @@ export function PageEditor({id}: PageEditorProps) {
                 ) : (
                   <>
                     <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
                       size={'lg'}
                       icon={<Icon icon="save" />}
                       disabled={isDisabled}
@@ -250,6 +256,9 @@ export function PageEditor({id}: PageEditorProps) {
                       {t('Save')}
                     </IconButton>
                     <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
                       size={'lg'}
                       icon={<Icon icon="cloud-upload" />}
                       disabled={isDisabled}
