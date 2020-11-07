@@ -1,29 +1,11 @@
 import React, {useState} from 'react'
 
-import {
-  PanelHeader,
-  Panel,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  NavigationButton,
-  TextInput,
-  PanelSectionHeader,
-  Spacing,
-  Box,
-  Typography
-} from '@karma.run/ui'
-
 import {ArticleMetadata} from './articleMetadataPanel'
-import {
-  MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconUpdate,
-  MaterialIconQueryBuilder
-} from '@karma.run/icons'
-import {dateTimeLocalString} from '../utility'
 
 import {useTranslation} from 'react-i18next'
+import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
+
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -43,94 +25,57 @@ export function PublishArticlePanel({
 }: PublishArticlePanelProps) {
   const now = new Date()
 
-  const [publishDateString, setPublishDateString] = useState(
-    initialPublishDate ? dateTimeLocalString(initialPublishDate) : dateTimeLocalString(now)
-  )
-
-  const [updateDateString, setUpdateDateString] = useState(dateTimeLocalString(now))
-
-  const [publishDateError, setPublishDateError] = useState<string>()
-  const [updateDateError, setUpdateDateError] = useState<string>()
-
   const [publishDate, setPublishDate] = useState<Date | undefined>(initialPublishDate ?? now)
   const [updateDate, setUpdateDate] = useState<Date | undefined>(now)
 
   const {t} = useTranslation()
 
   return (
-    <Panel>
-      <PanelHeader
-        title={t('articleEditor.panels.publishArticle')}
-        leftChildren={
-          <NavigationButton
-            icon={MaterialIconClose}
-            label={t('articleEditor.panels.close')}
-            onClick={() => onClose()}
-          />
-        }
-        rightChildren={
-          <NavigationButton
-            icon={MaterialIconCheck}
-            label={t('articleEditor.panels.confirm')}
-            disabled={!publishDate || !updateDate}
-            onClick={() => onConfirm(publishDate!, updateDate!)}
-          />
-        }
-      />
-      <PanelSection>
+    <>
+      <Modal.Header>
+        <Modal.Title>{t('articleEditor.panels.publishArticle')}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
         {pendingPublishDate && (
-          <Box marginBottom={Spacing.Small}>
-            <Typography variant="subtitle1" color="alert">
-              {t('articleEditor.panels.articlePending', {pendingPublishDate})}
-            </Typography>
-          </Box>
+          <Message
+            type="warning"
+            description={t('articleEditor.panels.articlePending', {pendingPublishDate})}
+          />
         )}
-        <TextInput
-          type="datetime-local"
-          label={t('articleEditor.panels.publishDate')}
-          errorMessage={publishDateError}
-          icon={MaterialIconQueryBuilder}
-          marginBottom={Spacing.Small}
-          value={publishDateString}
-          onChange={e => {
-            const value = e.target.value
-            const publishDate = new Date(value)
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.publishDate')}</ControlLabel>
+            <DatePicker
+              block
+              value={publishDate}
+              format="YYYY-MM-DD HH:mm"
+              ranges={[
+                {
+                  label: 'Now',
+                  value: new Date()
+                }
+              ]}
+              onChange={publishDate => setPublishDate(publishDate)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.updateDate')}</ControlLabel>
+            <DatePicker
+              block
+              value={updateDate}
+              format="YYYY-MM-DD HH:mm"
+              ranges={[
+                {
+                  label: 'Now',
+                  value: new Date()
+                }
+              ]}
+              onChange={updateDate => setUpdateDate(updateDate)}
+            />
+          </FormGroup>
+        </Form>
 
-            if (!isNaN(publishDate.getTime())) {
-              setPublishDateError('')
-              setPublishDate(publishDate)
-            } else {
-              setPublishDateError(t('articleEditor.panels.invalidDate'))
-              setPublishDate(undefined)
-            }
-
-            setPublishDateString(value)
-          }}
-        />
-        <TextInput
-          type="datetime-local"
-          label={t('articleEditor.panels.updateDate')}
-          errorMessage={updateDateError}
-          icon={MaterialIconUpdate}
-          value={updateDateString}
-          onChange={e => {
-            const value = e.target.value
-            const updateDate = new Date(value)
-
-            if (!isNaN(updateDate.getTime())) {
-              setPublishDateError('')
-              setUpdateDate(updateDate)
-            } else {
-              setUpdateDateError('articleEditor.panels.invalidDate')
-              setUpdateDate(undefined)
-            }
-
-            setUpdateDateString(value)
-          }}
-        />
-      </PanelSection>
-      <PanelSectionHeader title={t('articleEditor.panels.metadata')} />
-      <PanelSection>
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
             {metadata.preTitle || '-'}
@@ -154,7 +99,19 @@ export function PublishArticlePanel({
             {metadata.shared ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
         </DescriptionList>
-      </PanelSection>
-    </Panel>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          appearance="primary"
+          disabled={!publishDate || !updateDate}
+          onClick={() => onConfirm(publishDate!, updateDate!)}>
+          {t('articleEditor.panels.confirm')}
+        </Button>
+        <Button appearance="subtle" onClick={() => onClose()}>
+          {t('articleEditor.panels.close')}
+        </Button>
+      </Modal.Footer>
+    </>
   )
 }
