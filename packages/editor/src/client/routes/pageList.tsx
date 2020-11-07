@@ -242,7 +242,7 @@ export function PageList() {
               setConfirmationDialogOpen(false)
             }}
             color="red">
-            {t('userList.panels.confirm')}
+            {t('pages.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
             {t('pages.panels.cancel')}
