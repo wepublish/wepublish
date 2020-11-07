@@ -286,7 +286,7 @@ export const Migrations: Migration[] = [
         {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
         {
           $set: {
-            'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
           }
         },
         {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
@@ -315,7 +315,7 @@ export const Migrations: Migration[] = [
         {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
         {
           $set: {
-            'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
           }
         },
         {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
