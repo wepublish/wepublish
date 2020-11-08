@@ -1,4 +1,5 @@
 import React from 'react'
+import {Node} from 'slate'
 import {Peer} from '../types'
 import {Image} from '../atoms/image'
 import {PrimaryButton} from '../atoms/primaryButton'
@@ -6,7 +7,6 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
-import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
 import {RichText} from '../atoms/richText'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
@@ -60,7 +60,7 @@ export interface PageBreakBlockStyleProps {
 export interface PageBreakBlockProps {
   peer?: Peer
   text: string
-  richText: RichTextBlockValue
+  richText: Node[]
   linkURL: string
   linkText: string
   linkTarget: string
