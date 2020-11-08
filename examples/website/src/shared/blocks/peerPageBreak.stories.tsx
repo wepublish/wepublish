@@ -17,7 +17,7 @@ storiesOf('Blocks|PeerPageBreak*', module)
       styleOption={'default'}
       layoutOption={'default'}
       templateOption={'default'}
-      imageID={undefined}
+      hideButton={false}
       image={null}
     />
   ))
@@ -32,7 +32,7 @@ storiesOf('Blocks|PeerPageBreak*', module)
       styleOption={'default'}
       layoutOption={'default'}
       templateOption={'default'}
-      imageID={undefined}
+      hideButton={false}
       image={null}
     />
   ))

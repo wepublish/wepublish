@@ -97,14 +97,15 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return (
         <PageBreakBlock
           text={block.value.text}
-          richText={[]}
+          richText={block.value.richText}
           linkURL={block.value.linkURL}
           styleOption={block.value.styleOption}
           layoutOption={block.value.layoutOption}
-          templateOption={block.value.layoutOption}
+          templateOption={block.value.templateOption}
           linkText={block.value.linkText}
           linkTarget={block.value.linkTarget}
-          imageID={block.value.imageID}
+          hideButton={block.value.hideButton}
+          image={block.value.image}
           isArticle={isArticle}
           image={null}
         />
@@ -112,9 +113,6 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
     case BlockType.Listicle:
       return <ListicalBLock listical={block.value} />
-
-    case BlockType.Quote:
-      return <QuoteBlock text={block.value.text} author={block.value.author} />
 
     case BlockType.Title:
       return (
@@ -139,7 +137,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
 function renderTeaser(key: string, article: PublishedArticle) {
   function getTeaserTags(tags: string[], max: number): string[] {
-    let result = []
+    const result = []
     for (let i = 0; i < tags.length && i < max; i++) {
       result.push(tags[i])
     }

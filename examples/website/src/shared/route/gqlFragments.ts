@@ -294,13 +294,14 @@ export const linkPageBreakBlockDataFragment = gql`
   fragment LinkPageBreakBlockData on LinkPageBreakBlock {
     __typename
     text
-    htmlText
+    richText
     linkURL
     linkText
     hideButton
     linkTarget
     styleOption
     layoutOption
+    templateOption
     image {
       ...SimpleImageData
     }
