@@ -1,8 +1,16 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {LoginTemplate, TextInput, Button, Spacing, Toast, Link, Box} from '@karma.run/ui'
 import {RouteActionType, styled} from '@karma.run/react'
 
-import {useRouteDispatch, matchRoute, useRoute, IndexRoute, LoginRoute} from './route'
+import {LoginTemplate} from './atoms/loginTemplate'
+
+import {
+  useRouteDispatch,
+  matchRoute,
+  useRoute,
+  IndexRoute,
+  LoginRoute,
+  IconButtonLink
+} from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
 import {LocalStorageKey} from './utility'
@@ -14,12 +22,18 @@ import {
 } from './api'
 
 import {useTranslation} from 'react-i18next'
-
-const LoginForm = styled('form', () => ({
-  display: 'flex',
-  flexDirection: 'column',
-  margin: 0
-}))
+import {
+  ControlLabel,
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  Divider,
+  Icon,
+  Notification
+} from 'rsuite'
+import {SVGIcon} from 'rsuite/lib/@types/common'
+import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -29,9 +43,6 @@ export function Login() {
 
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const [authenticate, {loading, error}] = useCreateSessionMutation()
 
@@ -78,12 +89,16 @@ export function Login() {
 
   useEffect(() => {
     if (error) {
-      setErrorToastOpen(true)
-      setErrorMessage(error.message)
+      Notification.error({
+        title: error.message,
+        duration: 5000
+      })
     }
     if (errorOAuth2) {
-      setErrorToastOpen(true)
-      setErrorMessage(errorOAuth2.message)
+      Notification.error({
+        title: errorOAuth2.message,
+        duration: 5000
+      })
     }
   }, [error, errorOAuth2])
 
@@ -121,68 +136,76 @@ export function Login() {
     routeDispatch({type: RouteActionType.ReplaceRoute, route: IndexRoute.create({})})
   }
 
-  return (
-    <>
-      <LoginTemplate backgroundChildren={<Background />}>
-        {!loadingOAuth2 && (
-          <>
-            <LoginForm onSubmit={login}>
-              <TextInput
-                label={t('login.email')}
-                value={email}
-                autoComplete={t('login.username')}
-                onChange={event => setEmail(event.target.value)}
-                marginBottom={Spacing.Small}
-              />
-              <TextInput
-                type="password"
-                label={t('login.password')}
-                value={password}
-                autoComplete={t('login.currentPassword')}
-                onChange={event => setPassword(event.target.value)}
-                marginBottom={Spacing.Small}
-              />
-              <Button color="primary" label={t('Login')} disabled={loading} />
-            </LoginForm>
-            {!!providerData?.authProviders?.length && (
-              <>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  marginTop={Spacing.Small}
-                  alignItems="center">
-                  <p>{t('login.alternativeLogin')}</p>
-                  {providerData.authProviders.map(
-                    (provider: {url: string; name: string}, index: number) => {
-                      return (
-                        <Link href={provider.url} key={index}>
-                          <Box margin={Spacing.Tiny}>
-                            <Button label={provider.name} variant="outlined" color="primary" />
-                          </Box>
-                        </Link>
-                      )
-                    }
-                  )}
-                </Box>
-              </>
-            )}
-          </>
-        )}
-        {loadingOAuth2 && (
-          <div>
-            <p>{t('login.OAuth2')}</p>
-          </div>
-        )}
-      </LoginTemplate>
+  function getAuthLogo(name: string): IconNames | SVGIcon {
+    switch (name) {
+      case 'google':
+        return 'google'
+      case 'facebook':
+        return 'facebook'
+      case 'twitter':
+        return 'twitter'
+      default:
+        return 'space-shuttle'
+    }
+  }
 
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-    </>
+  return (
+    <LoginTemplate backgroundChildren={<Background />}>
+      {!loadingOAuth2 && (
+        <>
+          <Form
+            fluid={true}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              margin: 0
+            }}>
+            <FormGroup>
+              <ControlLabel>{t('login.email')}</ControlLabel>
+              <FormControl
+                value={email}
+                autoComplete={'username'}
+                onChange={email => setEmail(email)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('login.password')}</ControlLabel>
+              <FormControl
+                type="password"
+                value={password}
+                autoComplete={'currentPassword'}
+                onChange={password => setPassword(password)}
+              />
+            </FormGroup>
+            <Button appearance="primary" disabled={loading} onClick={login}>
+              {t('Login')}
+            </Button>
+          </Form>
+          {!!providerData?.authProviders?.length && (
+            <>
+              <Divider />
+              {providerData.authProviders.map(
+                (provider: {url: string; name: string}, index: number) => (
+                  <IconButtonLink
+                    style={{marginBottom: 10}}
+                    key={index}
+                    appearance="subtle"
+                    href={provider.url}
+                    icon={<Icon icon={getAuthLogo(provider.name)} />}>
+                    {provider.name}
+                  </IconButtonLink>
+                )
+              )}
+            </>
+          )}
+        </>
+      )}
+      {loadingOAuth2 && (
+        <div>
+          <p>{t('login.OAuth2')}</p>
+        </div>
+      )}
+    </LoginTemplate>
   )
 }
 
