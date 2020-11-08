@@ -1,7 +1,7 @@
 {
   // This file is only needed for VSCode, client will be built by webpack/babel.
   "extends": "../../../../tsconfig.base.json",
-  "include": ["./**/*"],
+  "include": ["./**/*", "../../../../node_modules/@karma.run/ui/src/typings.d.ts"],
   "compilerOptions": {
     "outDir": "../../dist/client",
     "module": "esnext",
