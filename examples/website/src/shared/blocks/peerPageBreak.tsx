@@ -7,6 +7,7 @@ import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
 import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
+import {RichText} from '../atoms/richText'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
   backgroundColor: Color.SecondaryLight,
@@ -66,8 +67,8 @@ export interface PageBreakBlockProps {
   styleOption: string
   templateOption: string
   layoutOption: string
-  imageID: string
-  image: null
+  hideButton: boolean
+  image: any
 }
 
 export function PageBreakBlock({
@@ -80,7 +81,7 @@ export function PageBreakBlock({
   styleOption,
   layoutOption,
   templateOption,
-  imageID,
+  hideButton,
   image,
   isArticle = false
 }: PageBreakBlockProps & PageBreakBlockStyleProps) {
@@ -93,15 +94,7 @@ export function PageBreakBlock({
             <Image src={peer.logoURL} height={90} width={90} />
           </div>
         )}
-        <pre>
-          {{richText}}
-          {{linkTarget}}
-          {{layoutOption}}
-          {{templateOption}}
-          {{styleOption}}
-          {{imageID}}
-          {{image}}
-        </pre>
+
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>
         {linkText && linkURL && (
           <Link className={css(PeerPageBreakButton)} href={linkURL}>
@@ -109,6 +102,21 @@ export function PageBreakBlock({
           </Link>
         )}
       </div>
+      <div style={{width: '300px'}}>
+        {!!image && !!image?.id && (
+          <Image
+            width={300}
+            height={300}
+            src={image && image.smallTeaserURL ? image.smallTeaserURL : undefined}
+          />
+        )}
+      </div>
+      {!!richText && <RichText value={richText} />}
+      <pre>layoutOption: {layoutOption || 'not set'}</pre>
+      <pre>styleOption: {styleOption}</pre>
+      <pre>templateOption: {templateOption}</pre>
+      <pre>hideButton: {hideButton}</pre>
+      <pre>linkTarget: {linkTarget}</pre>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 import {Node} from 'slate'
 import {Route} from './route/routeContext'
-import {RichTextBlockValue} from '@wepublish/editor/src/client/blocks/types'
 
 export enum VersionState {
   Draft = 'draft',
@@ -157,14 +156,15 @@ export interface PeerPageBreakBlock
     {
       peer: Peer
       text: string
-      richText: RichTextBlockValue
+      richText: Node[]
       linkURL: string
       linkText: string
       linkTarget: string
+      hideButton: false
       styleOption: string
       layoutOption: string
-      imageID: string
-      image: undefined
+      templateOption: string
+      image?: ImageRefData | null
     }
   > {}
 
