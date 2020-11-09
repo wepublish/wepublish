@@ -149,7 +149,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
               label="peerList.panels.name"
               marginBottom={10}
               onChange={[Function]}
-              value=""
+              value="something peer name"
             >
               <Styled(div)
                 styleProps={
@@ -170,12 +170,12 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                             "hasIcon": false,
                           }
                         }
-                        value=""
+                        value="something peer name"
                       >
                         <input
                           onChange={[Function]}
                           placeholder="peerList.panels.name"
-                          value=""
+                          value="something peer name"
                         />
                       </Styled(input)>
                       <Styled(span)
@@ -196,10 +196,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
               </Styled(div)>
             </ForwardRef(TextInput)>
             <ForwardRef(TextInput)
+              errorMessage="Invalid URL"
               label="peerList.panels.URL"
               marginBottom={10}
               onChange={[Function]}
-              value=""
+              value="https://host-url.ch/"
             >
               <Styled(div)
                 styleProps={
@@ -216,22 +217,22 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                         placeholder="peerList.panels.URL"
                         styleProps={
                           Object {
-                            "hasError": false,
+                            "hasError": true,
                             "hasIcon": false,
                           }
                         }
-                        value=""
+                        value="https://host-url.ch/"
                       >
                         <input
                           onChange={[Function]}
                           placeholder="peerList.panels.URL"
-                          value=""
+                          value="https://host-url.ch/"
                         />
                       </Styled(input)>
                       <Styled(span)
                         styleProps={
                           Object {
-                            "hasError": false,
+                            "hasError": true,
                             "hasIcon": false,
                           }
                         }
@@ -242,6 +243,11 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                       </Styled(span)>
                     </label>
                   </Styled(label)>
+                  <Styled(div)>
+                    <div>
+                      Invalid URL
+                    </div>
+                  </Styled(div)>
                 </div>
               </Styled(div)>
             </ForwardRef(TextInput)>
@@ -249,7 +255,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
               label="peerList.panels.token"
               marginBottom={10}
               onChange={[Function]}
-              value=""
+              value="abc123def456"
             >
               <Styled(div)
                 styleProps={
@@ -270,12 +276,12 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                             "hasIcon": false,
                           }
                         }
-                        value=""
+                        value="abc123def456"
                       >
                         <input
                           onChange={[Function]}
                           placeholder="peerList.panels.token"
-                          value=""
+                          value="abc123def456"
                         />
                       </Styled(input)>
                       <Styled(span)
@@ -669,7 +675,9 @@ exports[`Peer Edit Panel should render 1`] = `
 `;
 
 exports[`Peer Edit Panel should render with ID 1`] = `
-<PeerEditPanel>
+<PeerEditPanel
+  id="peerId1"
+>
   <Styled(div)>
     <div>
       <PanelHeader
@@ -684,11 +692,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
           <ForwardRef(NavigationButton)
             disabled={true}
             icon={[Function]}
-            label="peerList.panels.create"
+            label="peerList.panels.save"
             onClick={[Function]}
           />
         }
-        title="peerList.panels.createPeer"
+        title="peerList.panels.editPeer"
       >
         <Styled(div)>
           <div>
@@ -748,13 +756,13 @@ exports[`Peer Edit Panel should render with ID 1`] = `
             </ForwardRef(Box)>
             <Styled(span)>
               <span>
-                peerList.panels.createPeer
+                peerList.panels.editPeer
               </span>
             </Styled(span)>
             <ForwardRef(NavigationButton)
               disabled={true}
               icon={[Function]}
-              label="peerList.panels.create"
+              label="peerList.panels.save"
               onClick={[Function]}
             >
               <Styled(button)
@@ -795,7 +803,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                     element="span"
                   >
                     <span>
-                      peerList.panels.create
+                      peerList.panels.save
                     </span>
                   </ForwardRef(Box)>
                 </button>
@@ -817,7 +825,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
               label="peerList.panels.name"
               marginBottom={10}
               onChange={[Function]}
-              value=""
+              value="Test Peer Name"
             >
               <Styled(div)
                 styleProps={
@@ -838,12 +846,12 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                             "hasIcon": false,
                           }
                         }
-                        value=""
+                        value="Test Peer Name"
                       >
                         <input
                           onChange={[Function]}
                           placeholder="peerList.panels.name"
-                          value=""
+                          value="Test Peer Name"
                         />
                       </Styled(input)>
                       <Styled(span)
@@ -864,10 +872,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
               </Styled(div)>
             </ForwardRef(TextInput)>
             <ForwardRef(TextInput)
+              errorMessage="Invalid URL"
               label="peerList.panels.URL"
               marginBottom={10}
               onChange={[Function]}
-              value=""
+              value="https://test-url.ch/"
             >
               <Styled(div)
                 styleProps={
@@ -884,22 +893,22 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                         placeholder="peerList.panels.URL"
                         styleProps={
                           Object {
-                            "hasError": false,
+                            "hasError": true,
                             "hasIcon": false,
                           }
                         }
-                        value=""
+                        value="https://test-url.ch/"
                       >
                         <input
                           onChange={[Function]}
                           placeholder="peerList.panels.URL"
-                          value=""
+                          value="https://test-url.ch/"
                         />
                       </Styled(input)>
                       <Styled(span)
                         styleProps={
                           Object {
-                            "hasError": false,
+                            "hasError": true,
                             "hasIcon": false,
                           }
                         }
@@ -910,10 +919,16 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                       </Styled(span)>
                     </label>
                   </Styled(label)>
+                  <Styled(div)>
+                    <div>
+                      Invalid URL
+                    </div>
+                  </Styled(div)>
                 </div>
               </Styled(div)>
             </ForwardRef(TextInput)>
             <ForwardRef(TextInput)
+              description="Leave empty if you don't want to change it"
               label="peerList.panels.token"
               marginBottom={10}
               onChange={[Function]}
@@ -960,6 +975,11 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                       </Styled(span)>
                     </label>
                   </Styled(label)>
+                  <Styled(div)>
+                    <div>
+                      Leave empty if you don't want to change it
+                    </div>
+                  </Styled(div)>
                 </div>
               </Styled(div)>
             </ForwardRef(TextInput)>

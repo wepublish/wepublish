@@ -21,30 +21,6 @@ const styleRenderer: fela.IRenderer = {
   clear: jest.fn()
 }
 
-const mocks = [
-  {
-    request: {
-      query: PeerDocument,
-      variables: {
-        id: 'peerId1'
-      }
-    },
-    result: () => {
-      return {
-        data: {
-          peer: {
-            __typename: 'Peer',
-            id: 'roleId1',
-            name: 'Test Peer Name',
-            slug: 'test-peer-name',
-            hostURL: 'https://test-url.ch'
-          }
-        }
-      }
-    }
-  }
-]
-
 describe('Peer Edit Panel', () => {
   test('should render', async () => {
     const wrapper = mount(
@@ -61,10 +37,33 @@ describe('Peer Edit Panel', () => {
   })
 
   test('should render with ID', async () => {
+    const mocks = [
+      {
+        request: {
+          query: PeerDocument,
+          variables: {
+            id: 'peerId1'
+          }
+        },
+        result: () => {
+          return {
+            data: {
+              peer: {
+                __typename: 'Peer',
+                id: 'peerId1',
+                name: 'Test Peer Name',
+                slug: 'test-peer-name',
+                hostURL: 'https://test-url.ch/'
+              }
+            }
+          }
+        }
+      }
+    ]
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <PeerEditPanel />
+          <PeerEditPanel id={'peerId1'} />
         </MockedProvider>
       </UIProvider>
     )
@@ -75,16 +74,24 @@ describe('Peer Edit Panel', () => {
   })
 
   test('should be able to generate a new peering', async () => {
-    const mock = [
+    const peer = {
+      id: 'roleId1',
+      name: 'something peer name',
+      slug: 'something-peer-name',
+      hostURL: 'https://host-url.ch/',
+      token: 'abc123def456',
+      profile: {}
+    }
+    const mocks = [
       {
         request: {
           query: CreatePeerDocument,
           variables: {
             input: {
-              name: 'something peer name',
-              slug: 'something-peer-name',
-              hostURL: 'https://host-url.ch',
-              token: 'abc123def456'
+              name: peer.name,
+              slug: peer.slug,
+              hostURL: peer.hostURL,
+              token: peer.token
             }
           }
         },
@@ -93,11 +100,11 @@ describe('Peer Edit Panel', () => {
             data: {
               createPeer: {
                 __typename: 'Peer',
-                id: 'roleId1',
-                name: 'Test Peer Name',
-                slug: 'test-peer-name',
-                hostURL: 'https://test-url.ch',
-                profile: {}
+                id: peer.id,
+                name: peer.name,
+                slug: peer.slug,
+                hostURL: peer.hostURL,
+                profile: peer.profile
               }
             }
           }
@@ -107,20 +114,31 @@ describe('Peer Edit Panel', () => {
 
     const wrapper = mount(
       <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mock} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename={false}>
           <PeerEditPanel />
         </MockedProvider>
       </UIProvider>
     )
     await updateWrapper(wrapper, 100)
 
-    /*
+    act(() => {
+      wrapper
+        .find('input[placeholder="peerList.panels.name"]')
+        .simulate('change', {target: {value: peer.name}})
+
+      wrapper
+        .find('input[placeholder="peerList.panels.URL"]')
+        .simulate('change', {target: {value: peer.hostURL}})
+
+      wrapper
+        .find('input[placeholder="peerList.panels.token"]')
+        .simulate('change', {target: {value: peer.token}})
+    })
     await act(async () => {
       wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
     })
     await updateWrapper(wrapper, 100)
 
-    */
     const panel = wrapper.find('PeerEditPanel')
     expect(panel).toMatchSnapshot()
   })
