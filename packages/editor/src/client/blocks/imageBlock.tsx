@@ -42,7 +42,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
         }}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <div
+            <Panel
               style={{
                 padding: 0,
                 position: 'relative',
@@ -63,7 +63,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 </Dropdown.Item>
                 {/* TODO: Meta sync */}
               </Dropdown>
-            </div>
+            </Panel>
           )}
         </PlaceholderInput>
       </Panel>
