@@ -28,7 +28,7 @@ import {
   MaterialIconLinkOff,
   MaterialIconClose,
   MaterialIconCheck,
-  MaterialIconTableChart
+  MaterialIconGridOn
 } from '@karma.run/icons'
 
 import {
@@ -355,7 +355,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
         <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
-        <InsertHtmlElementButton icon={MaterialIconTableChart} format={BlockFormat.Table} />
+        <InsertHtmlElementButton icon={MaterialIconGridOn} format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
