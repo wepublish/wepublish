@@ -32,9 +32,11 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
   return (
     <>
       <Panel
+        bodyFill={true}
         bordered={true}
         style={{
           height: isEmpty ? 300 : undefined,
+          padding: 0,
           overflow: 'hidden',
           backgroundColor: '#f7f9fa'
         }}>

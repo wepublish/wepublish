@@ -16,10 +16,16 @@ export interface GalleryListEditPanelProps {
   id?: string
   initialImages: GalleryImageEdge[]
 
-  onClose?(images: GalleryImageEdge[]): void
+  onSave?(images: GalleryImageEdge[]): void
+  onClose?(): void
 }
 
-export function GalleryListEditPanel({id, initialImages, onClose}: GalleryListEditPanelProps) {
+export function GalleryListEditPanel({
+  id,
+  initialImages,
+  onSave,
+  onClose
+}: GalleryListEditPanelProps) {
   const [images, setImages] = useState<ListValue<GalleryImageEdge>[]>(() =>
     initialImages.map(value => ({
       id: nanoid(),
@@ -45,7 +51,10 @@ export function GalleryListEditPanel({id, initialImages, onClose}: GalleryListEd
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.(images.map(({value}) => value))}>
+        <Button appearance={'primary'} onClick={() => onSave?.(images.map(({value}) => value))}>
+          {t('blocks.imageGallery.panels.save')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('blocks.imageGallery.panels.close')}
         </Button>
       </Drawer.Footer>

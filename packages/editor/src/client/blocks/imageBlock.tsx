@@ -33,10 +33,12 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
   return (
     <>
       <Panel
+        bodyFill={true}
         bordered={true}
         style={{
           height: 300,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          marginBottom: 10
         }}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
