@@ -65,7 +65,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         const observer = new ResizeObserver(() => {
           handleResize()
         })
-
+        if (!ref.current) return
         observer.observe(ref.current)
         return () => observer.unobserve(ref.current)
       } else {

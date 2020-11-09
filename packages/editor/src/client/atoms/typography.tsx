@@ -1,4 +1,4 @@
-import React, {ReactNode, ElementType, CSSProperties, forwardRef} from 'react'
+import {CSSProperties} from 'react'
 
 export type TypographyVariant =
   | 'title'
