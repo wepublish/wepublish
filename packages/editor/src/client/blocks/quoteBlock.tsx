@@ -1,6 +1,8 @@
 import React, {useRef, useEffect} from 'react'
 
-import {BlockProps, TypographicTextArea, Box, Spacing} from '@karma.run/ui'
+import {BlockProps} from '../atoms/blockList'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+
 import {QuoteBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
@@ -26,8 +28,18 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
         disabled={disabled}
         onChange={e => onChange({...value, quote: e.target.value})}
       />
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Box marginRight={Spacing.Tiny}>—</Box>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+        <div
+          style={{
+            marginRight: 5
+          }}>
+          —
+        </div>
         <TypographicTextArea
           variant="body1"
           placeholder={t('blocks.quote.author')}
@@ -35,7 +47,7 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
           disabled={disabled}
           onChange={e => onChange({...value, author: e.target.value})}
         />
-      </Box>
+      </div>
     </>
   )
 }
