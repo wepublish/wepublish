@@ -1,4 +1,4 @@
-import {CSSProperties} from 'react'
+import React, {CSSProperties, ElementType, forwardRef, ReactNode} from 'react'
 
 export type TypographyVariant =
   | 'title'
@@ -13,6 +13,54 @@ export type TypographyVariant =
 export type TypographyTextAlign = 'left' | 'center' | 'right'
 export type TypographyDisplay = 'block' | 'inline'
 export type TypographySpacing = 'small' | 'large'
+
+export interface TypographyProps {
+  variant?: TypographyVariant
+  color?: string
+  align?: TypographyTextAlign
+  display?: TypographyDisplay
+  spacing?: TypographySpacing
+  ellipsize?: boolean
+  element?: ElementType<{className?: string}>
+  children?: ReactNode
+}
+
+export const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
+  {
+    variant = 'body1',
+    color,
+    align,
+    display,
+    spacing,
+    ellipsize,
+    element = elementForTypographyVariant(variant),
+    children,
+    ...props
+  },
+  ref
+) {
+  const Element = element as any
+
+  return (
+    <Element
+      ref={ref}
+      style={{
+        display,
+        textAlign: align,
+        color: color ? color : undefined,
+        fill: color ? color : undefined,
+        whiteSpace: ellipsize ? 'nowrap' : undefined,
+        textOverflow: ellipsize ? 'ellipsis' : undefined,
+        overflow: ellipsize ? 'hidden' : undefined,
+        marginTop: 0,
+        marginBottom: spacing ? marginForTypographySpacing(spacing) : 0,
+        ...stylesForTypographyVariant(variant)
+      }}
+      {...props}>
+      {children}
+    </Element>
+  )
+})
 
 export function elementForTypographyVariant(variant: TypographyVariant) {
   switch (variant) {
