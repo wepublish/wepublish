@@ -289,25 +289,25 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 //   }
 // ])
 
-function EmojiPicker() {
-  const apple = 'apple' as keyof Pick<PickerProps, 'set'>
-  const pick = 'pick'
-  const pointUp = 'point_up'
-  return (
-    <>
-      <Picker set={apple} />
-      <Picker onSelect={() => null /* this.addEmoji */} />
-      <Picker title={pick} emoji={pointUp} />
-      <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
-      <Picker
-        i18n={{
-          search: 'Search',
-          categories: {search: 'Search results', recent: 'recent'}
-        }}
-      />
-    </>
-  )
-}
+// function EmojiPicker() {
+//   const apple = 'apple' as keyof Pick<PickerProps, 'set'>
+//   const pick = 'pick'
+//   const pointUp = 'point_up'
+//   return (
+//     <>
+//       <Picker set={apple} />
+//       <Picker onSelect={() => null /* this.addEmoji */} />
+//       <Picker title={pick} emoji={pointUp} />
+//       <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
+//       <Picker
+//         i18n={{
+//           search: 'Search',
+//           categories: {search: 'Search results', recent: 'recent'}
+//         }}
+//       />
+//     </>
+//   )
+// }
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
