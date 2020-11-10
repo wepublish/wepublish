@@ -125,7 +125,7 @@ export function hexToRgba(hex: string | number, alpha: number) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`
 }
 
-/*export function scrollBarStyle(theme: Theme): CSSStyle {
+/* export function scrollBarStyle(theme: Theme): CSSStyle {
   return {
     '::-webkit-scrollbar': {
       width: Spacing.Tiny
@@ -143,7 +143,7 @@ export function hexToRgba(hex: string | number, alpha: number) {
       borderBottomLeftRadius: Spacing.Tiny
     }
   }
-}*/
+} */
 
 export type CSSLength = string | number
 

@@ -236,7 +236,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 />
               )}
             </Panel>
-            <Panel header={'Description'}>
+            <Panel header={t('images.panels.description')}>
               <p>
                 {t('images.panels.filename')}: {filename || t('images.panels.untitled')}
                 {extension}
@@ -256,12 +256,12 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 </p>
               )}
               <p>
-                {t('images.panels.fileSize')}>: {prettyBytes(fileSize)}
+                {t('images.panels.fileSize')}: {prettyBytes(fileSize)}
               </p>
               {originalImageURL && (
                 <p>
                   {t('images.panels.link')}:{' '}
-                  <a href={originalImageURL} target="_blank">
+                  <a href={originalImageURL} rel="noreferrer" target="_blank">
                     {originalImageURL}
                   </a>{' '}
                 </p>

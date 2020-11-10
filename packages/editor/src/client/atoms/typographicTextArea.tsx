@@ -34,7 +34,8 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         })
         if (!ref.current) return
         observer.observe(ref.current)
-        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return () => observer.unobserve(ref.current)
       } else {
         window.addEventListener('resize', handleResize)
@@ -76,13 +77,13 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
 
           outline: 'none !important'
 
-          /*':focus': {
+          /* ':focus': {
             outline: 'none'
-          },*/
+          }, */
 
-          /*'::placeholder': {
+          /* '::placeholder': {
             color: 'gray'
-          }*/
+          } */
         }}
         onChange={handleChange}
         rows={1}

@@ -22,17 +22,7 @@ import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  FlexboxGrid,
-  Icon,
-  List,
-  Loader,
-  IconButton,
-  Drawer,
-  Modal,
-  Notification
-} from 'rsuite'
+import {Button, FlexboxGrid, Icon, List, Loader, IconButton, Drawer, Modal, Alert} from 'rsuite'
 
 export function TokenList() {
   const {current} = useRoute()
@@ -61,19 +51,8 @@ export function TokenList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (tokenListError) {
-      Notification.error({
-        title: 'Cloud not fetch tokens',
-        description: tokenListError.message,
-        duration: 5000
-      })
-    } else if (deleteTokenError) {
-      Notification.error({
-        title: 'Cloud not delete token',
-        description: deleteTokenError.message,
-        duration: 5000
-      })
-    }
+    const error = tokenListError?.message ?? deleteTokenError?.message
+    if (error) Alert.error(error, 0)
   }, [tokenListError, deleteTokenError])
 
   useEffect(() => {

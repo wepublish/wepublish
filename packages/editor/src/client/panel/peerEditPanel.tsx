@@ -1,15 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Button,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Notification,
-  Panel
-} from 'rsuite'
+import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
 
 import {
   PeerListDocument,
@@ -23,6 +14,7 @@ import {
 import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface ImageEditPanelProps {
   id?: string
@@ -68,22 +60,8 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   }, [data?.peer])
 
   useEffect(() => {
-    if (loadError) {
-      Notification.error({
-        title: loadError.message,
-        duration: 5000
-      })
-    } else if (createError) {
-      Notification.error({
-        title: createError.message,
-        duration: 5000
-      })
-    } else if (updateError) {
-      Notification.error({
-        title: updateError.message,
-        duration: 5000
-      })
-    }
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError])
 
   useEffect(() => {
@@ -214,18 +192,21 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               bordered={true}
               style={{
                 height: '200px',
+                marginBottom: '20px',
                 backgroundSize: 'cover',
                 backgroundImage: `url(${
                   profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
                 }`
               }}
             />
-            <p>
-              {t('peerList.panels.name')}: {profile?.name}
-            </p>
-            <p>
-              {t('peerList.panels.themeColor')}: {profile?.themeColor}
-            </p>
+            <DescriptionList>
+              <DescriptionListItem label={t('peerList.panels.name')}>
+                {profile?.name}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeColor')}>
+                {profile?.themeColor}
+              </DescriptionListItem>
+            </DescriptionList>
           </Panel>
         )}
       </Drawer.Body>

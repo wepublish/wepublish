@@ -61,7 +61,7 @@ export default (env: any, {mode}: any) =>
                 // If you are using less-loader@5 or older version, please spread the lessOptions to options directly.
                 lessOptions: {
                   javascriptEnabled: true
-                  //modifyVars: { '@reset-import': false }
+                  // modifyVars: { '@reset-import': false }
                 }
               }
             }

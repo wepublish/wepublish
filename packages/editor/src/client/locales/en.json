@@ -422,6 +422,11 @@
       "currentPassword": "Current password",
       "alternativeLogin": "Or login with: ",
       "O2Auth": "Authenticating against OAuth2: "
+    },
+    "chooseEditImage": {
+      "chooseImage": "Choose Image",
+      "editImage": "Edit Image",
+      "removeImage": "Remove Image"
     }
   }
 }

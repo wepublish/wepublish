@@ -27,7 +27,7 @@ import {
   Modal,
   Button
 } from 'rsuite'
-const {Column, HeaderCell, Cell /*, Pagination*/} = Table
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
   const {t} = useTranslation()
@@ -48,7 +48,7 @@ export function AuthorList() {
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
 
-  const {data, /*fetchMore,*/ loading: isLoading} = useAuthorListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useAuthorListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -78,7 +78,7 @@ export function AuthorList() {
     }
   }, [data?.authors])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.authors.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -92,7 +92,7 @@ export function AuthorList() {
         }
       }
     })
-  }*/
+  } */
 
   return (
     <>
@@ -214,7 +214,7 @@ export function AuthorList() {
               })
 
               setConfirmationDialogOpen(false)
-              //fetchMore()
+              // fetchMore()
             }}
             color="red">
             {t('authors.panels.confirm')}

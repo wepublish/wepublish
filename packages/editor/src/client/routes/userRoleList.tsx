@@ -6,7 +6,8 @@ import {
   UserRoleCreateRoute,
   UserRoleListRoute,
   ButtonLink,
-  UserRoleEditRoute
+  UserRoleEditRoute,
+  Link
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
@@ -25,7 +26,8 @@ import {
   Modal,
   Button
 } from 'rsuite'
-const {Column, HeaderCell, Cell /*, Pagination*/} = Table
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
   const {t} = useTranslation()
@@ -75,35 +77,6 @@ export function UserRoleList() {
     }
   }, [data?.userRoles])
 
-  const DeleteCell = ({rowData, dataKey, ...props}: any) => {
-    return (
-      <Cell {...props} style={{padding: '6px 0'}}>
-        <IconButton
-          icon={<Icon icon="wrench" />}
-          circle
-          size="sm"
-          onClick={() => {
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: UserRoleEditRoute.create({id: rowData.id})
-            })
-          }}
-        />
-        <IconButton
-          icon={<Icon icon="trash" />}
-          disabled={rowData.systemRole}
-          circle
-          size="sm"
-          style={{marginLeft: '5px'}}
-          onClick={() => {
-            setConfirmationDialogOpen(true)
-            setCurrentUserRole(rowData)
-          }}
-        />
-      </Cell>
-    )
-  }
-
   return (
     <>
       <FlexboxGrid>
@@ -129,21 +102,37 @@ export function UserRoleList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>Id</HeaderCell>
-          <Cell dataKey="id" />
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>Name</HeaderCell>
-          <Cell dataKey="name" />
+        <Column width={200} align="left" resizable>
+          <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullUserRoleFragment) => (
+              <Link route={UserRoleEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('userRoles.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
         </Column>
         <Column width={400} align="left" resizable>
-          <HeaderCell>Description</HeaderCell>
+          <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
           <Cell dataKey="description" />
         </Column>
         <Column width={100} align="center" fixed="right">
-          <HeaderCell>Action</HeaderCell>
-          <DeleteCell dataKey="id" />
+          <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullUserRoleFragment) => (
+              <IconButton
+                icon={<Icon icon="trash" />}
+                disabled={rowData.systemRole}
+                circle
+                size="sm"
+                style={{marginLeft: '5px'}}
+                onClick={() => {
+                  setConfirmationDialogOpen(true)
+                  setCurrentUserRole(rowData)
+                }}
+              />
+            )}
+          </Cell>
         </Column>
       </Table>
 
@@ -182,9 +171,11 @@ export function UserRoleList() {
         </Modal.Header>
 
         <Modal.Body>
-          {t('userRoles.panels.deleteTokenText', {
-            name: currentUserRole?.name || currentUserRole?.id
-          })}
+          <DescriptionList>
+            <DescriptionListItem label={t('userRoles.panels.name')}>
+              {currentUserRole?.name || t('userRoles.panels.Unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
         </Modal.Body>
 
         <Modal.Footer>

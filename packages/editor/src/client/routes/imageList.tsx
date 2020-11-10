@@ -57,7 +57,7 @@ export function ImageList() {
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
   const listVariables = {filter: filter || undefined, first: ImagesPerPage}
-  const {data, /*fetchMore,*/ loading: isLoading} = useImageListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -68,7 +68,8 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       setImages(data.images.nodes)
     }
   }, [data?.images])
@@ -84,7 +85,7 @@ export function ImageList() {
     }
   }, [current])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -98,7 +99,7 @@ export function ImageList() {
         }
       }
     })
-  }*/
+  } */
 
   return (
     <>
@@ -123,8 +124,8 @@ export function ImageList() {
 
       {images.length > 0 ? (
         <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
-          {images.map(image => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px'}}>
+          {images.map((image, key) => (
+            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px'}} key={key}>
               <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
                 <Panel shaded bordered bodyFill>
                   <img src={image.thumbURL || ''} />

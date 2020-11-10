@@ -7,7 +7,8 @@ import {
   UserEditRoute,
   UserCreateRoute,
   UserListRoute,
-  ButtonLink
+  ButtonLink,
+  Link
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
@@ -28,7 +29,8 @@ import {
   Modal,
   Button
 } from 'rsuite'
-const {Column, HeaderCell, Cell /*, Pagination*/} = Table
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserList() {
   const {current} = useRoute()
@@ -118,13 +120,15 @@ export function UserList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={users}>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>Id</HeaderCell>
-          <Cell dataKey="id" />
-        </Column>
-        <Column width={100} align="left" resizable>
+        <Column width={200} align="left" resizable>
           <HeaderCell>Name</HeaderCell>
-          <Cell dataKey="name" />
+          <Cell>
+            {(rowData: FullUserFragment) => (
+              <Link route={UserEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('userList.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
         </Column>
         <Column width={400} align="left" resizable>
           <HeaderCell>Description</HeaderCell>
@@ -135,17 +139,6 @@ export function UserList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="wrench" />}
-                  circle
-                  size="sm"
-                  onClick={e => {
-                    dispatch({
-                      type: RouteActionType.PushRoute,
-                      route: UserEditRoute.create({id: rowData.id})
-                    })
-                  }}
-                />
                 <IconButton
                   icon={<Icon icon="key" />}
                   circle
@@ -228,9 +221,11 @@ export function UserList() {
         </Modal.Header>
 
         <Modal.Body>
-          {t('userList.panels.deleteUser', {
-            name: currentUser?.name || currentUser?.id
-          })}
+          <DescriptionList>
+            <DescriptionListItem label={t('userList.panels.name')}>
+              {currentUser?.name || t('userList.panels.Unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
         </Modal.Body>
 
         <Modal.Footer>

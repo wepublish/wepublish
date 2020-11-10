@@ -34,11 +34,13 @@ import {
   IconButton,
   Button,
   Divider,
-  Notification,
-  Modal
+  Modal,
+  Alert
 } from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-//@ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const ListItemLink = routeLink(List.Item)
 const IconButtonLink = routeLink(IconButton)
 const ButtonLink = routeLink(Button)
@@ -78,13 +80,8 @@ export function PeerList() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (peerInfoError ?? peerListError) {
-      Notification.error({
-        title: 'Cloud not fetch peers',
-        description: peerInfoError?.message ?? peerListError!.message,
-        duration: 5000
-      })
-    }
+    const error = peerInfoError?.message ?? peerListError?.message
+    if (error) Alert.error(error, 0)
   }, [peerInfoError, peerListError])
 
   useEffect(() => {
@@ -227,10 +224,10 @@ export function PeerList() {
           onSave={() => {
             setEditModalOpen(false)
 
-            Notification.success({
-              title: editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
-              duration: 2000
-            })
+            Alert.success(
+              editID ? t('peerList.panels.peerUpdated') : t('peerList.panels.peerCreated'),
+              2000
+            )
 
             dispatch({
               type: RouteActionType.PushRoute,
@@ -245,7 +242,11 @@ export function PeerList() {
           <Modal.Title>{t('peerList.panels.deletePeer')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {t('peerList.panels.deletePeerText', {name: currentPeer?.name || currentPeer?.hostURL})}
+          <DescriptionList>
+            <DescriptionListItem label={t('peerList.panels.name')}>
+              {currentPeer?.name || t('peerList.panels.Unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
         </Modal.Body>
         <Modal.Footer>
           <Button

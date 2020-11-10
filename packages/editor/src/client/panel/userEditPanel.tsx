@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
 import {
+  Alert,
   Button,
   CheckPicker,
   ControlLabel,
@@ -8,8 +9,7 @@ import {
   Form,
   FormControl,
   FormGroup,
-  Modal,
-  Notification
+  Modal
 } from 'rsuite'
 
 import {
@@ -84,27 +84,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   }, [userRoleData?.userRoles])
 
   useEffect(() => {
-    if (loadError) {
-      Notification.error({
-        title: loadError.message,
-        duration: 5000
-      })
-    } else if (createError) {
-      Notification.error({
-        title: createError.message,
-        duration: 5000
-      })
-    } else if (updateError) {
-      Notification.error({
-        title: updateError.message,
-        duration: 5000
-      })
-    } else if (loadUserRoleError) {
-      Notification.error({
-        title: loadUserRoleError.message,
-        duration: 5000
-      })
-    }
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      loadUserRoleError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadUserRoleError])
 
   async function handleSave() {
@@ -185,6 +170,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           <FormGroup>
             <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
             <CheckPicker
+              block={true}
               value={roles.map(role => role.id)}
               data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
               onChange={value => {

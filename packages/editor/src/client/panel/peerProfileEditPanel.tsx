@@ -1,18 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Button,
-  Drawer,
-  Icon,
-  Panel,
-  IconButton,
-  Dropdown,
-  Notification,
-  Form,
-  FormGroup,
-  ControlLabel,
-  FormControl
-} from 'rsuite'
+import {Button, Drawer, Panel, Form, FormGroup, ControlLabel, FormControl, Alert} from 'rsuite'
 
 import {
   usePeerProfileQuery,
@@ -26,6 +14,7 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -62,13 +51,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   }, [data?.peerProfile])
 
   useEffect(() => {
-    if (fetchError || saveError) {
-      Notification.error({
-        title: t('peerList.panels.infoEditError'),
-        description: fetchError?.message ?? saveError!.message,
-        duration: 5000
-      })
-    }
+    const error = fetchError?.message ?? saveError?.message
+    if (error) Alert.error(error, 0)
   }, [fetchError, saveError])
 
   async function handleSave() {
@@ -81,11 +65,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         }
       }
     })
-
-    Notification.success({
-      title: t('peerList.panels.peerInfoUpdated'),
-      duration: 2000
-    })
+    Alert.success(t('peerList.panels.peerInfoUpdated'), 2000)
     onClose?.()
   }
 
@@ -96,34 +76,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${
-              logoImage?.previewURL ?? 'https://via.placeholder.com/240x240'
-            })`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item disabled={isLoading} onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={isLoading || !logoImage}
-              onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={isLoading || !logoImage}
-              onClick={() => setLogoImage(undefined)}>
-              <Icon icon="close" /> {t('peerList.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
-        </Panel>
+        <ChooseEditImage
+          image={logoImage}
+          disabled={isLoading}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setLogoImage(undefined)}
+        />
         <Panel header={t('peerList.panels.information')}>
           <Form fluid={true}>
             <FormGroup>
@@ -151,7 +110,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         </Button>
       </Drawer.Footer>
 
-      <Drawer show={isChooseModalOpen} size={'sm'}>
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -161,7 +120,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         />
       </Drawer>
 
-      <Drawer show={isEditModalOpen} size={'sm'}>
+      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         {logoImage && (
           <ImagedEditPanel id={logoImage!.id} onClose={() => setEditModalOpen(false)} />
         )}
