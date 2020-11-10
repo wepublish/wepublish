@@ -229,9 +229,6 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
   if (leaf[TextFormat.Subscript]) {
     children = <sub {...attributes}>{children}</sub>
   }
-  if (leaf.text === '😄') {
-    children = <sub {...attributes}>{children}</sub>
-  }
 
   return <span {...attributes}>{children}</span>
 }
@@ -307,10 +304,6 @@ export const RichTextBlock = memo(function RichTextBlock({
       ReactEditor.focus(editor)
     }
   }, [])
-
-  //  <Slate editor={editor} value={value} onChange={value => setValue(value)}>
-  //    <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
-  //  </Slate>
 
   return (
     <Slate
