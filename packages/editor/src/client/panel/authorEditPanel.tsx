@@ -159,6 +159,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           <FormGroup>
             <ControlLabel>{t('authors.panels.name')}</ControlLabel>
             <FormControl
+              name={t('authors.panels.name')}
               value={name}
               disabled={isDisabled}
               onChange={value => {

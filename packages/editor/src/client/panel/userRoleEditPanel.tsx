@@ -143,11 +143,17 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         <Form fluid={true}>
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
-            <FormControl value={name} disabled={isDisabled} onChange={value => setName(value)} />
+            <FormControl
+              name={t('userRoles.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => setName(value)}
+            />
           </FormGroup>
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.description')}</ControlLabel>
             <FormControl
+              name={t('userRoles.panels.description')}
               value={description}
               disabled={isDisabled}
               onChange={value => setDescription(value)}

@@ -148,17 +148,28 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         <Form fluid={true}>
           <FormGroup>
             <ControlLabel>{t('userList.panels.name')}</ControlLabel>
-            <FormControl value={name} disabled={isDisabled} onChange={value => setName(value)} />
+            <FormControl
+              name={t('userList.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => setName(value)}
+            />
           </FormGroup>
           <FormGroup>
             <ControlLabel>{t('userList.panels.email')}</ControlLabel>
-            <FormControl value={email} disabled={isDisabled} onChange={value => setEmail(value)} />
+            <FormControl
+              name={t('userList.panels.email')}
+              value={email}
+              disabled={isDisabled}
+              onChange={value => setEmail(value)}
+            />
           </FormGroup>
           {!id ? (
             <FormGroup>
               <ControlLabel>{t('userList.panels.password')}</ControlLabel>
               <FormControl
                 type="password"
+                name={t('userList.panels.password')}
                 value={password}
                 disabled={isDisabled}
                 onChange={value => setPassword(value)}
