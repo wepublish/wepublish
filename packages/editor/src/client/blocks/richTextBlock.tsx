@@ -17,43 +17,6 @@ import {jsx} from 'slate-hyperscript'
 import 'emoji-mart/css/emoji-mart.css'
 import {Picker, PickerProps} from 'emoji-mart'
 
-// TODO replace with rsuite components
-// import {
-//   MaterialIconFormatBold,
-//   MaterialIconFormatItalic,
-//   MaterialIconFormatUnderlined,
-//   MaterialIconFormatStrikethrough,
-//   MaterialIconLooksTwoOutlined,
-//   MaterialIconLooks3Outlined,
-//   MaterialIconFormatListBulleted,
-//   MaterialIconFormatListNumbered,
-//   MaterialIconLooksOneOutlined,
-//   MaterialIconLink,
-//   MaterialIconLinkOff,
-//   MaterialIconClose,
-//   MaterialIconCheck
-// } from '@karma.run/icons'
-
-// import {
-//   Typography,
-//   ToolbarButtonProps,
-//   ToolbarButton,
-//   Button,
-//   BaseButtonProps,
-//   ToolbarDivider,
-//   Link,
-//   BlockProps,
-//   Toolbar,
-//   Dialog,
-//   Panel,
-//   PanelHeader,
-//   NavigationButton,
-//   PanelSection,
-//   TextInput,
-//   Spacing,
-//   Box
-// } from '@karma.run/ui'
-
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
 import {RichTextBlockValue} from './types'
@@ -349,12 +312,6 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        {'😄 😁 🤯 🎸'.split(' ').map((txt, i) => (
-          <InsertTextButton key={i} label={txt} />
-        ))}
-
-        <ToolbarDivider />
-
         <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
         <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
       </Toolbar>
@@ -386,22 +343,28 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
     />
   )
 }
+//
+//        <ToolbarDivider />
+//
+//        {'😄 😁 🤯 🎸'.split(' ').map((txt, i) => (
+//          <InsertTextButton key={i} label={txt} />
+//        ))}
 
-function InsertTextButton({label}: BaseButtonProps) {
-  const editor = useSlate()
-
-  return (
-    <Button
-      variant="text"
-      style={{padding: '0px'}}
-      label={label}
-      onMouseDown={e => {
-        e.preventDefault()
-        label && editor.insertText(label as string)
-      }}
-    />
-  )
-}
+// function InsertTextButton({label}: BaseButtonProps) {
+//   const editor = useSlate()
+//
+//   return (
+//     <Button
+//       variant="text"
+//       style={{padding: '0px'}}
+//       label={label}
+//       onMouseDown={e => {
+//         e.preventDefault()
+//         label && editor.insertText(label as string)
+//       }}
+//     />
+//   )
+// }
 
 function LinkFormatButton() {
   const editor = useSlate()
