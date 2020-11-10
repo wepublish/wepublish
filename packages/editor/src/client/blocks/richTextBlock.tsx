@@ -208,8 +208,8 @@ function renderElement({attributes, children, element}: RenderElementProps) {
     case BlockFormat.TableCell:
       return <td {...attributes}>{children}</td>
 
-    // case BlockFormat.HorizontalLine:
-    //  return <hr {...attributes} />
+    case BlockFormat.HorizontalLine:
+      return <hr {...attributes} />
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -442,25 +442,27 @@ function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
       active={false}
       onMouseDown={e => {
         e.preventDefault()
+        editor.insertBreak()
         onMouseDown()
       }}
     />
   )
+
   switch (format) {
     case BlockFormat.HorizontalLine:
       return btn(
-        () => editor.insertText('-----------TODO  hr --------------------')
-        // Transforms.insertNodes(editor, [
-        //  {
-        //    type: BlockFormat.HorizontalLine,
-        //    children: [{text: ''}]
-        //  }
-        // ])
+        // () => editor.insertText('-----------TODO  hr --------------------')
         // TODO editor.insertHtml(<hr />)
+        () =>
+          Transforms.insertNodes(editor, [
+            {
+              type: BlockFormat.HorizontalLine,
+              children: [{text: ''}]
+            }
+          ])
       )
     case BlockFormat.Table:
       return btn(() => {
-        editor.insertBreak()
         editor.insertFragment([
           {
             children: [
@@ -534,13 +536,6 @@ function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
                     children: [{text: '9'}]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            children: [
-              {
-                text: 'TODO'
               }
             ]
           }
