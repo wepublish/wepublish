@@ -25,7 +25,7 @@ import {
   Modal,
   Button
 } from 'rsuite'
-const {Column, HeaderCell, Cell /*, Pagination*/} = Table
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
   const {t} = useTranslation()

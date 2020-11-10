@@ -120,9 +120,9 @@ export function FocalPoint() {
         fill: '#FFFFFF',
         fontSize: '24px'
 
-        /*'&:hover': {
+        /* '&:hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.4)'
-      }*/
+      } */
       }}>
       <Icon icon="square-o" />
     </div>

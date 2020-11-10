@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {Drawer, Modal, Notification} from 'rsuite'
+import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -28,7 +28,6 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Icon, IconButton} from 'rsuite'
 
 export interface ArticleEditorProps {
   readonly id?: string

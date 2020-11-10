@@ -29,9 +29,9 @@ export function DescriptionListItem({label, children}: DescriptionListItemProps)
         display: 'flex',
         marginBottom: 10
 
-        /*':last-child': {
+        /* ':last-child': {
         marginBottom: 0
-      }*/
+      } */
       }}>
       <dt
         style={{

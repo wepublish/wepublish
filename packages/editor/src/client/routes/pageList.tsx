@@ -13,9 +13,9 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
-const {Column, HeaderCell, Cell} = Table
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Delete = 'delete',

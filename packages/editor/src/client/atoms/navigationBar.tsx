@@ -14,7 +14,7 @@ export function NavigationBar({leftChildren, rightChildren, centerChildren}: Nav
         overflow: 'hidden',
         width: '100%',
         backgroundColor: 'white'
-        //borderBottom: `solid 1px gray`
+        // borderBottom: `solid 1px gray`
       }}>
       <div
         style={{

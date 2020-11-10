@@ -47,8 +47,8 @@ export const Typography = forwardRef<HTMLElement, TypographyProps>(function Typo
       style={{
         display,
         textAlign: align,
-        color: color ? color : undefined,
-        fill: color ? color : undefined,
+        color: color || undefined,
+        fill: color || undefined,
         whiteSpace: ellipsize ? 'nowrap' : undefined,
         textOverflow: ellipsize ? 'ellipsis' : undefined,
         overflow: ellipsize ? 'hidden' : undefined,

@@ -121,7 +121,7 @@ export function Base({children}: BaseProps) {
                   placement="topStart"
                   trigger="click"
                   renderTitle={children => {
-                    //@ts-ignore
+                    // @ts-ignore
                     return <Icon style={iconStyles} icon="cog" />
                   }}>
                   <Dropdown.Item>Help</Dropdown.Item>

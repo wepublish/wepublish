@@ -57,25 +57,25 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     return (
       <button
         style={{
-          //fill: isActive ? 'blue' : 'black',
+          // fill: isActive ? 'blue' : 'black',
           border: active ? 'blue 1px solid' : '',
           fontSize: 16,
 
           cursor: 'pointer',
-          //border: 'none',
+          // border: 'none',
           borderRadius: 3,
           backgroundColor: 'transparent',
 
           padding: 2
 
-          /*':hover': {
+          /* ':hover': {
           backgroundColor: 'gray'
         },
 
         ':focus': {
           outline: 'none',
           backgroundColor: 'gray'
-        }*/
+        } */
         }}
         ref={ref}
         {...props}>

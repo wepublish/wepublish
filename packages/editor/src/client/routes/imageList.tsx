@@ -57,7 +57,7 @@ export function ImageList() {
   const [currentImage, setCurrentImage] = useState<ImageRefFragment>()
 
   const listVariables = {filter: filter || undefined, first: ImagesPerPage}
-  const {data, /*fetchMore,*/ loading: isLoading} = useImageListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useImageListQuery({
     fetchPolicy: 'network-only',
     variables: listVariables
   })
@@ -68,7 +68,7 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
-      //@ts-ignore
+      // @ts-ignore
       setImages(data.images.nodes)
     }
   }, [data?.images])
@@ -84,7 +84,7 @@ export function ImageList() {
     }
   }, [current])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: ImagesPerPage, after: data?.images.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -98,7 +98,7 @@ export function ImageList() {
         }
       }
     })
-  }*/
+  } */
 
   return (
     <>

@@ -38,7 +38,7 @@ import {
   Modal
 } from 'rsuite'
 
-//@ts-ignore
+// @ts-ignore
 const ListItemLink = routeLink(List.Item)
 const IconButtonLink = routeLink(IconButton)
 const ButtonLink = routeLink(Button)

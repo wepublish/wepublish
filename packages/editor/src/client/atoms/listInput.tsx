@@ -118,7 +118,7 @@ const SortableList = SortableContainer(
   }
 )
 
-/*const ListItemHelperStyle = cssRule({
+/* const ListItemHelperStyle = cssRule({
   zIndex: 6
 })
 
