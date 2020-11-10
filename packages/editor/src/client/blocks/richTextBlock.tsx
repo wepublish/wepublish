@@ -14,7 +14,8 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-import {Picker} from 'emoji-mart'
+import 'emoji-mart/css/emoji-mart.css'
+import {Picker, PickerProps} from 'emoji-mart'
 
 import {
   MaterialIconFormatBold,
@@ -288,6 +289,26 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 //   }
 // ])
 
+function EmojiPicker() {
+  const apple = 'apple' as keyof Pick<PickerProps, 'set'>
+  const pick = 'pick'
+  const pointUp = 'point_up'
+  return (
+    <>
+      <Picker set={apple} />
+      <Picker onSelect={() => null /* this.addEmoji */} />
+      <Picker title={pick} emoji={pointUp} />
+      <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
+      <Picker
+        i18n={{
+          search: 'Search',
+          categories: {search: 'Search results', recent: 'recent'}
+        }}
+      />
+    </>
+  )
+}
+
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -339,7 +360,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        {'😄 😁 🤯 🎸 ¿ å etc'.split(' ').map((txt, i) => (
+        {'😄 😁 🤯 🎸'.split(' ').map((txt, i) => (
           <InsertTextButton key={i} label={txt} />
         ))}
 
@@ -348,18 +369,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
         <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
       </Toolbar>
-
-      <Picker set="apple" />
-      <Picker onSelect={() => null /*this.addEmoji*/} />
-      <Picker title="Pick your emoji…" emoji="point_up" />
-      <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
-      <Picker
-        i18n={{
-          search: 'Recherche',
-          categories: {search: 'Résultats de recherche', recent: 'Récents'}
-        }}
-      />
-
       <Editable
         readOnly={disabled}
         placeholder={t('blocks.richText.startWriting')}
