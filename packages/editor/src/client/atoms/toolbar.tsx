@@ -49,6 +49,7 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
 
 export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon: IconNames | SVGIcon
+  readonly iconActive?: IconNames | SVGIcon
   readonly active?: boolean
 }
 

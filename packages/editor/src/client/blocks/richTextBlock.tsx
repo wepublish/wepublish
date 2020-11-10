@@ -1,4 +1,4 @@
-import React, {useState, memo, useEffect, useMemo} from 'react'
+import React, {useState, memo, useEffect, useMemo, useRef} from 'react'
 import {Editor, Node as SlateNode, createEditor, Range, Transforms} from 'slate'
 
 import {
@@ -15,14 +15,16 @@ import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
 import 'emoji-mart/css/emoji-mart.css'
-// import {Picker} from 'emoji-mart'
+import './emoji-mart-override.css'
+import {Picker, BaseEmoji} from 'emoji-mart'
 
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal, Popover, Whisper} from 'rsuite'
+import {WhisperProps} from 'rsuite/lib/Whisper'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -292,6 +294,10 @@ export const RichTextBlock = memo(function RichTextBlock({
 
           <LinkFormatButton />
           <RemoveLinkFormatButton />
+
+          <ToolbarDivider />
+
+          <InsertEmojiButton icon="smile-o" iconActive="close" />
         </Toolbar>
         <Editable
           readOnly={disabled}
@@ -323,49 +329,62 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-//
-//        {'😄 😁 🤯 🎸'.split(' ').map((txt, i) => (
-//          <InsertTextButton key={i} label={txt} />
-//        ))}
+interface WhisperInstancePopover extends React.Component<WhisperProps, {isOverlayShown?: boolean}> {
+  // node_modules/rsuite/lib/Whisper/Whisper.d.ts
+  open: (delay?: number) => void
+  close: (delay?: number) => void
 
-// function InsertTextButton({label}: BaseButtonProps) {
-//   const editor = useSlate()
-//
-//   return (
-//     <Button
-//       variant="text"
-//       style={{padding: '0px'}}
-//       label={label}
-//       onMouseDown={e => {
-//         e.preventDefault()
-//         label && editor.insertText(label as string)
-//       }}
-//     />
-//   )
-// }
-// function EmojiPicker() {
-//   // const apple = 'apple' as keyof Pick<PickerProps, 'set'>
-//   const pick = 'pick'
-//   const pointUp = 'point_up'
-//   return (
-//     <>
-//       <Picker set={'apple'} />
-//       <Picker onSelect={() => null /* this.addEmoji */} />
-//       <Picker title={pick} emoji={pointUp} />
-//       <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
-//       <Picker
-//         i18n={{
-//           search: 'Search',
-//           categories: {search: 'Search results', recent: 'recent'}
-//         }}
-//       />
-//     </>
-//   )
-// }
-//
-//      <div style={{position: 'absolute', top: 10, right: 10, zIndex: 1000}}>
-//        <EmojiPicker />
-//      </div>
+  /** @deprecated Use `open` instead */
+  show: (delay?: number) => void
+  /** @deprecated Use `close` instead */
+  hide: (delay?: number) => void
+}
+
+function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
+  const editor = useSlate()
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
+
+  const triggerRef = useRef<WhisperInstancePopover>(null)
+  const open = () => {
+    triggerRef?.current?.open()
+    // TODO should be done with forwardRef
+    setIsEmojiPickerOpen(true)
+    console.log(isEmojiPickerOpen)
+  }
+  const close = () => {
+    triggerRef?.current?.close()
+    setIsEmojiPickerOpen(false)
+    console.log(isEmojiPickerOpen)
+  }
+
+  const top = 'top'
+  const noTrigger = 'none'
+
+  const emojiPicker = (
+    <Popover>
+      <Picker
+        onSelect={({native}: BaseEmoji) => {
+          editor.insertText(native)
+        }}
+      />
+    </Popover>
+  )
+
+  return (
+    <>
+      <Whisper placement={top} speaker={emojiPicker} ref={triggerRef} trigger={noTrigger}>
+        <ToolbarButton
+          icon={isEmojiPickerOpen ? iconActive || icon : icon}
+          active={isEmojiPickerOpen}
+          onMouseDown={e => {
+            e.preventDefault()
+            isEmojiPickerOpen ? close() : open()
+          }}
+        />
+      </Whisper>
+    </>
+  )
+}
 
 function LinkFormatButton() {
   const editor = useSlate()
