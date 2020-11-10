@@ -1,5 +1,5 @@
 import React, {useState, memo, useEffect, useMemo} from 'react'
-import {Editor, Node as SlateNode, createEditor, Range, Transforms, Point} from 'slate'
+import {Editor, Node as SlateNode, createEditor, Range, Transforms} from 'slate'
 
 import {
   useSlate,
@@ -27,8 +27,7 @@ import {
   MaterialIconLink,
   MaterialIconLinkOff,
   MaterialIconClose,
-  MaterialIconCheck,
-  MaterialIconGridOn
+  MaterialIconCheck
 } from '@karma.run/icons'
 
 import {
@@ -61,10 +60,7 @@ enum BlockFormat {
   Paragraph = 'paragraph',
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  Table = 'table',
-  TableRow = 'table-row',
-  TableCell = 'table-cell'
+  ListItem = 'list-item'
 }
 
 enum InlineFormat {
@@ -99,10 +95,7 @@ const ElementTags: any = {
   P: () => ({type: BlockFormat.Paragraph}),
   LI: () => ({type: BlockFormat.ListItem}),
   OL: () => ({type: BlockFormat.OrderedList}),
-  UL: () => ({type: BlockFormat.UnorderedList}),
-  TB: () => ({type: BlockFormat.Table}),
-  TR: () => ({type: BlockFormat.TableRow}),
-  TD: () => ({type: BlockFormat.TableCell})
+  UL: () => ({type: BlockFormat.UnorderedList})
 }
 
 const TextTags: any = {
@@ -191,19 +184,6 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.ListItem:
       return <li {...attributes}>{children}</li>
-
-    case BlockFormat.Table:
-      return (
-        <table>
-          <tbody {...attributes}>{children}</tbody>
-        </table>
-      )
-
-    case BlockFormat.TableRow:
-      return <tr {...attributes}>{children}</tr>
-
-    case BlockFormat.TableCell:
-      return <td {...attributes}>{children}</td>
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -349,7 +329,6 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
         <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
-        <InsertHtmlElementButton icon={MaterialIconGridOn} format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
@@ -417,110 +396,6 @@ function InsertTextButton({label}: BaseButtonProps) {
       }}
     />
   )
-}
-
-function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
-  // TODO for <hr>
-  const editor = useSlate()
-
-  const btn = (onMouseDown: () => any) => (
-    <ToolbarButton
-      icon={icon}
-      active={false}
-      onMouseDown={e => {
-        e.preventDefault()
-        editor.insertBreak()
-        onMouseDown()
-      }}
-    />
-  )
-
-  switch (format) {
-    case BlockFormat.Table:
-      return btn(() => {
-        editor.insertFragment([
-          {
-            children: [
-              {
-                text: 'TODO: senseful table insert handling, and add border styling buttons.'
-              }
-            ]
-          },
-          {
-            type: 'table',
-            children: [
-              {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: ''}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Human', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Dog', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Cat', bold: true}]
-                  }
-                ]
-              },
-              {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: '# of Feet', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '2'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '4'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '4'}]
-                  }
-                ]
-              },
-              {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: '# of Lives', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '1'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '1'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '9'}]
-                  }
-                ]
-              }
-            ]
-          }
-        ])
-      })
-    default:
-      return btn(() => {
-        console.error(`Unavailable block format ${format}`)
-      })
-  }
 }
 
 function LinkFormatButton() {
@@ -721,7 +596,7 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline, deleteBackward, deleteForward, insertBreak} = editor
+  const {insertData, isInline} = editor
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
   editor.insertData = (data: any) => {
@@ -734,63 +609,6 @@ function withRichText<T extends ReactEditor>(editor: T): T {
     } else {
       insertData(data)
     }
-  }
-
-  // https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
-  editor.deleteBackward = unit => {
-    const {selection} = editor
-
-    if (selection && Range.isCollapsed(selection)) {
-      const [cell] = Editor.nodes(editor, {
-        match: n => n.type === BlockFormat.TableCell
-      })
-
-      if (cell) {
-        const [, cellPath] = cell
-        const start = Editor.start(editor, cellPath)
-
-        if (Point.equals(selection.anchor, start)) {
-          return
-        }
-      }
-    }
-
-    deleteBackward(unit)
-  }
-
-  editor.deleteForward = unit => {
-    const {selection} = editor
-
-    if (selection && Range.isCollapsed(selection)) {
-      const [cell] = Editor.nodes(editor, {
-        match: n => n.type === BlockFormat.TableCell
-      })
-
-      if (cell) {
-        const [, cellPath] = cell
-        const end = Editor.end(editor, cellPath)
-
-        if (Point.equals(selection.anchor, end)) {
-          return
-        }
-      }
-    }
-
-    deleteForward(unit)
-  }
-
-  editor.insertBreak = () => {
-    const {selection} = editor
-
-    if (selection) {
-      const [table] = Editor.nodes(editor, {match: n => n.type === BlockFormat.Table})
-
-      if (table) {
-        return
-      }
-    }
-
-    insertBreak()
   }
 
   return editor
