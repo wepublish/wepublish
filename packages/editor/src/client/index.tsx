@@ -3,13 +3,10 @@ import 'regenerator-runtime/runtime'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {render as renderStyles} from 'fela-dom'
 import {ApolloProvider, ApolloClient, ApolloLink, InMemoryCache} from '@apollo/client'
 import {createUploadLink} from 'apollo-upload-client'
 
 import './i18n'
-
-import {createStyleRenderer, UIProvider} from '@karma.run/ui'
 
 import {ElementID} from '../shared/elementID'
 import {ClientSettings} from '../shared/types'
@@ -86,28 +83,23 @@ const onDOMContentLoaded = async () => {
     })
   })
 
-  const styleRenderer = createStyleRenderer()
-  renderStyles(styleRenderer)
-
   window.addEventListener('dragover', e => e.preventDefault())
   window.addEventListener('drop', e => e.preventDefault())
 
   ReactDOM.render(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={ElementID.ReactRoot}>
-      <ApolloProvider client={client}>
-        <AuthProvider>
-          <RouteProvider>
-            <FacebookProvider sdkLanguage={'en_US'}>
-              <InstagramProvider>
-                <TwitterProvider>
-                  <HotApp />
-                </TwitterProvider>
-              </InstagramProvider>
-            </FacebookProvider>
-          </RouteProvider>
-        </AuthProvider>
-      </ApolloProvider>
-    </UIProvider>,
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <RouteProvider>
+          <FacebookProvider sdkLanguage={'en_US'}>
+            <InstagramProvider>
+              <TwitterProvider>
+                <HotApp />
+              </TwitterProvider>
+            </InstagramProvider>
+          </FacebookProvider>
+        </RouteProvider>
+      </AuthProvider>
+    </ApolloProvider>,
     document.getElementById(ElementID.ReactRoot)
   )
 }

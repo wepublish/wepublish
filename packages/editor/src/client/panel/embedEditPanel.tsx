@@ -1,16 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import {MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
-import {
-  NavigationButton,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  TextArea,
-  Spacing,
-  Typography,
-  Box
-} from '@karma.run/ui'
+import {Button, Drawer, Input, Message} from 'rsuite'
 
 import {EmbedPreview} from '../blocks/embedBlock'
 import {EmbedBlockValue, EmbedType} from '../blocks/types'
@@ -99,55 +89,42 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
   }, [input])
 
   return (
-    <Panel>
-      <PanelHeader
-        title={t('blocks.embeds.panels.editEmbed')}
-        leftChildren={
-          <NavigationButton
-            icon={MaterialIconClose}
-            label={t('blocks.embeds.panels.close')}
-            onClick={() => onClose()}
-          />
-        }
-        rightChildren={
-          <NavigationButton
-            icon={MaterialIconCheck}
-            label={t('blocks.embeds.panels.confirm')}
-            onClick={() => onConfirm(embed)}
-            disabled={isEmpty}
-          />
-        }
-      />
-      <PanelSection>
-        <TextArea
-          marginBottom={Spacing.ExtraSmall}
-          label={t('blocks.embeds.panels.embed')}
-          errorMessage={errorMessage}
+    <>
+      <Drawer.Header>
+        <Drawer.Title>{t('blocks.embeds.panels.editEmbed')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Input
+          componentClass="textarea"
+          rows={3}
+          style={{width: '100%'}}
+          placeholder={t('blocks.embeds.panels.embed')}
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={input => setInput(input)}
         />
-        <Box marginBottom={Spacing.ExtraSmall}>
-          <Typography variant="subtitle1" spacing="small">
-            {t('blocks.embeds.panels.socialMediaList')}
-          </Typography>
+        {errorMessage && <Message type="error" description={errorMessage} />}
+        <div style={{marginBottom: 8}}>
+          <p>{t('blocks.embeds.panels.socialMediaList')}</p>
           <code>{t('blocks.embeds.panels.fbPosts')}</code>
-          <Typography variant="subtitle1" spacing="small">
-            {t('blocks.embeds.panels.embedCodeAttributes')}
-          </Typography>
+          <p>{t('blocks.embeds.panels.embedCodeAttributes')}</p>
           <code>{t('blocks.embeds.panels.iframe1Sample')}</code>
-          <Typography variant="subtitle1" spacing="small">
-            {t('blocks.embeds.panels.alternativeStyling')}
-          </Typography>
-
+          <p>{t('blocks.embeds.panels.alternativeStyling')}</p>
           <code>{t('blocks.embeds.panels.iframe2Sample')}</code>
-          <Typography variant="subtitle1" spacing="small">
-            {t('blocks.embeds.panels.GDPRInfo')}
-          </Typography>
-        </Box>
-
+          <p>{t('blocks.embeds.panels.GDPRInfo')}</p>
+        </div>
         <EmbedPreview value={embed} />
-      </PanelSection>
-    </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isEmpty} onClick={() => onConfirm(embed)}>
+          {t('blocks.embeds.panels.confirm')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('blocks.embeds.panels.confirm')}
+        </Button>
+      </Drawer.Footer>
+    </>
   )
 }
 

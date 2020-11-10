@@ -3,7 +3,12 @@
   "include": ["./**/*"],
   "exclude": ["./__mocks__"],
   "compilerOptions": {
-    "types": ["@types/node", "@types/webpack-dev-server", "@types/jest"],
+    "types": [
+      "@types/node",
+      "@types/webpack-dev-server",
+      "@types/jest",
+      "@types/resize-observer-browser"
+    ],
     "lib": ["ES2017", "ES2018", "ES2019", "dom", "dom.iterable"]
   }
 }

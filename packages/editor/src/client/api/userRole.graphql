@@ -1,7 +1,6 @@
 fragment FullPermission on Permission {
     id
     description
-    checked
     deprecated
 }
 

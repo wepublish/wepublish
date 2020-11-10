@@ -1,25 +1,11 @@
 import React, {useState, useCallback} from 'react'
 
-import {
-  BlockProps,
-  ListInput,
-  FieldProps,
-  Box,
-  Card,
-  PlaceholderInput,
-  ZIndex,
-  IconButton,
-  Spacing,
-  TypographicTextArea,
-  Drawer,
-  Image
-} from '@karma.run/ui'
+import {BlockProps} from '../atoms/blockList'
+import {ListInput, FieldProps} from '../atoms/listInput'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+import {PlaceholderInput} from '../atoms/placeholderInput'
 
-import {
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconClose
-} from '@karma.run/icons'
+import {IconButton, Drawer, Panel, Dropdown, Icon} from 'rsuite'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
@@ -65,42 +51,51 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
 
   return (
     <>
-      <Box display="flex" flexDirection="row">
-        <Card
-          overflow="hidden"
-          width={200}
-          height={150}
-          marginRight={Spacing.ExtraSmall}
-          flexShrink={0}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row'
+        }}>
+        <Panel
+          bodyFill={true}
+          bordered={true}
+          style={{
+            overflow: 'hidden',
+            width: 200,
+            height: 150,
+            marginRight: 10,
+            flexShrink: 0
+          }}>
           <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
             {image && (
-              <Box position="relative" width="100%" height="100%">
-                <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                  <IconButton
-                    icon={MaterialIconImageOutlined}
-                    title={t('blocks.listicle.chooseImage')}
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setChooseModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconEditOutlined}
-                    title={t('blocks.listicle.editImage')}
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => setEditModalOpen(true)}
-                  />
-                  <IconButton
-                    icon={MaterialIconClose}
-                    title={t('blocks.listicle.removeImage')}
-                    margin={Spacing.ExtraSmall}
-                    onClick={() => onChange(value => ({...value, image: null}))}
-                  />
-                </Box>
-                {image.previewURL && <Image src={image.previewURL} width="100%" height="100%" />}
-              </Box>
+              <Panel
+                bordered={true}
+                style={{
+                  height: '200px',
+                  backgroundSize: 'cover',
+                  backgroundImage: `url(${
+                    image?.previewURL ?? 'https://via.placeholder.com/240x240'
+                  })`
+                }}>
+                <Dropdown
+                  renderTitle={() => {
+                    return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+                  }}>
+                  <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
+                    <Icon icon="image" /> {t('peerList.panels.chooseImage')}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEditModalOpen(true)}>
+                    <Icon icon="pencil" /> {t('peerList.panels.editImage')}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => onChange(value => ({...value, image: null}))}>
+                    <Icon icon="close" /> {t('peerList.panels.removeImage')}
+                  </Dropdown.Item>
+                </Dropdown>
+              </Panel>
             )}
           </PlaceholderInput>
-        </Card>
-        <Box flexGrow={1}>
+        </Panel>
+        <div style={{flexGrow: 1}}>
           <TypographicTextArea
             variant="h1"
             placeholder={t('blocks.listicle.title')}
@@ -112,29 +107,27 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
           />
 
           <RichTextBlock value={richText} onChange={handleRichTextChange} />
-        </Box>
-      </Box>
+        </div>
+      </div>
 
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={image => {
-              setChooseModalOpen(false)
-              onChange(value => ({...value, image}))
-            }}
-          />
-        )}
+      <Drawer show={isChooseModalOpen} sizw={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={image => {
+            setChooseModalOpen(false)
+            onChange(value => ({...value, image}))
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
+      {image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
           <ImagedEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />
-        )}
-      </Drawer>
+        </Drawer>
+      )}
     </>
   )
 }

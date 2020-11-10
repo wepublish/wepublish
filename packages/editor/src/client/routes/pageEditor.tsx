@@ -1,26 +1,12 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {
-  EditorTemplate,
-  NavigationBar,
-  NavigationButton,
-  BlockList,
-  Drawer,
-  Toast,
-  Dialog,
-  useBlockMap
-} from '@karma.run/ui'
-
-import {
-  MaterialIconArrowBack,
-  MaterialIconInsertDriveFileOutlined,
-  MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
-
 import {RouteActionType} from '@karma.run/react'
 
-import {RouteNavigationLinkButton, useRouteDispatch, PageEditRoute, PageListRoute} from '../route'
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {NavigationBar} from '../atoms/navigationBar'
+import {EditorTemplate} from '../atoms/editorTemplate'
+
+import {useRouteDispatch, PageEditRoute, PageListRoute, IconButtonLink} from '../route'
 
 import {
   PageInput,
@@ -39,6 +25,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
+import {Icon, IconButton, Drawer, Modal, Notification} from 'rsuite'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -65,12 +52,6 @@ export function PageEditor({id}: PageEditorProps) {
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
-
-  const [isSuccessToastOpen, setSuccessToastOpen] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<PageMetadata>({
@@ -139,8 +120,10 @@ export function PageEditor({id}: PageEditorProps) {
 
   useEffect(() => {
     if (createError || updateError || publishError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
+      Notification.error({
+        title: updateError?.message ?? createError?.message ?? publishError!.message,
+        duration: 5000
+      })
     }
   }, [createError, updateError, publishError])
 
@@ -163,8 +146,10 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Saved')
+      Notification.success({
+        title: 'Page Draft Saved',
+        duration: 2000
+      })
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -176,8 +161,10 @@ export function PageEditor({id}: PageEditorProps) {
       }
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Created')
+      Notification.success({
+        title: 'Page Draft Created',
+        duration: 2000
+      })
     }
   }
 
@@ -204,14 +191,18 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    setSuccessToastOpen(true)
-    setSuccessMessage('Page Published')
+    Notification.success({
+      title: 'Page Published',
+      duration: 2000
+    })
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage('Page Not Found')
-      setErrorToastOpen(true)
+      Notification.error({
+        title: 'Page Not Found',
+        duration: 5000
+      })
     }
   }, [isNotFound])
 
@@ -221,45 +212,59 @@ export function PageEditor({id}: PageEditorProps) {
         navigationChildren={
           <NavigationBar
             leftChildren={
-              <RouteNavigationLinkButton
-                icon={MaterialIconArrowBack}
-                label={t('Back')}
+              <IconButtonLink
+                size={'lg'}
+                icon={<Icon icon="arrow-left" />}
                 route={PageListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
-                }}
-              />
+                }}>
+                {t('Back')}
+              </IconButtonLink>
             }
             centerChildren={
               <>
-                <NavigationButton
-                  icon={MaterialIconInsertDriveFileOutlined}
-                  label={t('Metadata')}
-                  onClick={() => setMetaDrawerOpen(true)}
+                <IconButton
+                  icon={<Icon icon="newspaper-o" />}
+                  size={'lg'}
                   disabled={isDisabled}
-                />
+                  onClick={() => setMetaDrawerOpen(true)}>
+                  {t('Metadata')}
+                </IconButton>
 
                 {isNew && createData == null ? (
-                  <NavigationButton
-                    icon={MaterialIconSaveOutlined}
-                    label={t('Create')}
-                    onClick={() => handleSave()}
+                  <IconButton
+                    style={{
+                      marginLeft: '10px'
+                    }}
+                    size={'lg'}
+                    icon={<Icon icon="save" />}
                     disabled={isDisabled}
-                  />
+                    onClick={() => handleSave()}>
+                    {t('Create')}
+                  </IconButton>
                 ) : (
                   <>
-                    <NavigationButton
-                      icon={MaterialIconSaveOutlined}
-                      label={t('Save')}
-                      onClick={() => handleSave()}
+                    <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
+                      size={'lg'}
+                      icon={<Icon icon="save" />}
                       disabled={isDisabled}
-                    />
-                    <NavigationButton
-                      icon={MaterialIconPublishOutlined}
-                      label={t('Publish')}
-                      onClick={() => setPublishDialogOpen(true)}
+                      onClick={() => handleSave()}>
+                      {t('Save')}
+                    </IconButton>
+                    <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
+                      size={'lg'}
+                      icon={<Icon icon="cloud-upload" />}
                       disabled={isDisabled}
-                    />
+                      onClick={() => setPublishDialogOpen(true)}>
+                      {t('Publish')}
+                    </IconButton>
                   </>
                 )}
               </>
@@ -270,46 +275,30 @@ export function PageEditor({id}: PageEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
-        {() => (
-          <PageMetadataPanel
-            value={metadata}
-            onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => {
-              setMetadata(value)
-              setChanged(true)
-            }}
-          />
-        )}
+
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+        <PageMetadataPanel
+          value={metadata}
+          onClose={() => setMetaDrawerOpen(false)}
+          onChange={value => {
+            setMetadata(value)
+            setChanged(true)
+          }}
+        />
       </Drawer>
-      <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
-        {() => (
-          <PublishPagePanel
-            initialPublishDate={publishedAt}
-            pendingPublishDate={pendingPublishDate}
-            metadata={metadata}
-            onClose={() => setPublishDialogOpen(false)}
-            onConfirm={(publishDate, updateDate) => {
-              handlePublish(publishDate, updateDate)
-              setPublishDialogOpen(false)
-            }}
-          />
-        )}
-      </Dialog>
-      <Toast
-        type="success"
-        open={isSuccessToastOpen}
-        autoHideDuration={2000}
-        onClose={() => setSuccessToastOpen(false)}>
-        {successMessage}
-      </Toast>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+
+      <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
+        <PublishPagePanel
+          initialPublishDate={publishedAt}
+          pendingPublishDate={pendingPublishDate}
+          metadata={metadata}
+          onClose={() => setPublishDialogOpen(false)}
+          onConfirm={(publishDate, updateDate) => {
+            handlePublish(publishDate, updateDate)
+            setPublishDialogOpen(false)
+          }}
+        />
+      </Modal>
     </>
   )
 }

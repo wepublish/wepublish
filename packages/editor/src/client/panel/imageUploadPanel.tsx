@@ -1,16 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 
-import {MaterialIconClose, MaterialIconCloudUploadOutlined} from '@karma.run/icons'
+import {Button, Drawer, Icon, Notification} from 'rsuite'
 
-import {
-  Box,
-  FileDropInput,
-  NavigationButton,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  Toast
-} from '@karma.run/ui'
+import {FileDropInput} from '../atoms/fileDropInput'
 
 import {useTranslation} from 'react-i18next'
 
@@ -20,9 +12,6 @@ export interface ImageUploadPanelProps {
 }
 
 export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
-  const [errorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
   const {t} = useTranslation()
 
   async function handleDrop(files: File[]) {
@@ -31,9 +20,10 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
     const file = files[0]
 
     if (!file.type.startsWith('image')) {
-      setErrorToastOpen(true)
-      setErrorMessage('articleEditor.panels.învalidImage')
-      return
+      Notification.error({
+        title: t('articleEditor.panels.învalidImage'),
+        duration: 5000
+      })
     }
 
     onUpload(file)
@@ -41,34 +31,25 @@ export function ImageUploadPanel({onClose, onUpload}: ImageUploadPanelProps) {
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('articleEditor.panels.uploadImage')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('articleEditor.panels.close')}
-              onClick={() => onClose()}
-            />
-          }
-        />
-        <PanelSection>
-          <Box height={100}>
-            <FileDropInput
-              icon={MaterialIconCloudUploadOutlined}
-              text={t('articleEditor.panels.dropImage')}
-              onDrop={handleDrop}
-            />
-          </Box>
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={errorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.uploadImage')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <div style={{height: '100px'}}>
+          <FileDropInput
+            icon={<Icon icon="upload" />}
+            text={t('articleEditor.panels.dropImage')}
+            onDrop={handleDrop}
+          />
+        </div>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

@@ -1,34 +1,6 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
-import {
-  MaterialIconQueryBuilder,
-  MaterialIconUpdate,
-  MaterialIconDeleteOutlined,
-  MaterialIconGetAppOutlined,
-  MaterialIconClose,
-  MaterialIconCheck
-} from '@karma.run/icons'
-
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Icon,
-  IconScale,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  Button
-} from '@karma.run/ui'
-
-import {RouteLinkButton, ArticleCreateRoute, Link, ArticleEditRoute} from '../route'
+import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
 
 import {
   useArticleListQuery,
@@ -36,10 +8,15 @@ import {
   useUnpublishArticleMutation,
   useDeleteArticleMutation,
   ArticleListDocument,
-  ArticleListQuery
+  ArticleListQuery,
+  PageRefFragment
 } from '../api'
 
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+
 import {useTranslation} from 'react-i18next'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -55,6 +32,8 @@ export function ArticleList() {
   const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
+  const [articles, setArticles] = useState<ArticleRefFragment[]>([])
+
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
 
@@ -64,6 +43,12 @@ export function ArticleList() {
     fetchPolicy: 'network-only'
   })
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if (data?.articles.nodes) {
+      setArticles(data.articles.nodes)
+    }
+  }, [data?.articles])
 
   function loadMore() {
     fetchMore({
@@ -81,229 +66,192 @@ export function ArticleList() {
     })
   }
 
-  const articles = data?.articles.nodes.map(article => {
-    const {
-      id,
-      createdAt,
-      modifiedAt,
-
-      draft,
-      pending,
-      published,
-
-      latest: {title}
-    } = article
-
-    const states = []
-
-    if (draft) states.push(t('articles.overview.draft'))
-    if (pending) states.push(t('articles.overview.pending'))
-    if (published) states.push(t('articles.overview.published'))
-
-    return (
-      <Box key={id} marginBottom={Spacing.Small}>
-        <Box marginBottom={Spacing.ExtraSmall}>
-          <Link route={ArticleEditRoute.create({id})}>
-            <Typography variant="h3" color={title ? 'dark' : 'gray'}>
-              {title || t('articles.overview.untitled')}
-            </Typography>
-          </Link>
-        </Box>
-        <Box
-          marginBottom={Spacing.ExtraSmall}
-          flexDirection="row"
-          alignItems="center"
-          display="flex">
-          <Typography element="div" variant="body1" color="grayDark">
-            <Box
-              marginRight={Spacing.ExtraSmall}
-              flexDirection="row"
-              alignItems="center"
-              display="flex">
-              <Box marginRight={Spacing.Tiny}>
-                <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-              </Box>
-              {new Date(createdAt).toLocaleString()}
-            </Box>
-          </Typography>
-          <Typography element="div" variant="body1" color="grayDark">
-            <Box marginRight={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-              <Box marginRight={Spacing.Tiny}>
-                <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-              </Box>
-              {new Date(modifiedAt).toLocaleString()}
-            </Box>
-          </Typography>
-          <Typography element="div" variant="subtitle1" color="gray">
-            {states.join(' / ')}
-          </Typography>
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={
-              published // TODO: Allow disabling menu items
-                ? [
-                    {
-                      id: ConfirmAction.Unpublish,
-                      label: t('articles.panels.unpublish'),
-                      icon: MaterialIconGetAppOutlined
-                    },
-                    {
-                      id: ConfirmAction.Delete,
-                      label: t('articles.panels.delete'),
-                      icon: MaterialIconDeleteOutlined
-                    }
-                  ]
-                : [
-                    {
-                      id: ConfirmAction.Delete,
-                      label: t('articles.panels.delete'),
-                      icon: MaterialIconDeleteOutlined
-                    }
-                  ]
-            }
-            onMenuItemClick={item => {
-              setCurrentArticle(article)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
-
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('articles.overview.articles')}</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label={t('articles.overview.newArticle')}
-          route={ArticleCreateRoute.create({})}
-        />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder={t('articles.overview.search')}
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-      </Box>
-      <Box>
-        {articles?.length ? (
-          <>
-            {articles}
-            <Box display="flex" justifyContent="center">
-              {data?.articles.pageInfo.hasNextPage && (
-                <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
-              )}
-            </Box>
-          </>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            {t('articles.overview.noArticlesFound')}
-          </Typography>
-        ) : null}
-      </Box>
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('articles.overview.articles')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={ArticleCreateRoute.create({})}>
+            {t('articles.overview.newArticle')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
 
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title={
-                confirmAction === ConfirmAction.Unpublish
-                  ? t('articles.panels.unpublishArticle')
-                  : t('articles.panels.deleteArticle')
-              }
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('articles.panels.cancel')}
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label={t('articles.panels.confirm')}
-                  disabled={isUnpublishing || isDeleting}
-                  onClick={async () => {
-                    if (!currentArticle) return
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={articles}>
+        <Column width={400} align="left" resizable>
+          <HeaderCell>Titel</HeaderCell>
+          <Cell>
+            {(rowData: PageRefFragment) => (
+              <Link route={ArticleEditRoute.create({id: rowData.id})}>
+                {rowData.latest.title || t('articles.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="left" resizable>
+          <HeaderCell>Created</HeaderCell>
+          <Cell dataKey="createdAt" />
+        </Column>
+        <Column width={100} align="left" resizable>
+          <HeaderCell>Modified</HeaderCell>
+          <Cell dataKey="modifiedAt" />
+        </Column>
+        <Column width={100} align="left" resizable>
+          <HeaderCell>State</HeaderCell>
+          <Cell>
+            {(rowData: PageRefFragment) => {
+              const states = []
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteArticle({
-                          variables: {id: currentArticle.id},
-                          update: cache => {
-                            const query = cache.readQuery<ArticleListQuery>({
-                              query: ArticleListDocument,
-                              variables: listVariables
-                            })
+              if (rowData.draft) states.push(t('articles.overview.draft'))
+              if (rowData.pending) states.push(t('articles.overview.pending'))
+              if (rowData.published) states.push(t('articles.overview.published'))
 
-                            if (!query) return
-
-                            cache.writeQuery<ArticleListQuery>({
-                              query: ArticleListDocument,
-                              data: {
-                                articles: {
-                                  ...query.articles,
-                                  nodes: query.articles.nodes.filter(
-                                    article => article.id !== currentArticle.id
-                                  )
-                                }
-                              },
-                              variables: listVariables
-                            })
-                          }
-                        })
-                        break
-
-                      case ConfirmAction.Unpublish:
-                        await unpublishArticle({
-                          variables: {id: currentArticle.id}
-                        })
-                        break
-                    }
-
-                    setConfirmationDialogOpen(false)
+              return <div>{states.join(' / ')}</div>
+            }}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>Action</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: ArticleRefFragment) => (
+              <>
+                {rowData.published && (
+                  <IconButton
+                    icon={<Icon icon="arrow-circle-o-down" />}
+                    circle
+                    size="sm"
+                    onClick={e => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Unpublish)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                )}
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setConfirmAction(ConfirmAction.Delete)
+                    setConfirmationDialogOpen(true)
                   }}
                 />
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      {data?.articles.pageInfo.hasNextPage && (
+        <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
+      )}
+
+      <Modal
+        show={isConfirmationDialogOpen}
+        width={'sm'}
+        onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>
+            {confirmAction === ConfirmAction.Unpublish
+              ? t('articles.panels.unpublishArticle')
+              : t('articles.panels.deleteArticle')}
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('articles.panels.title')}>
+              {currentArticle?.latest.title || t('articles.panels.untitled')}
+            </DescriptionListItem>
+
+            {currentArticle?.latest.lead && (
+              <DescriptionListItem label={t('articles.panels.lead')}>
+                {currentArticle?.latest.lead}
+              </DescriptionListItem>
+            )}
+
+            <DescriptionListItem label={t('articles.panels.createdAt')}>
+              {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
+            </DescriptionListItem>
+
+            <DescriptionListItem label={t('articles.panels.updatedAt')}>
+              {currentArticle?.latest.updatedAt &&
+                new Date(currentArticle.latest.updatedAt).toLocaleString()}
+            </DescriptionListItem>
+
+            {currentArticle?.latest.publishedAt && (
+              <DescriptionListItem label={t('articles.panels.publishedAt')}>
+                {new Date(currentArticle.createdAt).toLocaleString()}
+              </DescriptionListItem>
+            )}
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isUnpublishing || isDeleting}
+            onClick={async () => {
+              if (!currentArticle) return
+
+              switch (confirmAction) {
+                case ConfirmAction.Delete:
+                  await deleteArticle({
+                    variables: {id: currentArticle.id},
+                    update: cache => {
+                      const query = cache.readQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        variables: listVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        data: {
+                          articles: {
+                            ...query.articles,
+                            nodes: query.articles.nodes.filter(
+                              article => article.id !== currentArticle.id
+                            )
+                          }
+                        },
+                        variables: listVariables
+                      })
+                    }
+                  })
+                  break
+
+                case ConfirmAction.Unpublish:
+                  await unpublishArticle({
+                    variables: {id: currentArticle.id}
+                  })
+                  break
               }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label={t('articles.panels.title')}>
-                  {currentArticle?.latest.title || t('articles.panels.untitled')}
-                </DescriptionListItem>
 
-                {currentArticle?.latest.lead && (
-                  <DescriptionListItem label={t('articles.panels.lead')}>
-                    {currentArticle?.latest.lead}
-                  </DescriptionListItem>
-                )}
-
-                <DescriptionListItem label={t('articles.panels.createdAt')}>
-                  {currentArticle?.createdAt && new Date(currentArticle.createdAt).toLocaleString()}
-                </DescriptionListItem>
-
-                <DescriptionListItem label={t('articles.panels.updatedAt')}>
-                  {currentArticle?.latest.updatedAt &&
-                    new Date(currentArticle.latest.updatedAt).toLocaleString()}
-                </DescriptionListItem>
-
-                {currentArticle?.latest.publishedAt && (
-                  <DescriptionListItem label={t('articles.panels.publishedAt')}>
-                    {new Date(currentArticle.createdAt).toLocaleString()}
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+              setConfirmationDialogOpen(false)
+            }}>
+            {t('articles.panels.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('articles.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

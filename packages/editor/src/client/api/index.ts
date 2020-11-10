@@ -835,7 +835,6 @@ export type Permission = {
   __typename?: 'Permission';
   id: Scalars['String'];
   description: Scalars['String'];
-  checked: Scalars['Boolean'];
   deprecated: Scalars['Boolean'];
 };
 
@@ -2323,7 +2322,7 @@ export type DeleteUserMutation = (
 
 export type FullPermissionFragment = (
   { __typename?: 'Permission' }
-  & Pick<Permission, 'id' | 'description' | 'checked' | 'deprecated'>
+  & Pick<Permission, 'id' | 'description' | 'deprecated'>
 );
 
 export type FullUserRoleFragment = (
@@ -2757,7 +2756,6 @@ export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
   description
-  checked
   deprecated
 }
     `;

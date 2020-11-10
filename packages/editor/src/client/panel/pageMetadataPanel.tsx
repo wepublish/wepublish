@@ -2,28 +2,17 @@ import React, {useState} from 'react'
 
 import {
   Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  TextArea,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
+  ControlLabel,
   Drawer,
+  Dropdown,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
   IconButton,
-  Image,
-  TagInput,
-  ZIndex
-} from '@karma.run/ui'
-
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined
-} from '@karma.run/icons'
+  TagPicker
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -66,100 +55,84 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('pageEditor.panels.metadata')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('pageEditor.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-        />
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('pageEditor.panels.slug')}
-              value={slug}
-              onChange={e => onChange?.({...value, slug: e.target.value})}
-            />
-          </Box>
+      <Drawer.Header>
+        <Drawer.Title>{t('pageEditor.panels.metadata')}</Drawer.Title>
+      </Drawer.Header>
 
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('pageEditor.panels.title')}
-              value={title}
-              onChange={e => onChange?.({...value, title: e.target.value})}
-            />
-          </Box>
-
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextArea
-              label={t('pageEditor.panels.description')}
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
+            <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
+            <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
+            <FormControl
+              componentClass="textarea"
               value={description}
-              onChange={e => onChange?.({...value, description: e.target.value})}
+              onChange={description => onChange?.({...value, description})}
             />
-          </Box>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
+            <TagPicker
+              style={{width: '100%'}}
+              creatable={true}
+              data={tags.map(tag => ({label: tag, value: tag}))}
+              onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+            />
+          </FormGroup>
+        </Form>
+        <Panel
+          bordered={true}
+          style={{
+            height: '200px',
+            backgroundSize: 'cover',
+            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
+          }}>
+          <Dropdown
+            renderTitle={() => {
+              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+            }}>
+            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
+              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
+            </Dropdown.Item>
+            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
+              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
+            </Dropdown.Item>
+            <Dropdown.Item
+              disabled={!image}
+              onClick={() => onChange?.({...value, image: undefined})}>
+              <Icon icon="close" /> {t('peerList.panels.removeImage')}
+            </Dropdown.Item>
+          </Dropdown>
+        </Panel>
+      </Drawer.Body>
 
-          <Box marginBottom={Spacing.Small}>
-            <TagInput
-              label={t('pageEditor.panels.tags')}
-              description={t('pageEditor.panels.addTag')}
-              value={tags}
-              onChange={tags => onChange?.({...value, tags: tags ?? []})}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('pageEditor.panels.image')} />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <IconButton
-                        icon={MaterialIconImageOutlined}
-                        title={t('pageEditor.panels.chooseImage')}
-                        onClick={() => setChooseModalOpen(true)}
-                        margin={Spacing.ExtraSmall}
-                      />
-                      <IconButton
-                        icon={MaterialIconEditOutlined}
-                        title={t('pageEditor.panels.editImage')}
-                        onClick={() => setEditModalOpen(true)}
-                        margin={Spacing.ExtraSmall}
-                      />
-                      <IconButton
-                        icon={MaterialIconClose}
-                        title={t('pageEditor.panels.removeImage')}
-                        onClick={() => onChange?.({...value, image: undefined})}
-                        margin={Spacing.ExtraSmall}
-                      />
-                    </Box>
-                    {image.url && <Image src={image.url} width="100%" height="100%" />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-      </Panel>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
+      <Drawer.Footer>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('pageEditor.panels.close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />}
-      </Drawer>
+      {value.image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+          <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />
+        </Drawer>
+      )}
     </>
   )
 }
