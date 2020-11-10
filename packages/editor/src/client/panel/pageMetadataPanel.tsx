@@ -1,24 +1,13 @@
 import React, {useState} from 'react'
 
-import {
-  Panel,
-  Button,
-  ControlLabel,
-  Drawer,
-  Dropdown,
-  Form,
-  FormControl,
-  FormGroup,
-  Icon,
-  IconButton,
-  TagPicker
-} from 'rsuite'
+import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, TagPicker} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 export interface PageMetadataProperty {
   readonly key: string
   readonly value: string
@@ -82,35 +71,19 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             <TagPicker
               style={{width: '100%'}}
               creatable={true}
+              value={tags}
               data={tags.map(tag => ({label: tag, value: tag}))}
               onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
             />
           </FormGroup>
         </Form>
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={!image}
-              onClick={() => onChange?.({...value, image: undefined})}>
-              <Icon icon="close" /> {t('peerList.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
-        </Panel>
+        <ChooseEditImage
+          image={image}
+          disabled={false}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => onChange?.({...value, image: undefined})}
+        />
       </Drawer.Body>
 
       <Drawer.Footer>

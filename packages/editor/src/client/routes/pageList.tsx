@@ -107,7 +107,7 @@ export function PageList() {
           <Cell dataKey="modifiedAt" />
         </Column>
         <Column width={100} align="left" resizable>
-          <HeaderCell>Id</HeaderCell>
+          <HeaderCell>State</HeaderCell>
           <Cell>
             {(rowData: PageRefFragment) => {
               const states = []
