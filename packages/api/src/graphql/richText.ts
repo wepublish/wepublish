@@ -10,7 +10,6 @@ export enum ElementNodeType {
   OrderedList = 'ordered-list',
   ListItem = 'list-item',
   Link = 'link',
-  // HorizontalLine = 'horizontal-line', // TODO
   Table = 'table',
   TableRow = 'table-row',
   TableCell = 'table-cell'
@@ -45,7 +44,6 @@ export interface RichTextBlockNode {
     | ElementNodeType.UnorderedList
     | ElementNodeType.OrderedList
     | ElementNodeType.ListItem
-    // | HorizontalLine = 'horizontal-line', // TODO
     | ElementNodeType.Table
     | ElementNodeType.TableRow
     | ElementNodeType.TableCell
