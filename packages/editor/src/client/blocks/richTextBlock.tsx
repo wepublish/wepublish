@@ -14,8 +14,7 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-// import 'emoji-mart/css/emoji-mart.css'
-// import {Picker} from 'emoji-mart'
+import {Picker} from 'emoji-mart'
 
 import {
   MaterialIconFormatBold,
@@ -349,6 +348,18 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
         <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
       </Toolbar>
+
+      <Picker set="apple" />
+      <Picker onSelect={() => null /*this.addEmoji*/} />
+      <Picker title="Pick your emoji…" emoji="point_up" />
+      <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
+      <Picker
+        i18n={{
+          search: 'Recherche',
+          categories: {search: 'Résultats de recherche', recent: 'Récents'}
+        }}
+      />
+
       <Editable
         readOnly={disabled}
         placeholder={t('blocks.richText.startWriting')}

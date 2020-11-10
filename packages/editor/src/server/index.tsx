@@ -43,6 +43,8 @@ async function asyncMain() {
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+          <link href="./node_modules/emoji-mart/css/emoji-mart.css" rel="stylesheet" />
+
           <script
             type="application/json"
             id={ElementID.Settings}
