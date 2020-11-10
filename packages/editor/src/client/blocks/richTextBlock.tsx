@@ -15,7 +15,7 @@ import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
 import 'emoji-mart/css/emoji-mart.css'
-// import {Picker, PickerProps} from 'emoji-mart'
+// import {Picker} from 'emoji-mart'
 
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
@@ -241,26 +241,6 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 //   }
 // ])
 
-// function EmojiPicker() {
-//   const apple = 'apple' as keyof Pick<PickerProps, 'set'>
-//   const pick = 'pick'
-//   const pointUp = 'point_up'
-//   return (
-//     <>
-//       <Picker set={apple} />
-//       <Picker onSelect={() => null /* this.addEmoji */} />
-//       <Picker title={pick} emoji={pointUp} />
-//       <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
-//       <Picker
-//         i18n={{
-//           search: 'Search',
-//           categories: {search: 'Search results', recent: 'recent'}
-//         }}
-//       />
-//     </>
-//   )
-// }
-
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -281,42 +261,46 @@ export const RichTextBlock = memo(function RichTextBlock({
   }, [])
 
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(newValue: SlateNode[]) => {
-        setFocus(ReactEditor.isFocused(editor))
-        if (value !== newValue) onChange(newValue)
-      }}>
-      <Toolbar fadeOut={!hasFocus}>
-        <FormatButton icon="header" format={BlockFormat.H1} />
-        <FormatButton icon="header" format={BlockFormat.H2} />
-        <FormatButton icon="header" format={BlockFormat.H3} />
+    <>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(newValue: SlateNode[]) => {
+          setFocus(ReactEditor.isFocused(editor))
+          if (value !== newValue) onChange(newValue)
+        }}>
+        <Toolbar fadeOut={!hasFocus}>
+          <FormatButton icon="header" format={BlockFormat.H1} />
+          <FormatButton icon="header" format={BlockFormat.H2} />
+          <FormatButton icon="header" format={BlockFormat.H3} />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
-        <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
+          <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
+          <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <FormatButton icon="bold" format={TextFormat.Bold} />
-        <FormatButton icon="italic" format={TextFormat.Italic} />
-        <FormatButton icon="underline" format={TextFormat.Underline} />
-        <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
+          <FormatButton icon="bold" format={TextFormat.Bold} />
+          <FormatButton icon="italic" format={TextFormat.Italic} />
+          <FormatButton icon="underline" format={TextFormat.Underline} />
+          <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
+          <FormatButton icon={'superscript'} format={TextFormat.Superscript} />
+          <FormatButton icon={'subscript'} format={TextFormat.Subscript} />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <LinkFormatButton />
-        <RemoveLinkFormatButton />
-      </Toolbar>
-      <Editable
-        readOnly={disabled}
-        placeholder={t('blocks.richText.startWriting')}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-      />
-    </Slate>
+          <LinkFormatButton />
+          <RemoveLinkFormatButton />
+        </Toolbar>
+        <Editable
+          readOnly={disabled}
+          placeholder={t('blocks.richText.startWriting')}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+        />
+      </Slate>
+    </>
   )
 })
 
@@ -340,15 +324,6 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
 }
 
 //
-//        <ToolbarDivider />
-//
-//        <FormatButton icon={MaterialIconFormatSuperscript} format={TextFormat.Superscript} />
-//        <FormatButton icon={MaterialIconFormatSubscript} format={TextFormat.Subscript} />
-//
-
-//
-//        <ToolbarDivider />
-//
 //        {'😄 😁 🤯 🎸'.split(' ').map((txt, i) => (
 //          <InsertTextButton key={i} label={txt} />
 //        ))}
@@ -368,6 +343,29 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
 //     />
 //   )
 // }
+// function EmojiPicker() {
+//   // const apple = 'apple' as keyof Pick<PickerProps, 'set'>
+//   const pick = 'pick'
+//   const pointUp = 'point_up'
+//   return (
+//     <>
+//       <Picker set={'apple'} />
+//       <Picker onSelect={() => null /* this.addEmoji */} />
+//       <Picker title={pick} emoji={pointUp} />
+//       <Picker style={{position: 'absolute', bottom: '20px', right: '20px'}} />
+//       <Picker
+//         i18n={{
+//           search: 'Search',
+//           categories: {search: 'Search results', recent: 'recent'}
+//         }}
+//       />
+//     </>
+//   )
+// }
+//
+//      <div style={{position: 'absolute', top: 10, right: 10, zIndex: 1000}}>
+//        <EmojiPicker />
+//      </div>
 
 function LinkFormatButton() {
   const editor = useSlate()
@@ -574,35 +572,3 @@ function withRichText<T extends ReactEditor>(editor: T): T {
 export function createDefaultValue(): RichTextBlockValue {
   return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
 }
-
-// function MaterialIconFormatSuperscript() {
-//   return (
-//     <svg
-//       xmlns="http://www.w3.org/2000/svg"
-//       enableBackground="new 0 0 24 24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       width="24">
-//       <g>
-//         <rect fill="none" height="24" width="24" x="0" y="0" />
-//         <path d="M22,7h-2v1h3v1h-4V7c0-0.55,0.45-1,1-1h2V5h-3V4h3c0.55,0,1,0.45,1,1v1C23,6.55,22.55,7,22,7z M5.88,20h2.66l3.4-5.42h0.12 l3.4,5.42h2.66l-4.65-7.27L17.81,6h-2.68l-3.07,4.99h-0.12L8.85,6H6.19l4.32,6.73L5.88,20z" />
-//       </g>
-//     </svg>
-//   )
-// }
-//
-// function MaterialIconFormatSubscript() {
-//   return (
-//     <svg
-//       xmlns="http://www.w3.org/2000/svg"
-//       enableBackground="new 0 0 24 24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//      width="24">
-//      <g>
-//        <rect fill="none" height="24" width="24" />
-//        <path d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z" />
-//      </g>
-//    </svg>
-//  )
-// }
