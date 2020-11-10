@@ -1035,6 +1035,412 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   </Styled(button)>
                                 </ForwardRef(ToolbarButton)>
                               </RemoveLinkFormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <InsertTextButton
+                                key="0"
+                                label="😄"
+                              >
+                                <ForwardRef(Button)
+                                  label="😄"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😄
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="1"
+                                label="😁"
+                              >
+                                <ForwardRef(Button)
+                                  label="😁"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😁
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="2"
+                                label="🤯"
+                              >
+                                <ForwardRef(Button)
+                                  label="🤯"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🤯
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="3"
+                                label="🎸"
+                              >
+                                <ForwardRef(Button)
+                                  label="🎸"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🎸
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="4"
+                                label="¿"
+                              >
+                                <ForwardRef(Button)
+                                  label="¿"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      ¿
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="5"
+                                label="å"
+                              >
+                                <ForwardRef(Button)
+                                  label="å"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      å
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="6"
+                                label="etc"
+                              >
+                                <ForwardRef(Button)
+                                  label="etc"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      etc
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="superscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSuperscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                                x="0"
+                                                y="0"
+                                              />
+                                              <path
+                                                d="M22,7h-2v1h3v1h-4V7c0-0.55,0.45-1,1-1h2V5h-3V4h3c0.55,0,1,0.45,1,1v1C23,6.55,22.55,7,22,7z M5.88,20h2.66l3.4-5.42h0.12 l3.4,5.42h2.66l-4.65-7.27L17.81,6h-2.68l-3.07,4.99h-0.12L8.85,6H6.19l4.32,6.73L5.88,20z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSuperscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="subscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSubscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                              />
+                                              <path
+                                                d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSubscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
                             </div>
                           </Styled(div)>
                         </div>
@@ -2756,6 +3162,412 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   </Styled(button)>
                                 </ForwardRef(ToolbarButton)>
                               </RemoveLinkFormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <InsertTextButton
+                                key="0"
+                                label="😄"
+                              >
+                                <ForwardRef(Button)
+                                  label="😄"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😄
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="1"
+                                label="😁"
+                              >
+                                <ForwardRef(Button)
+                                  label="😁"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😁
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="2"
+                                label="🤯"
+                              >
+                                <ForwardRef(Button)
+                                  label="🤯"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🤯
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="3"
+                                label="🎸"
+                              >
+                                <ForwardRef(Button)
+                                  label="🎸"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🎸
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="4"
+                                label="¿"
+                              >
+                                <ForwardRef(Button)
+                                  label="¿"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      ¿
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="5"
+                                label="å"
+                              >
+                                <ForwardRef(Button)
+                                  label="å"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      å
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="6"
+                                label="etc"
+                              >
+                                <ForwardRef(Button)
+                                  label="etc"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      etc
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="superscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSuperscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                                x="0"
+                                                y="0"
+                                              />
+                                              <path
+                                                d="M22,7h-2v1h3v1h-4V7c0-0.55,0.45-1,1-1h2V5h-3V4h3c0.55,0,1,0.45,1,1v1C23,6.55,22.55,7,22,7z M5.88,20h2.66l3.4-5.42h0.12 l3.4,5.42h2.66l-4.65-7.27L17.81,6h-2.68l-3.07,4.99h-0.12L8.85,6H6.19l4.32,6.73L5.88,20z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSuperscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="subscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSubscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                              />
+                                              <path
+                                                d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSubscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
                             </div>
                           </Styled(div)>
                         </div>
@@ -4203,6 +5015,412 @@ exports[`Author Edit Panel should render 1`] = `
                                   </Styled(button)>
                                 </ForwardRef(ToolbarButton)>
                               </RemoveLinkFormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <InsertTextButton
+                                key="0"
+                                label="😄"
+                              >
+                                <ForwardRef(Button)
+                                  label="😄"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😄
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="1"
+                                label="😁"
+                              >
+                                <ForwardRef(Button)
+                                  label="😁"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😁
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="2"
+                                label="🤯"
+                              >
+                                <ForwardRef(Button)
+                                  label="🤯"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🤯
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="3"
+                                label="🎸"
+                              >
+                                <ForwardRef(Button)
+                                  label="🎸"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🎸
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="4"
+                                label="¿"
+                              >
+                                <ForwardRef(Button)
+                                  label="¿"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      ¿
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="5"
+                                label="å"
+                              >
+                                <ForwardRef(Button)
+                                  label="å"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      å
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="6"
+                                label="etc"
+                              >
+                                <ForwardRef(Button)
+                                  label="etc"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      etc
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="superscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSuperscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                                x="0"
+                                                y="0"
+                                              />
+                                              <path
+                                                d="M22,7h-2v1h3v1h-4V7c0-0.55,0.45-1,1-1h2V5h-3V4h3c0.55,0,1,0.45,1,1v1C23,6.55,22.55,7,22,7z M5.88,20h2.66l3.4-5.42h0.12 l3.4,5.42h2.66l-4.65-7.27L17.81,6h-2.68l-3.07,4.99h-0.12L8.85,6H6.19l4.32,6.73L5.88,20z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSuperscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="subscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSubscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                              />
+                                              <path
+                                                d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSubscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
                             </div>
                           </Styled(div)>
                         </div>
@@ -5652,6 +6870,412 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   </Styled(button)>
                                 </ForwardRef(ToolbarButton)>
                               </RemoveLinkFormatButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <InsertTextButton
+                                key="0"
+                                label="😄"
+                              >
+                                <ForwardRef(Button)
+                                  label="😄"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😄
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="1"
+                                label="😁"
+                              >
+                                <ForwardRef(Button)
+                                  label="😁"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      😁
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="2"
+                                label="🤯"
+                              >
+                                <ForwardRef(Button)
+                                  label="🤯"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🤯
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="3"
+                                label="🎸"
+                              >
+                                <ForwardRef(Button)
+                                  label="🎸"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      🎸
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="4"
+                                label="¿"
+                              >
+                                <ForwardRef(Button)
+                                  label="¿"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      ¿
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="5"
+                                label="å"
+                              >
+                                <ForwardRef(Button)
+                                  label="å"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      å
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <InsertTextButton
+                                key="6"
+                                label="etc"
+                              >
+                                <ForwardRef(Button)
+                                  label="etc"
+                                  onMouseDown={[Function]}
+                                  style={
+                                    Object {
+                                      "padding": "0px",
+                                    }
+                                  }
+                                  variant="text"
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    style={
+                                      Object {
+                                        "padding": "0px",
+                                      }
+                                    }
+                                    styleProps={
+                                      Object {
+                                        "color": "default",
+                                        "disabled": undefined,
+                                        "variant": "text",
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                      style={
+                                        Object {
+                                          "padding": "0px",
+                                        }
+                                      }
+                                    >
+                                      etc
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(Button)>
+                              </InsertTextButton>
+                              <Styled(div)>
+                                <div />
+                              </Styled(div)>
+                              <FormatButton
+                                format="superscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSuperscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                                x="0"
+                                                y="0"
+                                              />
+                                              <path
+                                                d="M22,7h-2v1h3v1h-4V7c0-0.55,0.45-1,1-1h2V5h-3V4h3c0.55,0,1,0.45,1,1v1C23,6.55,22.55,7,22,7z M5.88,20h2.66l3.4-5.42h0.12 l3.4,5.42h2.66l-4.65-7.27L17.81,6h-2.68l-3.07,4.99h-0.12L8.85,6H6.19l4.32,6.73L5.88,20z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSuperscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
+                              <FormatButton
+                                format="subscript"
+                                icon={[Function]}
+                              >
+                                <ForwardRef(ToolbarButton)
+                                  active={false}
+                                  icon={[Function]}
+                                  onMouseDown={[Function]}
+                                >
+                                  <Styled(button)
+                                    onMouseDown={[Function]}
+                                    styleProps={
+                                      Object {
+                                        "isActive": false,
+                                      }
+                                    }
+                                  >
+                                    <button
+                                      onMouseDown={[Function]}
+                                    >
+                                      <Icon
+                                        block={true}
+                                        element={[Function]}
+                                        scale="1em"
+                                      >
+                                        <MaterialIconFormatSubscript
+                                          role="img"
+                                        >
+                                          <svg
+                                            enableBackground="new 0 0 24 24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <g>
+                                              <rect
+                                                fill="none"
+                                                height="24"
+                                                width="24"
+                                              />
+                                              <path
+                                                d="M22,18h-2v1h3v1h-4v-2c0-0.55,0.45-1,1-1h2v-1h-3v-1h3c0.55,0,1,0.45,1,1v1C23,17.55,22.55,18,22,18z M5.88,18h2.66 l3.4-5.42h0.12l3.4,5.42h2.66l-4.65-7.27L17.81,4h-2.68l-3.07,4.99h-0.12L8.85,4H6.19l4.32,6.73L5.88,18z"
+                                              />
+                                            </g>
+                                          </svg>
+                                        </MaterialIconFormatSubscript>
+                                      </Icon>
+                                    </button>
+                                  </Styled(button)>
+                                </ForwardRef(ToolbarButton)>
+                              </FormatButton>
                             </div>
                           </Styled(div)>
                         </div>
