@@ -47,6 +47,10 @@ export default (env: any, {mode}: any) =>
           }
         },
         {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        },
+        {
           test: /\.less$/,
           use: [
             'style-loader',
