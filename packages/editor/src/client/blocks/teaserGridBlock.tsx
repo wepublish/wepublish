@@ -9,8 +9,6 @@ import {Typography} from '../atoms/typography'
 
 import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
 
-import {styled} from '@karma.run/react'
-
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
@@ -22,17 +20,6 @@ import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
 
-interface GridElementProps {
-  numColumns: number
-}
-
-const GridElement = styled('div', ({numColumns}: GridElementProps) => ({
-  display: 'grid',
-  gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-  gridGap: 20,
-  userSelect: 'none'
-}))
-
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
 })
@@ -43,7 +30,17 @@ interface GridProps {
 }
 
 const Grid = SortableContainer(({children, numColumns}: GridProps) => {
-  return <GridElement styleProps={{numColumns}}>{children}</GridElement>
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+        gridGap: 20,
+        userSelect: 'none'
+      }}>
+      {children}
+    </div>
+  )
 })
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {

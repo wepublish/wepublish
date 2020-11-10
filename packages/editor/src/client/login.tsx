@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType, styled} from '@karma.run/react'
+import {RouteActionType} from '@karma.run/react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
 
@@ -209,69 +209,67 @@ export function Login() {
   )
 }
 
-const BackgroundWrapper = styled('div', () => ({
-  position: 'relative',
-  width: 340,
-  height: 40,
-  transform: 'translateY(-0px)'
-}))
-
-const RedCircle = styled('div', () => ({
-  position: 'absolute',
-  width: 340,
-  height: 340,
-  borderRadius: '100%',
-  transform: 'translateY(-80px)',
-  background: 'linear-gradient(-90deg, #D95560 0%, #FF6370 100%)'
-}))
-
-const OrangeCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateX(-180px) translateY(-40px)',
-  background: 'linear-gradient(230deg, #F08C1F 0%, #FFA463 100%)'
-}))
-
-const GreenCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateX(180px) translateY(-40px)',
-  background: 'linear-gradient(10deg, #29805A 0%, #34D690 100%)'
-}))
-
-const BlueCircle = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  width: 260,
-  height: 260,
-  borderRadius: '100%',
-  transform: 'translateX(-50%) translateY(-140px)',
-  background: 'linear-gradient(-40deg, #03738C 0%, #04C4D9 100%)'
-}))
-
-const LogoWrapper = styled('div', () => ({
-  position: 'absolute',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 230
-}))
-
 function Background() {
   return (
-    <BackgroundWrapper>
-      <OrangeCircle />
-      <GreenCircle />
-      <BlueCircle />
-      <RedCircle />
-      <LogoWrapper>
+    <div
+      style={{
+        position: 'relative',
+        width: 340,
+        height: 40,
+        transform: 'translateY(-0px)'
+      }}>
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateX(-180px) translateY(-40px)',
+          background: 'linear-gradient(230deg, #F08C1F 0%, #FFA463 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateX(180px) translateY(-40px)',
+          background: 'linear-gradient(10deg, #29805A 0%, #34D690 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          width: 260,
+          height: 260,
+          borderRadius: '100%',
+          transform: 'translateX(-50%) translateY(-140px)',
+          background: 'linear-gradient(-40deg, #03738C 0%, #04C4D9 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          width: 340,
+          height: 340,
+          borderRadius: '100%',
+          transform: 'translateY(-80px)',
+          background: 'linear-gradient(-90deg, #D95560 0%, #FF6370 100%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 230
+        }}>
         <Logo />
-      </LogoWrapper>
-    </BackgroundWrapper>
+      </div>
+    </div>
   )
 }

@@ -8,40 +8,7 @@ import React, {
   ChangeEvent
 } from 'react'
 
-import {styled} from '@karma.run/react'
-
 import {TypographyVariant, stylesForTypographyVariant, TypographyTextAlign} from './typography'
-
-interface InputWrapperProps {
-  readonly variant: TypographyVariant
-  readonly align: TypographyTextAlign
-}
-
-const TextAreaWrapper = styled('textarea', ({variant, align}: InputWrapperProps) => ({
-  display: 'block',
-
-  width: '100%',
-  resize: 'none',
-
-  borderStyle: 'none',
-  borderWidth: 0,
-  borderColor: 'transparent',
-
-  fontFamily: 'inherit',
-  lineHeight: 1.375,
-
-  color: 'black',
-  textAlign: align,
-  ...stylesForTypographyVariant(variant),
-
-  ':focus': {
-    outline: 'none'
-  },
-
-  '::placeholder': {
-    color: 'gray'
-  }
-}))
 
 const AutoSizeBuffer = 2
 
@@ -87,10 +54,36 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
     }
 
     return (
-      <TextAreaWrapper
+      <textarea
         ref={ref}
         {...props}
-        styleProps={{variant, align}}
+        style={{
+          display: 'block',
+
+          width: '100%',
+          resize: 'none',
+
+          borderStyle: 'none',
+          borderWidth: 0,
+          borderColor: 'transparent',
+
+          fontFamily: 'inherit',
+          lineHeight: 1.375,
+
+          color: 'black',
+          textAlign: align,
+          ...stylesForTypographyVariant(variant),
+
+          outline: 'none !important'
+
+          /*':focus': {
+            outline: 'none'
+          },*/
+
+          /*'::placeholder': {
+            color: 'gray'
+          }*/
+        }}
         onChange={handleChange}
         rows={1}
       />

@@ -3,7 +3,7 @@ import nanoid from 'nanoid'
 import {SortableHandle, SortableContainer, SortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {isFunctionalUpdate, cssRule, useStyle} from '@karma.run/react'
+import {isFunctionalUpdate /* cssRule, useStyle */} from '@karma.run/react'
 
 import {Icon, IconButton, Panel} from 'rsuite'
 
@@ -118,9 +118,12 @@ const SortableList = SortableContainer(
   }
 )
 
-const ListItemHelperStyle = cssRule({
+/*const ListItemHelperStyle = cssRule({
   zIndex: 6
 })
+
+helperClass={css(ListItemHelperStyle)}
+ */
 
 export function ListInput<T>({
   value,
@@ -130,7 +133,6 @@ export function ListInput<T>({
   children,
   onChange
 }: ListFieldProps<T>) {
-  const css = useStyle()
   const onSortEnd = ({oldIndex, newIndex}: {oldIndex: number; newIndex: number}) => {
     onChange(arrayMove(value, oldIndex, newIndex))
   }
@@ -139,7 +141,6 @@ export function ListInput<T>({
     <div>
       {label && <label>{label}</label>}
       <SortableList
-        helperClass={css(ListItemHelperStyle)}
         value={value}
         defaultValue={defaultValue}
         disabled={disabled}

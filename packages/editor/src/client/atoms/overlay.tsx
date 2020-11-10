@@ -1,7 +1,5 @@
 import React, {forwardRef, ImgHTMLAttributes, ReactNode} from 'react'
 
-import {styled} from '@karma.run/react'
-
 import {
   WidthProps,
   HeightProps,
@@ -11,19 +9,6 @@ import {
   hexToRgba,
   BlurStrength
 } from './helpers'
-
-interface OverlayWrapperProps extends WidthProps, HeightProps, PaddingProps, PositionProps {}
-
-const OverlayElement = styled('div', ({position, ...props}: OverlayWrapperProps) => ({
-  display: 'block',
-  position: position ?? 'absolute',
-  backgroundColor: hexToRgba('black', 0.8),
-  color: 'white',
-
-  backdropFilter: `blur(${BlurStrength.Strong})`,
-
-  ...props
-}))
 
 export interface OverlayProps
   extends WidthProps,
@@ -40,9 +25,23 @@ export const Overlay = forwardRef<HTMLImageElement, OverlayProps>(function Image
 ) {
   const [styleProps, elementProps] = extractStyleProps(props)
 
+  const {position, ...otherProps} = styleProps
+
   return (
-    <OverlayElement {...elementProps} ref={ref} styleProps={styleProps}>
+    <div
+      style={{
+        display: 'block',
+        position: position ?? 'absolute',
+        backgroundColor: hexToRgba('black', 0.8),
+        color: 'white',
+
+        backdropFilter: `blur(${BlurStrength.Strong})`,
+
+        ...otherProps
+      }}
+      {...elementProps}
+      ref={ref}>
       {children}
-    </OverlayElement>
+    </div>
   )
 })

@@ -1,7 +1,5 @@
 import React, {ReactNode, forwardRef, ButtonHTMLAttributes} from 'react'
 
-import {styled} from '@karma.run/react'
-
 import {Icon} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
@@ -54,41 +52,35 @@ export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
   readonly active?: boolean
 }
 
-interface ToolbarButtonElementStyleProps {
-  readonly isActive?: boolean
-}
-
-export const ToolbarButtonElement = styled(
-  'button',
-  ({isActive}: ToolbarButtonElementStyleProps) => ({
-    //fill: isActive ? 'blue' : 'black',
-    border: isActive ? 'blue 1px solid' : '',
-    fontSize: 16,
-
-    cursor: 'pointer',
-    //border: 'none',
-    borderRadius: 3,
-    backgroundColor: 'transparent',
-
-    padding: 2,
-
-    ':hover': {
-      backgroundColor: 'gray'
-    },
-
-    ':focus': {
-      outline: 'none',
-      backgroundColor: 'gray'
-    }
-  })
-)
-
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton({icon, active, ...props}, ref) {
     return (
-      <ToolbarButtonElement ref={ref} styleProps={{isActive: active}} {...props}>
+      <button
+        style={{
+          //fill: isActive ? 'blue' : 'black',
+          border: active ? 'blue 1px solid' : '',
+          fontSize: 16,
+
+          cursor: 'pointer',
+          //border: 'none',
+          borderRadius: 3,
+          backgroundColor: 'transparent',
+
+          padding: 2
+
+          /*':hover': {
+          backgroundColor: 'gray'
+        },
+
+        ':focus': {
+          outline: 'none',
+          backgroundColor: 'gray'
+        }*/
+        }}
+        ref={ref}
+        {...props}>
         <Icon icon={icon} element={icon} />
-      </ToolbarButtonElement>
+      </button>
     )
   }
 )
