@@ -34,6 +34,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         })
         if (!ref.current) return
         observer.observe(ref.current)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return () => observer.unobserve(ref.current)
       } else {

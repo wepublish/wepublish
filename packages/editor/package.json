@@ -131,11 +131,18 @@
       "react/display-name": [
         0
       ],
+      "react/prop-types": [
+        0
+      ],
       "i18next/no-literal-string": [
         2,
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "dataKey",
+            "appearance",
+            "icon",
+            "size",
             "display",
             "flexDirection",
             "alignItems",
@@ -145,6 +152,7 @@
             "align",
             "position",
             "justifyContent",
+            "justify",
             "overflow",
             "target",
             "spacing",

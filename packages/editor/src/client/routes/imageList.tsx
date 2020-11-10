@@ -68,6 +68,7 @@ export function ImageList() {
 
   useEffect(() => {
     if (data?.images?.nodes) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       setImages(data.images.nodes)
     }
@@ -123,8 +124,8 @@ export function ImageList() {
 
       {images.length > 0 ? (
         <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
-          {images.map(image => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px'}}>
+          {images.map((image, key) => (
+            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px'}} key={key}>
               <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
                 <Panel shaded bordered bodyFill>
                   <img src={image.thumbURL || ''} />

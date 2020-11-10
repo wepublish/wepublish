@@ -3,7 +3,7 @@ import nanoid from 'nanoid'
 import {SortableHandle, SortableContainer, SortableElement} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import {isFunctionalUpdate /* cssRule, useStyle */} from '@karma.run/react'
+import {isFunctionalUpdate} from '@karma.run/react'
 
 import {Icon, IconButton, Panel} from 'rsuite'
 
@@ -11,8 +11,6 @@ export interface FieldProps<V = any> {
   readonly value: V
   readonly onChange: React.Dispatch<React.SetStateAction<V>>
 }
-
-export type FieldConstructorFn<V = any> = (props: FieldProps<V>) => JSX.Element
 
 export interface ListFieldProps<T = any> extends FieldProps<ListValue<T>[]> {
   readonly label?: string
@@ -36,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton title="Move" icon={<Icon icon="th2" />} disabled={disabled} />
+  <IconButton icon={<Icon icon="th2" />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -68,12 +66,7 @@ const ListItem = SortableElement(
           </div>
         </Panel>
         <div style={{marginLeft: '10px'}}>
-          <IconButton
-            title="Delete"
-            icon={<Icon icon="trash" />}
-            onClick={handleRemove}
-            disabled={itemDisabled}
-          />
+          <IconButton icon={<Icon icon="trash" />} onClick={handleRemove} disabled={itemDisabled} />
         </div>
       </div>
     )
@@ -144,7 +137,7 @@ export function ListInput<T>({
         value={value}
         defaultValue={defaultValue}
         disabled={disabled}
-        children={children}
+        children={children} // eslint-disable-line react/no-children-prop
         onChange={onChange}
         onSortEnd={onSortEnd}
         useDragHandle
