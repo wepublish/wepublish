@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react'
 
 import {
+  Alert,
   Button,
   CheckPicker,
   ControlLabel,
   Drawer,
   Form,
   FormControl,
-  FormGroup,
-  Notification
+  FormGroup
 } from 'rsuite'
 
 import {
@@ -79,27 +79,12 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
   }, [permissionData?.permissions])
 
   useEffect(() => {
-    if (loadError) {
-      Notification.error({
-        title: loadError.message,
-        duration: 5000
-      })
-    } else if (createError) {
-      Notification.error({
-        title: createError.message,
-        duration: 5000
-      })
-    } else if (updateError) {
-      Notification.error({
-        title: updateError.message,
-        duration: 5000
-      })
-    } else if (loadPermissionError) {
-      Notification.error({
-        title: loadPermissionError.message,
-        duration: 5000
-      })
-    }
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      loadPermissionError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadPermissionError])
 
   async function handleSave() {
@@ -163,6 +148,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.permissions')}</ControlLabel>
             <CheckPicker
+              block={true}
               disabledItemValues={systemRole ? allPermissions.map(per => per.id) : []}
               value={permissions.map(per => per.id)}
               data={allPermissions.map(permission => ({
