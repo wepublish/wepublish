@@ -4499,6 +4499,13 @@
   dependencies:
     "@types/express" "*"
 
+"@types/emoji-mart@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/emoji-mart/-/emoji-mart-3.0.4.tgz#418868330c13b510a7b4b86b1ee9904291daeec1"
+  integrity sha512-Uqegqi54lXzz1qlDnLYEbFlUXY46auTVwbeOO8mj+9maGu2WBx/lGnmLKg7WS4CC5lB8Q6ch8K5VPBR9bDjWgg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/enzyme-adapter-react-16@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/enzyme-adapter-react-16/-/enzyme-adapter-react-16-1.0.6.tgz#8aca7ae2fd6c7137d869b6616e696d21bb8b0cec"

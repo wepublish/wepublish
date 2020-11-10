@@ -14,6 +14,9 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
+// import 'emoji-mart/css/emoji-mart.css'
+// import {Picker} from 'emoji-mart'
+
 import {
   MaterialIconFormatBold,
   MaterialIconFormatItalic,
