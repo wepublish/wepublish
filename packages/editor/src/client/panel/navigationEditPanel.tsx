@@ -23,13 +23,11 @@ import {
   useUpdateNavigationMutation,
   FullNavigationFragment,
   NavigationListDocument,
-  NavigationLink,
-  PageNavigationLink
+  NavigationLinkInput
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
 import {generateID, getOperationNameFromDocument} from '../utility'
-import {render} from 'react-dom'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -38,21 +36,23 @@ export interface NavigationEditPanelProps {
   onSave?(navigation: FullNavigationFragment): void
 }
 
-export interface LinkTypeProps {
+export interface LinkType {
   id: string
-  name: string
 }
 
+export enum LinkTypes {
+  PageNavigationLink = 'page',
+  ArticleNavigationLink = 'article',
+  ExternalNavigationLink = 'external'
+}
+export interface NavigationLinkTT extends NavigationLinkInput {
+  label: string
+  type: LinkTypes
+}
 export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
-  const [links, setLinks] = useState<ListValue[]>([])
-  const [currentLinkType, setCurrentLinkType] = useState<LinkTypeProps>()
-  const linkTypes = [
-    {id: 'PageNavigationLink', name: 'Page Link'},
-    {id: 'ArticleNavigationLink', name: 'Article Link'},
-    {id: 'ExternalNavigationLink', name: 'External Link'}
-  ]
+  const [navigationLinkInput, setNavigationLinkInput] = useState<ListValue<NavigationLinkTT>[]>([])
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -82,14 +82,39 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     if (data?.navigation) {
       setName(data.navigation.name)
       setKey(data.navigation.key)
-      setLinks(
+      setNavigationLinkInput(
         data.navigation.links
-          ? data.navigation.links.map(link => ({
-              id: generateID(),
-              value: {
-                label: link.label
+          ? data.navigation.links.map(link => {
+              return {
+                id: generateID(),
+                value: {
+                  label: link.label,
+                  type:
+                    link.__typename === 'PageNavigationLink'
+                      ? LinkTypes.PageNavigationLink
+                      : link.__typename === 'ArticleNavigationLink'
+                      ? LinkTypes.ArticleNavigationLink
+                      : link.__typename === 'ExternalNavigationLink'
+                      ? LinkTypes.ExternalNavigationLink
+                      : LinkTypes.ArticleNavigationLink,
+
+                  ...(link.__typename === 'PageNavigationLink'
+                    ? {page: {label: link.label, pageID: link.page?.id ? link.page.id : ''}}
+                    : {}),
+                  ...(link.__typename === 'ArticleNavigationLink'
+                    ? {
+                        article: {
+                          label: link.label,
+                          articleID: link.article ? link.article.id : ''
+                        }
+                      }
+                    : {}),
+                  ...(link.__typename === 'ExternalNavigationLink'
+                    ? {external: {label: link.label, url: link.url}}
+                    : {})
+                }
               }
-            }))
+            })
           : []
       )
     }
@@ -116,19 +141,20 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           input: {
             name,
             key,
-            links
+            links: navigationLinkInput.map(({value}) => value)
           }
         }
       })
 
       if (data?.updateNavigation) onSave?.(data.updateNavigation)
     } else {
+      console.log('update')
       const {data} = await createNavigation({
         variables: {
           input: {
             name,
             key,
-            links
+            links: navigationLinkInput.map(({value}) => value)
           }
         }
       })
@@ -137,43 +163,14 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     }
   }
 
-  function secondSelectorSwitch(currentLinkType: string | undefined) {
-    switch (currentLinkType) {
-      case 'PageNavigationLink':
-        return (
-          <Box display="flex" flexDirection="row">
-            <TextInput
-              label={t('navigation.panels.page')}
-              flexBasis="70%"
-              // value={this.value.page}
-              // onChange={e => onChange({...value, page: e.target.value})}
-            />
-          </Box>
-        )
-      case 'ArticleNavigationLink':
-        return (
-          <Box display="flex" flexDirection="row">
-            <TextInput
-              label={t('navigation.panels.article')}
-              flexBasis="70%"
-              // value={value.article}
-              // onChange={e => onChange({...value, article: e.target.value})}
-            />
-          </Box>
-        )
-      case 'ExternalNavigationLink':
-        return (
-          <Box display="flex" flexDirection="row">
-            <TextInput
-              label={t('navigation.panels.url')}
-              flexBasis="70%"
-              // value={value.url}
-              // onChange={e => onChange({...value, url: e.target.value})}
-            />
-          </Box>
-        )
-      default:
-        return ''
+  const renderLinkTypes = (value: {id: LinkTypes}) => {
+    switch (value.id) {
+      case LinkTypes.ArticleNavigationLink:
+        return 'Article Link'
+      case LinkTypes.PageNavigationLink:
+        return 'Page Link'
+      case LinkTypes.ExternalNavigationLink:
+        return 'External Link'
     }
   }
 
@@ -226,9 +223,9 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         <PanelSectionHeader title={t('navigation.panels.links')} />
         <PanelSection>
           <ListInput
-            value={links}
-            onChange={links => setLinks(links)}
-            defaultValue={{label: '', url: ''}}>
+            value={navigationLinkInput}
+            onChange={navigationLinkInput => setNavigationLinkInput(navigationLinkInput)}
+            defaultValue={{label: '', type: LinkTypes.ArticleNavigationLink}}>
             {({value, onChange}) => (
               <>
                 <TextInput
@@ -236,23 +233,92 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                   flexBasis="30%"
                   marginBottom={Spacing.Small}
                   value={value.label}
-                  onChange={e => onChange({...value, label: e.target.value})}
+                  onChange={e => {
+                    onChange({...value, label: e.target.value})
+                  }}
                 />
+                {console.log('ListInputX:', value)}
                 <Select
                   label={t('navigation.panels.linkType')}
-                  options={linkTypes.map(linkType => {
-                    return linkType
-                  })}
-                  value={currentLinkType}
-                  renderListItem={linkType => linkType?.name}
-                  onChange={linkType => {
-                    if (linkType?.id) {
-                      setCurrentLinkType(linkType)
-                    }
+                  options={[
+                    {...value, id: LinkTypes.PageNavigationLink},
+                    {...value, id: LinkTypes.ArticleNavigationLink},
+                    {...value, id: LinkTypes.ExternalNavigationLink}
+                  ]}
+                  value={{...value, id: value.type}}
+                  renderListItem={renderLinkTypes}
+                  onChange={e => {
+                    onChange({...value, type: e!.id})
                   }}
                   marginBottom={Spacing.Small}
                 />
-                {secondSelectorSwitch(currentLinkType?.id)}
+                {(value => {
+                  switch (value.type) {
+                    case LinkTypes.PageNavigationLink:
+                      return (
+                        <Box display="flex" flexDirection="row">
+                          <TextInput
+                            label={t('navigation.panels.page')}
+                            flexBasis="70%"
+                            value={value.page?.pageID}
+                            onChange={e =>
+                              onChange({
+                                ...value,
+                                page: {
+                                  label: value.label,
+                                  pageID: e.target.value
+                                },
+                                article: undefined
+                              })
+                            }
+                            {...delete value.article}
+                            {...delete value.external}
+                          />
+                        </Box>
+                      )
+                    case LinkTypes.ArticleNavigationLink:
+                      return (
+                        <Box display="flex" flexDirection="row">
+                          <TextInput
+                            label={t('navigation.panels.article')}
+                            flexBasis="70%"
+                            value={value.article?.articleID}
+                            onChange={e =>
+                              onChange({
+                                ...value,
+                                article: {
+                                  label: value.article ? value.article?.label : '',
+                                  articleID: e.target.value
+                                }
+                              })
+                            }
+                          />
+                        </Box>
+                      )
+                    case LinkTypes.ExternalNavigationLink:
+                      return (
+                        <Box display="flex" flexDirection="row">
+                          <TextInput
+                            label={t('navigation.panels.url')}
+                            flexBasis="70%"
+                            value={value.external?.url}
+                            onChange={e =>
+                              onChange({
+                                ...value,
+                                external: {
+                                  label: value.external ? value.external?.label : '',
+                                  url: e.target.value
+                                }
+                              })
+                            }
+                          />
+                        </Box>
+                      )
+                    default:
+                      return ''
+                  }
+                })(value)}
+                {console.log('Page', value)}
               </>
             )}
           </ListInput>

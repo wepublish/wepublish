@@ -207,7 +207,9 @@
         "label": "Label",
         "article": "Article",
         "page": "Page",
-        "url": "URL"
+        "url": "URL",
+        "editNavigation": "Edit Navigation",
+        "save": "Save"
       }
     },
     "images": {
