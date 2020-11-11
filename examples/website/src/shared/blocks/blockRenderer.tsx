@@ -107,7 +107,6 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
           hideButton={block.value.hideButton}
           image={block.value.image}
           isArticle={isArticle}
-          image={null}
         />
       )
 
