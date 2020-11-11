@@ -143,7 +143,7 @@ export function PageList() {
                   size="sm"
                   style={{marginLeft: '5px'}}
                   onClick={() => {
-                    setConfirmationDialogOpen(true)
+                    setCurrentPage(rowData)
                     setConfirmAction(ConfirmAction.Delete)
                     setConfirmationDialogOpen(true)
                   }}

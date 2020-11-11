@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, TagPicker} from 'rsuite'
+import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel, TagPicker} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -49,34 +49,36 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
-            <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
-            <FormControl value={title} onChange={title => onChange?.({...value, title})} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
-            <FormControl
-              componentClass="textarea"
-              value={description}
-              onChange={description => onChange?.({...value, description})}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
-            <TagPicker
-              style={{width: '100%'}}
-              creatable={true}
-              value={tags}
-              data={tags.map(tag => ({label: tag, value: tag}))}
-              onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
-            />
-          </FormGroup>
-        </Form>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
+              <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
+              <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
+              <FormControl
+                componentClass="textarea"
+                value={description}
+                onChange={description => onChange?.({...value, description})}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
+              <TagPicker
+                style={{width: '100%'}}
+                creatable={true}
+                value={tags}
+                data={tags.map(tag => ({label: tag, value: tag}))}
+                onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
         <ChooseEditImage
           image={image}
           disabled={false}
