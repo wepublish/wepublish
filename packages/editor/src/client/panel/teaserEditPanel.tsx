@@ -1,15 +1,12 @@
 import React, {useState} from 'react'
 
 import {
-  IconButton,
   Button,
   ControlLabel,
   Drawer,
-  Dropdown,
   Form,
   FormControl,
   FormGroup,
-  Icon,
   Panel,
   Radio,
   RadioGroup
@@ -23,6 +20,7 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
@@ -58,56 +56,42 @@ export function TeaserEditPanel({
 
       <Drawer.Body>
         {previewForTeaser(initialTeaser)}
-        {t('articleEditor.panels.displayOptions')}
-        <Form fluid>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
-            <RadioGroup inline value={style} onChange={teaserStyle => setStyle(teaserStyle)}>
-              <Radio value={TeaserStyle.Default}>Default</Radio>
-              <Radio value={TeaserStyle.Light}>Light</Radio>
-              <Radio value={TeaserStyle.Text}>text</Radio>
-            </RadioGroup>
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
-            <FormControl value={preTitle} onChange={preTitle => setPreTitle(preTitle)} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-            <FormControl value={title} onChange={title => setTitle(title)} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-            <FormControl value={lead} onChange={lead => setLead(lead)} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-            <FormControl value={lead} onChange={lead => setLead(lead)} />
-          </FormGroup>
-        </Form>
-
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={!image} onClick={() => setImage(undefined)}>
-              <Icon icon="close" /> {t('peerList.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
+        <Panel header={t('articleEditor.panels.displayOptions')}>
+          <Form fluid>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
+              <RadioGroup inline value={style} onChange={teaserStyle => setStyle(teaserStyle)}>
+                <Radio value={TeaserStyle.Default}>Default</Radio>
+                <Radio value={TeaserStyle.Light}>Light</Radio>
+                <Radio value={TeaserStyle.Text}>text</Radio>
+              </RadioGroup>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+              <FormControl value={preTitle} onChange={preTitle => setPreTitle(preTitle)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+              <FormControl value={title} onChange={title => setTitle(title)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+              <FormControl value={lead} onChange={lead => setLead(lead)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+              <FormControl value={lead} onChange={lead => setLead(lead)} />
+            </FormGroup>
+          </Form>
         </Panel>
+
+        <ChooseEditImage
+          image={image}
+          disabled={false}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setImage(undefined)}
+        />
       </Drawer.Body>
 
       <Drawer.Footer>
@@ -183,7 +167,7 @@ function previewForTeaser(teaser: Teaser) {
   }
 
   return (
-    <>
+    <Panel>
       <Panel
         bordered={true}
         style={{
@@ -203,6 +187,6 @@ function previewForTeaser(teaser: Teaser) {
           {lead || '-'}
         </DescriptionListItem>
       </DescriptionList>
-    </>
+    </Panel>
   )
 }

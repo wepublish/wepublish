@@ -7,7 +7,8 @@ import {
   useRouteDispatch,
   AuthorListRoute,
   AuthorCreateRoute,
-  ButtonLink
+  ButtonLink,
+  Link
 } from '../route'
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment} from '../api'
@@ -120,33 +121,28 @@ export function AuthorList() {
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={authors}>
         <Column width={100} align="left" resizable>
-          <HeaderCell>Id</HeaderCell>
-          <Cell>
+          <HeaderCell></HeaderCell>
+          <Cell style={{padding: 2}}>
             {(rowData: FullAuthorFragment) => (
               <Avatar circle src={rowData.image?.squareURL || undefined} />
             )}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column width={400} align="left" resizable>
           <HeaderCell>Name</HeaderCell>
-          <Cell dataKey="name" />
+          <Cell>
+            {(rowData: FullAuthorFragment) => (
+              <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('authors.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>Action</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullAuthorFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="wrench" />}
-                  circle
-                  size="sm"
-                  onClick={e => {
-                    dispatch({
-                      type: RouteActionType.PushRoute,
-                      route: AuthorEditRoute.create({id: rowData.id})
-                    })
-                  }}
-                />
                 <IconButton
                   icon={<Icon icon="trash" />}
                   circle

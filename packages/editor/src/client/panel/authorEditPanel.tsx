@@ -12,7 +12,7 @@ import {
   Panel,
   IconButton,
   Input,
-  Notification
+  Alert
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -36,6 +36,7 @@ import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface AuthorEditPanelProps {
   id?: string
@@ -91,22 +92,8 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   }, [data?.author])
 
   useEffect(() => {
-    if (loadError) {
-      Notification.error({
-        title: loadError.message,
-        duration: 5000
-      })
-    } else if (createError) {
-      Notification.error({
-        title: createError.message,
-        duration: 5000
-      })
-    } else if (updateError) {
-      Notification.error({
-        title: updateError.message,
-        duration: 5000
-      })
-    }
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -155,42 +142,30 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('authors.panels.name')}</ControlLabel>
-            <FormControl
-              name={t('authors.panels.name')}
-              value={name}
-              disabled={isDisabled}
-              onChange={value => {
-                setName(value)
-                setSlug(slugify(value))
-              }}
-            />
-          </FormGroup>
-        </Form>
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item disabled={isLoading} onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('peerList.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={isLoading || !image} onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('peerList.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={isLoading || !image} onClick={() => setImage(undefined)}>
-              <Icon icon="close" /> {t('peerList.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('authors.panels.name')}</ControlLabel>
+              <FormControl
+                name={t('authors.panels.name')}
+                value={name}
+                disabled={isDisabled}
+                onChange={value => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
+              />
+            </FormGroup>
+          </Form>
         </Panel>
+
+        <ChooseEditImage
+          image={image}
+          disabled={isLoading}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setImage(undefined)}
+        />
 
         <Panel header={t('authors.panels.links')}>
           <ListInput
