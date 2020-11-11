@@ -54,7 +54,7 @@ export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function ToolbarButton({icon, active, ...props}, ref) {
+  function ToolbarButton({icon, iconActive, active, ...props}, ref) {
     return (
       <button
         style={{
