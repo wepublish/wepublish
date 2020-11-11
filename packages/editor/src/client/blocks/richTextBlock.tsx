@@ -14,8 +14,8 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-import 'emoji-mart/css/emoji-mart.css'
-import './emoji-mart-override.css'
+// import 'emoji-mart/css/emoji-mart.css'
+// import './emoji-mart-override.css'
 import {Picker, BaseEmoji} from 'emoji-mart'
 
 import {BlockProps} from '../atoms/blockList'

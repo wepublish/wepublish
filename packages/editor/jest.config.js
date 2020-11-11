@@ -8,6 +8,11 @@ module.exports = {
       tsconfig: './tsconfig.json'
     }
   },
+  moduleNameMapper: {
+    // '\\.(css|less)$': './__mocks__/styleMock.ts'
+    // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+    // '<rootDir>/__mocks__/fileMock.js', (in case needed)
+  },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
