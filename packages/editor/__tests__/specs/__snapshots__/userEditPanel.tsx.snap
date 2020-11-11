@@ -577,6 +577,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         </ControlLabel>
                       </defaultProps(ControlLabel)>
                       <withLocale(defaultProps(CheckPicker))
+                        block={true}
                         data={
                           Array [
                             Object {
@@ -594,6 +595,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                       >
                         <defaultProps(CheckPicker)
                           appearance="default"
+                          block={true}
                           childrenKey="children"
                           classPrefix="rs-picker"
                           cleanable={true}
@@ -632,6 +634,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                         >
                           <CheckPicker
                             appearance="default"
+                            block={true}
                             childrenKey="children"
                             classPrefix="rs-picker"
                             cleanable={true}
@@ -675,6 +678,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                               pickerProps={
                                 Object {
                                   "appearance": "default",
+                                  "block": true,
                                   "childrenKey": "children",
                                   "classPrefix": "rs-picker",
                                   "cleanable": true,
@@ -955,7 +959,7 @@ exports[`User Edit Panel should allow a new user to be created 1`] = `
                                 trigger="click"
                               >
                                 <div
-                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-countable"
+                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block rs-picker-countable"
                                   key="triggerComponent"
                                   onClick={[Function]}
                                 >
@@ -3163,6 +3167,7 @@ exports[`User Edit Panel should render 1`] = `
                         </ControlLabel>
                       </defaultProps(ControlLabel)>
                       <withLocale(defaultProps(CheckPicker))
+                        block={true}
                         data={
                           Array [
                             Object {
@@ -3180,6 +3185,7 @@ exports[`User Edit Panel should render 1`] = `
                       >
                         <defaultProps(CheckPicker)
                           appearance="default"
+                          block={true}
                           childrenKey="children"
                           classPrefix="rs-picker"
                           cleanable={true}
@@ -3218,6 +3224,7 @@ exports[`User Edit Panel should render 1`] = `
                         >
                           <CheckPicker
                             appearance="default"
+                            block={true}
                             childrenKey="children"
                             classPrefix="rs-picker"
                             cleanable={true}
@@ -3261,6 +3268,7 @@ exports[`User Edit Panel should render 1`] = `
                               pickerProps={
                                 Object {
                                   "appearance": "default",
+                                  "block": true,
                                   "childrenKey": "children",
                                   "classPrefix": "rs-picker",
                                   "cleanable": true,
@@ -3541,7 +3549,7 @@ exports[`User Edit Panel should render 1`] = `
                                 trigger="click"
                               >
                                 <div
-                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-countable"
+                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block rs-picker-countable"
                                   key="triggerComponent"
                                   onClick={[Function]}
                                 >
@@ -4425,6 +4433,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                         </ControlLabel>
                       </defaultProps(ControlLabel)>
                       <withLocale(defaultProps(CheckPicker))
+                        block={true}
                         data={
                           Array [
                             Object {
@@ -4446,6 +4455,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                       >
                         <defaultProps(CheckPicker)
                           appearance="default"
+                          block={true}
                           childrenKey="children"
                           classPrefix="rs-picker"
                           cleanable={true}
@@ -4488,6 +4498,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                         >
                           <CheckPicker
                             appearance="default"
+                            block={true}
                             childrenKey="children"
                             classPrefix="rs-picker"
                             cleanable={true}
@@ -4535,6 +4546,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                               pickerProps={
                                 Object {
                                   "appearance": "default",
+                                  "block": true,
                                   "childrenKey": "children",
                                   "classPrefix": "rs-picker",
                                   "cleanable": true,
@@ -4825,7 +4837,7 @@ exports[`User Edit Panel should render with ID 1`] = `
                                 trigger="click"
                               >
                                 <div
-                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-has-value rs-picker-cleanable rs-picker-countable"
+                                  className="rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-bottom-start rs-picker-block rs-picker-has-value rs-picker-cleanable rs-picker-countable"
                                   key="triggerComponent"
                                   onClick={[Function]}
                                 >
