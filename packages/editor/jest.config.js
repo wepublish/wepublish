@@ -1,8 +1,7 @@
 module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
-    '\\.(css|less|scss)$': './__mocks__/stub-transformer.js'
+    '^.+\\.(ts|tsx)$': 'ts-jest'
   },
   globals: {
     'ts-jest': {
