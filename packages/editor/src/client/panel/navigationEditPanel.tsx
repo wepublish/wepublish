@@ -46,8 +46,8 @@ export enum LinkTypes {
   ExternalNavigationLink = 'external'
 }
 export interface NavigationLinkTT extends NavigationLinkInput {
-  label: string
-  type: LinkTypes
+  label: string | undefined
+  type: LinkTypes | undefined
 }
 export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const [name, setName] = useState('')
@@ -105,7 +105,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                     ? {
                         article: {
                           label: link.label,
-                          articleID: link.article ? link.article.id : ''
+                          articleID: link.article?.id ? link.article?.id : ''
                         }
                       }
                     : {}),
@@ -133,6 +133,44 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     }
   }, [loadError, createError, updateError])
 
+  function cleanNavigationLinkInput(value: NavigationLinkTT): NavigationLinkInput {
+    if (value.type === 'page') {
+      value = {
+        ...value,
+        page: {
+          label: value.label ? value.label : '',
+          pageID: value.page?.pageID ? value.page.pageID : ''
+        },
+        external: undefined,
+        article: undefined
+      }
+    } else if (value.type === 'article') {
+      value = {
+        ...value,
+        article: {
+          label: value.label ? value.label : '',
+          articleID: value.article?.articleID ? value.article.articleID : ''
+        },
+        external: undefined,
+        page: undefined
+      }
+    } else if (value.type === 'external') {
+      value = {
+        ...value,
+        external: {
+          label: value.label ? value.label : '',
+          url: value.external?.url ? value.external?.url : ''
+        },
+        article: undefined,
+        page: undefined
+      }
+    } else {
+      console.log('Error: LinkType not defined')
+    }
+    ;[value.label, value.type] = [undefined, undefined]
+    return value
+  }
+
   async function handleSave() {
     if (id) {
       const {data} = await updateNavigation({
@@ -141,14 +179,13 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           input: {
             name,
             key,
-            links: navigationLinkInput.map(({value}) => value)
+            links: navigationLinkInput.map(({value}) => cleanNavigationLinkInput(value))
           }
         }
       })
 
       if (data?.updateNavigation) onSave?.(data.updateNavigation)
     } else {
-      console.log('update')
       const {data} = await createNavigation({
         variables: {
           input: {
@@ -237,7 +274,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                     onChange({...value, label: e.target.value})
                   }}
                 />
-                {console.log('ListInputX:', value)}
                 <Select
                   label={t('navigation.panels.linkType')}
                   options={[
@@ -245,10 +281,16 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                     {...value, id: LinkTypes.ArticleNavigationLink},
                     {...value, id: LinkTypes.ExternalNavigationLink}
                   ]}
-                  value={{...value, id: value.type}}
+                  value={{...value, id: value.type ? value.type : LinkTypes.ArticleNavigationLink}}
                   renderListItem={renderLinkTypes}
                   onChange={e => {
-                    onChange({...value, type: e!.id})
+                    onChange({
+                      ...value,
+                      type: e!.id,
+                      page: {pageID: '', label: value.label ? value.label : ''},
+                      article: {articleID: '', label: value.label ? value.label : ''},
+                      external: {url: '', label: value.label ? value.label : ''}
+                    })
                   }}
                   marginBottom={Spacing.Small}
                 />
@@ -265,14 +307,11 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                               onChange({
                                 ...value,
                                 page: {
-                                  label: value.label,
+                                  label: value.label ? value.label : '',
                                   pageID: e.target.value
-                                },
-                                article: undefined
+                                }
                               })
                             }
-                            {...delete value.article}
-                            {...delete value.external}
                           />
                         </Box>
                       )
@@ -287,7 +326,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                               onChange({
                                 ...value,
                                 article: {
-                                  label: value.article ? value.article?.label : '',
+                                  label: value.label ? value.label : '',
                                   articleID: e.target.value
                                 }
                               })
@@ -306,7 +345,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                               onChange({
                                 ...value,
                                 external: {
-                                  label: value.external ? value.external?.label : '',
+                                  label: value.label ? value.label : '',
                                   url: e.target.value
                                 }
                               })
@@ -318,7 +357,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                       return ''
                   }
                 })(value)}
-                {console.log('Page', value)}
               </>
             )}
           </ListInput>
