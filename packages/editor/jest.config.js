@@ -1,17 +1,13 @@
 module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '\\.(css|less|scss)$': './__mocks__/stub-transformer.js'
   },
   globals: {
     'ts-jest': {
       tsconfig: './tsconfig.json'
     }
-  },
-  moduleNameMapper: {
-    // '\\.(css|less)$': './__mocks__/styleMock.ts'
-    // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-    // '<rootDir>/__mocks__/fileMock.js', (in case needed)
   },
   testMatch: ['**/__tests__/specs/**/*.+(ts|tsx|js)'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
