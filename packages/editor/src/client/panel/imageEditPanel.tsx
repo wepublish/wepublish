@@ -10,6 +10,8 @@ import {
 } from '../api'
 import {getOperationNameFromDocument} from '../utility'
 
+import {Link} from '../route'
+
 import {useTranslation} from 'react-i18next'
 import {FocalPointInput} from '../atoms/focalPointInput'
 import {Point} from '../atoms/draggable'
@@ -24,6 +26,7 @@ import {
   TagPicker,
   Notification
 } from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface ImageEditPanelProps {
   readonly id?: string
@@ -237,35 +240,36 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
               )}
             </Panel>
             <Panel header={t('images.panels.description')}>
-              <p>
-                {t('images.panels.filename')}: {filename || t('images.panels.untitled')}
-                {extension}
-              </p>
-              <p>
-                {t('images.panels.dimension')}:{' '}
-                {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-              </p>
-              {createdAt && (
-                <p>
-                  {t('images.panels.created')}: {new Date(createdAt).toLocaleString()}
-                </p>
-              )}
-              {updatedAt && (
-                <p>
-                  {t('images.panels.updated')}: {new Date(updatedAt).toLocaleString()}
-                </p>
-              )}
-              <p>
-                {t('images.panels.fileSize')}: {prettyBytes(fileSize)}
-              </p>
-              {originalImageURL && (
-                <p>
-                  {t('images.panels.link')}:{' '}
-                  <a href={originalImageURL} rel="noreferrer" target="_blank">
-                    {originalImageURL}
-                  </a>{' '}
-                </p>
-              )}
+              <DescriptionList>
+                <DescriptionListItem label={t('images.panels.filename')}>
+                  {filename || t('images.panels.untitled')}
+                  {extension}
+                </DescriptionListItem>
+                <DescriptionListItem label={t('images.panels.dimension')}>
+                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
+                </DescriptionListItem>
+                {createdAt && (
+                  <DescriptionListItem label={t('images.panels.created')}>
+                    {new Date(createdAt).toLocaleString()}
+                  </DescriptionListItem>
+                )}
+                {updatedAt && (
+                  <DescriptionListItem label={t('images.panels.updated')}>
+                    {new Date(updatedAt).toLocaleString()}
+                  </DescriptionListItem>
+                )}
+                <DescriptionListItem label={t('images.panels.fileSize')}>
+                  {prettyBytes(fileSize)}
+                </DescriptionListItem>
+
+                {originalImageURL && (
+                  <DescriptionListItem label={t('images.panels.link')}>
+                    <Link href={originalImageURL} target="_blank">
+                      {originalImageURL}
+                    </Link>
+                  </DescriptionListItem>
+                )}
+              </DescriptionList>
             </Panel>
             <Panel header={t('images.panels.information')}>
               <Form fluid={true}>
@@ -296,7 +300,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
                 <FormGroup>
                   <ControlLabel>{t('images.panels.tags')}</ControlLabel>
                   <TagPicker
-                    creatable
+                    block={true}
+                    creatable={true}
                     disabled={isDisabled}
                     value={tags}
                     data={tags.map(tag => ({value: tag, label: tag}))}
