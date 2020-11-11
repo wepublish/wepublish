@@ -142,7 +142,7 @@ export function Login() {
                 onChange={event => setPassword(event.target.value)}
                 marginBottom={Spacing.Small}
               />
-              <Button color="primary" label={t('Login')} disabled={loading} />
+              <Button color="primary" label={t('login.login')} disabled={loading} />
             </LoginForm>
             {!!providerData?.authProviders?.length && (
               <>

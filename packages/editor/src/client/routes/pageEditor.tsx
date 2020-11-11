@@ -164,7 +164,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Saved')
+      setSuccessMessage('pageEditor.overview.pageDraftSaved')
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -177,7 +177,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       setChanged(false)
       setSuccessToastOpen(true)
-      setSuccessMessage('Page Draft Created')
+      setSuccessMessage('pageEditor.overview.pageDraftCreated')
     }
   }
 
@@ -205,12 +205,12 @@ export function PageEditor({id}: PageEditorProps) {
 
     setChanged(false)
     setSuccessToastOpen(true)
-    setSuccessMessage('Page Published')
+    setSuccessMessage('pageEditor.overview.pagePublished')
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage('Page Not Found')
+      setErrorMessage('pageEditor.overview.pageNotFound')
       setErrorToastOpen(true)
     }
   }, [isNotFound])
@@ -223,7 +223,7 @@ export function PageEditor({id}: PageEditorProps) {
             leftChildren={
               <RouteNavigationLinkButton
                 icon={MaterialIconArrowBack}
-                label={t('Back')}
+                label={t('pageEditor.overview.back')}
                 route={PageListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -234,7 +234,7 @@ export function PageEditor({id}: PageEditorProps) {
               <>
                 <NavigationButton
                   icon={MaterialIconInsertDriveFileOutlined}
-                  label={t('Metadata')}
+                  label={t('pageEditor.overview.metadata')}
                   onClick={() => setMetaDrawerOpen(true)}
                   disabled={isDisabled}
                 />
@@ -242,7 +242,7 @@ export function PageEditor({id}: PageEditorProps) {
                 {isNew && createData == null ? (
                   <NavigationButton
                     icon={MaterialIconSaveOutlined}
-                    label={t('Create')}
+                    label={t('pageEditor.overview.create')}
                     onClick={() => handleSave()}
                     disabled={isDisabled}
                   />
@@ -250,13 +250,13 @@ export function PageEditor({id}: PageEditorProps) {
                   <>
                     <NavigationButton
                       icon={MaterialIconSaveOutlined}
-                      label={t('Save')}
+                      label={t('pageEditor.overview.save')}
                       onClick={() => handleSave()}
                       disabled={isDisabled}
                     />
                     <NavigationButton
                       icon={MaterialIconPublishOutlined}
-                      label={t('Publish')}
+                      label={t('pageEditor.overview.publish')}
                       onClick={() => setPublishDialogOpen(true)}
                       disabled={isDisabled}
                     />
