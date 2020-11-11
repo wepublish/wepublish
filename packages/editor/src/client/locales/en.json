@@ -424,6 +424,7 @@
       "O2Auth": "Authenticating against OAuth2: "
     },
     "chooseEditImage": {
+      "header": "Image",
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",
       "removeImage": "Remove Image"

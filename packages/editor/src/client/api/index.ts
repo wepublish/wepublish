@@ -15,8 +15,8 @@ export type Scalars = {
   DateTime: string;
   /** A hexidecimal color value. */
   Color: string;
-  RichText: Node[];
   Slug: string;
+  RichText: Node[];
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -172,19 +172,6 @@ export type AuthProvider = {
   __typename?: 'AuthProvider';
   name: Scalars['String'];
   url: Scalars['String'];
-};
-
-export type AvailablePaymentMethod = {
-  __typename?: 'AvailablePaymentMethod';
-  paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<Scalars['String']>;
-  forceAutoRenewal: Scalars['Boolean'];
-};
-
-export type AvailablePaymentMethodInput = {
-  paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<Scalars['String']>;
-  forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type BaseNavigationLink = {
@@ -427,46 +414,6 @@ export type ListicleItemInput = {
   richText: Scalars['RichText'];
 };
 
-export type MemberPlan = {
-  __typename?: 'MemberPlan';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  image?: Maybe<Image>;
-  description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
-  availablePaymentMethods: Array<AvailablePaymentMethod>;
-};
-
-export type MemberPlanConnection = {
-  __typename?: 'MemberPlanConnection';
-  nodes: Array<MemberPlan>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type MemberPlanFilter = {
-  name?: Maybe<Scalars['String']>;
-};
-
-export type MemberPlanInput = {
-  name: Scalars['String'];
-  imageID?: Maybe<Scalars['ID']>;
-  description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
-  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
-};
-
-export enum MemberPlanSort {
-  CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
-}
-
 export type Mutation = {
   __typename?: 'Mutation';
   updatePeerProfile: PeerProfile;
@@ -482,10 +429,8 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
-  updateUserSubscription?: Maybe<UserSubscription>;
   resetUserPassword?: Maybe<User>;
   deleteUser?: Maybe<Scalars['String']>;
-  deleteUserSubscription?: Maybe<Scalars['String']>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
   deleteUserRole?: Maybe<Scalars['String']>;
@@ -508,12 +453,6 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
-  createMemberPlan?: Maybe<MemberPlan>;
-  updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<Scalars['ID']>;
-  createPaymentMethod?: Maybe<PaymentMethod>;
-  updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<Scalars['ID']>;
 };
 
 
@@ -578,12 +517,6 @@ export type MutationUpdateUserArgs = {
 };
 
 
-export type MutationUpdateUserSubscriptionArgs = {
-  userId: Scalars['ID'];
-  input: UserSubscriptionInput;
-};
-
-
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
@@ -592,11 +525,6 @@ export type MutationResetUserPasswordArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
-};
-
-
-export type MutationDeleteUserSubscriptionArgs = {
-  userId: Scalars['ID'];
 };
 
 
@@ -721,38 +649,6 @@ export type MutationUnpublishPageArgs = {
   id: Scalars['ID'];
 };
 
-
-export type MutationCreateMemberPlanArgs = {
-  input: MemberPlanInput;
-};
-
-
-export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['ID'];
-  input: MemberPlanInput;
-};
-
-
-export type MutationDeleteMemberPlanArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationCreatePaymentMethodArgs = {
-  input: PaymentMethodInput;
-};
-
-
-export type MutationUpdatePaymentMethodArgs = {
-  id: Scalars['ID'];
-  input: PaymentMethodInput;
-};
-
-
-export type MutationDeletePaymentMethodArgs = {
-  id: Scalars['ID'];
-};
-
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -874,24 +770,6 @@ export type PageTeaserInput = {
   pageID: Scalars['ID'];
 };
 
-export type PaymentMethod = {
-  __typename?: 'PaymentMethod';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  description: Scalars['RichText'];
-  paymentAdapter: Scalars['String'];
-  active: Scalars['Boolean'];
-};
-
-export type PaymentMethodInput = {
-  name: Scalars['String'];
-  description: Scalars['RichText'];
-  paymentAdapter: Scalars['String'];
-  active: Scalars['Boolean'];
-};
-
 export type Peer = {
   __typename?: 'Peer';
   id: Scalars['ID'];
@@ -957,7 +835,6 @@ export type Permission = {
   __typename?: 'Permission';
   id: Scalars['String'];
   description: Scalars['String'];
-  checked: Scalars['Boolean'];
   deprecated: Scalars['Boolean'];
 };
 
@@ -1006,10 +883,6 @@ export type Query = {
   peerArticles: PeerArticleConnection;
   page?: Maybe<Page>;
   pages: PageConnection;
-  memberPlan?: Maybe<MemberPlan>;
-  memberPlans: MemberPlanConnection;
-  paymentMethod?: Maybe<PaymentMethod>;
-  paymentMethods: Array<PaymentMethod>;
 };
 
 
@@ -1138,27 +1011,6 @@ export type QueryPagesArgs = {
   filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
-};
-
-
-export type QueryMemberPlanArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryMemberPlansArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<MemberPlanFilter>;
-  sort?: Maybe<MemberPlanSort>;
-  order?: Maybe<SortOrder>;
-};
-
-
-export type QueryPaymentMethodArgs = {
-  id?: Maybe<Scalars['ID']>;
 };
 
 export type QuoteBlock = {
@@ -1318,7 +1170,6 @@ export type User = {
   name: Scalars['String'];
   email: Scalars['String'];
   roles: Array<Maybe<UserRole>>;
-  subscription?: Maybe<UserSubscription>;
 };
 
 export type UserConnection = {
@@ -1373,29 +1224,6 @@ export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
 }
-
-export type UserSubscription = {
-  __typename?: 'UserSubscription';
-  memberPlan: MemberPlan;
-  paymentPeriodicity: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  autoRenew: Scalars['Boolean'];
-  startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type UserSubscriptionInput = {
-  memberPlanId: Scalars['String'];
-  paymentPeriodicity: Scalars['String'];
-  monthlyAmount: Scalars['Int'];
-  autoRenew: Scalars['Boolean'];
-  startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
-  deactivatedAt?: Maybe<Scalars['DateTime']>;
-};
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';

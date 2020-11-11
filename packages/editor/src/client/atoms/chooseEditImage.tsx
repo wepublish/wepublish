@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next'
 
 export interface ChooseEditImageProps {
   image: any
+  header?: string
   disabled: boolean
   openChooseModalOpen: () => void
   openEditModalOpen: () => void
@@ -13,17 +14,19 @@ export interface ChooseEditImageProps {
 
 export function ChooseEditImage({
   image,
+  header,
   disabled,
   openChooseModalOpen,
   openEditModalOpen,
   removeImage
 }: ChooseEditImageProps) {
   const {t} = useTranslation()
-
+  header = header ?? t('chooseEditImage.header')
   return (
     <Panel
+      header={header}
       style={{
-        height: 200
+        height: 300
       }}>
       <PlaceholderInput onAddClick={() => openChooseModalOpen()}>
         {image && (
