@@ -150,7 +150,7 @@ export function PublishArticlePanel({
           <DescriptionListItem label={t('articleEditor.panels.breakingNews')}>
             {metadata.breaking ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
-          <DescriptionListItem label={t('Shared with peers')}>
+          <DescriptionListItem label={t('articleEditor.panels.sharedWithPeers')}>
             {metadata.shared ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
         </DescriptionList>

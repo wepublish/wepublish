@@ -59,7 +59,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           leftChildren={
             <NavigationButton
               icon={MaterialIconClose}
-              label={t('Close')}
+              label={t('tokenList.panels.close')}
               onClick={() => onClose?.()}
             />
           }

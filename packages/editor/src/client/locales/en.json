@@ -99,8 +99,10 @@
         "statePending": "Status: Pending",
         "statePublished": "Status: Published",
         "teaserStyle": "Style: {{label}}",
-        "status": "Status: {{stateJoin}}",
-        "uploadImage": "Upload Image"
+        "status": "{{stateJoin}}",
+        "uploadImage": "Upload Image",
+        "removeTeaser": "Remove Teaser",
+        "sharedWithPeers": "Shared With Peers"
       }
     },
     "pages": {
@@ -132,7 +134,17 @@
       }
     },
     "pageEditor": {
-      "overview": {},
+      "overview": {
+        "back": "Back",
+        "metadata": "Metadata",
+        "save": "Save",
+        "publish": "Publish",
+        "create": "Create",
+        "pagePublished": "Page Published",
+        "pageNotFound": "Page Not Found",
+        "pageDraftCreated": "Page Draft Created",
+        "pageDraftSaved": "Page Draft Saved"
+      },
       "panels": {
         "metadata": "Metadata",
         "title": "Title",
@@ -327,7 +339,8 @@
         "Unknown": "Unknown",
         "generateToken": "Generate Token",
         "generate": "Generate",
-        "creationSuccess": "Token creation success"
+        "creationSuccess": "Token creation success",
+        "close": "Close"
       }
     },
     "blocks": {
@@ -420,6 +433,7 @@
       }
     },
     "login": {
+      "login": "Login",
       "username": "Username",
       "email": "Email",
       "password": "Password",
