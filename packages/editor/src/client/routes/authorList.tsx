@@ -28,6 +28,7 @@ import {
   Modal,
   Button
 } from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
@@ -194,9 +195,11 @@ export function AuthorList() {
         </Modal.Header>
 
         <Modal.Body>
-          {t('authors.panels.deleteAuthor', {
-            name: currentAuthor?.name || currentAuthor?.id
-          })}
+          <DescriptionList>
+            <DescriptionListItem label={t('authors.overview.name')}>
+              {currentAuthor?.name || t('authors.overview.unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
         </Modal.Body>
 
         <Modal.Footer>
@@ -213,10 +216,10 @@ export function AuthorList() {
               // fetchMore()
             }}
             color="red">
-            {t('authors.panels.confirm')}
+            {t('authors.overview.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('authors.panels.cancel')}
+            {t('authors.overview.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>
