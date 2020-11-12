@@ -146,7 +146,7 @@ export function ArticleList() {
                   size="sm"
                   style={{marginLeft: '5px'}}
                   onClick={() => {
-                    setConfirmationDialogOpen(true)
+                    setCurrentArticle(rowData)
                     setConfirmAction(ConfirmAction.Delete)
                     setConfirmationDialogOpen(true)
                   }}
@@ -204,6 +204,7 @@ export function ArticleList() {
 
         <Modal.Footer>
           <Button
+            color={'red'}
             disabled={isUnpublishing || isDeleting}
             onClick={async () => {
               if (!currentArticle) return

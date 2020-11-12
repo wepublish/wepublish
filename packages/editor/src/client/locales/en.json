@@ -364,7 +364,8 @@
           "chooseImage": "Choose Image",
           "editImage": "Edit Image",
           "removeImage": "Remove Image",
-          "caption": "Caption"
+          "caption": "Caption",
+          "save": "Save"
         }
       },
       "embeds": {
