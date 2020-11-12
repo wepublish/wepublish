@@ -191,7 +191,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
       if (data?.updateNavigation) onSave?.(data.updateNavigation)
     } else {
-      console.log('update')
       const {data} = await createNavigation({
         variables: {
           input: {
