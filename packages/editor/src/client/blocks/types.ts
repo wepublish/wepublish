@@ -355,6 +355,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   article: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     articleID: value.article.id
@@ -366,6 +367,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   peerArticle: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     peerID: value.peer.id,
@@ -378,6 +380,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   page: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     pageID: value.page.id
