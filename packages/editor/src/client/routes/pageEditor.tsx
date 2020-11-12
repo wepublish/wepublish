@@ -147,7 +147,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       setChanged(false)
       Notification.success({
-        title: 'Page Draft Saved',
+        title: t('pageEditor.overview.pageDraftSaved'),
         duration: 2000
       })
     } else {
@@ -162,7 +162,7 @@ export function PageEditor({id}: PageEditorProps) {
 
       setChanged(false)
       Notification.success({
-        title: 'Page Draft Created',
+        title: t('pageEditor.overview.pageDraftCreated'),
         duration: 2000
       })
     }
@@ -192,7 +192,7 @@ export function PageEditor({id}: PageEditorProps) {
 
     setChanged(false)
     Notification.success({
-      title: 'Page Published',
+      title: t('pageEditor.overview.pagePublished'),
       duration: 2000
     })
   }
@@ -200,7 +200,7 @@ export function PageEditor({id}: PageEditorProps) {
   useEffect(() => {
     if (isNotFound) {
       Notification.error({
-        title: 'Page Not Found',
+        title: t('pageEditor.overview.pageNotFound'),
         duration: 5000
       })
     }
@@ -229,7 +229,7 @@ export function PageEditor({id}: PageEditorProps) {
                   size={'lg'}
                   disabled={isDisabled}
                   onClick={() => setMetaDrawerOpen(true)}>
-                  {t('Metadata')}
+                  {t('pageEditor.overview.metadata')}
                 </IconButton>
 
                 {isNew && createData == null ? (
@@ -241,7 +241,7 @@ export function PageEditor({id}: PageEditorProps) {
                     icon={<Icon icon="save" />}
                     disabled={isDisabled}
                     onClick={() => handleSave()}>
-                    {t('Create')}
+                    {t('pageEditor.overview.create')}
                   </IconButton>
                 ) : (
                   <>
@@ -253,7 +253,7 @@ export function PageEditor({id}: PageEditorProps) {
                       icon={<Icon icon="save" />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
-                      {t('Save')}
+                      {t('pageEditor.overview.save')}
                     </IconButton>
                     <IconButton
                       style={{
@@ -263,7 +263,7 @@ export function PageEditor({id}: PageEditorProps) {
                       icon={<Icon icon="cloud-upload" />}
                       disabled={isDisabled}
                       onClick={() => setPublishDialogOpen(true)}>
-                      {t('Publish')}
+                      {t('pageEditor.overview.publish')}
                     </IconButton>
                   </>
                 )}

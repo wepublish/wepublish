@@ -99,8 +99,10 @@
         "statePending": "Status: Pending",
         "statePublished": "Status: Published",
         "teaserStyle": "Style: {{label}}",
-        "status": "Status: {{stateJoin}}",
-        "uploadImage": "Upload Image"
+        "status": "{{stateJoin}}",
+        "uploadImage": "Upload Image",
+        "removeTeaser": "Remove Teaser",
+        "sharedWithPeers": "Shared With Peers"
       }
     },
     "pages": {
@@ -132,7 +134,17 @@
       }
     },
     "pageEditor": {
-      "overview": {},
+      "overview": {
+        "back": "Back",
+        "metadata": "Metadata",
+        "save": "Save",
+        "publish": "Publish",
+        "create": "Create",
+        "pagePublished": "Page Published",
+        "pageNotFound": "Page Not Found",
+        "pageDraftCreated": "Page Draft Created",
+        "pageDraftSaved": "Page Draft Saved"
+      },
       "panels": {
         "metadata": "Metadata",
         "title": "Title",
@@ -253,7 +265,9 @@
         "userRoles": "User Roles",
         "remove": "Remove",
         "addUserRole": "Add User Role",
-        "selectUserRole": "Select User Role"
+        "selectUserRole": "Select User Role",
+        "createUser": "Create User",
+        "create": "Create"
       }
     },
     "userRoles": {
@@ -328,7 +342,8 @@
         "generateToken": "Generate Token",
         "generate": "Generate",
         "creationSuccess": "Token creation success",
-        "generateError": "Could not create Token"
+        "generateError": "Could not create Token",
+        "close": "Close"
       }
     },
     "blocks": {
@@ -413,9 +428,15 @@
       "userRoles": "User Roles",
       "peering": "Peering",
       "tokens": "Tokens",
-      "logout": "Logout"
+      "logout": "Logout",
+      "languageSwitch": {
+        "currentLanguage": "English",
+        "close": "Close",
+        "selectNewLanguage": "Select new language"
+      }
     },
     "login": {
+      "login": "Login",
       "username": "Username",
       "email": "Email",
       "password": "Password",
