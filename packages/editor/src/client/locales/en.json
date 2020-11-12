@@ -209,7 +209,9 @@
         "page": "Page",
         "url": "URL",
         "editNavigation": "Edit Navigation",
-        "save": "Save"
+        "save": "Save",
+        "selectPage": "Select Page",
+        "selectArticle": "Select Article"
       }
     },
     "images": {
