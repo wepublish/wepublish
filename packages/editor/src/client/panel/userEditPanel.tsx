@@ -170,6 +170,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           <FormGroup>
             <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
             <CheckPicker
+              name={t('userList.panels.userRoles')}
               block={true}
               value={roles.map(role => role.id)}
               data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
