@@ -23,7 +23,9 @@ import {
   useUpdateNavigationMutation,
   FullNavigationFragment,
   NavigationListDocument,
-  NavigationLinkInput
+  NavigationLinkInput,
+  usePageListQuery,
+  PageRefFragment
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
@@ -49,10 +51,20 @@ export interface NavigationLinkTT extends NavigationLinkInput {
   label: string
   type: LinkTypes
 }
+
+export interface NavigationLink {
+  label: string
+  type: string
+  articleID?: string
+  pageID?: string
+  url?: string
+}
+
 export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelProps) {
   const [name, setName] = useState('')
   const [key, setKey] = useState('')
-  const [navigationLinkInput, setNavigationLinkInput] = useState<ListValue<NavigationLinkTT>[]>([])
+  const [navigationLinks, setNavigationLinks] = useState<ListValue<NavigationLink>[]>([])
+  const [pages, setPages] = useState<PageRefFragment[]>([])
 
   const [isErrorToastOpen, setErrorToastOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
@@ -61,6 +73,11 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
+  })
+
+  const {data: pageData, loading: isLoadingPageData, error: pageDataError} = usePageListQuery({
+    variables: {first: 50},
+    fetchPolicy: 'no-cache'
   })
 
   const [createNavigation, {loading: isCreating, error: createError}] = useCreateNavigationMutation(
@@ -74,7 +91,13 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     {loading: isUpdating, error: updateError}
   ] = useUpdateNavigationMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+  const isDisabled =
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isLoadingPageData ||
+    loadError !== undefined ||
+    pageDataError !== undefined
 
   const {t} = useTranslation()
 
@@ -82,36 +105,18 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     if (data?.navigation) {
       setName(data.navigation.name)
       setKey(data.navigation.key)
-      setNavigationLinkInput(
+      setNavigationLinks(
         data.navigation.links
           ? data.navigation.links.map(link => {
               return {
                 id: generateID(),
                 value: {
                   label: link.label,
-                  type:
-                    link.__typename === 'PageNavigationLink'
-                      ? LinkTypes.PageNavigationLink
-                      : link.__typename === 'ArticleNavigationLink'
-                      ? LinkTypes.ArticleNavigationLink
-                      : link.__typename === 'ExternalNavigationLink'
-                      ? LinkTypes.ExternalNavigationLink
-                      : LinkTypes.ArticleNavigationLink,
-
-                  ...(link.__typename === 'PageNavigationLink'
-                    ? {page: {label: link.label, pageID: link.page?.id ? link.page.id : ''}}
-                    : {}),
-                  ...(link.__typename === 'ArticleNavigationLink'
-                    ? {
-                        article: {
-                          label: link.label,
-                          articleID: link.article ? link.article.id : ''
-                        }
-                      }
-                    : {}),
-                  ...(link.__typename === 'ExternalNavigationLink'
-                    ? {external: {label: link.label, url: link.url}}
-                    : {})
+                  type: link.__typename,
+                  articleID:
+                    link.__typename === 'ArticleNavigationLink' ? link.article?.id : undefined,
+                  pageId: link.__typename === 'PageNavigationLink' ? link.page?.id : undefined,
+                  url: link.__typename === 'ExternalNavigationLink' ? link.url : undefined
                 }
               }
             })
@@ -119,6 +124,12 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
       )
     }
   }, [data?.navigation])
+
+  useEffect(() => {
+    if (pageData?.pages?.nodes) {
+      setPages(pageData.pages.nodes)
+    }
+  }, [pageData?.pages])
 
   useEffect(() => {
     if (loadError) {
@@ -130,8 +141,40 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     } else if (updateError) {
       setErrorToastOpen(true)
       setErrorMessage(updateError.message)
+    } else if (pageDataError) {
+      setErrorMessage(pageDataError.message)
+      setErrorToastOpen(true)
     }
-  }, [loadError, createError, updateError])
+  }, [loadError, createError, updateError, pageDataError])
+
+  function unionForNavigationLink(item: ListValue<NavigationLink>): NavigationLinkInput {
+    const link = item.value
+    switch (link.type) {
+      case 'ArticleNavigationLink':
+        return {
+          article: {
+            label: link.label,
+            articleID: link.articleID!
+          }
+        }
+      case 'PageNavigationLink':
+        return {
+          page: {
+            label: link.label,
+            pageID: link.pageID!
+          }
+        }
+      case 'ExternalNavigationLink':
+        return {
+          external: {
+            label: link.label,
+            url: link.url!
+          }
+        }
+      default:
+        throw new Error('Type does not exist')
+    }
+  }
 
   async function handleSave() {
     if (id) {
@@ -141,7 +184,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           input: {
             name,
             key,
-            links: navigationLinkInput.map(({value}) => value)
+            links: navigationLinks.map(unionForNavigationLink)
           }
         }
       })
@@ -154,23 +197,12 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           input: {
             name,
             key,
-            links: navigationLinkInput.map(({value}) => value)
+            links: navigationLinks.map(unionForNavigationLink)
           }
         }
       })
 
       if (data?.createNavigation) onSave?.(data.createNavigation)
-    }
-  }
-
-  const renderLinkTypes = (value: {id: LinkTypes}) => {
-    switch (value.id) {
-      case LinkTypes.ArticleNavigationLink:
-        return 'Article Link'
-      case LinkTypes.PageNavigationLink:
-        return 'Page Link'
-      case LinkTypes.ExternalNavigationLink:
-        return 'External Link'
     }
   }
 
@@ -223,8 +255,8 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         <PanelSectionHeader title={t('navigation.panels.links')} />
         <PanelSection>
           <ListInput
-            value={navigationLinkInput}
-            onChange={navigationLinkInput => setNavigationLinkInput(navigationLinkInput)}
+            value={navigationLinks}
+            onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
             defaultValue={{label: '', type: LinkTypes.ArticleNavigationLink}}>
             {({value, onChange}) => (
               <>
@@ -237,88 +269,67 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                     onChange({...value, label: e.target.value})
                   }}
                 />
-                {console.log('ListInputX:', value)}
                 <Select
                   label={t('navigation.panels.linkType')}
                   options={[
-                    {...value, id: LinkTypes.PageNavigationLink},
-                    {...value, id: LinkTypes.ArticleNavigationLink},
-                    {...value, id: LinkTypes.ExternalNavigationLink}
+                    {id: LinkTypes.PageNavigationLink},
+                    {id: LinkTypes.ArticleNavigationLink},
+                    {id: LinkTypes.ExternalNavigationLink}
                   ]}
-                  value={{...value, id: value.type}}
-                  renderListItem={renderLinkTypes}
-                  onChange={e => {
-                    onChange({...value, type: e!.id})
+                  value={{id: value.type}}
+                  renderListItem={type => type.id}
+                  onChange={type => {
+                    if (!type) return
+                    onChange({...value, type: type.id})
                   }}
                   marginBottom={Spacing.Small}
                 />
-                {(value => {
-                  switch (value.type) {
-                    case LinkTypes.PageNavigationLink:
-                      return (
-                        <Box display="flex" flexDirection="row">
-                          <TextInput
-                            label={t('navigation.panels.page')}
-                            flexBasis="70%"
-                            value={value.page?.pageID}
-                            onChange={e =>
-                              onChange({
-                                ...value,
-                                page: {
-                                  label: value.label,
-                                  pageID: e.target.value
-                                },
-                                article: undefined
-                              })
-                            }
-                            {...delete value.article}
-                            {...delete value.external}
-                          />
-                        </Box>
-                      )
-                    case LinkTypes.ArticleNavigationLink:
-                      return (
-                        <Box display="flex" flexDirection="row">
-                          <TextInput
-                            label={t('navigation.panels.article')}
-                            flexBasis="70%"
-                            value={value.article?.articleID}
-                            onChange={e =>
-                              onChange({
-                                ...value,
-                                article: {
-                                  label: value.article ? value.article?.label : '',
-                                  articleID: e.target.value
-                                }
-                              })
-                            }
-                          />
-                        </Box>
-                      )
-                    case LinkTypes.ExternalNavigationLink:
-                      return (
-                        <Box display="flex" flexDirection="row">
-                          <TextInput
-                            label={t('navigation.panels.url')}
-                            flexBasis="70%"
-                            value={value.external?.url}
-                            onChange={e =>
-                              onChange({
-                                ...value,
-                                external: {
-                                  label: value.external ? value.external?.label : '',
-                                  url: e.target.value
-                                }
-                              })
-                            }
-                          />
-                        </Box>
-                      )
-                    default:
-                      return ''
-                  }
-                })(value)}
-                {console.log('Page', value)}
+                {value.type === LinkTypes.PageNavigationLink ||
+                value.type === LinkTypes.ArticleNavigationLink ? (
+                  <Box>
+                    <Select
+                      label={
+                        value.type === LinkTypes.PageNavigationLink
+                          ? t('navigation.panels.selectPages')
+                          : t('navigation.panels.selectArticles')
+                      }
+                      options={
+                        value.type === LinkTypes.PageNavigationLink
+                          ? pages.map(page => ({id: page.id}))
+                          : []
+                      }
+                      value={
+                        value.type === LinkTypes.PageNavigationLink
+                          ? {id: value.pageID!}
+                          : {id: value.articleID!}
+                      }
+                      renderListItem={option => option.id}
+                      onChange={type => {
+                        if (!type) return
+                        if (value.type === LinkTypes.PageNavigationLink) {
+                          onChange({...value, pageID: type.id})
+                        } else {
+                          onChange({...value, articleID: type.id})
+                        }
+                      }}
+                      marginBottom={Spacing.Small}
+                    />
+                  </Box>
+                ) : (
+                  <Box display="flex" flexDirection="row">
+                    <TextInput
+                      label={t('navigation.panels.url')}
+                      flexBasis="70%"
+                      value={value.url}
+                      onChange={e =>
+                        onChange({
+                          ...value,
+                          url: e.target.value
+                        })
+                      }
+                    />
+                  </Box>
+                )}
               </>
             )}
           </ListInput>
