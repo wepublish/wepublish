@@ -1,4 +1,6 @@
-import {BlockListValue, ListValue} from '@karma.run/ui'
+import {BlockListValue} from '../atoms/blockList'
+import {ListValue} from '../atoms/listInput'
+
 import {Node} from 'slate'
 
 import nanoid from 'nanoid'

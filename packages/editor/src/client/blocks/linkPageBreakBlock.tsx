@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react'
 
-import {BlockProps, TypographicTextArea, Box} from '@karma.run/ui'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+import {BlockProps} from '../atoms/blockList'
 import {LinkPageBreakBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
@@ -24,7 +25,7 @@ export function LinkPageBreakBlock({
 
   return (
     <>
-      <Box flexGrow={1}>
+      <div style={{flexGrow: 1}}>
         <TypographicTextArea
           ref={focusRef}
           variant="h2"
@@ -34,7 +35,7 @@ export function LinkPageBreakBlock({
           disabled={disabled}
           onChange={e => onChange({...value, text: e.target.value})}
         />
-      </Box>
+      </div>
       <TypographicTextArea
         ref={focusRef}
         variant="body1"

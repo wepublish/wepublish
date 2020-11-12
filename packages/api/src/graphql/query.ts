@@ -292,7 +292,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetPermissions, roles)
 
-        return AllPermissions.map(permission => ({...permission, checked: false}))
+        return AllPermissions
       }
     },
 

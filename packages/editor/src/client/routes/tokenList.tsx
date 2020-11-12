@@ -1,32 +1,14 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Typography,
-  Box,
-  Spacing,
-  Drawer,
-  Toast,
-  Divider,
-  IconButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
-
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutline, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
 import {
   RouteType,
   useRoute,
   useRouteDispatch,
   TokenListRoute,
-  RouteLinkButton,
-  TokenGenerateRoute
+  TokenGenerateRoute,
+  ButtonLink
 } from '../route'
 
 import {
@@ -40,6 +22,7 @@ import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
+import {Button, FlexboxGrid, Icon, List, Loader, IconButton, Drawer, Modal, Alert} from 'rsuite'
 
 export function TokenList() {
   const {current} = useRoute()
@@ -53,9 +36,6 @@ export function TokenList() {
 
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
   const {
     data: tokenListData,
     loading: isTokenListLoading,
@@ -64,18 +44,16 @@ export function TokenList() {
     fetchPolicy: 'network-only'
   })
 
-  const [deleteToken, {loading: isDeleting}] = useDeleteTokenMutation({
+  const [deleteToken, {loading: isDeleting, error: deleteTokenError}] = useDeleteTokenMutation({
     refetchQueries: [getOperationNameFromDocument(TokenListDocument)]
   })
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (tokenListError) {
-      setErrorToastOpen(true)
-      setErrorMessage(tokenListError.message)
-    }
-  }, [tokenListError])
+    const error = tokenListError?.message ?? deleteTokenError?.message
+    if (error) Alert.error(error, 0)
+  }, [tokenListError, deleteTokenError])
 
   useEffect(() => {
     switch (current?.type) {
@@ -91,94 +69,89 @@ export function TokenList() {
 
   return (
     <>
-      <Box>
-        <Box marginBottom={Spacing.Small} flexDirection="row" alignItems="center" display="flex">
-          <Typography variant="h1">{t('tokenList.overview.tokens')}</Typography>
-          <Box flexGrow={1} />
-          <RouteLinkButton
-            color="primary"
-            label={t('tokenList.overview.generateToken')}
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('tokenList.overview.tokens')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
             disabled={isTokenListLoading}
-            route={TokenGenerateRoute.create({})}
-          />
-        </Box>
-        {isTokenListLoading
-          ? null
-          : tokenListData?.tokens.map(token => (
-              <Box key={token.id} marginBottom={Spacing.Small}>
-                <Box display="flex" alignItems="center" marginBottom={Spacing.ExtraSmall}>
-                  <Typography variant="body2">{token.name}</Typography>
-                  <Box flexGrow={1} />
+            route={TokenGenerateRoute.create({})}>
+            {t('tokenList.overview.generateToken')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+      {isTokenListLoading ? (
+        <Loader backdrop content="loading..." vertical />
+      ) : (
+        <List bordered={true} style={{marginTop: '40px'}}>
+          {tokenListData?.tokens.map((token, index) => (
+            <List.Item key={token.name} index={index}>
+              <FlexboxGrid>
+                <FlexboxGrid.Item colspan={23} style={{paddingLeft: '10px'}}>
+                  {token.name}
+                </FlexboxGrid.Item>
+                <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
                   <IconButton
-                    icon={MaterialIconDeleteOutline}
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
                     onClick={() => {
                       setConfirmationDialogOpen(true)
                       setCurrentToken(token)
                     }}
                   />
-                </Box>
-                <Divider />
-              </Box>
-            ))}
-      </Box>
+                </FlexboxGrid.Item>
+              </FlexboxGrid>
+            </List.Item>
+          ))}
+        </List>
+      )}
 
-      <Drawer open={isTokenGeneratePanelOpen} width={480}>
-        {() => (
-          <TokenGeneratePanel
-            onClose={() => {
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: TokenListRoute.create({})
-              })
-            }}
-          />
-        )}
+      <Drawer
+        show={isTokenGeneratePanelOpen}
+        onHide={() => {
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: TokenListRoute.create({})
+          })
+        }}
+        size={'sm'}>
+        <TokenGeneratePanel
+          onClose={() => {
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: TokenListRoute.create({})
+            })
+          }}
+        />
       </Drawer>
 
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title={t('tokenList.panels.deleteToken')}
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('tokenList.panels.cancel')}
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label={t('tokenList.panels.confirm')}
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentToken) return
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {t('tokenList.panels.deleteTokenText', {name: currentToken?.name || currentToken?.id})}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentToken) return
 
-                    await deleteToken({variables: {id: currentToken.id}})
-                    setConfirmationDialogOpen(false)
-                  }}
-                />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label={t('tokenList.panels.name')}>
-                  {currentToken?.name || t('tokenList.panels.Unknown')}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
-
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+              await deleteToken({variables: {id: currentToken.id}})
+              setConfirmationDialogOpen(false)
+            }}
+            color="red">
+            {t('tokenList.panels.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('tokenList.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

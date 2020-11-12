@@ -1,37 +1,21 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  Toggle,
-  TextArea,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
+  CheckPicker,
+  ControlLabel,
   Drawer,
+  Dropdown,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
+  TagPicker,
+  Toggle,
+  Panel,
   IconButton,
-  Image,
-  TagInput,
-  AutocompleteInput,
-  AutocompleteInputListProps,
-  SelectList,
-  SelectListItem,
-  MarginProps,
-  Avatar,
-  PlaceholderImage,
-  ZIndex
-} from '@karma.run/ui'
-
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined
-} from '@karma.run/icons'
+  HelpBlock
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -77,213 +61,144 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     onChange?.({...value, image})
   }
 
-  return (
-    <>
-      <Panel>
-        <PanelHeader
-          title={t('articleEditor.panels.metadata')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('articleEditor.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-        />
+  const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
+  const [authorsFilter, setAuthorsFilter] = useState('')
 
-        <PanelSection>
-          <TextInput
-            label={t('articleEditor.panels.preTitle')}
-            value={preTitle}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e => onChange?.({...value, preTitle: e.target.value})}
-          />
-
-          <TextInput
-            label={t('articleEditor.panels.title')}
-            value={title}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e =>
-              onChange?.({...value, title: e.target.value, slug: slugify(e.target.value)})
-            }
-          />
-
-          <TextArea
-            label={t('articleEditor.panels.lead')}
-            value={lead}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={e => onChange?.({...value, lead: e.target.value})}
-          />
-
-          <AuthorInput
-            label={t('articleEditor.panels.authors')}
-            value={authors}
-            marginBottom={Spacing.ExtraSmall}
-            onChange={authors => onChange?.({...value, authors: authors || []})}
-          />
-
-          <TagInput
-            label={t('articleEditor.panels.tags')}
-            description={t('articleEditor.panels.addTag')}
-            value={tags}
-            marginBottom={Spacing.Small}
-            onChange={tags => onChange?.({...value, tags: tags ?? []})}
-          />
-
-          <Box>
-            <Toggle
-              label={t('articleEditor.panels.breakingNews')}
-              checked={breaking}
-              onChange={e => onChange?.({...value, breaking: e.target.checked})}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('articleEditor.panels.image')} />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconImageOutlined}
-                          title={t('articleEditor.panels.chooseImage')}
-                          onClick={() => setChooseModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconEditOutlined}
-                          title={t('articleEditor.panels.editImage')}
-                          onClick={() => setEditModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconClose}
-                          title={t('articleEditor.panels.removeImage')}
-                          onClick={() => onChange?.({...value, image: undefined})}
-                        />
-                      </Box>
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('articleEditor.panels.peering')} />
-        <PanelSection>
-          <Toggle
-            label={t('articleEditor.panels.peerShare')}
-            description={t('articleEditor.panels.allowPeerPublishing')}
-            checked={shared}
-            onChange={e => onChange?.({...value, shared: e.target.checked})}
-          />
-        </PanelSection>
-      </Panel>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
-      </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />}
-      </Drawer>
-    </>
-  )
-}
-
-export interface AuthorInputProps extends MarginProps {
-  label?: string
-  description?: string
-  value: AuthorRefFragment[]
-  onChange(author?: AuthorRefFragment[]): void
-}
-
-export function AuthorInput(props: AuthorInputProps) {
-  return (
-    <AutocompleteInput
-      {...props}
-      valueToChipData={author => ({
-        id: author.id,
-        label: author.name,
-        imageURL: author.image?.squareURL ?? undefined
-      })}>
-      {props => <AuthorInputList {...props} />}
-    </AutocompleteInput>
-  )
-}
-
-function AuthorInputList({
-  isOpen,
-  inputValue,
-  highlightedIndex,
-  getItemProps,
-  getMenuProps
-}: AutocompleteInputListProps) {
-  const [items, setItems] = useState<AuthorRefFragment[]>([])
-  const {data, loading: isLoading} = useAuthorListQuery({
-    variables: {filter: inputValue || undefined, first: 10},
+  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
+  const {data} = useAuthorListQuery({
+    variables: authorsVariables,
     fetchPolicy: 'network-only'
   })
 
-  const {t} = useTranslation()
-
   useEffect(() => {
-    setItems(data?.authors.nodes ?? [])
-  }, [data])
+    if (data?.authors?.nodes) {
+      setFoundAuthors(data?.authors.nodes)
+    }
+  }, [data?.authors])
 
   return (
-    <SelectList {...getMenuProps()}>
-      {isOpen && inputValue ? (
-        !isLoading ? (
-          items.length ? (
-            items.map((item, index) => (
-              <SelectListItem
-                key={item.id}
-                highlighted={index === highlightedIndex}
-                {...getItemProps({item, index})}>
-                <Box display="flex">
-                  <Avatar marginRight={Spacing.Tiny}>
-                    {item.image?.squareURL ? (
-                      <Image src={item.image.squareURL} width={20} height={20} />
-                    ) : (
-                      <PlaceholderImage width={20} height={20} />
-                    )}
-                  </Avatar>
-                  {item.name}
-                </Box>
-              </SelectListItem>
-            ))
-          ) : (
-            <SelectListItem>{t('articleEditor.panels.noAuthorsFound')}</SelectListItem>
-          )
-        ) : (
-          <SelectListItem>{t('articleEditor.panels.loading')}</SelectListItem>
-        )
-      ) : null}
-    </SelectList>
+    <>
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.metadata')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+            <FormControl value={preTitle} onChange={preTitle => onChange?.({...value, preTitle})} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+            <FormControl
+              value={title}
+              onChange={title => onChange?.({...value, title, slug: slugify(title)})}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+            <FormControl
+              rows={5}
+              componentClass="textarea"
+              value={lead}
+              onChange={title => onChange?.({...value, lead})}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
+            <CheckPicker
+              cleanable={true}
+              value={authors.map(author => author.id)}
+              data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+              onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
+              onChange={authorsID => {
+                const authors = foundAuthors.filter(author => authorsID.includes(author.id))
+                onChange?.({...value, authors})
+              }}
+              block
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
+            <TagPicker
+              block
+              value={tags}
+              creatable={true}
+              data={tags.map(tag => ({label: tag, value: tag}))}
+              onChange={tags => {
+                onChange?.({...value, tags})
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
+            <Toggle checked={breaking} onChange={breaking => onChange?.({...value, breaking})} />
+          </FormGroup>
+        </Form>
+
+        <Panel
+          bordered={true}
+          style={{
+            height: '200px',
+            backgroundSize: 'cover',
+            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
+          }}>
+          <Dropdown
+            renderTitle={() => {
+              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+            }}>
+            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
+              <Icon icon="image" /> {t('articleEditor.panels.chooseImage')}
+            </Dropdown.Item>
+            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
+              <Icon icon="pencil" /> {t('articleEditor.panels.editImage')}
+            </Dropdown.Item>
+            <Dropdown.Item
+              disabled={!image}
+              onClick={() => onChange?.({...value, image: undefined})}>
+              <Icon icon="close" /> {t('articleEditor.panels.removeImage')}
+            </Dropdown.Item>
+          </Dropdown>
+        </Panel>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
+            <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
+            <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
+          </FormGroup>
+        </Form>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer
+        show={isChooseModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setChooseModalOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
+      </Drawer>
+      {value.image && (
+        <Drawer
+          show={isEditModalOpen}
+          size={'sm'}
+          onHide={() => {
+            setEditModalOpen(false)
+          }}>
+          <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />
+        </Drawer>
+      )}
+    </>
   )
 }

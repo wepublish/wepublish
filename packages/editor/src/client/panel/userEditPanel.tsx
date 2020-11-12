@@ -1,29 +1,16 @@
 import React, {useState, useEffect} from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  Toast,
-  PanelSectionHeader,
-  Typography,
-  OptionButton,
-  IconButton,
-  Select,
+  Alert,
   Button,
-  Dialog
-} from '@karma.run/ui'
-
-import {
-  MaterialIconAdd,
-  MaterialIconClose,
-  MaterialIconRemoveOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+  CheckPicker,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Modal
+} from 'rsuite'
 
 import {
   useCreateUserMutation,
@@ -45,11 +32,6 @@ export interface UserEditPanelProps {
   onSave?(user: FullUserFragment): void
 }
 
-enum ConfirmAction {
-  Remove = 'remove',
-  Add = 'add'
-}
-
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -57,12 +39,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
 
-  const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
-
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
 
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
@@ -107,19 +84,12 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   }, [userRoleData?.userRoles])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    } else if (loadUserRoleError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadUserRoleError.message)
-    }
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      loadUserRoleError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, loadUserRoleError])
 
   async function handleSave() {
@@ -151,147 +121,94 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
     }
   }
 
-  function handleSetCurrentUserRole(userRole: FullUserRoleFragment | undefined): void {
-    if (!userRole) return
-    setCurrentUserRole(userRole)
-  }
-
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('userList.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? t('userList.panels.save') : t('userList.panels.create')}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('userList.panels.name')}
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.name')}</ControlLabel>
+            <FormControl
+              name={t('userList.panels.name')}
               value={name}
               disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
+              onChange={value => setName(value)}
             />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('userList.panels.email')}
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.email')}</ControlLabel>
+            <FormControl
+              name={t('userList.panels.email')}
               value={email}
               disabled={isDisabled}
-              onChange={e => {
-                setEmail(e.target.value)
-              }}
+              onChange={value => setEmail(value)}
             />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            {!id && (
-              <TextInput
-                label={t('userList.panels.password')}
+          </FormGroup>
+          {!id ? (
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.password')}</ControlLabel>
+              <FormControl
                 type="password"
+                name={t('userList.panels.password')}
                 value={password}
                 disabled={isDisabled}
-                onChange={e => {
-                  setPassword(e.target.value)
-                }}
+                onChange={value => setPassword(value)}
               />
-            )}
-            {id && (
-              <Button
-                label={t('userList.panels.resetPassword')}
-                variant="outlined"
-                onClick={() => setIsResetUserPasswordOpen(true)}
-              />
-            )}
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('userList.panels.userRoles')} />
-        <PanelSection>
-          {roles.map(role => {
-            return (
-              <Box key={role.id} display="flex" flexDirection="row" alignItems="center">
-                <Box>
-                  <Typography variant="h3">{role.name}</Typography>
-                  <Typography variant="body1">{role.description}</Typography>
-                </Box>
-                <Box flexGrow={1} />
-                <OptionButton
-                  position="left"
-                  menuItems={[
-                    {
-                      id: ConfirmAction.Remove,
-                      label: t('userList.panels.remove'),
-                      icon: MaterialIconRemoveOutlined
-                    }
-                  ]}
-                  onMenuItemClick={item => {
-                    setRoles(roles.filter(_role => _role.id !== role.id))
-                  }}
-                />
-              </Box>
-            )
-          })}
-          <Box marginTop={Spacing.Large}>
-            <Typography variant="h3">{t('userList.panels.addUserRole')}</Typography>
-          </Box>
-          <Box display="flex" flexDirection="row" alignItems="center">
-            <Select
-              description={t('userList.panels.selectUserRole')}
-              flexBasis="90%"
-              options={userRoles}
-              value={currentUserRole}
-              renderListItem={userRole => userRole?.name}
-              onChange={userRole => handleSetCurrentUserRole(userRole)}
-            />
-            <IconButton
-              flexBasis="10%"
-              icon={MaterialIconAdd}
-              margin={Spacing.Tiny}
-              variant="large"
-              onClick={() => {
-                if (!currentUserRole) return
-                setRoles([...roles, currentUserRole])
-                setCurrentUserRole(undefined)
+            </FormGroup>
+          ) : (
+            <FormGroup>
+              <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
+                {t('userList.panels.resetPassword')}
+              </Button>
+            </FormGroup>
+          )}
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
+            <CheckPicker
+              block={true}
+              value={roles.map(role => role.id)}
+              data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
+              onChange={value => {
+                setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
               }}
             />
-          </Box>
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-      <Dialog
-        open={isResetUserPasswordOpen}
-        onClose={() => setIsResetUserPasswordOpen(false)}
-        width={480}
-        closeOnBackgroundClick>
-        {() => (
+          </FormGroup>
+        </Form>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('userList.panels.save') : t('userList.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('userList.panels.close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
           <ResetUserPasswordPanel
             userID={id}
             userName={name}
             onClose={() => setIsResetUserPasswordOpen(false)}
           />
-        )}
-      </Dialog>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
+            {t('userList.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

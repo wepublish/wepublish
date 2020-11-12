@@ -14,42 +14,12 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-import {
-  MaterialIconFormatBold,
-  MaterialIconFormatItalic,
-  MaterialIconFormatUnderlined,
-  MaterialIconFormatStrikethrough,
-  MaterialIconLooksTwoOutlined,
-  MaterialIconLooks3Outlined,
-  MaterialIconFormatListBulleted,
-  MaterialIconFormatListNumbered,
-  MaterialIconLooksOneOutlined,
-  MaterialIconLink,
-  MaterialIconLinkOff,
-  MaterialIconClose,
-  MaterialIconCheck
-} from '@karma.run/icons'
-
-import {
-  Typography,
-  ToolbarButtonProps,
-  ToolbarButton,
-  ToolbarDivider,
-  Link,
-  BlockProps,
-  Toolbar,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Spacing,
-  Box
-} from '@karma.run/ui'
+import {BlockProps} from '../atoms/blockList'
+import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -150,25 +120,13 @@ function deserialize(element: Element): any {
 function renderElement({attributes, children, element}: RenderElementProps) {
   switch (element.type) {
     case BlockFormat.H1:
-      return (
-        <Typography variant="h1" spacing="small" {...attributes}>
-          {children}
-        </Typography>
-      )
+      return <h1 {...attributes}>{children}</h1>
 
     case BlockFormat.H2:
-      return (
-        <Typography variant="h2" spacing="small" {...attributes}>
-          {children}
-        </Typography>
-      )
+      return <h2 {...attributes}>{children}</h2>
 
     case BlockFormat.H3:
-      return (
-        <Typography variant="h3" spacing="small" {...attributes}>
-          {children}
-        </Typography>
-      )
+      return <h3 {...attributes}>{children}</h3>
 
     case BlockFormat.UnorderedList:
       return <ul {...attributes}>{children}</ul>
@@ -185,17 +143,13 @@ function renderElement({attributes, children, element}: RenderElementProps) {
       // title={title}
 
       return (
-        <Link data-title={element.title} data-href={element.url} {...attributes}>
+        <a data-title={element.title} data-href={element.url} {...attributes}>
           {children}
-        </Link>
+        </a>
       )
 
     default:
-      return (
-        <Typography variant="body1" spacing="large" {...attributes}>
-          {children}
-        </Typography>
-      )
+      return <p {...attributes}>{children}</p>
   }
 }
 
@@ -300,21 +254,21 @@ export const RichTextBlock = memo(function RichTextBlock({
         if (value !== newValue) onChange(newValue)
       }}>
       <Toolbar fadeOut={!hasFocus}>
-        <FormatButton icon={MaterialIconLooksOneOutlined} format={BlockFormat.H1} />
-        <FormatButton icon={MaterialIconLooksTwoOutlined} format={BlockFormat.H2} />
-        <FormatButton icon={MaterialIconLooks3Outlined} format={BlockFormat.H3} />
+        <FormatButton icon="header" format={BlockFormat.H1} />
+        <FormatButton icon="header" format={BlockFormat.H2} />
+        <FormatButton icon="header" format={BlockFormat.H3} />
 
         <ToolbarDivider />
 
-        <FormatButton icon={MaterialIconFormatListBulleted} format={BlockFormat.UnorderedList} />
-        <FormatButton icon={MaterialIconFormatListNumbered} format={BlockFormat.OrderedList} />
+        <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
+        <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
 
         <ToolbarDivider />
 
-        <FormatButton icon={MaterialIconFormatBold} format={TextFormat.Bold} />
-        <FormatButton icon={MaterialIconFormatItalic} format={TextFormat.Italic} />
-        <FormatButton icon={MaterialIconFormatUnderlined} format={TextFormat.Underline} />
-        <FormatButton icon={MaterialIconFormatStrikethrough} format={TextFormat.Strikethrough} />
+        <FormatButton icon="bold" format={TextFormat.Bold} />
+        <FormatButton icon="italic" format={TextFormat.Italic} />
+        <FormatButton icon="underline" format={TextFormat.Underline} />
+        <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
 
         <ToolbarDivider />
 
@@ -366,7 +320,7 @@ function LinkFormatButton() {
   return (
     <>
       <ToolbarButton
-        icon={MaterialIconLink}
+        icon="link"
         active={isFormatActive(editor, InlineFormat.Link)}
         onMouseDown={e => {
           e.preventDefault()
@@ -394,49 +348,35 @@ function LinkFormatButton() {
           setLinkDialogOpen(true)
         }}
       />
-      <Dialog open={isLinkDialogOpen}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('Cancel')}
-                  onClick={() => setLinkDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  disabled={isDisabled}
-                  label={t('Apply')}
-                  onClick={() => {
-                    insertLink(editor, selection, validatedURL!, title || undefined)
-                    setLinkDialogOpen(false)
-                  }}
-                />
-              }
-            />
-            <PanelSection>
-              <Box width={300}>
-                <TextInput
-                  label={t('blocks.richText.link')}
-                  errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
-                  value={url}
-                  onChange={e => setURL(e.target.value)}
-                  marginBottom={Spacing.ExtraSmall}
-                />
-                <TextInput
-                  label={t('blocks.richText.title')}
-                  description={t('blocks.richText.optionalDescription')}
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-              </Box>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+      <Modal show={isLinkDialogOpen} size={'sm'} onHide={() => setLinkDialogOpen(false)}>
+        <Modal.Body>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
+              <FormControl
+                errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
+                value={url}
+                onChange={url => setURL(url)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('blocks.richText.title')}</ControlLabel>
+              <FormControl value={title} onChange={title => setTitle(title)} />
+            </FormGroup>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            disabled={isDisabled}
+            onClick={() => {
+              insertLink(editor, selection, validatedURL!, title || undefined)
+              setLinkDialogOpen(false)
+            }}>
+            {t('Apply')}
+          </Button>
+          <Button onClick={() => setLinkDialogOpen(false)}>{t('Cancel')}</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
@@ -461,7 +401,7 @@ function RemoveLinkFormatButton() {
 
   return (
     <ToolbarButton
-      icon={MaterialIconLinkOff}
+      icon="unlink"
       active={isFormatActive(editor, InlineFormat.Link)}
       disabled={!isFormatActive(editor, InlineFormat.Link)}
       onMouseDown={e => {

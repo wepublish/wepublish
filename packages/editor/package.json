@@ -50,9 +50,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.1",
-    "@karma.run/icons": "^1.1.0",
     "@karma.run/react": "^0.1.3",
-    "@karma.run/ui": "0.3.20",
     "@karma.run/webpack": "^0.0.3",
     "apollo-upload-client": "^14.1.2",
     "array-move": "^2.2.1",
@@ -70,6 +68,7 @@
     "react-i18next": "^11.7.3",
     "react-sortable-hoc": "^1.11.0",
     "regenerator-runtime": "^0.13.3",
+    "rsuite": "^4.8.4",
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
@@ -97,11 +96,13 @@
     "@types/node": "^12.12.16",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
+    "@types/resize-observer-browser": "^0.1.4",
     "@types/react-test-renderer": "^16.9.3",
     "@types/webpack": "^4.41.0",
     "@types/webpack-dev-server": "^3.9.0",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.0.6",
+    "babel-preset-rsuite": "^4.0.1",
     "clean-webpack-plugin": "^3.0.0",
     "crlf": "^1.1.1",
     "dotenv": "^8.2.0",
@@ -109,6 +110,8 @@
     "enzyme-adapter-react-16": "^1.15.5",
     "enzyme-to-json": "^3.6.1",
     "fork-ts-checker-webpack-plugin": "^4.1.4",
+    "less": "^3.12.2",
+    "less-loader": "^7.0.2",
     "jest": "^26.4.2",
     "nodemon": "^2.0.1",
     "npm-run-all": "^4.1.5",
@@ -128,11 +131,18 @@
       "react/display-name": [
         0
       ],
+      "react/prop-types": [
+        0
+      ],
       "i18next/no-literal-string": [
         2,
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "dataKey",
+            "appearance",
+            "icon",
+            "size",
             "display",
             "flexDirection",
             "alignItems",
@@ -142,6 +152,7 @@
             "align",
             "position",
             "justifyContent",
+            "justify",
             "overflow",
             "target",
             "spacing",

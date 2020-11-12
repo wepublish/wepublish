@@ -1,46 +1,35 @@
 import React, {useState, useEffect} from 'react'
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Avatar,
-  PlaceholderImage,
-  Drawer,
-  Image,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  Button
-} from '@karma.run/ui'
 
 import {
-  RouteLinkButton,
-  Link,
   AuthorEditRoute,
   RouteType,
   useRoute,
   useRouteDispatch,
   AuthorListRoute,
-  AuthorCreateRoute
+  AuthorCreateRoute,
+  ButtonLink,
+  Link
 } from '../route'
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment} from '../api'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
 import {useTranslation} from 'react-i18next'
-
-enum ConfirmAction {
-  Delete = 'delete'
-}
+import {
+  FlexboxGrid,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  Table,
+  Avatar,
+  Drawer,
+  Modal,
+  Button
+} from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
   const {t} = useTranslation()
@@ -58,10 +47,10 @@ export function AuthorList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, fetchMore, loading: isLoading} = useAuthorListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useAuthorListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -85,7 +74,13 @@ export function AuthorList() {
     }
   }, [current])
 
-  function loadMore() {
+  useEffect(() => {
+    if (data?.authors?.nodes) {
+      setAuthors(data.authors.nodes)
+    }
+  }, [data?.authors])
+
+  /* function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.authors.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -99,153 +94,135 @@ export function AuthorList() {
         }
       }
     })
-  }
-
-  const authors = data?.authors.nodes.map(author => {
-    const {id, name, image} = author
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Avatar width={50} height={50} marginRight={Spacing.Small}>
-            {image ? (
-              image.squareURL && <Image src={image.squareURL} width="100%" height="100%" />
-            ) : (
-              <PlaceholderImage width="100%" height="100%" />
-            )}
-          </Avatar>
-
-          <Link route={AuthorEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || t('authors.overview.unknown')}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {
-                id: ConfirmAction.Delete,
-                label: t('authors.overview.delete'),
-                icon: MaterialIconDeleteOutlined
-              }
-            ]}
-            onMenuItemClick={item => {
-              setCurrentAuthor(author)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
+  } */
 
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('authors.overview.authors')}</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label={t('authors.overview.newAuthor')}
-          route={AuthorCreateRoute.create({})}
-        />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder={t('authors.overview.search')}
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-      </Box>
-      <Box>
-        {authors?.length ? (
-          <>
-            {authors}
-            <Box display="flex" justifyContent="center">
-              {data?.authors.pageInfo.hasNextPage && (
-                <Button label={t('authors.overview.loadMore')} onClick={loadMore} />
-              )}
-            </Box>
-          </>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            {t('authors.overview.noAuthorsFound')}
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <AuthorEditPanel
-            id={editID}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: AuthorListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: AuthorListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
-      </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title={t('authors.overview.deleteAuthor')}
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('authors.overview.cancel')}
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label={t('authors.overview.confirm')}
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentAuthor) return
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('authors.overview.authors')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={AuthorCreateRoute.create({})}>
+            {t('authors.overview.newAuthor')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteAuthor({
-                          variables: {id: currentAuthor.id}
-                        })
-                        break
-                    }
-
-                    setConfirmationDialogOpen(false)
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={authors}>
+        <Column width={100} align="left" resizable>
+          <HeaderCell></HeaderCell>
+          <Cell style={{padding: 2}}>
+            {(rowData: FullAuthorFragment) => (
+              <Avatar circle src={rowData.image?.squareURL || undefined} />
+            )}
+          </Cell>
+        </Column>
+        <Column width={400} align="left" resizable>
+          <HeaderCell>Name</HeaderCell>
+          <Cell>
+            {(rowData: FullAuthorFragment) => (
+              <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('authors.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>Action</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullAuthorFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setCurrentAuthor(rowData)
                   }}
                 />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label={t('authors.overview.name')}>
-                  {currentAuthor?.name || t('authors.overview.unknown')}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: AuthorListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <AuthorEditPanel
+          id={editID}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: AuthorListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: AuthorListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
+      </Drawer>
+
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('authors.overview.deleteAuthor')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('authors.overview.name')}>
+              {currentAuthor?.name || t('authors.overview.unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentAuthor) return
+
+              await deleteAuthor({
+                variables: {id: currentAuthor.id}
+              })
+
+              setConfirmationDialogOpen(false)
+              // fetchMore()
+            }}
+            color="red">
+            {t('authors.overview.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('authors.overview.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

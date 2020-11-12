@@ -35,7 +35,8 @@ export default (env: any, {mode}: any) =>
             presets: [
               '@babel/preset-react',
               '@babel/preset-typescript',
-              ['@babel/preset-env', {modules: false}]
+              ['@babel/preset-env', {modules: false}],
+              ['rsuite', {style: true, theme: 'default'}]
             ],
             plugins: [
               '@babel/plugin-syntax-dynamic-import',
@@ -44,6 +45,23 @@ export default (env: any, {mode}: any) =>
               ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
             ]
           }
+        },
+        {
+          test: /\.less$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'less-loader',
+              options: {
+                // If you are using less-loader@5 or older version, please spread the lessOptions to options directly.
+                lessOptions: {
+                  javascriptEnabled: true
+                  // modifyVars: { '@reset-import': false }
+                }
+              }
+            }
+          ]
         }
       ]
     },

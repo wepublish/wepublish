@@ -1,19 +1,9 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  PlaceholderInput,
-  Drawer,
-  BlockProps,
-  Image,
-  Box,
-  Spacing,
-  IconButton,
-  TypographicTextArea,
-  ZIndex,
-  Card
-} from '@karma.run/ui'
-
-import {MaterialIconEditOutlined, MaterialIconImageOutlined} from '@karma.run/icons'
+import {Drawer, Dropdown, Icon, IconButton, Panel} from 'rsuite'
+import {BlockProps} from '../atoms/blockList'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {TypographicTextArea} from '../atoms/typographicTextArea'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
@@ -42,60 +32,64 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
 
   return (
     <>
-      <Card height={300} overflow="hidden">
+      <Panel
+        bodyFill={true}
+        bordered={true}
+        style={{
+          height: 300,
+          overflow: 'hidden',
+          marginBottom: 10
+        }}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
           {image && (
-            <Box position="relative" width="100%" height="100%">
-              <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                <IconButton
-                  icon={MaterialIconImageOutlined}
-                  title={t('blocks.image.overview.chooseImage')}
-                  onClick={() => setChooseModalOpen(true)}
-                  margin={Spacing.ExtraSmall}
-                />
-                <IconButton
-                  icon={MaterialIconEditOutlined}
-                  title={t('blocks.image.overview.editImage')}
-                  onClick={() => setEditModalOpen(true)}
-                  margin={Spacing.ExtraSmall}
-                />
+            <Panel
+              style={{
+                padding: 0,
+                position: 'relative',
+                width: '100%',
+                height: '200px',
+                backgroundSize: 'cover',
+                backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
+              }}>
+              <Dropdown
+                renderTitle={() => {
+                  return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+                }}>
+                <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
+                  <Icon icon="image" /> {t('blocks.image.overview.chooseImage')}
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setEditModalOpen(true)}>
+                  <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
+                </Dropdown.Item>
                 {/* TODO: Meta sync */}
-                {/* <IconButton
-                    icon={MaterialIconSyncAlt}
-                    title="Use as Meta Image"
-                    onClick={() => setChooseModalOpen(true)}
-                  /> */}
-              </Box>
-              {image.largeURL && <Image src={image.largeURL} width="100%" height={300} contain />}
-            </Box>
+              </Dropdown>
+            </Panel>
           )}
         </PlaceholderInput>
-      </Card>
-      <Box marginTop={Spacing.ExtraSmall}>
-        <TypographicTextArea
-          variant="subtitle2"
-          align="center"
-          placeholder={t('blocks.image.overview.caption')}
-          value={caption}
-          onChange={e => {
-            onChange({...value, caption: e.target.value})
+      </Panel>
+      <TypographicTextArea
+        variant="subtitle2"
+        align="center"
+        placeholder={t('blocks.image.overview.caption')}
+        value={caption}
+        onChange={e => {
+          onChange({...value, caption: e.target.value})
+        }}
+      />
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
           }}
         />
-      </Box>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />}
-      </Drawer>
+      {image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+        </Drawer>
+      )}
     </>
   )
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import {Box} from '@karma.run/ui'
 
 export interface VimeoVideoEmbedProps {
   videoID: string
@@ -7,7 +6,12 @@ export interface VimeoVideoEmbedProps {
 
 export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
   return (
-    <Box position="relative" paddingTop="56.25%" width="100%">
+    <div
+      style={{
+        position: 'relative',
+        paddingTop: '56.25%',
+        width: '100%'
+      }}>
       <iframe
         src={`https://player.vimeo.com/video/${encodeURIComponent(videoID)}`}
         style={{
@@ -21,6 +25,6 @@ export function VimeoVideoEmbed({videoID}: VimeoVideoEmbedProps) {
         frameBorder="0"
         allowFullScreen
       />
-    </Box>
+    </div>
   )
 }

@@ -1,33 +1,18 @@
 import React, {useState} from 'react'
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconCheck
-} from '@karma.run/icons'
 
 import {
-  NavigationButton,
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
   Panel,
-  PanelHeader,
-  PanelSection,
-  IconElement,
-  Select,
-  TextInput,
-  Spacing,
-  PanelSectionHeader,
-  Card,
-  Box,
-  PlaceholderInput,
-  ZIndex,
-  IconButton,
-  Typography,
-  PlaceholderImage,
-  Image,
-  DescriptionList,
-  DescriptionListItem,
-  Drawer
-} from '@karma.run/ui'
+  Radio,
+  RadioGroup
+} from 'rsuite'
+
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {Teaser, TeaserType} from '../blocks/types'
 import {TeaserStyle} from '../api'
@@ -35,12 +20,12 @@ import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface TeaserEditPanelProps {
   initialTeaser: Teaser
 
   closeLabel?: string
-  closeIcon?: IconElement
 
   onClose: () => void
   onConfirm: (teaser: Teaser) => void
@@ -50,8 +35,7 @@ export function TeaserEditPanel({
   initialTeaser,
   onClose,
   onConfirm,
-  closeLabel = 'Close',
-  closeIcon = MaterialIconClose
+  closeLabel = 'Close'
 }: TeaserEditPanelProps) {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
@@ -66,139 +50,84 @@ export function TeaserEditPanel({
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('articleEditor.panels.editTeaser')}
-          leftChildren={
-            <NavigationButton icon={closeIcon} label={closeLabel} onClick={() => onClose()} />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconCheck}
-              label={t('articleEditor.panels.confirm')}
-              onClick={() =>
-                onConfirm({
-                  ...initialTeaser,
-                  style,
-                  preTitle: preTitle || undefined,
-                  title: title || undefined,
-                  lead: lead || undefined,
-                  image
-                })
-              }
-            />
-          }
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.editTeaser')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        {previewForTeaser(initialTeaser)}
+        <Panel header={t('articleEditor.panels.displayOptions')}>
+          <Form fluid>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
+              <RadioGroup inline value={style} onChange={teaserStyle => setStyle(teaserStyle)}>
+                <Radio value={TeaserStyle.Default}>Default</Radio>
+                <Radio value={TeaserStyle.Light}>Light</Radio>
+                <Radio value={TeaserStyle.Text}>text</Radio>
+              </RadioGroup>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+              <FormControl value={preTitle} onChange={preTitle => setPreTitle(preTitle)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+              <FormControl value={title} onChange={title => setTitle(title)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+              <FormControl value={lead} onChange={lead => setLead(lead)} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+              <FormControl value={lead} onChange={lead => setLead(lead)} />
+            </FormGroup>
+          </Form>
+        </Panel>
+
+        <ChooseEditImage
+          image={image}
+          disabled={false}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setImage(undefined)}
         />
-        <PanelSection dark>{previewForTeaser(initialTeaser)}</PanelSection>
-        <PanelSectionHeader title={t('articleEditor.panels.displayOptions')} />
-        <PanelSection>
-          <Select
-            label={t('articleEditor.panels.style')}
-            value={{id: style}}
-            options={[{id: TeaserStyle.Default}, {id: TeaserStyle.Light}, {id: TeaserStyle.Text}]}
-            onChange={value => {
-              if (value?.id) {
-                setStyle(value.id)
-              }
-            }}
-            renderListItem={renderTeaserStyleListItem}
-            marginBottom={Spacing.Small}
-          />
+      </Drawer.Body>
 
-          <TextInput
-            label={t('articleEditor.panels.preTitle')}
-            value={preTitle}
-            onChange={e => setPreTitle(e.target.value)}
-            marginBottom={Spacing.Small}
-            description={t('articleEditor.panels.emptyPreTitle')}
-          />
+      <Drawer.Footer>
+        <Button
+          appearance={'primary'}
+          onClick={() =>
+            onConfirm({
+              ...initialTeaser,
+              style,
+              preTitle: preTitle || undefined,
+              title: title || undefined,
+              lead: lead || undefined,
+              image
+            })
+          }>
+          {t('articleEditor.panels.confirm')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {closeLabel}
+        </Button>
+      </Drawer.Footer>
 
-          <TextInput
-            label={t('articleEditor.panels.title')}
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            marginBottom={Spacing.Small}
-            description={t('articleEditor.panels.emptyTitle')}
-          />
-
-          <TextInput
-            label={t('articleEditor.panels.lead')}
-            value={lead}
-            onChange={e => setLead(e.target.value)}
-            marginBottom={Spacing.Small}
-            description={t('articleEditor.panels.emptyLead')}
-          />
-
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Typography variant="subtitle1" color="gray">
-              {t('articleEditor.panels.image')}
-            </Typography>
-          </Box>
-          <Box height={200} marginBottom={Spacing.ExtraSmall}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconImageOutlined}
-                          title={t('articleEditor.panels.chooseImage')}
-                          onClick={() => setChooseModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconEditOutlined}
-                          title={t('articleEditor.panels.editImage')}
-                          onClick={() => setEditModalOpen(true)}
-                        />
-                      </Box>
-                      <Box
-                        margin={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        justifyContent="flex-end"
-                        display="flex">
-                        <IconButton
-                          icon={MaterialIconClose}
-                          title={t('articleEditor.panels.removeImage')}
-                          onClick={() => setImage(undefined)}
-                        />
-                      </Box>
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-          <Typography variant="subtitle1" color="gray">
-            {t('articleEditor.panels.emptyImage')}
-          </Typography>
-        </PanelSection>
-      </Panel>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              setImage(value)
-            }}
-          />
-        )}
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            setImage(value)
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />}
-      </Drawer>
+      {image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+        </Drawer>
+      )}
     </>
   )
 }
@@ -238,14 +167,14 @@ function previewForTeaser(teaser: Teaser) {
   }
 
   return (
-    <>
-      <Card marginBottom={Spacing.Medium} height={200}>
-        {imageURL ? (
-          <Image src={imageURL} width="100%" height="100%" />
-        ) : (
-          <PlaceholderImage width="100%" height="100%" />
-        )}
-      </Card>
+    <Panel>
+      <Panel
+        bordered={true}
+        style={{
+          height: '200px',
+          backgroundSize: 'cover',
+          backgroundImage: `url(${imageURL ?? 'https://via.placeholder.com/240x240'})`
+        }}></Panel>
       <DescriptionList>
         <DescriptionListItem label={t('articleEditor.panels.type')}>{type}</DescriptionListItem>
         <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
@@ -258,19 +187,6 @@ function previewForTeaser(teaser: Teaser) {
           {lead || '-'}
         </DescriptionListItem>
       </DescriptionList>
-    </>
+    </Panel>
   )
-}
-
-function renderTeaserStyleListItem(value: {id: TeaserStyle}) {
-  switch (value.id) {
-    case TeaserStyle.Default:
-      return 'Default'
-
-    case TeaserStyle.Light:
-      return 'Light'
-
-    case TeaserStyle.Text:
-      return 'Text'
-  }
 }
