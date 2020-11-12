@@ -92,7 +92,7 @@ export function ArticleList() {
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={articles}>
         <Column width={400} align="left" resizable>
-          <HeaderCell>Titel</HeaderCell>
+          <HeaderCell>{t('articles.overview.title')}</HeaderCell>
           <Cell>
             {(rowData: PageRefFragment) => (
               <Link route={ArticleEditRoute.create({id: rowData.id})}>
@@ -102,15 +102,15 @@ export function ArticleList() {
           </Cell>
         </Column>
         <Column width={100} align="left" resizable>
-          <HeaderCell>Created</HeaderCell>
+          <HeaderCell>{t('articles.overview.created')}</HeaderCell>
           <Cell dataKey="createdAt" />
         </Column>
         <Column width={100} align="left" resizable>
-          <HeaderCell>Modified</HeaderCell>
+          <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
           <Cell dataKey="modifiedAt" />
         </Column>
         <Column width={100} align="left" resizable>
-          <HeaderCell>State</HeaderCell>
+          <HeaderCell>{t('articles.overview.states')}</HeaderCell>
           <Cell>
             {(rowData: PageRefFragment) => {
               const states = []
@@ -124,7 +124,7 @@ export function ArticleList() {
           </Cell>
         </Column>
         <Column width={100} align="center" fixed="right">
-          <HeaderCell>Action</HeaderCell>
+          <HeaderCell>{t('articles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: ArticleRefFragment) => (
               <>

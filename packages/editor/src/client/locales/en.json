@@ -2,7 +2,13 @@
   "translation": {
     "articles": {
       "overview": {
+        "title": "Titel",
+        "created": "Created",
+        "updated": "Modified",
+        "states": "States",
         "articles": "Articles",
+        "action": "Action",
+        "created": "Created",
         "newArticle": "New Article",
         "search": "Search",
         "loadMore": "Load More",
@@ -83,6 +89,8 @@
         "Untitled": "Untitled",
         "chooseTeaser": "Choose Teaser",
         "default": "Default",
+        "light": "Light",
+        "text": "Text",
         "outlined": "Outlined",
         "peerArticle": "Peer Article",
         "page": "Page",
@@ -108,6 +116,11 @@
     "pages": {
       "overview": {
         "pages": "Pages",
+        "title": "Titel",
+        "created": "Created",
+        "updated": "Modified",
+        "states": "States",
+        "action": "Action",
         "draft": "Draft",
         "pending": "Pending",
         "published": "Published",
@@ -177,7 +190,8 @@
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
-        "loadMore": "Load More"
+        "loadMore": "Load More",
+        "action": "Action"
       },
       "panels": {
         "editAuthor": "Edit Author",
@@ -239,8 +253,11 @@
     },
     "userList": {
       "overview": {
+        "name": "Name",
         "unknown": "Unknown",
+        "description": "Description",
         "noDescription": "No Description",
+        "action": "Action",
         "resetPassword": "Reset Password",
         "delete": "Delete",
         "users": "Users",
@@ -330,7 +347,8 @@
     "tokenList": {
       "overview": {
         "generateToken": "Generate Token",
-        "tokens": "Tokens"
+        "tokens": "Tokens",
+        "loading": "loading..."
       },
       "panels": {
         "deleteToken": "Delete Token?",

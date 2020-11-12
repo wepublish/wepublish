@@ -121,7 +121,7 @@ export function UserList() {
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={users}>
         <Column width={200} align="left" resizable>
-          <HeaderCell>Name</HeaderCell>
+          <HeaderCell>{t('userList.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullUserFragment) => (
               <Link route={UserEditRoute.create({id: rowData.id})}>
@@ -131,11 +131,11 @@ export function UserList() {
           </Cell>
         </Column>
         <Column width={400} align="left" resizable>
-          <HeaderCell>Description</HeaderCell>
+          <HeaderCell>{t('description')}</HeaderCell>
           <Cell dataKey="email" />
         </Column>
         <Column width={100} align="center" fixed="right">
-          <HeaderCell>Action</HeaderCell>
+          <HeaderCell>{t('action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserFragment) => (
               <>

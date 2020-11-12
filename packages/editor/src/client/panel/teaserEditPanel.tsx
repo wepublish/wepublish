@@ -61,9 +61,9 @@ export function TeaserEditPanel({
             <FormGroup>
               <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
               <RadioGroup inline value={style} onChange={teaserStyle => setStyle(teaserStyle)}>
-                <Radio value={TeaserStyle.Default}>Default</Radio>
-                <Radio value={TeaserStyle.Light}>Light</Radio>
-                <Radio value={TeaserStyle.Text}>text</Radio>
+                <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
+                <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
+                <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
               </RadioGroup>
             </FormGroup>
             <FormGroup>

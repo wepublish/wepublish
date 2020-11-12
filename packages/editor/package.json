@@ -139,6 +139,11 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "componentClass",
+            "autoComplete",
+            "name",
+            "placement",
+            "trigger",
             "dataKey",
             "appearance",
             "icon",
@@ -160,7 +165,9 @@
             "axis",
             "flexWrap",
             "minHeight",
-            "href"
+            "href",
+            "fixed",
+            "format"
           ],
           "ignoreComponent": [
             "code"

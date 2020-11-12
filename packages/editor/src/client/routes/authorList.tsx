@@ -130,7 +130,7 @@ export function AuthorList() {
           </Cell>
         </Column>
         <Column width={400} align="left" resizable>
-          <HeaderCell>Name</HeaderCell>
+          <HeaderCell>{t('authors.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullAuthorFragment) => (
               <Link route={AuthorEditRoute.create({id: rowData.id})}>
@@ -140,7 +140,7 @@ export function AuthorList() {
           </Cell>
         </Column>
         <Column width={100} align="center" fixed="right">
-          <HeaderCell>Action</HeaderCell>
+          <HeaderCell>{t('authors.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullAuthorFragment) => (
               <>

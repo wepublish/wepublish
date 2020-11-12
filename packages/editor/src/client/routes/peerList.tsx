@@ -195,7 +195,6 @@ export function PeerList() {
 
       <Drawer
         show={isPeerProfileEditModalOpen}
-        backdrop={'static'}
         size={'sm'}
         onHide={() => setPeerProfileEditModalOpen(false)}>
         <PeerInfoEditPanel
