@@ -68,7 +68,7 @@ export interface LinkPageBreakBlockValue {
   linkURL: string
   linkText: string
   linkTarget?: string
-  hideButton?: boolean
+  hideButton: boolean
   styleOption?: string
   layoutOption?: string
   templateOption?: string
@@ -281,7 +281,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           templateOption: block.value.templateOption || undefined,
           richText: block.value.richText,
           linkTarget: block.value.linkTarget || undefined,
-          hideButton: block.value.hideButton || undefined,
+          hideButton: block.value.hideButton,
           imageID: block.value.image?.id || undefined
         }
       }

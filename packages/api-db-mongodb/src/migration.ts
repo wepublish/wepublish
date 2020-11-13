@@ -339,6 +339,68 @@ export const Migrations: Migration[] = [
         {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
       )
     }
+  },
+  {
+    // Add hideButton false to pageBreakBlocks
+    version: 5,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}
+        },
+        {$set: {'pending.blocks.$[elem].hideButton': false}},
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+
+      // Add RTE to page break block if not exists in pages
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+    }
   }
 ]
 

@@ -386,7 +386,7 @@ export type LinkPageBreakBlock = {
   linkURL?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkTarget?: Maybe<Scalars['String']>;
-  hideButton?: Maybe<Scalars['Boolean']>;
+  hideButton: Scalars['Boolean'];
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
@@ -399,7 +399,7 @@ export type LinkPageBreakBlockInput = {
   linkURL?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkTarget?: Maybe<Scalars['String']>;
-  hideButton?: Maybe<Scalars['Boolean']>;
+  hideButton: Scalars['Boolean'];
   styleOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
