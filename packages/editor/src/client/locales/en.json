@@ -443,6 +443,8 @@
       "O2Auth": "Authenticating against OAuth2: "
     },
     "linkPageBreakEditPanel": {
+      "title": "Settings",
+      "close": "Close",
       "style": {
         "label": "Styles",
         "default": "Default Style",
@@ -468,8 +470,9 @@
         "urlPlaceholder": "https://...",
         "urlLabel": "CTA URL",
         "buttonLabel": "CTA Button label",
-        "targetLabelSelf": "This browser tab",
-        "targetLabelBlank": "New browser tab",
+        "targetLabel": "Open Link in",
+        "targetLabelSelf": "this browser tab",
+        "targetLabelBlank": "new browser tab",
         "hideToggleLabel": "Hide CTA Button",
         "hideToogleDescription": "Hide button an make whole element clickable."
       }

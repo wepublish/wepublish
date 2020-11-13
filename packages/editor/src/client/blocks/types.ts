@@ -616,7 +616,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           templateOption: block.templateOption ?? '',
           richText: block.richText,
           linkTarget: block.linkTarget ?? '',
-          hideButton: block.hideButton ?? false,
+          hideButton: block.hideButton,
           image: block.image ?? undefined
         }
       }
