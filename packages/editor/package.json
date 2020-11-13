@@ -141,6 +141,7 @@
           "ignoreAttribute": [
             "componentClass",
             "autoComplete",
+            "controlId",
             "name",
             "placement",
             "trigger",
