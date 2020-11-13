@@ -394,7 +394,7 @@ export type InstagramPostBlockInput = {
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
-  richText?: Maybe<Scalars['RichText']>
+  richText: Scalars['RichText']
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
   linkTarget?: Maybe<Scalars['String']>
@@ -407,14 +407,14 @@ export type LinkPageBreakBlock = {
 
 export type LinkPageBreakBlockInput = {
   text?: Maybe<Scalars['String']>
-  richText?: Maybe<Scalars['RichText']>
+  richText: Scalars['RichText']
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
   linkTarget?: Maybe<Scalars['String']>
   hideButton?: Maybe<Scalars['Boolean']>
   styleOption?: Maybe<Scalars['String']>
-  layoutOption?: Maybe<Scalars['String']>
   templateOption?: Maybe<Scalars['String']>
+  layoutOption?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
 }
 
@@ -1542,18 +1542,8 @@ type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
 
 type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
-  | 'text'
-  | 'linkText'
-  | 'linkURL'
-  | 'styleOption'
-  | 'layoutOption'
-  | 'richText'
-  | 'linkTarget'
-  | 'hideButton'
-  | 'templateOption'
-> & {
-    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-  }
+  'text' | 'linkText' | 'linkURL'
+>
 
 type FullBlock_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<TitleBlock, 'title' | 'lead'>
 
@@ -2091,15 +2081,6 @@ export const FullBlock = gql`
       text
       linkText
       linkURL
-      linkTarget
-      hideButton
-      styleOption
-      layoutOption
-      templateOption
-      richText
-      image {
-        ...ImageRef
-      }
     }
     ... on ImageBlock {
       caption
