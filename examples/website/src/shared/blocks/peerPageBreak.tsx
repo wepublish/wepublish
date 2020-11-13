@@ -1,4 +1,5 @@
 import React from 'react'
+import {Node} from 'slate'
 import {Peer} from '../types'
 import {Image} from '../atoms/image'
 import {PrimaryButton} from '../atoms/primaryButton'
@@ -6,6 +7,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenMobile} from '../style/helpers'
 import {Link} from '../route/routeContext'
+import {RichText} from '../atoms/richText'
 
 export const PeerPageBreakStyle = cssRule(isArticle => ({
   backgroundColor: Color.SecondaryLight,
@@ -52,23 +54,37 @@ const PeerPageBreakButton = cssRule({
   fontSize: pxToRem(12)
 })
 
-export interface PageBreackBlockStyleProps {
+export interface PageBreakBlockStyleProps {
   isArticle?: boolean
 }
 export interface PageBreakBlockProps {
   peer?: Peer
   text: string
+  richText: Node[]
   linkURL: string
   linkText: string
+  linkTarget: string
+  styleOption: string
+  templateOption: string
+  layoutOption: string
+  hideButton: boolean
+  image: any
 }
 
 export function PageBreakBlock({
   peer,
   text,
+  richText,
   linkURL,
   linkText,
+  linkTarget,
+  styleOption,
+  layoutOption,
+  templateOption,
+  hideButton,
+  image,
   isArticle = false
-}: PageBreakBlockProps & PageBreackBlockStyleProps) {
+}: PageBreakBlockProps & PageBreakBlockStyleProps) {
   const css = useStyle(isArticle)
   return (
     <div className={css(PeerPageBreakStyle)}>
@@ -78,6 +94,7 @@ export function PageBreakBlock({
             <Image src={peer.logoURL} height={90} width={90} />
           </div>
         )}
+
         <p className={css(PeerPageBreakTextStyle)}>{text}</p>
         {linkText && linkURL && (
           <Link className={css(PeerPageBreakButton)} href={linkURL}>
@@ -85,6 +102,21 @@ export function PageBreakBlock({
           </Link>
         )}
       </div>
+      <div style={{width: '300px'}}>
+        {!!image && !!image?.id && (
+          <Image
+            width={300}
+            height={300}
+            src={image && image.smallTeaserURL ? image.smallTeaserURL : undefined}
+          />
+        )}
+      </div>
+      {!!richText && <RichText value={richText} />}
+      <pre>layoutOption: {layoutOption || 'not set'}</pre>
+      <pre>styleOption: {styleOption}</pre>
+      <pre>templateOption: {templateOption}</pre>
+      <pre>hideButton: {hideButton}</pre>
+      <pre>linkTarget: {linkTarget}</pre>
     </div>
   )
 }

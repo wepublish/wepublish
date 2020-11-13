@@ -134,6 +134,8 @@
           "markupOnly": true,
           "ignoreAttribute": [
             "display",
+            "name",
+            "value",
             "flexDirection",
             "alignItems",
             "element",
