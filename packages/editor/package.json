@@ -73,8 +73,7 @@
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
-    "slate-react": "^0.58.1",
-    "uuid": "^8.3.1"
+    "slate-react": "^0.58.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
@@ -98,7 +97,6 @@
     "@types/node": "^12.12.16",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
-    "@types/uuid": "^8.3.0",
     "@types/react-test-renderer": "^16.9.3",
     "@types/webpack": "^4.41.0",
     "@types/webpack-dev-server": "^3.9.0",
@@ -136,6 +134,8 @@
           "markupOnly": true,
           "ignoreAttribute": [
             "display",
+            "name",
+            "value",
             "flexDirection",
             "alignItems",
             "element",

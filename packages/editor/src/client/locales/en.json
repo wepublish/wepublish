@@ -393,7 +393,8 @@
       "linkPageBreak": {
         "text": "Text",
         "linkText": "Link Text",
-        "linkURL": "Link URL"
+        "linkURL": "Link URL",
+        "title": "Title"
       },
       "listicle": {
         "title": "Title",
@@ -440,6 +441,38 @@
       "currentPassword": "Current password",
       "alternativeLogin": "Or login with: ",
       "O2Auth": "Authenticating against OAuth2: "
+    },
+    "linkPageBreakEditPanel": {
+      "style": {
+        "label": "Styles",
+        "default": "Default Style",
+        "dark": "Dark Style",
+        "image": "Image Background"
+      },
+      "layout": {
+        "label": "Layouts",
+        "default": "Default Layout",
+        "right": "Right Aligned",
+        "center": "Centered",
+        "image-right": "Image Right",
+        "image-left": "Image Left"
+      },
+      "template": {
+        "label": "Templates",
+        "none": "None",
+        "donation": "Donation",
+        "membership": "Membership",
+        "subscription": "Subscription"
+      },
+      "link": {
+        "urlPlaceholder": "https://...",
+        "urlLabel": "CTA URL",
+        "buttonLabel": "CTA Button label",
+        "targetLabelSelf": "This browser tab",
+        "targetLabelBlank": "New browser tab",
+        "hideToggleLabel": "Hide CTA Button",
+        "hideToogleDescription": "Hide button an make whole element clickable."
+      }
     }
   }
 }
