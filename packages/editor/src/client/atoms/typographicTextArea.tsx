@@ -76,14 +76,6 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
           ...stylesForTypographyVariant(variant),
 
           outline: 'none !important'
-
-          /* ':focus': {
-            outline: 'none'
-          }, */
-
-          /* '::placeholder': {
-            color: 'gray'
-          } */
         }}
         onChange={handleChange}
         rows={1}

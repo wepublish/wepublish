@@ -61,7 +61,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
                 <Dropdown.Item onClick={() => setEditModalOpen(true)}>
                   <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
                 </Dropdown.Item>
-                {/* TODO: Meta sync */}
+                {/* TODO: Meta sync for metadata image */}
               </Dropdown>
             </Panel>
           )}

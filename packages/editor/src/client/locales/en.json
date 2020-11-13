@@ -2,7 +2,7 @@
   "translation": {
     "articles": {
       "overview": {
-        "title": "Titel",
+        "title": "Title",
         "created": "Created",
         "updated": "Modified",
         "states": "States",
@@ -116,7 +116,7 @@
     "pages": {
       "overview": {
         "pages": "Pages",
-        "title": "Titel",
+        "title": "Title",
         "created": "Created",
         "updated": "Modified",
         "states": "States",
@@ -352,7 +352,7 @@
       },
       "panels": {
         "deleteToken": "Delete Token?",
-        "deleteTokenText": "Do you want to delete {{name}}",
+        "deleteTokenText": "Do you want to delete {{name}}?",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",

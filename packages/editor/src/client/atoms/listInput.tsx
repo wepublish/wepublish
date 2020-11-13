@@ -111,13 +111,6 @@ const SortableList = SortableContainer(
   }
 )
 
-/* const ListItemHelperStyle = cssRule({
-  zIndex: 6
-})
-
-helperClass={css(ListItemHelperStyle)}
- */
-
 export function ListInput<T>({
   value,
   label,
