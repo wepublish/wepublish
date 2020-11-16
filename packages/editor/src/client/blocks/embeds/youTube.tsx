@@ -1,5 +1,4 @@
 import React from 'react'
-import {Box} from '@karma.run/ui'
 
 export interface YouTubeVideoEmbedProps {
   videoID: string
@@ -7,7 +6,12 @@ export interface YouTubeVideoEmbedProps {
 
 export function YouTubeVideoEmbed({videoID}: YouTubeVideoEmbedProps) {
   return (
-    <Box position="relative" paddingTop="56.25%" width="100%">
+    <div
+      style={{
+        position: 'relative',
+        paddingTop: '56.25%',
+        width: '100%'
+      }}>
       <iframe
         src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoID)}`}
         style={{
@@ -21,6 +25,6 @@ export function YouTubeVideoEmbed({videoID}: YouTubeVideoEmbedProps) {
         frameBorder="0"
         allowFullScreen
       />
-    </Box>
+    </div>
   )
 }

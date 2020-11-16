@@ -1,5 +1,4 @@
 import React from 'react'
-import {Box} from '@karma.run/ui'
 import {transformCssStringToObject} from '../../utility'
 
 export interface IframeEmbedProps {
@@ -22,11 +21,13 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
         }
 
   return (
-    <Box width="100%">
-      <Box
-        position="relative"
-        paddingTop={`${noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`}
-        minHeight={'45px'}>
+    <div style={{width: '100%'}}>
+      <div
+        style={{
+          position: 'relative',
+          paddingTop: `${noRatio && ratio === 0 ? '0' : (1 / ratio) * 100 + '%'}`,
+          minHeight: '45px'
+        }}>
         <iframe
           src={url}
           title={title}
@@ -40,7 +41,7 @@ export function IframeEmbed({url, title, width, height, styleCustom}: IframeEmbe
           frameBorder="0"
           allowFullScreen
         />
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }

@@ -8,7 +8,6 @@ import React, {
   useRef
 } from 'react'
 import {useScript} from '../../utility'
-import {Box, Spacing} from '@karma.run/ui'
 
 // Define some globals set by Facebook SDK.
 declare global {
@@ -106,11 +105,13 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
   const encodedPostID = encodeURIComponent(postID)
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      minHeight={300}
-      padding={Spacing.Small}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: 300,
+        padding: 20
+      }}
       ref={wrapperRef}>
       <div
         className="fb-post"
@@ -118,7 +119,7 @@ export function FacebookPostEmbed({userID, postID}: FacebookPostEmbedProps) {
         data-show-text="true"
         data-width="200"
       />
-    </Box>
+    </div>
   )
 }
 
@@ -151,17 +152,19 @@ export function FacebookVideoEmbed({userID, videoID}: FacebookVideoEmbedProps) {
   const encodedVideoID = encodeURIComponent(videoID)
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      minHeight={300}
-      padding={Spacing.Small}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: 300,
+        padding: 20
+      }}
       ref={wrapperRef}>
       <div
         className="fb-video"
         data-href={`https://www.facebook.com/${encodedUserID}/videos/${encodedVideoID}/`}
         data-show-text="true"
       />
-    </Box>
+    </div>
   )
 }

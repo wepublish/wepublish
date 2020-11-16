@@ -279,8 +279,132 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Add MemberPlan Collection and PaymentMethod Collection
+    // Add RTE to page break block if not exists in articles and pages
     version: 4,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}
+        },
+        {$set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}},
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+
+      // Add RTE to page break block if not exists in pages
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', richText: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].richText': [{children: [{text: ''}], type: 'paragraph'}]}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+    }
+  },
+  {
+    // Add hideButton false to pageBreakBlocks
+    version: 5,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}
+        },
+        {$set: {'pending.blocks.$[elem].hideButton': false}},
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+
+      // Add RTE to page break block if not exists in pages
+      await db.collection(CollectionName.Pages).updateMany(
+        {'draft.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {
+            'draft.blocks.$[elem].hideButton': false
+          }
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {
+          'published.blocks': {
+            $elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}
+          }
+        },
+        {
+          $set: {'published.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+      await db.collection(CollectionName.Pages).updateMany(
+        {'pending.blocks': {$elemMatch: {type: 'linkPageBreak', hideButton: {$exists: false}}}},
+        {
+          $set: {'pending.blocks.$[elem].hideButton': false}
+        },
+        {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
+      )
+    }
+  },
+  {
+    //  Add MemberPlan Collection and PaymentMethod Collection
+    version: 6,
     async migrate(db, locale) {
       const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
         strict: true
@@ -294,11 +418,7 @@ export const Migrations: Migration[] = [
 
       await paymentMethod.createIndex({name: 1})
       await paymentMethod.createIndex({paymentAdapter: 1})
-    }
-  },
-  {
-    version: 5,
-    async migrate(db, locale) {
+
       const users = db.collection(CollectionName.Users)
       await users.createIndex({'subscription.memberPlanId': 1})
     }

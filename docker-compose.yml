@@ -72,3 +72,9 @@ services:
       - 8000:8081
     depends_on:
       - mongo
+
+  test:
+    build: .
+    command: [ 'yarn', 'test']
+    environment:
+      TEST_MONGO_URL: mongodb://mongo:27017/wepublish-test

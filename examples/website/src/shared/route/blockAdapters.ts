@@ -90,8 +90,15 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           key: index,
           value: {
             text: block.text,
+            richText: block.richText,
             linkURL: block.linkURL,
-            linkText: block.linkText
+            linkText: block.linkText,
+            linkTarget: block.linkTarget,
+            styleOption: block.styleOption,
+            layoutOption: block.layoutOption,
+            templateOption: block.templateOption,
+            hideButton: block.hideButton,
+            image: block.image && imageAdapter(block.image)
           }
         }
 
