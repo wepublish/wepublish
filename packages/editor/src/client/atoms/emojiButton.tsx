@@ -5,6 +5,8 @@ import {Icon, Popover, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
+import 'emoji-mart/css/emoji-mart.css'
+import './emojiButton.less'
 import {Picker, BaseEmoji} from 'emoji-mart'
 
 export interface EmojiButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
