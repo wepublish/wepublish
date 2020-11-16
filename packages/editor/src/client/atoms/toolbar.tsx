@@ -49,13 +49,11 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
 
 export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon: IconNames | SVGIcon
-  readonly iconActive?: IconNames | SVGIcon
   readonly active?: boolean
 }
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function ToolbarButton({icon, iconActive, active, ...props}, ref) {
-    icon = iconActive && active ? iconActive : icon
+  function ToolbarButton({icon, active, ...props}, ref) {
     return (
       <button
         style={{

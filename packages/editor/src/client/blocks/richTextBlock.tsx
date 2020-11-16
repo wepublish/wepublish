@@ -1,4 +1,4 @@
-import React, {useState, memo, useEffect, useMemo, useRef} from 'react'
+import React, {useState, memo, useEffect, useMemo} from 'react'
 import {Editor, Node as SlateNode, createEditor, Range, Transforms} from 'slate'
 
 import {
@@ -14,17 +14,13 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-import 'emoji-mart/css/emoji-mart.css'
-import './emoji-mart-override.css'
-import {Picker, BaseEmoji} from 'emoji-mart'
-
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
+import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Modal, Popover, Whisper} from 'rsuite'
-import {WhisperProps} from 'rsuite/lib/Whisper'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -296,7 +292,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertEmojiButton icon="smile-o" iconActive="close" />
+        <EmojiButton icon="smile-o" iconActive="close" />
       </Toolbar>
       <Editable
         readOnly={disabled}
@@ -324,52 +320,6 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
         toggleFormat(editor, format)
       }}
     />
-  )
-}
-
-function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
-  const editor = useSlate()
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
-
-  const triggerRef = useRef<any>(null)
-
-  const open = () => {
-    if (triggerRef.current) {
-      triggerRef.current!.open()
-      // TODO rather be done with forwardRef ?
-      setIsEmojiPickerOpen(true)
-    }
-  }
-  const close = () => {
-    if (triggerRef.current) {
-      triggerRef.current!.close()
-      setIsEmojiPickerOpen(false)
-    }
-  }
-
-  const emojiPicker = (
-    <Popover>
-      <Picker
-        onSelect={({native}: BaseEmoji) => {
-          editor.insertText(native)
-        }}
-      />
-    </Popover>
-  )
-
-  return (
-    <>
-      <Whisper placement="top" speaker={emojiPicker} ref={triggerRef} trigger="none">
-        <ToolbarButton
-          icon={isEmojiPickerOpen ? iconActive || icon : icon}
-          active={isEmojiPickerOpen}
-          onMouseDown={e => {
-            e.preventDefault()
-            isEmojiPickerOpen ? close() : open()
-          }}
-        />
-      </Whisper>
-    </>
   )
 }
 
