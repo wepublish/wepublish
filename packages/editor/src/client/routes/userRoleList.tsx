@@ -1,42 +1,33 @@
 import React, {useState, useEffect} from 'react'
 import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Drawer,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
-
-import {
-  RouteLinkButton,
-  Link,
   RouteType,
   useRoute,
   useRouteDispatch,
-  UserRoleEditRoute,
   UserRoleCreateRoute,
-  UserRoleListRoute
+  UserRoleListRoute,
+  ButtonLink,
+  UserRoleEditRoute,
+  Link
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} from '../api'
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 import {useTranslation} from 'react-i18next'
-
-enum ConfirmAction {
-  Delete = 'delete'
-}
+import {
+  FlexboxGrid,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  Table,
+  Drawer,
+  Modal,
+  Button
+} from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
   const {t} = useTranslation()
@@ -55,8 +46,8 @@ export function UserRoleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const {data, refetch, loading: isLoading} = useUserRoleListQuery({
     variables: {
@@ -80,143 +71,134 @@ export function UserRoleList() {
     }
   }, [current])
 
-  const userRoles = data?.userRoles.nodes.map(userRole => {
-    const {id, name, description, systemRole} = userRole
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Link route={UserRoleEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || t('userRoles.overview.Unknown')}
-            </Typography>
-            <Typography variant="body1" color={description ? 'dark' : 'gray'}>
-              {description || t('userRoles.overview.noDescription')}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          {!systemRole && (
-            <OptionButton
-              position="left"
-              menuItems={[
-                {
-                  id: ConfirmAction.Delete,
-                  label: t('userRoles.overview.delete'),
-                  icon: MaterialIconDeleteOutlined
-                }
-              ]}
-              onMenuItemClick={item => {
-                setCurrentUserRole(userRole)
-                setConfirmationDialogOpen(true)
-                setConfirmAction(item.id as ConfirmAction)
-              }}
-            />
-          )}
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
+  useEffect(() => {
+    if (data?.userRoles?.nodes) {
+      setUserRoles(data.userRoles.nodes)
+    }
+  }, [data?.userRoles])
 
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('userRoles.overview.userRoles')}</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label={t('userRoles.overview.newUserRole')}
-          route={UserRoleCreateRoute.create({})}
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('userRoles.overview.userRoles')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={UserRoleCreateRoute.create({})}>
+            {t('userRoles.overview.newUserRole')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
+
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
+        <Column width={200} align="left" resizable>
+          <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullUserRoleFragment) => (
+              <Link route={UserRoleEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('userRoles.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={400} align="left" resizable>
+          <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
+          <Cell dataKey="description" />
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullUserRoleFragment) => (
+              <IconButton
+                icon={<Icon icon="trash" />}
+                disabled={rowData.systemRole}
+                circle
+                size="sm"
+                style={{marginLeft: '5px'}}
+                onClick={() => {
+                  setConfirmationDialogOpen(true)
+                  setCurrentUserRole(rowData)
+                }}
+              />
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      <Drawer
+        show={isEditModalOpen}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: UserRoleListRoute.create({}, current ?? undefined)
+          })
+        }}
+        size={'sm'}>
+        <UserRoleEditPanel
+          id={editID!}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: UserRoleListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            refetch()
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: UserRoleListRoute.create({}, current ?? undefined)
+            })
+          }}
         />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder={t('userRoles.overview.search')}
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-      </Box>
-      <Box>
-        {userRoles?.length ? (
-          userRoles
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            {t('noUserRolesFound')}
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <UserRoleEditPanel
-            id={editID!}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: UserRoleListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              refetch()
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: UserRoleListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
       </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title={t('userRoles.panels.deleteUserRole')}
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('userRoles.panels.cancel')}
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label={t('userRoles.panels.confirm')}
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentUserRole) return
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
+        </Modal.Header>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteUserRole({
-                          variables: {id: currentUserRole.id}
-                        })
-                        break
-                    }
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('userRoles.panels.name')}>
+              {currentUserRole?.name || t('userRoles.panels.Unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
 
-                    setConfirmationDialogOpen(false)
-                    refetch()
-                  }}
-                />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label={t('userRoles.panels.name')}>
-                  {currentUserRole?.name || t('userRoles.panels.Unknown')}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentUserRole) return
+
+              await deleteUserRole({
+                variables: {id: currentUserRole.id}
+              })
+
+              setConfirmationDialogOpen(false)
+              refetch()
+            }}
+            color="red">
+            {t('userRoles.panels.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('userRoles.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

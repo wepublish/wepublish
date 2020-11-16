@@ -1,153 +1,131 @@
 import React from 'react'
-import {MockedProvider} from '@apollo/client/testing'
+import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
-import Enzyme, {mount} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import {mount} from 'enzyme'
 
-import {UIProvider} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
-import * as fela from 'fela'
+import {createDefaultValue} from '../../src/client/blocks/richTextBlock'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-// import wait from 'waait'
+const MockedProvider = MockedProviderBase as any
 
-const styleRenderer: fela.IRenderer = {
-  renderRule: jest.fn(),
-  renderKeyframe: jest.fn(),
-  renderFont: jest.fn(),
-  renderStatic: jest.fn(),
-  renderToString: jest.fn(),
-  subscribe: jest.fn(),
-  clear: jest.fn()
-}
-
-test('Author Edit Panel should render', () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+describe('Author Edit Panel', () => {
+  test('should render', () => {
+    const wrapper = mount(
       <MockedProvider addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
-    </UIProvider>
-  )
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    )
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('Author Edit Panel should render with id', async () => {
-  const mocks = [
-    {
-      request: {
-        query: AuthorDocument,
-        variables: {
-          id: 'fakeId2'
-        }
-      },
-      result: () => ({
-        data: {
-          author: {
-            __typename: 'Author',
-            id: 'fakeId2',
-            name: 'Douglas Cole'
+  test('should render with ID', async () => {
+    const mocks = [
+      {
+        request: {
+          query: AuthorDocument,
+          variables: {
+            id: 'fakeId2'
           }
-        }
-      })
-    }
-  ]
+        },
+        result: () => ({
+          data: {
+            author: {
+              __typename: 'Author',
+              id: 'fakeId2',
+              name: 'Douglas Cole'
+            }
+          }
+        })
+      }
+    ]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={true}>
         <AuthorEditPanel id={'fakeId2'} />
       </MockedProvider>
-    </UIProvider>
-  )
+    )
 
-  await updateWrapper(wrapper, 100)
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    await updateWrapper(wrapper, 100)
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('Clicking add block button should display two text fields ', async () => {
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+  test('should expand links fields when Add Block button is clicked', async () => {
+    const wrapper = mount(
       <MockedProvider addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  const button = wrapper.find('button[title="Add Block"]')
-  button.simulate('click')
+    const button = wrapper.find('ListInput IconButton[classPrefix="rs-btn-icon"]')
+    button.simulate('click')
 
-  const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
-  inputField.props().value = 'abcd'
+    const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
+    inputField.props().value = 'abcd'
 
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to create a new author', async () => {
-  const author = {
-    name: 'Clark Kent',
-    id: 'fakeId3',
-    slug: 'clark-kent',
-    url: 'url',
-    links: [],
-    bio: [],
-    imageID: undefined
-  }
-  const mocks = [
-    {
-      request: {
-        query: CreateAuthorDocument,
-        variables: {
-          input: {
-            name: author.name,
-            slug: author.slug,
-            links: author.links,
-            bio: author.bio,
-            imageID: author.imageID
-          }
-        }
-      },
-      result: () => ({
-        data: {
-          author: {
-            __typename: 'Author',
-            id: author.id,
-            name: author.name,
-            slug: author.slug,
-            url: author.url,
-            links: author.links,
-            bio: author.bio
-          }
-        }
-      })
+  test('should allow a new author to be created ', async () => {
+    const author = {
+      name: 'Clark Kent',
+      id: 'fakeId3',
+      slug: 'clark-kent',
+      url: 'url',
+      links: [],
+      bio: createDefaultValue(),
+      imageID: undefined
     }
-  ]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+    const mocks = [
+      {
+        request: {
+          query: CreateAuthorDocument,
+          variables: {
+            input: {
+              name: author.name,
+              slug: author.slug,
+              links: author.links,
+              bio: author.bio,
+              imageID: author.imageID
+            }
+          }
+        },
+        result: () => ({
+          data: {
+            author: {
+              __typename: 'Author',
+              id: author.id,
+              name: author.name,
+              slug: author.slug,
+              url: author.url,
+              links: author.links,
+              bio: author.bio
+            }
+          }
+        })
+      }
+    ]
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <AuthorEditPanel />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  act(() => {
-    wrapper
-      .find('input[placeholder="authors.panels.name"]')
-      .simulate('change', {target: {value: author.name}})
+    act(() => {
+      wrapper
+        .find('input[name="authors.panels.name"]')
+        .simulate('change', {target: {value: author.name}})
+    })
+
+    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
+
+    const panel = wrapper.find('AuthorEditPanel')
+    expect(panel).toMatchSnapshot()
   })
-
-  await act(async () => {
-    wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
-  })
-
-  const panel = wrapper.find('AuthorEditPanel')
-  expect(panel).toMatchSnapshot()
 })

@@ -1,5 +1,7 @@
 import React, {useRef, useEffect} from 'react'
-import {BlockProps, TypographicTextArea} from '@karma.run/ui'
+
+import {TypographicTextArea} from '../atoms/typographicTextArea'
+import {BlockProps} from '../atoms/blockList'
 
 import {useTranslation} from 'react-i18next'
 

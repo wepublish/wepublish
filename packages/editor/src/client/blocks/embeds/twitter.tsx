@@ -1,5 +1,4 @@
 import React, {createContext, useContext, useEffect, ReactNode, useRef} from 'react'
-import {Box, Spacing} from '@karma.run/ui'
 
 import {useScript} from '../../utility'
 
@@ -56,12 +55,14 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
   }, [isLoaded, isLoading])
 
   return (
-    <Box
+    <div
       ref={wrapperRef}
-      display="flex"
-      justifyContent="center"
-      minHeight={300}
-      padding={Spacing.Small}>
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: 300,
+        padding: 20
+      }}>
       <blockquote className="twitter-tweet">
         <a
           href={`https://twitter.com/${encodeURIComponent(userID)}/status/${encodeURIComponent(
@@ -69,6 +70,6 @@ export function TwitterTweetEmbed({userID, tweetID}: TwitterTweetEmbedProps) {
           )}`}
         />
       </blockquote>
-    </Box>
+    </div>
   )
 }

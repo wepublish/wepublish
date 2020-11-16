@@ -1,31 +1,17 @@
 import React from 'react'
-import {MockedProvider} from '@apollo/client/testing'
 import {UserRoleEditPanel} from '../../src/client/panel/userRoleEditPanel'
 import {
   UserRoleDocument,
   PermissionListDocument,
   CreateUserRoleDocument
 } from '../../src/client/api'
-import Enzyme, {mount} from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import {mount} from 'enzyme'
 
-import {UIProvider} from '@karma.run/ui'
-import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
+import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 
-// React 16 Enzyme adapter
-Enzyme.configure({adapter: new Adapter()})
-
-const styleRenderer: fela.IRenderer = {
-  renderRule: jest.fn(),
-  renderKeyframe: jest.fn(),
-  renderFont: jest.fn(),
-  renderStatic: jest.fn(),
-  renderToString: jest.fn(),
-  subscribe: jest.fn(),
-  clear: jest.fn()
-}
+const MockedProvider = MockedProviderBase as any
 
 const userRoleDocumentQuery = {
   request: {
@@ -124,138 +110,130 @@ const permissions = [
   }
 ]
 
-test('Role Panel should render', async () => {
-  const mocks = [permissionListQuery]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+describe('User Role Edit Panel', () => {
+  test('should render', async () => {
+    const mocks = [permissionListQuery]
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('UserRoleEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserRoleEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('Role Panel should render with role', async () => {
-  const mocks = [userRoleDocumentQuery, permissionListQuery]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+  test('should render with role', async () => {
+    const mocks = [userRoleDocumentQuery, permissionListQuery]
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel id={'roleId1'} />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('UserRoleEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserRoleEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('Toggle sliders should be disabled with System Role', async () => {
-  userRoleDocumentQuery.result = () => {
-    return {
-      data: {
-        userRole: {
-          __typename: 'UserRole',
-          id: 'roleId1',
-          name: 'Role 1',
-          description: 'Description for role 1',
-          systemRole: true,
-          permissions: [
-            {
-              __typename: 'Permission',
-              id: 'permissionId1',
-              description: 'permission description 1',
-              checked: true,
-              deprecated: false
-            },
-            {
-              __typename: 'Permission',
-              id: 'permissionId2',
-              description: 'permission description 2',
-              checked: false,
-              deprecated: false
-            }
-          ]
+  test('should have Toggle sliders disabled with System Role', async () => {
+    userRoleDocumentQuery.result = () => {
+      return {
+        data: {
+          userRole: {
+            __typename: 'UserRole',
+            id: 'roleId1',
+            name: 'Role 1',
+            description: 'Description for role 1',
+            systemRole: true,
+            permissions: [
+              {
+                __typename: 'Permission',
+                id: 'permissionId1',
+                description: 'permission description 1',
+                checked: true,
+                deprecated: false
+              },
+              {
+                __typename: 'Permission',
+                id: 'permissionId2',
+                description: 'permission description 2',
+                checked: false,
+                deprecated: false
+              }
+            ]
+          }
         }
       }
     }
-  }
-  const mocks = [userRoleDocumentQuery, permissionListQuery]
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+    const mocks = [userRoleDocumentQuery, permissionListQuery]
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel id={'roleId1'} />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  const panel = wrapper.find('UserRoleEditPanel')
-  expect(panel).toMatchSnapshot()
-})
+    const panel = wrapper.find('UserRoleEditPanel')
+    expect(panel).toMatchSnapshot()
+  })
 
-test('User should be able to create a new role', async () => {
-  const userRole = {
-    __typename: 'UserRole',
-    id: 'fakeId4',
-    name: 'Brand New User Role',
-    description: 'A user role to be added to snapshot',
-    systemRole: false
-  }
-  const mocks = [
-    {
-      request: {
-        query: CreateUserRoleDocument,
-        variables: {
-          input: {
-            name: userRole.name,
-            description: userRole.description,
-            permissionIDs: []
+  test('should allow a new role to be created', async () => {
+    const userRole = {
+      __typename: 'UserRole',
+      id: 'fakeId4',
+      name: 'Brand New User Role',
+      description: 'A user role to be added to snapshot',
+      systemRole: false
+    }
+    const mocks = [
+      {
+        request: {
+          query: CreateUserRoleDocument,
+          variables: {
+            input: {
+              name: userRole.name,
+              description: userRole.description,
+              permissionIDs: []
+            }
           }
-        }
+        },
+        result: () => ({
+          data: {
+            userRole: {
+              __typename: userRole.__typename,
+              id: userRole.id,
+              name: userRole.description,
+              description: userRole.description,
+              systemRole: userRole.systemRole,
+              permissions: []
+            }
+          }
+        })
       },
-      result: () => ({
-        data: {
-          userRole: {
-            __typename: userRole.__typename,
-            id: userRole.id,
-            name: userRole.description,
-            description: userRole.description,
-            systemRole: userRole.systemRole,
-            permissions: []
-          }
-        }
-      })
-    },
-    permissionListQuery
-  ]
+      permissionListQuery
+    ]
 
-  const wrapper = mount(
-    <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
+    const wrapper = mount(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserRoleEditPanel />
       </MockedProvider>
-    </UIProvider>
-  )
-  await updateWrapper(wrapper, 100)
+    )
+    await updateWrapper(wrapper, 100)
 
-  act(() => {
-    wrapper
-      .find('input[placeholder="userRoles.panels.name"]')
-      .simulate('change', {target: {value: userRole.name}})
-    wrapper
-      .find('input[placeholder="userRoles.panels.description"]')
-      .simulate('change', {target: {value: userRole.description}})
+    act(() => {
+      wrapper
+        .find('input[name="userRoles.panels.name"]')
+        .simulate('change', {target: {value: userRole.name}})
+      wrapper
+        .find('input[name="userRoles.panels.description"]')
+        .simulate('change', {target: {value: userRole.description}})
+    })
+
+    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
+
+    const panel = wrapper.find('UserRoleEditPanel')
+    expect(panel).toMatchSnapshot()
   })
-
-  await act(async () => {
-    wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
-  })
-
-  const panel = wrapper.find('UserRoleEditPanel')
-  expect(panel).toMatchSnapshot()
 })
