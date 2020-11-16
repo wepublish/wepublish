@@ -263,50 +263,48 @@ export const RichTextBlock = memo(function RichTextBlock({
   }, [])
 
   return (
-    <>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue: SlateNode[]) => {
-          setFocus(ReactEditor.isFocused(editor))
-          if (value !== newValue) onChange(newValue)
-        }}>
-        <Toolbar fadeOut={!hasFocus}>
-          <FormatButton icon="header" format={BlockFormat.H1} />
-          <FormatButton icon="header" format={BlockFormat.H2} />
-          <FormatButton icon="header" format={BlockFormat.H3} />
+    <Slate
+      editor={editor}
+      value={value}
+      onChange={(newValue: SlateNode[]) => {
+        setFocus(ReactEditor.isFocused(editor))
+        if (value !== newValue) onChange(newValue)
+      }}>
+      <Toolbar fadeOut={!hasFocus}>
+        <FormatButton icon="header" format={BlockFormat.H1} />
+        <FormatButton icon="header" format={BlockFormat.H2} />
+        <FormatButton icon="header" format={BlockFormat.H3} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
-          <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
+        <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
+        <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <FormatButton icon="bold" format={TextFormat.Bold} />
-          <FormatButton icon="italic" format={TextFormat.Italic} />
-          <FormatButton icon="underline" format={TextFormat.Underline} />
-          <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
-          <FormatButton icon={'superscript'} format={TextFormat.Superscript} />
-          <FormatButton icon={'subscript'} format={TextFormat.Subscript} />
+        <FormatButton icon="bold" format={TextFormat.Bold} />
+        <FormatButton icon="italic" format={TextFormat.Italic} />
+        <FormatButton icon="underline" format={TextFormat.Underline} />
+        <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
+        <FormatButton icon={'superscript'} format={TextFormat.Superscript} />
+        <FormatButton icon={'subscript'} format={TextFormat.Subscript} />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <LinkFormatButton />
-          <RemoveLinkFormatButton />
+        <LinkFormatButton />
+        <RemoveLinkFormatButton />
 
-          <ToolbarDivider />
+        <ToolbarDivider />
 
-          <InsertEmojiButton icon="smile-o" iconActive="close" />
-        </Toolbar>
-        <Editable
-          readOnly={disabled}
-          placeholder={t('blocks.richText.startWriting')}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-        />
-      </Slate>
-    </>
+        <InsertEmojiButton icon="smile-o" iconActive="close" />
+      </Toolbar>
+      <Editable
+        readOnly={disabled}
+        placeholder={t('blocks.richText.startWriting')}
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+      />
+    </Slate>
   )
 })
 
