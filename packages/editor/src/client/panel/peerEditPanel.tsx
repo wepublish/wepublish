@@ -1,22 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Spacing,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  Toast,
-  NavigationButton,
-  TextInput,
-  PanelSectionHeader,
-  Image,
-  PlaceholderImage,
-  Card,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
+import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
 
 import {
   PeerListDocument,
@@ -30,6 +14,7 @@ import {
 import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface ImageEditPanelProps {
   id?: string
@@ -47,9 +32,6 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   const [isValidURL, setValidURL] = useState<boolean>()
   const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
   const [profile, setProfile] = useState<FullPeerProfileFragment>()
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const {data, loading: isLoading, error: loadError} = usePeerQuery({
     variables: {id: id!},
@@ -78,23 +60,8 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   }, [data?.peer])
 
   useEffect(() => {
-    if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    }
-  }, [createError])
-
-  useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    }
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError])
 
   useEffect(() => {
@@ -173,91 +140,85 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         }
       })
     }
-
     onSave?.()
   }
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('peerList.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? t('peerList.panels.save') : t('peerList.panels.create')}
-              onClick={() => handleSave()}
-              disabled={isDisabled}
-            />
-          }
-        />
-        <PanelSection>
-          <TextInput
-            label={t('peerList.panels.name')}
-            marginBottom={Spacing.ExtraSmall}
-            value={name}
-            onChange={e => {
-              setName(e.target.value)
-              setSlug(slugify(e.target.value))
-            }}
-          />
-          <TextInput
-            label={t('peerList.panels.URL')}
-            marginBottom={Spacing.ExtraSmall}
-            value={urlString}
-            errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
-            onChange={e => {
-              setURLString(e.target.value)
-            }}
-          />
-          <TextInput
-            label={t('peerList.panels.token')}
-            marginBottom={Spacing.ExtraSmall}
-            value={token}
-            description={id ? "Leave empty if you don't want to change it" : undefined}
-            onChange={e => {
-              setToken(e.target.value)
-            }}
-          />
-        </PanelSection>
-        <PanelSectionHeader title={t('peerList.panels.information')} />
-        {isLoadingPeerProfile ? null : isValidURL ? (
-          <>
-            <PanelSection dark>
-              <Card marginBottom={Spacing.Medium} height={200}>
-                {profile?.logo ? (
-                  <Image src={profile.logo.previewURL!} width="100%" height="100%" />
-                ) : (
-                  <PlaceholderImage width="100%" height="100%" />
-                )}
-              </Card>
-              <DescriptionList>
-                <DescriptionListItem label={t('peerList.panels.name')}>
-                  {profile?.name}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                  {profile?.themeColor}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </>
-        ) : null}
-      </Panel>
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+      <Drawer.Body>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
+              <FormControl
+                value={name}
+                onChange={value => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
+              <FormControl
+                value={urlString}
+                errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
+                onChange={value => {
+                  setURLString(value)
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
+              <FormControl
+                value={token}
+                placeholder={id ? "Leave empty if you don't want to change it" : undefined}
+                onChange={value => {
+                  setToken(value)
+                }}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
+        {!isLoadingPeerProfile && isValidURL && (
+          <Panel header={t('peerList.panels.information')}>
+            <Panel
+              bordered={true}
+              style={{
+                height: '200px',
+                marginBottom: '20px',
+                backgroundSize: 'cover',
+                backgroundImage: `url(${
+                  profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
+                }`
+              }}
+            />
+            <DescriptionList>
+              <DescriptionListItem label={t('peerList.panels.name')}>
+                {profile?.name}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeColor')}>
+                {profile?.themeColor}
+              </DescriptionListItem>
+            </DescriptionList>
+          </Panel>
+        )}
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('peerList.panels.save') : t('peerList.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('peerList.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

@@ -1,32 +1,20 @@
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useState} from 'react'
 
-import {NavigationTemplate, Divider} from '@karma.run/ui'
-
-import {
-  MaterialIconInsertDriveFileOutlined,
-  MaterialIconPowerSettingsNew,
-  MaterialIconTextFields,
-  MaterialIconPhotoLibraryOutlined,
-  MaterialIconPermIdentityOutlined,
-  MaterialIconShareOutlined,
-  MaterialIconLockOutlined,
-  MaterialIconFaceOutlined,
-  MaterialIconHowToRegOutlined
-} from '@karma.run/icons'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
 import {
-  RouteMenuLinkButton,
-  LogoutRoute,
   ArticleListRoute,
-  PageListRoute,
-  ImageListRoute,
-  AuthorListRoute,
   useRoute,
   RouteType,
+  PageListRoute,
+  routeLink,
+  AuthorListRoute,
+  ImageListRoute,
+  UserListRoute,
+  UserRoleListRoute,
   PeerListRoute,
   TokenListRoute,
-  UserListRoute,
-  UserRoleListRoute
+  LogoutRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -35,90 +23,136 @@ export interface BaseProps {
   children?: ReactNode
 }
 
+const iconStyles = {
+  width: 56,
+  height: 56,
+  lineHeight: '56px',
+  textAlign: 'center'
+}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const NavItemLink = routeLink(Nav.Item)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const DropdownItemLink = routeLink(Dropdown.Item)
+
 export function Base({children}: BaseProps) {
   const {current} = useRoute()
 
   const {t} = useTranslation()
 
+  const [isExpanded, setIsExpanded] = useState(true)
+
   return (
-    <NavigationTemplate
-      navigationChildren={
-        <>
-          <RouteMenuLinkButton
-            icon={MaterialIconTextFields}
-            label={t('navbar.articles')}
-            route={ArticleListRoute.create({})}
-            active={current?.type === RouteType.ArticleList}
-          />
+    <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
+      <Container>
+        <Sidebar
+          style={{display: 'flex', flexDirection: 'column'}}
+          width={isExpanded ? 260 : 56}
+          collapsible>
+          <Sidenav
+            expanded={isExpanded}
+            defaultOpenKeys={['3']}
+            appearance="subtle"
+            style={{flex: '1 1 auto'}}>
+            <Sidenav.Body>
+              <Nav>
+                <NavItemLink
+                  icon={<Icon icon="file-text" />}
+                  route={ArticleListRoute.create({})}
+                  active={current?.type === RouteType.ArticleList}>
+                  {t('navbar.articles')}
+                </NavItemLink>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconInsertDriveFileOutlined}
-            label={t('navbar.pages')}
-            route={PageListRoute.create({})}
-            active={current?.type === RouteType.PageList}
-          />
+                <NavItemLink
+                  icon={<Icon icon="file" />}
+                  route={PageListRoute.create({})}
+                  active={current?.type === RouteType.PageList}>
+                  {t('navbar.pages')}
+                </NavItemLink>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconFaceOutlined}
-            label={t('navbar.authors')}
-            route={AuthorListRoute.create({})}
-            active={current?.type === RouteType.AuthorList}
-          />
+                <NavItemLink
+                  icon={<Icon icon="people-group" />}
+                  route={AuthorListRoute.create({})}
+                  active={current?.type === RouteType.AuthorList}>
+                  {t('navbar.authors')}
+                </NavItemLink>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconPhotoLibraryOutlined}
-            label={t('navbar.imageLibrary')}
-            route={ImageListRoute.create({})}
-            active={current?.type === RouteType.ImageList}
-          />
+                <NavItemLink
+                  icon={<Icon icon="camera-retro" />}
+                  route={ImageListRoute.create({})}
+                  active={current?.type === RouteType.ImageList}>
+                  {t('navbar.imageLibrary')}
+                </NavItemLink>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconPermIdentityOutlined}
-            label={t('navbar.users')}
-            route={UserListRoute.create({})}
-            active={current?.type === RouteType.UserList}
-          />
+                <NavItemLink
+                  icon={<Icon icon="user-circle" />}
+                  route={UserListRoute.create({})}
+                  active={current?.type === RouteType.UserList}>
+                  {t('navbar.users')}
+                </NavItemLink>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconHowToRegOutlined}
-            label={t('navbar.userRoles')}
-            route={UserRoleListRoute.create({})}
-            active={current?.type === RouteType.UserRoleList}
-          />
+                <NavItemLink
+                  icon={<Icon icon="user-secret" />}
+                  route={UserRoleListRoute.create({})}
+                  active={current?.type === RouteType.UserRoleList}>
+                  {t('navbar.userRoles')}
+                </NavItemLink>
 
-          {/* TODO */}
-          {/* <RouteMenuIconLinkButton
-            icon={MaterialIconNavigationOutlined}
-            label="Navigation"
-            route={ImageListRoute.create({})}
-          /> */}
+                <NavItemLink
+                  icon={<Icon icon="share" />}
+                  route={PeerListRoute.create({})}
+                  active={current?.type === RouteType.PeerList}>
+                  {t('navbar.peering')}
+                </NavItemLink>
 
-          <Divider />
+                <NavItemLink
+                  icon={<Icon icon="key" />}
+                  route={TokenListRoute.create({})}
+                  active={current?.type === RouteType.TokenList}>
+                  {t('navbar.tokens')}
+                </NavItemLink>
+              </Nav>
+            </Sidenav.Body>
+          </Sidenav>
+          <Navbar appearance="subtle" className="nav-toggle">
+            <Navbar.Body>
+              <Nav>
+                <Dropdown
+                  placement="topStart"
+                  trigger="click"
+                  renderTitle={children => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    return <Icon style={iconStyles} icon="cog" />
+                  }}>
+                  <DropdownItemLink route={LogoutRoute.create({})}>
+                    {t('navbar.logout')}
+                  </DropdownItemLink>
+                  <Dropdown.Item></Dropdown.Item>
+                </Dropdown>
+              </Nav>
 
-          <RouteMenuLinkButton
-            icon={MaterialIconShareOutlined}
-            label={t('navbar.peering')}
-            route={PeerListRoute.create({})}
-            active={current?.type === RouteType.PeerList}
-          />
-
-          <RouteMenuLinkButton
-            icon={MaterialIconLockOutlined}
-            label={t('navbar.tokens')}
-            route={TokenListRoute.create({})}
-            active={current?.type === RouteType.TokenList}
-          />
-
-          <Divider />
-
-          <RouteMenuLinkButton
-            icon={MaterialIconPowerSettingsNew}
-            label={t('navbar.logout')}
-            route={LogoutRoute.create({})}
-          />
-        </>
-      }>
-      {children}
-    </NavigationTemplate>
+              <Nav pullRight>
+                <Nav.Item
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  style={{width: 56, textAlign: 'center'}}>
+                  <Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />
+                </Nav.Item>
+              </Nav>
+            </Navbar.Body>
+          </Navbar>
+        </Sidebar>
+        <Container
+          style={{
+            paddingTop: '60px',
+            paddingBottom: '60px',
+            paddingLeft: '40px',
+            paddingRight: '40px'
+          }}>
+          {children}
+        </Container>
+      </Container>
+    </div>
   )
 }

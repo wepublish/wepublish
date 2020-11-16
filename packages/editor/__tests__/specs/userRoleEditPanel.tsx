@@ -7,23 +7,11 @@ import {
 } from '../../src/client/api'
 import {mount} from 'enzyme'
 
-import {UIProvider} from '@karma.run/ui'
-import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 
 const MockedProvider = MockedProviderBase as any
-
-const styleRenderer: fela.IRenderer = {
-  renderRule: jest.fn(),
-  renderKeyframe: jest.fn(),
-  renderFont: jest.fn(),
-  renderStatic: jest.fn(),
-  renderToString: jest.fn(),
-  subscribe: jest.fn(),
-  clear: jest.fn()
-}
 
 const userRoleDocumentQuery = {
   request: {
@@ -126,11 +114,9 @@ describe('User Role Edit Panel', () => {
   test('should render', async () => {
     const mocks = [permissionListQuery]
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserRoleEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
@@ -141,11 +127,9 @@ describe('User Role Edit Panel', () => {
   test('should render with role', async () => {
     const mocks = [userRoleDocumentQuery, permissionListQuery]
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserRoleEditPanel id={'roleId1'} />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel id={'roleId1'} />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
@@ -185,11 +169,9 @@ describe('User Role Edit Panel', () => {
     }
     const mocks = [userRoleDocumentQuery, permissionListQuery]
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserRoleEditPanel id={'roleId1'} />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel id={'roleId1'} />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
@@ -234,26 +216,22 @@ describe('User Role Edit Panel', () => {
     ]
 
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <UserRoleEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserRoleEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
     act(() => {
       wrapper
-        .find('input[placeholder="userRoles.panels.name"]')
+        .find('input[name="userRoles.panels.name"]')
         .simulate('change', {target: {value: userRole.name}})
       wrapper
-        .find('input[placeholder="userRoles.panels.description"]')
+        .find('input[name="userRoles.panels.description"]')
         .simulate('change', {target: {value: userRole.description}})
     })
 
-    await act(async () => {
-      wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
-    })
+    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
 
     const panel = wrapper.find('UserRoleEditPanel')
     expect(panel).toMatchSnapshot()

@@ -2,7 +2,13 @@
   "translation": {
     "articles": {
       "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "states": "States",
         "articles": "Articles",
+        "action": "Action",
+        "created": "Created",
         "newArticle": "New Article",
         "search": "Search",
         "loadMore": "Load More",
@@ -83,6 +89,8 @@
         "Untitled": "Untitled",
         "chooseTeaser": "Choose Teaser",
         "default": "Default",
+        "light": "Light",
+        "text": "Text",
         "outlined": "Outlined",
         "peerArticle": "Peer Article",
         "page": "Page",
@@ -108,6 +116,11 @@
     "pages": {
       "overview": {
         "pages": "Pages",
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "states": "States",
+        "action": "Action",
         "draft": "Draft",
         "pending": "Pending",
         "published": "Published",
@@ -177,7 +190,8 @@
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
-        "loadMore": "Load More"
+        "loadMore": "Load More",
+        "action": "Action"
       },
       "panels": {
         "editAuthor": "Edit Author",
@@ -239,8 +253,11 @@
     },
     "userList": {
       "overview": {
+        "name": "Name",
         "unknown": "Unknown",
+        "description": "Description",
         "noDescription": "No Description",
+        "action": "Action",
         "resetPassword": "Reset Password",
         "delete": "Delete",
         "users": "Users",
@@ -323,16 +340,19 @@
         "themeColor": "Theme Color",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
-        "removeImage": "Remove Image"
+        "removeImage": "Remove Image",
+        "infoEditError": "Edit Token Error"
       }
     },
     "tokenList": {
       "overview": {
         "generateToken": "Generate Token",
-        "tokens": "Tokens"
+        "tokens": "Tokens",
+        "loading": "loading..."
       },
       "panels": {
         "deleteToken": "Delete Token?",
+        "deleteTokenText": "Do you want to delete {{name}}?",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
@@ -340,6 +360,7 @@
         "generateToken": "Generate Token",
         "generate": "Generate",
         "creationSuccess": "Token creation success",
+        "generateError": "Could not create Token",
         "close": "Close"
       }
     },
@@ -361,7 +382,8 @@
           "chooseImage": "Choose Image",
           "editImage": "Edit Image",
           "removeImage": "Remove Image",
-          "caption": "Caption"
+          "caption": "Caption",
+          "save": "Save"
         }
       },
       "embeds": {
@@ -476,6 +498,12 @@
         "hideToggleLabel": "Hide CTA Button",
         "hideToogleDescription": "Hide button an make whole element clickable."
       }
+    },
+    "chooseEditImage": {
+      "header": "Image",
+      "chooseImage": "Choose Image",
+      "editImage": "Edit Image",
+      "removeImage": "Remove Image"
     }
   }
 }
