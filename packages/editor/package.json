@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/editor",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "We.publish CMS Editor",
   "keywords": [
     "editor",
@@ -142,11 +142,19 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "componentClass",
+            "autoComplete",
+            "controlId",
+            "name",
+            "placement",
+            "trigger",
             "dataKey",
             "appearance",
             "icon",
             "size",
             "display",
+            "name",
+            "value",
             "flexDirection",
             "alignItems",
             "element",
@@ -163,7 +171,9 @@
             "axis",
             "flexWrap",
             "minHeight",
-            "href"
+            "href",
+            "fixed",
+            "format"
           ],
           "ignoreComponent": [
             "code"

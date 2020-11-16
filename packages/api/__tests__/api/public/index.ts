@@ -220,8 +220,15 @@ export type InstagramPostBlock = {
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
+  richText: Scalars['RichText']
   linkURL?: Maybe<Scalars['String']>
   linkText?: Maybe<Scalars['String']>
+  linkTarget?: Maybe<Scalars['String']>
+  hideButton: Scalars['Boolean']
+  styleOption?: Maybe<Scalars['String']>
+  layoutOption?: Maybe<Scalars['String']>
+  templateOption?: Maybe<Scalars['String']>
+  image?: Maybe<Image>
 }
 
 export type ListicleBlock = {

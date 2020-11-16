@@ -178,7 +178,7 @@ export function Login() {
               />
             </FormGroup>
             <Button appearance="primary" disabled={loading} onClick={login}>
-              {t('Login')}
+              {t('login.login')}
             </Button>
           </Form>
           {!!providerData?.authProviders?.length && (

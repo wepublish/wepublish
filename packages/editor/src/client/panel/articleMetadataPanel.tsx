@@ -5,15 +5,11 @@ import {
   CheckPicker,
   ControlLabel,
   Drawer,
-  Dropdown,
   Form,
   FormControl,
   FormGroup,
-  Icon,
   TagPicker,
   Toggle,
-  Panel,
-  IconButton,
   HelpBlock
 } from 'rsuite'
 
@@ -23,6 +19,8 @@ import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+
 export interface ArticleMetadataProperty {
   readonly key: string
   readonly value: string
@@ -101,7 +99,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               rows={5}
               componentClass="textarea"
               value={lead}
-              onChange={title => onChange?.({...value, lead})}
+              onChange={lead => onChange?.({...value, lead})}
             />
           </FormGroup>
           <FormGroup>
@@ -135,32 +133,15 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             <Toggle checked={breaking} onChange={breaking => onChange?.({...value, breaking})} />
           </FormGroup>
         </Form>
-
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('articleEditor.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('articleEditor.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={!image}
-              onClick={() => onChange?.({...value, image: undefined})}>
-              <Icon icon="close" /> {t('articleEditor.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
-        </Panel>
-        <Form fluid={true}>
+        <ChooseEditImage
+          header={''}
+          image={image}
+          disabled={false}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => onChange?.({...value, image: undefined})}
+        />
+        <Form fluid={true} style={{marginTop: '20px'}}>
           <FormGroup>
             <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
             <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />

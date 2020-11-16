@@ -70,7 +70,18 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.LinkPageBreak]: {
     field: props => <LinkPageBreakBlock {...props} />,
-    defaultValue: {text: '', linkText: '', linkURL: ''},
+    defaultValue: {
+      text: '',
+      linkText: '',
+      linkTarget: '',
+      linkURL: '',
+      styleOption: 'default',
+      layoutOption: 'default',
+      templateOption: 'none',
+      richText: createDefaultValue(),
+      image: undefined,
+      hideButton: false
+    },
     label: 'Break',
     icon: 'coffee'
   },

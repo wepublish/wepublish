@@ -36,6 +36,8 @@ import {
   Modal,
   Button
 } from 'rsuite'
+import {Overlay} from '../atoms/overlay'
+import {Typography} from '../atoms/typography'
 
 const ImagesPerPage = 24
 
@@ -129,10 +131,14 @@ export function ImageList() {
               <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
                 <Panel shaded bordered bodyFill>
                   <img src={image.thumbURL || ''} />
-                  <Panel
-                    header={`${image.filename || t('images.panels.untitled')}${image.extension}`}>
-                    {image.title || t('images.panels.Untitled')}
-                  </Panel>
+                  <Overlay bottom={0} width="100%" maxHeight="50%" padding={10}>
+                    <Typography variant="subtitle1" color="gray" ellipsize>
+                      {`${image.filename || t('images.panels.untitled')}${image.extension}`}
+                    </Typography>
+                    <Typography variant="body2" color="white" ellipsize>
+                      {image.title || t('images.panels.Untitled')}
+                    </Typography>
+                  </Overlay>
                   <IconButton
                     style={{position: 'absolute', top: '5px', right: '5px'}}
                     icon={<Icon icon="trash" />}

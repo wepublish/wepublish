@@ -125,26 +125,6 @@ export function hexToRgba(hex: string | number, alpha: number) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`
 }
 
-/* export function scrollBarStyle(theme: Theme): CSSStyle {
-  return {
-    '::-webkit-scrollbar': {
-      width: Spacing.Tiny
-    },
-
-    '::-webkit-scrollbar-thumb': {
-      backgroundColor: theme.colors.gray,
-      borderTopLeftRadius: Spacing.Tiny,
-      borderBottomLeftRadius: Spacing.Tiny
-    },
-
-    '::-webkit-scrollbar-track': {
-      backgroundColor: theme.colors.grayLight,
-      borderTopLeftRadius: Spacing.Tiny,
-      borderBottomLeftRadius: Spacing.Tiny
-    }
-  }
-} */
-
 export type CSSLength = string | number
 
 export interface PositionProps {

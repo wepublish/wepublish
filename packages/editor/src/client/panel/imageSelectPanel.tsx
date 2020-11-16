@@ -85,13 +85,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <div style={{height: '100px'}}>
+        <Panel bodyFill={true} style={{height: '150px'}}>
           <FileDropInput
             icon={<Icon icon="upload" />}
             text={t('articleEditor.panels.dropImage')}
             onDrop={handleDrop}
           />
-        </div>
+        </Panel>
 
         <Panel header={t('articleEditor.panels.images')}>
           <InputGroup>
@@ -124,13 +124,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
               })}
             </FlexboxGrid>
             {data?.images.pageInfo.hasNextPage && (
-              <Button onClick={loadMore}>{t('articleEditor.loadMore')}</Button>
+              <Button onClick={loadMore}>{t('articleEditor.panels.loadMore')}</Button>
             )}
           </>
         ) : !isLoading ? (
           <Message type="info" description={t('articleEditor.panels.noImagesFound')} />
         ) : (
-          <Loader center content="loading" />
+          <Loader center content={t('articleEditor.panels.loading')} />
         )}
       </Drawer.Body>
 

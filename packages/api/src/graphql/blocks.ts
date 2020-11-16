@@ -7,7 +7,8 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLUnionType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLBoolean
 } from 'graphql'
 
 import {GraphQLRichText} from './richText'
@@ -442,8 +443,20 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
   name: 'LinkPageBreakBlock',
   fields: {
     text: {type: GraphQLString},
+    richText: {type: GraphQLNonNull(GraphQLRichText)},
     linkURL: {type: GraphQLString},
-    linkText: {type: GraphQLString}
+    linkText: {type: GraphQLString},
+    linkTarget: {type: GraphQLString},
+    hideButton: {type: GraphQLNonNull(GraphQLBoolean)},
+    styleOption: {type: GraphQLString},
+    layoutOption: {type: GraphQLString},
+    templateOption: {type: GraphQLString},
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    }
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.LinkPageBreak
@@ -540,8 +553,15 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
   name: 'LinkPageBreakBlockInput',
   fields: {
     text: {type: GraphQLString},
+    richText: {type: GraphQLNonNull(GraphQLRichText)},
     linkURL: {type: GraphQLString},
-    linkText: {type: GraphQLString}
+    linkText: {type: GraphQLString},
+    linkTarget: {type: GraphQLString},
+    hideButton: {type: GraphQLNonNull(GraphQLBoolean)},
+    styleOption: {type: GraphQLString},
+    templateOption: {type: GraphQLString},
+    layoutOption: {type: GraphQLString},
+    imageID: {type: GraphQLID}
   }
 })
 

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import nanoid from 'nanoid'
 
-import {Button, Drawer, Panel, Dropdown, IconButton, Icon, Input} from 'rsuite'
+import {Button, Drawer, Form, FormGroup, ControlLabel, FormControl} from 'rsuite'
 
 import {ListInput, ListValue, FieldProps} from '../atoms/listInput'
 
@@ -11,6 +11,7 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {GalleryImageEdge} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface GalleryListEditPanelProps {
   id?: string
@@ -73,40 +74,25 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
   return (
     <>
       <div>
-        <Panel
-          bordered={true}
-          style={{
-            height: '200px',
-            backgroundSize: 'cover',
-            backgroundImage: `url(${image?.previewURL ?? 'https://via.placeholder.com/240x240'})`
-          }}>
-          <Dropdown
-            renderTitle={() => {
-              return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-            }}>
-            <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-              <Icon icon="image" /> {t('blocks.imageGallery.panels.chooseImage')}
-            </Dropdown.Item>
-            <Dropdown.Item disabled={!image} onClick={() => setEditModalOpen(true)}>
-              <Icon icon="pencil" /> {t('blocks.imageGallery.panels.editImage')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={!image}
-              onClick={() => onChange(value => ({...value, image: null}))}>
-              <Icon icon="close" /> {t('blocks.imageGallery.panels.removeImage')}
-            </Dropdown.Item>
-          </Dropdown>
-        </Panel>
-        <Input
-          componentClass="textarea"
-          rows={3}
-          style={{width: 300}}
-          placeholder={t('blocks.imageGallery.panels.caption')}
-          value={caption}
-          onChange={caption => {
-            onChange(value => ({...value, caption}))
-          }}
+        <ChooseEditImage
+          header={''}
+          image={image}
+          disabled={false}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => onChange?.({...value, image: null})}
         />
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('blocks.imageGallery.panels.caption')}</ControlLabel>
+            <FormControl
+              rows={5}
+              componentClass="textarea"
+              value={caption}
+              onChange={caption => onChange({...value, caption})}
+            />
+          </FormGroup>
+        </Form>
       </div>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>

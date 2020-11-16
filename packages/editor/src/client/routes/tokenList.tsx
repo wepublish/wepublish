@@ -83,7 +83,7 @@ export function TokenList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
       {isTokenListLoading ? (
-        <Loader backdrop content="loading..." vertical />
+        <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
         <List bordered={true} style={{marginTop: '40px'}}>
           {tokenListData?.tokens.map((token, index) => (

@@ -106,7 +106,7 @@ describe('User Edit Panel', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  xtest('should allow user role to be added', async () => {
+  test('should allow user role to be added', async () => {
     const mocks = [userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -116,15 +116,14 @@ describe('User Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    wrapper.find('Select button').simulate('click')
-    wrapper.find('li[role="option"]').last().simulate('click')
-    wrapper.find('button > Icon > MaterialIconAdd').simulate('click')
+    wrapper.find('a[name="userList.panels.userRoles"]').simulate('click')
+    wrapper.find('div[role="menuitem"]').last().simulate('click')
 
     const panel = wrapper.find('UserEditPanel')
     expect(panel).toMatchSnapshot()
   })
 
-  xtest('should allow user role to be removed', async () => {
+  test('should allow user role to be removed', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -134,8 +133,8 @@ describe('User Edit Panel', () => {
     )
     await updateWrapper(wrapper, 100)
 
-    wrapper.find('ForwardRef(IconButton)').first().simulate('click')
-    wrapper.find('ForwardRef(MenuButton)').simulate('click')
+    wrapper.find('a[name="userList.panels.userRoles"]').simulate('click')
+    wrapper.find('div.rs-checkbox-checked').simulate('click')
 
     const panel = wrapper.find('UserEditPanel')
     expect(panel).toMatchSnapshot()

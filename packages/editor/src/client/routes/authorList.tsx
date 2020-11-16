@@ -7,7 +7,8 @@ import {
   useRouteDispatch,
   AuthorListRoute,
   AuthorCreateRoute,
-  ButtonLink
+  ButtonLink,
+  Link
 } from '../route'
 
 import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment} from '../api'
@@ -27,6 +28,7 @@ import {
   Modal,
   Button
 } from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
@@ -120,33 +122,28 @@ export function AuthorList() {
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={authors}>
         <Column width={100} align="left" resizable>
-          <HeaderCell>Id</HeaderCell>
-          <Cell>
+          <HeaderCell></HeaderCell>
+          <Cell style={{padding: 2}}>
             {(rowData: FullAuthorFragment) => (
               <Avatar circle src={rowData.image?.squareURL || undefined} />
             )}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>Name</HeaderCell>
-          <Cell dataKey="name" />
+        <Column width={400} align="left" resizable>
+          <HeaderCell>{t('authors.overview.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullAuthorFragment) => (
+              <Link route={AuthorEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('authors.overview.untitled')}
+              </Link>
+            )}
+          </Cell>
         </Column>
         <Column width={100} align="center" fixed="right">
-          <HeaderCell>Action</HeaderCell>
+          <HeaderCell>{t('authors.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullAuthorFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="wrench" />}
-                  circle
-                  size="sm"
-                  onClick={e => {
-                    dispatch({
-                      type: RouteActionType.PushRoute,
-                      route: AuthorEditRoute.create({id: rowData.id})
-                    })
-                  }}
-                />
                 <IconButton
                   icon={<Icon icon="trash" />}
                   circle
@@ -198,9 +195,11 @@ export function AuthorList() {
         </Modal.Header>
 
         <Modal.Body>
-          {t('authors.panels.deleteAuthor', {
-            name: currentAuthor?.name || currentAuthor?.id
-          })}
+          <DescriptionList>
+            <DescriptionListItem label={t('authors.overview.name')}>
+              {currentAuthor?.name || t('authors.overview.unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
         </Modal.Body>
 
         <Modal.Footer>
@@ -217,10 +216,10 @@ export function AuthorList() {
               // fetchMore()
             }}
             color="red">
-            {t('authors.panels.confirm')}
+            {t('authors.overview.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('authors.panels.cancel')}
+            {t('authors.overview.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

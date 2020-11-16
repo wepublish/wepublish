@@ -62,7 +62,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           </Button>
         )}
         <Button onClick={() => onClose?.()} appearance="subtle">
-          {t('Close')}
+          {t('tokenList.panels.close')}
         </Button>
       </Drawer.Footer>
     </>

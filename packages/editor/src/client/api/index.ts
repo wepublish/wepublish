@@ -1758,7 +1758,11 @@ type FullBlock_EmbedBlock_Fragment = (
 
 type FullBlock_LinkPageBreakBlock_Fragment = (
   { __typename: 'LinkPageBreakBlock' }
-  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL'>
+  & Pick<LinkPageBreakBlock, 'text' | 'linkText' | 'linkURL' | 'styleOption' | 'richText' | 'linkTarget' | 'hideButton' | 'templateOption' | 'layoutOption'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )> }
 );
 
 type FullBlock_TitleBlock_Fragment = (
@@ -2650,6 +2654,15 @@ export const FullBlockFragmentDoc = gql`
     text
     linkText
     linkURL
+    styleOption
+    richText
+    linkTarget
+    hideButton
+    templateOption
+    layoutOption
+    image {
+      ...ImageRef
+    }
   }
   ... on ImageBlock {
     caption
