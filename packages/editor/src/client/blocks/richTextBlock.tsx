@@ -327,32 +327,22 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-interface WhisperInstancePopover extends React.Component<WhisperProps, {isOverlayShown?: boolean}> {
-  // node_modules/rsuite/lib/Whisper/Whisper.d.ts
-  open: (delay?: number) => void
-  close: (delay?: number) => void
-
-  /** @deprecated Use `open` instead */
-  show: (delay?: number) => void
-  /** @deprecated Use `close` instead */
-  hide: (delay?: number) => void
-}
-
 function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
   const editor = useSlate()
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
-  const triggerRef = useRef<WhisperInstancePopover>(null)
+  const triggerRef = useRef<any>(null)
+
   const open = () => {
-    if (triggerRef!.current) {
-      triggerRef!.current!.open()
+    if (triggerRef.current) {
+      triggerRef.current!.open()
       // TODO rather be done with forwardRef ?
       setIsEmojiPickerOpen(true)
     }
   }
   const close = () => {
-    if (triggerRef!.current) {
-      triggerRef!.current!.close()
+    if (triggerRef.current) {
+      triggerRef.current!.close()
       setIsEmojiPickerOpen(false)
     }
   }
