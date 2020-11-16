@@ -357,9 +357,6 @@ function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
     }
   }
 
-  const top = 'top'
-  const noTrigger = 'none'
-
   const emojiPicker = (
     <Popover>
       <Picker
@@ -372,7 +369,7 @@ function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
 
   return (
     <>
-      <Whisper placement={top} speaker={emojiPicker} ref={triggerRef} trigger={noTrigger}>
+      <Whisper placement="top" speaker={emojiPicker} ref={triggerRef} trigger="none">
         <ToolbarButton
           icon={isEmojiPickerOpen ? iconActive || icon : icon}
           active={isEmojiPickerOpen}
