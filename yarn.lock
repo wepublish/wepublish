@@ -4466,10 +4466,10 @@
   dependencies:
     "@types/express" "*"
 
-"@types/emoji-mart@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@types/emoji-mart/-/emoji-mart-3.0.4.tgz#418868330c13b510a7b4b86b1ee9904291daeec1"
-  integrity sha512-Uqegqi54lXzz1qlDnLYEbFlUXY46auTVwbeOO8mj+9maGu2WBx/lGnmLKg7WS4CC5lB8Q6ch8K5VPBR9bDjWgg==
+"@types/emoji-mart@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/emoji-mart/-/emoji-mart-3.0.0.tgz#b214e8d92f7b559c4434781fa68563d06d2f0580"
+  integrity sha512-sTZX5TGcY8YVwKfy11Q9k9UfyjlQLEpaZkFvdqV89dO6WfPxsEPEqQ8cCG3VLpBphWJLDBvfvFKQiYP5Am1TSA==
   dependencies:
     "@types/react" "*"
 
