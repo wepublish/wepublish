@@ -3,32 +3,18 @@ import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {PeerEditPanel} from '../../src/client/panel/peerEditPanel'
 import {mount} from 'enzyme'
 
-import {UIProvider} from '@karma.run/ui'
-import * as fela from 'fela'
 import {updateWrapper} from '../utils'
 import {act} from 'react-dom/test-utils'
 import {PeerDocument, CreatePeerDocument} from '../../src/client/api'
 
 const MockedProvider = MockedProviderBase as any
 
-const styleRenderer: fela.IRenderer = {
-  renderRule: jest.fn(),
-  renderKeyframe: jest.fn(),
-  renderFont: jest.fn(),
-  renderStatic: jest.fn(),
-  renderToString: jest.fn(),
-  subscribe: jest.fn(),
-  clear: jest.fn()
-}
-
 describe('Peer Edit Panel', () => {
   test('should render', async () => {
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider addTypename={false}>
-          <PeerEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider addTypename={false}>
+        <PeerEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
@@ -61,11 +47,9 @@ describe('Peer Edit Panel', () => {
       }
     ]
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <PeerEditPanel id={'peerId1'} />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <PeerEditPanel id={'peerId1'} />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
@@ -113,29 +97,28 @@ describe('Peer Edit Panel', () => {
     ]
 
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <PeerEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <PeerEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
     act(() => {
       wrapper
-        .find('input[placeholder="peerList.panels.name"]')
+        .find('input[name="peerList.panels.name"]')
         .simulate('change', {target: {value: peer.name}})
 
       wrapper
-        .find('input[placeholder="peerList.panels.URL"]')
+        .find('input[name="peerList.panels.URL"]')
         .simulate('change', {target: {value: peer.hostURL}})
 
       wrapper
-        .find('input[placeholder="peerList.panels.token"]')
+        .find('input[name="peerList.panels.token"]')
         .simulate('change', {target: {value: peer.token}})
     })
+
     await act(async () => {
-      wrapper.find('button > Icon > MaterialIconSaveOutlined').simulate('click')
+      wrapper.find('button[className="rs-btn rs-btn-primary rs-btn-disabled"]').simulate('click')
     })
     await updateWrapper(wrapper, 100)
 

@@ -2,675 +2,1383 @@
 
 exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 <PeerEditPanel>
-  <Styled(div)>
-    <div>
-      <PanelHeader
-        leftChildren={
-          <ForwardRef(NavigationButton)
-            icon={[Function]}
-            label="peerList.panels.close"
-            onClick={[Function]}
-          />
-        }
-        rightChildren={
-          <ForwardRef(NavigationButton)
-            disabled={true}
-            icon={[Function]}
-            label="peerList.panels.create"
-            onClick={[Function]}
-          />
-        }
-        title="peerList.panels.createPeer"
-      >
-        <Styled(div)>
-          <div>
-            <ForwardRef(NavigationButton)
-              icon={[Function]}
-              label="peerList.panels.close"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": undefined,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconClose
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                      </svg>
-                    </MaterialIconClose>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.close
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-            <ForwardRef(Box)
-              flexGrow={1}
-            >
-              <div />
-            </ForwardRef(Box)>
-            <Styled(span)>
-              <span>
-                peerList.panels.createPeer
-              </span>
-            </Styled(span)>
-            <ForwardRef(NavigationButton)
-              disabled={true}
-              icon={[Function]}
-              label="peerList.panels.create"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": true,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconSaveOutlined
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M0 0h24v24H0V0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
-                        />
-                      </svg>
-                    </MaterialIconSaveOutlined>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.create
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-          </div>
-        </Styled(div)>
-      </PanelHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(TextInput)
-              label="peerList.panels.name"
-              marginBottom={10}
-              onChange={[Function]}
-              value="something peer name"
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.name"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value="something peer name"
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.name"
-                          value="something peer name"
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.name
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              errorMessage="Invalid URL"
-              label="peerList.panels.URL"
-              marginBottom={10}
-              onChange={[Function]}
-              value="https://host-url.ch/"
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.URL"
-                        styleProps={
-                          Object {
-                            "hasError": true,
-                            "hasIcon": false,
-                          }
-                        }
-                        value="https://host-url.ch/"
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.URL"
-                          value="https://host-url.ch/"
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": true,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.URL
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                  <Styled(div)>
-                    <div>
-                      Invalid URL
-                    </div>
-                  </Styled(div)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              label="peerList.panels.token"
-              marginBottom={10}
-              onChange={[Function]}
-              value="abc123def456"
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.token"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value="abc123def456"
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.token"
-                          value="abc123def456"
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.token
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="peerList.panels.information"
-      >
-        <Styled(div)>
-          <div>
-            peerList.panels.information
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-    </div>
-  </Styled(div)>
-  <Toast
-    autoHideDuration={5000}
-    onClose={[Function]}
-    open={false}
-    type="error"
+  <defaultProps(defaultProps(ModalHeader))
+    classPrefix="rs-drawer-header"
+    closeButton={true}
   >
-    <Transition
-      appear={false}
-      enter={true}
-      exit={true}
-      in={false}
-      mountOnEnter={false}
-      onEnter={[Function]}
-      onEntered={[Function]}
-      onEntering={[Function]}
-      onExit={[Function]}
-      onExited={[Function]}
-      onExiting={[Function]}
-      timeout={200}
-      unmountOnExit={true}
-    />
-  </Toast>
+    <defaultProps(ModalHeader)
+      classPrefix="rs-drawer-header"
+      closeButton={true}
+    >
+      <ModalHeader
+        classPrefix="rs-drawer-header"
+        closeButton={true}
+      >
+        <div
+          className="rs-drawer-header"
+        >
+          <button
+            aria-label="Close"
+            className="rs-drawer-header-close"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+          <defaultProps(defaultProps(ModalTitle))
+            classPrefix="rs-drawer-title"
+          >
+            <defaultProps(ModalTitle)
+              classPrefix="rs-drawer-title"
+            >
+              <ModalTitle
+                classPrefix="rs-drawer-title"
+              >
+                <h4
+                  className="rs-drawer-title"
+                >
+                  peerList.panels.createPeer
+                </h4>
+              </ModalTitle>
+            </defaultProps(ModalTitle)>
+          </defaultProps(defaultProps(ModalTitle))>
+        </div>
+      </ModalHeader>
+    </defaultProps(ModalHeader)>
+  </defaultProps(defaultProps(ModalHeader))>
+  <Body
+    classPrefix="rs-drawer-body"
+  >
+    <defaultProps(ModalBody)
+      classPrefix="rs-drawer-body"
+    >
+      <ModalBody
+        classPrefix="rs-drawer-body"
+      >
+        <div
+          className="rs-drawer-body"
+          style={Object {}}
+        >
+          <defaultProps(Panel)
+            classPrefix="rs-panel"
+          >
+            <Panel
+              classPrefix="rs-panel"
+            >
+              <div
+                className="rs-panel rs-panel-default"
+              >
+                <div
+                  className="rs-panel-body"
+                >
+                  <Form
+                    checkDelay={500}
+                    checkTrigger="change"
+                    classPrefix="rs-form"
+                    errorFromContext={true}
+                    fluid={true}
+                    formDefaultValue={Object {}}
+                    layout="vertical"
+                    model={
+                      Schema {
+                        "schema": Object {},
+                      }
+                    }
+                  >
+                    <form
+                      className="rs-form rs-form-vertical rs-form-fluid"
+                      onSubmit={[Function]}
+                    >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.name
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.name"
+                                onChange={[Function]}
+                                value="something peer name"
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.name"
+                                  onChange={[Function]}
+                                  value="something peer name"
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.name"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value="something peer name"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.name"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value="something peer name"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.name"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value="something peer name"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.name"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value="something peer name"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.name"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value="something peer name"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.URL
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                errorMessage="Invalid URL"
+                                name="peerList.panels.URL"
+                                onChange={[Function]}
+                                value="https://host-url.ch/"
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  errorMessage="Invalid URL"
+                                  name="peerList.panels.URL"
+                                  onChange={[Function]}
+                                  value="https://host-url.ch/"
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorMessage="Invalid URL"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.URL"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value="https://host-url.ch/"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.URL"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value="https://host-url.ch/"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.URL"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value="https://host-url.ch/"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.URL"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value="https://host-url.ch/"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.URL"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value="https://host-url.ch/"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={true}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={true}
+                                        >
+                                          <div
+                                            className="rs-error-message-wrapper rs-form-control-message-wrapper rs-error-message-placement-bottom-start"
+                                          >
+                                            <span
+                                              className="rs-error-message rs-error-message-show"
+                                            >
+                                              <span
+                                                className="rs-error-message-arrow"
+                                              />
+                                              <span
+                                                className="rs-error-message-inner"
+                                              >
+                                                Invalid URL
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </ErrorMessage>
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.token
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.token"
+                                onChange={[Function]}
+                                value="abc123def456"
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.token"
+                                  onChange={[Function]}
+                                  value="abc123def456"
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.token"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value="abc123def456"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.token"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value="abc123def456"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.token"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value="abc123def456"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.token"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value="abc123def456"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.token"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value="abc123def456"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                    </form>
+                  </Form>
+                </div>
+              </div>
+            </Panel>
+          </defaultProps(Panel)>
+        </div>
+      </ModalBody>
+    </defaultProps(ModalBody)>
+  </Body>
+  <defaultProps(defaultProps(ModalFooter))
+    classPrefix="rs-drawer-footer"
+  >
+    <defaultProps(ModalFooter)
+      classPrefix="rs-drawer-footer"
+    >
+      <ModalFooter
+        classPrefix="rs-drawer-footer"
+      >
+        <div
+          className="rs-drawer-footer"
+        >
+          <withStyleProps(defaultProps(Button))
+            appearance="primary"
+            classPrefix="rs-btn"
+            componentClass="button"
+            disabled={true}
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="primary"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              disabled={true}
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="primary"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                disabled={true}
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.create
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+          <withStyleProps(defaultProps(Button))
+            appearance="subtle"
+            classPrefix="rs-btn"
+            componentClass="button"
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="subtle"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="subtle"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-subtle"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.close
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+        </div>
+      </ModalFooter>
+    </defaultProps(ModalFooter)>
+  </defaultProps(defaultProps(ModalFooter))>
 </PeerEditPanel>
 `;
 
 exports[`Peer Edit Panel should render 1`] = `
 <PeerEditPanel>
-  <Styled(div)>
-    <div>
-      <PanelHeader
-        leftChildren={
-          <ForwardRef(NavigationButton)
-            icon={[Function]}
-            label="peerList.panels.close"
-            onClick={[Function]}
-          />
-        }
-        rightChildren={
-          <ForwardRef(NavigationButton)
-            disabled={true}
-            icon={[Function]}
-            label="peerList.panels.create"
-            onClick={[Function]}
-          />
-        }
-        title="peerList.panels.createPeer"
-      >
-        <Styled(div)>
-          <div>
-            <ForwardRef(NavigationButton)
-              icon={[Function]}
-              label="peerList.panels.close"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": undefined,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconClose
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                      </svg>
-                    </MaterialIconClose>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.close
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-            <ForwardRef(Box)
-              flexGrow={1}
-            >
-              <div />
-            </ForwardRef(Box)>
-            <Styled(span)>
-              <span>
-                peerList.panels.createPeer
-              </span>
-            </Styled(span)>
-            <ForwardRef(NavigationButton)
-              disabled={true}
-              icon={[Function]}
-              label="peerList.panels.create"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": true,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconSaveOutlined
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M0 0h24v24H0V0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
-                        />
-                      </svg>
-                    </MaterialIconSaveOutlined>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.create
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-          </div>
-        </Styled(div)>
-      </PanelHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(TextInput)
-              label="peerList.panels.name"
-              marginBottom={10}
-              onChange={[Function]}
-              value=""
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.name"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value=""
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.name"
-                          value=""
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.name
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              label="peerList.panels.URL"
-              marginBottom={10}
-              onChange={[Function]}
-              value=""
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.URL"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value=""
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.URL"
-                          value=""
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.URL
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              label="peerList.panels.token"
-              marginBottom={10}
-              onChange={[Function]}
-              value=""
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.token"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value=""
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.token"
-                          value=""
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.token
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="peerList.panels.information"
-      >
-        <Styled(div)>
-          <div>
-            peerList.panels.information
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-    </div>
-  </Styled(div)>
-  <Toast
-    autoHideDuration={5000}
-    onClose={[Function]}
-    open={false}
-    type="error"
+  <defaultProps(defaultProps(ModalHeader))
+    classPrefix="rs-drawer-header"
+    closeButton={true}
   >
-    <Transition
-      appear={false}
-      enter={true}
-      exit={true}
-      in={false}
-      mountOnEnter={false}
-      onEnter={[Function]}
-      onEntered={[Function]}
-      onEntering={[Function]}
-      onExit={[Function]}
-      onExited={[Function]}
-      onExiting={[Function]}
-      timeout={200}
-      unmountOnExit={true}
-    />
-  </Toast>
+    <defaultProps(ModalHeader)
+      classPrefix="rs-drawer-header"
+      closeButton={true}
+    >
+      <ModalHeader
+        classPrefix="rs-drawer-header"
+        closeButton={true}
+      >
+        <div
+          className="rs-drawer-header"
+        >
+          <button
+            aria-label="Close"
+            className="rs-drawer-header-close"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+          <defaultProps(defaultProps(ModalTitle))
+            classPrefix="rs-drawer-title"
+          >
+            <defaultProps(ModalTitle)
+              classPrefix="rs-drawer-title"
+            >
+              <ModalTitle
+                classPrefix="rs-drawer-title"
+              >
+                <h4
+                  className="rs-drawer-title"
+                >
+                  peerList.panels.createPeer
+                </h4>
+              </ModalTitle>
+            </defaultProps(ModalTitle)>
+          </defaultProps(defaultProps(ModalTitle))>
+        </div>
+      </ModalHeader>
+    </defaultProps(ModalHeader)>
+  </defaultProps(defaultProps(ModalHeader))>
+  <Body
+    classPrefix="rs-drawer-body"
+  >
+    <defaultProps(ModalBody)
+      classPrefix="rs-drawer-body"
+    >
+      <ModalBody
+        classPrefix="rs-drawer-body"
+      >
+        <div
+          className="rs-drawer-body"
+          style={Object {}}
+        >
+          <defaultProps(Panel)
+            classPrefix="rs-panel"
+          >
+            <Panel
+              classPrefix="rs-panel"
+            >
+              <div
+                className="rs-panel rs-panel-default"
+              >
+                <div
+                  className="rs-panel-body"
+                >
+                  <Form
+                    checkDelay={500}
+                    checkTrigger="change"
+                    classPrefix="rs-form"
+                    errorFromContext={true}
+                    fluid={true}
+                    formDefaultValue={Object {}}
+                    layout="vertical"
+                    model={
+                      Schema {
+                        "schema": Object {},
+                      }
+                    }
+                  >
+                    <form
+                      className="rs-form rs-form-vertical rs-form-fluid"
+                      onSubmit={[Function]}
+                    >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.name
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.name"
+                                onChange={[Function]}
+                                value=""
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.name"
+                                  onChange={[Function]}
+                                  value=""
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.name"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value=""
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.name"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value=""
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.name"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value=""
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.name"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value=""
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.name"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value=""
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.URL
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.URL"
+                                onChange={[Function]}
+                                value=""
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.URL"
+                                  onChange={[Function]}
+                                  value=""
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.URL"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value=""
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.URL"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value=""
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.URL"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value=""
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.URL"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value=""
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.URL"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value=""
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.token
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.token"
+                                onChange={[Function]}
+                                value=""
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.token"
+                                  onChange={[Function]}
+                                  value=""
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.token"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value=""
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.token"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value=""
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.token"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value=""
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.token"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value=""
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.token"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value=""
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                    </form>
+                  </Form>
+                </div>
+              </div>
+            </Panel>
+          </defaultProps(Panel)>
+        </div>
+      </ModalBody>
+    </defaultProps(ModalBody)>
+  </Body>
+  <defaultProps(defaultProps(ModalFooter))
+    classPrefix="rs-drawer-footer"
+  >
+    <defaultProps(ModalFooter)
+      classPrefix="rs-drawer-footer"
+    >
+      <ModalFooter
+        classPrefix="rs-drawer-footer"
+      >
+        <div
+          className="rs-drawer-footer"
+        >
+          <withStyleProps(defaultProps(Button))
+            appearance="primary"
+            classPrefix="rs-btn"
+            componentClass="button"
+            disabled={true}
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="primary"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              disabled={true}
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="primary"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                disabled={true}
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.create
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+          <withStyleProps(defaultProps(Button))
+            appearance="subtle"
+            classPrefix="rs-btn"
+            componentClass="button"
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="subtle"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="subtle"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-subtle"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.close
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+        </div>
+      </ModalFooter>
+    </defaultProps(ModalFooter)>
+  </defaultProps(defaultProps(ModalFooter))>
 </PeerEditPanel>
 `;
 
@@ -678,346 +1386,708 @@ exports[`Peer Edit Panel should render with ID 1`] = `
 <PeerEditPanel
   id="peerId1"
 >
-  <Styled(div)>
-    <div>
-      <PanelHeader
-        leftChildren={
-          <ForwardRef(NavigationButton)
-            icon={[Function]}
-            label="peerList.panels.close"
-            onClick={[Function]}
-          />
-        }
-        rightChildren={
-          <ForwardRef(NavigationButton)
-            disabled={true}
-            icon={[Function]}
-            label="peerList.panels.save"
-            onClick={[Function]}
-          />
-        }
-        title="peerList.panels.editPeer"
-      >
-        <Styled(div)>
-          <div>
-            <ForwardRef(NavigationButton)
-              icon={[Function]}
-              label="peerList.panels.close"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": undefined,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconClose
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                        />
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                      </svg>
-                    </MaterialIconClose>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.close
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-            <ForwardRef(Box)
-              flexGrow={1}
-            >
-              <div />
-            </ForwardRef(Box)>
-            <Styled(span)>
-              <span>
-                peerList.panels.editPeer
-              </span>
-            </Styled(span)>
-            <ForwardRef(NavigationButton)
-              disabled={true}
-              icon={[Function]}
-              label="peerList.panels.save"
-              onClick={[Function]}
-            >
-              <Styled(button)
-                onClick={[Function]}
-                styleProps={
-                  Object {
-                    "active": undefined,
-                    "disabled": true,
-                  }
-                }
-              >
-                <button
-                  onClick={[Function]}
-                >
-                  <Icon
-                    element={[Function]}
-                    scale="2em"
-                  >
-                    <MaterialIconSaveOutlined
-                      role="img"
-                    >
-                      <svg
-                        role="img"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M0 0h24v24H0V0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
-                        />
-                      </svg>
-                    </MaterialIconSaveOutlined>
-                  </Icon>
-                  <ForwardRef(Box)
-                    display="block"
-                    element="span"
-                  >
-                    <span>
-                      peerList.panels.save
-                    </span>
-                  </ForwardRef(Box)>
-                </button>
-              </Styled(button)>
-            </ForwardRef(NavigationButton)>
-          </div>
-        </Styled(div)>
-      </PanelHeader>
-      <PanelSection>
-        <Styled(div)
-          styleProps={
-            Object {
-              "dark": undefined,
-            }
-          }
-        >
-          <div>
-            <ForwardRef(TextInput)
-              label="peerList.panels.name"
-              marginBottom={10}
-              onChange={[Function]}
-              value="Test Peer Name"
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.name"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value="Test Peer Name"
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.name"
-                          value="Test Peer Name"
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.name
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              errorMessage="Invalid URL"
-              label="peerList.panels.URL"
-              marginBottom={10}
-              onChange={[Function]}
-              value="https://test-url.ch/"
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.URL"
-                        styleProps={
-                          Object {
-                            "hasError": true,
-                            "hasIcon": false,
-                          }
-                        }
-                        value="https://test-url.ch/"
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.URL"
-                          value="https://test-url.ch/"
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": true,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.URL
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                  <Styled(div)>
-                    <div>
-                      Invalid URL
-                    </div>
-                  </Styled(div)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-            <ForwardRef(TextInput)
-              description="Leave empty if you don't want to change it"
-              label="peerList.panels.token"
-              marginBottom={10}
-              onChange={[Function]}
-              value=""
-            >
-              <Styled(div)
-                styleProps={
-                  Object {
-                    "marginBottom": 10,
-                  }
-                }
-              >
-                <div>
-                  <Styled(label)>
-                    <label>
-                      <Styled(input)
-                        onChange={[Function]}
-                        placeholder="peerList.panels.token"
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                        value=""
-                      >
-                        <input
-                          onChange={[Function]}
-                          placeholder="peerList.panels.token"
-                          value=""
-                        />
-                      </Styled(input)>
-                      <Styled(span)
-                        styleProps={
-                          Object {
-                            "hasError": false,
-                            "hasIcon": false,
-                          }
-                        }
-                      >
-                        <span>
-                          peerList.panels.token
-                        </span>
-                      </Styled(span)>
-                    </label>
-                  </Styled(label)>
-                  <Styled(div)>
-                    <div>
-                      Leave empty if you don't want to change it
-                    </div>
-                  </Styled(div)>
-                </div>
-              </Styled(div)>
-            </ForwardRef(TextInput)>
-          </div>
-        </Styled(div)>
-      </PanelSection>
-      <PanelSectionHeader
-        title="peerList.panels.information"
-      >
-        <Styled(div)>
-          <div>
-            peerList.panels.information
-          </div>
-        </Styled(div)>
-      </PanelSectionHeader>
-    </div>
-  </Styled(div)>
-  <Toast
-    autoHideDuration={5000}
-    onClose={[Function]}
-    open={false}
-    type="error"
+  <defaultProps(defaultProps(ModalHeader))
+    classPrefix="rs-drawer-header"
+    closeButton={true}
   >
-    <Transition
-      appear={false}
-      enter={true}
-      exit={true}
-      in={false}
-      mountOnEnter={false}
-      onEnter={[Function]}
-      onEntered={[Function]}
-      onEntering={[Function]}
-      onExit={[Function]}
-      onExited={[Function]}
-      onExiting={[Function]}
-      timeout={200}
-      unmountOnExit={true}
-    />
-  </Toast>
+    <defaultProps(ModalHeader)
+      classPrefix="rs-drawer-header"
+      closeButton={true}
+    >
+      <ModalHeader
+        classPrefix="rs-drawer-header"
+        closeButton={true}
+      >
+        <div
+          className="rs-drawer-header"
+        >
+          <button
+            aria-label="Close"
+            className="rs-drawer-header-close"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+          <defaultProps(defaultProps(ModalTitle))
+            classPrefix="rs-drawer-title"
+          >
+            <defaultProps(ModalTitle)
+              classPrefix="rs-drawer-title"
+            >
+              <ModalTitle
+                classPrefix="rs-drawer-title"
+              >
+                <h4
+                  className="rs-drawer-title"
+                >
+                  peerList.panels.editPeer
+                </h4>
+              </ModalTitle>
+            </defaultProps(ModalTitle)>
+          </defaultProps(defaultProps(ModalTitle))>
+        </div>
+      </ModalHeader>
+    </defaultProps(ModalHeader)>
+  </defaultProps(defaultProps(ModalHeader))>
+  <Body
+    classPrefix="rs-drawer-body"
+  >
+    <defaultProps(ModalBody)
+      classPrefix="rs-drawer-body"
+    >
+      <ModalBody
+        classPrefix="rs-drawer-body"
+      >
+        <div
+          className="rs-drawer-body"
+          style={Object {}}
+        >
+          <defaultProps(Panel)
+            classPrefix="rs-panel"
+          >
+            <Panel
+              classPrefix="rs-panel"
+            >
+              <div
+                className="rs-panel rs-panel-default"
+              >
+                <div
+                  className="rs-panel-body"
+                >
+                  <Form
+                    checkDelay={500}
+                    checkTrigger="change"
+                    classPrefix="rs-form"
+                    errorFromContext={true}
+                    fluid={true}
+                    formDefaultValue={Object {}}
+                    layout="vertical"
+                    model={
+                      Schema {
+                        "schema": Object {},
+                      }
+                    }
+                  >
+                    <form
+                      className="rs-form rs-form-vertical rs-form-fluid"
+                      onSubmit={[Function]}
+                    >
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.name
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.name"
+                                onChange={[Function]}
+                                value="Test Peer Name"
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.name"
+                                  onChange={[Function]}
+                                  value="Test Peer Name"
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.name"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value="Test Peer Name"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.name"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value="Test Peer Name"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.name"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value="Test Peer Name"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.name"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value="Test Peer Name"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.name"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value="Test Peer Name"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.URL
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                errorMessage="Invalid URL"
+                                name="peerList.panels.URL"
+                                onChange={[Function]}
+                                value="https://test-url.ch/"
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  errorMessage="Invalid URL"
+                                  name="peerList.panels.URL"
+                                  onChange={[Function]}
+                                  value="https://test-url.ch/"
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorMessage="Invalid URL"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.URL"
+                                    onChange={[Function]}
+                                    plaintextDefaultValue="--"
+                                    value="https://test-url.ch/"
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.URL"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        type="text"
+                                        value="https://test-url.ch/"
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.URL"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          type="text"
+                                          value="https://test-url.ch/"
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.URL"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            type="text"
+                                            value="https://test-url.ch/"
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.URL"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              type="text"
+                                              value="https://test-url.ch/"
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={true}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={true}
+                                        >
+                                          <div
+                                            className="rs-error-message-wrapper rs-form-control-message-wrapper rs-error-message-placement-bottom-start"
+                                          >
+                                            <span
+                                              className="rs-error-message rs-error-message-show"
+                                            >
+                                              <span
+                                                className="rs-error-message-arrow"
+                                              />
+                                              <span
+                                                className="rs-error-message-inner"
+                                              >
+                                                Invalid URL
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </ErrorMessage>
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                      <withStyleProps(defaultProps(FormGroup))
+                        classPrefix="rs-form-group"
+                      >
+                        <defaultProps(FormGroup)
+                          className=""
+                          classPrefix="rs-form-group"
+                        >
+                          <FormGroup
+                            className=""
+                            classPrefix="rs-form-group"
+                          >
+                            <div
+                              className="rs-form-group"
+                              role="group"
+                            >
+                              <defaultProps(ControlLabel)
+                                classPrefix="rs-control-label"
+                              >
+                                <ControlLabel
+                                  classPrefix="rs-control-label"
+                                >
+                                  <label
+                                    className="rs-control-label"
+                                  >
+                                    peerList.panels.token
+                                  </label>
+                                </ControlLabel>
+                              </defaultProps(ControlLabel)>
+                              <defaultProps(FormControlWrapper)
+                                classPrefix="rs-form-control"
+                                name="peerList.panels.token"
+                                onChange={[Function]}
+                                placeholder="Leave empty if you don't want to change it"
+                                value=""
+                              >
+                                <FormControlWrapper
+                                  classPrefix="rs-form-control"
+                                  name="peerList.panels.token"
+                                  onChange={[Function]}
+                                  placeholder="Leave empty if you don't want to change it"
+                                  value=""
+                                >
+                                  <FormControl
+                                    accepter={
+                                      Object {
+                                        "$$typeof": Symbol(react.forward_ref),
+                                        "contextType": Object {
+                                          "$$typeof": Symbol(react.context),
+                                          "Consumer": Object {
+                                            "$$typeof": Symbol(react.context),
+                                            "_calculateChangedBits": null,
+                                            "_context": [Circular],
+                                          },
+                                          "Provider": Object {
+                                            "$$typeof": Symbol(react.provider),
+                                            "_context": [Circular],
+                                          },
+                                          "_calculateChangedBits": null,
+                                          "_currentRenderer": null,
+                                          "_currentRenderer2": null,
+                                          "_currentValue": null,
+                                          "_currentValue2": null,
+                                          "_threadCount": 0,
+                                        },
+                                        "defaultProps": Object {
+                                          "classPrefix": "rs-input",
+                                          "componentClass": "input",
+                                          "type": "text",
+                                        },
+                                        "displayName": "withStyleProps(defaultProps(Input))",
+                                        "propTypes": Object {
+                                          "innerRef": [Function],
+                                          "size": [Function],
+                                        },
+                                        "render": [Function],
+                                      }
+                                    }
+                                    classPrefix="rs-form-control"
+                                    errorPlacement="bottomStart"
+                                    formValue={Object {}}
+                                    name="peerList.panels.token"
+                                    onChange={[Function]}
+                                    placeholder="Leave empty if you don't want to change it"
+                                    plaintextDefaultValue="--"
+                                    value=""
+                                  >
+                                    <div
+                                      className="rs-form-control-wrapper"
+                                    >
+                                      <withStyleProps(defaultProps(Input))
+                                        classPrefix="rs-input"
+                                        componentClass="input"
+                                        name="peerList.panels.token"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        placeholder="Leave empty if you don't want to change it"
+                                        type="text"
+                                        value=""
+                                      >
+                                        <defaultProps(Input)
+                                          className=""
+                                          classPrefix="rs-input"
+                                          componentClass="input"
+                                          name="peerList.panels.token"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          placeholder="Leave empty if you don't want to change it"
+                                          type="text"
+                                          value=""
+                                        >
+                                          <Input
+                                            className=""
+                                            classPrefix="rs-input"
+                                            componentClass="input"
+                                            name="peerList.panels.token"
+                                            onBlur={[Function]}
+                                            onChange={[Function]}
+                                            placeholder="Leave empty if you don't want to change it"
+                                            type="text"
+                                            value=""
+                                          >
+                                            <input
+                                              className="rs-input"
+                                              name="peerList.panels.token"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onKeyDown={[Function]}
+                                              placeholder="Leave empty if you don't want to change it"
+                                              type="text"
+                                              value=""
+                                            />
+                                          </Input>
+                                        </defaultProps(Input)>
+                                      </withStyleProps(defaultProps(Input))>
+                                      <defaultProps(ErrorMessage)
+                                        className="rs-form-control-message-wrapper"
+                                        classPrefix="rs-error-message"
+                                        placement="bottomStart"
+                                        show={false}
+                                      >
+                                        <ErrorMessage
+                                          className="rs-form-control-message-wrapper"
+                                          classPrefix="rs-error-message"
+                                          placement="bottomStart"
+                                          show={false}
+                                        />
+                                      </defaultProps(ErrorMessage)>
+                                    </div>
+                                  </FormControl>
+                                </FormControlWrapper>
+                              </defaultProps(FormControlWrapper)>
+                            </div>
+                          </FormGroup>
+                        </defaultProps(FormGroup)>
+                      </withStyleProps(defaultProps(FormGroup))>
+                    </form>
+                  </Form>
+                </div>
+              </div>
+            </Panel>
+          </defaultProps(Panel)>
+        </div>
+      </ModalBody>
+    </defaultProps(ModalBody)>
+  </Body>
+  <defaultProps(defaultProps(ModalFooter))
+    classPrefix="rs-drawer-footer"
+  >
+    <defaultProps(ModalFooter)
+      classPrefix="rs-drawer-footer"
+    >
+      <ModalFooter
+        classPrefix="rs-drawer-footer"
+      >
+        <div
+          className="rs-drawer-footer"
+        >
+          <withStyleProps(defaultProps(Button))
+            appearance="primary"
+            classPrefix="rs-btn"
+            componentClass="button"
+            disabled={true}
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="primary"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              disabled={true}
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="primary"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                disabled={true}
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-primary rs-btn-disabled"
+                  disabled={true}
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.save
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+          <withStyleProps(defaultProps(Button))
+            appearance="subtle"
+            classPrefix="rs-btn"
+            componentClass="button"
+            onClick={[Function]}
+            ripple={true}
+          >
+            <defaultProps(Button)
+              appearance="subtle"
+              className=""
+              classPrefix="rs-btn"
+              componentClass="button"
+              onClick={[Function]}
+              ripple={true}
+            >
+              <Button
+                appearance="subtle"
+                className=""
+                classPrefix="rs-btn"
+                componentClass="button"
+                onClick={[Function]}
+                ripple={true}
+              >
+                <button
+                  className="rs-btn rs-btn-subtle"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  peerList.panels.close
+                  <defaultProps(Ripple)
+                    classPrefix="rs-ripple"
+                  >
+                    <Ripple
+                      classPrefix="rs-ripple"
+                    >
+                      <span
+                        className="rs-ripple-pond"
+                      >
+                        <Transition
+                          enteringClassName="rs-ripple-rippling"
+                          in={false}
+                          onEntered={[Function]}
+                          timeout={1000}
+                        >
+                          <span
+                            className="rs-ripple"
+                            style={Object {}}
+                          />
+                        </Transition>
+                      </span>
+                    </Ripple>
+                  </defaultProps(Ripple)>
+                </button>
+              </Button>
+            </defaultProps(Button)>
+          </withStyleProps(defaultProps(Button))>
+        </div>
+      </ModalFooter>
+    </defaultProps(ModalFooter)>
+  </defaultProps(defaultProps(ModalFooter))>
 </PeerEditPanel>
 `;
