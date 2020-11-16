@@ -346,15 +346,17 @@ function InsertEmojiButton({icon, iconActive}: ToolbarButtonProps) {
 
   const triggerRef = useRef<WhisperInstancePopover>(null)
   const open = () => {
-    triggerRef?.current?.open()
-    // TODO should be done with forwardRef
-    setIsEmojiPickerOpen(true)
-    console.log(isEmojiPickerOpen)
+    if (triggerRef!.current) {
+      triggerRef!.current!.open()
+      // TODO rather be done with forwardRef ?
+      setIsEmojiPickerOpen(true)
+    }
   }
   const close = () => {
-    triggerRef?.current?.close()
-    setIsEmojiPickerOpen(false)
-    console.log(isEmojiPickerOpen)
+    if (triggerRef!.current) {
+      triggerRef!.current!.close()
+      setIsEmojiPickerOpen(false)
+    }
   }
 
   const top = 'top'
