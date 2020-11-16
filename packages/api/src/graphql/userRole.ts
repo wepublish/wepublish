@@ -31,7 +31,7 @@ export const GraphQLUserRole = new GraphQLObjectType({
     systemRole: {type: GraphQLNonNull(GraphQLBoolean)},
     permissions: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPermission))),
-      resolve({id, permissionIDs}, args, {loaders}) {
+      resolve({id, permissionIDs}) {
         switch (id) {
           case 'admin':
             return AllPermissions

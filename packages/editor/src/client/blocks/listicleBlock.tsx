@@ -3,9 +3,8 @@ import React, {useState, useCallback} from 'react'
 import {BlockProps} from '../atoms/blockList'
 import {ListInput, FieldProps} from '../atoms/listInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-import {PlaceholderInput} from '../atoms/placeholderInput'
 
-import {IconButton, Drawer, Panel, Dropdown, Icon} from 'rsuite'
+import {Drawer} from 'rsuite'
 
 import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
@@ -15,6 +14,7 @@ import {createDefaultValue, RichTextBlock} from './richTextBlock'
 import {isFunctionalUpdate} from '@karma.run/react'
 
 import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {
   return (
@@ -56,9 +56,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
           display: 'flex',
           flexDirection: 'row'
         }}>
-        <Panel
-          bodyFill={true}
-          bordered={true}
+        <div
           style={{
             overflow: 'hidden',
             width: 200,
@@ -66,35 +64,15 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
             marginRight: 10,
             flexShrink: 0
           }}>
-          <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-            {image && (
-              <Panel
-                bordered={true}
-                style={{
-                  height: '200px',
-                  backgroundSize: 'cover',
-                  backgroundImage: `url(${
-                    image?.previewURL ?? 'https://via.placeholder.com/240x240'
-                  })`
-                }}>
-                <Dropdown
-                  renderTitle={() => {
-                    return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-                  }}>
-                  <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                    <Icon icon="image" /> {t('peerList.panels.chooseImage')}
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                    <Icon icon="pencil" /> {t('peerList.panels.editImage')}
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => onChange(value => ({...value, image: null}))}>
-                    <Icon icon="close" /> {t('peerList.panels.removeImage')}
-                  </Dropdown.Item>
-                </Dropdown>
-              </Panel>
-            )}
-          </PlaceholderInput>
-        </Panel>
+          <ChooseEditImage
+            header={''}
+            image={image}
+            disabled={false}
+            openChooseModalOpen={() => setChooseModalOpen(true)}
+            openEditModalOpen={() => setEditModalOpen(true)}
+            removeImage={() => onChange?.({...value, image: null})}
+          />
+        </div>
         <div style={{flexGrow: 1}}>
           <TypographicTextArea
             variant="h1"
@@ -110,7 +88,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
         </div>
       </div>
 
-      <Drawer show={isChooseModalOpen} sizw={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={image => {

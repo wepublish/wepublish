@@ -14,7 +14,6 @@ import {
   UserRoleListRoute,
   PeerListRoute,
   TokenListRoute,
-  NavigationListRoute,
   LogoutRoute
 } from './route'
 
@@ -127,9 +126,9 @@ export function Base({children}: BaseProps) {
                     // @ts-ignore
                     return <Icon style={iconStyles} icon="cog" />
                   }}>
-                  <Dropdown.Item>Help</Dropdown.Item>
-                  <Dropdown.Item>Settings</Dropdown.Item>
-                  <DropdownItemLink route={LogoutRoute.create({})}>Sign out</DropdownItemLink>
+                  <DropdownItemLink route={LogoutRoute.create({})}>
+                    {t('navbar.logout')}
+                  </DropdownItemLink>
                   <Dropdown.Item></Dropdown.Item>
                 </Dropdown>
               </Nav>

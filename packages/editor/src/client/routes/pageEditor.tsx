@@ -25,7 +25,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Icon, IconButton, Drawer, Modal, Notification} from 'rsuite'
+import {Icon, IconButton, Drawer, Modal, Alert} from 'rsuite'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -119,12 +119,8 @@ export function PageEditor({id}: PageEditorProps) {
   }, [pageData])
 
   useEffect(() => {
-    if (createError || updateError || publishError) {
-      Notification.error({
-        title: updateError?.message ?? createError?.message ?? publishError!.message,
-        duration: 5000
-      })
-    }
+    const error = createError?.message ?? updateError?.message ?? publishError?.message
+    if (error) Alert.error(error, 0)
   }, [createError, updateError, publishError])
 
   function createInput(): PageInput {
@@ -146,10 +142,7 @@ export function PageEditor({id}: PageEditorProps) {
       await updatePage({variables: {id: pageID, input}})
 
       setChanged(false)
-      Notification.success({
-        title: t('pageEditor.overview.pageDraftSaved'),
-        duration: 2000
-      })
+      Alert.success(t('pageEditor.overview.pageDraftSaved'), 2000)
     } else {
       const {data} = await createPage({variables: {input}})
 
@@ -161,10 +154,7 @@ export function PageEditor({id}: PageEditorProps) {
       }
 
       setChanged(false)
-      Notification.success({
-        title: t('pageEditor.overview.pageDraftCreated'),
-        duration: 2000
-      })
+      Alert.success(t('pageEditor.overview.pageDraftCreated'), 2000)
     }
   }
 
@@ -191,18 +181,12 @@ export function PageEditor({id}: PageEditorProps) {
     }
 
     setChanged(false)
-    Notification.success({
-      title: t('pageEditor.overview.pagePublished'),
-      duration: 2000
-    })
+    Alert.success(t('pageEditor.overview.pagePublished'), 2000)
   }
 
   useEffect(() => {
     if (isNotFound) {
-      Notification.error({
-        title: t('pageEditor.overview.pageNotFound'),
-        duration: 5000
-      })
+      Alert.error(t('pageEditor.overview.pageNotFound'), 0)
     }
   }, [isNotFound])
 

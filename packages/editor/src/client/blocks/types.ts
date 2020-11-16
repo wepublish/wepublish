@@ -66,8 +66,15 @@ export interface QuoteBlockValue {
 
 export interface LinkPageBreakBlockValue {
   text: string
+  richText: RichTextBlockValue
   linkURL: string
   linkText: string
+  linkTarget?: string
+  hideButton: boolean
+  styleOption?: string
+  layoutOption?: string
+  templateOption?: string
+  image?: ImageRefFragment | undefined
 }
 
 export enum EmbedType {
@@ -270,7 +277,14 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         linkPageBreak: {
           text: block.value.text || undefined,
           linkText: block.value.linkText || undefined,
-          linkURL: block.value.linkURL || undefined
+          linkURL: block.value.linkURL || undefined,
+          styleOption: block.value.styleOption || undefined,
+          layoutOption: block.value.layoutOption || undefined,
+          templateOption: block.value.templateOption || undefined,
+          richText: block.value.richText,
+          linkTarget: block.value.linkTarget || undefined,
+          hideButton: block.value.hideButton,
+          imageID: block.value.image?.id || undefined
         }
       }
 
@@ -355,6 +369,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   article: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     articleID: value.article.id
@@ -366,6 +381,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   peerArticle: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     peerID: value.peer.id,
@@ -378,6 +394,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   page: {
                     style: value.style,
                     imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
                     title: value.title || undefined,
                     lead: value.lead || undefined,
                     pageID: value.page.id
@@ -595,7 +612,14 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           text: block.text ?? '',
           linkText: block.linkText ?? '',
-          linkURL: block.linkURL ?? ''
+          linkURL: block.linkURL ?? '',
+          styleOption: block.styleOption ?? '',
+          layoutOption: block.layoutOption ?? '',
+          templateOption: block.templateOption ?? '',
+          richText: block.richText,
+          linkTarget: block.linkTarget ?? '',
+          hideButton: block.hideButton,
+          image: block.image ?? undefined
         }
       }
 
