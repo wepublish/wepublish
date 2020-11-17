@@ -306,8 +306,8 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon="italic" format={TextFormat.Italic} />
         <FormatButton icon="underline" format={TextFormat.Underline} />
         <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
-        <FormatButton icon={'superscript'} format={TextFormat.Superscript} />
-        <FormatButton icon={'subscript'} format={TextFormat.Subscript} />
+        <FormatButton icon="superscript" format={TextFormat.Superscript} />
+        <FormatButton icon="subscript" format={TextFormat.Subscript} />
 
         <ToolbarDivider />
 
