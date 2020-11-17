@@ -106,7 +106,7 @@ describe('User Edit Panel', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  xtest('should allow user role to be added', async () => {
+  test('should allow user role to be added', async () => {
     const mocks = [userRoleListDocumentQuery]
 
     const wrapper = mount(
@@ -123,7 +123,7 @@ describe('User Edit Panel', () => {
     expect(panel).toMatchSnapshot()
   })
 
-  xtest('should allow user role to be removed', async () => {
+  test('should allow user role to be removed', async () => {
     const mocks = [userDocumentQuery, userRoleListDocumentQuery]
 
     const wrapper = mount(
