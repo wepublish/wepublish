@@ -29,7 +29,10 @@ enum BlockFormat {
   Paragraph = 'paragraph',
   UnorderedList = 'unordered-list',
   OrderedList = 'ordered-list',
-  ListItem = 'list-item'
+  ListItem = 'list-item',
+  Table = 'table',
+  TableRow = 'table-row',
+  TableCell = 'table-cell'
 }
 
 enum InlineFormat {
@@ -64,7 +67,10 @@ const ElementTags: any = {
   P: () => ({type: BlockFormat.Paragraph}),
   LI: () => ({type: BlockFormat.ListItem}),
   OL: () => ({type: BlockFormat.OrderedList}),
-  UL: () => ({type: BlockFormat.UnorderedList})
+  UL: () => ({type: BlockFormat.UnorderedList}),
+  TB: () => ({type: BlockFormat.Table}),
+  TR: () => ({type: BlockFormat.TableRow}),
+  TD: () => ({type: BlockFormat.TableCell})
 }
 
 const TextTags: any = {
@@ -141,6 +147,19 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.ListItem:
       return <li {...attributes}>{children}</li>
+
+    case BlockFormat.Table:
+      return (
+        <table>
+          <tbody {...attributes}>{children}</tbody>
+        </table>
+      )
+
+    case BlockFormat.TableRow:
+      return <tr {...attributes}>{children}</tr>
+
+    case BlockFormat.TableCell:
+      return <td {...attributes}>{children}</td>
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -275,6 +294,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
         <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
+        <InsertHtmlElementButton icon="table" format={BlockFormat.Table} />
+
+        <ToolbarDivider />
 
         <ToolbarDivider />
 
@@ -429,6 +451,122 @@ function RemoveLinkFormatButton() {
       }}
     />
   )
+}
+
+function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
+  // TODO for <hr>
+  const editor = useSlate()
+
+  const btn = (onMouseDown: () => any) => (
+    <ToolbarButton
+      icon={icon}
+      active={false}
+      onMouseDown={e => {
+        e.preventDefault()
+        editor.insertBreak()
+        onMouseDown()
+      }}
+    />
+  )
+
+  switch (format) {
+    // case BlockFormat.HorizontalLine:
+    //   return btn(
+    //     // () => editor.insertText('-----------TODO  hr --------------------')
+    //     // TODO editor.insertHtml(<hr />)
+    //     () =>
+    //       Transforms.insertNodes(editor, [
+    //         {
+    //           type: BlockFormat.HorizontalLine,
+    //           children: [{text: ''}]
+    //         }
+    //       ])
+    //   )
+    case BlockFormat.Table:
+      return btn(() => {
+        editor.insertFragment([
+          {
+            children: [
+              {
+                text: 'TODO: senseful table insert handling, and add border styling buttons.'
+              }
+            ]
+          },
+          {
+            type: 'table',
+            children: [
+              {
+                type: 'table-row',
+                children: [
+                  {
+                    type: 'table-cell',
+                    children: [{text: ''}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: 'Human', bold: true}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: 'Dog', bold: true}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: 'Cat', bold: true}]
+                  }
+                ]
+              },
+              {
+                type: 'table-row',
+                children: [
+                  {
+                    type: 'table-cell',
+                    children: [{text: '# of Feet', bold: true}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '2'}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '4'}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '4'}]
+                  }
+                ]
+              },
+              {
+                type: 'table-row',
+                children: [
+                  {
+                    type: 'table-cell',
+                    children: [{text: '# of Lives', bold: true}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '1'}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '1'}]
+                  },
+                  {
+                    type: 'table-cell',
+                    children: [{text: '9'}]
+                  }
+                ]
+              }
+            ]
+          }
+        ])
+      })
+    default:
+      return btn(() => {
+        console.error(`Unavailable block format ${format}`)
+      })
+  }
 }
 
 function isFormatActive(editor: Editor, format: Format) {
