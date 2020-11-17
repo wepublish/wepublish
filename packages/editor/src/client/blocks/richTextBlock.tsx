@@ -17,11 +17,10 @@ import {jsx} from 'slate-hyperscript'
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
 import {EmojiButton} from '../atoms/emojiButton'
-import {TableButton} from '../atoms/tableButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal, Icon} from 'rsuite'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -278,6 +277,10 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
+  // TOOO
+  // below tablebutton
+  // <{ put +/-row, +/- table buttons here, } />
+  // <{ put +/-row, +/- table buttons here, } />
   return (
     <Slate
       editor={editor}
@@ -298,7 +301,12 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <TableButton icon="table" format={BlockFormat.Table} />
+        <FormatButton icon="table" format={BlockFormat.Table} />
+        <div style={{display: isFormatActive(editor, BlockFormat.Table) ? 'inherit' : 'none'}}>
+          <Icon icon="plus" />
+        </div>
+        <InsertButton icon="bars" format={BlockFormat.Table} />
+        <InsertButton icon="columns" format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
@@ -342,6 +350,79 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
       onMouseDown={e => {
         e.preventDefault()
         toggleFormat(editor, format)
+      }}
+    />
+  )
+}
+
+function InsertButton({icon, format}: SlateBlockButtonProps) {
+  const editor = useSlate()
+
+  return (
+    <ToolbarButton
+      icon={icon}
+      disabled={isFormatActive(editor, format)}
+      onMouseDown={e => {
+        e.preventDefault()
+        // editor.insertBreak()
+        editor.insertFragment([
+          {
+            type: 'table',
+            children: [
+              {
+                type: 'table-row',
+                children: [
+                  {
+                    type: 'table-cell',
+                    children: [{text: ''}]
+                  }
+                ]
+              }
+              // {
+              //   type: 'table-row',
+              //   children: [
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '# of Feet', bold: true}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '2'}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '4'}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '4'}]
+              //     }
+              //   ]
+              // },
+              // {
+              //   type: 'table-row',
+              //   children: [
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '# of Lives', bold: true}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '1'}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '1'}]
+              //     },
+              //     {
+              //       type: 'table-cell',
+              //       children: [{text: '9'}]
+              //     }
+              //   ]
+              // }
+            ]
+          }
+        ])
       }}
     />
   )
