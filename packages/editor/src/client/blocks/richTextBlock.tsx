@@ -294,9 +294,10 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <FormatButton icon="list-ul" format={BlockFormat.UnorderedList} />
         <FormatButton icon="list-ol" format={BlockFormat.OrderedList} />
-        <InsertHtmlElementButton icon="table" format={BlockFormat.Table} />
 
         <ToolbarDivider />
+
+        <InsertHtmlElementButton icon="table" format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
@@ -454,7 +455,10 @@ function RemoveLinkFormatButton() {
 }
 
 function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
-  // TODO for <hr>
+  /**
+   * on activate table > all text into 1-col-table (similar to ol/ul)
+   * if blockformat.table > table controls show [+row, +col, X]
+   **/
   const editor = useSlate()
 
   const btn = (onMouseDown: () => any) => (
@@ -469,104 +473,85 @@ function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
     />
   )
 
-  switch (format) {
-    // case BlockFormat.HorizontalLine:
-    //   return btn(
-    //     // () => editor.insertText('-----------TODO  hr --------------------')
-    //     // TODO editor.insertHtml(<hr />)
-    //     () =>
-    //       Transforms.insertNodes(editor, [
-    //         {
-    //           type: BlockFormat.HorizontalLine,
-    //           children: [{text: ''}]
-    //         }
-    //       ])
-    //   )
-    case BlockFormat.Table:
-      return btn(() => {
-        editor.insertFragment([
+  return btn(() => {
+    editor.insertFragment([
+      {
+        children: [
           {
+            text: 'TODO: senseful table insert handling, and add border styling buttons.'
+          }
+        ]
+      },
+      {
+        type: 'table',
+        children: [
+          {
+            type: 'table-row',
             children: [
               {
-                text: 'TODO: senseful table insert handling, and add border styling buttons.'
+                type: 'table-cell',
+                children: [{text: ''}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: 'Human', bold: true}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: 'Dog', bold: true}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: 'Cat', bold: true}]
               }
             ]
           },
           {
-            type: 'table',
+            type: 'table-row',
             children: [
               {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: ''}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Human', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Dog', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: 'Cat', bold: true}]
-                  }
-                ]
+                type: 'table-cell',
+                children: [{text: '# of Feet', bold: true}]
               },
               {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: '# of Feet', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '2'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '4'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '4'}]
-                  }
-                ]
+                type: 'table-cell',
+                children: [{text: '2'}]
               },
               {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: '# of Lives', bold: true}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '1'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '1'}]
-                  },
-                  {
-                    type: 'table-cell',
-                    children: [{text: '9'}]
-                  }
-                ]
+                type: 'table-cell',
+                children: [{text: '4'}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: '4'}]
+              }
+            ]
+          },
+          {
+            type: 'table-row',
+            children: [
+              {
+                type: 'table-cell',
+                children: [{text: '# of Lives', bold: true}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: '1'}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: '1'}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: '9'}]
               }
             ]
           }
-        ])
-      })
-    default:
-      return btn(() => {
-        console.error(`Unavailable block format ${format}`)
-      })
-  }
+        ]
+      }
+    ])
+  })
 }
 
 function isFormatActive(editor: Editor, format: Format) {
