@@ -68,6 +68,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
   const testLinkTypes: Record<string, string>[] = []
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const [propertyValue, propertyKey] of Object.entries(LinkTypes)) {
     testLinkTypes.push({label: propertyKey, value: propertyKey})
   }
