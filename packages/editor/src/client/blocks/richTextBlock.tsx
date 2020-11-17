@@ -22,6 +22,8 @@ import {RichTextBlockValue} from './types'
 import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, Form, FormControl, FormGroup, Modal, Icon} from 'rsuite'
 
+import './richTextBlock.less'
+
 enum BlockFormat {
   H1 = 'heading-one',
   H2 = 'heading-two',
@@ -304,9 +306,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon="table" format={BlockFormat.Table} />
         <div style={{display: isFormatActive(editor, BlockFormat.Table) ? 'inherit' : 'none'}}>
           <Icon icon="plus" />
+          <InsertButton icon="bars" format={BlockFormat.Table} />
+          <InsertButton icon="columns" format={BlockFormat.Table} />
         </div>
-        <InsertButton icon="bars" format={BlockFormat.Table} />
-        <InsertButton icon="columns" format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
