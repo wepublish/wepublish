@@ -418,10 +418,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteNavigation: {
       type: GraphQLNavigation,
       args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteNavigation, roles)
-
+        await dbAdapter.navigation.deleteNavigation(id)
         return dbAdapter.navigation.deleteNavigation(id)
       }
     },

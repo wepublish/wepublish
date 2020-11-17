@@ -14,7 +14,8 @@ import {
   UserRoleListRoute,
   PeerListRoute,
   TokenListRoute,
-  LogoutRoute
+  LogoutRoute,
+  NavigationListRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
@@ -83,6 +84,13 @@ export function Base({children}: BaseProps) {
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="bars" />}
+                  route={NavigationListRoute.create({})}
+                  active={current?.type === RouteType.NavigationList}>
+                  {t('navbar.navigations')}
                 </NavItemLink>
 
                 <NavItemLink

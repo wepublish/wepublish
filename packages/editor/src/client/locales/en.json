@@ -219,7 +219,9 @@
         "deleteNavigation": "Delete navigation",
         "cancel": "Cancel",
         "name": "Name",
-        "delete": "Delete"
+        "delete": "Delete",
+        "action": "Action",
+        "confirm": "Confirm"
       },
       "panels": {
         "close": "Close",

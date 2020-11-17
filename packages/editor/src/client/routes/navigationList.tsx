@@ -1,42 +1,35 @@
 import React, {useState, useEffect} from 'react'
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Drawer,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
 
 import {
-  RouteLinkButton,
   Link,
   NavigationEditRoute,
   RouteType,
   useRoute,
   useRouteDispatch,
   NavigationListRoute,
-  NavigationCreateRoute
+  NavigationCreateRoute,
+  ButtonLink
 } from '../route'
+
+import {
+  FlexboxGrid,
+  Icon,
+  IconButton,
+  Input,
+  InputGroup,
+  Table,
+  Drawer,
+  Modal,
+  Button
+} from 'rsuite'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 
 import {useTranslation} from 'react-i18next'
-
-enum ConfirmAction {
-  Delete = 'delete'
-}
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function NavigationList() {
   const {t} = useTranslation()
@@ -54,10 +47,10 @@ export function NavigationList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, loading: isLoading} = useNavigationListQuery({
+  const {data, refetch, loading: isLoading} = useNavigationListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -77,6 +70,13 @@ export function NavigationList() {
     }
   }, [current])
 
+  useEffect(() => {
+    if (data?.navigations) {
+      setNavigations(data.navigations)
+    }
+  }, [data?.navigations])
+
+  /*
   const navigations = data?.navigations.map(navigation => {
     const {id, name} = navigation
 
@@ -115,98 +115,128 @@ export function NavigationList() {
       </Box>
     )
   })
-
+*/
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">{t('navigation.overview.navigations')}</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label={t('navigation.overview.newNavigation')}
-          route={NavigationCreateRoute.create({})}
-        />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder={t('navigation.overview.search')}
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-      </Box>
-      <Box>
-        {navigations?.length ? (
-          <>{navigations}</>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            {t('navigation.overview.noNavigationsFound')} {console.log(data)}
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <NavigationEditPanel
-            id={editID}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: NavigationListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: NavigationListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
-      </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title={t('navigation.overview.deleteNavigation')}
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label={t('navigation.overview.cancel')}
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label={t('navigation.overview.confirm')}
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentNavigation) return
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('navigation.overview.navigations')}</h2>
+        </FlexboxGrid.Item>
+        <ButtonLink
+          appearance="primary"
+          disabled={isLoading}
+          route={NavigationCreateRoute.create({})}>
+          {t('navigation.overview.newNavigation')}
+        </ButtonLink>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteNavigation({
-                          variables: {id: currentNavigation.id}
-                        })
-                        break
-                    }
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
 
-                    setConfirmationDialogOpen(false)
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
+        <Column width={100} align="left" resizable>
+          <HeaderCell></HeaderCell>
+          <Cell style={{padding: 2}}></Cell>
+        </Column>
+        <Column width={400} align="left" resizable>
+          <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullNavigationFragment) => (
+              <Link route={NavigationEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('navigation.overview.unknown')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullNavigationFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setCurrentNavigation(rowData)
+                    setConfirmationDialogOpen(true)
                   }}
                 />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label={t('navigation.overview.name')}>
-                  {currentNavigation?.name || t('navigation.overview.unknown')}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: NavigationListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <NavigationEditPanel
+          id={editID}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: NavigationListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: NavigationListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
+      </Drawer>
+
+      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('navigation.overview.name')}>
+              {currentNavigation?.name || t('navigation.overview.unknown')}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentNavigation) return
+              await deleteNavigation({
+                variables: {id: currentNavigation.id}
+              })
+
+              setConfirmationDialogOpen(false)
+              refetch()
+            }}
+            color="red">
+            {t('navigation.overview.confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('navigation.overview.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

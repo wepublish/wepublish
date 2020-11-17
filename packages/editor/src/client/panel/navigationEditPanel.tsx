@@ -1,21 +1,17 @@
 import React, {useState, useEffect} from 'react'
 
 import {
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
   Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PanelSectionHeader,
-  Toast,
-  Select,
-  ListInput,
-  ListValue
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
+  Input,
+  SelectPicker,
+  Alert
+} from 'rsuite'
 
 import {
   useCreateNavigationMutation,
@@ -32,6 +28,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {generateID, getOperationNameFromDocument} from '../utility'
+import {ListInput, ListValue} from '../atoms/listInput'
 
 export interface NavigationEditPanelProps {
   id?: string
@@ -41,7 +38,7 @@ export interface NavigationEditPanelProps {
 }
 
 export interface LinkType {
-  id: string
+  id: string[]
 }
 
 export enum LinkTypes {
@@ -49,6 +46,7 @@ export enum LinkTypes {
   ArticleNavigationLink = 'Article',
   ExternalNavigationLink = 'External'
 }
+
 export interface NavigationLinkTT extends NavigationLinkInput {
   label: string
   type: LinkTypes
@@ -69,8 +67,10 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   const [pages, setPages] = useState<PageRefFragment[]>([])
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
+  const testLinkTypes: Record<string, string>[] = []
+  for (const [propertyValue, propertyKey] of Object.entries(LinkTypes)) {
+    testLinkTypes.push({label: propertyKey, value: propertyKey})
+  }
 
   const {data, loading: isLoading, error: loadError} = useNavigationQuery({
     variables: {id: id!},
@@ -134,7 +134,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                       : 'External',
                   articleID:
                     link.__typename === 'ArticleNavigationLink' ? link.article?.id : undefined,
-                  pageId: link.__typename === 'PageNavigationLink' ? link.page?.id : undefined,
+                  pageID: link.__typename === 'PageNavigationLink' ? link.page?.id : undefined,
                   url: link.__typename === 'ExternalNavigationLink' ? link.url : undefined
                 }
               }
@@ -157,23 +157,9 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   }, [articleData?.articles])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    } else if (pageDataError) {
-      setErrorMessage(pageDataError.message)
-      setErrorToastOpen(true)
-    } else if (articleDataError) {
-      setErrorMessage(articleDataError.message)
-      setErrorToastOpen(true)
-    }
-  }, [loadError, createError, updateError, pageDataError, articleDataError])
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
+  }, [loadError, createError, updateError])
 
   function unionForNavigationLink(item: ListValue<NavigationLink>): NavigationLinkInput {
     const link = item.value
@@ -235,140 +221,115 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={
-            id ? t('navigation.panels.editNavigation') : t('navigation.panels.createNavigation')
-          }
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('navigation.panels.close')}
-              onClick={() => onClose?.()}
-            />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? t('navigation.panels.save') : t('navigation.panels.create')}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
-
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('navigation.panels.name')}
-              value={name}
-              disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
-            />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label={t('navigation.panels.key')}
-              value={key}
-              disabled={isDisabled}
-              onChange={e => {
-                setKey(e.target.value)
-              }}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title={t('navigation.panels.links')} />
-        <PanelSection>
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('navigation.panels.editNavigation') : t('navigation.panels.createNavigation')}
+        </Drawer.Title>
+      </Drawer.Header>
+      <Drawer.Body>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('navigation.panels.name')}</ControlLabel>
+              <FormControl
+                placeholder={t('navigation.panels.name')}
+                value={name}
+                disabled={isDisabled}
+                onChange={value => {
+                  setName(value)
+                }}
+              />
+              <ControlLabel>{t('navigation.panels.key')}</ControlLabel>
+              <FormControl
+                placeholder={t('navigation.panels.key')}
+                value={key}
+                disabled={isDisabled}
+                onChange={value => {
+                  setKey(value)
+                }}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
+        <Panel header={t('authors.panels.links')}>
           <ListInput
             value={navigationLinks}
             onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
-            defaultValue={{label: '', type: LinkTypes.ArticleNavigationLink}}>
+            defaultValue={{label: '', url: '', type: LinkTypes.ArticleNavigationLink}}>
             {({value, onChange}) => (
               <>
-                <TextInput
-                  label={t('navigation.panels.label')}
-                  flexBasis="30%"
-                  marginBottom={Spacing.Small}
+                <Input
+                  placeholder={t('navigation.panels.label')}
                   value={value.label}
-                  onChange={e => {
-                    onChange({...value, label: e.target.value})
+                  onChange={label => {
+                    onChange({...value, label})
                   }}
                 />
-                <Select
+                <SelectPicker
+                  block={true}
                   label={t('navigation.panels.linkType')}
-                  options={[
-                    {id: LinkTypes.PageNavigationLink},
-                    {id: LinkTypes.ArticleNavigationLink},
-                    {id: LinkTypes.ExternalNavigationLink}
-                  ]}
-                  value={{id: value.type}}
-                  renderListItem={type => type.id}
-                  onChange={type => {
+                  value={value.type}
+                  data={testLinkTypes}
+                  onChange={(type: string) => {
                     if (!type) return
-                    onChange({...value, type: type.id})
+                    onChange({...value, type: type})
                   }}
-                  marginBottom={Spacing.Small}
                 />
                 {value.type === LinkTypes.PageNavigationLink ||
                 value.type === LinkTypes.ArticleNavigationLink ? (
-                  <Box>
-                    <Select
-                      label={
-                        value.type === LinkTypes.PageNavigationLink
-                          ? t('navigation.panels.selectPage')
-                          : t('navigation.panels.selectArticle')
+                  <SelectPicker
+                    block={true}
+                    placeholder={
+                      value.type === LinkTypes.PageNavigationLink
+                        ? t('navigation.panels.selectPage')
+                        : t('navigation.panels.selectArticle')
+                    }
+                    value={
+                      value.type === LinkTypes.PageNavigationLink ? value.pageID : value.articleID
+                    }
+                    data={
+                      value.type === LinkTypes.PageNavigationLink
+                        ? pages.map(page => ({value: page.id!, label: page.latest.title}))
+                        : articles.map(article => ({
+                            value: article.id!,
+                            label: article.latest.title
+                          }))
+                    }
+                    onChange={chosenReferenceID => {
+                      if (!chosenReferenceID) return
+                      if (value.type === LinkTypes.PageNavigationLink) {
+                        onChange({...value, pageID: chosenReferenceID})
+                      } else {
+                        onChange({...value, articleID: chosenReferenceID})
                       }
-                      options={
-                        value.type === LinkTypes.PageNavigationLink
-                          ? pages.map(page => ({id: page.id}))
-                          : articles.map(article => ({id: article.id}))
-                      }
-                      value={
-                        value.type === LinkTypes.PageNavigationLink
-                          ? {id: value.pageID!}
-                          : {id: value.articleID!}
-                      }
-                      renderListItem={option => option.id}
-                      onChange={type => {
-                        if (!type) return
-                        if (value.type === LinkTypes.PageNavigationLink) {
-                          onChange({...value, pageID: type.id})
-                        } else {
-                          onChange({...value, articleID: type.id})
-                        }
-                      }}
-                      marginBottom={Spacing.Small}
-                    />
-                  </Box>
+                    }}
+                  />
                 ) : (
-                  <Box display="flex" flexDirection="row">
-                    <TextInput
-                      label={t('navigation.panels.url')}
-                      flexBasis="70%"
-                      value={value.url}
-                      onChange={e =>
-                        onChange({
-                          ...value,
-                          url: e.target.value
-                        })
-                      }
-                    />
-                  </Box>
+                  <Input
+                    placeholder={t('navigation.panels.url')}
+                    value={value.url}
+                    onChange={url =>
+                      onChange({
+                        ...value,
+                        url
+                      })
+                    }
+                  />
                 )}
               </>
             )}
           </ListInput>
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+        </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('navigation.panels.save') : t('navigation.panels.create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('navigation.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }
