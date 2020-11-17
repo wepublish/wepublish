@@ -17,7 +17,9 @@ export enum TextNodeFields {
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
-  Strikethrough = 'strikethrough'
+  Strikethrough = 'strikethrough',
+  Superscript = 'superscript',
+  Subscript = 'subscript'
 }
 
 export enum ElementNodeFields {
@@ -54,6 +56,8 @@ export interface RichTextTextNode {
   readonly italic?: boolean
   readonly underline?: boolean
   readonly strikethrough?: boolean
+  readonly superscript?: boolean
+  readonly subscript?: boolean
   readonly text: string
 }
 
@@ -130,12 +134,25 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       ])
     }
 
+    if (value.superscript != undefined && !isBoolean(value.superscript)) {
+      throw createRichTextError(`Expected boolean found ${value.superscript}`, [
+        ...path,
+        'superscript'
+      ])
+    }
+
+    if (value.subscript != undefined && !isBoolean(value.subscript)) {
+      throw createRichTextError(`Expected boolean found ${value.subscript}`, [...path, 'subscript'])
+    }
+
     return Object.assign(
       {text: value.text},
       value.bold != undefined ? {bold: value.bold as boolean} : {},
       value.italic != undefined ? {italic: value.italic as boolean} : {},
       value.underline != undefined ? {underline: value.underline as boolean} : {},
-      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {}
+      value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {},
+      value.superscript != undefined ? {superscript: value.superscript as boolean} : {},
+      value.subscript != undefined ? {subscript: value.subscript as boolean} : {}
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
