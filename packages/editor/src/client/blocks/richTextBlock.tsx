@@ -17,6 +17,7 @@ import {jsx} from 'slate-hyperscript'
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
 import {EmojiButton} from '../atoms/emojiButton'
+import {TableButton} from '../atoms/tableButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
@@ -297,7 +298,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertHtmlElementButton icon="table" format={BlockFormat.Table} />
+        <TableButton icon="table" format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
@@ -452,106 +453,6 @@ function RemoveLinkFormatButton() {
       }}
     />
   )
-}
-
-function InsertHtmlElementButton({icon, format}: SlateBlockButtonProps) {
-  /**
-   * on activate table > all text into 1-col-table (similar to ol/ul)
-   * if blockformat.table > table controls show [+row, +col, X]
-   **/
-  const editor = useSlate()
-
-  const btn = (onMouseDown: () => any) => (
-    <ToolbarButton
-      icon={icon}
-      active={false}
-      onMouseDown={e => {
-        e.preventDefault()
-        editor.insertBreak()
-        onMouseDown()
-      }}
-    />
-  )
-
-  return btn(() => {
-    editor.insertFragment([
-      {
-        children: [
-          {
-            text: 'TODO: senseful table insert handling, and add border styling buttons.'
-          }
-        ]
-      },
-      {
-        type: 'table',
-        children: [
-          {
-            type: 'table-row',
-            children: [
-              {
-                type: 'table-cell',
-                children: [{text: ''}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: 'Human', bold: true}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: 'Dog', bold: true}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: 'Cat', bold: true}]
-              }
-            ]
-          },
-          {
-            type: 'table-row',
-            children: [
-              {
-                type: 'table-cell',
-                children: [{text: '# of Feet', bold: true}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '2'}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '4'}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '4'}]
-              }
-            ]
-          },
-          {
-            type: 'table-row',
-            children: [
-              {
-                type: 'table-cell',
-                children: [{text: '# of Lives', bold: true}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '1'}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '1'}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: '9'}]
-              }
-            ]
-          }
-        ]
-      }
-    ])
-  })
 }
 
 function isFormatActive(editor: Editor, format: Format) {
