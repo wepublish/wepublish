@@ -1,33 +1,19 @@
 import React, {useState, useEffect} from 'react'
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Drawer,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem
-} from '@karma.run/ui'
 
 import {
-  RouteLinkButton,
   Link,
   RouteType,
   useRoute,
   useRouteDispatch,
   PaymentMethodEditRoute,
   PaymentMethodCreateRoute,
-  PaymentMethodListRoute
+  PaymentMethodListRoute,
+  ButtonLink
 } from '../route'
 
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
 import {
   FullPaymentMethodFragment,
   useDeletePaymentMethodMutation,
@@ -35,14 +21,15 @@ import {
 } from '../api'
 
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
-
-enum ConfirmAction {
-  Delete = 'delete'
-}
+import {FlexboxGrid, Icon, IconButton, Drawer, Table, Modal, Button} from 'rsuite'
+import {useTranslation} from 'react-i18next'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function PaymentMethodList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
+
+  const {t} = useTranslation()
 
   const [isEditModalOpen, setEditModalOpen] = useState(
     current?.type === RouteType.PaymentMethodEdit || current?.type === RouteType.PaymentMethodCreate
@@ -52,9 +39,10 @@ export function PaymentMethodList() {
     current?.type === RouteType.PaymentMethodEdit ? current.params.id : undefined
   )
 
+  const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
+
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<FullPaymentMethodFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
   const {data, loading: isLoading} = usePaymentMethodListQuery({
     fetchPolicy: 'network-only'
@@ -76,125 +64,121 @@ export function PaymentMethodList() {
     }
   }, [current])
 
-  const paymentMethods = data?.paymentMethods.map(paymentMethod => {
-    const {id, name} = paymentMethod
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Link route={PaymentMethodEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-            ]}
-            onMenuItemClick={item => {
-              setCurrentPaymentMethod(paymentMethod)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
+  useEffect(() => {
+    if (data?.paymentMethods) {
+      setPaymentMethods(data.paymentMethods)
+    }
+  }, [data?.paymentMethods])
 
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Payment Methods</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label="New Payment Method"
-          route={PaymentMethodCreateRoute.create({})}
-        />
-      </Box>
-      <Box>
-        {paymentMethods?.length ? (
-          <>{paymentMethods}</>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            No Payment Methods found
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <PaymentMethodEditPanel
-            id={editID}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PaymentMethodListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: PaymentMethodListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
-      </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title="Delete Payment Method"
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label="Cancel"
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label="Confirm"
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentPaymentMethod) return
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('paymentMethodList.title')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={PaymentMethodCreateRoute.create({})}>
+            {t('paymentMethodList.createNew')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deletePaymentMethod({
-                          variables: {id: currentPaymentMethod.id}
-                        })
-                        break
-                    }
-
-                    setConfirmationDialogOpen(false)
+      <Table
+        autoHeight={true}
+        style={{marginTop: '20px'}}
+        loading={isLoading}
+        data={paymentMethods}>
+        <Column width={200} align="left" resizable>
+          <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
+          <Cell style={{padding: 2}}>
+            {(rowData: FullPaymentMethodFragment) => (
+              <Link route={PaymentMethodEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={300} align="left" resizable>
+          <HeaderCell>{t('paymentMethodList.description')}</HeaderCell>
+          <Cell dataKey="description" />
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullPaymentMethodFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setCurrentPaymentMethod(rowData)
                   }}
                 />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentPaymentMethod?.name || 'Unknown'}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <PaymentMethodEditPanel
+          id={editID}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: PaymentMethodListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: PaymentMethodListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
+      </Drawer>
+
+      <Modal show={isConfirmationDialogOpen} size={'sm'}>
+        <Modal.Header>
+          <Modal.Title>{t('paymentMethodList.deleteModalTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('paymentMethodList.name')}>
+              {currentPaymentMethod?.name || t('untitled')}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentPaymentMethod) return
+
+              await deletePaymentMethod({
+                variables: {id: currentPaymentMethod.id}
+              })
+
+              setConfirmationDialogOpen(false)
+            }}
+            color="red">
+            {t('confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

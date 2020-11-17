@@ -504,6 +504,25 @@
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",
       "removeImage": "Remove Image"
-    }
+    },
+    "paymentMethodList": {
+      "title": "Payment Methods",
+      "createNew": "New Payment Method",
+      "name": "Name",
+      "description": "Description",
+      "action": "Actions",
+      "deleteModalTitle": "Delete Payment Method",
+      "editTitle": "Edit Payment Method",
+      "createTitle": "Crate Payment Method",
+      "active": "Active",
+      "activeDescription": "Makes the plan available",
+      "adapter": "Payment Adapter"
+    },
+    "untitled": "Untitled",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "close": "Close"
   }
 }

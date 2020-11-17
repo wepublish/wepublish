@@ -1,19 +1,18 @@
 import React, {useState, useEffect} from 'react'
 
 import {
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
   Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PanelSectionHeader,
-  Toast,
-  Toggle
-} from '@karma.run/ui'
-
-import {MaterialIconClose, MaterialIconSaveOutlined} from '@karma.run/icons'
+  Alert,
+  Toggle,
+  HelpBlock,
+  SelectPicker
+} from 'rsuite'
 
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
@@ -25,6 +24,8 @@ import {
   useUpdatePaymentMethodMutation
 } from '../api'
 
+import {useTranslation} from 'react-i18next'
+
 export interface PaymentMethodEditPanelProps {
   id?: string
 
@@ -33,13 +34,12 @@ export interface PaymentMethodEditPanelProps {
 }
 
 export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelProps) {
+  const {t} = useTranslation()
+
   const [name, setName] = useState('')
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [isActive, setIsActive] = useState<boolean>(false)
   const [paymentAdapter, setPaymentAdapter] = useState<string>('')
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
 
   const {data, loading: isLoading, error: loadError} = usePaymentMethodQuery({
     variables: {id: id!},
@@ -69,16 +69,8 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   }, [data?.paymentMethod])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    }
+    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError])
 
   async function handleSave() {
@@ -114,68 +106,60 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? 'Edit Member Plan' : 'Create Member Plan'}
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
-        />
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('paymentMethodList.editTitle') : t('paymentMethodList.createTitle')}
+        </Drawer.Title>
+      </Drawer.Header>
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Name"
-              value={name}
-              disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
-            />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Toggle
-              label="Active"
-              description="Makes the plan available"
-              checked={isActive}
-              disabled={isDisabled}
-              onChange={event => setIsActive(event.target.checked)}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Description" />
-        <PanelSection>
+      <Drawer.Body>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('paymentMethodList.name')}</ControlLabel>
+              <FormControl
+                name={t('paymentMethodList.name')}
+                value={name}
+                disabled={isDisabled}
+                onChange={value => {
+                  setName(value)
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('paymentMethodList.active')}</ControlLabel>
+              <Toggle
+                checked={isActive}
+                disabled={isDisabled}
+                onChange={value => setIsActive(value)}
+              />
+              <HelpBlock>{t('paymentMethodList.activeDescription')}</HelpBlock>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
+              <SelectPicker
+                value={paymentAdapter}
+                data={['cc', 'payrexx'].map(pa => ({value: pa, label: pa}))}
+                searchable={false}
+                block={true}
+                onChange={value => setPaymentAdapter(value)}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
+        <Panel header={t('authors.panels.bioInformation')}>
           <RichTextBlock value={description} onChange={value => setDescription(value)} />
-        </PanelSection>
-        <PanelSectionHeader title="Payment Adapter" />
-        <PanelSection>
-          <Box marginBottom={Spacing.Small}>
-            <TextInput
-              label="Name"
-              value={paymentAdapter}
-              disabled={isDisabled}
-              onChange={e => {
-                setPaymentAdapter(e.target.value)
-              }}
-            />
-          </Box>
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+        </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('save') : t('create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }
