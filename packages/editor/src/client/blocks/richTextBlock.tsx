@@ -16,6 +16,7 @@ import {jsx} from 'slate-hyperscript'
 
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
+import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
@@ -39,7 +40,9 @@ enum TextFormat {
   Bold = 'bold',
   Italic = 'italic',
   Underline = 'underline',
-  Strikethrough = 'strikethrough'
+  Strikethrough = 'strikethrough',
+  Superscript = 'superscript',
+  Subscript = 'subscript'
 }
 
 type Format = BlockFormat | InlineFormat | TextFormat
@@ -71,7 +74,9 @@ const TextTags: any = {
   I: () => ({[TextFormat.Italic]: true}),
   STRONG: () => ({[TextFormat.Bold]: true}),
   B: () => ({[TextFormat.Bold]: true}),
-  U: () => ({[TextFormat.Underline]: true})
+  U: () => ({[TextFormat.Underline]: true}),
+  SUP: () => ({[TextFormat.Superscript]: true}),
+  SUB: () => ({[TextFormat.Subscript]: true})
 }
 
 function deserialize(element: Element): any {
@@ -168,6 +173,14 @@ function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 
   if (leaf[TextFormat.Strikethrough]) {
     children = <del {...attributes}>{children}</del>
+  }
+
+  if (leaf[TextFormat.Superscript]) {
+    children = <sup {...attributes}>{children}</sup>
+  }
+
+  if (leaf[TextFormat.Subscript]) {
+    children = <sub {...attributes}>{children}</sub>
   }
 
   return <span {...attributes}>{children}</span>
@@ -269,11 +282,17 @@ export const RichTextBlock = memo(function RichTextBlock({
         <FormatButton icon="italic" format={TextFormat.Italic} />
         <FormatButton icon="underline" format={TextFormat.Underline} />
         <FormatButton icon="strikethrough" format={TextFormat.Strikethrough} />
+        <FormatButton icon={'superscript'} format={TextFormat.Superscript} />
+        <FormatButton icon={'subscript'} format={TextFormat.Subscript} />
 
         <ToolbarDivider />
 
         <LinkFormatButton />
         <RemoveLinkFormatButton />
+
+        <ToolbarDivider />
+
+        <EmojiButton icon="smile-o" iconActive="close" />
       </Toolbar>
       <Editable
         readOnly={disabled}
