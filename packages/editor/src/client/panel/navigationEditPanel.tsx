@@ -37,12 +37,6 @@ export interface NavigationEditPanelProps {
   onSave?(navigation: FullNavigationFragment): void
 }
 
-/* export enum LinkTypes {
-  PageNavigationLink = 'Page',
-  ArticleNavigationLink = 'Article',
-  ExternalNavigationLink = 'External'
-} */
-
 export interface NavigationLink {
   label: string
   type: string
