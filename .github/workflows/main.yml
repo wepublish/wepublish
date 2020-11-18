@@ -1,10 +1,9 @@
-name: CD
+name: CI/CD
 
 on:
   push:
     branches:
       - master
-      - c/deploy
 
 jobs:
   release:
