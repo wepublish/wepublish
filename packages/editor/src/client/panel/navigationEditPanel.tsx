@@ -37,20 +37,11 @@ export interface NavigationEditPanelProps {
   onSave?(navigation: FullNavigationFragment): void
 }
 
-export interface LinkType {
-  id: string[]
-}
-
-export enum LinkTypes {
+/* export enum LinkTypes {
   PageNavigationLink = 'Page',
   ArticleNavigationLink = 'Article',
   ExternalNavigationLink = 'External'
-}
-
-export interface NavigationLinkTT extends NavigationLinkInput {
-  label: string
-  type: LinkTypes
-}
+} */
 
 export interface NavigationLink {
   label: string
@@ -67,11 +58,11 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   const [pages, setPages] = useState<PageRefFragment[]>([])
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
-  const testLinkTypes: Record<string, string>[] = []
-  for (const [propertyValue, propertyKey] of Object.entries(LinkTypes)) {
-    // dump-variable is a work-around to avoid "unused-variable"-error
-    testLinkTypes.push({label: propertyKey, value: propertyKey, dump: propertyValue})
-  }
+  const linkTypes = [
+    {label: 'Article', value: 'ArticleNavigationLink'},
+    {label: 'Page', value: 'PageNavigationLink'},
+    {label: 'External Link', value: 'ExternalNavigationLink'}
+  ]
 
   const {data, loading: isLoading, error: loadError} = useNavigationQuery({
     variables: {id: id!},
@@ -79,7 +70,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     skip: id === undefined
   })
 
-  const {data: pageData, loading: isLoadingPageData, error: pageDataError} = usePageListQuery({
+  const {data: pageData, loading: isLoadingPageData, error: pageLoadError} = usePageListQuery({
     variables: {first: 50},
     fetchPolicy: 'no-cache'
   })
@@ -87,7 +78,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   const {
     data: articleData,
     loading: isLoadingArticleData,
-    error: articleDataError
+    error: articleLoadError
   } = useArticleListQuery({
     variables: {first: 50},
     fetchPolicy: 'no-cache'
@@ -110,9 +101,9 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
     isUpdating ||
     isLoadingPageData ||
     loadError !== undefined ||
-    pageDataError !== undefined ||
+    pageLoadError !== undefined ||
     isLoadingArticleData ||
-    articleDataError !== undefined
+    articleLoadError !== undefined
 
   const {t} = useTranslation()
 
@@ -127,12 +118,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                 id: generateID(),
                 value: {
                   label: link.label,
-                  type:
-                    link.__typename === 'ArticleNavigationLink'
-                      ? 'Article'
-                      : link.__typename === 'PageNavigationLink'
-                      ? 'Page'
-                      : 'External',
+                  type: link.__typename,
                   articleID:
                     link.__typename === 'ArticleNavigationLink' ? link.article?.id : undefined,
                   pageID: link.__typename === 'PageNavigationLink' ? link.page?.id : undefined,
@@ -158,28 +144,34 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
   }, [articleData?.articles])
 
   useEffect(() => {
-    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      pageLoadError?.message ??
+      articleLoadError?.message
     if (error) Alert.error(error, 0)
-  }, [loadError, createError, updateError])
+  }, [loadError, createError, updateError, articleLoadError, pageLoadError])
 
   function unionForNavigationLink(item: ListValue<NavigationLink>): NavigationLinkInput {
     const link = item.value
+    console.log(link)
     switch (link.type) {
-      case 'Article':
+      case 'ArticleNavigationLink':
         return {
           article: {
             label: link.label,
             articleID: link.articleID!
           }
         }
-      case 'Page':
+      case 'PageNavigationLink':
         return {
           page: {
             label: link.label,
             pageID: link.pageID!
           }
         }
-      case 'External':
+      case 'ExternalNavigationLink':
         return {
           external: {
             label: link.label,
@@ -256,9 +248,10 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
           <ListInput
             value={navigationLinks}
             onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
-            defaultValue={{label: '', url: '', type: LinkTypes.ArticleNavigationLink}}>
+            defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
             {({value, onChange}) => (
               <>
+                {console.log(value)}
                 <Input
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
@@ -270,26 +263,23 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                   block={true}
                   label={t('navigation.panels.linkType')}
                   value={value.type}
-                  data={testLinkTypes}
+                  data={linkTypes}
                   onChange={(type: string) => {
                     if (!type) return
-                    onChange({...value, type: type})
+                    onChange({...value, type})
                   }}
                 />
-                {value.type === LinkTypes.PageNavigationLink ||
-                value.type === LinkTypes.ArticleNavigationLink ? (
+                {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
                   <SelectPicker
                     block={true}
                     placeholder={
-                      value.type === LinkTypes.PageNavigationLink
+                      value.type === 'PageNavigationLink'
                         ? t('navigation.panels.selectPage')
                         : t('navigation.panels.selectArticle')
                     }
-                    value={
-                      value.type === LinkTypes.PageNavigationLink ? value.pageID : value.articleID
-                    }
+                    value={value.type === 'PageNavigationLink' ? value.pageID : value.articleID}
                     data={
-                      value.type === LinkTypes.PageNavigationLink
+                      value.type === 'PageNavigationLink'
                         ? pages.map(page => ({value: page.id!, label: page.latest.title}))
                         : articles.map(article => ({
                             value: article.id!,
@@ -298,7 +288,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                     }
                     onChange={chosenReferenceID => {
                       if (!chosenReferenceID) return
-                      if (value.type === LinkTypes.PageNavigationLink) {
+                      if (value.type === 'PageNavigationLink') {
                         onChange({...value, pageID: chosenReferenceID})
                       } else {
                         onChange({...value, articleID: chosenReferenceID})

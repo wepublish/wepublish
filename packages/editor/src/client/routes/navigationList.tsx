@@ -76,46 +76,6 @@ export function NavigationList() {
     }
   }, [data?.navigations])
 
-  /*
-  const navigations = data?.navigations.map(navigation => {
-    const {id, name} = navigation
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Link route={NavigationEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || t('navigation.overview.unknown')}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {
-                id: ConfirmAction.Delete,
-                label: t('navigation.overview.delete'),
-                icon: MaterialIconDeleteOutlined
-              }
-            ]}
-            onMenuItemClick={item => {
-              setCurrentNavigation(navigation)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
-*/
   return (
     <>
       <FlexboxGrid>
@@ -140,10 +100,6 @@ export function NavigationList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
-        <Column width={100} align="left" resizable>
-          <HeaderCell></HeaderCell>
-          <Cell style={{padding: 2}}></Cell>
-        </Column>
         <Column width={400} align="left" resizable>
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>

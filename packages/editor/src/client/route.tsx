@@ -94,12 +94,12 @@ export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author
 
 export const NavigationCreateRoute = route(
   RouteType.NavigationCreate,
-  routePath`/navigation/create`
+  routePath`/navigations/create`
 )
-export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigation`)
+export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigations`)
 export const NavigationEditRoute = route(
   RouteType.NavigationEdit,
-  routePath`/navigation/edit/${required('id')}`
+  routePath`/navigations/edit/${required('id')}`
 )
 
 export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
