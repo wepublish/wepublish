@@ -158,6 +158,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
               <FormControl
                 value={name}
+                name={t('peerList.panels.name')}
                 onChange={value => {
                   setName(value)
                   setSlug(slugify(value))
@@ -168,6 +169,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
               <FormControl
                 value={urlString}
+                name={t('peerList.panels.URL')}
                 errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
                 onChange={value => {
                   setURLString(value)
@@ -178,6 +180,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
               <FormControl
                 value={token}
+                name={t('peerList.panels.token')}
                 placeholder={id ? "Leave empty if you don't want to change it" : undefined}
                 onChange={value => {
                   setToken(value)
