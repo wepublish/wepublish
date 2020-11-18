@@ -32,29 +32,12 @@ jobs:
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
-      - id: get-credentials
+      - name: Prepare and authenticate kubectl
         uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: tsri-django
           location: europe-west6-c
           project_id: tsri-246213
           credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
-      # The KUBECONFIG env var is automatically exported and picked up by kubectl.
-      - id: get-pods
-        run: kubectl get pods -n wepublish
-      #- name: Deploy
-      #  run: kubectl apply -f ./kubernetesConfigs
-
-
-#      - uses: dudagroup/github-actions@master
-#        with:
-#          version: '275.0.0'
-#          service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
-#      - name: Prepare Gcloud and Kubernetes
-#        run: |
-#          gcloud components install kubectl
-#          gcloud --quiet config set project tsri-246213
-#          gcloud --quiet config set compute/zone europe-west6-c
-#          gcloud --quiet container clusters get-credentials tsri-django
-#      - name: Deploy
-#        run: kubectl apply -f ./kubernetesConfigs
+      - name: Deploy to kubernetes
+        run: kubectl apply -f ./kubernetesConfigs
