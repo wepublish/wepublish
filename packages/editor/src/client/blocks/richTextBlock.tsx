@@ -1,5 +1,5 @@
 import React, {useState, memo, useEffect, useMemo} from 'react'
-import {Editor, Node as SlateNode, createEditor, Range, Transforms} from 'slate'
+import {Editor, Node as SlateNode, createEditor, Range, Transforms, Point} from 'slate'
 
 import {
   useSlate,
@@ -130,12 +130,17 @@ function deserialize(element: Element): any {
 }
 
 function renderElement({attributes, children, element}: RenderElementProps) {
+  // TODO only temporary
   const S = {
     table: {
-      width: '100%'
+      width: '100%',
+      margin: '10px'
     },
     tableAll: {
       border: '1px solid black'
+    },
+    tableCell: {
+      padding: '8px'
     }
   }
 
@@ -161,21 +166,23 @@ function renderElement({attributes, children, element}: RenderElementProps) {
     case BlockFormat.Table:
       return (
         <table style={{...S.table, ...S.tableAll}}>
-          <tbody {...attributes}>{children}</tbody>
+          <tbody style={{...S.tableCell}} {...attributes}>
+            {children}
+          </tbody>
         </table>
       )
 
     // && <InsertButton icon="columns" format={BlockFormat.Table} />}
     case BlockFormat.TableRow:
       return (
-        <tr style={{...S.tableAll}} {...attributes}>
+        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes}>
           {children}
         </tr>
       )
 
     case BlockFormat.TableCell:
       return (
-        <td style={{...S.tableAll}} {...attributes}>
+        <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
           {children}
         </td>
       )
@@ -316,13 +323,8 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <FormatButton icon={customIcons.insertRowBelow} format={BlockFormat.Table} />
-        {isFormatActive(editor, BlockFormat.Table) && (
-          <>
-            <InsertButton icon="plus" format={BlockFormat.Table} />
-            <InsertButton icon="columns" format={BlockFormat.Table} />
-          </>
-        )}
+        <FormatButton icon="table" format={BlockFormat.Table} />
+        <InsertButton icon={customIcons.insertRowBelow} format={BlockFormat.Table} />
 
         <ToolbarDivider />
 
@@ -381,7 +383,7 @@ function InsertButton({icon, format}: SlateBlockButtonProps) {
       onMouseDown={e => {
         e.preventDefault()
         console.log('insert row')
-        editor.insertBreak()
+        // editor.insertBreak()
         editor.insertFragment([
           {
             type: 'table-row',
@@ -389,6 +391,10 @@ function InsertButton({icon, format}: SlateBlockButtonProps) {
               {
                 type: 'table-cell',
                 children: [{text: 'new row :)'}]
+              },
+              {
+                type: 'table-cell',
+                children: [{text: 'another one :)'}]
               }
             ]
           }
@@ -624,7 +630,7 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline} = editor
+  const {insertData, isInline, deleteBackward, deleteForward, insertBreak} = editor
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
   editor.insertData = (data: any) => {
@@ -638,6 +644,67 @@ function withRichText<T extends ReactEditor>(editor: T): T {
       insertData(data)
     }
   }
+
+  // START  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
+  editor.deleteBackward = unit => {
+    const {selection} = editor
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [cell] = Editor.nodes(editor, {
+        match: n => n.type === BlockFormat.TableCell
+      })
+
+      if (cell) {
+        const [, cellPath] = cell
+        const start = Editor.start(editor, cellPath)
+
+        if (Point.equals(selection.anchor, start)) {
+          return
+        }
+      }
+    }
+
+    deleteBackward(unit)
+  }
+
+  editor.deleteForward = unit => {
+    const {selection} = editor
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [cell] = Editor.nodes(editor, {
+        match: n => n.type === BlockFormat.TableCell
+      })
+
+      if (cell) {
+        const [, cellPath] = cell
+        const end = Editor.end(editor, cellPath)
+
+        if (Point.equals(selection.anchor, end)) {
+          return
+        }
+      }
+    }
+
+    deleteForward(unit)
+  }
+
+  editor.insertBreak = () => {
+    const {selection} = editor
+
+    if (selection) {
+      const [table] = Editor.nodes(editor, {
+        match: n => n.type === BlockFormat.Table
+      })
+
+      if (table) {
+        return
+      }
+    }
+
+    insertBreak()
+  }
+
+  // STOP  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
 
   return editor
 }
