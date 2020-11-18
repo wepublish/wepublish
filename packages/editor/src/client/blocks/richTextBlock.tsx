@@ -20,9 +20,8 @@ import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Modal, Icon} from 'rsuite'
-
-import './richTextBlock.less'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
+import {customIcons} from '../atoms/customSVGIcons'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -131,6 +130,15 @@ function deserialize(element: Element): any {
 }
 
 function renderElement({attributes, children, element}: RenderElementProps) {
+  const S = {
+    table: {
+      width: '100%'
+    },
+    tableAll: {
+      border: '1px solid black'
+    }
+  }
+
   switch (element.type) {
     case BlockFormat.H1:
       return <h1 {...attributes}>{children}</h1>
@@ -152,16 +160,25 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.Table:
       return (
-        <table>
+        <table style={{...S.table, ...S.tableAll}}>
           <tbody {...attributes}>{children}</tbody>
         </table>
       )
 
+    // && <InsertButton icon="columns" format={BlockFormat.Table} />}
     case BlockFormat.TableRow:
-      return <tr {...attributes}>{children}</tr>
+      return (
+        <tr style={{...S.tableAll}} {...attributes}>
+          {children}
+        </tr>
+      )
 
     case BlockFormat.TableCell:
-      return <td {...attributes}>{children}</td>
+      return (
+        <td style={{...S.tableAll}} {...attributes}>
+          {children}
+        </td>
+      )
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -279,10 +296,6 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
-  // TOOO
-  // below tablebutton
-  // <{ put +/-row, +/- table buttons here, } />
-  // <{ put +/-row, +/- table buttons here, } />
   return (
     <Slate
       editor={editor}
@@ -303,12 +316,13 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <FormatButton icon="table" format={BlockFormat.Table} />
-        <div style={{display: isFormatActive(editor, BlockFormat.Table) ? 'inherit' : 'none'}}>
-          <Icon icon="plus" />
-          <InsertButton icon="bars" format={BlockFormat.Table} />
-          <InsertButton icon="columns" format={BlockFormat.Table} />
-        </div>
+        <FormatButton icon={customIcons.insertRowBelow} format={BlockFormat.Table} />
+        {isFormatActive(editor, BlockFormat.Table) && (
+          <>
+            <InsertButton icon="plus" format={BlockFormat.Table} />
+            <InsertButton icon="columns" format={BlockFormat.Table} />
+          </>
+        )}
 
         <ToolbarDivider />
 
@@ -363,65 +377,19 @@ function InsertButton({icon, format}: SlateBlockButtonProps) {
   return (
     <ToolbarButton
       icon={icon}
-      disabled={isFormatActive(editor, format)}
+      disabled={!isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
-        // editor.insertBreak()
+        console.log('insert row')
+        editor.insertBreak()
         editor.insertFragment([
           {
-            type: 'table',
+            type: 'table-row',
             children: [
               {
-                type: 'table-row',
-                children: [
-                  {
-                    type: 'table-cell',
-                    children: [{text: ''}]
-                  }
-                ]
+                type: 'table-cell',
+                children: [{text: 'new row :)'}]
               }
-              // {
-              //   type: 'table-row',
-              //   children: [
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '# of Feet', bold: true}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '2'}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '4'}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '4'}]
-              //     }
-              //   ]
-              // },
-              // {
-              //   type: 'table-row',
-              //   children: [
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '# of Lives', bold: true}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '1'}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '1'}]
-              //     },
-              //     {
-              //       type: 'table-cell',
-              //       children: [{text: '9'}]
-              //     }
-              //   ]
-              // }
             ]
           }
         ])
@@ -429,6 +397,48 @@ function InsertButton({icon, format}: SlateBlockButtonProps) {
     />
   )
 }
+// {
+//   type: 'table-row',
+//   children: [
+//     {
+//       type: 'table-cell',
+//       children: [{text: '# of Feet', bold: true}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '2'}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '4'}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '4'}]
+//     }
+//   ]
+// },
+// {
+//   type: 'table-row',
+//   children: [
+//     {
+//       type: 'table-cell',
+//       children: [{text: '# of Lives', bold: true}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '1'}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '1'}]
+//     },
+//     {
+//       type: 'table-cell',
+//       children: [{text: '9'}]
+//     }
+//   ]
+// }
 
 function LinkFormatButton() {
   const editor = useSlate()
