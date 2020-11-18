@@ -149,7 +149,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
   function unionForNavigationLink(item: ListValue<NavigationLink>): NavigationLinkInput {
     const link = item.value
-    console.log(link)
     switch (link.type) {
       case 'ArticleNavigationLink':
         return {
