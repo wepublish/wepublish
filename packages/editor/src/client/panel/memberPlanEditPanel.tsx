@@ -39,7 +39,6 @@ import {generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
-import 'react-input-range/lib/css/index.css'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 

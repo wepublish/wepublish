@@ -16,7 +16,7 @@ import {
 
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
-import 'react-input-range/lib/css/index.css'
+
 import {
   FullPaymentMethodFragment,
   useCreatePaymentMethodMutation,
