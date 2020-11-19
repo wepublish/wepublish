@@ -44,11 +44,11 @@ export interface DeleteNavigationArgs {
 }
 
 export interface CreateNavigationArgs {
-  readonly input: Readonly<NavigationInput>
+  input: NavigationInput
 }
 
 export interface DBNavigationAdapter {
-  createNavigation(input: Readonly<NavigationInput>): Promise<OptionalNavigation>
+  createNavigation(args: CreateNavigationArgs): Promise<OptionalNavigation>
   updateNavigation(id: string, input: Readonly<NavigationInput>): Promise<OptionalNavigation>
   deleteNavigation(args: DeleteNavigationArgs): Promise<string | null>
 

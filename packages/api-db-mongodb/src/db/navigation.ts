@@ -3,7 +3,8 @@ import {
   NavigationInput,
   OptionalNavigation,
   DeleteNavigationArgs,
-  Navigation
+  Navigation,
+  CreateNavigationArgs
 } from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
@@ -17,7 +18,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     this.navigations = db.collection(CollectionName.Navigations)
   }
 
-  async createNavigation(input: Readonly<NavigationInput>): Promise<OptionalNavigation> {
+  async createNavigation({input}: CreateNavigationArgs): Promise<OptionalNavigation> {
     try {
       const {ops} = await this.navigations.insertOne({
         createdAt: new Date(),
@@ -26,7 +27,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
         key: input.key,
         links: input.links
       })
-
+      console.log(ops)
       const {_id: id, ...navigation} = ops[0]
       return {id, ...navigation}
     } catch (err) {

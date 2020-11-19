@@ -244,7 +244,6 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
             defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
             {({value, onChange}) => (
               <>
-                {console.log(value)}
                 <Input
                   placeholder={t('navigation.panels.label')}
                   value={value.label}
