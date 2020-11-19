@@ -1,6 +1,6 @@
 import {
   DBNavigationAdapter,
-  NavigationInput,
+  UpdateNavigationArgs,
   OptionalNavigation,
   DeleteNavigationArgs,
   Navigation,
@@ -18,7 +18,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     this.navigations = db.collection(CollectionName.Navigations)
   }
 
-  async createNavigation({input}: CreateNavigationArgs): Promise<OptionalNavigation> {
+  async createNavigation({input}: CreateNavigationArgs): Promise<Navigation> {
     try {
       const {ops} = await this.navigations.insertOne({
         createdAt: new Date(),
@@ -27,7 +27,6 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
         key: input.key,
         links: input.links
       })
-      console.log(ops)
       const {_id: id, ...navigation} = ops[0]
       return {id, ...navigation}
     } catch (err) {
@@ -39,10 +38,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     }
   }
 
-  async updateNavigation(
-    id: string,
-    input: Readonly<NavigationInput>
-  ): Promise<OptionalNavigation> {
+  async updateNavigation({id, input}: UpdateNavigationArgs): Promise<OptionalNavigation> {
     try {
       const {value} = await this.navigations.findOneAndUpdate(
         {_id: id},

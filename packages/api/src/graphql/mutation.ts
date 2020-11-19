@@ -405,11 +405,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id, input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateNavigation, roles)
+        input = {...input, links: input.links.map(mapNavigationLinkInput)}
 
-        return dbAdapter.navigation.updateNavigation(id, {
-          ...input,
-          links: input.links.map(mapNavigationLinkInput)
-        })
+        return dbAdapter.navigation.updateNavigation({id, input})
       }
     },
 
