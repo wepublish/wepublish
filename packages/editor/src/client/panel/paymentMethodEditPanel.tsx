@@ -44,7 +44,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   const {data, loading: isLoading, error: loadError} = usePaymentMethodQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const [
@@ -57,7 +57,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     {loading: isUpdating, error: updateError}
   ] = useUpdatePaymentMethodMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError != undefined
+  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
 
   useEffect(() => {
     if (data?.paymentMethod) {

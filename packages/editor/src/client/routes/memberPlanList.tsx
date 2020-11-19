@@ -12,7 +12,6 @@ import {
   Input
 } from 'rsuite'
 import {useTranslation} from 'react-i18next'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -31,6 +30,7 @@ import {RouteActionType} from '@karma.run/react'
 
 import {FullMemberPlanFragment, useDeleteMemberPlanMutation, useMemberPlanListQuery} from '../api'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function MemberPlanList() {
   const {current} = useRoute()
@@ -53,7 +53,7 @@ export function MemberPlanList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
-  const {data, /*fetchMore,*/ loading: isLoading} = useMemberPlanListQuery({
+  const {data, /* fetchMore, */ loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -83,7 +83,7 @@ export function MemberPlanList() {
     }
   }, [data?.memberPlans])
 
-  /*function loadMore() {
+  /* function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.memberPlans.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -97,7 +97,7 @@ export function MemberPlanList() {
         }
       }
     })
-  }*/
+  } */
 
   return (
     <>
@@ -191,7 +191,7 @@ export function MemberPlanList() {
         <Modal.Body>
           <DescriptionList>
             <DescriptionListItem label={t('memberPlanList.name')}>
-              {currentMemberPlan?.name || t('untitled')}}
+              {currentMemberPlan?.name || t('untitled')}
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>

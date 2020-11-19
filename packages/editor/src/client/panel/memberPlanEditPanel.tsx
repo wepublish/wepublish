@@ -79,7 +79,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const {data, loading: isLoading, error: loadError} = useMemberPlanQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
-    skip: id == undefined
+    skip: id === undefined
   })
 
   const {
@@ -106,8 +106,8 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     isLoadingPaymentMethods ||
     isCreating ||
     isUpdating ||
-    loadError != undefined ||
-    paymentMethodLoadError != undefined
+    loadError !== undefined ||
+    paymentMethodLoadError !== undefined
 
   useEffect(() => {
     if (data?.memberPlan) {

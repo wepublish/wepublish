@@ -44,20 +44,20 @@ export function UserSubscriptionEditPanel({
 
   const [memberPlan, setMemberPlan] = useState(subscription?.memberPlan)
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-  const [paymentPeriodicity /*setPaymentPeriodicity*/] = useState(
+  const [paymentPeriodicity /* setPaymentPeriodicity */] = useState(
     subscription?.paymentPeriodicity ?? 'monthly'
-  ) //TODO: find smart default
+  ) // TODO: find smart default
   const [monthlyAmount, setMonthlyAmount] = useState(subscription?.monthlyAmount ?? 0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
     subscription ? new Date(subscription.startsAt) : new Date()
   )
-  // @ts-ignore
-  const [payedUntil, setPayedUntil] = useState(
+
+  const [payedUntil /* setPayedUntil */] = useState(
     subscription ? new Date(subscription.payedUntil) : new Date()
   )
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod ?? 'CC') //TODO: find smart default
+  const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod ?? 'CC') // TODO: find smart default
   const [deactivatedAt, setDeactivatedAt] = useState(
     subscription?.deactivatedAt ? new Date(subscription.deactivatedAt) : null
   )
