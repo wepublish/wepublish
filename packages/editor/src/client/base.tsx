@@ -102,17 +102,17 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="user-secret" />}
+                  icon={<Icon icon="id-card" />}
                   route={MemberPlanListRoute.create({})}
                   active={current?.type === RouteType.MemberPlanList}>
                   {t('navbar.memberPlans')}
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="user-secret" />}
+                  icon={<Icon icon="money" />}
                   route={PaymentMethodListRoute.create({})}
                   active={current?.type === RouteType.PaymentMethodList}>
-                  {t('navbar.paymentMethos')}
+                  {t('navbar.paymentMethods')}
                 </NavItemLink>
 
                 <NavItemLink

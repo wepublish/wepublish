@@ -1,36 +1,22 @@
 import React, {useState, useEffect} from 'react'
 
+import {ListValue, ListInput} from '../atoms/listInput'
+
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Box,
-  Spacing,
-  PlaceholderInput,
-  PanelSectionHeader,
-  Card,
+  Button,
+  ControlLabel,
   Drawer,
-  IconButton,
-  Image,
-  Toast,
-  ZIndex,
+  Form,
+  FormControl,
+  FormGroup,
+  Panel,
+  Alert,
   Toggle,
-  Typography,
-  //Select,
-  ListValue,
-  ListInput
-} from '@karma.run/ui'
-
-import Select from 'react-select'
-
-import {
-  MaterialIconClose,
-  MaterialIconImageOutlined,
-  MaterialIconEditOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+  HelpBlock,
+  RangeSlider,
+  Slider,
+  CheckPicker
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -52,8 +38,12 @@ import {
 import {generateID, getOperationNameFromDocument} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
-import InputRange from 'react-input-range'
+
 import 'react-input-range/lib/css/index.css'
+import {useTranslation} from 'react-i18next'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
+
+const MAX_PRICE_PER_MONTH = 100
 
 const ALL_PAYMENT_PERIODICITIES = [
   {id: 'monthly', checked: false},
@@ -70,6 +60,8 @@ export interface MemberPlanEditPanelProps {
 }
 
 export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelProps) {
+  const {t} = useTranslation()
+
   const [name, setName] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
@@ -81,9 +73,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const [fixPrice, setFixPrice] = useState<boolean>(false)
   const [pricePerMonthMinimum, setPricePerMonthMinimum] = useState<number>(0)
   const [pricePerMonthMaximum, setPricePerMonthMaximum] = useState<number>(0)
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>()
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -149,19 +138,12 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   }, [paymentMethodData?.paymentMethods])
 
   useEffect(() => {
-    if (loadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(loadError.message)
-    } else if (createError) {
-      setErrorToastOpen(true)
-      setErrorMessage(createError.message)
-    } else if (updateError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError.message)
-    } else if (paymentMethodLoadError) {
-      setErrorToastOpen(true)
-      setErrorMessage(paymentMethodLoadError.message)
-    }
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      paymentMethodLoadError?.message
+    if (error) Alert.error(error, 0)
   }, [loadError, createError, updateError, paymentMethodLoadError])
 
   function handleImageChange(image: ImageRefFragment) {
@@ -215,123 +197,88 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={id ? 'Edit Member Plan' : 'Create Member Plan'}
-          leftChildren={
-            <NavigationButton icon={MaterialIconClose} label="Close" onClick={() => onClose?.()} />
-          }
-          rightChildren={
-            <NavigationButton
-              icon={MaterialIconSaveOutlined}
-              label={id ? 'Save' : 'Create'}
-              disabled={isDisabled}
-              onClick={handleSave}
-            />
-          }
+      <Drawer.Header>
+        <Drawer.Title>
+          {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
+        </Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.name')}</ControlLabel>
+              <FormControl
+                name={t('memberPlanList.name')}
+                value={name}
+                disabled={isDisabled}
+                onChange={value => setName(value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
+              <Toggle
+                checked={isActive}
+                disabled={isDisabled}
+                onChange={value => setIsActive(value)}
+              />
+              <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
+              <RichTextBlock value={description} onChange={value => setDescription(value)} />
+            </FormGroup>
+          </Form>
+        </Panel>
+
+        <ChooseEditImage
+          image={image}
+          disabled={isLoading}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setImage(undefined)}
         />
 
-        <PanelSection>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <TextInput
-              label="Name"
-              value={name}
-              disabled={isDisabled}
-              onChange={e => {
-                setName(e.target.value)
-              }}
-            />
-          </Box>
-          <Box marginBottom={Spacing.ExtraSmall}>
-            <Toggle
-              label="Active"
-              description="Makes the plan available"
-              checked={isActive}
-              disabled={isDisabled}
-              onChange={event => setIsActive(event.target.checked)}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Image" />
-        <PanelSection dark>
-          <Box height={200}>
-            <Card>
-              <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-                {image && (
-                  <Box position="relative" width="100%" height="100%">
-                    <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
-                      <IconButton
-                        icon={MaterialIconImageOutlined}
-                        title="Choose Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setChooseModalOpen(true)}
-                      />
-                      <IconButton
-                        icon={MaterialIconEditOutlined}
-                        title="Edit Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setEditModalOpen(true)}
-                      />
-                      <IconButton
-                        icon={MaterialIconClose}
-                        title="Remove Image"
-                        margin={Spacing.ExtraSmall}
-                        onClick={() => setImage(undefined)}
-                      />
-                    </Box>
-                    {image.previewURL && <Image src={image.previewURL} width="100%" height={200} />}
-                  </Box>
-                )}
-              </PlaceholderInput>
-            </Card>
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Description" />
-        <PanelSection>
-          <RichTextBlock value={description} onChange={value => setDescription(value)} />
-        </PanelSection>
-        <PanelSectionHeader title="Settings" />
-        <PanelSection>
-          <Box marginBottom={Spacing.Small}>
-            <Toggle
-              label="Fix price"
-              description="If false the price can be a price range"
-              checked={fixPrice}
-              disabled={isDisabled}
-              onChange={event => setFixPrice(event.target.checked)}
-            />
-          </Box>
-          <Box marginBottom={Spacing.Small}>
-            <Typography variant="subtitle1">Price-(Range) in CHF</Typography>
-          </Box>
-          <Box
-            marginBottom={Spacing.Medium}
-            marginLeft={Spacing.ExtraSmall}
-            marginRight={Spacing.ExtraSmall}>
-            <InputRange
-              onChange={value => {
-                if (fixPrice) {
-                  setPricePerMonthMinimum(value as number)
-                } else {
-                  //TODO: fix this
-                  //@ts-ignore
-                  setPricePerMonthMinimum(value.min)
-                  //@ts-ignore
-                  setPricePerMonthMaximum(value.max)
-                }
-              }}
-              value={
-                fixPrice
-                  ? pricePerMonthMinimum
-                  : {min: pricePerMonthMinimum, max: pricePerMonthMaximum}
-              }
-              minValue={0}
-              maxValue={100}
-            />
-          </Box>
-        </PanelSection>
-        <PanelSectionHeader title="Payment Pariodicity" />
-        <PanelSection>
+        <Panel>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.fixPrice')}</ControlLabel>
+              <Toggle
+                checked={fixPrice}
+                disabled={isDisabled}
+                onChange={value => setFixPrice(value)}
+              />
+              <HelpBlock>{t('memberPlanList.fixPriceDescription')}</HelpBlock>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.priceRange')}</ControlLabel>
+              {fixPrice ? (
+                <Slider
+                  disabled={isDisabled}
+                  progress
+                  value={pricePerMonthMinimum}
+                  onChange={value => setPricePerMonthMinimum(value)}
+                  min={0}
+                  max={MAX_PRICE_PER_MONTH}
+                />
+              ) : (
+                <RangeSlider
+                  progress
+                  disabled={isDisabled}
+                  value={[pricePerMonthMinimum, pricePerMonthMaximum]}
+                  onChange={value => {
+                    setPricePerMonthMinimum(value[0])
+                    setPricePerMonthMaximum(value[1])
+                  }}
+                  min={0}
+                  max={MAX_PRICE_PER_MONTH}
+                />
+              )}
+            </FormGroup>
+          </Form>
+        </Panel>
+
+        <Panel>
           <ListInput
             value={availablePaymentMethods}
             onChange={app => setAvailablePaymentMethods(app)}
@@ -341,88 +288,75 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               paymentMethods: []
             }}>
             {({value, onChange}) => (
-              <Box>
-                <Box marginBottom={Spacing.ExtraSmall}>
+              <Form fluid={true}>
+                <FormGroup>
+                  <ControlLabel>{t('memberPlanList.autoRenewal')}</ControlLabel>
                   <Toggle
-                    label="Force Auto Renewal"
-                    description="Forces auto renewal of subscription"
                     checked={value.forceAutoRenewal}
                     disabled={isDisabled}
-                    onChange={e => {
-                      onChange({...value, forceAutoRenewal: e.target.checked})
-                    }}
+                    onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
                   />
-                </Box>
-                <Typography variant="h3">Possible Payment Periodicities</Typography>
-                <Box marginBottom={Spacing.ExtraSmall}>
-                  <Select
-                    value={value.paymentPeriodicities.map(pp => ({value: pp, label: pp}))}
-                    isMulti={true}
-                    options={ALL_PAYMENT_PERIODICITIES.map(pp => ({value: pp.id, label: pp.id}))}
-                    onChange={(changedPaymentPeriodicities, action) => {
-                      if (Array.isArray(changedPaymentPeriodicities)) {
-                        onChange({
-                          ...value,
-                          paymentPeriodicities: changedPaymentPeriodicities.map(cpp => cpp.value)
-                        })
-                      }
-                      console.log('change', changedPaymentPeriodicities)
-                      console.log('action', action)
-                    }}
+                  <HelpBlock>{t('memberPlanList.autoRenewalDescription')}</HelpBlock>
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+                  <CheckPicker
+                    value={value.paymentPeriodicities}
+                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({value: pp.id, label: pp.id}))}
+                    onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
+                    block
                   />
-                </Box>
-                <Typography variant="h3">Possible Payment Methods</Typography>
-                <Box marginBottom={Spacing.ExtraSmall}>
-                  <Select
-                    value={value.paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                    isMulti={true}
-                    options={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                    onChange={(changedPaymentMethods, action) => {
-                      if (Array.isArray(changedPaymentMethods)) {
-                        const newMethods = changedPaymentMethods
-                          .map(cpm => paymentMethods.find(pm => cpm.value === pm.id))
-                          .filter(pm => pm !== null)
-                          .map(cpm => cpm as PaymentMethod)
-                        onChange({
-                          ...value,
-                          paymentMethods: newMethods
-                        })
-                      }
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('memberPlanList.paymentMethods')}</ControlLabel>
+                  <CheckPicker
+                    value={value.paymentMethods.map(pm => pm.id)}
+                    data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                    onChange={paymentMethodIDs => {
+                      onChange({
+                        ...value,
+                        paymentMethods: paymentMethodIDs
+                          .map(pmID => paymentMethods.find(pm => pm.id === pmID))
+                          .filter(pm => pm !== undefined)
+                          .map(pm => pm as PaymentMethod)
+                      })
                     }}
+                    block
                   />
-                </Box>
-              </Box>
+                </FormGroup>
+              </Form>
             )}
           </ListInput>
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <ImageSelectPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={value => {
-              setChooseModalOpen(false)
-              handleImageChange(value)
-            }}
-          />
-        )}
+        </Panel>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+          {id ? t('save') : t('create')}
+        </Button>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('close')}
+        </Button>
+      </Drawer.Footer>
+
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <ImageSelectPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={value => {
+            setChooseModalOpen(false)
+            handleImageChange(value)
+          }}
+        />
       </Drawer>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
+      {image && (
+        <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
           <ImagedEditPanel
             id={image!.id}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />
-        )}
-      </Drawer>
+        </Drawer>
+      )}
     </>
   )
 }

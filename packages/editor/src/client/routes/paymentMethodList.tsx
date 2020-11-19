@@ -93,17 +93,13 @@ export function PaymentMethodList() {
         data={paymentMethods}>
         <Column width={200} align="left" resizable>
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
-          <Cell style={{padding: 2}}>
+          <Cell>
             {(rowData: FullPaymentMethodFragment) => (
               <Link route={PaymentMethodEditRoute.create({id: rowData.id})}>
                 {rowData.name || t('untitled')}
               </Link>
             )}
           </Cell>
-        </Column>
-        <Column width={300} align="left" resizable>
-          <HeaderCell>{t('paymentMethodList.description')}</HeaderCell>
-          <Cell dataKey="description" />
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
@@ -126,7 +122,16 @@ export function PaymentMethodList() {
         </Column>
       </Table>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: PaymentMethodListRoute.create({}, current ?? undefined)
+          })
+        }}>
         <PaymentMethodEditPanel
           id={editID}
           onClose={() => {

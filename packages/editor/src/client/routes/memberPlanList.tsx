@@ -1,48 +1,42 @@
 import React, {useState, useEffect} from 'react'
-import {
-  Typography,
-  Box,
-  Spacing,
-  Divider,
-  Avatar,
-  PlaceholderImage,
-  Drawer,
-  Image,
-  SearchInput,
-  OptionButton,
-  Dialog,
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  DescriptionList,
-  DescriptionListItem,
-  Button
-} from '@karma.run/ui'
 
 import {
-  RouteLinkButton,
+  FlexboxGrid,
+  Icon,
+  IconButton,
+  Drawer,
+  Table,
+  Modal,
+  Button,
+  InputGroup,
+  Input
+} from 'rsuite'
+import {useTranslation} from 'react-i18next'
+const {Column, HeaderCell, Cell /*, Pagination */} = Table
+
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+
+import {
   Link,
   RouteType,
   useRoute,
   useRouteDispatch,
   MemberPlanEditRoute,
   MemberPlanCreateRoute,
-  MemberPlanListRoute
+  MemberPlanListRoute,
+  ButtonLink
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
-import {MaterialIconDeleteOutlined, MaterialIconClose, MaterialIconCheck} from '@karma.run/icons'
+
 import {FullMemberPlanFragment, useDeleteMemberPlanMutation, useMemberPlanListQuery} from '../api'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
-
-enum ConfirmAction {
-  Delete = 'delete'
-}
 
 export function MemberPlanList() {
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
+
+  const {t} = useTranslation()
 
   const [isEditModalOpen, setEditModalOpen] = useState(
     current?.type === RouteType.MemberPlanEdit || current?.type === RouteType.MemberPlanCreate
@@ -54,11 +48,12 @@ export function MemberPlanList() {
 
   const [filter, setFilter] = useState('')
 
+  const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
+
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  const {data, fetchMore, loading: isLoading} = useMemberPlanListQuery({
+  const {data, /*fetchMore,*/ loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -82,7 +77,13 @@ export function MemberPlanList() {
     }
   }, [current])
 
-  function loadMore() {
+  useEffect(() => {
+    if (data?.memberPlans?.nodes) {
+      setMemberPlans(data.memberPlans.nodes)
+    }
+  }, [data?.memberPlans])
+
+  /*function loadMore() {
     fetchMore({
       variables: {first: 50, after: data?.memberPlans.pageInfo.endCursor},
       updateQuery: (prev, {fetchMoreResult}) => {
@@ -96,149 +97,125 @@ export function MemberPlanList() {
         }
       }
     })
-  }
-
-  const memberPlans = data?.memberPlans.nodes.map(memberPlan => {
-    const {id, name, image} = memberPlan
-
-    return (
-      <Box key={id} display="block" marginBottom={Spacing.ExtraSmall}>
-        <Box
-          key={id}
-          marginBottom={Spacing.ExtraSmall}
-          display="flex"
-          flexDirection="row"
-          alignItems="center">
-          <Avatar width={50} height={50} marginRight={Spacing.Small}>
-            {image ? (
-              image.squareURL && <Image src={image.squareURL} width="100%" height="100%" />
-            ) : (
-              <PlaceholderImage width="100%" height="100%" />
-            )}
-          </Avatar>
-
-          <Link route={MemberPlanEditRoute.create({id})}>
-            <Typography variant="h3" color={name ? 'dark' : 'gray'}>
-              {name || 'Unknown'}
-            </Typography>
-          </Link>
-
-          <Box flexGrow={1} />
-          <OptionButton
-            position="left"
-            menuItems={[
-              {id: ConfirmAction.Delete, label: 'Delete', icon: MaterialIconDeleteOutlined}
-            ]}
-            onMenuItemClick={item => {
-              setCurrentMemberPlan(memberPlan)
-              setConfirmationDialogOpen(true)
-              setConfirmAction(item.id as ConfirmAction)
-            }}
-          />
-        </Box>
-        <Divider />
-      </Box>
-    )
-  })
+  }*/
 
   return (
     <>
-      <Box marginBottom={Spacing.Small} flexDirection="row" display="flex">
-        <Typography variant="h1">Member Plans</Typography>
-        <Box flexGrow={1} />
-        <RouteLinkButton
-          color="primary"
-          label="New Member Plan"
-          route={MemberPlanCreateRoute.create({})}
-        />
-      </Box>
-      <Box marginBottom={Spacing.Large}>
-        <SearchInput
-          placeholder="Search"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-      </Box>
-      <Box>
-        {memberPlans?.length ? (
-          <>
-            {memberPlans}
-            <Box display="flex" justifyContent="center">
-              {data?.memberPlans.pageInfo.hasNextPage && (
-                <Button label="Load More" onClick={loadMore} />
-              )}
-            </Box>
-          </>
-        ) : !isLoading ? (
-          <Typography variant="body1" color="gray" align="center">
-            No Member Plans found
-          </Typography>
-        ) : null}
-      </Box>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <MemberPlanEditPanel
-            id={editID}
-            onClose={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: MemberPlanListRoute.create({}, current ?? undefined)
-              })
-            }}
-            onSave={() => {
-              setEditModalOpen(false)
-              dispatch({
-                type: RouteActionType.PushRoute,
-                route: MemberPlanListRoute.create({}, current ?? undefined)
-              })
-            }}
-          />
-        )}
-      </Drawer>
-      <Dialog open={isConfirmationDialogOpen} width={340}>
-        {() => (
-          <Panel>
-            <PanelHeader
-              title="Delete Member Plan?"
-              leftChildren={
-                <NavigationButton
-                  icon={MaterialIconClose}
-                  label="Cancel"
-                  onClick={() => setConfirmationDialogOpen(false)}
-                />
-              }
-              rightChildren={
-                <NavigationButton
-                  icon={MaterialIconCheck}
-                  label="Confirm"
-                  disabled={isDeleting}
-                  onClick={async () => {
-                    if (!currentMemberPlan) return
+      <FlexboxGrid>
+        <FlexboxGrid.Item colspan={16}>
+          <h2>{t('memberPlanList.title')}</h2>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={MemberPlanCreateRoute.create({})}>
+            {t('memberPlanList.createNew')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
+        <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
+          <InputGroup>
+            <Input value={filter} onChange={value => setFilter(value)} />
+            <InputGroup.Addon>
+              <Icon icon="search" />
+            </InputGroup.Addon>
+          </InputGroup>
+        </FlexboxGrid.Item>
+      </FlexboxGrid>
 
-                    switch (confirmAction) {
-                      case ConfirmAction.Delete:
-                        await deleteMemberPlan({
-                          variables: {id: currentMemberPlan.id}
-                        })
-                        break
-                    }
-
-                    setConfirmationDialogOpen(false)
+      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={memberPlans}>
+        <Column width={200} align="left" resizable>
+          <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
+          <Cell>
+            {(rowData: FullMemberPlanFragment) => (
+              <Link route={MemberPlanEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('untitled')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column width={100} align="center" fixed="right">
+          <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullMemberPlanFragment) => (
+              <>
+                <IconButton
+                  icon={<Icon icon="trash" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setConfirmationDialogOpen(true)
+                    setCurrentMemberPlan(rowData)
                   }}
                 />
-              }
-            />
-            <PanelSection>
-              <DescriptionList>
-                <DescriptionListItem label="Name">
-                  {currentMemberPlan?.name || 'Unknown'}
-                </DescriptionListItem>
-              </DescriptionList>
-            </PanelSection>
-          </Panel>
-        )}
-      </Dialog>
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
+
+      <Drawer
+        show={isEditModalOpen}
+        size={'sm'}
+        onHide={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: MemberPlanListRoute.create({}, current ?? undefined)
+          })
+        }}>
+        <MemberPlanEditPanel
+          id={editID}
+          onClose={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: MemberPlanListRoute.create({}, current ?? undefined)
+            })
+          }}
+          onSave={() => {
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: MemberPlanListRoute.create({}, current ?? undefined)
+            })
+          }}
+        />
+      </Drawer>
+      <Modal show={isConfirmationDialogOpen} size={'sm'}>
+        <Modal.Header>
+          <Modal.Title>{t('memberPlanList.deleteModalTitle')}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            <DescriptionListItem label={t('memberPlanList.name')}>
+              {currentMemberPlan?.name || t('untitled')}}
+            </DescriptionListItem>
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            disabled={isDeleting}
+            onClick={async () => {
+              if (!currentMemberPlan) return
+
+              await deleteMemberPlan({
+                variables: {id: currentMemberPlan.id}
+              })
+
+              setConfirmationDialogOpen(false)
+            }}
+            color="red">
+            {t('confirm')}
+          </Button>
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

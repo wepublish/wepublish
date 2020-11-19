@@ -145,10 +145,11 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
                 onChange={value => setPaymentAdapter(value)}
               />
             </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('paymentMethodList.description')}</ControlLabel>
+              <RichTextBlock value={description} onChange={value => setDescription(value)} />
+            </FormGroup>
           </Form>
-        </Panel>
-        <Panel header={t('authors.panels.bioInformation')}>
-          <RichTextBlock value={description} onChange={value => setDescription(value)} />
         </Panel>
       </Drawer.Body>
 
