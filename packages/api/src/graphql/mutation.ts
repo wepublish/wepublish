@@ -390,9 +390,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve(root, {input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateNavigation, roles)
-        input = {...input, links: input.links.map(mapNavigationLinkInput)}
 
-        return dbAdapter.navigation.createNavigation({input})
+        return dbAdapter.navigation.createNavigation({
+          input: {...input, links: input.links.map(mapNavigationLinkInput)}
+        })
       }
     },
 
@@ -405,9 +406,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       resolve(root, {id, input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateNavigation, roles)
-        input = {...input, links: input.links.map(mapNavigationLinkInput)}
 
-        return dbAdapter.navigation.updateNavigation({id, input})
+        return dbAdapter.navigation.updateNavigation({
+          id,
+          input: {...input, links: input.links.map(mapNavigationLinkInput)}
+        })
       }
     },
 
