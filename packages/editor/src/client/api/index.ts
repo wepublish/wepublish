@@ -450,7 +450,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<Scalars['String']>;
   createNavigation?: Maybe<Navigation>;
   updateNavigation?: Maybe<Navigation>;
-  deleteNavigation?: Maybe<Navigation>;
+  deleteNavigation?: Maybe<Scalars['ID']>;
   createAuthor?: Maybe<Author>;
   updateAuthor?: Maybe<Author>;
   deleteAuthor?: Maybe<Scalars['ID']>;
@@ -1968,10 +1968,7 @@ export type DeleteNavigationMutationVariables = Exact<{
 
 export type DeleteNavigationMutation = (
   { __typename?: 'Mutation' }
-  & { deleteNavigation?: Maybe<(
-    { __typename?: 'Navigation' }
-    & FullNavigationFragment
-  )> }
+  & Pick<Mutation, 'deleteNavigation'>
 );
 
 export type MutationPageFragment = (
@@ -3829,11 +3826,9 @@ export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigat
 export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
 export const DeleteNavigationDocument = gql`
     mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id) {
-    ...FullNavigation
-  }
+  deleteNavigation(id: $id)
 }
-    ${FullNavigationFragmentDoc}`;
+    `;
 export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 
 /**

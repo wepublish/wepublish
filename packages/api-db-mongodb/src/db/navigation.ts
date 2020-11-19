@@ -1,4 +1,10 @@
-import {DBNavigationAdapter, NavigationInput, OptionalNavigation, Navigation} from '@wepublish/api'
+import {
+  DBNavigationAdapter,
+  NavigationInput,
+  OptionalNavigation,
+  DeleteNavigationArgs,
+  Navigation
+} from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
 import {CollectionName, DBNavigation} from './schema'
@@ -63,7 +69,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     }
   }
 
-  async deleteNavigation(id: string): Promise<string | null> {
+  async deleteNavigation({id}: DeleteNavigationArgs): Promise<string | null> {
     const {deletedCount} = await this.navigations.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
   }

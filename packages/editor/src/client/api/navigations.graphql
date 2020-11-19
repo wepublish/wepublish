@@ -49,7 +49,5 @@ mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
 }
 
 mutation DeleteNavigation($id: ID!) {
-  deleteNavigation(id: $id) {
-    ...FullNavigation
-  }
+  deleteNavigation(id: $id)
 }
