@@ -47,7 +47,7 @@ export function UserSubscriptionEditPanel({
   const [paymentPeriodicity /* setPaymentPeriodicity */] = useState(
     subscription?.paymentPeriodicity ?? 'monthly'
   ) // TODO: find smart default
-  const [monthlyAmount, setMonthlyAmount] = useState(subscription?.monthlyAmount ?? 0)
+  const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
     subscription ? new Date(subscription.startsAt) : new Date()
@@ -178,7 +178,7 @@ export function UserSubscriptionEditPanel({
                 type="number"
                 disabled={isDisabled || hasNoMemberPlanSelected}
                 onChange={value => {
-                  setMonthlyAmount(value)
+                  setMonthlyAmount(parseInt(`${value}`))
                 }}
               />
             </FormGroup>
