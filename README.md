@@ -107,7 +107,7 @@ TBD
   - Media Adapter:
     - [@wepublish/api-media-karma](./packages/api-media-karma)
 - [@wepublish/editor](./packages/editor)
-- [@wepublish/oauth2](./packages/oauth2))
+- [@wepublish/oauth2](./packages/oauth2)
 
 <!-- GETTING STARTED -->
 ## Getting Started
