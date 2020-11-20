@@ -63,6 +63,7 @@
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Demo](#demo)
+* [Packages](#packages)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -97,6 +98,16 @@ TBD
   - password: `123`
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
+
+## Packages
+
+- [@wepublish/api](./packages/api)
+  - DB Adapter:
+    - [@wepublish/api-db-mongodb](./packages/api-db-mongodb)
+  - Media Adapter:
+    - [@wepublish/api-media-karma](./packages/api-media-karma)
+- [@wepublish/editor](./packages/editor)
+- [@wepublish/oauth2](./packages/oauth2))
 
 <!-- GETTING STARTED -->
 ## Getting Started
