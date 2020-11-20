@@ -1,21 +1,18 @@
 import React from 'react'
 
 import {
-  Panel,
-  PanelHeader,
-  NavigationButton,
-  PanelSection,
-  TextInput,
-  Spacing,
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
   Toggle,
-  Select,
-  Radio,
+  HelpBlock,
+  SelectPicker,
   RadioGroup,
-  Box,
-  Typography
-} from '@karma.run/ui'
-
-import {MaterialIconClose} from '@karma.run/icons'
+  Radio
+} from 'rsuite'
 
 import {useTranslation} from 'react-i18next'
 import {LinkPageBreakBlockValue} from '../blocks/types'
@@ -54,90 +51,98 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('linkPageBreakEditPanel.title')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('linkPageBreakEditPanel.close')}
-              onClick={() => onClose?.()}
+      <Drawer.Header>
+        <Drawer.Title>{t('linkPageBreakEditPanel.title')}</Drawer.Title>
+      </Drawer.Header>
+
+      <Drawer.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.style.label')}</ControlLabel>
+            <SelectPicker
+              block
+              data={STYLE_OPTIONS.map(style => ({
+                value: style.id,
+                label: t(`linkPageBreakEditPanel.style.${style.id}`)
+              }))}
+              value={styleOption}
+              onChange={styleOption =>
+                onChange?.({
+                  ...value,
+                  styleOption,
+                  layoutOption:
+                    styleOption === STYLE_OPTIONS[2].id ? LAYOUT_OPTIONS[0].id : value.layoutOption
+                })
+              }
             />
-          }
-        />
+          </FormGroup>
 
-        <PanelSection>
-          <Select
-            label={t('linkPageBreakEditPanel.style.label')}
-            options={STYLE_OPTIONS}
-            value={{id: styleOption ?? STYLE_OPTIONS[0].id}}
-            renderListItem={value => t(`linkPageBreakEditPanel.style.${value?.id}`)}
-            onChange={styleOption =>
-              onChange?.({
-                ...value,
-                styleOption: styleOption?.id,
-                layoutOption:
-                  styleOption?.id === STYLE_OPTIONS[2].id
-                    ? LAYOUT_OPTIONS[0].id
-                    : value.layoutOption
-              })
-            }
-            marginBottom={Spacing.Small}
-          />
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.layout.label')}</ControlLabel>
+            <SelectPicker
+              block
+              data={LAYOUT_OPTIONS.filter(
+                layout => styleOption !== STYLE_OPTIONS[2].id || !layout.disabledIfImageStyle
+              ).map(layout => ({
+                value: layout.id,
+                label: t(`linkPageBreakEditPanel.layout.${layout.id}`)
+              }))}
+              value={layoutOption}
+              onChange={layoutOption => onChange?.({...value, layoutOption})}
+            />
+          </FormGroup>
 
-          <Select
-            label={t('linkPageBreakEditPanel.layout.label')}
-            options={LAYOUT_OPTIONS.filter(
-              layout => styleOption !== STYLE_OPTIONS[2].id || !layout.disabledIfImageStyle
-            )}
-            value={LAYOUT_OPTIONS.find(layout => layout.id === layoutOption)}
-            renderListItem={value => t(`linkPageBreakEditPanel.layout.${value?.id}`)}
-            onChange={layoutOption => onChange?.({...value, layoutOption: layoutOption?.id})}
-            marginBottom={Spacing.Small}
-          />
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.template.label')}</ControlLabel>
+            <SelectPicker
+              block
+              data={TEMPLATE_OPTIONS.map(template => ({
+                value: template.id,
+                label: t(`linkPageBreakEditPanel.template.${template?.id}`)
+              }))}
+              value={templateOption}
+              onChange={templateOption => onChange?.({...value, templateOption})}
+            />
+          </FormGroup>
 
-          <Select
-            label={t('linkPageBreakEditPanel.template.label')}
-            options={TEMPLATE_OPTIONS}
-            value={TEMPLATE_OPTIONS.find(template => template.id === templateOption)}
-            renderListItem={value => t(`linkPageBreakEditPanel.template.${value?.id}`)}
-            onChange={templateOption => onChange?.({...value, templateOption: templateOption?.id})}
-            marginBottom={Spacing.Small}
-          />
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.link.urlLabel')}</ControlLabel>
+            <FormControl value={linkURL} onChange={linkURL => onChange?.({...value, linkURL})} />
+          </FormGroup>
 
-          <TextInput
-            placeholder={t('linkPageBreakEditPanel.link.urlPlaceholder')}
-            label={t('linkPageBreakEditPanel.link.urlLabel')}
-            value={linkURL}
-            onChange={e => onChange?.({...value, linkURL: e.target.value})}
-            marginBottom={Spacing.Small}
-          />
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.link.buttonLabel')}</ControlLabel>
+            <FormControl value={linkText} onChange={linkText => onChange?.({...value, linkText})} />
+          </FormGroup>
 
-          <TextInput
-            label={t('linkPageBreakEditPanel.link.buttonLabel')}
-            value={linkText}
-            onChange={e => onChange?.({...value, linkText: e.target.value})}
-            marginBottom={Spacing.Small}
-          />
-          <Box marginBottom={Spacing.Small}>
-            <Typography variant="body1">{t('linkPageBreakEditPanel.link.targetLabel')}</Typography>
+          <FormGroup controlId="target_radio">
+            <ControlLabel>{t('linkPageBreakEditPanel.link.targetLabel')}</ControlLabel>
             <RadioGroup
-              name={'target_radio'}
-              onChange={e => onChange?.({...value, linkTarget: e.target.value})}
+              name="target_radio"
+              inline={true}
+              onChange={linkTarget => onChange?.({...value, linkTarget})}
               value={linkTarget}>
-              <Radio value={'_self'} label={t('linkPageBreakEditPanel.link.targetLabelSelf')} />
-              <Radio value={'_blank'} label={t('linkPageBreakEditPanel.link.targetLabelBlank')} />
+              <Radio value={'_self'}>{t('linkPageBreakEditPanel.link.targetLabelSelf')}</Radio>
+              <Radio value={'_blank'}>{t('linkPageBreakEditPanel.link.targetLabelBlank')}</Radio>
             </RadioGroup>
-          </Box>
+          </FormGroup>
 
-          <Toggle
-            label={t('linkPageBreakEditPanel.link.hideToggleLabel')}
-            description={t('linkPageBreakEditPanel.link.hideToogleDescription')}
-            onChange={e => onChange?.({...value, hideButton: e.target.checked})}
-            checked={hideButton}
-          />
-        </PanelSection>
-      </Panel>
+          <FormGroup>
+            <ControlLabel>{t('linkPageBreakEditPanel.link.hideToggleLabel')}</ControlLabel>
+            <Toggle
+              onChange={hideButton => onChange?.({...value, hideButton})}
+              checked={hideButton}
+            />
+            <HelpBlock>{t('linkPageBreakEditPanel.link.hideToogleDescription')}</HelpBlock>
+          </FormGroup>
+        </Form>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('linkPageBreakEditPanel.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

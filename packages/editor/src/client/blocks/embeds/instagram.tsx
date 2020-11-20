@@ -1,6 +1,5 @@
 import React, {createContext, useContext, useEffect, ReactNode} from 'react'
 import {useScript} from '../../utility'
-import {Box, Spacing} from '@karma.run/ui'
 
 // Define some globals set by the SDKs.
 declare global {
@@ -51,7 +50,13 @@ export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
   }, [isLoaded, isLoading])
 
   return (
-    <Box display="flex" justifyContent="center" minHeight={300} padding={Spacing.Small}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: 300,
+        padding: 20
+      }}>
       <blockquote
         className="instagram-media"
         data-width="100%"
@@ -59,6 +64,6 @@ export function InstagramPostEmbed({postID}: InstagramPostEmbedProps) {
         data-instgrm-permalink={`https://www.instagram.com/p/${encodeURIComponent(postID)}/`}
         data-instgrm-version="12"
       />
-    </Box>
+    </div>
   )
 }

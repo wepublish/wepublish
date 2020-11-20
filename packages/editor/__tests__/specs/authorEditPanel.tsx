@@ -4,32 +4,18 @@ import {AuthorEditPanel} from '../../src/client/panel/authorEditPanel'
 import {CreateAuthorDocument, AuthorDocument} from '../../src/client/api'
 import {mount} from 'enzyme'
 
-import {UIProvider} from '@karma.run/ui'
 import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
-import * as fela from 'fela'
 import {createDefaultValue} from '../../src/client/blocks/richTextBlock'
 
 const MockedProvider = MockedProviderBase as any
 
-const styleRenderer: fela.IRenderer = {
-  renderRule: jest.fn(),
-  renderKeyframe: jest.fn(),
-  renderFont: jest.fn(),
-  renderStatic: jest.fn(),
-  renderToString: jest.fn(),
-  subscribe: jest.fn(),
-  clear: jest.fn()
-}
-
 describe('Author Edit Panel', () => {
   test('should render', () => {
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider addTypename={false}>
-          <AuthorEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider addTypename={false}>
+        <AuthorEditPanel />
+      </MockedProvider>
     )
     const panel = wrapper.find('AuthorEditPanel')
     expect(panel).toMatchSnapshot()
@@ -57,11 +43,9 @@ describe('Author Edit Panel', () => {
     ]
 
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={true}>
-          <AuthorEditPanel id={'fakeId2'} />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={true}>
+        <AuthorEditPanel id={'fakeId2'} />
+      </MockedProvider>
     )
 
     await updateWrapper(wrapper, 100)
@@ -71,15 +55,13 @@ describe('Author Edit Panel', () => {
 
   test('should expand links fields when Add Block button is clicked', async () => {
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider addTypename={false}>
-          <AuthorEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider addTypename={false}>
+        <AuthorEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
-    const button = wrapper.find('button[title="Add Block"]')
+    const button = wrapper.find('ListInput IconButton[classPrefix="rs-btn-icon"]')
     button.simulate('click')
 
     const inputField = wrapper.find('input[placeholder="authors.panels.title"]')
@@ -129,23 +111,19 @@ describe('Author Edit Panel', () => {
       }
     ]
     const wrapper = mount(
-      <UIProvider styleRenderer={styleRenderer} rootElementID={'fskr'}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <AuthorEditPanel />
-        </MockedProvider>
-      </UIProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <AuthorEditPanel />
+      </MockedProvider>
     )
     await updateWrapper(wrapper, 100)
 
     act(() => {
       wrapper
-        .find('input[placeholder="authors.panels.name"]')
+        .find('input[name="authors.panels.name"]')
         .simulate('change', {target: {value: author.name}})
     })
 
-    await act(async () => {
-      wrapper.find('ForwardRef(NavigationButton)[label="authors.panels.create"]').simulate('click')
-    })
+    wrapper.find('button[className="rs-btn rs-btn-primary"]').simulate('click')
 
     const panel = wrapper.find('AuthorEditPanel')
     expect(panel).toMatchSnapshot()
