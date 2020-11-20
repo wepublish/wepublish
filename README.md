@@ -144,11 +144,6 @@ yarn run-p watch:api watch:api-example watch:editor
 - **Editor:** [http://localhost:3000](http://localhost:3000)
 - **Webpack Dev Server:** [http://localhost:3001](http://localhost:3001)
 - **MongoDB:** [http://localhost:27017](http://localhost:27017)
-- **MongoDB Express:** [http://localhost:8000](http://localhost:8000)
-
-
-
-<!-- ROADMAP -->
 
 
 <!-- CONTRIBUTING -->
@@ -163,6 +158,10 @@ A good place to start is with an issue that has the label [good first issue](htt
 4. Push to the Branch (`git push origin f/AmazingFeature`)
 5. Open a Pull Request
 
+<!-- FAQ -->
+## Troubleshooting
+
+If you encounter problems you can check our [FAQ][faq-md-url] or write us [dev@wepublish.ch](mailto:dev@wepublish.ch).
 
 
 <!-- LICENSE -->
@@ -210,3 +209,4 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [vscode-download-url]: https://code.visualstudio.com/Download
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 [package-json-url]: package.json
+[faq-md-url]: FAQ.md
