@@ -47,7 +47,7 @@
     <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>-->
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="#demo">View Demo</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
     ·
@@ -62,6 +62,7 @@
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
+* [Demo](#demo)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -90,6 +91,12 @@ TBD
 * [:green_heart:]()
 
 
+## Demo
+- [Editor](https://editor.demo.wepublish.media)
+  - username: `dev@wepublish.ch`
+  - password: `123`
+- [Website](https://demo.wepublish.media)
+- [API](https://api.demo.wepublish.media)
 
 <!-- GETTING STARTED -->
 ## Getting Started
