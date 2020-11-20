@@ -68,6 +68,7 @@
 * [Usage](#usage)
 * [Troubleshooting](#troubleshooting)
 * [Contributing](#contributing)
+* [Code of Conduct](#code-of-conduct)
 * [License](#license)
 * [Contact](#contact)
 
@@ -154,6 +155,12 @@ A good place to start is with an issue that has the label [good first issue](htt
 4. Push to the Branch (`git push origin f/AmazingFeature`)
 5. Open a Pull Request
 
+
+## Code of Conduct
+We.publish is dedicated to building a welcoming, diverse, safe community. 
+We expect everyone participating in the we.publish community to abide by our [Code of Conduct][code-of-conduct-url]. 
+Please read it. Please follow it. 
+
 <!-- FAQ -->
 ## Troubleshooting
 
@@ -206,3 +213,4 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 [package-json-url]: package.json
 [faq-md-url]: FAQ.md
+[code-of-conduct-url]: CODE_OF_CONDUCT.md
