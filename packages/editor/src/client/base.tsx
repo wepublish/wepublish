@@ -1,4 +1,4 @@
-import React, {ReactNode, useState} from 'react'
+import React, {ReactNode, useEffect, useState} from 'react'
 
 import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
@@ -45,6 +45,18 @@ export function Base({children}: BaseProps) {
 
   const [isExpanded, setIsExpanded] = useState(true)
 
+  const [isUsersAndMembersOpen, setUsersAndMembersOpen] = useState(true)
+
+  useEffect(() => {
+    const shouldBeOpen =
+      current?.type === RouteType.UserList ||
+      current?.type === RouteType.UserRoleList ||
+      current?.type === RouteType.MemberPlanList ||
+      current?.type === RouteType.PaymentMethodList
+    console.log({shouldBeOpen})
+    setUsersAndMembersOpen(shouldBeOpen)
+  }, [current?.type])
+
   return (
     <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
       <Container>
@@ -54,7 +66,7 @@ export function Base({children}: BaseProps) {
           collapsible>
           <Sidenav
             expanded={isExpanded}
-            defaultOpenKeys={['3']}
+            defaultOpenKeys={['1']}
             appearance="subtle"
             style={{flex: '1 1 auto'}}>
             <Sidenav.Body>
@@ -87,33 +99,38 @@ export function Base({children}: BaseProps) {
                   {t('navbar.imageLibrary')}
                 </NavItemLink>
 
-                <NavItemLink
-                  icon={<Icon icon="user-circle" />}
-                  route={UserListRoute.create({})}
-                  active={current?.type === RouteType.UserList}>
-                  {t('navbar.users')}
-                </NavItemLink>
+                <Dropdown
+                  eventKey={'1'}
+                  title={t('navbar.usersAndMembers')}
+                  icon={<Icon icon="peoples" />}>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.UserList}
+                    icon={<Icon icon="user-circle" />}
+                    route={UserListRoute.create({})}>
+                    {t('navbar.users')}
+                  </DropdownItemLink>
 
-                <NavItemLink
-                  icon={<Icon icon="user-secret" />}
-                  route={UserRoleListRoute.create({})}
-                  active={current?.type === RouteType.UserRoleList}>
-                  {t('navbar.userRoles')}
-                </NavItemLink>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.UserRoleList}
+                    icon={<Icon icon="character-authorize" />}
+                    route={UserRoleListRoute.create({})}>
+                    {t('navbar.userRoles')}
+                  </DropdownItemLink>
 
-                <NavItemLink
-                  icon={<Icon icon="id-card" />}
-                  route={MemberPlanListRoute.create({})}
-                  active={current?.type === RouteType.MemberPlanList}>
-                  {t('navbar.memberPlans')}
-                </NavItemLink>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.MemberPlanList}
+                    icon={<Icon icon="id-card" />}
+                    route={MemberPlanListRoute.create({})}>
+                    {t('navbar.memberPlans')}
+                  </DropdownItemLink>
 
-                <NavItemLink
-                  icon={<Icon icon="money" />}
-                  route={PaymentMethodListRoute.create({})}
-                  active={current?.type === RouteType.PaymentMethodList}>
-                  {t('navbar.paymentMethods')}
-                </NavItemLink>
+                  <DropdownItemLink
+                    active={current?.type === RouteType.PaymentMethodList}
+                    icon={<Icon icon="money" />}
+                    route={PaymentMethodListRoute.create({})}>
+                    {t('navbar.paymentMethods')}
+                  </DropdownItemLink>
+                </Dropdown>
 
                 <NavItemLink
                   icon={<Icon icon="share" />}

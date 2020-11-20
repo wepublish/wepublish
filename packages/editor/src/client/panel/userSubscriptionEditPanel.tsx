@@ -178,7 +178,7 @@ export function UserSubscriptionEditPanel({
                 type="number"
                 disabled={isDisabled || hasNoMemberPlanSelected}
                 onChange={value => {
-                  setMonthlyAmount(parseInt(`${value}`))
+                  setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
                 }}
               />
             </FormGroup>
