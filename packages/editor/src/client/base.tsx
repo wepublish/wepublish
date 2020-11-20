@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from 'react'
+import React, {ReactNode, useState} from 'react'
 
 import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
@@ -44,18 +44,6 @@ export function Base({children}: BaseProps) {
   const {t} = useTranslation()
 
   const [isExpanded, setIsExpanded] = useState(true)
-
-  const [isUsersAndMembersOpen, setUsersAndMembersOpen] = useState(true)
-
-  useEffect(() => {
-    const shouldBeOpen =
-      current?.type === RouteType.UserList ||
-      current?.type === RouteType.UserRoleList ||
-      current?.type === RouteType.MemberPlanList ||
-      current?.type === RouteType.PaymentMethodList
-    console.log({shouldBeOpen})
-    setUsersAndMembersOpen(shouldBeOpen)
-  }, [current?.type])
 
   return (
     <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
