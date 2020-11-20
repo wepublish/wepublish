@@ -78,3 +78,9 @@ There are several launch configurations that allow you to attach the debugger to
 [vscode-download-url]: https://code.visualstudio.com/Download
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 [package-json-url]: package.json
+[code-of-conduct-url]: CODE_OF_CONDUCT.md
+
+## Code of Conduct
+We.publish is dedicated to building a welcoming, diverse, safe community. 
+We expect everyone participating in the we.publish community to abide by our [Code of Conduct][code-of-conduct-url]. 
+Please read it. Please follow it. 
