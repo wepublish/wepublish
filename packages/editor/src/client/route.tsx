@@ -11,10 +11,10 @@ import {
   optional
 } from '@karma.run/react'
 
-import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation, gql} from '@apollo/client'
 import {LocalStorageKey} from './utility'
+import {Button, IconButton} from 'rsuite'
 
 export enum RouteType {
   Login = 'login',
@@ -149,10 +149,8 @@ export const {
   useRouteDispatch
 } = createRouteContext(routes)
 
-export const RouteLinkButton = routeLink(LinkButton)
-export const RouteLinkIconButton = routeLink(LinkIconButton)
-export const RouteMenuLinkButton = routeLink(MenuLinkButton)
-export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
+export const ButtonLink = routeLink(Button)
+export const IconButtonLink = routeLink(IconButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>
 

@@ -1,29 +1,13 @@
 import React, {useState, ReactNode} from 'react'
 import nanoid from 'nanoid'
 
-import {
-  MaterialIconInsertDriveFileOutlined,
-  MaterialIconClose,
-  MaterialIconEditOutlined
-} from '@karma.run/icons'
+import {PlaceholderInput} from '../atoms/placeholderInput'
+import {PlaceholderImage} from '../atoms/placeholderImage'
+import {BlockProps} from '../atoms/blockList'
+import {Overlay} from '../atoms/overlay'
+import {Typography} from '../atoms/typography'
 
-import {
-  PlaceholderInput,
-  Drawer,
-  BlockProps,
-  Box,
-  Spacing,
-  IconButton,
-  Image,
-  Typography,
-  ZIndex,
-  PlaceholderImage,
-  Overlay,
-  Card,
-  Chip
-} from '@karma.run/ui'
-
-import {styled} from '@karma.run/react'
+import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
 
 import {SortableElement, SortableContainer, SortEnd} from 'react-sortable-hoc'
 import arrayMove from 'array-move'
@@ -36,17 +20,6 @@ import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
 
-interface GridElementProps {
-  numColumns: number
-}
-
-const GridElement = styled('div', ({numColumns}: GridElementProps) => ({
-  display: 'grid',
-  gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-  gridGap: Spacing.Small,
-  userSelect: 'none'
-}))
-
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />
 })
@@ -57,7 +30,17 @@ interface GridProps {
 }
 
 const Grid = SortableContainer(({children, numColumns}: GridProps) => {
-  return <GridElement styleProps={{numColumns}}>{children}</GridElement>
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+        gridGap: 20,
+        userSelect: 'none'
+      }}>
+      {children}
+    </div>
+  )
 })
 
 export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockValue>) {
@@ -97,7 +80,7 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
       <Grid
         numColumns={numColumns}
         axis="xy"
-        distance={Spacing.ExtraSmall}
+        distance={10}
         onSortStart={handleSortStart}
         onSortEnd={handleSortEnd}>
         {teasers.map(([key, teaser], index) => (
@@ -122,28 +105,24 @@ export function TeaserGridBlock({value, onChange}: BlockProps<TeaserGridBlockVal
           />
         ))}
       </Grid>
-      <Drawer open={isEditModalOpen} width={480}>
-        {() => (
-          <TeaserEditPanel
-            initialTeaser={teasers[editIndex][1]!}
-            onClose={() => setEditModalOpen(false)}
-            onConfirm={teaser => {
-              setEditModalOpen(false)
-              handleTeaserLinkChange(editIndex, teaser)
-            }}
-          />
-        )}
+      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+        <TeaserEditPanel
+          initialTeaser={teasers[editIndex][1]!}
+          onClose={() => setEditModalOpen(false)}
+          onConfirm={teaser => {
+            setEditModalOpen(false)
+            handleTeaserLinkChange(editIndex, teaser)
+          }}
+        />
       </Drawer>
-      <Drawer open={isChooseModalOpen} width={480}>
-        {() => (
-          <TeaserSelectAndEditPanel
-            onClose={() => setChooseModalOpen(false)}
-            onSelect={teaser => {
-              setChooseModalOpen(false)
-              handleTeaserLinkChange(editIndex, teaser)
-            }}
-          />
-        )}
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <TeaserSelectAndEditPanel
+          onClose={() => setChooseModalOpen(false)}
+          onSelect={teaser => {
+            setChooseModalOpen(false)
+            handleTeaserLinkChange(editIndex, teaser)
+          }}
+        />
       </Drawer>
     </>
   )
@@ -166,43 +145,58 @@ export function TeaserBlock({
   onChoose,
   onRemove
 }: TeaserBlockProps) {
-  const {t} = useTranslation()
-
   return (
-    <Card
-      style={{cursor: showGrabCursor ? 'grab' : ''}}
-      height={300}
-      overflow="hidden"
-      zIndex={ZIndex.Default}>
+    <Panel
+      bodyFill={true}
+      style={{
+        cursor: showGrabCursor ? 'grab' : '',
+        height: 300,
+        overflow: 'hidden',
+        zIndex: 1
+      }}>
       <PlaceholderInput onAddClick={onChoose}>
         {teaser && (
-          <Box position="relative" width="100%" height="100%">
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%'
+            }}>
             {contentForTeaser(teaser, numColumns)}
 
-            <Box position="absolute" zIndex={ZIndex.Default} right={0} top={0}>
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                right: 0,
+                top: 0
+              }}>
               <IconButton
-                icon={MaterialIconInsertDriveFileOutlined}
-                title={t('articleEditor.panels.chooseTeaser')}
+                icon={<Icon icon="file" />}
                 onClick={onChoose}
-                margin={Spacing.ExtraSmall}
+                style={{
+                  margin: 10
+                }}
               />
               <IconButton
-                icon={MaterialIconEditOutlined}
-                title={t('articleEditor.panels.editTeaser')}
+                icon={<Icon icon="pencil" />}
                 onClick={onEdit}
-                margin={Spacing.ExtraSmall}
+                style={{
+                  margin: 10
+                }}
               />
               <IconButton
-                icon={MaterialIconClose}
-                title={t('articleEditor.panels.removeTeaser')}
+                icon={<Icon icon="trash" />}
                 onClick={onRemove}
-                margin={Spacing.ExtraSmall}
+                style={{
+                  margin: 10
+                }}
               />
-            </Box>
-          </Box>
+            </div>
+          </div>
         )}
       </PlaceholderInput>
-    </Card>
+    </Panel>
   )
 }
 
@@ -314,21 +308,30 @@ export function TeaserContent({
 
   return (
     <>
-      <Box position="absolute" width="100%" height="100%">
+      <div
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%'
+        }}>
         {image ? (
-          <Image
-            draggable={false}
+          <img
+            style={{
+              width: '100%',
+              height: '100%'
+            }}
             src={numColumns === 1 ? image.column1URL ?? '' : image.column6URL ?? ''}
-            width="100%"
-            height="100%"
           />
         ) : (
-          <PlaceholderImage width="100%" height="100%" />
+          <PlaceholderImage />
         )}
-      </Box>
+      </div>
 
-      <Overlay bottom={0} width="100%" padding={Spacing.ExtraSmall}>
-        <Box marginBottom={Spacing.ExtraSmall}>
+      <Overlay bottom={0} width="100%" padding={10}>
+        <div
+          style={{
+            marginBottom: 10
+          }}>
           {preTitle && (
             <Typography variant="subtitle1" color="white" spacing="small" ellipsize>
               {preTitle}
@@ -342,27 +345,36 @@ export function TeaserContent({
               {lead}
             </Typography>
           )}
-        </Box>
+        </div>
         {peer && (
-          <Box display="flex" marginBottom={Spacing.ExtraSmall}>
-            <Chip
-              imageURL={peer.profile?.logo?.squareURL ?? undefined}
-              label={peer.profile?.name ?? peer.name}
-            />
-          </Box>
+          <div
+            style={{
+              display: 'flex',
+              marginBottom: 10
+            }}>
+            <Avatar src={peer.profile?.logo?.squareURL ?? undefined} circle />
+          </div>
         )}
-        <Box display="flex" flexWrap="wrap">
-          <Box flexShrink={0} marginRight={Spacing.ExtraSmall}>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap'
+          }}>
+          <div
+            style={{
+              flexShrink: 0,
+              marginRight: 10
+            }}>
             <Typography variant="subtitle1" color="gray">
               {t('articleEditor.panels.teaserStyle', {label})}
             </Typography>
-          </Box>
-          <Box flexShrink={0}>
+          </div>
+          <div style={{flexShrink: 0}}>
             <Typography variant="subtitle1" color="gray">
               {t('articleEditor.panels.status', {stateJoin})}
             </Typography>
-          </Box>
-        </Box>
+          </div>
+        </div>
       </Overlay>
     </>
   )

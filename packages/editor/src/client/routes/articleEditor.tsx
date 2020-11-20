@@ -1,31 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {
-  EditorTemplate,
-  NavigationBar,
-  NavigationButton,
-  BlockList,
-  Drawer,
-  Toast,
-  Dialog,
-  useBlockMap
-} from '@karma.run/ui'
+import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
 
-import {
-  MaterialIconArrowBack,
-  MaterialIconInsertDriveFileOutlined,
-  MaterialIconPublishOutlined,
-  MaterialIconSaveOutlined
-} from '@karma.run/icons'
+import {BlockList, useBlockMap} from '../atoms/blockList'
+import {EditorTemplate} from '../atoms/editorTemplate'
+import {NavigationBar} from '../atoms/navigationBar'
 
 import {RouteActionType} from '@karma.run/react'
 
-import {
-  RouteNavigationLinkButton,
-  ArticleListRoute,
-  useRouteDispatch,
-  ArticleEditRoute
-} from '../route'
+import {ArticleListRoute, useRouteDispatch, ArticleEditRoute, IconButtonLink} from '../route'
 
 import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
@@ -78,12 +61,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
-
-  const [isSuccessToastOpen, setSuccessToastOpen] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
   const [metadata, setMetadata] = useState<ArticleMetadata>({
@@ -170,8 +147,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (createError || updateError || publishError) {
-      setErrorToastOpen(true)
-      setErrorMessage(updateError?.message ?? createError?.message ?? publishError!.message)
+      Notification.error({
+        title: updateError?.message ?? createError?.message ?? publishError!.message,
+        duration: 5000
+      })
     }
   }, [createError, updateError, publishError])
 
@@ -198,8 +177,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       await updateArticle({variables: {id: articleID, input}})
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage(t('articleEditor.overview.draftSaved'))
+      Notification.success({
+        title: t('articleEditor.overview.draftSaved'),
+        duration: 2000
+      })
     } else {
       const {data} = await createArticle({variables: {input}})
 
@@ -210,8 +191,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       }
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage(t('articleEditor.overview.draftCreated'))
+      Notification.success({
+        title: t('articleEditor.overview.draftCreated'),
+        duration: 2000
+      })
     }
   }
 
@@ -237,15 +220,19 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       }
 
       setChanged(false)
-      setSuccessToastOpen(true)
-      setSuccessMessage(t('articleEditor.overview.articlePublished'))
+      Notification.success({
+        title: t('articleEditor.overview.articlePublished'),
+        duration: 2000
+      })
     }
   }
 
   useEffect(() => {
     if (isNotFound) {
-      setErrorMessage(t('articleEditor.overview.notFound'))
-      setErrorToastOpen(true)
+      Notification.error({
+        title: t('articleEditor.overview.notFound'),
+        duration: 5000
+      })
     }
   }, [isNotFound])
 
@@ -255,45 +242,59 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         navigationChildren={
           <NavigationBar
             leftChildren={
-              <RouteNavigationLinkButton
-                icon={MaterialIconArrowBack}
-                label={t('articleEditor.overview.back')}
+              <IconButtonLink
+                size={'lg'}
+                icon={<Icon icon="arrow-left" />}
                 route={ArticleListRoute.create({})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
-                }}
-              />
+                }}>
+                {t('articleEditor.overview.back')}
+              </IconButtonLink>
             }
             centerChildren={
               <>
-                <NavigationButton
-                  icon={MaterialIconInsertDriveFileOutlined}
-                  label={t('articleEditor.overview.metadata')}
-                  onClick={() => setMetaDrawerOpen(true)}
+                <IconButton
+                  icon={<Icon icon="newspaper-o" />}
+                  size={'lg'}
                   disabled={isDisabled}
-                />
+                  onClick={() => setMetaDrawerOpen(true)}>
+                  {t('articleEditor.overview.metadata')}
+                </IconButton>
 
                 {isNew && createData == null ? (
-                  <NavigationButton
-                    icon={MaterialIconSaveOutlined}
-                    label={t('articleEditor.overview.create')}
-                    onClick={() => handleSave()}
+                  <IconButton
+                    style={{
+                      marginLeft: '10px'
+                    }}
+                    size={'lg'}
+                    icon={<Icon icon="save" />}
                     disabled={isDisabled}
-                  />
+                    onClick={() => handleSave()}>
+                    {t('articleEditor.overview.create')}
+                  </IconButton>
                 ) : (
                   <>
-                    <NavigationButton
-                      icon={MaterialIconSaveOutlined}
-                      label={t('articleEditor.overview.save')}
-                      onClick={() => handleSave()}
+                    <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
+                      size={'lg'}
+                      icon={<Icon icon="save" />}
                       disabled={isDisabled}
-                    />
-                    <NavigationButton
-                      icon={MaterialIconPublishOutlined}
-                      label={t('articleEditor.overview.publish')}
-                      onClick={() => setPublishDialogOpen(true)}
+                      onClick={() => handleSave()}>
+                      {t('articleEditor.overview.save')}
+                    </IconButton>
+                    <IconButton
+                      style={{
+                        marginLeft: '10px'
+                      }}
+                      size={'lg'}
+                      icon={<Icon icon="cloud-upload" />}
                       disabled={isDisabled}
-                    />
+                      onClick={() => setPublishDialogOpen(true)}>
+                      {t('articleEditor.overview.publish')}
+                    </IconButton>
                   </>
                 )}
               </>
@@ -304,46 +305,28 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer open={isMetaDrawerOpen} width={480} onClose={() => setMetaDrawerOpen(false)}>
-        {() => (
-          <ArticleMetadataPanel
-            value={metadata}
-            onClose={() => setMetaDrawerOpen(false)}
-            onChange={value => {
-              setMetadata(value)
-              setChanged(true)
-            }}
-          />
-        )}
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+        <ArticleMetadataPanel
+          value={metadata}
+          onClose={() => setMetaDrawerOpen(false)}
+          onChange={value => {
+            setMetadata(value)
+            setChanged(true)
+          }}
+        />
       </Drawer>
-      <Dialog open={isPublishDialogOpen} width={480} onClose={() => setPublishDialogOpen(false)}>
-        {() => (
-          <PublishArticlePanel
-            initialPublishDate={publishedAt}
-            pendingPublishDate={pendingPublishDate}
-            metadata={metadata}
-            onClose={() => setPublishDialogOpen(false)}
-            onConfirm={(publishDate, updateDate) => {
-              handlePublish(publishDate, updateDate)
-              setPublishDialogOpen(false)
-            }}
-          />
-        )}
-      </Dialog>
-      <Toast
-        type="success"
-        open={isSuccessToastOpen}
-        autoHideDuration={2000}
-        onClose={() => setSuccessToastOpen(false)}>
-        {successMessage}
-      </Toast>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+      <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
+        <PublishArticlePanel
+          initialPublishDate={publishedAt}
+          pendingPublishDate={pendingPublishDate}
+          metadata={metadata}
+          onClose={() => setPublishDialogOpen(false)}
+          onConfirm={(publishDate, updateDate) => {
+            handlePublish(publishDate, updateDate)
+            setPublishDialogOpen(false)
+          }}
+        />
+      </Modal>
     </>
   )
 }

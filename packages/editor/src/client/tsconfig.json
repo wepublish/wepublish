@@ -5,7 +5,7 @@
   "compilerOptions": {
     "outDir": "../../dist/client",
     "module": "esnext",
-    "types": ["@types/jest"],
+    "types": ["@types/jest", "@types/resize-observer-browser"],
     "lib": ["DOM", "DOM.Iterable", "ES2017", "ESNext.Array"]
   },
   "references": [{"path": "../shared"}]
