@@ -262,6 +262,7 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
                   <Link
                     className={css(LinkStyles)}
                     route={item.route}
+                    href={item.url}
                     onClick={e => {
                       onCollapse(true)
                     }}>

@@ -4,11 +4,12 @@ import gql from 'graphql-tag'
 import {useQuery} from 'react-apollo'
 import {BaseTemplate} from '../templates/baseTemplate'
 import {NavigationItem} from '../types'
-import {PageRoute} from './routeContext'
+import {ArticleRoute, PageRoute, routes} from './routeContext'
+import {createRouteContext} from '@karma.run/react/lib/cjs/route'
 
 const NavigationQuery = gql`
   {
-    main: navigation(key: "main") {
+    main: navigation(key: "test") {
       ...BaseNavigations
     }
 
@@ -20,11 +21,22 @@ const NavigationQuery = gql`
   fragment BaseNavigations on Navigation {
     links {
       __typename
+
       ... on PageNavigationLink {
         label
         page {
           slug
         }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          id
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
       }
     }
   }
@@ -37,6 +49,15 @@ export interface BaseTemplateContainerProps {
   children?: ReactNode
 }
 
+export const {
+  Link,
+  routeLink,
+  RouteProvider: BaseRouteProvider,
+  matchRoute,
+  useRoute,
+  useRouteDispatch
+} = createRouteContext(routes)
+
 export function BaseTemplateContainer({
   hideHeaderMobile,
   largeHeader,
@@ -46,7 +67,6 @@ export function BaseTemplateContainer({
   const {data} = useQuery(NavigationQuery)
 
   const {main, footer} = data ?? {}
-
   const mainNavi = main ? dataToNavigation(main) : []
   const footerNavi = footer ? dataToNavigation(footer) : []
 
@@ -64,16 +84,43 @@ export function BaseTemplateContainer({
   )
 }
 
-function dataToNavigation(data: any): NavigationItem[] {
-  return data.links
-    .filter((link: {__typename: string}) => link.__typename == 'PageNavigationLink')
-    .map((link: any) => linkToNavigationItem(link))
+function linkToNavigationItem(link: any): NavigationItem {
+  console.log('link:', link)
+  switch (link.__typename) {
+    case 'PageNavigationLink':
+      return {
+        title: link.label,
+        route: PageRoute.create({
+          slug: link.page?.slug ?? undefined
+        }),
+        isActive: false
+      }
+    case 'ArticleNavigationLink':
+      return {
+        title: link.label,
+        route: ArticleRoute.create({
+          id: link.article?.id ?? undefined
+        }),
+        isActive: false
+      }
+    case 'ExternalNavigationLink':
+      return {
+        title: link.label,
+        url: link.url,
+        isActive: false
+      }
+    default:
+      throw new Error('Unknown Link Type: ' + link.__typename)
+  }
 }
 
-function linkToNavigationItem(link: any): NavigationItem {
-  return {
-    title: link.label,
-    route: PageRoute.create({slug: link.page?.slug ?? undefined}),
-    isActive: false
-  }
+function dataToNavigation(data: any): NavigationItem[] {
+  return data.links
+    .filter(
+      (link: {__typename: string}) =>
+        link.__typename === 'ExternalNavigationLink' ||
+        link.__typename === 'PageNavigationLink' ||
+        link.__typename === 'ArticleNavigationLink'
+    )
+    .map((link: any) => linkToNavigationItem(link))
 }
