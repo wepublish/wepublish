@@ -11,10 +11,10 @@ import {
   optional
 } from '@karma.run/react'
 
-import {LinkButton, NavigationLinkButton, MenuLinkButton, LinkIconButton} from '@karma.run/ui'
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
 import {useMutation, gql} from '@apollo/client'
 import {LocalStorageKey} from './utility'
+import {Button, IconButton} from 'rsuite'
 
 export enum RouteType {
   Login = 'login',
@@ -38,6 +38,10 @@ export enum RouteType {
   AuthorList = 'authorList',
   AuthorEdit = 'authorEdit',
   AuthorCreate = 'authorCreate',
+
+  NavigationList = 'navigationList',
+  NavigationEdit = 'navigationEdit',
+  NavigationCreate = 'navigationCreate',
 
   PeerList = 'peerList',
   PeerProfileEdit = 'peerProfileEdit',
@@ -88,6 +92,16 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
+export const NavigationCreateRoute = route(
+  RouteType.NavigationCreate,
+  routePath`/navigation/create`
+)
+export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigations`)
+export const NavigationEditRoute = route(
+  RouteType.NavigationEdit,
+  routePath`/navigation/edit/${required('id')}`
+)
+
 export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
 export const PeerInfoEditRoute = route(RouteType.PeerProfileEdit, routePath`/peering/profile/edit`)
 export const PeerCreateRoute = route(RouteType.PeerCreate, routePath`/peering/create`)
@@ -125,6 +139,9 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
+  NavigationListRoute,
+  NavigationEditRoute,
+  NavigationCreateRoute,
   PeerListRoute,
   PeerInfoEditRoute,
   PeerCreateRoute,
@@ -149,10 +166,8 @@ export const {
   useRouteDispatch
 } = createRouteContext(routes)
 
-export const RouteLinkButton = routeLink(LinkButton)
-export const RouteLinkIconButton = routeLink(LinkIconButton)
-export const RouteMenuLinkButton = routeLink(MenuLinkButton)
-export const RouteNavigationLinkButton = routeLink(NavigationLinkButton)
+export const ButtonLink = routeLink(Button)
+export const IconButtonLink = routeLink(IconButton)
 
 export type Route = RouteInstancesForRoutes<typeof routes>
 
@@ -176,7 +191,6 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         // TODO: Handle UnsavedChangesDialog popstate
         // TODO: Add a way to discard next route
-
         if (next.type === RouteType.Logout) {
           if (session) {
             logout({variables: {token: session.sessionToken}})

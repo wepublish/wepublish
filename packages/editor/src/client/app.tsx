@@ -1,6 +1,8 @@
 import React from 'react'
 import {hot} from 'react-hot-loader/root'
 
+import 'rsuite/lib/styles/index.less'
+
 import {useRoute, RouteType, Route} from './route'
 
 import {Login} from './login'
@@ -16,6 +18,7 @@ import {PeerList} from './routes/peerList'
 import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
+import {NavigationList} from './routes/navigationList'
 
 export function contentForRoute(route: Route) {
   switch (route.type) {
@@ -58,6 +61,11 @@ export function contentForRoute(route: Route) {
     case RouteType.UserRoleCreate:
     case RouteType.UserRoleEdit:
       return <UserRoleList />
+
+    case RouteType.NavigationList:
+    case RouteType.NavigationCreate:
+    case RouteType.NavigationEdit:
+      return <NavigationList />
 
     case RouteType.NotFound:
       return <ArticleList />

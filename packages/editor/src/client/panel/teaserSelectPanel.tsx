@@ -1,27 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import {MaterialIconClose, MaterialIconUpdate, MaterialIconQueryBuilder} from '@karma.run/icons'
-
-import {
-  Box,
-  NavigationButton,
-  Panel,
-  PanelHeader,
-  PanelSection,
-  Toast,
-  Spacing,
-  Divider,
-  Typography,
-  Icon,
-  IconScale,
-  SearchInput,
-  Button,
-  Chip
-} from '@karma.run/ui'
 
 import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
+import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
 
 export interface TeaserSelectPanelProps {
   onClose(): void
@@ -29,9 +12,6 @@ export interface TeaserSelectPanelProps {
 }
 
 export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
-  const [isErrorToastOpen, setErrorToastOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
   const [type, setType] = useState<TeaserType>(TeaserType.Article)
   const [filter, setFilter] = useState('')
 
@@ -68,10 +48,10 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   useEffect(() => {
     if (articleListError ?? pageListError ?? peerArticleListError) {
-      setErrorToastOpen(true)
-      setErrorMessage(
-        articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message
-      )
+      Notification.error({
+        title: articleListError?.message ?? pageListError?.message ?? peerArticleListError!.message,
+        duration: 5000
+      })
     }
   }, [articleListError ?? pageListError ?? peerArticleListError])
 
@@ -136,57 +116,29 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
-                <Box key={article.id} marginBottom={Spacing.Small}>
-                  <Box
-                    marginBottom={Spacing.Tiny}
+                <List.Item key={article.id}>
+                  <h3
                     style={{cursor: 'pointer'}}
                     onClick={() => onSelect({type: TeaserType.Article, article})}>
-                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                      {article.latest.title || t('articleEditor.panels.untitled')}
-                    </Typography>
-                  </Box>
-                  <Box
-                    marginBottom={Spacing.ExtraSmall}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                        </Box>
-                        {new Date(article.createdAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.Small}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                        </Box>
-                        {new Date(article.modifiedAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="gray">
+                    {article.latest.title || t('articleEditor.panels.untitled')}
+                  </h3>
+                  <div>
+                    <div style={{display: 'inline', fontSize: 12}}>
+                      {new Date(article.createdAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                      {new Date(article.modifiedAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}
-                    </Typography>
-                  </Box>
-                  <Divider />
-                </Box>
+                    </div>
+                  </div>
+                </List.Item>
               )
             })}
-            <Box display="flex" justifyContent="center">
-              {articleListData?.articles.pageInfo.hasNextPage && (
-                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMoreArticles} />
-              )}
-            </Box>
+            {articleListData?.articles.pageInfo.hasNextPage && (
+              <Button onClick={loadMoreArticles}>{t('articleEditor.panels.loadMore')}</Button>
+            )}
           </>
         )
 
@@ -201,65 +153,32 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (article.published) states.push(t('articleEditor.panels.published'))
 
               return (
-                <Box key={`${peer.id}.${article.id}`} marginBottom={Spacing.Small}>
-                  <Box
-                    marginBottom={Spacing.Tiny}
+                <List.Item key={`${peer.id}.${article.id}`}>
+                  <h3
                     style={{cursor: 'pointer'}}
                     onClick={() =>
                       onSelect({type: TeaserType.PeerArticle, peer, articleID: article.id, article})
                     }>
-                    <Typography variant="body2" color={article.latest.title ? 'dark' : 'gray'}>
-                      {article.latest.title || t('articleEditor.panels.untitled')}
-                    </Typography>
-                  </Box>
-                  <Box
-                    marginBottom={Spacing.ExtraSmall}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                        </Box>
-                        {new Date(article.createdAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.Small}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                        </Box>
-                        {new Date(article.modifiedAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="gray">
+                    {peer.profile?.name ?? peer.name} -{' '}
+                    {article.latest.title || t('articleEditor.panels.untitled')}
+                  </h3>
+                  <div>
+                    <div style={{display: 'inline', fontSize: 12}}>
+                      {new Date(article.createdAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                      {new Date(article.modifiedAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}
-                    </Typography>
-                  </Box>
-                  <Box display="flex" marginBottom={Spacing.ExtraSmall}>
-                    <Chip
-                      imageURL={peer.profile?.logo?.squareURL ?? undefined}
-                      label={peer.profile?.name ?? peer.name}
-                    />
-                  </Box>
-                  <Divider />
-                </Box>
+                    </div>
+                  </div>
+                </List.Item>
               )
             })}
-            <Box display="flex" justifyContent="center">
-              {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
-                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMorePeerArticles} />
-              )}
-            </Box>
+            {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
+              <Button onClick={loadMorePeerArticles}>{t('articleEditor.panels.loadMore')}</Button>
+            )}
           </>
         )
 
@@ -274,57 +193,29 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               if (page.published) states.push('articleEditor.panels.published')
 
               return (
-                <Box key={page.id} marginBottom={Spacing.Small}>
-                  <Box
-                    marginBottom={Spacing.Tiny}
+                <List.Item key={page.id}>
+                  <h3
                     style={{cursor: 'pointer'}}
                     onClick={() => onSelect({type: TeaserType.Page, page})}>
-                    <Typography variant="body2" color={page.latest.title ? 'dark' : 'gray'}>
-                      {page.latest.title || t('articleEditor.panels.untitled')}
-                    </Typography>
-                  </Box>
-                  <Box
-                    marginBottom={Spacing.ExtraSmall}
-                    flexDirection="row"
-                    alignItems="center"
-                    display="flex">
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.ExtraSmall}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconQueryBuilder} scale={IconScale.Larger} />
-                        </Box>
-                        {new Date(page.createdAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="grayDark">
-                      <Box
-                        marginRight={Spacing.Small}
-                        flexDirection="row"
-                        alignItems="center"
-                        display="flex">
-                        <Box marginRight={Spacing.Tiny}>
-                          <Icon element={MaterialIconUpdate} scale={IconScale.Larger} />
-                        </Box>
-                        {page.modifiedAt && new Date(page.modifiedAt).toLocaleString()}
-                      </Box>
-                    </Typography>
-                    <Typography element="div" variant="subtitle1" color="gray">
+                    {page.latest.title || t('articleEditor.panels.untitled')}
+                  </h3>
+                  <div>
+                    <div style={{display: 'inline', fontSize: 12}}>
+                      {new Date(page.createdAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
+                      {new Date(page.modifiedAt).toLocaleString()}
+                    </div>
+                    <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
                       {states.join(' / ')}
-                    </Typography>
-                  </Box>
-                  <Divider />
-                </Box>
+                    </div>
+                  </div>
+                </List.Item>
               )
             })}
-            <Box display="flex" justifyContent="center">
-              {pageListData?.pages.pageInfo.hasNextPage && (
-                <Button label={t('articleEditor.panels.loadMore')} onClick={loadMorePages} />
-              )}
-            </Box>
+            {pageListData?.pages.pageInfo.hasNextPage && (
+              <Button onClick={loadMorePages}>{t('articleEditor.panels.loadMore')}</Button>
+            )}
           </>
         )
     }
@@ -332,72 +223,42 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   return (
     <>
-      <Panel>
-        <PanelHeader
-          title={t('articleEditor.panels.chooseTeaser')}
-          leftChildren={
-            <NavigationButton
-              icon={MaterialIconClose}
-              label={t('articleEditor.panels.close')}
-              onClick={() => onClose()}
-            />
-          }
-        />
-        <PanelSection>
-          <Box display="flex" marginBottom={Spacing.Small}>
-            {/* TODO: Create TabButton/ButtonGroup UI component */}
-            <Button
-              flexGrow={1}
-              marginRight={Spacing.ExtraSmall}
-              variant={
-                type === TeaserType.Article
-                  ? t('articleEditor.panels.default')
-                  : t('articleEditor.panels.outlined')
-              }
-              label={t('articleEditor.panels.article')}
-              onClick={() => setType(TeaserType.Article)}
-            />
-            <Button
-              flexGrow={1}
-              marginRight={Spacing.ExtraSmall}
-              variant={
-                type === TeaserType.PeerArticle
-                  ? t('articleEditor.panels.default')
-                  : t('articleEditor.panels.outlined')
-              }
-              label={t('articleEditor.panels.peerArticle')}
-              onClick={() => setType(TeaserType.PeerArticle)}
-            />
-            <Button
-              flexGrow={1}
-              marginRight={Spacing.ExtraSmall}
-              variant={
-                type === TeaserType.Page
-                  ? t('articleEditor.panels.default')
-                  : t('articleEditor.panels.outlined')
-              }
-              label={t('articleEditor.panels.page')}
-              onClick={() => setType(TeaserType.Page)}
-            />
-          </Box>
-          <Box marginBottom={Spacing.Medium}>
-            <SearchInput
-              placeholder={t('articleEditor.panels.search')}
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
-          </Box>
+      <Drawer.Header>
+        <Drawer.Title>{t('articleEditor.panels.chooseTeaser')}</Drawer.Title>
+      </Drawer.Header>
 
-          {currentContent()}
-        </PanelSection>
-      </Panel>
-      <Toast
-        type="error"
-        open={isErrorToastOpen}
-        autoHideDuration={5000}
-        onClose={() => setErrorToastOpen(false)}>
-        {errorMessage}
-      </Toast>
+      <Drawer.Body>
+        <Nav
+          appearance="tabs"
+          activeKey={type}
+          onSelect={type => setType(type)}
+          style={{marginBottom: 20}}>
+          <Nav.Item eventKey={TeaserType.Article} icon={<Icon icon="file-text" />}>
+            {t('articleEditor.panels.article')}
+          </Nav.Item>
+          <Nav.Item eventKey={TeaserType.PeerArticle} icon={<Icon icon="file-text" />}>
+            {t('articleEditor.panels.peerArticle')}
+          </Nav.Item>
+          <Nav.Item eventKey={TeaserType.Page} icon={<Icon icon="file-text" />}>
+            {t('articleEditor.panels.page')}
+          </Nav.Item>
+        </Nav>
+
+        <InputGroup style={{marginBottom: 20}}>
+          <Input value={filter} onChange={value => setFilter(value)} />
+          <InputGroup.Addon>
+            <Icon icon="search" />
+          </InputGroup.Addon>
+        </InputGroup>
+
+        <List>{currentContent()}</List>
+      </Drawer.Body>
+
+      <Drawer.Footer>
+        <Button appearance={'subtle'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.close')}
+        </Button>
+      </Drawer.Footer>
     </>
   )
 }

@@ -292,7 +292,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanGetPermissions, roles)
 
-        return AllPermissions.map(permission => ({...permission, checked: false}))
+        return AllPermissions
       }
     },
 
@@ -326,12 +326,12 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     navigations: {
-      type: GraphQLList(GraphQLNavigation),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigation))),
       resolve(root, args, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetNavigations, roles)
 
-        dbAdapter.navigation.getNavigations()
+        return dbAdapter.navigation.getNavigations()
       }
     },
 

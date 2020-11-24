@@ -102,8 +102,15 @@ export interface ListicleBlock {
 export interface LinkPageBreakBlock {
   type: BlockType.LinkPageBreak
   text: string
+  richText: RichTextNode[]
   linkURL: string
   linkText: string
+  linkTarget: string
+  hideButton: boolean
+  styleOption?: string
+  layoutOption?: string
+  templateOption?: string
+  imageID?: string
 }
 
 export interface TitleBlock {
