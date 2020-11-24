@@ -357,6 +357,30 @@ export const CanDeletePaymentMethod: Permission = {
   deprecated: false
 }
 
+export const CanCreateInvoice: Permission = {
+  id: 'CAN_CREATE_INVOICE',
+  description: 'Allows to create an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoice: Permission = {
+  id: 'CAN_GET_INVOICE',
+  description: 'Allows to get an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoices: Permission = {
+  id: 'CAN_GET_INVOICES',
+  description: 'Allows to get all invoices',
+  deprecated: false
+}
+
+export const CanDeleteInvoice: Permission = {
+  id: 'CAN_DELETE_INVOICE',
+  description: 'Allows to delete invoice',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -410,7 +434,11 @@ export const AllPermissions: Permission[] = [
   CanCreatePaymentMethod,
   CanGetPaymentMethod,
   CanGetPaymentMethods,
-  CanDeletePaymentMethod
+  CanDeletePaymentMethod,
+  CanCreateInvoice,
+  CanGetInvoice,
+  CanGetInvoices,
+  CanDeleteInvoice
 ]
 
 export const EditorPermissions: Permission[] = [

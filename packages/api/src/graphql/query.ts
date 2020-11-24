@@ -96,7 +96,9 @@ import {
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetPaymentMethods,
-  CanGetPaymentMethod
+  CanGetPaymentMethod,
+  CanGetInvoice,
+  CanGetInvoices
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -117,6 +119,13 @@ import {
 } from './memberPlan'
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPaymentMethod} from './paymentMethod'
+import {
+  GraphQLInvoice,
+  GraphQLInvoiceConnection,
+  GraphQLinvoiceFilter,
+  GraphQLInvoiceSort
+} from './invoice'
+import {InvoiceSort} from '../db/invoice'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -785,6 +794,45 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetPaymentMethods, roles)
 
         return dbAdapter.paymentMethod.getPaymentMethods()
+      }
+    },
+
+    // Invoice
+    // ======
+
+    invoice: {
+      type: GraphQLInvoice,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetInvoice, roles)
+
+        return loaders.invoicesByID.load(id)
+      }
+    },
+
+    invoices: {
+      type: GraphQLNonNull(GraphQLInvoiceConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLinvoiceFilter},
+        sort: {type: GraphQLInvoiceSort, defaultValue: InvoiceSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetInvoices, roles)
+
+        return dbAdapter.invoice.getInvoices({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
       }
     }
   }

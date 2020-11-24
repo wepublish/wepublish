@@ -36,6 +36,7 @@ import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {OptionalMemberPlan} from './db/memberPlan'
 import {OptionalPaymentMethod} from './db/paymentMethod'
+import {OptionalInvoice} from './db/invoice'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -63,6 +64,7 @@ export interface DataLoaderContext {
 
   readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
+  readonly invoicesByID: DataLoader<string, OptionalInvoice>
 }
 
 export interface Context {
@@ -201,7 +203,8 @@ export async function contextFromRequest(
       }),
 
       memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
-      paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids))
+      paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
+      invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids))
     },
 
     dbAdapter,

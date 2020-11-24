@@ -1,11 +1,12 @@
 import {ConnectionResult, InputCursor, Limit, RichTextNode, SortOrder} from '..'
 
-export interface InvoiceItems {
+export interface InvoiceItem {
   createdAt: Date
   modifiedAt: Date
   name: string
   description?: RichTextNode[]
-  amountInCents: number
+  quantity: number
+  amount: number
 }
 
 export interface InvoiceHistory {
@@ -24,7 +25,7 @@ export interface Invoice {
   description?: RichTextNode[]
   payedAt: Date | null
   history: InvoiceHistory[]
-  items: InvoiceItems[]
+  items: InvoiceItem[]
 }
 
 export type OptionalInvoice = Invoice | null
@@ -34,8 +35,7 @@ export interface InvoiceInput {
   userID?: string
   description?: RichTextNode[]
   payedAt: Date | null
-  history: InvoiceHistory[]
-  items: InvoiceItems[]
+  items: InvoiceItem[]
 }
 
 export interface CreateInvoiceArgs {

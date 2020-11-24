@@ -3,7 +3,7 @@ import {
   AvailablePaymentMethod,
   FocalPoint,
   InvoiceHistory,
-  InvoiceItems,
+  InvoiceItem,
   MetadataProperty,
   NavigationLink,
   PageBlock,
@@ -300,5 +300,5 @@ export interface DBInvoice {
   description?: RichTextNode[]
   payedAt: Date | null
   history: InvoiceHistory[]
-  items: InvoiceItems[]
+  items: InvoiceItem[]
 }

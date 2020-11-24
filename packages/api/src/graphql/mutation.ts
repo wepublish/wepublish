@@ -56,7 +56,9 @@ import {
   CanCreateMemberPlan,
   CanDeleteMemberPlan,
   CanCreatePaymentMethod,
-  CanDeletePaymentMethod
+  CanDeletePaymentMethod,
+  CanCreateInvoice,
+  CanDeleteInvoice
 } from './permissions'
 import {
   GraphQLUser,
@@ -77,6 +79,7 @@ import {
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
+import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -810,6 +813,47 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         await dbAdapter.paymentMethod.deletePaymentMethod(id)
         return id
       }
+    },
+
+    // Invoice
+    // ======
+
+    createInvoice: {
+      type: GraphQLInvoice,
+      args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateInvoice, roles)
+        return dbAdapter.invoice.createInvoice({input})
+      }
+    },
+
+    updateInvoice: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateInvoice, roles)
+        return dbAdapter.invoice.updateInvoice({id, input})
+      }
+    },
+
+    deleteInvoice: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteInvoice, roles)
+        return await dbAdapter.invoice.deleteInvoice({id})
+      }
     }
+
+    // Image
+    // =====
   }
 })

@@ -36,7 +36,7 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       userID: input.userID,
       description: input.description,
       payedAt: input.payedAt,
-      history: input.history,
+      history: [],
       items: input.items
     })
 
@@ -54,7 +54,6 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
           userID: input.userID,
           description: input.description,
           payedAt: input.payedAt,
-          history: input.history,
           items: input.items
         }
       },
