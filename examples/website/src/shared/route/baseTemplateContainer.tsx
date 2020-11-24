@@ -9,7 +9,7 @@ import {createRouteContext} from '@karma.run/react/lib/cjs/route'
 
 const NavigationQuery = gql`
   {
-    main: navigation(key: "test") {
+    main: navigation(key: "main") {
       ...BaseNavigations
     }
 
@@ -85,7 +85,6 @@ export function BaseTemplateContainer({
 }
 
 function linkToNavigationItem(link: any): NavigationItem {
-  console.log('link:', link)
   switch (link.__typename) {
     case 'PageNavigationLink':
       return {
