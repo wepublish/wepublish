@@ -179,6 +179,7 @@ export function Base({children}: BaseProps) {
                   )}>
                   {AVAILABLE_LANG.map(lang => (
                     <Dropdown.Item
+                      key={lang.id}
                       onSelect={() => setUILanguage(lang.id)}
                       active={lang.id === uiLanguage}>
                       {lang.name}
