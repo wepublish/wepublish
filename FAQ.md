@@ -1,5 +1,5 @@
 #### Q: How do i generate a token for the playground?
-A: When working in the admin-view of the GraphQL-Playground (`http://localhost:4000/admin`), you are required to be authenticated. In order to do so, you have to create a session-token. You can do this in the following way: 
+A: When working with the GraphQL-API in the GraphQL-Playground (`http://localhost:4000/admin`), you are required to be authenticated. In order to do so, you have to create a session-token. You can do this in the following way: 
 
 Create the following query: 
 ``` 
@@ -32,8 +32,8 @@ Copy the token and switch to the `HTTP Headers`-view. Now paste your token into 
 As of now you’re good to go the execute queries/mutations in the GraphQL-Playground. 
 
 #### Q: What do I do if I receive the error `MongoError: Collection migrations already exists. Currently in strict mode` in the terminal?
-A: Basically this error means that you have a conflict in your database caused by installing two different (incompatible) branches. 
+A: Basically this error means that you have a conflict in your database caused by working on two different branches with different migration states. 
 
-You can solve this issue by running `docker-compose down` followed by `yarn clean`. These commands will delete the current database and remove any residuals. 
+You can solve this issue by stopping everything, running `docker-compose down` followed by `yarn clean && yarn build`. These commands will delete the current database and remove any residuals. 
 
-By then running `yarn dev` you can then setup the database from scratch and everything should be running again. 
+Now if you start your database up and run `yarn watch` you'll get a fresh new database. and everything should be running again. 
