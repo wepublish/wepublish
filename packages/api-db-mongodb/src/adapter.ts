@@ -19,6 +19,7 @@ import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBUserRoleAdapter} from './db/userRole'
 import {MongoDBMemberPlanAdapter} from './db/memberPlan'
 import {MongoDBPaymentMethodAdapter} from './db/paymentMethod'
+import {MongoDBInvoiceAdapter} from './db/invoice'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -69,6 +70,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly page: MongoDBPageAdapter
   readonly memberPlan: MongoDBMemberPlanAdapter
   readonly paymentMethod: MongoDBPaymentMethodAdapter
+  readonly invoice: MongoDBInvoiceAdapter
 
   // Init
   // ====
@@ -99,6 +101,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.page = new MongoDBPageAdapter(db, locale)
     this.memberPlan = new MongoDBMemberPlanAdapter(db, locale)
     this.paymentMethod = new MongoDBPaymentMethodAdapter(db)
+    this.invoice = new MongoDBInvoiceAdapter(db, locale)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {

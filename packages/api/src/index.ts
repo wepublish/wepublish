@@ -31,6 +31,7 @@ export * from './db/adapter'
 export * from './db/peer'
 export * from './db/token'
 export * from './db/memberPlan'
+export * from './db/invoice'
 
 export * from './mediaAdapter'
 export * from './urlAdapter'

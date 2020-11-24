@@ -421,6 +421,12 @@ export const Migrations: Migration[] = [
 
       const users = db.collection(CollectionName.Users)
       await users.createIndex({'subscription.memberPlanId': 1})
+
+      const invoices = await db.createCollection(CollectionName.Invoices, {
+        strict: true
+      })
+
+      await invoices.createIndex({mail: 1})
     }
   }
 ]
