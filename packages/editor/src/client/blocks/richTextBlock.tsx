@@ -175,17 +175,19 @@ function renderElement({attributes, children, element}: RenderElementProps) {
     // && <InsertButton icon="columns" format={BlockFormat.Table} />}
     case BlockFormat.TableRow:
       return (
-        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes}>
-          {children}
+        <tr style={{...S.tableAll, ...S.tableCell}}>
+          <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
+            {children}
+          </td>
         </tr>
       )
 
-    case BlockFormat.TableCell:
-      return (
-        <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
-          {children}
-        </td>
-      )
+    // case BlockFormat.TableCell:
+    //   return (
+    //     <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
+    //       {children}
+    //     </td>
+    //   )
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -376,29 +378,25 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
 function InsertButton({icon, format}: SlateBlockButtonProps) {
   const editor = useSlate()
 
+  // TODO everything
   return (
     <ToolbarButton
       icon={icon}
-      disabled={!isFormatActive(editor, format)}
+      disabled={
+        !isFormatActive(editor, BlockFormat.Table) || !isFormatActive(editor, BlockFormat.TableRow)
+      }
       onMouseDown={e => {
         e.preventDefault()
-        console.log('insert row')
-        // editor.insertBreak()
-        editor.insertFragment([
-          {
-            type: 'table-row',
-            children: [
-              {
-                type: 'table-cell',
-                children: [{text: 'new row :)'}]
-              },
-              {
-                type: 'table-cell',
-                children: [{text: 'another one :)'}]
-              }
-            ]
-          }
-        ])
+        Transforms.insertNodes(
+          editor,
+          [
+            {
+              type: 'table-row',
+              children: [{text: 'new row :)'}]
+            }
+          ],
+          {match: node => node.type === BlockFormat.TableRow}
+        )
       }}
     />
   )
@@ -575,6 +573,8 @@ function isFormatActive(editor: Editor, format: Format) {
 function toggleFormat(editor: Editor, format: Format) {
   const isActive = isFormatActive(editor, format)
   const isList = ListFormats.includes(format)
+  const isTable = format === BlockFormat.Table
+  // const isTableRow = format === BlockFormat.TableRow
 
   if (TextFormats.includes(format)) {
     if (isActive) {
@@ -585,15 +585,22 @@ function toggleFormat(editor: Editor, format: Format) {
   }
 
   if (BlockFormats.includes(format)) {
-    for (const format of ListFormats) {
+    for (const format of [...ListFormats, BlockFormat.Table]) {
       Transforms.unwrapNodes(editor, {match: node => node.type === format, split: true})
     }
 
     Transforms.setNodes(editor, {
-      type: isActive ? BlockFormat.Paragraph : isList ? BlockFormat.ListItem : format
+      type: [
+        [isActive, BlockFormat.Paragraph],
+        [isList, BlockFormat.ListItem],
+        [isTable, BlockFormat.TableRow],
+        [true, format]
+      ]
+        .find(([fType]) => fType)
+        ?.pop()
     })
 
-    if (!isActive && isList) {
+    if (!isActive && (isList || isTable)) {
       Transforms.wrapNodes(editor, {type: format, children: []})
     }
   }
@@ -646,63 +653,63 @@ function withRichText<T extends ReactEditor>(editor: T): T {
   }
 
   // START  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
-  editor.deleteBackward = unit => {
-    const {selection} = editor
+  // editor.deleteBackward = unit => {
+  //   const {selection} = editor
 
-    if (selection && Range.isCollapsed(selection)) {
-      const [cell] = Editor.nodes(editor, {
-        match: n => n.type === BlockFormat.TableCell
-      })
+  //   if (selection && Range.isCollapsed(selection)) {
+  //     const [cell] = Editor.nodes(editor, {
+  //       match: n => n.type === BlockFormat.TableCell
+  //     })
 
-      if (cell) {
-        const [, cellPath] = cell
-        const start = Editor.start(editor, cellPath)
+  //     if (cell) {
+  //       const [, cellPath] = cell
+  //       const start = Editor.start(editor, cellPath)
 
-        if (Point.equals(selection.anchor, start)) {
-          return
-        }
-      }
-    }
+  //       if (Point.equals(selection.anchor, start)) {
+  //         return
+  //       }
+  //     }
+  //   }
 
-    deleteBackward(unit)
-  }
+  //   deleteBackward(unit)
+  // }
 
-  editor.deleteForward = unit => {
-    const {selection} = editor
+  // editor.deleteForward = unit => {
+  //   const {selection} = editor
 
-    if (selection && Range.isCollapsed(selection)) {
-      const [cell] = Editor.nodes(editor, {
-        match: n => n.type === BlockFormat.TableCell
-      })
+  //   if (selection && Range.isCollapsed(selection)) {
+  //     const [cell] = Editor.nodes(editor, {
+  //       match: n => n.type === BlockFormat.TableCell
+  //     })
 
-      if (cell) {
-        const [, cellPath] = cell
-        const end = Editor.end(editor, cellPath)
+  //     if (cell) {
+  //       const [, cellPath] = cell
+  //       const end = Editor.end(editor, cellPath)
 
-        if (Point.equals(selection.anchor, end)) {
-          return
-        }
-      }
-    }
+  //       if (Point.equals(selection.anchor, end)) {
+  //         return
+  //       }
+  //     }
+  //   }
 
-    deleteForward(unit)
-  }
+  //   deleteForward(unit)
+  // }
 
-  editor.insertBreak = () => {
-    const {selection} = editor
+  // editor.insertBreak = () => {
+  //   const {selection} = editor
 
-    if (selection) {
-      const [table] = Editor.nodes(editor, {
-        match: n => n.type === BlockFormat.Table
-      })
+  //   if (selection) {
+  //     const [table] = Editor.nodes(editor, {
+  //       match: n => n.type === BlockFormat.Table
+  //     })
 
-      if (table) {
-        return
-      }
-    }
+  //     if (table) {
+  //       return
+  //     }
+  //   }
 
-    insertBreak()
-  }
+  //   insertBreak()
+  // }
 
   // STOP  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
 
