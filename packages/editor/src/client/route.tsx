@@ -39,6 +39,10 @@ export enum RouteType {
   AuthorEdit = 'authorEdit',
   AuthorCreate = 'authorCreate',
 
+  NavigationList = 'navigationList',
+  NavigationEdit = 'navigationEdit',
+  NavigationCreate = 'navigationCreate',
+
   PeerList = 'peerList',
   PeerProfileEdit = 'peerProfileEdit',
   PeerCreate = 'peerCreate',
@@ -88,6 +92,16 @@ export const AuthorEditRoute = route(
 )
 export const AuthorCreateRoute = route(RouteType.AuthorCreate, routePath`/author/create`)
 
+export const NavigationCreateRoute = route(
+  RouteType.NavigationCreate,
+  routePath`/navigation/create`
+)
+export const NavigationListRoute = route(RouteType.NavigationList, routePath`/navigations`)
+export const NavigationEditRoute = route(
+  RouteType.NavigationEdit,
+  routePath`/navigation/edit/${required('id')}`
+)
+
 export const PeerListRoute = route(RouteType.PeerList, routePath`/peering`)
 export const PeerInfoEditRoute = route(RouteType.PeerProfileEdit, routePath`/peering/profile/edit`)
 export const PeerCreateRoute = route(RouteType.PeerCreate, routePath`/peering/create`)
@@ -125,6 +139,9 @@ export const routes = [
   AuthorListRoute,
   AuthorEditRoute,
   AuthorCreateRoute,
+  NavigationListRoute,
+  NavigationEditRoute,
+  NavigationCreateRoute,
   PeerListRoute,
   PeerInfoEditRoute,
   PeerCreateRoute,
@@ -174,7 +191,6 @@ export function RouteProvider({children}: RouteProviderProps) {
       handleNextRoute={(next, dispatch) => {
         // TODO: Handle UnsavedChangesDialog popstate
         // TODO: Add a way to discard next route
-
         if (next.type === RouteType.Logout) {
           if (session) {
             logout({variables: {token: session.sessionToken}})
