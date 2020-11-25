@@ -510,7 +510,6 @@ function InsertTable({icon}: ToolbarButtonProps) {
         disabled={isFormatActive(editor, BlockFormat.Table)}
         onMouseDown={e => {
           e.preventDefault()
-          editor.insertBreak()
           Transforms.insertNodes(editor, basicTableElement(nrows, ncols))
         }}
       />
@@ -616,7 +615,7 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline} = editor
+  const {insertData, isInline, insertBreak} = editor
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
   editor.insertData = (data: any) => {
@@ -629,6 +628,13 @@ function withRichText<T extends ReactEditor>(editor: T): T {
     } else {
       insertData(data)
     }
+  }
+
+  editor.insertBreak = () => {
+    if (isFormatActive(editor, BlockFormat.Table)) {
+      return
+    }
+    insertBreak()
   }
 
   return editor
