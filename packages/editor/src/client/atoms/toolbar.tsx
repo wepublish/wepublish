@@ -48,7 +48,7 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
 }
 
 export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly icon: IconNames | SVGIcon | SVGElement
+  readonly icon: IconNames | SVGIcon
   readonly active?: boolean
 }
 
@@ -68,11 +68,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         }}
         ref={ref}
         {...props}>
-        {typeof icon !== 'string' && !icon.id ? (
-          icon
-        ) : (
-          <Icon icon={icon as IconNames} element={icon} />
-        )}
+        <Icon icon={icon} element={icon} />
       </button>
     )
   }
