@@ -1,4 +1,5 @@
 import React, {useState, memo, useEffect, useMemo} from 'react'
+import nanoid from 'nanoid'
 import {
   Editor,
   Node as SlateNode,
@@ -180,14 +181,14 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.TableRow:
       return (
-        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes}>
+        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes} key={nanoid()}>
           {children}
         </tr>
       )
 
     case BlockFormat.TableCell:
       return (
-        <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
+        <td style={{...S.tableAll, ...S.tableCell}} {...attributes} key={nanoid()}>
           {children}
         </td>
       )
