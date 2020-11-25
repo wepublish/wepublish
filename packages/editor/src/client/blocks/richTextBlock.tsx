@@ -330,15 +330,6 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <InsertTable icon="table" />
 
-        <InputGroup size="xs" style={{width: '80px'}}>
-          <InputGroup.Addon>r:</InputGroup.Addon>
-          <Input type="number" value="4" />
-        </InputGroup>
-        <InputGroup size="xs" style={{width: '80px'}}>
-          <InputGroup.Addon>c:</InputGroup.Addon>
-          <Input type="number" value="4" />
-        </InputGroup>
-
         <ToolbarDivider />
 
         <FormatButton icon="bold" format={TextFormat.Bold} />
@@ -496,6 +487,8 @@ function RemoveLinkFormatButton() {
 
 function InsertTable({icon}: ToolbarButtonProps) {
   const editor = useSlate()
+  const [nrows, setNrows] = useState(2)
+  const [ncols, setNcols] = useState(1)
 
   const basicTableElement = (nrows: number, ncols: number): [SlateElement] => [
     {
@@ -511,15 +504,39 @@ function InsertTable({icon}: ToolbarButtonProps) {
   ]
 
   return (
-    <ToolbarButton
-      icon={icon}
-      disabled={isFormatActive(editor, BlockFormat.Table)}
-      onMouseDown={e => {
-        e.preventDefault()
-        editor.insertBreak()
-        Transforms.insertNodes(editor, basicTableElement(2, 2))
-      }}
-    />
+    <>
+      <ToolbarButton
+        icon={icon}
+        disabled={isFormatActive(editor, BlockFormat.Table)}
+        onMouseDown={e => {
+          e.preventDefault()
+          editor.insertBreak()
+          Transforms.insertNodes(editor, basicTableElement(nrows, ncols))
+        }}
+      />
+      <SetRowColNumbers key={'row'} label="r:" num={nrows} setNumber={setNrows} />
+      <SetRowColNumbers key={'col'} label="c:" num={ncols} setNumber={setNcols} />
+    </>
+  )
+}
+
+interface SetRowColNumbersProps {
+  label: string
+  num: number
+  setNumber: React.Dispatch<React.SetStateAction<number>>
+}
+
+function SetRowColNumbers({label, num, setNumber}: SetRowColNumbersProps) {
+  const editor = useSlate()
+
+  return (
+    <InputGroup
+      size="xs"
+      style={{width: '80px'}}
+      disabled={isFormatActive(editor, BlockFormat.Table)}>
+      <InputGroup.Addon>{label}</InputGroup.Addon>
+      <Input type="number" value={`${num}`} onChange={val => setNumber(Number(val))} />
+    </InputGroup>
   )
 }
 
