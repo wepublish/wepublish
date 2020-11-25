@@ -27,8 +27,7 @@ import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
-import {customIcons} from '../atoms/customSVGIcons'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Input, InputGroup, Modal} from 'rsuite'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -330,8 +329,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         <ToolbarDivider />
 
         <InsertTable icon="table" />
-        <InsertTableRow icon={customIcons.insertRowBelow} />
-        <InsertTableColumn icon={customIcons.insertRowBelow} />
+
+        <InputGroup size="xs" style={{width: '80px'}}>
+          <InputGroup.Addon>r:</InputGroup.Addon>
+          <Input type="number" value="4" />
+        </InputGroup>
+        <InputGroup size="xs" style={{width: '80px'}}>
+          <InputGroup.Addon>c:</InputGroup.Addon>
+          <Input type="number" value="4" />
+        </InputGroup>
 
         <ToolbarDivider />
 
@@ -488,194 +494,34 @@ function RemoveLinkFormatButton() {
   )
 }
 
-const basicTableElement: [SlateElement] = [
-  {
-    type: 'table',
-    children: [
-      {
-        type: 'table-row',
-        children: [
-          {
-            type: 'table-cell',
-            children: [{text: ''}]
-          }
-        ]
-      }
-    ]
-  }
-]
-
 function InsertTable({icon}: ToolbarButtonProps) {
   const editor = useSlate()
 
+  const basicTableElement = (nrows: number, ncols: number): [SlateElement] => [
+    {
+      type: BlockFormat.Table,
+      children: new Array(nrows).fill({
+        type: BlockFormat.TableRow,
+        children: new Array(ncols).fill({
+          type: BlockFormat.TableCell,
+          children: [{text: ''}]
+        })
+      })
+    }
+  ]
+
   return (
     <ToolbarButton
       icon={icon}
+      disabled={isFormatActive(editor, BlockFormat.Table)}
       onMouseDown={e => {
         e.preventDefault()
         editor.insertBreak()
-        Transforms.insertNodes(editor, basicTableElement)
+        Transforms.insertNodes(editor, basicTableElement(2, 2))
       }}
     />
   )
 }
-
-function InsertTableRow({icon}: ToolbarButtonProps) {
-  const editor = useSlate()
-  const {selection} = editor
-
-  let row = basicTableElement[0].children
-
-  if (selection) {
-    for (const [node, path] of SlateNode.ancestors(editor, selection.focus.path)) {
-      if (node.type === BlockFormat.TableRow) {
-        const cells = new Array(node.children.length).fill({
-          type: 'table-cell',
-          children: [{text: ''}]
-        })
-        row = [{type: 'table-row', children: cells}]
-      }
-    }
-  }
-
-  return (
-    <ToolbarButton
-      icon={icon}
-      disabled={!isFormatActive(editor, BlockFormat.Table)}
-      onMouseDown={e => {
-        e.preventDefault()
-        Transforms.insertNodes(editor, row, {
-          match: node => node.type === BlockFormat.TableRow
-        })
-      }}
-    />
-  )
-}
-
-function getSelectedBlock(editor: Editor, selection: Range | null) {
-  return selection !== null && selection.anchor !== null
-    ? editor.children[selection.anchor.path[0]]
-    : null
-}
-
-function InsertTableColumn({icon}: ToolbarButtonProps) {
-  const editor = useSlate()
-  const {selection} = editor
-
-  return (
-    <ToolbarButton
-      icon={icon}
-      // disabled={!isFormatActive(editor, BlockFormat.Table)}
-      onMouseDown={e => {
-        e.preventDefault()
-        if (selection) {
-          for (const [node, path] of SlateNode.ancestors(editor, selection.focus.path)) {
-            if (node.type === BlockFormat.TableRow) {
-              Transforms.insertNodes(
-                editor,
-                basicTableElement[0].children[0].children as SlateElement,
-                {at: path}
-              )
-            }
-          }
-
-          // Transforms.removeNodes(editor, {
-          //   at: selection,
-          //   match: node => node.type === BlockFormat.Table
-          // })
-        }
-      }}
-    />
-  )
-}
-
-// START  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
-// editor.deleteBackward = unit => {
-//   const {selection} = editor
-
-//   if (selection && Range.isCollapsed(selection)) {
-//     const [cell] = Editor.nodes(editor, {
-//       match: n => n.type === BlockFormat.TableCell
-//     })
-
-//     if (cell) {
-//       const [, cellPath] = cell
-//       const start = Editor.start(editor, cellPath)
-
-//       if (Point.equals(selection.anchor, start)) {
-//         return
-//       }
-//     }
-//   }
-
-//   deleteBackward(unit)
-// }
-
-// editor.deleteForward = unit => {
-//   const {selection} = editor
-
-//   if (selection && Range.isCollapsed(selection)) {
-//     const [cell] = Editor.nodes(editor, {
-//       match: n => n.type === BlockFormat.TableCell
-//     })
-
-//     if (cell) {
-//       const [, cellPath] = cell
-//       const end = Editor.end(editor, cellPath)
-
-//       if (Point.equals(selection.anchor, end)) {
-//         return
-//       }
-//     }
-//   }
-
-//   deleteForward(unit)
-// }
-
-// editor.insertBreak = () => {
-//   const {selection} = editor
-
-//   // if (selection) {
-//   //   const [table] = Editor.nodes(editor, {
-//   //     match: n => n.type === BlockFormat.Table
-//   //   })
-
-//   // TODO
-//   // Range.end( selection)
-//   //  })
-
-//   const selected: SlateNode | any =
-//     selection !== null && selection.anchor !== null
-//       ? editor.children[selection.anchor.path[0]][selection.anchor.path[1]]
-//       : null
-
-//   if (isFormatActive(editor, BlockFormat.Table)) {
-//     Transforms.insertNodes(
-//       editor,
-//       {type: BlockFormat.Paragraph, children: [{text: 'brek'}]}
-
-//       // [{...selected, children: [selected.children.map(child=>{
-//       //   {...child,text:''}
-//       // }
-//       // )]}]
-//     )
-//   } else {
-//     insertBreak()
-//   }
-
-//   // const nodes = Array.from(
-//   //   Editor.nodes(editor, {
-//   //     at: selection,
-//   //     match: node => node.type === InlineFormat.Link
-//   //   })
-//   // )
-
-//   // if (table) {
-//   //   return
-//   // }
-
-//   // STOP  https://github.com/ianstormtaylor/slate/blob/master/site/examples/tables.tsx
-// }
 
 function isFormatActive(editor: Editor, format: Format) {
   if (TextFormats.includes(format)) {
