@@ -637,9 +637,18 @@ function withRichText<T extends ReactEditor>(editor: T): T {
   }
 
   editor.insertBreak = () => {
-    if (isFormatActive(editor, BlockFormat.Table)) {
-      return
+    const {selection} = editor
+
+    if (selection) {
+      const [table] = Editor.nodes(editor, {
+        match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.Table
+      })
+
+      if (table) {
+        return
+      }
     }
+
     insertBreak()
   }
 
