@@ -491,7 +491,7 @@ function InsertTable({icon}: ToolbarButtonProps) {
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
 
-  const emptyCellsTable = (nrows: number, ncols: number): [SlateElement] => [
+  const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
     {
       type: BlockFormat.Table,
       children: Array.from({length: nrows}).map(_ => ({
@@ -501,6 +501,10 @@ function InsertTable({icon}: ToolbarButtonProps) {
           children: [{text: ''}]
         }))
       }))
+    },
+    {
+      type: BlockFormat.Paragraph,
+      children: [{text: ''}]
     }
   ]
 
