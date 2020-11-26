@@ -6,7 +6,8 @@ import {
   Element as SlateElement,
   createEditor,
   Range,
-  Transforms
+  Transforms,
+  Point
 } from 'slate'
 
 import {
@@ -620,7 +621,7 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline, insertBreak} = editor
+  const {insertData, isInline, insertBreak, deleteForward, deleteBackward} = editor
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
   editor.insertData = (data: any) => {
@@ -640,6 +641,50 @@ function withRichText<T extends ReactEditor>(editor: T): T {
       return
     }
     insertBreak()
+  }
+
+  editor.deleteBackward = unit => {
+    const {selection} = editor
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [cell] = Editor.nodes(editor, {
+        match: n =>
+          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.TableCell
+      })
+
+      if (cell) {
+        const [, cellPath] = cell
+        const start = Editor.start(editor, cellPath)
+
+        if (Point.equals(selection.anchor, start)) {
+          return
+        }
+      }
+    }
+
+    deleteBackward(unit)
+  }
+
+  editor.deleteForward = unit => {
+    const {selection} = editor
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [cell] = Editor.nodes(editor, {
+        match: n =>
+          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.TableCell
+      })
+
+      if (cell) {
+        const [, cellPath] = cell
+        const end = Editor.end(editor, cellPath)
+
+        if (Point.equals(selection.anchor, end)) {
+          return
+        }
+      }
+    }
+
+    deleteForward(unit)
   }
 
   return editor
