@@ -4,8 +4,7 @@ import gql from 'graphql-tag'
 import {useQuery} from 'react-apollo'
 import {BaseTemplate} from '../templates/baseTemplate'
 import {NavigationItem} from '../types'
-import {ArticleRoute, PageRoute, routes} from './routeContext'
-import {createRouteContext} from '@karma.run/react/lib/cjs/route'
+import {ArticleRoute, PageRoute} from './routeContext'
 
 const NavigationQuery = gql`
   {
@@ -48,15 +47,6 @@ export interface BaseTemplateContainerProps {
   hideHeaderMobile?: boolean
   children?: ReactNode
 }
-
-export const {
-  Link,
-  routeLink,
-  RouteProvider: BaseRouteProvider,
-  matchRoute,
-  useRoute,
-  useRouteDispatch
-} = createRouteContext(routes)
 
 export function BaseTemplateContainer({
   hideHeaderMobile,
@@ -114,12 +104,5 @@ function linkToNavigationItem(link: any): NavigationItem {
 }
 
 function dataToNavigation(data: any): NavigationItem[] {
-  return data.links
-    .filter(
-      (link: {__typename: string}) =>
-        link.__typename === 'ExternalNavigationLink' ||
-        link.__typename === 'PageNavigationLink' ||
-        link.__typename === 'ArticleNavigationLink'
-    )
-    .map((link: any) => linkToNavigationItem(link))
+  return data.links.map((link: any) => linkToNavigationItem(link))
 }

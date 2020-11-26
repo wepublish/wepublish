@@ -261,7 +261,7 @@ export function NavigationBar({itemsCategory, itemsIntern}: NavigationBarProps) 
                 <div key={index}>
                   <Link
                     className={css(LinkStyles)}
-                    target={'_blank'}
+                    target={item.url ? '_blank' : '_self'}
                     route={item.route}
                     href={item.url}
                     onClick={e => {
