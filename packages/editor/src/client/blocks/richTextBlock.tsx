@@ -491,16 +491,16 @@ function InsertTable({icon}: ToolbarButtonProps) {
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
 
-  const basicTableElement = (nrows: number, ncols: number): [SlateElement] => [
+  const emptyCellsTable = (nrows: number, ncols: number): [SlateElement] => [
     {
       type: BlockFormat.Table,
-      children: new Array(nrows).fill({
+      children: Array.from({length: nrows}).map(_ => ({
         type: BlockFormat.TableRow,
-        children: new Array(ncols).fill({
+        children: Array.from({length: ncols}).map(_ => ({
           type: BlockFormat.TableCell,
           children: [{text: ''}]
-        })
-      })
+        }))
+      }))
     }
   ]
 
@@ -511,7 +511,7 @@ function InsertTable({icon}: ToolbarButtonProps) {
         disabled={isFormatActive(editor, BlockFormat.Table)}
         onMouseDown={e => {
           e.preventDefault()
-          Transforms.insertNodes(editor, basicTableElement(nrows, ncols))
+          Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
         }}
       />
       <SetRowColNumbers key={'row'} label="r:" num={nrows} setNumber={setNrows} />
