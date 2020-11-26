@@ -1,5 +1,4 @@
 import React, {useState, memo, useEffect, useMemo} from 'react'
-import nanoid from 'nanoid'
 import {
   Editor,
   Node as SlateNode,
@@ -142,7 +141,8 @@ function renderElement({attributes, children, element}: RenderElementProps) {
   const S = {
     table: {
       width: '100%',
-      margin: '10px'
+      margin: '10px',
+      tableLayout: 'fixed'
     },
     tableAll: {
       border: '1px solid black'
@@ -182,14 +182,14 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.TableRow:
       return (
-        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes} key={nanoid()}>
+        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes}>
           {children}
         </tr>
       )
 
     case BlockFormat.TableCell:
       return (
-        <td style={{...S.tableAll, ...S.tableCell}} {...attributes} key={nanoid()}>
+        <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
           {children}
         </td>
       )
@@ -519,8 +519,8 @@ function InsertTable({icon}: ToolbarButtonProps) {
           Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
         }}
       />
-      <SetRowColNumbers key={'row'} label="r:" num={nrows} setNumber={setNrows} />
-      <SetRowColNumbers key={'col'} label="c:" num={ncols} setNumber={setNcols} />
+      <SetRowColNumbers key={'row'} label="r" num={nrows} setNumber={setNrows} />
+      <SetRowColNumbers key={'col'} label="c" num={ncols} setNumber={setNcols} />
     </>
   )
 }
