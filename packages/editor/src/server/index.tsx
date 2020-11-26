@@ -42,6 +42,8 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" type="image/png" sizes="64x64" href="../../assets/favicon-128.png" />
+          <link rel="icon" type="image/png" sizes="64x64" href="../../assets/favicon-64.png" />
 
           <script
             type="application/json"
