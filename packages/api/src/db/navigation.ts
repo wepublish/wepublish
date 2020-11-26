@@ -39,14 +39,23 @@ export interface NavigationInput {
   links: NavigationLink[]
 }
 
+export interface DeleteNavigationArgs {
+  id: string
+}
+
+export interface UpdateNavigationArgs {
+  id: string
+  input: NavigationInput
+}
+
 export interface CreateNavigationArgs {
-  readonly input: Readonly<NavigationInput>
+  input: NavigationInput
 }
 
 export interface DBNavigationAdapter {
-  createNavigation(input: Readonly<NavigationInput>): Promise<OptionalNavigation>
-  updateNavigation(id: string, input: Readonly<NavigationInput>): Promise<OptionalNavigation>
-  deleteNavigation(id: string): Promise<string | null>
+  createNavigation(args: CreateNavigationArgs): Promise<Navigation>
+  updateNavigation(args: UpdateNavigationArgs): Promise<OptionalNavigation>
+  deleteNavigation(args: DeleteNavigationArgs): Promise<string | null>
 
   getNavigationsByID(ids: readonly string[]): Promise<OptionalNavigation[]>
   getNavigationsByKey(key: readonly string[]): Promise<OptionalNavigation[]>
