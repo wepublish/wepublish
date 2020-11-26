@@ -1,0 +1,431 @@
+{
+  "translation": {
+    "articles": {
+      "overview": {
+        "articles": "Articles",
+        "newArticle": "New Article",
+        "search": "Search",
+        "loadMore": "Load More",
+        "noArticlesFound": "No Articles found",
+        "untitled": "Untitled",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published"
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "deleteArticle": "Delete Article?",
+        "unpublishArticle": "Unpublish Article?",
+        "confirm": "Confirm",
+        "unpublish": "Unpublish",
+        "title": "Title",
+        "untitled": "Untitled",
+        "lead": "Lead",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "publishedAt": "Published At"
+      }
+    },
+    "articleEditor": {
+      "overview": {
+        "draftSaved": "Article Draft Saved",
+        "draftCreated": "Article Draft Created",
+        "articlePublished": "Article Published",
+        "notFound": "Article Not Found",
+        "back": "Back",
+        "metadata": "Metadata",
+        "create": "Create",
+        "save": "Save",
+        "publish": "Publish"
+      },
+      "panels": {
+        "metadata": "Metadata",
+        "article": "Article",
+        "search": "Search",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published",
+        "publishDate": "Publish Date",
+        "untitled": "Untitled",
+        "close": "Close",
+        "preTitle": "Pre-title",
+        "title": "Title",
+        "authors": "Authors",
+        "tags": "Tags",
+        "slug": "Slug",
+        "lead": "Lead",
+        "addTag": "Press enter to add tag",
+        "breakingNews": "Breaking News",
+        "image": "Image",
+        "chooseImage": "Choose Image",
+        "editImage": "Edit Image",
+        "removeImage": "Remove Image",
+        "chooseArticle": "Choose Article",
+        "peering": "Peering",
+        "peerShare": "Share with peers",
+        "allowPeerPublishing": "Allow peers to publish this article.",
+        "noAuthorsFound": "No Authors found",
+        "loading": "Loading ...",
+        "loadMore": "Load More",
+        "publishArticle": "Publish Article",
+        "confirm": "Confirm",
+        "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "invalidDate": "Invalid Date",
+        "updateDate": "Update Date",
+        "yes": "Yes",
+        "no": "No",
+        "noImagesFound": "No Images found",
+        "invalidImage": "Invalid Image",
+        "dropImage": "Drop Image Here",
+        "images": "Images",
+        "Untitled": "Untitled",
+        "chooseTeaser": "Choose Teaser",
+        "default": "Default",
+        "outlined": "Outlined",
+        "peerArticle": "Peer Article",
+        "page": "Page",
+        "back": "Back",
+        "editTeaser": "Edit Teaser",
+        "displayOptions": "Display Options",
+        "style": "Style",
+        "type": "Type",
+        "emptyPreTitle": "Leave empty to use original pre-title",
+        "emptyTitle": "Leave empty to use original title",
+        "emptyLead": "Leave empty to use original lead.",
+        "emptyImage": "Leave empty to use original image.",
+        "stateDraft": "Status: Draft",
+        "statePending": "Status: Pending",
+        "statePublished": "Status: Published",
+        "teaserStyle": "Style: {{label}}",
+        "status": "Status: {{stateJoin}}",
+        "uploadImage": "Upload Image"
+      }
+    },
+    "pages": {
+      "overview": {
+        "pages": "Pages",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published",
+        "untitled": "Untitled",
+        "newPage": "New Page",
+        "search": "Search",
+        "loadMore": "Load More",
+        "noPages": "No Pages found"
+      },
+      "panels": {
+        "unpublish": "Unpublish",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "close": "Close",
+        "unpublishPage": "Unpublish Page?",
+        "deletePage": "Delete Page?",
+        "confirm": "Confirm",
+        "title": "Title",
+        "untitled": "Untitled",
+        "lead": "Lead",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "publishedAt": "Published At"
+      }
+    },
+    "pageEditor": {
+      "overview": {},
+      "panels": {
+        "metadata": "Metadata",
+        "title": "Title",
+        "slug": "Slug",
+        "description": "Description",
+        "tags": "Tags",
+        "addTag": "Press enter to add tag",
+        "image": "Image",
+        "close": "Close",
+        "chooseImage": "Choose Image",
+        "removeImage": "Remove Image",
+        "editImage": "Edit Image",
+        "publishPage": "Publish Page",
+        "confirm": "Confirm",
+        "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "publishDate": "Publish Date",
+        "invalidDate": "Invalid Date",
+        "updateDate": "Update Date"
+      }
+    },
+    "authors": {
+      "overview": {
+        "delete": "Delete",
+        "unknown": "Unknown",
+        "newAuthor": "New Author",
+        "search": "Search",
+        "authors": "Authors",
+        "noAuthorsFound": "No Authors found",
+        "deleteAuthor": "Delete Author?",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "name": "Name",
+        "loadMore": "Load More"
+      },
+      "panels": {
+        "editAuthor": "Edit Author",
+        "createAuthor": "Create Author",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "name": "Name",
+        "image": "Image",
+        "chooseImage": "Choose Image",
+        "editImage": "Remove Image",
+        "removeImage": "Remove Image",
+        "links": "Links",
+        "title": "Title",
+        "link": "Link",
+        "bioInformation": "Biographical Information"
+      }
+    },
+    "images": {
+      "overview": {
+        "imageLibrary": "Image Library",
+        "uploadImage": "Upload Image",
+        "search": "Search",
+        "noImagesFound": "No Images found",
+        "loadMore": "Load More"
+      },
+      "panels": {
+        "untitled": "untitled",
+        "Untitled": "Untitled",
+        "uploadImage": "Upload Image",
+        "deleteImage": "Delete image?",
+        "chooseIMage": "Choose image",
+        "editImage": "Edit Image",
+        "confirm": "Confirm",
+        "filename": "Filename",
+        "title": "Title",
+        "description": "Description",
+        "cancel": "Cancel",
+        "close": "Close",
+        "upload": "Upload",
+        "save": "Save",
+        "notFound": "Image not found!",
+        "dimension": "Dimension",
+        "imageDimension": "{{imageWidth}} x {{imageHeight}}",
+        "created": "Created",
+        "updated": "Updated",
+        "fileSize": "File size",
+        "link": "Link",
+        "information": "Information",
+        "tags": "Tags",
+        "addTag": "Press enter to add tag",
+        "attribution": "Attribution",
+        "author": "Author",
+        "source": "Source",
+        "sourceLink": "Link to original source of the image.",
+        "license": "License",
+        "imageUpdated": "Image Updated"
+      }
+    },
+    "userList": {
+      "overview": {
+        "unknown": "Unknown",
+        "noDescription": "No Description",
+        "resetPassword": "Reset Password",
+        "delete": "Delete",
+        "users": "Users",
+        "newUser": "New User",
+        "search": "Search",
+        "noUsersFound": "No Users found"
+      },
+      "panels": {
+        "deleteUser": "Delete User?",
+        "save": "Save",
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "name": "Name",
+        "email": "Email",
+        "Unknown": "Unknown",
+        "resetPassword": "Reset Password",
+        "password": "Password",
+        "resetPasswordFor": "Reset the password for {{userName}}",
+        "passwordChangeSuccess": "Password successfuly changed!",
+        "editUser": "Edit User",
+        "userRoles": "User Roles",
+        "remove": "Remove",
+        "addUserRole": "Add User Role",
+        "selectUserRole": "Select User Role",
+        "createUser": "Create User",
+        "create": "Create"
+      }
+    },
+    "userRoles": {
+      "overview": {
+        "userRoles": "User Roles",
+        "noDescription": "No Description",
+        "newUserRole": "New UserRole",
+        "delete": "Delete",
+        "search": "Search",
+        "noUserRolesFound": "No UserRoles found",
+        "Unknown": "Unknown"
+      },
+      "panels": {
+        "deleteUserRole": "Delete User Role?",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "editUserRole": "Edit User Role",
+        "createUserRole": "Create User Role",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "description": "Description",
+        "permissions": "Permissions",
+        "systemRole": "is a System Role and can not be edited"
+      }
+    },
+    "peerList": {
+      "overview": {
+        "peers": "Peers",
+        "newPeer": "New Peer",
+        "noPeersFound": "No peers found"
+      },
+      "panels": {
+        "peerUpdated": "Peer updated",
+        "peerCreated": "Peer created",
+        "editPeerInfo": "Edit Peer Info",
+        "peerInfoUpdated": "Peer Info Updated",
+        "deletePeer": "Delete Peer",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "editPeer": "Edit Peer",
+        "createPeer": "Create Peer",
+        "close": "Close",
+        "save": "Save",
+        "create": "Create",
+        "URL": "URL",
+        "token": "Token",
+        "information": "Information",
+        "themeColor": "Theme Color",
+        "chooseImage": "Choose Image",
+        "editImage": "Edit Image",
+        "removeImage": "Remove Image"
+      }
+    },
+    "tokenList": {
+      "overview": {
+        "generateToken": "Generate Token",
+        "tokens": "Tokens"
+      },
+      "panels": {
+        "deleteToken": "Delete Token?",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "name": "Name",
+        "Unknown": "Unknown",
+        "generateToken": "Generate Token",
+        "generate": "Generate",
+        "creationSuccess": "Token creation success"
+      }
+    },
+    "blocks": {
+      "imageGallery": {
+        "overview": {
+          "editGalleryList": "Edit Gallery List",
+          "previous": "Previous",
+          "next": "Next",
+          "add": "Add",
+          "chooseImage": "Choose Image",
+          "editImage": "Edit Image",
+          "removeImage": "Remove Image",
+          "caption": "Caption"
+        },
+        "panels": {
+          "editGallery": "Edit Gallery",
+          "close": "Close",
+          "chooseImage": "Choose Image",
+          "editImage": "Edit Image",
+          "removeImage": "Remove Image",
+          "caption": "Caption"
+        }
+      },
+      "embeds": {
+        "overview": {
+          "editEmbed": "Edit Embed"
+        },
+        "panels": {
+          "invalidURL": "Invalid URL or iframe code",
+          "GDPRInfo": "Due to validation, shareable peers and GDPR-compliant, embedding blocks are currently limited to simple iframes and supported embeds listed above.",
+          "close": "Close",
+          "confirm": "Confirm",
+          "embed": "Embed",
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
+          "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
+          "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
+          "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
+          "iframe2Sample": "<iframe style=\"height:350px;width:100%;\" src=\"https://...\"></iframe>",
+          "fbPosts": "https://www.facebook.com/id/posts/id/",
+          "editEmbed": "Edit Embed"
+        }
+      },
+      "image": {
+        "overview": {
+          "chooseImage": "Choose Image",
+          "caption": "Caption",
+          "editImage": "Edit Image"
+        }
+      },
+      "linkPageBreak": {
+        "text": "Text",
+        "linkText": "Link Text",
+        "linkURL": "Link URL"
+      },
+      "listicle": {
+        "title": "Title",
+        "editImage": "Edit Image",
+        "chooseImage": "Choose Image",
+        "removeImage": "Remove Image"
+      },
+      "quote": {
+        "quote": "Quote",
+        "author": "Author"
+      },
+      "richText": {
+        "startWriting": "Start writing ...",
+        "optionalDescription": "Optional description for the link",
+        "link": "Link",
+        "title": "Title"
+      },
+      "title": {
+        "title": "Title",
+        "leadText": "Lead Text "
+      }
+    },
+    "navbar": {
+      "articles": "Artikel",
+      "pages": "Seiten",
+      "authors": "Autoren",
+      "imageLibrary": "Image Library",
+      "users": "Users",
+      "userRoles": "User Roles",
+      "peering": "Peering",
+      "tokens": "Tokens",
+      "logout": "Logout",
+      "languageSwitch": {
+        "currentLanguage": "Deutsch",
+        "close": "Schliessen",
+        "selectNewLanguage": "Neue Sprache wählen"
+      }
+    },
+    "login": {
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "currentPassword": "Current password",
+      "alternativeLogin": "Or login with: ",
+      "O2Auth": "Authenticating against OAuth2: "
+    }
+  }
+}
