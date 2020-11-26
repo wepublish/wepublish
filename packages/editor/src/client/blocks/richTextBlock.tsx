@@ -30,6 +30,8 @@ import {RichTextBlockValue} from './types'
 import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, Form, FormControl, FormGroup, Input, InputGroup, Modal} from 'rsuite'
 
+import './richTextBlockTable.less'
+
 enum BlockFormat {
   H1 = 'heading-one',
   H2 = 'heading-two',
@@ -137,21 +139,6 @@ function deserialize(element: Element): any {
 }
 
 function renderElement({attributes, children, element}: RenderElementProps) {
-  // TODO only temporary
-  const S = {
-    table: {
-      width: '100%',
-      margin: '10px',
-      tableLayout: 'fixed'
-    },
-    tableAll: {
-      border: '1px solid black'
-    },
-    tableCell: {
-      padding: '8px'
-    }
-  }
-
   switch (element.type) {
     case BlockFormat.H1:
       return <h1 {...attributes}>{children}</h1>
@@ -173,26 +160,16 @@ function renderElement({attributes, children, element}: RenderElementProps) {
 
     case BlockFormat.Table:
       return (
-        <table style={{...S.table, ...S.tableAll}}>
-          <tbody style={{...S.tableCell}} {...attributes}>
-            {children}
-          </tbody>
+        <table>
+          <tbody {...attributes}>{children}</tbody>
         </table>
       )
 
     case BlockFormat.TableRow:
-      return (
-        <tr style={{...S.tableAll, ...S.tableCell}} {...attributes}>
-          {children}
-        </tr>
-      )
+      return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      return (
-        <td style={{...S.tableAll, ...S.tableCell}} {...attributes}>
-          {children}
-        </td>
-      )
+      return <td {...attributes}>{children}</td>
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
