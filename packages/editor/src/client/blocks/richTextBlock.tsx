@@ -476,7 +476,12 @@ function InsertTable({icon}: ToolbarButtonProps) {
         type: BlockFormat.TableRow,
         children: Array.from({length: ncols}).map(_ => ({
           type: BlockFormat.TableCell,
-          children: [{text: ''}]
+          children: [
+            {
+              type: BlockFormat.Paragraph,
+              children: [{text: ''}]
+            }
+          ]
         }))
       }))
     },
@@ -613,21 +618,21 @@ function withRichText<T extends ReactEditor>(editor: T): T {
     }
   }
 
-  editor.insertBreak = () => {
-    const {selection} = editor
+  // editor.insertBreak = () => {
+  //   const {selection} = editor
 
-    if (selection) {
-      const [table] = Editor.nodes(editor, {
-        match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.Table
-      })
+  //   if (selection) {
+  //     const [table] = Editor.nodes(editor, {
+  //       match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.Table
+  //     })
 
-      if (table) {
-        return
-      }
-    }
+  //     if (table) {
+  //       return
+  //     }
+  //   }
 
-    insertBreak()
-  }
+  //   insertBreak()
+  // }
 
   editor.deleteBackward = unit => {
     const {selection} = editor
