@@ -1,4 +1,12 @@
-import React, {useState, memo, useEffect, useMemo} from 'react'
+import React, {
+  useState,
+  memo,
+  useEffect,
+  useMemo,
+  ButtonHTMLAttributes,
+  forwardRef,
+  useRef
+} from 'react'
 import {
   Editor,
   Node as SlateNode,
@@ -24,13 +32,27 @@ import {jsx} from 'slate-hyperscript'
 
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
-import {EmojiButton} from '../atoms/emojiButton'
+import {BaseEmojiButton, EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup, Input, InputGroup, Modal} from 'rsuite'
+import {
+  Button,
+  ControlLabel,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
+  Input,
+  InputGroup,
+  Modal,
+  Popover,
+  Whisper
+} from 'rsuite'
 
 import './richTextBlockTable.less'
+import {SVGIcon} from 'rsuite/lib/@types/common'
+import {IconNames} from 'rsuite/lib/Icon'
 
 enum BlockFormat {
   H1 = 'heading-one',
@@ -307,7 +329,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <InsertTable icon="table" />
+        <TableButton icon="table" iconActive="close" />
 
         <ToolbarDivider />
 
@@ -464,10 +486,82 @@ function RemoveLinkFormatButton() {
   )
 }
 
-function InsertTable({icon}: ToolbarButtonProps) {
+export interface TableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly icon: IconNames | SVGIcon
+  readonly iconActive?: IconNames | SVGIcon
+  readonly active?: boolean
+}
+
+export const BaseTableButton = forwardRef<HTMLButtonElement, TableButtonProps>(
+  function BaseTableButton({icon, iconActive, active, ...props}, ref) {
+    icon = iconActive && active ? iconActive : icon
+    return (
+      <button
+        style={{
+          border: active ? 'blue 1px solid' : '',
+          fontSize: 16,
+
+          cursor: 'pointer',
+          borderRadius: 3,
+          backgroundColor: 'transparent',
+
+          padding: 2
+        }}
+        ref={ref}
+        {...props}>
+        <Icon icon={icon} element={icon} />
+      </button>
+    )
+  }
+)
+
+function TableButton({icon, iconActive}: TableButtonProps) {
   const editor = useSlate()
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
+
+  const [isTableSpecsOpen, setIsTableSpecsOpen] = useState(false)
+
+  const triggerRef = useRef<any>(null)
+
+  const {t} = useTranslation()
+
+  const open = () => {
+    if (triggerRef.current && !isFormatActive(editor, BlockFormat.Table)) {
+      triggerRef.current!.open()
+      // TODO rather be done with forwardRef ?
+      setIsTableSpecsOpen(true)
+    }
+  }
+  const close = () => {
+    if (triggerRef.current) {
+      triggerRef.current!.close()
+      setIsTableSpecsOpen(false)
+    }
+  }
+
+  const tableSpecs = (
+    <Popover>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '130px'
+        }}>
+        <SetRowColNumbers key={'row'} label="rows" num={nrows} setNumber={setNrows} />
+        <SetRowColNumbers key={'col'} label="columns" num={ncols} setNumber={setNcols} />
+        <Button
+          disabled={isFormatActive(editor, BlockFormat.Table)}
+          onClick={() => {
+            Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
+            close()
+          }}>
+          {t('insert table')}
+        </Button>
+      </div>
+    </Popover>
+  )
 
   const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
     {
@@ -493,16 +587,17 @@ function InsertTable({icon}: ToolbarButtonProps) {
 
   return (
     <>
-      <ToolbarButton
-        icon={icon}
-        disabled={isFormatActive(editor, BlockFormat.Table)}
-        onMouseDown={e => {
-          e.preventDefault()
-          Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
-        }}
-      />
-      <SetRowColNumbers key={'row'} label="r" num={nrows} setNumber={setNrows} />
-      <SetRowColNumbers key={'col'} label="c" num={ncols} setNumber={setNcols} />
+      <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
+        <BaseTableButton
+          icon={isTableSpecsOpen ? iconActive || icon : icon}
+          disabled={isFormatActive(editor, BlockFormat.Table)}
+          active={isTableSpecsOpen}
+          onMouseDown={e => {
+            e.preventDefault()
+            isTableSpecsOpen ? close() : open()
+          }}
+        />
+      </Whisper>
     </>
   )
 }
@@ -517,11 +612,8 @@ function SetRowColNumbers({label, num, setNumber}: SetRowColNumbersProps) {
   const editor = useSlate()
 
   return (
-    <InputGroup
-      size="xs"
-      style={{width: '80px'}}
-      disabled={isFormatActive(editor, BlockFormat.Table)}>
-      <InputGroup.Addon>{label}</InputGroup.Addon>
+    <InputGroup style={{width: '140px'}} disabled={isFormatActive(editor, BlockFormat.Table)}>
+      <InputGroup.Addon style={{width: '60px'}}>{label}</InputGroup.Addon>
       <Input type="number" value={`${num}`} onChange={val => setNumber(Number(val))} />
     </InputGroup>
   )
