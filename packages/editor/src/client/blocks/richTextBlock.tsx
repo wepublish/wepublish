@@ -32,7 +32,7 @@ import {jsx} from 'slate-hyperscript'
 
 import {BlockProps} from '../atoms/blockList'
 import {Toolbar, ToolbarButtonProps, ToolbarButton, ToolbarDivider} from '../atoms/toolbar'
-import {BaseEmojiButton, EmojiButton} from '../atoms/emojiButton'
+import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
@@ -695,7 +695,7 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline, insertBreak, deleteForward, deleteBackward} = editor
+  const {insertData, isInline, deleteForward, deleteBackward} = editor
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
   editor.insertData = (data: any) => {
