@@ -32,6 +32,7 @@ async function asyncMain() {
   const app = express()
 
   app.use('/assets', express.static(joinPath(__dirname, '../../assets'), {index: false}))
+  app.use('/static', express.static(path.resolve(__dirname, '../../static/')))
 
   app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
@@ -42,8 +43,8 @@ async function asyncMain() {
             rel="stylesheet"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" type="image/png" sizes="64x64" href="../../static/favicon-128.png" />
-          <link rel="icon" type="image/png" sizes="64x64" href="../../static/favicon-64.png" />
+          <link rel="icon" type="image/png" sizes="128x128" href="/static/favicon-128.png" />
+          <link rel="icon" type="image/png" sizes="64x64" href="/static/favicon-64.png" />
 
           <script
             type="application/json"
