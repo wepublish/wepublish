@@ -33,7 +33,6 @@ export function EmojiButton({icon, iconActive}: EmojiButtonProps) {
     </Popover>
   )
 
-  icon = isPopoverOpen && iconActive ? iconActive : icon
   return (
     <Whisper placement="top" speaker={emojiPicker} ref={triggerRef} trigger="none">
       <button
@@ -49,7 +48,7 @@ export function EmojiButton({icon, iconActive}: EmojiButtonProps) {
           e.preventDefault()
           !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
         }}>
-        <Icon icon={icon} element={icon} />
+        <Icon icon={isPopoverOpen && iconActive ? iconActive : icon} />
       </button>
     </Whisper>
   )
