@@ -60,6 +60,7 @@ export type ArticleInput = {
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
+  hideAuthor: Scalars['Boolean'];
   blocks: Array<BlockInput>;
 };
 
@@ -81,6 +82,7 @@ export type ArticleRevision = {
   publishAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;

@@ -179,7 +179,7 @@ export const Migrations: Migration[] = [
       function mapArticleTeaserGridBlock(block: any) {
         if (block.type === 'articleTeaserGrid') {
           return {
-            type: 'teaserGrid',
+            type: 'graphqlteaserGrid',
             teasers: block.teasers.map((teaser: any) =>
               teaser
                 ? {
@@ -400,6 +400,24 @@ export const Migrations: Migration[] = [
         },
         {arrayFilters: [{'elem.type': 'linkPageBreak'}]}
       )
+    }
+  },
+  {
+    // Add hide author property to article.
+    version: 6,
+    async migrate(db) {
+      await db
+        .collection(CollectionName.Articles)
+        .updateMany({'pending.hideAuthor': {$exists: false}}, {$set: {'pending.hideAuthor': false}})
+      await db
+        .collection(CollectionName.Articles)
+        .updateMany(
+          {'pending.hideAuthor': {$exists: false}},
+          {$set: {'published.hideAuthor': false}}
+        )
+      await db
+        .collection(CollectionName.Articles)
+        .updateMany({'pending.hideAuthor': {$exists: false}}, {$set: {'draft.hideAuthor': false}})
     }
   }
 ]

@@ -86,6 +86,8 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     shared: {type: GraphQLNonNull(GraphQLBoolean)},
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
 
+    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
     }
@@ -102,6 +104,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
+
+    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
@@ -225,8 +229,12 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     authors: {
       type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
-        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+        if (hideAuthor) {
+          return []
+        } else {
+          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+        }
       })
     },
 
