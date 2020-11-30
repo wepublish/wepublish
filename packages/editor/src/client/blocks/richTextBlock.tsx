@@ -45,6 +45,7 @@ import {
   Icon,
   Input,
   InputGroup,
+  InputNumber,
   Modal,
   Popover,
   Whisper
@@ -573,7 +574,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     </Popover>
   )
 
-  const emptyTextParagraph = {type: BlockFormat.Paragraph, children: [{text: ''}]}
+  const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
 
   const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
     {
@@ -583,12 +584,12 @@ function TableButton({icon, iconActive}: TableButtonProps) {
         children: Array.from({length: ncols}).map(() => ({
           type: BlockFormat.TableCell,
           // Wrap all content inside cell into paragraph block to enable break lines.
-          children: [emptyTextParagraph]
+          children: [emptyTextParagraph()]
         }))
       }))
     },
     // Append empty paragraph after table block for easy continuation.
-    emptyTextParagraph
+    emptyTextParagraph()
   ]
 
   return (
@@ -618,9 +619,9 @@ function SetRowColNumbers({label, num, setNumber}: SetRowColNumbersProps) {
   const editor = useSlate()
 
   return (
-    <InputGroup style={{width: '140px'}} disabled={isFormatActive(editor, BlockFormat.Table)}>
-      <InputGroup.Addon style={{width: '60px'}}>{label}</InputGroup.Addon>
-      <Input type="number" value={`${num}`} onChange={val => setNumber(Number(val))} />
+    <InputGroup style={{width: '150px'}} disabled={isFormatActive(editor, BlockFormat.Table)}>
+      <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
+      <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
     </InputGroup>
   )
 }
