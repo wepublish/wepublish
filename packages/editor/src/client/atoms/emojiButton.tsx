@@ -35,24 +35,22 @@ export function EmojiButton({icon, iconActive}: EmojiButtonProps) {
 
   icon = isPopoverOpen && iconActive ? iconActive : icon
   return (
-    <div>
-      <Whisper placement="top" speaker={emojiPicker} ref={triggerRef} trigger="none">
-        <button
-          style={{
-            border: isPopoverOpen ? 'blue 1px solid' : '',
-            fontSize: 16,
-            cursor: 'pointer',
-            borderRadius: 3,
-            backgroundColor: 'transparent',
-            padding: 2
-          }}
-          onMouseDown={e => {
-            e.preventDefault()
-            !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
-          }}>
-          <Icon icon={icon} element={icon} />
-        </button>
-      </Whisper>
-    </div>
+    <Whisper placement="top" speaker={emojiPicker} ref={triggerRef} trigger="none">
+      <button
+        style={{
+          border: isPopoverOpen ? 'blue 1px solid' : '',
+          fontSize: 16,
+          cursor: 'pointer',
+          borderRadius: 3,
+          backgroundColor: 'transparent',
+          padding: 2
+        }}
+        onMouseDown={e => {
+          e.preventDefault()
+          !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
+        }}>
+        <Icon icon={icon} element={icon} />
+      </button>
+    </Whisper>
   )
 }
