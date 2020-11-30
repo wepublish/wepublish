@@ -466,7 +466,8 @@
         "title": "Title"
       },
       "richTextTable": {
-        "insertTable": "Insert table",
+        "insertTable": "Insert Table",
+        "deleteTable": "Delete Table",
         "rows": "Rows",
         "columns": "Columns"
       },

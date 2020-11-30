@@ -520,28 +520,42 @@ function TableButton({icon, iconActive}: TableButtonProps) {
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
 
-  const [isTableSpecsOpen, setIsTableSpecsOpen] = useState(false)
-
   const triggerRef = useRef<any>(null)
+  const popOverRef = useRef<any>(null)
 
   const {t} = useTranslation()
 
-  const open = () => {
-    if (triggerRef.current && !isFormatActive(editor, BlockFormat.Table)) {
-      triggerRef.current!.open()
-      // TODO rather be done with forwardRef ?
-      setIsTableSpecsOpen(true)
-    }
-  }
-  const close = () => {
-    if (triggerRef.current) {
-      triggerRef.current!.close()
-      setIsTableSpecsOpen(false)
-    }
-  }
+  const tableInsertControls = (
+    <>
+      <SetRowColNumbers
+        key={1}
+        label={t('blocks.richTextTable.rows')}
+        num={nrows}
+        setNumber={setNrows}
+      />
+      <SetRowColNumbers
+        key={2}
+        label={t('blocks.richTextTable.columns')}
+        num={ncols}
+        setNumber={setNcols}
+      />
+      <Button
+        onClick={() => {
+          Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
+        }}>
+        {t('blocks.richTextTable.insertTable')}
+      </Button>
+    </>
+  )
+
+  const tableActiveControls = (
+    <Button color="red" onClick={() => null}>
+      {t('blocks.richTextTable.deleteTable')}
+    </Button>
+  )
 
   const tableSpecs = (
-    <Popover>
+    <Popover ref={popOverRef}>
       <div
         style={{
           display: 'flex',
@@ -549,26 +563,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
           justifyContent: 'space-between',
           height: '130px'
         }}>
-        <SetRowColNumbers
-          key={1}
-          label={t('blocks.richTextTable.rows')}
-          num={nrows}
-          setNumber={setNrows}
-        />
-        <SetRowColNumbers
-          key={2}
-          label={t('blocks.richTextTable.columns')}
-          num={ncols}
-          setNumber={setNcols}
-        />
-        <Button
-          disabled={isFormatActive(editor, BlockFormat.Table)}
-          onClick={() => {
-            Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
-            close()
-          }}>
-          {t('blocks.richTextTable.insertTable')}
-        </Button>
+        {isFormatActive(editor, BlockFormat.Table) ? tableActiveControls : tableInsertControls}
       </div>
     </Popover>
   )
@@ -590,17 +585,16 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     // Append empty paragraph after table block for easy continuation.
     emptyTextParagraph()
   ]
-
+  // console.log(popOverRef.current.title)
   return (
     <>
       <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
         <BaseTableButton
-          icon={isTableSpecsOpen ? iconActive || icon : icon}
-          disabled={isFormatActive(editor, BlockFormat.Table)}
-          active={isTableSpecsOpen}
+          icon={popOverRef.current ? iconActive || icon : icon}
+          active={!!popOverRef.current}
           onMouseDown={e => {
             e.preventDefault()
-            isTableSpecsOpen ? close() : open()
+            !popOverRef.current ? triggerRef.current!.open() : triggerRef.current!.close()
           }}
         />
       </Whisper>
