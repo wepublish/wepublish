@@ -49,7 +49,6 @@ export function EmojiButton({icon, iconActive}: EmojiButtonProps) {
           onMouseDown={e => {
             e.preventDefault()
             !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
-            console.log(!!isPopoverOpen)
           }}>
           <Icon icon={icon} element={icon} />
         </button>
