@@ -32,7 +32,7 @@ async function asyncMain() {
   const app = express()
 
   app.use('/assets', express.static(joinPath(__dirname, '../../assets'), {index: false}))
-  app.use('/static', express.static(path.resolve(__dirname, '../../static/')))
+  app.use('/static', express.static(joinPath(__dirname, '../../static'), {index: false}))
 
   app.get('/*', (_req, res) => {
     const markup = renderToStaticMarkup(
