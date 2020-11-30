@@ -406,18 +406,27 @@ export const Migrations: Migration[] = [
     // Add hide author property to article.
     version: 6,
     async migrate(db) {
-      await db
-        .collection(CollectionName.Articles)
-        .updateMany({'pending.hideAuthor': {$exists: false}}, {$set: {'pending.hideAuthor': false}})
-      await db
-        .collection(CollectionName.Articles)
-        .updateMany(
-          {'pending.hideAuthor': {$exists: false}},
-          {$set: {'published.hideAuthor': false}}
-        )
-      await db
-        .collection(CollectionName.Articles)
-        .updateMany({'pending.hideAuthor': {$exists: false}}, {$set: {'draft.hideAuthor': false}})
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.hideAuthor': {$exists: false}
+        },
+        {$set: {'pending.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.hideAuthor': {$exists: false}
+        },
+        {$set: {'published.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.hideAuthor': {$exists: false}
+        },
+        {$set: {'draft.hideAuthor': false}}
+      )
     }
   }
 ]
