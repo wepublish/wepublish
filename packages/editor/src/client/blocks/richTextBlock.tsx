@@ -5,7 +5,8 @@ import React, {
   useMemo,
   ButtonHTMLAttributes,
   forwardRef,
-  useRef
+  useRef,
+  useCallback
 } from 'react'
 import {
   Editor,
@@ -489,39 +490,21 @@ function RemoveLinkFormatButton() {
 export interface TableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon: IconNames | SVGIcon
   readonly iconActive?: IconNames | SVGIcon
-  readonly active?: boolean
 }
-
-export const BaseTableButton = forwardRef<HTMLButtonElement, TableButtonProps>(
-  function BaseTableButton({icon, iconActive, active, ...props}, ref) {
-    icon = iconActive && active ? iconActive : icon
-    return (
-      <button
-        style={{
-          border: active ? 'blue 1px solid' : '',
-          fontSize: 16,
-
-          cursor: 'pointer',
-          borderRadius: 3,
-          backgroundColor: 'transparent',
-
-          padding: 2
-        }}
-        ref={ref}
-        {...props}>
-        <Icon icon={icon} element={icon} />
-      </button>
-    )
-  }
-)
 
 function TableButton({icon, iconActive}: TableButtonProps) {
   const editor = useSlate()
+
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
 
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
   const triggerRef = useRef<any>(null)
-  const popOverRef = useRef<any>(null)
+
+  const popOverRef = useCallback((node: any) => {
+    setIsPopoverOpen(!!node)
+  }, [])
 
   const {t} = useTranslation()
 
@@ -585,20 +568,18 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     // Append empty paragraph after table block for easy continuation.
     emptyTextParagraph()
   ]
-  // console.log(popOverRef.current.title)
+
   return (
-    <>
-      <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
-        <BaseTableButton
-          icon={popOverRef.current ? iconActive || icon : icon}
-          active={!!popOverRef.current}
-          onMouseDown={e => {
-            e.preventDefault()
-            !popOverRef.current ? triggerRef.current!.open() : triggerRef.current!.close()
-          }}
-        />
-      </Whisper>
-    </>
+    <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
+      <ToolbarButton
+        icon={isPopoverOpen && iconActive ? iconActive : icon}
+        active={isFormatActive(editor, BlockFormat.Table) || isPopoverOpen}
+        onMouseDown={e => {
+          e.preventDefault()
+          !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
+        }}
+      />
+    </Whisper>
   )
 }
 
