@@ -80,7 +80,7 @@ function linkToNavigationItem(link: any): NavigationItem {
       return {
         title: link.label,
         route: PageRoute.create({
-          slug: link.page!.slug ?? undefined
+          slug: link.page!.slug
         }),
         isActive: false
       }
@@ -88,7 +88,7 @@ function linkToNavigationItem(link: any): NavigationItem {
       return {
         title: link.label,
         route: ArticleRoute.create({
-          id: link.article!.id ?? undefined
+          id: link.article!.id
         }),
         isActive: false
       }
