@@ -174,8 +174,7 @@
             "minHeight",
             "href",
             "fixed",
-            "format",
-            "label"
+            "format"
           ],
           "ignoreComponent": [
             "code"

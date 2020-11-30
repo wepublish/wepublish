@@ -549,40 +549,46 @@ function TableButton({icon, iconActive}: TableButtonProps) {
           justifyContent: 'space-between',
           height: '130px'
         }}>
-        <SetRowColNumbers key={'row'} label="rows" num={nrows} setNumber={setNrows} />
-        <SetRowColNumbers key={'col'} label="columns" num={ncols} setNumber={setNcols} />
+        <SetRowColNumbers
+          key={1}
+          label={t('blocks.richTextTable.rows')}
+          num={nrows}
+          setNumber={setNrows}
+        />
+        <SetRowColNumbers
+          key={2}
+          label={t('blocks.richTextTable.columns')}
+          num={ncols}
+          setNumber={setNcols}
+        />
         <Button
           disabled={isFormatActive(editor, BlockFormat.Table)}
           onClick={() => {
             Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
             close()
           }}>
-          {t('insert table')}
+          {t('blocks.richTextTable.insertTable')}
         </Button>
       </div>
     </Popover>
   )
 
+  const emptyTextParagraph = {type: BlockFormat.Paragraph, children: [{text: ''}]}
+
   const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
     {
       type: BlockFormat.Table,
-      children: Array.from({length: nrows}).map(_ => ({
+      children: Array.from({length: nrows}).map(() => ({
         type: BlockFormat.TableRow,
-        children: Array.from({length: ncols}).map(_ => ({
+        children: Array.from({length: ncols}).map(() => ({
           type: BlockFormat.TableCell,
-          children: [
-            {
-              type: BlockFormat.Paragraph,
-              children: [{text: ''}]
-            }
-          ]
+          // Wrap all content inside cell into paragraph block to enable break lines.
+          children: [emptyTextParagraph]
         }))
       }))
     },
-    {
-      type: BlockFormat.Paragraph,
-      children: [{text: ''}]
-    }
+    // Append empty paragraph after table block for easy continuation.
+    emptyTextParagraph
   ]
 
   return (

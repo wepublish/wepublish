@@ -465,6 +465,11 @@
         "link": "Link",
         "title": "Title"
       },
+      "richTextTable": {
+        "insertTable": "Insert table",
+        "rows": "Rows",
+        "columns": "Columns"
+      },
       "title": {
         "title": "Title",
         "leadText": "Lead Text "
