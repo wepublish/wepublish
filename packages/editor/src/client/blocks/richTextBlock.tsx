@@ -101,7 +101,11 @@ const ElementTags: any = {
   UL: () => ({type: BlockFormat.UnorderedList}),
   TB: () => ({type: BlockFormat.Table}),
   TR: () => ({type: BlockFormat.TableRow}),
-  TD: () => ({type: BlockFormat.TableCell})
+  // TD: () => ({type: BlockFormat.TableCell}),
+  TD: (el: Element) => ({
+    type: BlockFormat.TableCell,
+    borderColor: el.getAttribute('borderColor')
+  })
 }
 
 const TextTags: any = {
@@ -190,7 +194,18 @@ function renderElement({attributes, children, element}: RenderElementProps) {
       return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      return <td {...attributes}>{children}</td>
+      // TODO custom borderColor using colorPicker
+      return (
+        <td
+          {...attributes}
+          style={{
+            borderColor: (c => (c === 'transparent' ? `rgb(0, 0, 0, 0.1)` : c))(
+              element.borderColor as string
+            )
+          }}>
+          {children}
+        </td>
+      )
 
     case InlineFormat.Link:
       // TODO: Implement custom tooltip
@@ -515,6 +530,15 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     triggerRef.current!.close()
   }
 
+  function isBorderVisible() {
+    const [match] = Editor.nodes(editor, {
+      match: node => node.borderColor && node.borderColor !== 'transparent',
+      mode: 'all'
+    })
+
+    return !!match
+  }
+
   const tableInsertControls = (
     <>
       <SetRowColNumbers
@@ -542,19 +566,46 @@ function TableButton({icon, iconActive}: TableButtonProps) {
   )
 
   const removeTable = () => {
-    console.log('hey')
     Transforms.removeNodes(editor, {
       at: editor.selection ?? undefined,
       match: node => node.type === BlockFormat.Table
     })
   }
 
+  const setTableCellBorderColor = (color: string) => {
+    const {selection} = editor
+    if (selection) {
+      const nodes = Array.from(
+        Editor.nodes(editor, {
+          at: selection,
+          match: node => node.type === BlockFormat.Table
+        })
+      )
+      Transforms.setNodes(
+        editor,
+        {borderColor: color},
+        {at: nodes[0][1], match: node => node.type === BlockFormat.TableCell}
+      )
+    }
+  }
+
   const tableActiveControls = (
     <>
       {!showRemoveConfirm ? (
-        <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
-          {t('blocks.richTextTable.deleteTable')}
-        </Button>
+        <>
+          {isBorderVisible() ? (
+            <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
+              {t('blocks.richTextTable.hideBorders')}
+            </Button>
+          ) : (
+            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
+              {t('blocks.richTextTable.showBorders')}
+            </Button>
+          )}
+          <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
+            {t('blocks.richTextTable.deleteTable')}
+          </Button>
+        </>
       ) : (
         <div
           style={{
@@ -587,7 +638,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
           alignItems: 'center',
           height: '10em',
           width: '15em'
@@ -606,6 +657,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
         type: BlockFormat.TableRow,
         children: Array.from({length: ncols}).map(() => ({
           type: BlockFormat.TableCell,
+          borderColor: 'black',
           // Wrap all content inside cell into paragraph block to enable break lines.
           children: [emptyTextParagraph()]
         }))

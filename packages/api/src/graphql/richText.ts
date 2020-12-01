@@ -35,6 +35,10 @@ export enum LinkNodeFields {
   Title = 'title'
 }
 
+export enum TableCellNodeFields {
+  Bordercolor = 'borderColor'
+}
+
 export interface RichTextBlockNode {
   readonly type:
     | ElementNodeType.H1
@@ -46,8 +50,13 @@ export interface RichTextBlockNode {
     | ElementNodeType.ListItem
     | ElementNodeType.Table
     | ElementNodeType.TableRow
-    | ElementNodeType.TableCell
 
+  readonly children: RichTextNode[]
+}
+
+export interface RichTextTableCellNode {
+  readonly type: ElementNodeType.TableCell
+  readonly borderColor: string
   readonly children: RichTextNode[]
 }
 
@@ -68,7 +77,11 @@ export interface RichTextTextNode {
   readonly text: string
 }
 
-export type RichTextNode = RichTextBlockNode | RichTextLinkNode | RichTextTextNode
+export type RichTextNode =
+  | RichTextBlockNode
+  | RichTextTableCellNode
+  | RichTextLinkNode
+  | RichTextTextNode
 
 export const GraphQLRichText = new GraphQLScalarType({
   name: 'RichText',
@@ -95,6 +108,11 @@ const ElmentNodeFieldsArr: string[] = Object.values(ElementNodeFields)
 const LinkNodeFieldsArr: string[] = [
   ...Object.values(ElementNodeFields),
   ...Object.values(LinkNodeFields)
+]
+
+const TableCellNodeFieldsArr: string[] = [
+  ...Object.values(ElementNodeFields),
+  ...Object.values(TableCellNodeFields)
 ]
 
 const ElementNodeTypeArr: string[] = Object.values(ElementNodeType)
@@ -163,11 +181,16 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
+    const isTableCellNode = value.type === ElementNodeType.TableCell
 
     for (const field of Object.keys(value)) {
       if (isLinkNode) {
         if (!LinkNodeFieldsArr.includes(field)) {
           throw createRichTextError(`Unknown LinkNode field "${field}".`, path)
+        }
+      } else if (isTableCellNode) {
+        if (!TableCellNodeFieldsArr.includes(field)) {
+          throw createRichTextError(`Unknown TableCellNode field "${field}".`, path)
         }
       } else {
         if (!ElmentNodeFieldsArr.includes(field)) {
@@ -208,6 +231,22 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
           },
           value.title != undefined ? {title: value.title as string} : {}
         )
+      }
+
+      case ElementNodeType.TableCell: {
+        if (!isString(value.borderColor)) {
+          // TODO: Check URL for malicious content.
+          throw createRichTextError(`Expected string found ${value.borderColor}`, [
+            ...path,
+            'borderColor'
+          ])
+        }
+
+        return {
+          type,
+          borderColor: value.borderColor,
+          children: parseRichTextNodes(value.children, [...path, 'children'])
+        }
       }
 
       default:
