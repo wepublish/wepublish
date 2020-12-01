@@ -1,9 +1,11 @@
 import express, {Application} from 'express'
+import bodyParser from 'body-parser'
 
 import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+import {setupPaymentProvider} from './payments/paymentProvider'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -57,6 +59,9 @@ export class WepublishServer {
       path: '/',
       cors: corsOptions
     })
+
+    app.use(bodyParser.json())
+    app.use(setupPaymentProvider(opts))
 
     this.app = app
   }

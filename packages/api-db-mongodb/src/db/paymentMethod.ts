@@ -21,7 +21,7 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
       modifiedAt: new Date(),
       name: input.name,
       description: input.description,
-      paymentAdapter: input.paymentAdapter,
+      paymentProviderID: input.paymentProviderID,
       active: input.active
     })
 
@@ -37,7 +37,7 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
           modifiedAt: new Date(),
           name: input.name,
           description: input.description,
-          paymentAdapter: input.paymentAdapter,
+          paymentProviderID: input.paymentProviderID,
           active: input.active
         }
       },

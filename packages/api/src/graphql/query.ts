@@ -98,7 +98,10 @@ import {
   CanGetPaymentMethods,
   CanGetPaymentMethod,
   CanGetInvoice,
-  CanGetInvoices
+  CanGetInvoices,
+  CanGetPayment,
+  CanGetPayments,
+  CanGetPaymentProviders
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -118,7 +121,7 @@ import {
   GraphQLMemberPlanSort
 } from './memberPlan'
 import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLPaymentMethod} from './paymentMethod'
+import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
@@ -126,6 +129,13 @@ import {
   GraphQLInvoiceSort
 } from './invoice'
 import {InvoiceSort} from '../db/invoice'
+import {
+  GraphQLPayment,
+  GraphQLPaymentConnection,
+  GraphQLPaymentFilter,
+  GraphQLPaymentSort
+} from './payment'
+import {PaymentSort} from '../db/payment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -797,6 +807,19 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    paymentProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProvider))),
+      resolve(root, {}, {authenticate, paymentProviders}) {
+        const {roles} = authenticate()
+        authorise(CanGetPaymentProviders, roles)
+
+        return paymentProviders.map(paymentProvider => ({
+          id: paymentProvider.id,
+          name: paymentProvider.name
+        }))
+      }
+    },
+
     // Invoice
     // ======
 
@@ -827,6 +850,45 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         authorise(CanGetInvoices, roles)
 
         return dbAdapter.invoice.getInvoices({
+          filter,
+          sort,
+          order,
+          cursor: InputCursor(after, before),
+          limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Payment
+    // ======
+
+    payment: {
+      type: GraphQLPayment,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, loaders}) {
+        const {roles} = authenticate()
+        authorise(CanGetPayment, roles)
+
+        return loaders.paymentsByID.load(id)
+      }
+    },
+
+    payments: {
+      type: GraphQLNonNull(GraphQLPaymentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLPaymentFilter},
+        sort: {type: GraphQLPaymentSort, defaultValue: PaymentSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetPayments, roles)
+
+        return dbAdapter.payment.getPayments({
           filter,
           sort,
           order,

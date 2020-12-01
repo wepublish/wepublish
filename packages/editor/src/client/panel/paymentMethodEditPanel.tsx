@@ -19,8 +19,10 @@ import {RichTextBlockValue} from '../blocks/types'
 
 import {
   FullPaymentMethodFragment,
+  FullPaymentProviderFragment,
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
+  usePaymentProviderListQuery,
   useUpdatePaymentMethodMutation
 } from '../api'
 
@@ -39,12 +41,21 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   const [name, setName] = useState('')
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
   const [isActive, setIsActive] = useState<boolean>(false)
-  const [paymentAdapter, setPaymentAdapter] = useState<string>('')
+  const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
+  const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
 
   const {data, loading: isLoading, error: loadError} = usePaymentMethodQuery({
     variables: {id: id!},
     fetchPolicy: 'network-only',
     skip: id === undefined
+  })
+
+  const {
+    data: paymentProviderData,
+    loading: isLoadingPaymentProvider,
+    error: loadPaymentProviderError
+  } = usePaymentProviderListQuery({
+    fetchPolicy: 'network-only'
   })
 
   const [
@@ -57,23 +68,43 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     {loading: isUpdating, error: updateError}
   ] = useUpdatePaymentMethodMutation()
 
-  const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
+  const isDisabled =
+    isLoading ||
+    isCreating ||
+    isUpdating ||
+    isLoadingPaymentProvider ||
+    loadError !== undefined ||
+    loadPaymentProviderError !== undefined
 
   useEffect(() => {
     if (data?.paymentMethod) {
       setName(data.paymentMethod.name)
       setDescription(data.paymentMethod.description)
       setIsActive(data.paymentMethod.active)
-      setPaymentAdapter(data.paymentMethod.paymentAdapter)
+      setPaymentProvider(data.paymentMethod.paymentProvider)
     }
   }, [data?.paymentMethod])
 
   useEffect(() => {
-    const error = loadError?.message ?? createError?.message ?? updateError?.message
+    if (paymentProviderData?.paymentProviders) {
+      setPaymentProviders(paymentProviderData.paymentProviders)
+    }
+  }, [paymentProviderData?.paymentProviders])
+
+  useEffect(() => {
+    const error =
+      loadError?.message ??
+      createError?.message ??
+      updateError?.message ??
+      loadPaymentProviderError?.message
     if (error) Alert.error(error, 0)
-  }, [loadError, createError, updateError])
+  }, [loadError, createError, updateError, loadPaymentProviderError])
 
   async function handleSave() {
+    if (!paymentProvider) {
+      return //TODO: handle validation
+    }
+
     if (id) {
       const {data} = await updatePaymentMethod({
         variables: {
@@ -82,7 +113,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             name,
             description,
             active: isActive,
-            paymentAdapter
+            paymentProviderID: paymentProvider.id
           }
         }
       })
@@ -95,7 +126,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             name,
             description,
             active: isActive,
-            paymentAdapter
+            paymentProviderID: paymentProvider.id
           }
         }
       })
@@ -138,11 +169,11 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
               <SelectPicker
-                value={paymentAdapter}
-                data={['cc', 'payrexx'].map(pa => ({value: pa, label: pa}))}
+                value={paymentProvider?.id}
+                data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
                 searchable={false}
                 block={true}
-                onChange={value => setPaymentAdapter(value)}
+                onChange={value => setPaymentProvider(paymentProviders.find(pp => pp.id === value))}
               />
             </FormGroup>
             <FormGroup>

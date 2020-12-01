@@ -392,6 +392,62 @@ export type InstagramPostBlockInput = {
   postID: Scalars['String'];
 };
 
+export type Invoice = {
+  __typename?: 'Invoice';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  mail: Scalars['String'];
+  user?: Maybe<User>;
+  description?: Maybe<Scalars['RichText']>;
+  payedAt?: Maybe<Scalars['DateTime']>;
+  items: Array<InvoiceItem>;
+  total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  mail?: Maybe<Scalars['String']>;
+};
+
+export type InvoiceInput = {
+  mail: Scalars['String'];
+  userID?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['RichText']>;
+  payedAt?: Maybe<Scalars['DateTime']>;
+  items: Array<InvoiceItemInput>;
+};
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem';
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['RichText']>;
+  quantity: Scalars['Int'];
+  amount: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type InvoiceItemInput = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['RichText']>;
+  quantity: Scalars['Int'];
+  amount: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PayedAt = 'PAYED_AT'
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   text?: Maybe<Scalars['String']>;
@@ -528,6 +584,9 @@ export type Mutation = {
   createPaymentMethod?: Maybe<PaymentMethod>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
   deletePaymentMethod?: Maybe<Scalars['ID']>;
+  createInvoice?: Maybe<Invoice>;
+  updateInvoice?: Maybe<Invoice>;
+  deleteInvoice?: Maybe<Scalars['ID']>;
 };
 
 
@@ -767,6 +826,22 @@ export type MutationDeletePaymentMethodArgs = {
   id: Scalars['ID'];
 };
 
+
+export type MutationCreateInvoiceArgs = {
+  input: InvoiceInput;
+};
+
+
+export type MutationUpdateInvoiceArgs = {
+  id: Scalars['ID'];
+  input: InvoiceInput;
+};
+
+
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['ID'];
+};
+
 export type Navigation = {
   __typename?: 'Navigation';
   id: Scalars['ID'];
@@ -888,6 +963,32 @@ export type PageTeaserInput = {
   pageID: Scalars['ID'];
 };
 
+export type Payment = {
+  __typename?: 'Payment';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  intentID: Scalars['String'];
+  amount: Scalars['Int'];
+  invoice?: Maybe<Invoice>;
+  intentData?: Maybe<Scalars['String']>;
+  open: Scalars['Boolean'];
+  successful: Scalars['Boolean'];
+  paymentMethod: PaymentMethod;
+  paymentData?: Maybe<Scalars['String']>;
+};
+
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection';
+  nodes: Array<Payment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaymentFilter = {
+  intentID?: Maybe<Scalars['String']>;
+};
+
 export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   id: Scalars['ID'];
@@ -895,16 +996,27 @@ export type PaymentMethod = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   description: Scalars['RichText'];
-  paymentAdapter: Scalars['String'];
+  paymentProvider: PaymentProvider;
   active: Scalars['Boolean'];
 };
 
 export type PaymentMethodInput = {
   name: Scalars['String'];
   description: Scalars['RichText'];
-  paymentAdapter: Scalars['String'];
+  paymentProviderID: Scalars['String'];
   active: Scalars['Boolean'];
 };
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export enum PaymentSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
 
 export type Peer = {
   __typename?: 'Peer';
@@ -1023,6 +1135,11 @@ export type Query = {
   memberPlans: MemberPlanConnection;
   paymentMethod?: Maybe<PaymentMethod>;
   paymentMethods: Array<PaymentMethod>;
+  paymentProviders: Array<PaymentProvider>;
+  invoice?: Maybe<Invoice>;
+  invoices: InvoiceConnection;
+  payment?: Maybe<Payment>;
+  payments: PaymentConnection;
 };
 
 
@@ -1172,6 +1289,38 @@ export type QueryMemberPlansArgs = {
 
 export type QueryPaymentMethodArgs = {
   id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryInvoiceArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryInvoicesArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<InvoiceFilter>;
+  sort?: Maybe<InvoiceSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PaymentFilter>;
+  sort?: Maybe<PaymentSort>;
+  order?: Maybe<SortOrder>;
 };
 
 export type QuoteBlock = {
@@ -2361,9 +2510,29 @@ export type PageQuery = (
   )> }
 );
 
+export type FullPaymentProviderFragment = (
+  { __typename?: 'PaymentProvider' }
+  & Pick<PaymentProvider, 'id' | 'name'>
+);
+
 export type FullPaymentMethodFragment = (
   { __typename?: 'PaymentMethod' }
-  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'paymentAdapter' | 'description' | 'active'>
+  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
+  & { paymentProvider: (
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  ) }
+);
+
+export type PaymentProviderListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentProviderListQuery = (
+  { __typename?: 'Query' }
+  & { paymentProviders: Array<(
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  )> }
 );
 
 export type PaymentMethodListQueryVariables = Exact<{ [key: string]: never; }>;
@@ -3167,17 +3336,25 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const FullPaymentProviderFragmentDoc = gql`
+    fragment FullPaymentProvider on PaymentProvider {
+  id
+  name
+}
+    `;
 export const FullPaymentMethodFragmentDoc = gql`
     fragment FullPaymentMethod on PaymentMethod {
   id
   name
   createdAt
   modifiedAt
-  paymentAdapter
+  paymentProvider {
+    ...FullPaymentProvider
+  }
   description
   active
 }
-    `;
+    ${FullPaymentProviderFragmentDoc}`;
 export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
@@ -4448,6 +4625,38 @@ export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQ
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
 export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>;
+export const PaymentProviderListDocument = gql`
+    query PaymentProviderList {
+  paymentProviders {
+    ...FullPaymentProvider
+  }
+}
+    ${FullPaymentProviderFragmentDoc}`;
+
+/**
+ * __usePaymentProviderListQuery__
+ *
+ * To run a query within a React component, call `usePaymentProviderListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentProviderListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentProviderListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePaymentProviderListQuery(baseOptions?: Apollo.QueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+        return Apollo.useQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, baseOptions);
+      }
+export function usePaymentProviderListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+          return Apollo.useLazyQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, baseOptions);
+        }
+export type PaymentProviderListQueryHookResult = ReturnType<typeof usePaymentProviderListQuery>;
+export type PaymentProviderListLazyQueryHookResult = ReturnType<typeof usePaymentProviderListLazyQuery>;
+export type PaymentProviderListQueryResult = Apollo.QueryResult<PaymentProviderListQuery, PaymentProviderListQueryVariables>;
 export const PaymentMethodListDocument = gql`
     query PaymentMethodList {
   paymentMethods {

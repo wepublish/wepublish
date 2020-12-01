@@ -50,7 +50,8 @@
     "node-fetch": "^2.6.0",
     "oidc-provider": "^6.23.4",
     "openid-client": "^3.14.0",
-    "qs": "^6.9.1"
+    "qs": "^6.9.1",
+    "stripe": "^8.126.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",

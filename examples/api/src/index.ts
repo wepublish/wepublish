@@ -5,7 +5,8 @@ import {
   PublicArticle,
   PublicPage,
   Author,
-  Oauth2Provider
+  Oauth2Provider,
+  StripePaymentProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -30,6 +31,8 @@ class ExampleURLAdapter implements URLAdapter {
 async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
+  if (!process.env.STRIPE_SECRET_KEY)
+    throw new Error('No STRIPE_SECRET_KEY defined in environment.')
 
   const hostURL = process.env.HOST_URL
   const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
@@ -103,12 +106,22 @@ async function asyncMain() {
     }
   ]
 
+  const paymentProviders = [
+    new StripePaymentProvider({
+      id: 'stripe_checkout',
+      name: 'Stripe Checkout',
+      hostURL: hostURL,
+      secretKey: process.env.STRIPE_SECRET_KEY
+    })
+  ]
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,
+    paymentProviders: paymentProviders,
     urlAdapter: new ExampleURLAdapter(),
     playground: true,
     introspection: true,

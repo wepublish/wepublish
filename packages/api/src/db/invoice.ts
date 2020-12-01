@@ -9,13 +9,6 @@ export interface InvoiceItem {
   amount: number
 }
 
-export interface InvoiceHistory {
-  createdAt: Date
-  successful: boolean
-  paymentMethodID: string
-  paymentTransaction: string
-}
-
 export interface Invoice {
   id: string
   createdAt: Date
@@ -24,7 +17,6 @@ export interface Invoice {
   userID?: string
   description?: RichTextNode[]
   payedAt: Date | null
-  history: InvoiceHistory[]
   items: InvoiceItem[]
 }
 

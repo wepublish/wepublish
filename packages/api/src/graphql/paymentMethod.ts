@@ -10,6 +10,16 @@ import {PaymentMethod} from '../db/paymentMethod'
 import {Context} from '../context'
 import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
+import {PaymentProvider} from '../payments/paymentProvider'
+import {createProxyingResolver} from '../utility'
+
+export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Context>({
+  name: 'PaymentProvider',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    name: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
 
 export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context>({
   name: 'PaymentMethod',
@@ -21,7 +31,12 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
 
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLRichText)},
-    paymentAdapter: {type: GraphQLNonNull(GraphQLString)},
+    paymentProvider: {
+      type: GraphQLNonNull(GraphQLPaymentProvider),
+      resolve: createProxyingResolver(({paymentProviderID}, {}, {paymentProviders}) => {
+        return paymentProviders.find(paymentProvider => paymentProvider.id === paymentProviderID)
+      })
+    },
     active: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -31,7 +46,7 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLNonNull(GraphQLRichText)},
-    paymentAdapter: {type: GraphQLNonNull(GraphQLString)},
+    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
     active: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })

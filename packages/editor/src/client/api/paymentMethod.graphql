@@ -1,13 +1,24 @@
-
+fragment FullPaymentProvider on PaymentProvider {
+    id
+    name
+}
 
 fragment FullPaymentMethod on PaymentMethod {
     id
     name
     createdAt
     modifiedAt
-    paymentAdapter
+    paymentProvider {
+        ...FullPaymentProvider
+    }
     description
     active
+}
+
+query PaymentProviderList {
+    paymentProviders {
+        ...FullPaymentProvider
+    }
 }
 
 query PaymentMethodList {

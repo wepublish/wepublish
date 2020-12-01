@@ -11,6 +11,7 @@ import {DBUserRoleAdapter} from './userRole'
 import {DBMemberPlanAdapter} from './memberPlan'
 import {DBPaymentMethodAdapter} from './paymentMethod'
 import {DBInvoiceAdapter} from './invoice'
+import {DBPaymentAdapter} from './payment'
 
 export interface DBAdapter {
   readonly peer: DBPeerAdapter
@@ -26,4 +27,5 @@ export interface DBAdapter {
   readonly memberPlan: DBMemberPlanAdapter
   readonly paymentMethod: DBPaymentMethodAdapter
   readonly invoice: DBInvoiceAdapter
+  readonly payment: DBPaymentAdapter
 }

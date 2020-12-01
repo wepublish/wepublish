@@ -427,6 +427,12 @@ export const Migrations: Migration[] = [
       })
 
       await invoices.createIndex({mail: 1})
+
+      const payments = await db.createCollection(CollectionName.Payments, {
+        strict: true
+      })
+
+      await payments.createIndex({intentID: 1})
     }
   }
 ]

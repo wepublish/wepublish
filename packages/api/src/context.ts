@@ -37,6 +37,8 @@ import {OptionalUserRole} from './db/userRole'
 import {OptionalMemberPlan} from './db/memberPlan'
 import {OptionalPaymentMethod} from './db/paymentMethod'
 import {OptionalInvoice} from './db/invoice'
+import {OptionalPayment} from './db/payment'
+import {PaymentProvider} from './payments/paymentProvider'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -65,6 +67,7 @@ export interface DataLoaderContext {
   readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly invoicesByID: DataLoader<string, OptionalInvoice>
+  readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
 
 export interface Context {
@@ -78,6 +81,7 @@ export interface Context {
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
+  readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
 
   authenticate(): Session
@@ -102,12 +106,22 @@ export interface ContextOptions {
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
+  readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
 }
 
 export async function contextFromRequest(
   req: IncomingMessage,
-  {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
+  {
+    hostURL,
+    websiteURL,
+    dbAdapter,
+    mediaAdapter,
+    urlAdapter,
+    oauth2Providers,
+    hooks,
+    paymentProviders
+  }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.session.getSessionByToken(token) : null
@@ -204,13 +218,15 @@ export async function contextFromRequest(
 
       memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
       paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
-      invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids))
+      invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
+      paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
     },
 
     dbAdapter,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
+    paymentProviders,
     hooks,
 
     authenticateUser() {

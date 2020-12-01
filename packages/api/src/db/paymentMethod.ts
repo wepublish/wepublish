@@ -6,7 +6,7 @@ export interface PaymentMethod {
   modifiedAt: Date
   name: string
   description: RichTextNode[]
-  paymentAdapter: string
+  paymentProviderID: string
   active: boolean
   // usable(): boolean
 }
@@ -16,7 +16,7 @@ export type OptionalPaymentMethod = PaymentMethod | null
 export interface PaymentMethodInput {
   name: string
   description: RichTextNode[]
-  paymentAdapter: string
+  paymentProviderID: string
   active: boolean
 }
 

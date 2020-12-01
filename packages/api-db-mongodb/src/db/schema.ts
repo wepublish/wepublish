@@ -2,7 +2,6 @@ import {
   ArticleBlock,
   AvailablePaymentMethod,
   FocalPoint,
-  InvoiceHistory,
   InvoiceItem,
   MetadataProperty,
   NavigationLink,
@@ -34,7 +33,8 @@ export enum CollectionName {
 
   MemberPlans = 'member.plans',
   PaymentMethods = 'payment.methods',
-  Invoices = 'invoices'
+  Invoices = 'invoices',
+  Payments = 'payments'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -284,7 +284,7 @@ export interface DBPaymentMethod {
 
   name: string
   description: RichTextNode[]
-  paymentAdapter: string
+  paymentProviderID: string
   active: boolean
 }
 
@@ -299,6 +299,21 @@ export interface DBInvoice {
   userID?: string
   description?: RichTextNode[]
   payedAt: Date | null
-  history: InvoiceHistory[]
   items: InvoiceItem[]
+}
+
+export interface DBPayment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  intentID: string
+  amount: number
+  invoiceID?: string
+  intentData?: object
+  open: boolean
+  successful: boolean
+  paymentMethodID: string
+  paymentData?: object
 }

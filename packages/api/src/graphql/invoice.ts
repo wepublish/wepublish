@@ -1,11 +1,10 @@
-import {Invoice, InvoiceHistory, InvoiceItem, InvoiceSort} from '../db/invoice'
+import {Invoice, InvoiceItem, InvoiceSort} from '../db/invoice'
 import {Context} from '../context'
 import {
   GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
-  GraphQLBoolean,
   GraphQLList,
   GraphQLInt,
   GraphQLInputObjectType,
@@ -15,23 +14,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLUser} from './user'
 import {createProxyingResolver} from '../utility'
 import {GraphQLRichText} from './richText'
-import {GraphQLPaymentMethod} from './paymentMethod'
 import {GraphQLPageInfo} from './common'
-
-export const GraphQLInvoiceHistory = new GraphQLObjectType<InvoiceHistory, Context>({
-  name: 'InvoiceHistory',
-  fields: {
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    successful: {type: GraphQLNonNull(GraphQLBoolean)},
-    paymentMethod: {
-      type: GraphQLNonNull(GraphQLPaymentMethod),
-      resolve: createProxyingResolver(({paymentMethodID}, {}, {loaders}) => {
-        return loaders.paymentMethodsByID.load(paymentMethodID)
-      })
-    },
-    paymentTransaction: {type: GraphQLNonNull(GraphQLString)}
-  }
-})
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
   name: 'InvoiceItem',
@@ -68,7 +51,6 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
     },
     description: {type: GraphQLRichText},
     payedAt: {type: GraphQLDateTime},
-    history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceHistory)))},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     total: {
       type: GraphQLNonNull(GraphQLInt),
@@ -84,7 +66,7 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
 export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
   name: 'InvoiceFilter',
   fields: {
-    name: {type: GraphQLString}
+    mail: {type: GraphQLString}
   }
 })
 
