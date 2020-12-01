@@ -532,6 +532,9 @@ function TableButton({icon, iconActive}: TableButtonProps) {
       <Button
         onClick={() => {
           Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
+          // following is needed for the popover to nicely stick to the TableButton.
+          closePopover()
+          openPopover()
         }}>
         {t('blocks.richTextTable.insertTable')}
       </Button>
@@ -579,7 +582,9 @@ function TableButton({icon, iconActive}: TableButtonProps) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          height: '130px'
+          alignItems: 'center',
+          height: '10em',
+          width: '15em'
         }}>
         {isFormatActive(editor, BlockFormat.Table) ? tableActiveControls : tableInsertControls}
       </div>
