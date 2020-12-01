@@ -32,7 +32,11 @@ export const ArticleRoute = route(
   null as PublishedArticle | null
 )
 
-export const PageRoute = route(RouteType.Page, routePath`/${zeroOrMore('slug')}`, null)
+export const PageRoute = route(
+  RouteType.Page,
+  routePath`/${zeroOrMore('id')}/${optional('slug')}`,
+  null
+)
 export const TagRoute = route(RouteType.Tag, routePath`/tag/${required('tag')}`, null)
 export const AuthorRoute = route(RouteType.Author, routePath`/author/${required('id')}`, null)
 
