@@ -556,7 +556,13 @@ function TableButton({icon, iconActive}: TableButtonProps) {
           {t('blocks.richTextTable.deleteTable')}
         </Button>
       ) : (
-        <>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            width: '100%'
+          }}>
           <Button
             color="red"
             appearance="primary"
@@ -570,7 +576,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
           </Button>
-        </>
+        </div>
       )}
     </>
   )
@@ -716,9 +722,12 @@ function removeLink(editor: Editor) {
 }
 
 function withRichText<T extends ReactEditor>(editor: T): T {
-  const {insertData, isInline, deleteForward, deleteBackward} = editor
+  const {insertData, isInline, deleteForward, deleteBackward, deleteFragment} = editor
+  // The delete commands are adjusted to avoid modifying the table structure directly. Some
+  // unwanted  behaviour occurs when doing so.
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
+
   editor.insertData = (data: any) => {
     const html = data.getData('text/html')
 
@@ -731,10 +740,13 @@ function withRichText<T extends ReactEditor>(editor: T): T {
     }
   }
 
-  editor.deleteBackward = unit => {
+  const tablePreventDelete = (
+    location: 'start' | 'end',
+    check: 'rangeIncludes' | 'pointEquals'
+  ): boolean => {
     const {selection} = editor
 
-    if (selection && Range.isCollapsed(selection)) {
+    if (selection) {
       const [cell] = Editor.nodes(editor, {
         match: n =>
           !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.TableCell
@@ -742,34 +754,37 @@ function withRichText<T extends ReactEditor>(editor: T): T {
 
       if (cell) {
         const [, cellPath] = cell
-        const start = Editor.start(editor, cellPath)
+        const loc = Editor[location](editor, cellPath)
 
-        if (Point.equals(selection.anchor, start)) {
-          return
+        if (check === 'pointEquals') {
+          return Point.equals(selection.anchor, loc)
+        } else if (check === 'rangeIncludes') {
+          return Range.includes(selection, loc)
         }
       }
+    }
+    return false
+  }
+
+  editor.deleteFragment = () => {
+    if (tablePreventDelete('start', 'rangeIncludes')) {
+      return
+    }
+
+    deleteFragment()
+  }
+
+  editor.deleteBackward = unit => {
+    if (tablePreventDelete('start', 'pointEquals')) {
+      return
     }
 
     deleteBackward(unit)
   }
 
   editor.deleteForward = unit => {
-    const {selection} = editor
-
-    if (selection && Range.isCollapsed(selection)) {
-      const [cell] = Editor.nodes(editor, {
-        match: n =>
-          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.TableCell
-      })
-
-      if (cell) {
-        const [, cellPath] = cell
-        const end = Editor.end(editor, cellPath)
-
-        if (Point.equals(selection.anchor, end)) {
-          return
-        }
-      }
+    if (tablePreventDelete('end', 'pointEquals')) {
+      return
     }
 
     deleteForward(unit)
