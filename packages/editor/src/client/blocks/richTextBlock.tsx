@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useMemo,
   ButtonHTMLAttributes,
-  forwardRef,
   useRef,
   useCallback
 } from 'react'
@@ -43,7 +42,6 @@ import {
   Form,
   FormControl,
   FormGroup,
-  Icon,
   InputGroup,
   InputNumber,
   Modal,
@@ -499,6 +497,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
   const [ncols, setNcols] = useState(1)
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const triggerRef = useRef<any>(null)
 
@@ -507,6 +506,14 @@ function TableButton({icon, iconActive}: TableButtonProps) {
   }, [])
 
   const {t} = useTranslation()
+
+  const openPopover = () => {
+    triggerRef.current!.open()
+  }
+
+  const closePopover = () => {
+    triggerRef.current!.close()
+  }
 
   const tableInsertControls = (
     <>
@@ -531,10 +538,38 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     </>
   )
 
+  const removeTable = () => {
+    console.log('hey')
+    Transforms.removeNodes(editor, {
+      at: editor.selection ?? undefined,
+      match: node => node.type === BlockFormat.Table
+    })
+  }
+
   const tableActiveControls = (
-    <Button color="red" onClick={() => null}>
-      {t('blocks.richTextTable.deleteTable')}
-    </Button>
+    <>
+      {!showRemoveConfirm ? (
+        <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
+          {t('blocks.richTextTable.deleteTable')}
+        </Button>
+      ) : (
+        <>
+          <Button
+            color="red"
+            appearance="primary"
+            onClick={() => {
+              removeTable()
+              closePopover()
+              setShowRemoveConfirm(false)
+            }}>
+            {t('blocks.richTextTable.delete')}
+          </Button>
+          <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
+            {t('blocks.richTextTable.cancel')}
+          </Button>
+        </>
+      )}
+    </>
   )
 
   const tableSpecs = (
@@ -576,7 +611,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
         active={isFormatActive(editor, BlockFormat.Table) || isPopoverOpen}
         onMouseDown={e => {
           e.preventDefault()
-          !isPopoverOpen ? triggerRef.current!.open() : triggerRef.current!.close()
+          !isPopoverOpen ? openPopover() : closePopover()
         }}
       />
     </Whisper>

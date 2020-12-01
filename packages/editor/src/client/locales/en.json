@@ -469,7 +469,9 @@
         "insertTable": "Insert Table",
         "deleteTable": "Delete Table",
         "rows": "Rows",
-        "columns": "Columns"
+        "columns": "Columns",
+        "cancel": "Cancel",
+        "delete": "Delete"
       },
       "title": {
         "title": "Title",
