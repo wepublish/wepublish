@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 import {useQuery} from 'react-apollo'
 import {BaseTemplate} from '../templates/baseTemplate'
 import {NavigationItem} from '../types'
-import {PageRoute} from './routeContext'
+import {ArticleRoute, PageRoute} from './routeContext'
 
 const NavigationQuery = gql`
   {
@@ -20,11 +20,22 @@ const NavigationQuery = gql`
   fragment BaseNavigations on Navigation {
     links {
       __typename
+
       ... on PageNavigationLink {
         label
         page {
           slug
         }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          id
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
       }
     }
   }
@@ -46,7 +57,6 @@ export function BaseTemplateContainer({
   const {data} = useQuery(NavigationQuery)
 
   const {main, footer} = data ?? {}
-
   const mainNavi = main ? dataToNavigation(main) : []
   const footerNavi = footer ? dataToNavigation(footer) : []
 
@@ -64,16 +74,35 @@ export function BaseTemplateContainer({
   )
 }
 
-function dataToNavigation(data: any): NavigationItem[] {
-  return data.links
-    .filter((link: {__typename: string}) => link.__typename == 'PageNavigationLink')
-    .map((link: any) => linkToNavigationItem(link))
+function linkToNavigationItem(link: any): NavigationItem {
+  switch (link.__typename) {
+    case 'PageNavigationLink':
+      return {
+        title: link.label,
+        route: PageRoute.create({
+          slug: link.page!.slug
+        }),
+        isActive: false
+      }
+    case 'ArticleNavigationLink':
+      return {
+        title: link.label,
+        route: ArticleRoute.create({
+          id: link.article!.id
+        }),
+        isActive: false
+      }
+    case 'ExternalNavigationLink':
+      return {
+        title: link.label,
+        url: link.url,
+        isActive: false
+      }
+    default:
+      throw new Error('Unknown Link Type: ' + link.__typename)
+  }
 }
 
-function linkToNavigationItem(link: any): NavigationItem {
-  return {
-    title: link.label,
-    route: PageRoute.create({slug: link.page?.slug ?? undefined}),
-    isActive: false
-  }
+function dataToNavigation(data: any): NavigationItem[] {
+  return data.links.map((link: any) => linkToNavigationItem(link))
 }
