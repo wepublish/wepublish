@@ -77,7 +77,6 @@ export async function renderApp({
   try {
     await getDataFromTree(ServerApp)
   } catch (err) {
-    console.log('error', err)
     console.error(`ApolloError: ${JSON.stringify(err, undefined, 2)}`)
     error = err
   }
