@@ -33,11 +33,11 @@ import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
 
 const PageQuery = gql`
-  query Page($slug: Slug, $id: ID) {
+  query Page($id: ID, $slug: Slug) {
     page(id: $id, slug: $slug) {
       updatedAt
       publishedAt
-
+      id
       slug
       title
       description
