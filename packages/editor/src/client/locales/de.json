@@ -100,7 +100,8 @@
         "statePublished": "Status: Published",
         "teaserStyle": "Style: {{label}}",
         "status": "Status: {{stateJoin}}",
-        "uploadImage": "Upload Image"
+        "uploadImage": "Upload Image",
+        "hideAuthors": "Hide Authors"
       }
     },
     "pages": {

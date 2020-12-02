@@ -1433,7 +1433,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'breaking'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3206,6 +3206,7 @@ export const ArticleDocument = gql`
       authors {
         ...AuthorRef
       }
+      hideAuthor
       breaking
       blocks {
         ...FullBlock

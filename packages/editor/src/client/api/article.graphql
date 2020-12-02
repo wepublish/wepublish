@@ -146,7 +146,7 @@ query Article($id: ID!) {
     latest {
       publishedAt
       updatedAt
-
+      
       revision
       slug
       preTitle
@@ -164,6 +164,8 @@ query Article($id: ID!) {
       authors {
         ...AuthorRef
       }
+      hideAuthor
+
       breaking
       blocks {
         ...FullBlock
