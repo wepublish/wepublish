@@ -41,7 +41,9 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
         $set: {
           name: input.name,
           logoID: input.logoID,
-          themeColor: input.themeColor
+          themeColor: input.themeColor,
+          callToActionURL: input.callToActionURL,
+          callToActionText: input.callToActionText
         }
       },
       {
