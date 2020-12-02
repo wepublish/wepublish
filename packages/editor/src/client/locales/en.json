@@ -341,7 +341,10 @@
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
         "removeImage": "Remove Image",
-        "infoEditError": "Edit Token Error"
+        "infoEditError": "Edit Token Error",
+        "callToAction": "Call to action information",
+        "callToActionText": "Text",
+        "callToActionURL": "URL"
       }
     },
     "tokenList": {

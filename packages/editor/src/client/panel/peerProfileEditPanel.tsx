@@ -15,6 +15,8 @@ import {getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
+import {RichTextBlockValue} from '../blocks/types'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
 
@@ -30,6 +32,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [logoImage, setLogoImage] = useState<PeerProfileImage>()
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
+  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
+  const [callToActionURL, setCallToActionURL] = useState('')
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -47,6 +51,10 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setLogoImage(data.peerProfile.logo)
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
+      setCallToActionText(
+        data.peerProfile.callToActionText ? data.peerProfile.callToActionText : createDefaultValue()
+      )
+      setCallToActionURL(data.peerProfile.callToActionURL || '')
     }
   }, [data?.peerProfile])
 
@@ -61,7 +69,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         input: {
           name,
           logoID: logoImage?.id,
-          themeColor
+          themeColor,
+          callToActionURL,
+          callToActionText
         }
       }
     })
@@ -95,6 +105,22 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 name="themeColor"
                 value={themeColor}
                 onChange={value => setThemeColor(value)}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
+        <Panel header={t('peerList.panels.callToAction')}>
+          <Form fluid={true}>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
+              <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('peerList.panels.callToActionURL')}</ControlLabel>
+              <FormControl
+                name="callToActionURL"
+                value={callToActionURL}
+                onChange={url => setCallToActionURL(url)}
               />
             </FormGroup>
           </Form>

@@ -12,13 +12,16 @@ import {GraphQLImage} from './image'
 import {GraphQLColor} from './color'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver, delegateToPeerSchema} from '../utility'
+import {GraphQLRichText} from './richText'
 
 export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
   name: 'PeerProfileInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     logoID: {type: GraphQLID},
-    themeColor: {type: GraphQLNonNull(GraphQLColor)}
+    themeColor: {type: GraphQLNonNull(GraphQLColor)},
+    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -36,7 +39,9 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
 
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
-    websiteURL: {type: GraphQLNonNull(GraphQLString)}
+    websiteURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionText: {type: GraphQLRichText},
+    callToActionURL: {type: GraphQLString}
   }
 })
 
