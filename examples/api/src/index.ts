@@ -110,8 +110,10 @@ async function asyncMain() {
     new StripePaymentProvider({
       id: 'stripe_checkout',
       name: 'Stripe Checkout',
+      offSessionPayments: false,
       hostURL: hostURL,
-      secretKey: process.env.STRIPE_SECRET_KEY
+      secretKey: process.env.STRIPE_SECRET_KEY,
+      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A'
     })
   ]
 

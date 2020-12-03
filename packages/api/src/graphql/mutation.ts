@@ -58,7 +58,8 @@ import {
   CanCreatePaymentMethod,
   CanDeletePaymentMethod,
   CanCreateInvoice,
-  CanDeleteInvoice
+  CanDeleteInvoice,
+  CanCreatePayment
 } from './permissions'
 import {
   GraphQLUser,
@@ -80,6 +81,7 @@ import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -780,7 +782,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreatePaymentMethod, roles)
 
-        //TODO: check if payment method exists and is active
+        // TODO: check if payment method exists and is active
 
         return dbAdapter.paymentMethod.createPaymentMethod({input})
       }
@@ -796,7 +798,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreatePaymentMethod, roles)
 
-        //TODO: check if payment method exists and is active
+        // TODO: check if payment method exists and is active
 
         return dbAdapter.paymentMethod.updatePaymentMethod({id, input})
       }
@@ -825,6 +827,45 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateInvoice, roles)
         return dbAdapter.invoice.createInvoice({input})
+      }
+    },
+
+    createPaymentFromInvoice: {
+      type: GraphQLPayment,
+      args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
+      async resolve(root, {input}, {authenticate, loaders, paymentProviders, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePayment, roles)
+        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+        const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
+        const paymentProvider = paymentProviders.find(
+          pp => pp.id === paymentMethod?.paymentProviderID
+        )
+
+        const invoice = await loaders.invoicesByID.load(invoiceID)
+
+        if (!invoice || !paymentProvider) {
+          throw new Error('Invalid data') // TODO: better error handling
+        }
+
+        const intent = await paymentProvider.createIntent({
+          invoice,
+          successURL,
+          failureURL
+        })
+
+        return await dbAdapter.payment.createPayment({
+          input: {
+            paymentMethodID,
+            invoiceID,
+            successful: intent.successful,
+            open: intent.open,
+            intentData: intent.intentData,
+            paymentData: intent.paymentData,
+            amount: intent.amount,
+            intentID: intent.intentID
+          }
+        })
       }
     },
 

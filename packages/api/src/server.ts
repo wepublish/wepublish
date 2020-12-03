@@ -1,11 +1,11 @@
 import express, {Application} from 'express'
-import bodyParser from 'body-parser'
+// import bodyParser from 'body-parser'
 
 import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
-import {setupPaymentProvider} from './payments/paymentProvider'
+import {setupPaymentProvider, WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -48,6 +48,9 @@ export class WepublishServer {
       methods: ['POST', 'GET', 'OPTIONS']
     }
 
+    // app.use(bodyParser.json())
+    app.use(`/${WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
+
     adminServer.applyMiddleware({
       app,
       path: '/admin',
@@ -59,9 +62,6 @@ export class WepublishServer {
       path: '/',
       cors: corsOptions
     })
-
-    app.use(bodyParser.json())
-    app.use(setupPaymentProvider(opts))
 
     this.app = app
   }

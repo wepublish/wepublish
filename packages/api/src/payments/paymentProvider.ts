@@ -4,62 +4,78 @@ import {contextFromRequest} from '../context'
 import {WepublishServerOpts} from '../server'
 import {DBAdapter} from '../db/adapter'
 import {Payment} from '../db/payment'
+import bodyParser from 'body-parser'
 
-export const WEBHOOK_PATH_PREFIX = 'pp-wh'
+export const WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
-export interface PaymentStatus {
-  payment: Payment
+export interface IntentStatus {
   successful: boolean
   open: boolean
-  paymentData?: object
+  paymentData?: string
+  paymentUserID?: string
 }
 
-export interface CreatePaymentProps {
+export interface CreateIntentProps {
   invoice: Invoice
+  user?: string
   successURL?: string
   failureURL?: string
 }
 
-export interface CheckPaymentProps {
+export interface CheckIntentProps {
   payment: Payment
-  data: any
+  data: string
 }
 
-export interface PaymentArgs {
+export interface WebhookUpdatesProps {
+  payment: Payment
+  body: any
+  headers: any
+}
+
+export interface GetInvoiceIDFromWebhookProps {
+  body: any
+  headers: any
+}
+
+export interface IntentArgs {
   intentID: string
   amount: number
-  intentData?: object
+  intentData?: string
   open: boolean
   successful: boolean
-  paymentData?: object
+  paymentData?: string
 }
 
 export interface PaymentProvider {
   id: string
   name: string
+  offSessionPayments: boolean
 
   hostURL: string
 
   getWebhookURL(): string
 
-  getPaymentIDFromWebhook(data: any): string
+  getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string
 
-  webhookUpdate(props: CheckPaymentProps): Promise<PaymentStatus>
+  webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus>
 
-  createPayment(props: CreatePaymentProps): Promise<PaymentArgs>
+  createIntent(props: CreateIntentProps): Promise<IntentArgs>
 
-  checkPaymentStatus(props: CheckPaymentProps): Promise<PaymentStatus>
+  checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus>
 }
 
 export interface PaymentProviderProps {
   id: string
   name: string
   hostURL: string
+  offSessionPayments: boolean
 }
 
 export abstract class BasePaymentProvider implements PaymentProvider {
   readonly id: string
   readonly name: string
+  readonly offSessionPayments: boolean
 
   readonly hostURL: string
 
@@ -67,26 +83,28 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     this.id = props.id
     this.name = props.name
     this.hostURL = props.hostURL
+    this.offSessionPayments = props.offSessionPayments
   }
 
   getWebhookURL(): string {
     return `${this.hostURL}/${WEBHOOK_PATH_PREFIX}/${this.id}`
   }
 
-  abstract getPaymentIDFromWebhook(data: any): string
+  abstract getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string
 
-  abstract webhookUpdate(props: CheckPaymentProps): Promise<PaymentStatus>
+  abstract webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus>
 
-  abstract createPayment(props: CreatePaymentProps): Promise<PaymentArgs>
+  abstract createIntent(props: CreateIntentProps): Promise<IntentArgs>
 
-  abstract checkPaymentStatus(props: CheckPaymentProps): Promise<PaymentStatus>
+  abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus>
 }
 
 export async function updatePayment(
-  paymentStatus: PaymentStatus,
+  payment: Payment,
+  paymentStatus: IntentStatus,
   dbAdapter: DBAdapter
 ): Promise<Payment> {
-  const {payment, successful, open, paymentData} = paymentStatus
+  const {successful, open, paymentData} = paymentStatus
   const updatedPayment = await dbAdapter.payment.updatePayment({
     id: payment.id,
     input: {
@@ -97,12 +115,12 @@ export async function updatePayment(
       open: open,
       successful: successful,
       paymentMethodID: payment.paymentMethodID,
-      paymentData: paymentData ? paymentData : payment.paymentData
+      paymentData: paymentData || payment.paymentData
     }
   })
 
   if (!updatedPayment) {
-    throw new Error('Error updating pamyent')
+    throw new Error('Error updating payment')
   }
 
   if (
@@ -111,7 +129,7 @@ export async function updatePayment(
     updatedPayment?.successful &&
     updatedPayment.invoiceID
   ) {
-    //TODO: mark invoice as payed
+    // TODO: mark invoice as payed
   }
 
   return updatedPayment
@@ -122,23 +140,33 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const paymentProviderWebhookRouter = Router()
 
   paymentProviders.forEach(paymentProvider => {
-    paymentProviderWebhookRouter.all(`${paymentProvider.id}`, async (req, res, next) => {
-      console.log('super Test', req)
-      const {body} = req
-      const paymentID = paymentProvider.getPaymentIDFromWebhook(body)
+    paymentProviderWebhookRouter
+      .route(`/${paymentProvider.id}`)
+      .all(bodyParser.raw({type: 'application/json'}), async (req, res, next) => {
+        res.status(200).send() // respond immediately with 200 since webhook was received.
+        try {
+          const {body} = req
+          const invoiceID = paymentProvider.getInvoiceIDFromWebhook({body, headers: req.headers})
 
-      const context = await contextFromRequest(req, opts)
-      const payment = await context.loaders.paymentsByID.load(paymentID)
-      if (!payment) {
-        // TODO: implement error handling
-        console.warn('No Invoice found')
-        return
-      }
+          const context = await contextFromRequest(req, opts)
+          const payments = await context.dbAdapter.payment.getPaymentsByInvoiceID(invoiceID)
+          const payment = payments.find(payment => payment?.open)
+          if (!payment) {
+            // TODO: implement error handling
+            console.warn('No payment found')
+            return
+          }
 
-      const paymentStatus = await paymentProvider.webhookUpdate({payment, data: body})
-      await updatePayment(paymentStatus, context.dbAdapter)
-      res.status(200).send()
-    })
+          const paymentStatus = await paymentProvider.webhookUpdate({
+            payment,
+            body,
+            headers: req.headers
+          })
+          await updatePayment(payment, paymentStatus, context.dbAdapter)
+        } catch (exception) {
+          console.warn('Exception during payment update from webhook', exception)
+        }
+      })
   })
 
   return paymentProviderWebhookRouter

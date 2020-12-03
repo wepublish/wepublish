@@ -311,9 +311,9 @@ export interface DBPayment {
   intentID: string
   amount: number
   invoiceID?: string
-  intentData?: object
+  intentData?: string
   open: boolean
   successful: boolean
   paymentMethodID: string
-  paymentData?: object
+  paymentData?: string
 }

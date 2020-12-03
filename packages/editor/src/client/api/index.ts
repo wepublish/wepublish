@@ -585,6 +585,7 @@ export type Mutation = {
   updatePaymentMethod?: Maybe<PaymentMethod>;
   deletePaymentMethod?: Maybe<Scalars['ID']>;
   createInvoice?: Maybe<Invoice>;
+  createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
   deleteInvoice?: Maybe<Scalars['ID']>;
 };
@@ -832,6 +833,11 @@ export type MutationCreateInvoiceArgs = {
 };
 
 
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput;
+};
+
+
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['ID'];
   input: InvoiceInput;
@@ -987,6 +993,13 @@ export type PaymentConnection = {
 
 export type PaymentFilter = {
   intentID?: Maybe<Scalars['String']>;
+};
+
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String'];
+  paymentMethodID: Scalars['String'];
+  successURL?: Maybe<Scalars['String']>;
+  failureURL?: Maybe<Scalars['String']>;
 };
 
 export type PaymentMethod = {

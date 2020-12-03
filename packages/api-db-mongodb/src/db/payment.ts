@@ -33,6 +33,7 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
       createdAt: new Date(),
       modifiedAt: new Date(),
       intentID: input.intentID,
+      intentData: input.intentData,
       amount: input.amount,
       invoiceID: input.invoiceID,
       open: input.open,
@@ -52,6 +53,7 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
         $set: {
           modifiedAt: new Date(),
           intentID: input.intentID,
+          intentData: input.intentData,
           amount: input.amount,
           invoiceID: input.invoiceID,
           open: input.open,
@@ -81,6 +83,12 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
     )
 
     return ids.map(id => paymentMap[id] ?? null)
+  }
+
+  async getPaymentsByInvoiceID(invoiceID: string): Promise<OptionalPayment[]> {
+    const payments = await this.payment.find({invoiceID: {$eq: invoiceID}}).toArray()
+
+    return payments.map(({_id, ...payment}) => ({id: _id, ...payment}))
   }
 
   async getPayments({
@@ -114,11 +122,11 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
         }
       : {}
 
-    let textFilter: FilterQuery<any> = {}
+    const textFilter: FilterQuery<any> = {}
 
     // TODO: Rename to search
     if (filter?.intentID !== undefined) {
-      textFilter['$or'] = [{mail: {$regex: filter.intentID, $options: 'i'}}]
+      textFilter.$or = [{mail: {$regex: filter.intentID, $options: 'i'}}]
     }
 
     const [totalCount, payments] = await Promise.all([
@@ -145,15 +153,11 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
       limit.type === LimitType.First
         ? payments.length > limitCount
         : cursor.type === InputCursorType.Before
-        ? true
-        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? payments.length > limitCount
         : cursor.type === InputCursorType.After
-        ? true
-        : false
 
     const firstPayment = nodes[0]
     const lastPayment = nodes[nodes.length - 1]

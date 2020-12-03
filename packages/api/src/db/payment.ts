@@ -7,22 +7,22 @@ export interface Payment {
   intentID: string
   amount: number
   invoiceID?: string
-  intentData?: object
+  intentData?: string
   open: boolean
   successful: boolean
   paymentMethodID: string
-  paymentData?: object
+  paymentData?: string
 }
 
 export interface PaymentInput {
   intentID: string
   amount: number
   invoiceID?: string
-  intentData?: object
+  intentData?: string
   open: boolean
   successful: boolean
   paymentMethodID: string
-  paymentData?: object
+  paymentData?: string
 }
 
 export interface CreatePaymentArgs {
@@ -63,5 +63,6 @@ export interface DBPaymentAdapter {
   deletePayment(args: DeletePaymentArgs): Promise<string | null>
 
   getPaymentsByID(ids: readonly string[]): Promise<OptionalPayment[]>
+  getPaymentsByInvoiceID(invoiceID: string): Promise<OptionalPayment[]>
   getPayments(args: GetPaymentsArgs): Promise<ConnectionResult<Payment>>
 }
