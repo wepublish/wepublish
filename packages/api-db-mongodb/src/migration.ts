@@ -179,7 +179,7 @@ export const Migrations: Migration[] = [
       function mapArticleTeaserGridBlock(block: any) {
         if (block.type === 'articleTeaserGrid') {
           return {
-            type: 'graphqlteaserGrid',
+            type: 'teaserGrid',
             teasers: block.teasers.map((teaser: any) =>
               teaser
                 ? {
