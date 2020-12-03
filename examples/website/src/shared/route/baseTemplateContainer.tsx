@@ -80,7 +80,7 @@ function linkToNavigationItem(link: any): NavigationItem {
       return {
         title: link.label,
         route: PageRoute.create({
-          slug: link.page!.slug
+          slug: link.page?.slug || undefined
         }),
         isActive: false
       }
