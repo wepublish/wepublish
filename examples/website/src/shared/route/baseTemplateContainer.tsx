@@ -24,7 +24,7 @@ const NavigationQuery = gql`
       ... on PageNavigationLink {
         label
         page {
-          id
+          slug
         }
       }
       ... on ArticleNavigationLink {
@@ -80,7 +80,7 @@ function linkToNavigationItem(link: any): NavigationItem {
       return {
         title: link.label,
         route: PageRoute.create({
-          id: link.page!.id
+          slug: link.page?.slug ?? undefined
         }),
         isActive: false
       }
