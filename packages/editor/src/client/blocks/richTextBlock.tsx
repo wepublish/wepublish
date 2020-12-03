@@ -101,7 +101,6 @@ const ElementTags: any = {
   UL: () => ({type: BlockFormat.UnorderedList}),
   TB: () => ({type: BlockFormat.Table}),
   TR: () => ({type: BlockFormat.TableRow}),
-  // TD: () => ({type: BlockFormat.TableCell}),
   TD: (el: Element) => ({
     type: BlockFormat.TableCell,
     borderColor: el.getAttribute('borderColor')
@@ -199,9 +198,10 @@ function renderElement({attributes, children, element}: RenderElementProps) {
         <td
           {...attributes}
           style={{
-            borderColor: (c => (c === 'transparent' ? `rgb(0, 0, 0, 0.1)` : c))(
-              element.borderColor as string
-            )
+            borderColor:
+              element.borderColor === 'transparent'
+                ? `rgb(0, 0, 0, 0.1)`
+                : (element.borderColor as string)
           }}>
           {children}
         </td>
@@ -530,7 +530,7 @@ function TableButton({icon, iconActive}: TableButtonProps) {
     triggerRef.current!.close()
   }
 
-  function isBorderVisible() {
+  const isBorderVisible = () => {
     const [match] = Editor.nodes(editor, {
       match: node => node.borderColor && node.borderColor !== 'transparent',
       mode: 'all'
@@ -541,18 +541,26 @@ function TableButton({icon, iconActive}: TableButtonProps) {
 
   const tableInsertControls = (
     <>
-      <SetRowColNumbers
-        key={1}
-        label={t('blocks.richTextTable.rows')}
-        num={nrows}
-        setNumber={setNrows}
-      />
-      <SetRowColNumbers
-        key={2}
-        label={t('blocks.richTextTable.columns')}
-        num={ncols}
-        setNumber={setNcols}
-      />
+      {[
+        {
+          label: t('blocks.richTextTable.rows'),
+          num: nrows,
+          setNumber: setNrows
+        },
+        {
+          label: t('blocks.richTextTable.columns'),
+          num: ncols,
+          setNumber: setNcols
+        }
+      ].map(({label, num, setNumber}, i) => (
+        <InputGroup
+          style={{width: '150px'}}
+          disabled={isFormatActive(editor, BlockFormat.Table)}
+          key={i}>
+          <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
+          <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
+        </InputGroup>
+      ))}
       <Button
         onClick={() => {
           Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
@@ -674,27 +682,10 @@ function TableButton({icon, iconActive}: TableButtonProps) {
         active={isFormatActive(editor, BlockFormat.Table) || isPopoverOpen}
         onMouseDown={e => {
           e.preventDefault()
-          !isPopoverOpen ? openPopover() : closePopover()
+          isPopoverOpen ? closePopover() : openPopover()
         }}
       />
     </Whisper>
-  )
-}
-
-interface SetRowColNumbersProps {
-  label: string
-  num: number
-  setNumber: React.Dispatch<React.SetStateAction<number>>
-}
-
-function SetRowColNumbers({label, num, setNumber}: SetRowColNumbersProps) {
-  const editor = useSlate()
-
-  return (
-    <InputGroup style={{width: '150px'}} disabled={isFormatActive(editor, BlockFormat.Table)}>
-      <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
-      <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
-    </InputGroup>
   )
 }
 
@@ -806,12 +797,12 @@ function withRichText<T extends ReactEditor>(editor: T): T {
 
       if (cell) {
         const [, cellPath] = cell
-        const loc = Editor[location](editor, cellPath)
+        const point = Editor[location](editor, cellPath)
 
         if (check === 'pointEquals') {
-          return Point.equals(selection.anchor, loc)
+          return Point.equals(selection.anchor, point)
         } else if (check === 'rangeIncludes') {
-          return Range.includes(selection, loc)
+          return Range.includes(selection, point)
         }
       }
     }
