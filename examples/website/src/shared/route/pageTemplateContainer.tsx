@@ -33,11 +33,10 @@ import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
 
 const PageQuery = gql`
-  query Page($slug: Slug, $id: ID) {
+  query Page($id: ID, $slug: Slug) {
     page(id: $id, slug: $slug) {
       updatedAt
       publishedAt
-
       slug
       title
       description
@@ -91,7 +90,6 @@ export interface PageTemplateContainerProps {
 
 export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-
   const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id}})
 
   if (loading) return <Loader text="Loading" />
