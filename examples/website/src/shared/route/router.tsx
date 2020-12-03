@@ -68,18 +68,10 @@ function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps
       }
   }
 }
-
 function contentForRoute(activeRoute: Route | null) {
   switch (activeRoute?.type) {
     case RouteType.Page:
-      if (activeRoute.params.id) {
-        return <PageTemplateContainer id={activeRoute.params.id} />
-      } else if (activeRoute.params.slug) {
-        return <PageTemplateContainer slug={activeRoute.params.slug} />
-      } else {
-        // This references a default landing-page identified by an empty slug. The slug can of course be adapted to reference a different landing-page
-        return <PageTemplateContainer slug="" />
-      }
+      return <PageTemplateContainer slug={activeRoute.params.slug || ''} />
 
     case RouteType.PeerArticle:
       return (

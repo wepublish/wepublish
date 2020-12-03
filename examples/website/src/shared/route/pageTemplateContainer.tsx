@@ -37,7 +37,6 @@ const PageQuery = gql`
     page(id: $id, slug: $slug) {
       updatedAt
       publishedAt
-      id
       slug
       title
       description
@@ -91,7 +90,6 @@ export interface PageTemplateContainerProps {
 
 export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-
   const {data, loading, error} = useQuery(PageQuery, {variables: {slug, id}})
 
   if (loading) return <Loader text="Loading" />
