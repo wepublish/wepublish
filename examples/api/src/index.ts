@@ -6,13 +6,14 @@ import {
   PublicPage,
   Author,
   Oauth2Provider,
-  StripePaymentProvider
+  StripeCheckoutPaymentProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
+import {StripePaymentProvider} from '@wepublish/api/lib/payments/stripePaymentProvider'
 
 class ExampleURLAdapter implements URLAdapter {
   getPublicArticleURL(article: PublicArticle): string {
@@ -107,11 +108,19 @@ async function asyncMain() {
   ]
 
   const paymentProviders = [
-    new StripePaymentProvider({
+    new StripeCheckoutPaymentProvider({
       id: 'stripe_checkout',
       name: 'Stripe Checkout',
       offSessionPayments: false,
-      hostURL: hostURL,
+      hostURL,
+      secretKey: process.env.STRIPE_SECRET_KEY,
+      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A'
+    }),
+    new StripePaymentProvider({
+      id: 'stripe',
+      name: 'Stripe',
+      offSessionPayments: true,
+      hostURL,
       secretKey: process.env.STRIPE_SECRET_KEY,
       webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A'
     })
