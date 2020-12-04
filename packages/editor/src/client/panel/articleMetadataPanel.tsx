@@ -180,6 +180,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             </Form>
           </>
         )
+      default:
+        return <></>
     }
   }
 
