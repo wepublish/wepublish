@@ -10,7 +10,9 @@ import {
   FormGroup,
   TagPicker,
   Toggle,
-  HelpBlock
+  HelpBlock,
+  Nav,
+  Icon
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -20,6 +22,7 @@ import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import e from 'express'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -50,8 +53,13 @@ export interface ArticleMetadataPanelProps {
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
   const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
 
+  // TODO: Include this later into value
+  const [socialMediaTitle, setSocialMediaTitle] = useState('')
+  const [socialMediaDescription, setSocialMediaDescription] = useState('')
+
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [activeKey, setActiveKey] = useState('general')
 
   const {t} = useTranslation()
 
@@ -68,6 +76,114 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     fetchPolicy: 'network-only'
   })
 
+  function currentContent() {
+    switch (activeKey) {
+      case 'socialMedia':
+        return (
+          <>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}</ControlLabel>
+                <FormControl
+                  value={socialMediaTitle}
+                  onChange={socialMediaTitle => {
+                    setSocialMediaTitle(socialMediaTitle)
+                  }}
+                />
+                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={socialMediaDescription}
+                  onChange={socialMediaDescription => {
+                    setSocialMediaDescription(socialMediaDescription)
+                  }}
+                />
+              </FormGroup>
+            </Form>
+          </>
+        )
+      case 'general':
+        return (
+          <>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+                <FormControl
+                  value={preTitle}
+                  onChange={preTitle => onChange?.({...value, preTitle})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+                <FormControl
+                  value={title}
+                  onChange={title => onChange?.({...value, title, slug: slugify(title)})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={lead}
+                  onChange={lead => onChange?.({...value, lead})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
+                <CheckPicker
+                  cleanable={true}
+                  value={authors.map(author => author.id)}
+                  data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
+                  onChange={authorsID => {
+                    const authors = foundAuthors.filter(author => authorsID.includes(author.id))
+                    onChange?.({...value, authors})
+                  }}
+                  block
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
+                <TagPicker
+                  block
+                  value={tags}
+                  creatable={true}
+                  data={tags.map(tag => ({label: tag, value: tag}))}
+                  onChange={tags => {
+                    onChange?.({...value, tags})
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
+                <Toggle
+                  checked={breaking}
+                  onChange={breaking => onChange?.({...value, breaking})}
+                />
+              </FormGroup>
+            </Form>
+            <ChooseEditImage
+              header={''}
+              image={image}
+              disabled={false}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => onChange?.({...value, image: undefined})}
+            />
+            <Form fluid={true} style={{marginTop: '20px'}}>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
+                <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
+                <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
+              </FormGroup>
+            </Form>
+          </>
+        )
+    }
+  }
+
   useEffect(() => {
     if (data?.authors?.nodes) {
       setFoundAuthors(data?.authors.nodes)
@@ -81,73 +197,19 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
-            <FormControl value={preTitle} onChange={preTitle => onChange?.({...value, preTitle})} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-            <FormControl
-              value={title}
-              onChange={title => onChange?.({...value, title, slug: slugify(title)})}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-            <FormControl
-              rows={5}
-              componentClass="textarea"
-              value={lead}
-              onChange={lead => onChange?.({...value, lead})}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
-            <CheckPicker
-              cleanable={true}
-              value={authors.map(author => author.id)}
-              data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
-              onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
-              onChange={authorsID => {
-                const authors = foundAuthors.filter(author => authorsID.includes(author.id))
-                onChange?.({...value, authors})
-              }}
-              block
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
-            <TagPicker
-              block
-              value={tags}
-              creatable={true}
-              data={tags.map(tag => ({label: tag, value: tag}))}
-              onChange={tags => {
-                onChange?.({...value, tags})
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.breakingNews')}</ControlLabel>
-            <Toggle checked={breaking} onChange={breaking => onChange?.({...value, breaking})} />
-          </FormGroup>
-        </Form>
-        <ChooseEditImage
-          header={''}
-          image={image}
-          disabled={false}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => onChange?.({...value, image: undefined})}
-        />
-        <Form fluid={true} style={{marginTop: '20px'}}>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
-            <Toggle checked={shared} onChange={shared => onChange?.({...value, shared})} />
-            <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
-          </FormGroup>
-        </Form>
+        <Nav
+          appearance="tabs"
+          activeKey={activeKey}
+          onSelect={activeKey => setActiveKey(activeKey)}
+          style={{marginBottom: 20}}>
+          <Nav.Item eventKey="general" icon={<Icon icon="cog" />}>
+            {t('articleEditor.panels.general')}
+          </Nav.Item>
+          <Nav.Item eventKey="socialMedia" icon={<Icon icon="share-alt" />}>
+            {t('articleEditor.panels.socialMedia')}
+          </Nav.Item>
+        </Nav>
+        {currentContent()}
       </Drawer.Body>
 
       <Drawer.Footer>
