@@ -465,6 +465,16 @@
         "link": "Link",
         "title": "Title"
       },
+      "richTextTable": {
+        "insertTable": "Insert Table",
+        "deleteTable": "Delete Table",
+        "showBorders": "Show Borders",
+        "hideBorders": "Hide Borders",
+        "rows": "Rows",
+        "columns": "Columns",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
       "title": {
         "title": "Title",
         "leadText": "Lead Text "
