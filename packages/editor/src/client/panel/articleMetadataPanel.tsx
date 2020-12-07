@@ -21,6 +21,7 @@ import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {MetatagType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface ArticleMetadataProperty {
@@ -78,7 +79,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
   function currentContent() {
     switch (activeKey) {
-      case 'socialMedia':
+      case MetatagType.SocialMedia:
         return (
           <>
             <Form fluid={true}>
@@ -110,7 +111,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             </Form>
           </>
         )
-      case 'general':
+      case MetatagType.General:
         return (
           <>
             <Form fluid={true}>
@@ -211,10 +212,10 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           activeKey={activeKey}
           onSelect={activeKey => setActiveKey(activeKey)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey="general" icon={<Icon icon="cog" />}>
+          <Nav.Item eventKey={MetatagType.General} icon={<Icon icon="cog" />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
-          <Nav.Item eventKey="socialMedia" icon={<Icon icon="share-alt" />}>
+          <Nav.Item eventKey={MetatagType.SocialMedia} icon={<Icon icon="share-alt" />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
         </Nav>
