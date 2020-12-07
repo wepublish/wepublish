@@ -109,7 +109,8 @@
         "status": "{{stateJoin}}",
         "uploadImage": "Upload Image",
         "removeTeaser": "Remove Teaser",
-        "sharedWithPeers": "Shared With Peers"
+        "sharedWithPeers": "Shared With Peers",
+        "hideAuthors": "Hide Authors"
       }
     },
     "pages": {

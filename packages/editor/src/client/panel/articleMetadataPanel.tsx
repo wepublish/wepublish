@@ -38,6 +38,7 @@ export interface ArticleMetadata {
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
+  readonly hideAuthor: boolean
 }
 
 export interface ArticleMetadataPanelProps {
@@ -48,7 +49,7 @@ export interface ArticleMetadataPanelProps {
 }
 
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
+  const {preTitle, title, lead, tags, authors, shared, breaking, image, hideAuthor} = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -114,6 +115,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 onChange?.({...value, authors})
               }}
               block
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
+            <Toggle
+              checked={hideAuthor}
+              onChange={hideAuthor => onChange?.({...value, hideAuthor})}
             />
           </FormGroup>
           <FormGroup>
