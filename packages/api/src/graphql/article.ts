@@ -75,6 +75,9 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
@@ -109,6 +112,14 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLList(GraphQLAuthor),
+      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      })
+    },
     lead: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
@@ -210,6 +221,18 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLList(GraphQLAuthor),
+      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+        if (hideAuthor) {
+          return []
+        } else {
+          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+        }
+      })
+    },
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 

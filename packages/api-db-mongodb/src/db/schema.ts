@@ -197,6 +197,9 @@ export interface DBArticleRevision {
 
   preTitle?: string
   title: string
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs?: string[]
   lead?: string
   tags: string[]
 

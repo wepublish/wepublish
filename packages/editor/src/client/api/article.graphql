@@ -150,6 +150,11 @@ query Article($id: ID!) {
       slug
       preTitle
       title
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
       lead
       image {
         ...ImageRef

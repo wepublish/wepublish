@@ -428,6 +428,57 @@ export const Migrations: Migration[] = [
         {$set: {'draft.hideAuthor': false}}
       )
     }
+  },
+  {
+    // Add social media metatags to article.
+    version: 7,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.socialMediaTitle': {$exists: false},
+          'pending.socialMediaDescription': {$exists: false},
+          'pending.socialMediaAuthors': {$exists: false}
+        },
+        {
+          $set: {
+            'pending.socialMediaTitle': false,
+            'pending.socialMediaDescription': false,
+            'pending.socialMediaAuthors': false
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.socialMediaTitle': {$exists: false},
+          'published.socialMediaDescription': {$exists: false},
+          'published.socialMediaAuthors': {$exists: false}
+        },
+        {
+          $set: {
+            'published.socialMediaTitle': false,
+            'published.socialMediaDescription': false,
+            'published.socialMediaAuthors': false
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.socialMediaTitle': {$exists: false},
+          'draft.socialMediaDescription': {$exists: false},
+          'draft.socialMediaAuthors': {$exists: false}
+        },
+        {
+          $set: {
+            'draft.socialMediaTitle': false,
+            'draft.socialMediaDescription': false,
+            'draft.socialMediaAuthors': false
+          }
+        }
+      )
+    }
   }
 ]
 

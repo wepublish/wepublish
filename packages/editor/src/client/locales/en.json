@@ -114,7 +114,7 @@
         "general": "General",
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
-        "socialMediaAuthor": "Author",
+        "socialMediaAuthors": "Authors",
         "hideAuthors": "Hide Authors"
       }
     },

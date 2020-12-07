@@ -34,6 +34,9 @@ export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
   readonly title: string
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthors?: AuthorRefFragment[]
   readonly lead: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
@@ -52,12 +55,21 @@ export interface ArticleMetadataPanelProps {
 }
 
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, tags, authors, shared, breaking, image, hideAuthor} = value
+  const {
+    preTitle,
+    title,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaAuthors,
+    lead,
+    tags,
+    authors,
+    shared,
+    breaking,
+    image,
+    hideAuthor
+  } = value
 
-  // TODO: Include this later into value
-  const [socialMediaTitle, setSocialMediaTitle] = useState('')
-  const [socialMediaDescription, setSocialMediaDescription] = useState('')
-  const [socialMediaAuthor, setSocialMediaAuthor] = useState('')
   const [activeKey, setActiveKey] = useState(MetatagType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -89,7 +101,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 <FormControl
                   value={socialMediaTitle}
                   onChange={socialMediaTitle => {
-                    setSocialMediaTitle(socialMediaTitle)
+                    onChange?.({...value, socialMediaTitle})
                   }}
                 />
                 <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
@@ -98,14 +110,14 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   componentClass="textarea"
                   value={socialMediaDescription}
                   onChange={socialMediaDescription => {
-                    setSocialMediaDescription(socialMediaDescription)
+                    onChange?.({...value, socialMediaDescription})
                   }}
                 />
-                <ControlLabel>{t('articleEditor.panels.socialMediaAuthor')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
                 <FormControl
-                  value={socialMediaAuthor}
-                  onChange={socialMediaAuthor => {
-                    setSocialMediaAuthor(socialMediaAuthor)
+                  value={socialMediaAuthors}
+                  onChange={socialMediaAuthors => {
+                    onChange?.({...value, socialMediaAuthors})
                   }}
                 />
               </FormGroup>
