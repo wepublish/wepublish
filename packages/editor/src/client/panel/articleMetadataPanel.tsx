@@ -154,6 +154,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 />
               </FormGroup>
               <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
+                <Toggle
+                  checked={hideAuthor}
+                  onChange={hideAuthor => onChange?.({...value, hideAuthor})}
+                />
+              </FormGroup>
+              <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
                 <TagPicker
                   block
