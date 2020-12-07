@@ -113,7 +113,8 @@
         "socialMedia": "Social Media",
         "general": "General",
         "socialMediaTitle": "Title for Social Media",
-        "socialMediaDescription": "Description for Social Media"
+        "socialMediaDescription": "Description for Social Media",
+        "socialMediaAuthor": "Author"
       }
     },
     "pages": {

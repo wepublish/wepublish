@@ -55,6 +55,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   // TODO: Include this later into value
   const [socialMediaTitle, setSocialMediaTitle] = useState('')
   const [socialMediaDescription, setSocialMediaDescription] = useState('')
+  const [socialMediaAuthor, setSocialMediaAuthor] = useState('')
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -96,6 +97,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={socialMediaDescription}
                   onChange={socialMediaDescription => {
                     setSocialMediaDescription(socialMediaDescription)
+                  }}
+                />
+                <ControlLabel>{t('articleEditor.panels.socialMediaAuthor')}</ControlLabel>
+                <FormControl
+                  value={socialMediaAuthor}
+                  onChange={socialMediaAuthor => {
+                    setSocialMediaAuthor(socialMediaAuthor)
                   }}
                 />
               </FormGroup>
