@@ -1,10 +1,22 @@
 import React, {useState} from 'react'
 
-import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel, TagPicker} from 'rsuite'
+import {
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Icon,
+  Nav,
+  Panel,
+  TagPicker
+} from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
+import {MetatagType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -36,10 +48,97 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
+  // TODO: Include this later into value
+  const [socialMediaTitle, setSocialMediaTitle] = useState('')
+  const [socialMediaDescription, setSocialMediaDescription] = useState('')
+  const [socialMediaAuthor, setSocialMediaAuthor] = useState('')
+  const [activeKey, setActiveKey] = useState(MetatagType.General)
+
   const {t} = useTranslation()
 
   function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
+  }
+
+  function currentContent() {
+    switch (activeKey) {
+      case MetatagType.SocialMedia:
+        return (
+          <>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}</ControlLabel>
+                <FormControl
+                  value={socialMediaTitle}
+                  onChange={socialMediaTitle => {
+                    setSocialMediaTitle(socialMediaTitle)
+                  }}
+                />
+                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={socialMediaDescription}
+                  onChange={socialMediaDescription => {
+                    setSocialMediaDescription(socialMediaDescription)
+                  }}
+                />
+                <ControlLabel>{t('articleEditor.panels.socialMediaAuthor')}</ControlLabel>
+                <FormControl
+                  value={socialMediaAuthor}
+                  onChange={socialMediaAuthor => {
+                    setSocialMediaAuthor(socialMediaAuthor)
+                  }}
+                />
+              </FormGroup>
+            </Form>
+          </>
+        )
+      case MetatagType.General:
+        return (
+          <>
+            <Panel>
+              <Form fluid={true}>
+                <FormGroup>
+                  <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
+                  <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
+                  <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
+                  <FormControl
+                    componentClass="textarea"
+                    value={description}
+                    onChange={description => onChange?.({...value, description})}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
+                  <TagPicker
+                    style={{width: '100%'}}
+                    creatable={true}
+                    value={tags}
+                    data={tags.map(tag => ({label: tag, value: tag}))}
+                    onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                  />
+                </FormGroup>
+              </Form>
+            </Panel>
+            <ChooseEditImage
+              image={image}
+              disabled={false}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => onChange?.({...value, image: undefined})}
+            />
+          </>
+        )
+      default:
+        return <></>
+    }
   }
 
   return (
@@ -49,43 +148,20 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
-              <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
-              <FormControl value={title} onChange={title => onChange?.({...value, title})} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
-              <FormControl
-                componentClass="textarea"
-                value={description}
-                onChange={description => onChange?.({...value, description})}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
-              <TagPicker
-                style={{width: '100%'}}
-                creatable={true}
-                value={tags}
-                data={tags.map(tag => ({label: tag, value: tag}))}
-                onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
-              />
-            </FormGroup>
-          </Form>
-        </Panel>
-        <ChooseEditImage
-          image={image}
-          disabled={false}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => onChange?.({...value, image: undefined})}
-        />
+        <Nav
+          appearance="tabs"
+          activeKey={activeKey}
+          onSelect={activeKey => setActiveKey(activeKey)}
+          style={{marginBottom: 20}}>
+          <Nav.Item eventKey={MetatagType.General} icon={<Icon icon="cog" />}>
+            {t('articleEditor.panels.general')}
+          </Nav.Item>
+          <Nav.Item eventKey={MetatagType.SocialMedia} icon={<Icon icon="share-alt" />}>
+            {t('articleEditor.panels.socialMedia')}
+          </Nav.Item>
+        </Nav>
+
+        {currentContent()}
       </Drawer.Body>
 
       <Drawer.Footer>

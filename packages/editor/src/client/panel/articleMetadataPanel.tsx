@@ -57,10 +57,10 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   const [socialMediaTitle, setSocialMediaTitle] = useState('')
   const [socialMediaDescription, setSocialMediaDescription] = useState('')
   const [socialMediaAuthor, setSocialMediaAuthor] = useState('')
+  const [activeKey, setActiveKey] = useState(MetatagType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [activeKey, setActiveKey] = useState('general')
 
   const {t} = useTranslation()
 
