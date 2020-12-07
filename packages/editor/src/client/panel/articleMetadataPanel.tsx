@@ -41,6 +41,7 @@ export interface ArticleMetadata {
   readonly image?: ImageRefFragment
   readonly shared: boolean
   readonly breaking: boolean
+  readonly hideAuthor: boolean
 }
 
 export interface ArticleMetadataPanelProps {
@@ -51,7 +52,7 @@ export interface ArticleMetadataPanelProps {
 }
 
 export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
-  const {preTitle, title, lead, tags, authors, shared, breaking, image} = value
+  const {preTitle, title, lead, tags, authors, shared, breaking, image, hideAuthor} = value
 
   // TODO: Include this later into value
   const [socialMediaTitle, setSocialMediaTitle] = useState('')

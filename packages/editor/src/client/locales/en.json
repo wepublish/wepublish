@@ -114,7 +114,8 @@
         "general": "General",
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
-        "socialMediaAuthor": "Author"
+        "socialMediaAuthor": "Author",
+        "hideAuthors": "Hide Authors"
       }
     },
     "pages": {
@@ -469,6 +470,16 @@
         "optionalDescription": "Optional description for the link",
         "link": "Link",
         "title": "Title"
+      },
+      "richTextTable": {
+        "insertTable": "Insert Table",
+        "deleteTable": "Delete Table",
+        "showBorders": "Show Borders",
+        "hideBorders": "Hide Borders",
+        "rows": "Rows",
+        "columns": "Columns",
+        "cancel": "Cancel",
+        "delete": "Delete"
       },
       "title": {
         "title": "Title",

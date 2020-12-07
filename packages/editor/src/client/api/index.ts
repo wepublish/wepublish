@@ -60,6 +60,7 @@ export type ArticleInput = {
   authorIDs: Array<Scalars['ID']>;
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
+  hideAuthor: Scalars['Boolean'];
   blocks: Array<BlockInput>;
 };
 
@@ -81,6 +82,7 @@ export type ArticleRevision = {
   publishAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
+  hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
@@ -1431,7 +1433,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'breaking'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -3204,6 +3206,7 @@ export const ArticleDocument = gql`
       authors {
         ...AuthorRef
       }
+      hideAuthor
       breaking
       blocks {
         ...FullBlock

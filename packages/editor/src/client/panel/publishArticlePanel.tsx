@@ -98,6 +98,9 @@ export function PublishArticlePanel({
           <DescriptionListItem label={t('articleEditor.panels.sharedWithPeers')}>
             {metadata.shared ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
           </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.hideAuthors')}>
+            {metadata.hideAuthor ? t('articleEditor.panels.yes') : t('articleEditor.panels.no')}
+          </DescriptionListItem>
         </DescriptionList>
       </Modal.Body>
 

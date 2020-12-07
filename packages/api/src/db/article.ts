@@ -15,6 +15,8 @@ export interface ArticleData {
 
   readonly breaking: boolean
   readonly blocks: ArticleBlock[]
+
+  readonly hideAuthor: boolean
 }
 
 // Article State Flow:
