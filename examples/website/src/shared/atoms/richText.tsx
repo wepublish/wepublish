@@ -31,6 +31,19 @@ export function renderNodes(nodes: Node[]): ReactNode {
         case 'list-item':
           return <li key={index}>{renderNodes(node.children)}</li>
 
+        case 'table':
+          return (
+            <table key={index}>
+              <tbody>{renderNodes(node.children)}</tbody>
+            </table>
+          )
+
+        case 'table-row':
+          return <tr key={index}>{renderNodes(node.children)}</tr>
+
+        case 'table-cell':
+          return <td key={index}>{renderNodes(node.children)}</td>
+
         case 'link':
           return (
             <a key={index} target="_blank" rel="noopener" href={node.url} title={node.title}>
