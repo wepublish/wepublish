@@ -1114,7 +1114,7 @@ async function applyMongo() {
       name: envSwitch(
         ENVIRONMENT_NAME,
         'wepublish-mongo',
-        `wepublish-mongo-${GITHUB_REF}`
+        `wepublish-mongo-${GITHUB_SHA}`
       ),
       namespace: NAMESPACE
     },
@@ -1200,7 +1200,7 @@ async function applyMongo() {
                 claimName: envSwitch(
                   ENVIRONMENT_NAME,
                   'wepublish-mongo',
-                  `wepublish-mongo-${GITHUB_REF}`
+                  `wepublish-mongo-${GITHUB_SHA}`
                 ),
               }
             }
