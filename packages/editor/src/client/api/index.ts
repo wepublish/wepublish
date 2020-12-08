@@ -837,8 +837,8 @@ export type PeerProfile = {
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
-  callToActionText?: Maybe<Scalars['RichText']>;
-  callToActionURL?: Maybe<Scalars['String']>;
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
