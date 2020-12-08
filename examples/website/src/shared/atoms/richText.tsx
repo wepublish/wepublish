@@ -33,7 +33,14 @@ export function renderNodes(nodes: Node[]): ReactNode {
 
         case 'table':
           return (
-            <table key={index}>
+            <table
+              key={index}
+              style={{
+                whiteSpace: 'pre-wrap',
+                width: '100%',
+                margin: '10px'
+                // table-layout: fixed,
+              }}>
               <tbody>{renderNodes(node.children)}</tbody>
             </table>
           )
@@ -43,7 +50,13 @@ export function renderNodes(nodes: Node[]): ReactNode {
 
         case 'table-cell':
           return (
-            <td key={index} style={{borderColor: node.borderColor}}>
+            <td
+              key={index}
+              style={{
+                borderColor: node.borderColor,
+                border: '1px solid',
+                padding: '8px'
+              }}>
               {renderNodes(node.children)}
             </td>
           )
