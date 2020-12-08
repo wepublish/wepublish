@@ -1,6 +1,23 @@
 import React, {ReactNode, Fragment} from 'react'
 import {Node} from 'slate'
 
+import {cssRule, useStyle} from '@karma.run/react'
+
+export const tableStyle = cssRule({
+  width: '100%',
+  borderCollapse: 'collapse',
+  tableLayout: 'fixed'
+})
+
+export const tableCellStyle = cssRule({
+  border: '1px solid',
+  padding: '8px',
+  // remove extra white spice after paragraph inside of table-cell
+  '> p': {
+    marginBlockEnd: '0'
+  }
+})
+
 export interface RichTextProps {
   readonly value: Node[]
 }
@@ -10,6 +27,7 @@ export function RichText(props: RichTextProps) {
 }
 
 export function renderNodes(nodes: Node[]): ReactNode {
+  const css = useStyle()
   return nodes.map((node, index) => {
     if (node.children) {
       switch (node.type) {
@@ -33,14 +51,7 @@ export function renderNodes(nodes: Node[]): ReactNode {
 
         case 'table':
           return (
-            <table
-              key={index}
-              style={{
-                whiteSpace: 'pre-wrap',
-                width: '100%',
-                margin: '10px'
-                // table-layout: fixed,
-              }}>
+            <table key={index} className={css(tableStyle)}>
               <tbody>{renderNodes(node.children)}</tbody>
             </table>
           )
@@ -50,13 +61,7 @@ export function renderNodes(nodes: Node[]): ReactNode {
 
         case 'table-cell':
           return (
-            <td
-              key={index}
-              style={{
-                borderColor: node.borderColor,
-                border: '1px solid',
-                padding: '8px'
-              }}>
+            <td key={index} className={css(tableCellStyle)} style={{borderColor: node.borderColor}}>
               {renderNodes(node.children)}
             </td>
           )
