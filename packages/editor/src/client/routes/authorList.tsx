@@ -50,13 +50,15 @@ export function AuthorList() {
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
 
-  const {data, /* fetchMore, */ loading: isLoading} = useAuthorListQuery({
+  const useAuthorListResult = useAuthorListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
     },
     fetchPolicy: 'network-only'
   })
+
+  const isLoading = useAuthorListResult.loading
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
@@ -75,10 +77,10 @@ export function AuthorList() {
   }, [current])
 
   useEffect(() => {
-    if (data?.authors?.nodes) {
-      setAuthors(data.authors.nodes)
+    if (useAuthorListResult.data?.authors?.nodes) {
+      setAuthors(useAuthorListResult.data.authors.nodes)
     }
-  }, [data?.authors])
+  }, [useAuthorListResult.data?.authors])
 
   /* function loadMore() {
     fetchMore({
@@ -211,6 +213,8 @@ export function AuthorList() {
               await deleteAuthor({
                 variables: {id: currentAuthor.id}
               })
+
+              await useAuthorListResult.refetch()
 
               setConfirmationDialogOpen(false)
               // fetchMore()
