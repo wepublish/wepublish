@@ -40,8 +40,8 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
     hostURL: {type: GraphQLNonNull(GraphQLString)},
     websiteURL: {type: GraphQLNonNull(GraphQLString)},
-    callToActionText: {type: GraphQLRichText},
-    callToActionURL: {type: GraphQLString}
+    callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
+    callToActionURL: {type: GraphQLNonNull(GraphQLString)}
   }
 })
 

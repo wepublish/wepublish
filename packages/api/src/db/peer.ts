@@ -4,8 +4,8 @@ export interface PeerProfile {
   name: string
   logoID?: string
   themeColor: string
-  callToActionText?: RichTextNode[]
-  callToActionURL?: string
+  callToActionText: RichTextNode[]
+  callToActionURL: string
 }
 
 export type ResolvedPeerProfile = unknown
@@ -14,8 +14,8 @@ export interface PeerProfileInput {
   name: string
   logoID?: string
   themeColor: string
-  callToActionText?: RichTextNode[]
-  callToActionURL?: string
+  callToActionText: RichTextNode[]
+  callToActionURL: string
 }
 
 export interface BasePeer {
