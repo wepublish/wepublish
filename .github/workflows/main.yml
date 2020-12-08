@@ -41,3 +41,13 @@ jobs:
           credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_CHANNEL: dev
+          SLACK_COLOR: '#3278BD'
+          SLACK_ICON: https://github.com/wepublish.png?size=48
+          SLACK_MESSAGE: 'We.Publish Deploy to Kubernetes done!'
+          SLACK_TITLE: 'CI/CD'
+          SLACK_USERNAME: 'Github (wepublish)'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
