@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - c/dev-instances
 
 jobs:
   release:
