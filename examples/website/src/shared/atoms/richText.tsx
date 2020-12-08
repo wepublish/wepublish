@@ -42,7 +42,11 @@ export function renderNodes(nodes: Node[]): ReactNode {
           return <tr key={index}>{renderNodes(node.children)}</tr>
 
         case 'table-cell':
-          return <td key={index}>{renderNodes(node.children)}</td>
+          return (
+            <td key={index} style={{borderColor: node.borderColor}}>
+              {renderNodes(node.children)}
+            </td>
+          )
 
         case 'link':
           return (
