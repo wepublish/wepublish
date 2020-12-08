@@ -67,9 +67,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     slug: '',
     preTitle: '',
     title: '',
-    socialMediaTitle: '',
-    socialMediaDescription: '',
-    socialMediaAuthors: [],
     lead: '',
     authors: [],
     tags: [],
@@ -77,7 +74,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     shared: false,
     breaking: false,
     image: undefined,
-    hideAuthor: false
+    hideAuthor: false,
+    socialMediaTitle: '',
+    socialMediaDescription: '',
+    socialMediaAuthors: [],
+    socialMediaImage: undefined
   })
 
   const isNew = id === undefined
@@ -116,9 +117,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         slug,
         preTitle,
         title,
-        socialMediaTitle,
-        socialMediaDescription,
-        socialMediaAuthors,
         lead,
         tags,
         breaking,
@@ -126,7 +124,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         image,
         blocks,
         properties,
-        hideAuthor
+        hideAuthor,
+        socialMediaTitle,
+        socialMediaDescription,
+        socialMediaAuthors,
+        socialMediaImage
       } = latest
       const {publishedAt} = published ?? {}
 
@@ -136,11 +138,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         slug,
         preTitle: preTitle ?? '',
         title,
-        socialMediaTitle: socialMediaTitle ?? '',
-        socialMediaDescription: socialMediaDescription ?? '',
-        socialMediaAuthors: socialMediaAuthors?.filter(
-          socialMediaAuthor => socialMediaAuthor != null
-        ) as AuthorRefFragment[],
         lead: lead ?? '',
         tags,
         properties: properties.map(property => ({
@@ -152,7 +149,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image || undefined,
-        hideAuthor
+        hideAuthor,
+        socialMediaTitle: socialMediaTitle ?? '',
+        socialMediaDescription: socialMediaDescription ?? '',
+        socialMediaAuthors: socialMediaAuthors?.filter(
+          socialMediaAuthor => socialMediaAuthor != null
+        ) as AuthorRefFragment[],
+        socialMediaImage: socialMediaImage || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -173,18 +176,19 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       slug: metadata.slug,
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
-      socialMediaTitle: metadata.socialMediaTitle || undefined,
-      socialMediaDescription: metadata.socialMediaDescription || undefined,
       lead: metadata.lead,
       authorIDs: metadata.authors.map(({id}) => id),
-      socialMediaAuthorIDs: metadata.authors.map(({id}) => id) || undefined,
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
       tags: metadata.tags,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
-      hideAuthor: metadata.hideAuthor
+      hideAuthor: metadata.hideAuthor,
+      socialMediaTitle: metadata.socialMediaTitle || undefined,
+      socialMediaDescription: metadata.socialMediaDescription || undefined,
+      socialMediaAuthorIDs: metadata.authors.map(({id}) => id) || undefined,
+      socialMediaImageID: metadata.socialMediaImage?.id
     }
   }
 
@@ -256,6 +260,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
+      {console.log('Metadata:', metadata)}
       <EditorTemplate
         navigationChildren={
           <NavigationBar

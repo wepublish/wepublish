@@ -197,9 +197,6 @@ export interface DBArticleRevision {
 
   preTitle?: string
   title: string
-  socialMediaTitle?: string
-  socialMediaDescription?: string
-  socialMediaAuthorIDs?: string[]
   lead?: string
   tags: string[]
 
@@ -212,6 +209,11 @@ export interface DBArticleRevision {
   blocks: ArticleBlock[]
 
   hideAuthor: boolean
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs?: string[]
+  socialMediaImageID?: string
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {

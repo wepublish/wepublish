@@ -89,9 +89,6 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
             'draft.title': data.title,
             'draft.preTitle': data.preTitle,
-            'draft.socialMediaTitle': data.socialMediaTitle,
-            'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
-            'draft.socialMediaDescription': data.socialMediaDescription,
             'draft.lead': data.lead,
 
             'draft.slug': data.slug,
@@ -104,7 +101,12 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
             'draft.blocks': data.blocks,
 
-            'draft.hideAuthor': data.hideAuthor
+            'draft.hideAuthor': data.hideAuthor,
+
+            'draft.socialMediaTitle': data.socialMediaTitle,
+            'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
+            'draft.socialMediaDescription': data.socialMediaDescription,
+            'draft.socialMediaImage': data.socialMediaImageID
           }
         }
       ] as any,

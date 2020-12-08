@@ -53,9 +53,6 @@ export type ArticleInput = {
   slug: Scalars['Slug'];
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthorIDs: Array<Scalars['ID']>;
   lead?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
@@ -64,6 +61,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
   hideAuthor: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthorIDs?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  socialMediaImageID?: Maybe<Scalars['String']>;
   blocks: Array<BlockInput>;
 };
 
@@ -88,9 +89,6 @@ export type ArticleRevision = {
   hideAuthor: Scalars['Boolean'];
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
-  socialMediaTitle?: Maybe<Scalars['String']>;
-  socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthors?: Maybe<Array<Maybe<Author>>>;
   lead?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
@@ -98,6 +96,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthors?: Maybe<Array<Maybe<Author>>>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -1439,11 +1441,8 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'socialMediaTitle' | 'socialMediaDescription' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
-      & { socialMediaAuthors?: Maybe<Array<Maybe<(
-        { __typename?: 'Author' }
-        & AuthorRefFragment
-      )>>>, image?: Maybe<(
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, properties: Array<(
@@ -1452,7 +1451,13 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, blocks: Array<(
+      )>>, socialMediaAuthors?: Maybe<Array<Maybe<(
+        { __typename?: 'Author' }
+        & AuthorRefFragment
+      )>>>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
+      )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
       ) | (
@@ -3202,11 +3207,6 @@ export const ArticleDocument = gql`
       slug
       preTitle
       title
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaAuthors {
-        ...AuthorRef
-      }
       lead
       image {
         ...ImageRef
@@ -3222,14 +3222,22 @@ export const ArticleDocument = gql`
       }
       hideAuthor
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage {
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }
     }
   }
 }
-    ${AuthorRefFragmentDoc}
-${ImageRefFragmentDoc}
+    ${ImageRefFragmentDoc}
+${AuthorRefFragmentDoc}
 ${FullBlockFragmentDoc}`;
 
 /**

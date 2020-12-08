@@ -18,7 +18,7 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
+import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment, ImageRefFragmentDoc} from '../api'
 
 import {useTranslation} from 'react-i18next'
 import {MetatagType} from '../blocks/types'
@@ -34,9 +34,6 @@ export interface ArticleMetadata {
   readonly slug: string
   readonly preTitle: string
   readonly title: string
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
-  readonly socialMediaAuthors?: AuthorRefFragment[]
   readonly lead: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
@@ -45,6 +42,10 @@ export interface ArticleMetadata {
   readonly shared: boolean
   readonly breaking: boolean
   readonly hideAuthor: boolean
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthors?: AuthorRefFragment[]
+  readonly socialMediaImage?: ImageRefFragment
 }
 
 export interface ArticleMetadataPanelProps {
@@ -58,27 +59,33 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   const {
     preTitle,
     title,
-    socialMediaTitle,
-    socialMediaDescription,
-    socialMediaAuthors,
     lead,
     tags,
     authors,
     shared,
     breaking,
     image,
-    hideAuthor
+    hideAuthor,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaAuthors,
+    socialMediaImage
   } = value
 
   const [activeKey, setActiveKey] = useState(MetatagType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [chosenImageType, setChosenImageType] = useState('')
 
   const {t} = useTranslation()
 
   function handleImageChange(image: ImageRefFragment) {
     onChange?.({...value, image})
+  }
+
+  function handleSocialMediaImageChange(socialMediaImage: ImageRefFragment) {
+    onChange?.({...value, socialMediaImage})
   }
 
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
@@ -104,6 +111,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
+              </FormGroup>
+              <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
                 <FormControl
                   rows={5}
@@ -113,12 +122,38 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
+              </FormGroup>
+              <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
-                <FormControl
-                  value={socialMediaAuthors}
-                  onChange={socialMediaAuthors => {
+                <CheckPicker
+                  cleanable={true}
+                  value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
+                  data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
+                  onChange={socialMediaAuthorsID => {
+                    const socialMediaAuthors = foundAuthors.filter(author =>
+                      socialMediaAuthorsID.includes(author.id)
+                    )
                     onChange?.({...value, socialMediaAuthors})
                   }}
+                  block
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.socialMediaImage')}</ControlLabel>
+                <ChooseEditImage
+                  header={''}
+                  image={socialMediaImage}
+                  disabled={false}
+                  openChooseModalOpen={() => {
+                    setChooseModalOpen(true)
+                    setChosenImageType('socialMediaImage')
+                  }}
+                  openEditModalOpen={() => {
+                    setEditModalOpen(true)
+                    setChosenImageType('socialMediaImage')
+                  }}
+                  removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
                 />
               </FormGroup>
             </Form>
@@ -192,14 +227,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 />
               </FormGroup>
             </Form>
-            <ChooseEditImage
-              header={''}
-              image={image}
-              disabled={false}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
-              removeImage={() => onChange?.({...value, image: undefined})}
-            />
             <Form fluid={true} style={{marginTop: '20px'}}>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.peering')}</ControlLabel>
@@ -207,6 +234,20 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
               </FormGroup>
             </Form>
+            <ChooseEditImage
+              header={'header'}
+              image={image}
+              disabled={false}
+              openChooseModalOpen={() => {
+                setChooseModalOpen(true)
+                setChosenImageType('image')
+              }}
+              openEditModalOpen={() => {
+                setEditModalOpen(true)
+                setChosenImageType('image')
+              }}
+              removeImage={() => onChange?.({...value, image: undefined})}
+            />
           </>
         )
       default:
@@ -258,18 +299,23 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
             setChooseModalOpen(false)
-            handleImageChange(value)
+            chosenImageType === 'image'
+              ? handleImageChange(value)
+              : handleSocialMediaImageChange(value)
           }}
         />
       </Drawer>
-      {value.image && (
+      {(value.image || value.socialMediaImage) && (
         <Drawer
           show={isEditModalOpen}
           size={'sm'}
           onHide={() => {
             setEditModalOpen(false)
           }}>
-          <ImagedEditPanel id={value.image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImagedEditPanel
+            id={chosenImageType === 'image' ? value.image!.id : value.socialMediaImage?.id}
+            onClose={() => setEditModalOpen(false)}
+          />
         </Drawer>
       )}
     </>

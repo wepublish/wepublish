@@ -438,13 +438,15 @@ export const Migrations: Migration[] = [
           pending: {$ne: null},
           'pending.socialMediaTitle': {$exists: false},
           'pending.socialMediaDescription': {$exists: false},
-          'pending.socialMediaAuthors': {$exists: false}
+          'pending.socialMediaAuthors': {$exists: false},
+          'pending.socialMediaImage': {$exists: false}
         },
         {
           $set: {
             'pending.socialMediaTitle': false,
             'pending.socialMediaDescription': false,
-            'pending.socialMediaAuthors': false
+            'pending.socialMediaAuthors': false,
+            'pending.socialMediaImage': false
           }
         }
       )
@@ -453,13 +455,15 @@ export const Migrations: Migration[] = [
           published: {$ne: null},
           'published.socialMediaTitle': {$exists: false},
           'published.socialMediaDescription': {$exists: false},
-          'published.socialMediaAuthors': {$exists: false}
+          'published.socialMediaAuthors': {$exists: false},
+          'published.socialMediaImage': {$exists: false}
         },
         {
           $set: {
             'published.socialMediaTitle': false,
             'published.socialMediaDescription': false,
-            'published.socialMediaAuthors': false
+            'published.socialMediaAuthors': false,
+            'published.socialMediaImage': false
           }
         }
       )
@@ -468,13 +472,15 @@ export const Migrations: Migration[] = [
           draft: {$ne: null},
           'draft.socialMediaTitle': {$exists: false},
           'draft.socialMediaDescription': {$exists: false},
-          'draft.socialMediaAuthors': {$exists: false}
+          'draft.socialMediaAuthors': {$exists: false},
+          'draft.socialMediaImage': {$exists: false}
         },
         {
           $set: {
             'draft.socialMediaTitle': false,
             'draft.socialMediaDescription': false,
-            'draft.socialMediaAuthors': false
+            'draft.socialMediaAuthors': false,
+            'draft.socialMediaImage': false
           }
         }
       )

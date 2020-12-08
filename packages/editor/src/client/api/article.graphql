@@ -150,11 +150,6 @@ query Article($id: ID!) {
       slug
       preTitle
       title
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaAuthors {
-        ...AuthorRef
-      }
       lead
       image {
         ...ImageRef
@@ -171,6 +166,15 @@ query Article($id: ID!) {
       hideAuthor
 
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage{
+        ...ImageRef
+      }
+
       blocks {
         ...FullBlock
       }

@@ -4,9 +4,6 @@ import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from 
 export interface ArticleData {
   readonly preTitle?: string
   readonly title: string
-  readonly socialMediaTitle?: string
-  readonly socialMediaDescription?: string
-  readonly socialMediaAuthorIDs?: string[]
   readonly lead?: string
   readonly slug: string
   readonly tags: string[]
@@ -20,6 +17,11 @@ export interface ArticleData {
   readonly blocks: ArticleBlock[]
 
   readonly hideAuthor: boolean
+
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthorIDs?: string[]
+  readonly socialMediaImageID?: string
 }
 
 // Article State Flow:

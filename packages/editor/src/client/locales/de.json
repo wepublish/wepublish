@@ -108,7 +108,8 @@
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaAuthors": "Authors",
-        "hideAuthors": "Hide Authors"
+        "hideAuthors": "Hide Authors",
+        "socialMediaImage": "Image for Social Media"
       }
     },
     "pages": {

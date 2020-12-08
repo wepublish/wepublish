@@ -75,9 +75,6 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    socialMediaTitle: {type: GraphQLString},
-    socialMediaDescription: {type: GraphQLString},
-    socialMediaAuthorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
@@ -90,6 +87,11 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthorIDs: {type: GraphQLList(GraphQLID)},
+    socialMediaImageID: {type: GraphQLString},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
@@ -112,14 +114,6 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    socialMediaTitle: {type: GraphQLString},
-    socialMediaDescription: {type: GraphQLString},
-    socialMediaAuthors: {
-      type: GraphQLList(GraphQLAuthor),
-      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
-        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
-      })
-    },
     lead: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
@@ -141,6 +135,22 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLList(GraphQLAuthor),
+      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
+        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      })
+    },
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
   }
 })
@@ -221,18 +231,6 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
-    socialMediaTitle: {type: GraphQLString},
-    socialMediaDescription: {type: GraphQLString},
-    socialMediaAuthors: {
-      type: GraphQLList(GraphQLAuthor),
-      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
-        if (hideAuthor) {
-          return []
-        } else {
-          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
-        }
-      })
-    },
     lead: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
@@ -262,6 +260,26 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     },
 
     breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaAuthors: {
+      type: GraphQLList(GraphQLAuthor),
+      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+        if (hideAuthor) {
+          return []
+        } else {
+          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+        }
+      })
+    },
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
   }
 })
