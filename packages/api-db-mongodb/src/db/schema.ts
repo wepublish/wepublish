@@ -42,6 +42,8 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  callToActionURL: string
+  callToActionText: RichTextNode[]
 }
 
 export interface DBPeer {

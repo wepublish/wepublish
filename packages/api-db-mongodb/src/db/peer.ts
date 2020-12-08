@@ -27,7 +27,9 @@ export class MongoDBPeerAdapter implements DBPeerAdapter {
     if (!value) {
       return {
         name: '',
-        themeColor: '#000000'
+        themeColor: '#000000',
+        callToActionURL: '',
+        callToActionText: []
       }
     }
 
