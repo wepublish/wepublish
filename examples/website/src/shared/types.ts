@@ -91,6 +91,8 @@ export interface Peer {
   logoURL: string
   websiteURL: string
   themeColor: string
+  callToActionText: RichTextBlock[]
+  callToActionURL: string
 }
 
 export enum BlockType {
@@ -133,42 +135,40 @@ export type TitleBlockValue = {
   lead: string
   isHeader?: boolean
 }
-export interface TitleBlock extends BaseBlock<BlockType.Title, TitleBlockValue> {}
+export type TitleBlock = BaseBlock<BlockType.Title, TitleBlockValue>
 
-export interface QuoteBlock extends BaseBlock<BlockType.Quote, {text: string; author: string}> {}
+export type QuoteBlock = BaseBlock<BlockType.Quote, {text: string; author: string}>
 
-export interface ImageBlock extends BaseBlock<BlockType.Image, ImageData> {}
-export interface TitleImageBlock extends BaseBlock<BlockType.TitleImage, ImageData> {}
+export type ImageBlock = BaseBlock<BlockType.Image, ImageData>
+export type TitleImageBlock = BaseBlock<BlockType.TitleImage, ImageData>
 
-export interface ListicleBlock
-  extends BaseBlock<
-    BlockType.Listicle,
-    {
-      title: string
-      image: ImageData
-      text: Node[]
-    }[]
-  > {}
+export type ListicleBlock = BaseBlock<
+  BlockType.Listicle,
+  {
+    title: string
+    image: ImageData
+    text: Node[]
+  }[]
+>
 
-export interface PeerPageBreakBlock
-  extends BaseBlock<
-    BlockType.PeerPageBreak,
-    {
-      peer: Peer
-      text: string
-      richText: Node[]
-      linkURL: string
-      linkText: string
-      linkTarget: string
-      hideButton: false
-      styleOption: string
-      layoutOption: string
-      templateOption: string
-      image?: ImageRefData | null
-    }
-  > {}
+export type PeerPageBreakBlock = BaseBlock<
+  BlockType.PeerPageBreak,
+  {
+    peer: Peer
+    text: string
+    richText: Node[]
+    linkURL: string
+    linkText: string
+    linkTarget: string
+    hideButton: false
+    styleOption: string
+    layoutOption: string
+    templateOption: string
+    image?: ImageRefData | null
+  }
+>
 
-export interface RichTextBlock extends BaseBlock<BlockType.RichText, Node[]> {}
+export type RichTextBlock = BaseBlock<BlockType.RichText, Node[]>
 
 export type GalleryBlock = BaseBlock<
   BlockType.Gallery,
