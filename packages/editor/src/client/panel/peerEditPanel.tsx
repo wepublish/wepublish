@@ -217,7 +217,12 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               <DescriptionList>
                 <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                   {!!profile?.callToActionText && (
-                    <RichTextBlock disabled onChange={() => {}} value={profile?.callToActionText} />
+                    <RichTextBlock
+                      disabled
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={profile?.callToActionText}
+                    />
                   )}
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
