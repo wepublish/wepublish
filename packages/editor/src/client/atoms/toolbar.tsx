@@ -1,4 +1,4 @@
-import React, {ReactNode, forwardRef, ButtonHTMLAttributes} from 'react'
+import React, {ReactNode, forwardRef, ButtonHTMLAttributes, Children} from 'react'
 
 import {Icon} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
@@ -47,13 +47,13 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
   )
 }
 
-export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly icon: IconNames | SVGIcon
+export interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly active?: boolean
+  readonly children?: ReactNode
 }
 
-export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function ToolbarButton({icon, active, ...props}, ref) {
+const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
+  function BaseToolbarButton({active, children, ...props}, ref) {
     return (
       <button
         style={{
@@ -68,39 +68,32 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         }}
         ref={ref}
         {...props}>
-        <Icon icon={icon} element={icon} />
+        {children}
       </button>
     )
   }
 )
 
-export interface ToolbarButtonWithChildrenProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly children?: ReactNode
+export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly icon: IconNames | SVGIcon
   readonly active?: boolean
 }
 
-export const ToolbarButtonWithChildren = forwardRef<
-  HTMLButtonElement,
-  ToolbarButtonWithChildrenProps
->(function ToolbarButton({active, children, ...props}, ref) {
+export function ToolbarButton({icon, active, ...props}: ToolbarButtonProps) {
   return (
-    <button
-      style={{
-        border: active ? 'blue 1px solid' : '',
-        fontSize: 16,
-
-        cursor: 'pointer',
-        borderRadius: 3,
-        backgroundColor: 'transparent',
-
-        padding: 2
-      }}
-      ref={ref}
-      {...props}>
-      {children}
-    </button>
+    <BaseToolbarButton active={active} {...props}>
+      <Icon icon={icon} element={icon} />
+    </BaseToolbarButton>
   )
-})
+}
+
+export function ToolbarButtonWithChildren({active, children, ...props}: BaseToolbarButtonProps) {
+  return (
+    <BaseToolbarButton active={active} {...props}>
+      {children}
+    </BaseToolbarButton>
+  )
+}
 
 export function ToolbarDivider() {
   return (

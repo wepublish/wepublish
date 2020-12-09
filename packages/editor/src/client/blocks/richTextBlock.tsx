@@ -37,7 +37,7 @@ import {
   ToolbarButton,
   ToolbarDivider,
   ToolbarButtonWithChildren,
-  ToolbarButtonWithChildrenProps
+  BaseToolbarButtonProps
 } from '../atoms/toolbar'
 import {EmojiButton} from '../atoms/emojiButton'
 import {RichTextBlockValue} from './types'
@@ -405,7 +405,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-interface SlateBlockButtonWithChildrenProps extends ToolbarButtonWithChildrenProps {
+interface SlateBlockButtonWithChildrenProps extends BaseToolbarButtonProps {
   readonly format: Format
 }
 
