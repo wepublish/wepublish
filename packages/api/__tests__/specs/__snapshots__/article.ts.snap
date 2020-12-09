@@ -51,6 +51,72 @@ Object {
 }
 `;
 
+exports[`Articles can be created/edited/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deleteArticle": true,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be published 1`] = `
+Object {
+  "data": Object {
+    "publishArticle": Object {
+      "draft": null,
+      "id": Any<String>,
+      "latest": Object {
+        "breaking": true,
+        "lead": "This article will rock your world. Never has there been a better article",
+        "preTitle": "Testing GraphQL",
+        "properties": Array [
+          Object {
+            "key": "testingKey",
+            "public": true,
+            "value": "testingValue",
+          },
+          Object {
+            "key": "privateTestingKey",
+            "public": false,
+            "value": "privateTestingValue",
+          },
+        ],
+        "publishedAt": "2020-11-25T23:55:35.000Z",
+        "revision": 0,
+        "slug": "my-super-seo-slug-for-the-best-article",
+        "tags": Array [
+          "testing",
+          "awesome",
+        ],
+        "title": "This is the best test article",
+        "updatedAt": "2020-11-25T23:55:35.000Z",
+      },
+      "pending": null,
+      "published": Object {
+        "publishedAt": "2020-11-25T23:55:35.000Z",
+        "revision": 0,
+        "updatedAt": "2020-11-25T23:55:35.000Z",
+      },
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Articles can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
@@ -101,53 +167,18 @@ Object {
 }
 `;
 
-exports[`Articles can be created/edited/deleted: can delete 1`] = `
-Object {
-  "data": Object {
-    "deleteArticle": true,
-  },
-  "errors": undefined,
-  "extensions": undefined,
-  "http": Object {
-    "headers": Headers {
-      Symbol(map): Object {},
-    },
-  },
-}
-`;
-
-exports[`Articles can be created/edited/deleted: can read list 1`] = `
+exports[`Articles can be created/edited/deleted: can be read in list 1`] = `
 Object {
   "data": Object {
     "articles": Object {
-      "nodes": Array [
-        Object {
-          "createdAt": Any<String>,
-          "draft": Object {
-            "revision": 0,
-          },
-          "id": Any<String>,
-          "latest": Object {
-            "image": null,
-            "lead": "This article will rock your world. Never has there been a better article",
-            "preTitle": "Testing GraphQL",
-            "publishedAt": null,
-            "revision": 0,
-            "title": "This is the best test article",
-            "updatedAt": null,
-          },
-          "modifiedAt": Any<String>,
-          "pending": null,
-          "published": null,
-        },
-      ],
+      "nodes": Any<Array>,
       "pageInfo": Object {
         "endCursor": Any<String>,
         "hasNextPage": false,
         "hasPreviousPage": false,
         "startCursor": Any<String>,
       },
-      "totalCount": 1,
+      "totalCount": 3,
     },
   },
   "errors": undefined,
@@ -160,7 +191,58 @@ Object {
 }
 `;
 
-exports[`Articles can be created/edited/deleted: can update article 1`] = `
+exports[`Articles can be created/edited/deleted: can be unpublished 1`] = `
+Object {
+  "data": Object {
+    "unpublishArticle": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "breaking": true,
+        "lead": "This article will rock your world. Never has there been a better article",
+        "preTitle": "Testing GraphQL",
+        "properties": Array [
+          Object {
+            "key": "testingKey",
+            "public": true,
+            "value": "testingValue",
+          },
+          Object {
+            "key": "privateTestingKey",
+            "public": false,
+            "value": "privateTestingValue",
+          },
+        ],
+        "publishedAt": null,
+        "revision": 0,
+        "slug": "my-super-seo-slug-for-the-best-article",
+        "tags": Array [
+          "testing",
+          "awesome",
+        ],
+        "title": "This is the best test article",
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+      "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be updated 1`] = `
 Object {
   "data": Object {
     "updateArticle": Object {

@@ -7,7 +7,9 @@ import {
   ArticleList,
   Article,
   UpdateArticle,
-  DeleteArticle
+  DeleteArticle,
+  PublishArticle,
+  UnpublishArticle
 } from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
@@ -29,8 +31,36 @@ beforeAll(async () => {
 })
 
 describe('Articles', () => {
-  let articleId = ''
   describe('can be created/edited/deleted:', () => {
+    let articleIds: string[]
+    articleIds = []
+    beforeEach(async () => {
+      const {mutate} = testClientPrivate
+      const articleInput: ArticleInput = {
+        title: 'This is the best test article',
+        slug: 'my-super-seo-slug-for-the-best-article',
+        shared: false,
+        tags: ['testing', 'awesome'],
+        breaking: true,
+        lead: 'This article will rock your world. Never has there been a better article',
+        preTitle: 'Testing GraphQL',
+        hideAuthor: false,
+        properties: [
+          {key: 'testingKey', value: 'testingValue', public: true},
+          {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
+        ],
+        authorIDs: [],
+        blocks: []
+      }
+      const res = await mutate({
+        mutation: CreateArticle,
+        variables: {
+          input: articleInput
+        }
+      })
+      articleIds.push(res.data?.createArticle?.id)
+    })
+
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
@@ -55,7 +85,7 @@ describe('Articles', () => {
           input: articleInput
         }
       })
-      articleId = res.data?.createArticle?.id
+
       expect(res).toMatchSnapshot({
         data: {
           createArticle: {
@@ -65,24 +95,19 @@ describe('Articles', () => {
       })
     })
 
-    test('can read list', async () => {
+    test('can be read in list', async () => {
       const {query} = testClientPrivate
       const articles = await query({
         query: ArticleList,
         variables: {
-          first: 1
+          first: 10
         }
       })
+
       expect(articles).toMatchSnapshot({
         data: {
           articles: {
-            nodes: [
-              {
-                createdAt: expect.any(String),
-                id: expect.any(String),
-                modifiedAt: expect.any(String)
-              }
-            ],
+            nodes: expect.any(Array),
             pageInfo: {
               endCursor: expect.any(String),
               startCursor: expect.any(String)
@@ -97,9 +122,10 @@ describe('Articles', () => {
       const article = await query({
         query: Article,
         variables: {
-          id: articleId
+          id: articleIds[0]
         }
       })
+
       expect(article).toMatchSnapshot({
         data: {
           article: {
@@ -109,7 +135,7 @@ describe('Articles', () => {
       })
     })
 
-    test('can update article', async () => {
+    test('can be updated', async () => {
       const {mutate} = testClientPrivate
       const updatedArticle = await mutate({
         mutation: UpdateArticle,
@@ -131,9 +157,10 @@ describe('Articles', () => {
             authorIDs: [],
             blocks: []
           },
-          id: articleId
+          id: articleIds[0]
         }
       })
+
       expect(updatedArticle).toMatchSnapshot({
         data: {
           updateArticle: {
@@ -143,14 +170,54 @@ describe('Articles', () => {
       })
     })
 
-    test('can delete', async () => {
+    test('can be published', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: PublishArticle,
+        variables: {
+          id: articleIds[1],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      expect(res).toMatchSnapshot({
+        data: {
+          publishArticle: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be unpublished', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: UnpublishArticle,
+        variables: {
+          id: articleIds[1]
+        }
+      })
+
+      expect(res).toMatchSnapshot({
+        data: {
+          unpublishArticle: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be deleted', async () => {
       const {mutate} = testClientPrivate
       const res = await mutate({
         mutation: DeleteArticle,
         variables: {
-          id: articleId
+          id: articleIds[0]
         }
       })
+
       expect(res).toMatchSnapshot()
     })
   })
