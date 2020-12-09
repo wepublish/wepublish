@@ -85,7 +85,6 @@ describe('Articles', () => {
           input: articleInput
         }
       })
-
       expect(res).toMatchSnapshot({
         data: {
           createArticle: {
@@ -103,7 +102,6 @@ describe('Articles', () => {
           first: 10
         }
       })
-
       expect(articles).toMatchSnapshot({
         data: {
           articles: {
@@ -160,7 +158,6 @@ describe('Articles', () => {
           id: articleIds[0]
         }
       })
-
       expect(updatedArticle).toMatchSnapshot({
         data: {
           updateArticle: {
@@ -181,7 +178,6 @@ describe('Articles', () => {
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
-
       expect(res).toMatchSnapshot({
         data: {
           publishArticle: {
@@ -199,7 +195,6 @@ describe('Articles', () => {
           id: articleIds[1]
         }
       })
-
       expect(res).toMatchSnapshot({
         data: {
           unpublishArticle: {
@@ -217,7 +212,6 @@ describe('Articles', () => {
           id: articleIds[0]
         }
       })
-
       expect(res).toMatchSnapshot()
     })
   })
