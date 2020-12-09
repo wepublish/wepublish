@@ -4,27 +4,28 @@ try {
   require('dotenv').config()
 } catch (e) {}
 
-let {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
+const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
 
-const ENVIRONMENT_NAME = 'production'
-/*if (GITHUB_REF === 'refs/heads/production' || GITHUB_REF === 'production') {
+let ENVIRONMENT_NAME = 'development'
+if (GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') {
   ENVIRONMENT_NAME = 'production'
-}*/
+}
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
-const NAMESPACE = 'wepublish'
+const NAMESPACE = envSwitch(ENVIRONMENT_NAME,'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
-const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
+const devDomain = 'dev.wepublish.media'
+const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
   `www.${domain}`,
-  'staging.website.34.65.204.205.nip.io'
+  `www.${devDomain}`
 )
 
-const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `staging.media.${domain}`)
-const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${domain}`)
-const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
-const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `staging.login.${domain}`)
+const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
+const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
+const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
+const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
@@ -191,14 +192,14 @@ async function applyWebsite() {
                 },
                 {
                   name: 'HOST_ENV',
-                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'development')
                 },
                 {
                   name: 'CANONICAL_HOST',
                   value: envSwitch(
                     ENVIRONMENT_NAME,
-                    'https://demo.wepublish.media',
-                    'https://demo.wepublish.media'
+                    `https://${domain}`,
+                    `https://${devDomain}`
                   )
                 },
                 {
@@ -220,7 +221,7 @@ async function applyWebsite() {
               resources: {
                 requests: {
                   cpu: '0m',
-                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '256Mi')
+                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '128Mi')
                 }
               },
               readinessProbe: {
@@ -269,6 +270,25 @@ async function applyMediaServer() {
   const app = 'media'
   const appName = `${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
+
+  const pvc = {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: {
+      name: 'wepublish-media',
+      namespace: NAMESPACE
+    },
+    spec: {
+      accessModes: ["ReadWriteOnce"],
+      resources: {
+        requests: {
+          storage: "30Gi"
+        }
+      }
+    }
+  }
+
+  await applyConfig(`pvc-${app}`, pvc)
 
   const deployment = {
     apiVersion: 'apps/v1',
@@ -362,13 +382,8 @@ async function applyMediaServer() {
           volumes: [
             {
               name: 'media-volume',
-              gcePersistentDisk: {
-                fsType: 'ext4',
-                pdName: envSwitch(
-                  ENVIRONMENT_NAME,
-                  'wepublish-media-production',
-                  'wepublish-media-staging'
-                )
+              persistentVolumeClaim: {
+                claimName: 'wepublish-media'
               }
             }
           ]
@@ -528,7 +543,7 @@ async function applyApiServer() {
                   value: envSwitch(
                     ENVIRONMENT_NAME,
                     'mongodb://mongo-production:27017/wepublish',
-                    'mongodb://mongo-staging:27017/wepublish'
+                    'mongodb://mongo-development:27017/wepublish'
                   )
                 },
                 {
@@ -538,18 +553,14 @@ async function applyApiServer() {
 
                 {
                   name: 'HOST_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'https://api.demo.wepublish.media',
-                    'https://api.demo.wepublish.media'
-                  )
+                  value: `https://${domainAPI}`,
                 },
                 {
                   name: 'WEBSITE_URL',
                   value: envSwitch(
                     ENVIRONMENT_NAME,
-                    'https://demo.wepublish.media',
-                    'https://demo.wepublish.media'
+                    `https://${domain}`,
+                    `https://${devDomain}`
                   )
                 },
                 {
@@ -594,7 +605,10 @@ async function applyApiServer() {
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: 'https://login.demo.wepublish.media/.well-known/openid-configuration'
+                  value: envSwitch(ENVIRONMENT_NAME,
+                    'https://login.demo.wepublish.media/.well-known/openid-configuration',
+                    'https://login.dev.wepublish.media/.well-known/openid-configuration'
+                  )
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_CLIENT_ID',
@@ -923,11 +937,17 @@ async function applyOAuth2() {
                 },
                 {
                   name: 'MONGO_URL',
-                  value: `mongodb://mongo-production:27017/wepublish`
+                  value: envSwitch(ENVIRONMENT_NAME,
+                    `mongodb://mongo-production:27017/wepublish`,
+                    `mongodb://mongo-development:27017/wepublish`
+                  )
                 },
                 {
                   name: 'OAUTH_MONGODB_URI',
-                  value: `mongodb://mongo-production:27017/wepublish-oauth2`
+                  value: envSwitch(ENVIRONMENT_NAME,
+                    `mongodb://mongo-production:27017/wepublish-oauth2`,
+                    `mongodb://mongo-development:27017/wepublish-oauth2`
+                  )
                 },
                 {
                   name: 'OAUTH_CLIENT_ID',
@@ -1087,6 +1107,29 @@ async function applyMongo() {
   const port = 27017
   const appName = `${app}-${ENVIRONMENT_NAME}`
 
+  const pvc = {
+    apiVersion: 'v1',
+    kind: 'PersistentVolumeClaim',
+    metadata: {
+      name: envSwitch(
+        ENVIRONMENT_NAME,
+        'wepublish-mongo',
+        `wepublish-mongo-${GITHUB_SHA}`
+      ),
+      namespace: NAMESPACE
+    },
+    spec: {
+      accessModes: ["ReadWriteOnce"],
+      resources: {
+        requests: {
+          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", "1Gi")
+        }
+      }
+    }
+  }
+
+  await applyConfig(`pvc-${app}`, pvc)
+
   const deployment = {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -1153,13 +1196,12 @@ async function applyMongo() {
           volumes: [
             {
               name: 'mongo-volume',
-              gcePersistentDisk: {
-                fsType: 'ext4',
-                pdName: envSwitch(
+              persistentVolumeClaim: {
+                claimName: envSwitch(
                   ENVIRONMENT_NAME,
-                  'wepublish-mongo-production',
-                  'wepublish-mongo-staging'
-                )
+                  'wepublish-mongo',
+                  `wepublish-mongo-${GITHUB_SHA}`
+                ),
               }
             }
           ]
