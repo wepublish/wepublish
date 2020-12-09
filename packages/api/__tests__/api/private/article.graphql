@@ -164,6 +164,7 @@ query Article($id: ID!) {
             authors {
                 ...AuthorRef
             }
+            hideAuthor
             breaking
             blocks {
                 ...FullBlock

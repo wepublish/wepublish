@@ -1,4 +1,11 @@
-import {DBNavigationAdapter, NavigationInput, OptionalNavigation, Navigation} from '@wepublish/api'
+import {
+  DBNavigationAdapter,
+  UpdateNavigationArgs,
+  OptionalNavigation,
+  DeleteNavigationArgs,
+  Navigation,
+  CreateNavigationArgs
+} from '@wepublish/api'
 import {Collection, Db, MongoError} from 'mongodb'
 
 import {CollectionName, DBNavigation} from './schema'
@@ -11,7 +18,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     this.navigations = db.collection(CollectionName.Navigations)
   }
 
-  async createNavigation(input: Readonly<NavigationInput>): Promise<OptionalNavigation> {
+  async createNavigation({input}: CreateNavigationArgs): Promise<Navigation> {
     try {
       const {ops} = await this.navigations.insertOne({
         createdAt: new Date(),
@@ -20,7 +27,6 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
         key: input.key,
         links: input.links
       })
-
       const {_id: id, ...navigation} = ops[0]
       return {id, ...navigation}
     } catch (err) {
@@ -32,10 +38,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     }
   }
 
-  async updateNavigation(
-    id: string,
-    input: Readonly<NavigationInput>
-  ): Promise<OptionalNavigation> {
+  async updateNavigation({id, input}: UpdateNavigationArgs): Promise<OptionalNavigation> {
     try {
       const {value} = await this.navigations.findOneAndUpdate(
         {_id: id},
@@ -63,7 +66,7 @@ export class MongoDBNavigationAdapter implements DBNavigationAdapter {
     }
   }
 
-  async deleteNavigation(id: string): Promise<string | null> {
+  async deleteNavigation({id}: DeleteNavigationArgs): Promise<string | null> {
     const {deletedCount} = await this.navigations.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null
   }

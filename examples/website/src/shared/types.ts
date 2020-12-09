@@ -33,7 +33,8 @@ export interface Author {
 
 export interface NavigationItem {
   title: string
-  route: Route
+  route?: Route
+  url?: string
   isActive: boolean
 }
 
