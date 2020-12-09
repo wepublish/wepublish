@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - c/dev-instances
+      - c/peering
 
 jobs:
   release:
