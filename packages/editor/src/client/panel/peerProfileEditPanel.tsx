@@ -52,7 +52,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
       setCallToActionText(
-        data.peerProfile.callToActionText ? data.peerProfile.callToActionText : createDefaultValue()
+        data?.peerProfile?.callToActionText?.length
+          ? data.peerProfile.callToActionText
+          : createDefaultValue()
       )
       setCallToActionURL(data.peerProfile.callToActionURL || '')
     }
