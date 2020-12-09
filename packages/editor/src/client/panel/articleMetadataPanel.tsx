@@ -18,7 +18,7 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment, ImageRefFragmentDoc} from '../api'
+import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
 import {MetatagType} from '../blocks/types'
