@@ -74,6 +74,34 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   }
 )
 
+export interface ToolbarButtonWithChildrenProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly children?: ReactNode
+  readonly active?: boolean
+}
+
+export const ToolbarButtonWithChildren = forwardRef<
+  HTMLButtonElement,
+  ToolbarButtonWithChildrenProps
+>(function ToolbarButton({active, children, ...props}, ref) {
+  return (
+    <button
+      style={{
+        border: active ? 'blue 1px solid' : '',
+        fontSize: 16,
+
+        cursor: 'pointer',
+        borderRadius: 3,
+        backgroundColor: 'transparent',
+
+        padding: 2
+      }}
+      ref={ref}
+      {...props}>
+      {children}
+    </button>
+  )
+})
+
 export function ToolbarDivider() {
   return (
     <div
