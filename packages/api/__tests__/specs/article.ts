@@ -33,6 +33,7 @@ describe('Articles', () => {
         breaking: true,
         lead: 'This article will rock your world. Never has there been a better article',
         preTitle: 'Testing GraphQL',
+        hideAuthor: false,
         properties: [
           {key: 'testingKey', value: 'testingValue', public: true},
           {key: 'privateTestingKey', value: 'privateTestingValue', public: false}

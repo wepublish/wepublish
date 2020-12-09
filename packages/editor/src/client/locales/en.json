@@ -8,7 +8,6 @@
         "states": "States",
         "articles": "Articles",
         "action": "Action",
-        "created": "Created",
         "newArticle": "New Article",
         "search": "Search",
         "loadMore": "Load More",
@@ -110,7 +109,8 @@
         "status": "{{stateJoin}}",
         "uploadImage": "Upload Image",
         "removeTeaser": "Remove Teaser",
-        "sharedWithPeers": "Shared With Peers"
+        "sharedWithPeers": "Shared With Peers",
+        "hideAuthors": "Hide Authors"
       }
     },
     "pages": {
@@ -208,6 +208,38 @@
         "title": "Title",
         "link": "Link",
         "bioInformation": "Biographical Information"
+      }
+    },
+    "navigation": {
+      "overview": {
+        "unknown": "Unknown",
+        "navigations": "Navigations",
+        "newNavigation": "New Navigation",
+        "search": "Search",
+        "noNavigationsFound": "No navigations found",
+        "deleteNavigation": "Delete navigation",
+        "cancel": "Cancel",
+        "name": "Name",
+        "delete": "Delete",
+        "action": "Action",
+        "confirm": "Confirm"
+      },
+      "panels": {
+        "close": "Close",
+        "createNavigation": "Create Navigation",
+        "create": "Create",
+        "name": "Name",
+        "key": "Key",
+        "links": "Links",
+        "linkType": "Link Type",
+        "label": "Label",
+        "article": "Article",
+        "page": "Page",
+        "url": "URL",
+        "editNavigation": "Edit Navigation",
+        "save": "Save",
+        "selectPage": "Select Page",
+        "selectArticle": "Select Article"
       }
     },
     "images": {
@@ -437,6 +469,16 @@
         "link": "Link",
         "title": "Title"
       },
+      "richTextTable": {
+        "insertTable": "Insert Table",
+        "deleteTable": "Delete Table",
+        "showBorders": "Show Borders",
+        "hideBorders": "Hide Borders",
+        "rows": "Rows",
+        "columns": "Columns",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
       "title": {
         "title": "Title",
         "leadText": "Lead Text "
@@ -446,6 +488,7 @@
       "articles": "Articles",
       "pages": "Pages",
       "authors": "Authors",
+      "navigations": "Navigations",
       "imageLibrary": "Image Library",
       "users": "Users",
       "userRoles": "User Roles",

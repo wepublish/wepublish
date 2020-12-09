@@ -68,7 +68,6 @@ function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps
       }
   }
 }
-
 function contentForRoute(activeRoute: Route | null) {
   switch (activeRoute?.type) {
     case RouteType.Page:
