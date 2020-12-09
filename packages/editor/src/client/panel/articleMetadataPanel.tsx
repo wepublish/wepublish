@@ -234,8 +234,9 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
               </FormGroup>
             </Form>
+            <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
             <ChooseEditImage
-              header={'header'}
+              header={''}
               image={image}
               disabled={false}
               openChooseModalOpen={() => {

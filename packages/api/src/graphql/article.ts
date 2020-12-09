@@ -91,7 +91,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthorIDs: {type: GraphQLList(GraphQLID)},
-    socialMediaImageID: {type: GraphQLString},
+    socialMediaImageID: {type: GraphQLID},
 
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
@@ -140,14 +140,20 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
       type: GraphQLList(GraphQLAuthor),
-      resolve: createProxyingResolver(({authorIDs}, args, {loaders}) => {
-        return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+      resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
+        return socialMediaAuthorIDs
+          ? Promise.all(
+              socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
+                loaders.authorsByID.load(socialMediaAuthorIDs)
+              )
+            )
+          : null
       })
     },
     socialMediaImage: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
-        return imageID ? loaders.images.load(imageID) : null
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
 
@@ -265,18 +271,24 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
       type: GraphQLList(GraphQLAuthor),
-      resolve: createProxyingResolver(({authorIDs, hideAuthor}, args, {loaders}) => {
+      resolve: createProxyingResolver(({socialMediaAuthorIDs, hideAuthor}, args, {loaders}) => {
         if (hideAuthor) {
           return []
         } else {
-          return Promise.all(authorIDs.map(authorID => loaders.authorsByID.load(authorID)))
+          return socialMediaAuthorIDs
+            ? Promise.all(
+                socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
+                  loaders.authorsByID.load(socialMediaAuthorIDs)
+                )
+              )
+            : null
         }
       })
     },
     socialMediaImage: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
-        return imageID ? loaders.images.load(imageID) : null
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
 

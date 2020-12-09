@@ -106,7 +106,7 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
             'draft.socialMediaTitle': data.socialMediaTitle,
             'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
             'draft.socialMediaDescription': data.socialMediaDescription,
-            'draft.socialMediaImage': data.socialMediaImageID
+            'draft.socialMediaImageID': data.socialMediaImageID
           }
         }
       ] as any,

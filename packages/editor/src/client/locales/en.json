@@ -116,7 +116,8 @@
         "socialMediaDescription": "Description for Social Media",
         "socialMediaAuthors": "Authors",
         "hideAuthors": "Hide Authors",
-        "socialMediaImage": "Image for Social Media"
+        "socialMediaImage": "Image for Social Media",
+        "postImage": "Image for Post"
       }
     },
     "pages": {

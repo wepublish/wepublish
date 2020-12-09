@@ -64,7 +64,7 @@ export type ArticleInput = {
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
   socialMediaAuthorIDs?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  socialMediaImageID?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 

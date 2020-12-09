@@ -187,8 +187,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       hideAuthor: metadata.hideAuthor,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaAuthorIDs: metadata.authors.map(({id}) => id) || undefined,
-      socialMediaImageID: metadata.socialMediaImage?.id
+      socialMediaAuthorIDs: metadata.socialMediaAuthors?.map(({id}) => id) || undefined,
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined
     }
   }
 
@@ -260,7 +260,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
-      {console.log('Metadata:', metadata)}
       <EditorTemplate
         navigationChildren={
           <NavigationBar
