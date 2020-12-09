@@ -13,17 +13,27 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
 
+interface ExampleURLAdapterProps {
+  websiteURL: string
+}
+
 class ExampleURLAdapter implements URLAdapter {
+  readonly websiteURL: string
+
+  constructor(props: ExampleURLAdapterProps) {
+    this.websiteURL = props.websiteURL
+  }
+
   getPublicArticleURL(article: PublicArticle): string {
-    return `https://demo.wepublish.ch/article/${article.id}/${article.slug}`
+    return `${this.websiteURL}/article/${article.id}/${article.slug}`
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `https://demo.wepublish.ch/page/${page.id}/${page.slug}`
+    return `${this.websiteURL}/page/${page.id}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `https://demo.wepublish.ch/author/${author.slug || author.id}`
+    return `${this.websiteURL}/author/${author.slug || author.id}`
   }
 }
 
@@ -109,7 +119,7 @@ async function asyncMain() {
     mediaAdapter,
     dbAdapter,
     oauth2Providers,
-    urlAdapter: new ExampleURLAdapter(),
+    urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
     tracing: true
