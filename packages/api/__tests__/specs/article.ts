@@ -1,7 +1,14 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {ArticleInput, CreateArticle} from '../api/private'
+import {
+  ArticleInput,
+  CreateArticle,
+  ArticleList,
+  Article,
+  UpdateArticle,
+  DeleteArticle
+} from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -22,7 +29,8 @@ beforeAll(async () => {
 })
 
 describe('Articles', () => {
-  describe('can be created/edited/deleted', () => {
+  let articleId = ''
+  describe('can be created/edited/deleted:', () => {
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
@@ -47,6 +55,7 @@ describe('Articles', () => {
           input: articleInput
         }
       })
+      articleId = res.data?.createArticle?.id
       expect(res).toMatchSnapshot({
         data: {
           createArticle: {
@@ -54,6 +63,95 @@ describe('Articles', () => {
           }
         }
       })
+    })
+
+    test('can read list', async () => {
+      const {query} = testClientPrivate
+      const articles = await query({
+        query: ArticleList,
+        variables: {
+          first: 1
+        }
+      })
+      expect(articles).toMatchSnapshot({
+        data: {
+          articles: {
+            nodes: [
+              {
+                createdAt: expect.any(String),
+                id: expect.any(String),
+                modifiedAt: expect.any(String)
+              }
+            ],
+            pageInfo: {
+              endCursor: expect.any(String),
+              startCursor: expect.any(String)
+            }
+          }
+        }
+      })
+    })
+
+    test('can be read by id', async () => {
+      const {query} = testClientPrivate
+      const article = await query({
+        query: Article,
+        variables: {
+          id: articleId
+        }
+      })
+      expect(article).toMatchSnapshot({
+        data: {
+          article: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can update article', async () => {
+      const {mutate} = testClientPrivate
+      const updatedArticle = await mutate({
+        mutation: UpdateArticle,
+        variables: {
+          input: {
+            title: 'New Updated Title',
+            slug: 'updated-slug',
+            shared: false,
+            tags: ['testing', 'awesome', 'another'],
+            breaking: true,
+            lead:
+              'This updated article will rock your world. Never has there been a better article',
+            preTitle: 'Testing GraphQL',
+            hideAuthor: false,
+            properties: [
+              {key: 'testingKey', value: 'testingValue', public: true},
+              {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
+            ],
+            authorIDs: [],
+            blocks: []
+          },
+          id: articleId
+        }
+      })
+      expect(updatedArticle).toMatchSnapshot({
+        data: {
+          updateArticle: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can delete', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: DeleteArticle,
+        variables: {
+          id: articleId
+        }
+      })
+      expect(res).toMatchSnapshot()
     })
   })
 })

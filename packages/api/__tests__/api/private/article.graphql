@@ -1,5 +1,6 @@
 fragment MutationArticle on Article {
     id
+    shared
 
     draft {
         publishedAt
@@ -19,9 +20,20 @@ fragment MutationArticle on Article {
     }
 
     latest {
-        publishedAt
+       publishedAt
         updatedAt
         revision
+        title
+        preTitle
+        lead
+        slug
+        breaking
+        tags
+        properties {
+        key
+        value
+        public
+      }
     }
 }
 
