@@ -339,11 +339,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         if (value !== newValue) onChange(newValue)
       }}>
       <Toolbar fadeOut={!hasFocus}>
-        <FormatButton icon="header" format={BlockFormat.H1} />
-        <ToolbarButtonWithChildren format={BlockFormat.H2}>
+        <FormatButtonWithChildren format={BlockFormat.H1}>
           <H1Icon />
-        </ToolbarButtonWithChildren>
-        <FormatButton icon="header" format={BlockFormat.H3} />
+        </FormatButtonWithChildren>
+        <FormatButtonWithChildren format={BlockFormat.H2}>
+          <H2Icon />
+        </FormatButtonWithChildren>
+        <FormatButtonWithChildren format={BlockFormat.H3}>
+          <H3Icon />
+        </FormatButtonWithChildren>
 
         <ToolbarDivider />
 
@@ -868,8 +872,8 @@ export function createDefaultValue(): RichTextBlockValue {
   return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
 }
 
-// cutsom icons from https://icons.getbootstrap.com/
 function H1Icon() {
+  // from https://icons.getbootstrap.com/
   return (
     <svg
       width="1em"
@@ -884,6 +888,7 @@ function H1Icon() {
 }
 
 function H2Icon() {
+  // from https://icons.getbootstrap.com/
   return (
     <svg
       width="1em"
@@ -898,6 +903,7 @@ function H2Icon() {
 }
 
 function H3Icon() {
+  // from https://icons.getbootstrap.com/
   return (
     <svg
       width="1em"
