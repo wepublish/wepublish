@@ -6,26 +6,25 @@ try {
 
 const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
 
-let ENVIRONMENT_NAME = 'development'
-if (GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') {
+const ENVIRONMENT_NAME = 'production'
+/* if (GITHUB_REF === 'refs/heads/production' || GITHUB_REF === 'production') {
   ENVIRONMENT_NAME = 'production'
-}
+} */
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
-const NAMESPACE = envSwitch(ENVIRONMENT_NAME,'wepublish', 'wepublish-dev')
+const NAMESPACE = 'wepublish'
 
 const domain = 'demo.wepublish.media'
-const devDomain = 'dev.wepublish.media'
-const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
+const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `staging.website.${domain}`)
 const domainSan = envSwitch(
   ENVIRONMENT_NAME,
   `www.${domain}`,
-  `www.${devDomain}`
+  'staging.website.34.65.204.205.nip.io'
 )
 
-const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
-const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
-const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
-const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
+const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `staging.media.${domain}`)
+const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `staging.api.${domain}`)
+const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `staging.editor.${domain}`)
+const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `staging.login.${domain}`)
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
@@ -45,7 +44,7 @@ async function main() {
 }
 
 async function applyNamespace() {
-  let namespace = {
+  const namespace = {
     apiVersion: 'v1',
     kind: 'Namespace',
     metadata: {
@@ -114,7 +113,7 @@ async function applyWebsite() {
     hosts = hosts.concat(domains)
   }
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -192,14 +191,14 @@ async function applyWebsite() {
                 },
                 {
                   name: 'HOST_ENV',
-                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'development')
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
                 },
                 {
                   name: 'CANONICAL_HOST',
                   value: envSwitch(
                     ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
+                    'https://demo.wepublish.media',
+                    'https://demo.wepublish.media'
                   )
                 },
                 {
@@ -221,7 +220,7 @@ async function applyWebsite() {
               resources: {
                 requests: {
                   cpu: '0m',
-                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '128Mi')
+                  memory: envSwitch(ENVIRONMENT_NAME, '128Mi', '256Mi')
                 }
               },
               readinessProbe: {
@@ -270,25 +269,6 @@ async function applyMediaServer() {
   const app = 'media'
   const appName = `${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
-
-  const pvc = {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: {
-      name: 'wepublish-media',
-      namespace: NAMESPACE
-    },
-    spec: {
-      accessModes: ["ReadWriteOnce"],
-      resources: {
-        requests: {
-          storage: "30Gi"
-        }
-      }
-    }
-  }
-
-  await applyConfig(`pvc-${app}`, pvc)
 
   const deployment = {
     apiVersion: 'apps/v1',
@@ -382,8 +362,13 @@ async function applyMediaServer() {
           volumes: [
             {
               name: 'media-volume',
-              persistentVolumeClaim: {
-                claimName: 'wepublish-media'
+              gcePersistentDisk: {
+                fsType: 'ext4',
+                pdName: envSwitch(
+                  ENVIRONMENT_NAME,
+                  'wepublish-media-production',
+                  'wepublish-media-staging'
+                )
               }
             }
           ]
@@ -418,7 +403,7 @@ async function applyMediaServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -543,7 +528,7 @@ async function applyApiServer() {
                   value: envSwitch(
                     ENVIRONMENT_NAME,
                     'mongodb://mongo-production:27017/wepublish',
-                    'mongodb://mongo-development:27017/wepublish'
+                    'mongodb://mongo-staging:27017/wepublish'
                   )
                 },
                 {
@@ -553,14 +538,18 @@ async function applyApiServer() {
 
                 {
                   name: 'HOST_URL',
-                  value: `https://${domainAPI}`,
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
+                    'https://api.demo.wepublish.media',
+                    'https://api.demo.wepublish.media'
+                  )
                 },
                 {
                   name: 'WEBSITE_URL',
                   value: envSwitch(
                     ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
+                    'https://demo.wepublish.media',
+                    'https://demo.wepublish.media'
                   )
                 },
                 {
@@ -605,10 +594,7 @@ async function applyApiServer() {
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: envSwitch(ENVIRONMENT_NAME,
-                    'https://login.demo.wepublish.media/.well-known/openid-configuration',
-                    'https://login.dev.wepublish.media/.well-known/openid-configuration'
-                  )
+                  value: 'https://login.demo.wepublish.media/.well-known/openid-configuration'
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_CLIENT_ID',
@@ -686,7 +672,7 @@ async function applyApiServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -839,7 +825,7 @@ async function applyEditor() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -937,17 +923,11 @@ async function applyOAuth2() {
                 },
                 {
                   name: 'MONGO_URL',
-                  value: envSwitch(ENVIRONMENT_NAME,
-                    `mongodb://mongo-production:27017/wepublish`,
-                    `mongodb://mongo-development:27017/wepublish`
-                  )
+                  value: `mongodb://mongo-production:27017/wepublish`
                 },
                 {
                   name: 'OAUTH_MONGODB_URI',
-                  value: envSwitch(ENVIRONMENT_NAME,
-                    `mongodb://mongo-production:27017/wepublish-oauth2`,
-                    `mongodb://mongo-development:27017/wepublish-oauth2`
-                  )
+                  value: `mongodb://mongo-production:27017/wepublish-oauth2`
                 },
                 {
                   name: 'OAUTH_CLIENT_ID',
@@ -1056,7 +1036,7 @@ async function applyOAuth2() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -1111,18 +1091,14 @@ async function applyMongo() {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: {
-      name: envSwitch(
-        ENVIRONMENT_NAME,
-        'wepublish-mongo',
-        `wepublish-mongo-${GITHUB_SHA}`
-      ),
+      name: envSwitch(ENVIRONMENT_NAME, 'wepublish-mongo', `wepublish-mongo-${GITHUB_SHA}`),
       namespace: NAMESPACE
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", "1Gi")
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
         }
       }
     }
@@ -1196,12 +1172,13 @@ async function applyMongo() {
           volumes: [
             {
               name: 'mongo-volume',
-              persistentVolumeClaim: {
-                claimName: envSwitch(
+              gcePersistentDisk: {
+                fsType: 'ext4',
+                pdName: envSwitch(
                   ENVIRONMENT_NAME,
                   'wepublish-mongo',
                   `wepublish-mongo-${GITHUB_SHA}`
-                ),
+                )
               }
             }
           ]
