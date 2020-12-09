@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - c/peering
+      - c/WEP-116
 
 jobs:
   release:
