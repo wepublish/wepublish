@@ -12,7 +12,7 @@ export const tableStyle = cssRule({
 export const tableCellStyle = cssRule({
   border: '1px solid',
   padding: '8px',
-  // remove extra white spice after paragraph inside of table-cell
+  // remove extra whitespace after paragraph inside of table-cell
   '> p': {
     marginBlockEnd: '0'
   }
