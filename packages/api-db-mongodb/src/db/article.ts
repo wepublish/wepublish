@@ -99,7 +99,9 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
             'draft.properties': data.properties,
 
-            'draft.blocks': data.blocks
+            'draft.blocks': data.blocks,
+
+            'draft.hideAuthor': data.hideAuthor
           }
         }
       ] as any,

@@ -59,6 +59,7 @@ export type ArticleInput = {
   authorIDs: Array<Scalars['ID']>
   shared: Scalars['Boolean']
   breaking: Scalars['Boolean']
+  hideAuthor: Scalars['Boolean']
   blocks: Array<BlockInput>
 }
 
@@ -80,6 +81,7 @@ export type ArticleRevision = {
   publishAt?: Maybe<Scalars['DateTime']>
   updatedAt?: Maybe<Scalars['DateTime']>
   publishedAt?: Maybe<Scalars['DateTime']>
+  hideAuthor: Scalars['Boolean']
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
@@ -462,7 +464,7 @@ export type Mutation = {
   deleteUserRole?: Maybe<Scalars['String']>
   createNavigation?: Maybe<Navigation>
   updateNavigation?: Maybe<Navigation>
-  deleteNavigation?: Maybe<Navigation>
+  deleteNavigation?: Maybe<Scalars['ID']>
   createAuthor?: Maybe<Author>
   updateAuthor?: Maybe<Author>
   deleteAuthor?: Maybe<Scalars['ID']>
@@ -826,7 +828,6 @@ export type Permission = {
   __typename?: 'Permission'
   id: Scalars['String']
   description: Scalars['String']
-  checked: Scalars['Boolean']
   deprecated: Scalars['Boolean']
 }
 
@@ -864,7 +865,7 @@ export type Query = {
   permissions?: Maybe<Array<Permission>>
   tokens: Array<Token>
   navigation?: Maybe<Navigation>
-  navigations?: Maybe<Array<Maybe<Navigation>>>
+  navigations: Array<Navigation>
   author?: Maybe<Author>
   authors: AuthorConnection
   image?: Maybe<Image>
@@ -1358,6 +1359,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | 'title'
           | 'lead'
           | 'tags'
+          | 'hideAuthor'
           | 'breaking'
         > & {
             image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
@@ -2310,6 +2312,7 @@ export const Article = gql`
         authors {
           ...AuthorRef
         }
+        hideAuthor
         breaking
         blocks {
           ...FullBlock
