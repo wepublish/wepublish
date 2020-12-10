@@ -434,8 +434,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanCreateNavigation, roles)
 
         return dbAdapter.navigation.createNavigation({
-          ...input,
-          links: input.links.map(mapNavigationLinkInput)
+          input: {...input, links: input.links.map(mapNavigationLinkInput)}
         })
       }
     },
@@ -450,21 +449,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateNavigation, roles)
 
-        return dbAdapter.navigation.updateNavigation(id, {
-          ...input,
-          links: input.links.map(mapNavigationLinkInput)
+        return dbAdapter.navigation.updateNavigation({
+          id,
+          input: {...input, links: input.links.map(mapNavigationLinkInput)}
         })
       }
     },
 
     deleteNavigation: {
-      type: GraphQLNavigation,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteNavigation, roles)
-
-        return dbAdapter.navigation.deleteNavigation(id)
+        return await dbAdapter.navigation.deleteNavigation({id})
       }
     },
 

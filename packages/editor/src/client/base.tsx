@@ -1,4 +1,4 @@
-import React, {ReactNode, useState} from 'react'
+import React, {ReactNode, useEffect, useState} from 'react'
 
 import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
@@ -16,6 +16,7 @@ import {
   TokenListRoute,
   MemberPlanListRoute,
   PaymentMethodListRoute,
+  NavigationListRoute,
   LogoutRoute
 } from './route'
 
@@ -24,6 +25,12 @@ import {useTranslation} from 'react-i18next'
 export interface BaseProps {
   children?: ReactNode
 }
+
+const AVAILABLE_LANG = [
+  {id: 'en', lang: 'en_US', name: 'English'},
+  {id: 'fr', lang: 'fr_FR', name: 'Français'},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+]
 
 const iconStyles = {
   width: 56,
@@ -38,12 +45,29 @@ const NavItemLink = routeLink(Nav.Item)
 // @ts-ignore
 const DropdownItemLink = routeLink(Dropdown.Item)
 
+function useStickyState(defaultValue: string, key: string) {
+  const [value, setValue] = useState(() => {
+    const stickyValue = window.localStorage.getItem(key)
+    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue
+  })
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+  return [value, setValue]
+}
+
 export function Base({children}: BaseProps) {
   const {current} = useRoute()
 
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
 
   const [isExpanded, setIsExpanded] = useState(true)
+
+  const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
+
+  useEffect(() => {
+    i18n.changeLanguage(uiLanguage)
+  }, [uiLanguage])
 
   return (
     <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
@@ -85,6 +109,13 @@ export function Base({children}: BaseProps) {
                   route={ImageListRoute.create({})}
                   active={current?.type === RouteType.ImageList}>
                   {t('navbar.imageLibrary')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="bars" />}
+                  route={NavigationListRoute.create({})}
+                  active={current?.type === RouteType.NavigationList}>
+                  {t('navbar.navigations')}
                 </NavItemLink>
 
                 <Dropdown
@@ -150,7 +181,31 @@ export function Base({children}: BaseProps) {
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
                   </DropdownItemLink>
-                  <Dropdown.Item></Dropdown.Item>
+                </Dropdown>
+              </Nav>
+              <Nav>
+                <Dropdown
+                  placement="topStart"
+                  trigger="click"
+                  renderTitle={() => (
+                    <Icon
+                      icon="globe"
+                      style={{
+                        width: 56,
+                        height: 56,
+                        lineHeight: '56px',
+                        textAlign: 'center'
+                      }}
+                    />
+                  )}>
+                  {AVAILABLE_LANG.map(lang => (
+                    <Dropdown.Item
+                      key={lang.id}
+                      onSelect={() => setUILanguage(lang.id)}
+                      active={lang.id === uiLanguage}>
+                      {lang.name}
+                    </Dropdown.Item>
+                  ))}
                 </Dropdown>
               </Nav>
 

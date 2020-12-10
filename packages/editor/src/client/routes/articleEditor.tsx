@@ -73,7 +73,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     properties: [],
     shared: false,
     breaking: false,
-    image: undefined
+    image: undefined,
+    hideAuthor: false
   })
 
   const isNew = id === undefined
@@ -118,7 +119,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         authors,
         image,
         blocks,
-        properties
+        properties,
+        hideAuthor
       } = latest
       const {publishedAt} = published ?? {}
 
@@ -138,7 +140,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         shared,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
-        image: image || undefined
+        image: image || undefined,
+        hideAuthor
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -166,7 +169,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       shared: metadata.shared,
       tags: metadata.tags,
       properties: metadata.properties,
-      blocks: blocks.map(unionMapForBlock)
+      blocks: blocks.map(unionMapForBlock),
+      hideAuthor: metadata.hideAuthor
     }
   }
 

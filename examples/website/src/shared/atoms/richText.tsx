@@ -1,6 +1,23 @@
 import React, {ReactNode, Fragment} from 'react'
 import {Node} from 'slate'
 
+import {cssRule, useStyle} from '@karma.run/react'
+
+export const tableStyle = cssRule({
+  width: '100%',
+  borderCollapse: 'collapse',
+  tableLayout: 'fixed'
+})
+
+export const tableCellStyle = cssRule({
+  border: '1px solid',
+  padding: '8px',
+  // remove extra whitespace after paragraph inside of table-cell
+  '> p': {
+    marginBlockEnd: '0'
+  }
+})
+
 export interface RichTextProps {
   readonly value: Node[]
 }
@@ -10,6 +27,7 @@ export function RichText(props: RichTextProps) {
 }
 
 export function renderNodes(nodes: Node[]): ReactNode {
+  const css = useStyle()
   return nodes.map((node, index) => {
     if (node.children) {
       switch (node.type) {
@@ -30,6 +48,23 @@ export function renderNodes(nodes: Node[]): ReactNode {
 
         case 'list-item':
           return <li key={index}>{renderNodes(node.children)}</li>
+
+        case 'table':
+          return (
+            <table key={index} className={css(tableStyle)}>
+              <tbody>{renderNodes(node.children)}</tbody>
+            </table>
+          )
+
+        case 'table-row':
+          return <tr key={index}>{renderNodes(node.children)}</tr>
+
+        case 'table-cell':
+          return (
+            <td key={index} className={css(tableCellStyle)} style={{borderColor: node.borderColor}}>
+              {renderNodes(node.children)}
+            </td>
+          )
 
         case 'link':
           return (

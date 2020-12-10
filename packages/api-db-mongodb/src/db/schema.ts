@@ -217,6 +217,8 @@ export interface DBArticleRevision {
 
   breaking: boolean
   blocks: ArticleBlock[]
+
+  hideAuthor: boolean
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {

@@ -403,8 +403,35 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Add MemberPlan Collection and PaymentMethod Collection
+    // Add hide author property to article.
     version: 6,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.hideAuthor': {$exists: false}
+        },
+        {$set: {'pending.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.hideAuthor': {$exists: false}
+        },
+        {$set: {'published.hideAuthor': false}}
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.hideAuthor': {$exists: false}
+        },
+        {$set: {'draft.hideAuthor': false}}
+      )
+    }
+  },
+  {
+    //  Add MemberPlan Collection and PaymentMethod Collection
+    version: 7,
     async migrate(db, locale) {
       const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
         strict: true
