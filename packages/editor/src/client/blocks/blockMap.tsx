@@ -5,7 +5,7 @@ import {BlockMapForValue} from '../atoms/blockList'
 
 import {BlockType, EmbedType, BlockValue} from './types'
 import {TitleBlock} from './titleBlock'
-import {RichTextBlock, createDefaultValue} from './richTextBlock/richTextBlock'
+import {RichTextBlock, createDefaultValue} from './richTextBlock/slate'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'

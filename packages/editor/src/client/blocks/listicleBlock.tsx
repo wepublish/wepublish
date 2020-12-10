@@ -10,7 +10,7 @@ import {ImageSelectPanel} from '../panel/imageSelectPanel'
 import {ImagedEditPanel} from '../panel/imageEditPanel'
 
 import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
-import {createDefaultValue, RichTextBlock} from './richTextBlock/richTextBlock'
+import {createDefaultValue, RichTextBlock} from './richTextBlock/slate'
 import {isFunctionalUpdate} from '@karma.run/react'
 
 import {useTranslation} from 'react-i18next'
