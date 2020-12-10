@@ -250,6 +250,10 @@ export interface DBPageRevision {
 
   imageID?: string
 
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImageID?: string
+
   blocks: PageBlock[]
 }
 

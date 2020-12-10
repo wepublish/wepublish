@@ -33,6 +33,9 @@ export interface PageMetadata {
   readonly tags: string[]
   readonly properties: PageMetadataProperty[]
   readonly image?: ImageRefFragment
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaImage?: ImageRefFragment
 }
 
 export interface PageMetadataPanelProps {
@@ -47,6 +50,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [chosenImageType, setChosenImageType] = useState('')
 
   // TODO: Include this later into value
   const [socialMediaTitle, setSocialMediaTitle] = useState('')
@@ -67,14 +71,14 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           <>
             <Form fluid={true}>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}</ControlLabel>
+                <ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</ControlLabel>
                 <FormControl
                   value={socialMediaTitle}
                   onChange={socialMediaTitle => {
                     setSocialMediaTitle(socialMediaTitle)
                   }}
                 />
-                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
+                <ControlLabel>{t('pageEditor.panels.socialMediaDescription')}</ControlLabel>
                 <FormControl
                   rows={5}
                   componentClass="textarea"
@@ -83,12 +87,29 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     setSocialMediaDescription(socialMediaDescription)
                   }}
                 />
-                <ControlLabel>{t('articleEditor.panels.socialMediaAuthor')}</ControlLabel>
+                <ControlLabel>{t('pageEditor.panels.socialMediaAuthor')}</ControlLabel>
                 <FormControl
                   value={socialMediaAuthor}
                   onChange={socialMediaAuthor => {
                     setSocialMediaAuthor(socialMediaAuthor)
                   }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.socialMediaImage')}</ControlLabel>
+                <ChooseEditImage
+                  header={''}
+                  image={socialMediaImage}
+                  disabled={false}
+                  openChooseModalOpen={() => {
+                    setChooseModalOpen(true)
+                    setChosenImageType('socialMediaImage')
+                  }}
+                  openEditModalOpen={() => {
+                    setEditModalOpen(true)
+                    setChosenImageType('socialMediaImage')
+                  }}
+                  removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
                 />
               </FormGroup>
             </Form>
@@ -127,11 +148,18 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 </FormGroup>
               </Form>
             </Panel>
+            <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
             <ChooseEditImage
               image={image}
               disabled={false}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
+              openChooseModalOpen={() => {
+                setChooseModalOpen(true)
+                setChosenImageType('image')
+              }}
+              openEditModalOpen={() => {
+                setEditModalOpen(true)
+                setChosenImageType('image')
+              }}
               removeImage={() => onChange?.({...value, image: undefined})}
             />
           </>

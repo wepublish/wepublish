@@ -737,6 +737,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -764,6 +767,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   image?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -2133,13 +2139,16 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -4110,6 +4119,11 @@ export const PageDocument = gql`
         key
         value
         public
+      }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...ImageRef
       }
       blocks {
         ...FullBlock
