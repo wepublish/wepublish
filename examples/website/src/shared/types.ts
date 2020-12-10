@@ -92,7 +92,7 @@ export interface Peer {
   logoURL: string
   websiteURL: string
   themeColor: string
-  callToActionText: RichTextBlock[]
+  callToActionText: Node[]
   callToActionURL: string
 }
 
