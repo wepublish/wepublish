@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - c/WEP-116
+      - F/WEP-116-add-peer-call-to-action-info
 
 jobs:
   release:
