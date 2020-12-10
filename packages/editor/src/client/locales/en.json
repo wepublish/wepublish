@@ -182,7 +182,10 @@
         "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
         "publishDate": "Publish Date",
         "invalidDate": "Invalid Date",
-        "updateDate": "Update Date"
+        "updateDate": "Update Date",
+        "socialMediaTitle": "Title for Social Media",
+        "socialMediaDescription": "Description for Social Media",
+        "socialMediaImage": "Image for Social Media"
       }
     },
     "authors": {
