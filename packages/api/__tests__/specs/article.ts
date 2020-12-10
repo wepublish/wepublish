@@ -57,7 +57,7 @@ describe('Articles', () => {
           input: articleInput
         }
       })
-      articleIds.push(res.data?.createArticle?.id)
+      articleIds.unshift(res.data?.createArticle?.id)
     })
 
     test('can be created', async () => {
@@ -91,7 +91,7 @@ describe('Articles', () => {
           }
         }
       })
-      articleIds.push(res.data?.createArticle?.id)
+      articleIds.unshift(res.data?.createArticle?.id)
     })
 
     test('can be read in list', async () => {
