@@ -60,38 +60,16 @@ import './richTextBlockTable.less'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon'
 
-enum BlockFormat {
-  H1 = 'heading-one',
-  H2 = 'heading-two',
-  H3 = 'heading-three',
-  Paragraph = 'paragraph',
-  UnorderedList = 'unordered-list',
-  OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  Table = 'table',
-  TableRow = 'table-row',
-  TableCell = 'table-cell'
-}
-
-enum InlineFormat {
-  Link = 'link'
-}
-
-enum TextFormat {
-  Bold = 'bold',
-  Italic = 'italic',
-  Underline = 'underline',
-  Strikethrough = 'strikethrough',
-  Superscript = 'superscript',
-  Subscript = 'subscript'
-}
-
-type Format = BlockFormat | InlineFormat | TextFormat
-
-const BlockFormats: string[] = Object.values(BlockFormat)
-const InlineFormats: string[] = Object.values(InlineFormat)
-const TextFormats: string[] = Object.values(TextFormat)
-const ListFormats: string[] = [BlockFormat.UnorderedList, BlockFormat.OrderedList]
+import {
+  BlockFormat,
+  InlineFormat,
+  TextFormat,
+  Format,
+  BlockFormats,
+  InlineFormats,
+  TextFormats,
+  ListFormats
+} from './formats'
 
 const ElementTags: any = {
   A: (el: Element) => ({
