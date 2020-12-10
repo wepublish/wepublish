@@ -217,7 +217,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       {value.image && (
         <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
           <ImagedEditPanel
-            id={chosenImageType === 'image' ? value.image!.id : value.socialMediaImage?.id}
+            id={chosenImageType === 'image' ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>

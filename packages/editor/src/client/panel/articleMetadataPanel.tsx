@@ -314,7 +314,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             setEditModalOpen(false)
           }}>
           <ImagedEditPanel
-            id={chosenImageType === 'image' ? value.image!.id : value.socialMediaImage?.id}
+            id={chosenImageType === 'image' ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>
