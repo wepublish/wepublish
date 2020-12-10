@@ -50,11 +50,17 @@ export function AuthorList() {
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
 
-  const {data, /* fetchMore, */ loading: isLoading} = useAuthorListQuery({
-    variables: {
-      filter: filter || undefined,
-      first: 50
-    },
+  const authorListQueryVariables = {
+    filter: filter || undefined,
+    first: 50
+  }
+
+  const {
+    data,
+    /* fetchMore, */ loading: isLoading,
+    refetch: authorListRefetch
+  } = useAuthorListQuery({
+    variables: authorListQueryVariables,
     fetchPolicy: 'network-only'
   })
 
@@ -211,6 +217,8 @@ export function AuthorList() {
               await deleteAuthor({
                 variables: {id: currentAuthor.id}
               })
+
+              await authorListRefetch(authorListQueryVariables)
 
               setConfirmationDialogOpen(false)
               // fetchMore()
