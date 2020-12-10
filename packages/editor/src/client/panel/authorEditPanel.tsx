@@ -29,7 +29,7 @@ import {
 } from '../api'
 
 import {slugify, generateID, getOperationNameFromDocument} from '../utility'
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/slate'
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/editor'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'

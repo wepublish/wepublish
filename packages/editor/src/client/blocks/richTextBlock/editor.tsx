@@ -71,7 +71,7 @@ import {
   ListFormats
 } from './formats'
 
-import {isFormatActive, toggleFormat} from './slateUtils'
+import {isFormatActive, toggleFormat} from './editorUtils'
 
 const ElementTags: any = {
   A: (el: Element) => ({

@@ -6,7 +6,7 @@ import {mount} from 'enzyme'
 
 import {act} from 'react-dom/test-utils'
 import {updateWrapper} from '../utils'
-import {createDefaultValue} from '../../src/client/blocks/richTextBlock/slate'
+import {createDefaultValue} from '../../src/client/blocks/richTextBlock/editor'
 
 const MockedProvider = MockedProviderBase as any
 
