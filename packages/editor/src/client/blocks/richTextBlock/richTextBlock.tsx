@@ -30,7 +30,7 @@ import {
 import {withHistory} from 'slate-history'
 import {jsx} from 'slate-hyperscript'
 
-import {BlockProps} from '../atoms/blockList'
+import {BlockProps} from '../../atoms/blockList'
 import {
   Toolbar,
   ToolbarButtonProps,
@@ -38,9 +38,9 @@ import {
   ToolbarDivider,
   ToolbarButtonWithChildren,
   BaseToolbarButtonProps
-} from '../atoms/toolbar'
-import {EmojiButton} from '../atoms/emojiButton'
-import {RichTextBlockValue} from './types'
+} from '../../atoms/toolbar'
+import {EmojiButton} from '../../atoms/emojiButton'
+import {RichTextBlockValue} from '../types'
 
 import {useTranslation} from 'react-i18next'
 import {
