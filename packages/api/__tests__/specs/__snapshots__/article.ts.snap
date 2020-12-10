@@ -178,7 +178,7 @@ Object {
         "hasPreviousPage": false,
         "startCursor": Any<String>,
       },
-      "totalCount": 3,
+      "totalCount": Any<Number>,
     },
   },
   "errors": undefined,

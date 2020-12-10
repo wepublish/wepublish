@@ -32,8 +32,7 @@ beforeAll(async () => {
 
 describe('Articles', () => {
   describe('can be created/edited/deleted:', () => {
-    let articleIds: string[]
-    articleIds = []
+    const articleIds: string[] = []
     beforeEach(async () => {
       const {mutate} = testClientPrivate
       const articleInput: ArticleInput = {
@@ -92,6 +91,7 @@ describe('Articles', () => {
           }
         }
       })
+      articleIds.push(res.data?.createArticle?.id)
     })
 
     test('can be read in list', async () => {
@@ -109,10 +109,12 @@ describe('Articles', () => {
             pageInfo: {
               endCursor: expect.any(String),
               startCursor: expect.any(String)
-            }
+            },
+            totalCount: expect.any(Number)
           }
         }
       })
+      expect(articles.data?.articles?.totalCount).toBe(articleIds.length)
     })
 
     test('can be read by id', async () => {
@@ -172,7 +174,7 @@ describe('Articles', () => {
       const res = await mutate({
         mutation: PublishArticle,
         variables: {
-          id: articleIds[1],
+          id: articleIds[0],
           publishAt: '2020-11-25T23:55:35.000Z',
           publishedAt: '2020-11-25T23:55:35.000Z',
           updatedAt: '2020-11-25T23:55:35.000Z'
@@ -192,7 +194,7 @@ describe('Articles', () => {
       const res = await mutate({
         mutation: UnpublishArticle,
         variables: {
-          id: articleIds[1]
+          id: articleIds[0]
         }
       })
       expect(res).toMatchSnapshot({
@@ -213,6 +215,7 @@ describe('Articles', () => {
         }
       })
       expect(res).toMatchSnapshot()
+      articleIds.shift()
     })
   })
 })

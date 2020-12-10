@@ -30,10 +30,10 @@ fragment MutationArticle on Article {
         breaking
         tags
         properties {
-        key
-        value
-        public
-      }
+            key
+            value
+            public
+        }
     }
 }
 
