@@ -79,6 +79,15 @@ export const articleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+
+    socialMediaTitle
+    socialMediaDescription
+    socialMediaAuthors {
+      ...AuthorsData
+    }
+    socialMediaImage {
+      ...SimpleImageData
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}

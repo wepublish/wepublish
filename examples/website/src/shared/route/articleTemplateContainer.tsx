@@ -97,7 +97,20 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
 
   if (!articleData) return <NotFoundTemplate />
 
-  const {title, lead, image, tags, authors, publishedAt, updatedAt, blocks} = articleData
+  const {
+    title,
+    lead,
+    image,
+    tags,
+    authors,
+    publishedAt,
+    updatedAt,
+    blocks,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaImage,
+    socialMediaAuthors
+  } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
   const canonicalURL = canonicalHost + path
@@ -107,23 +120,30 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-
         <link rel="canonical" href={canonicalURL} />
-
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
-
+        <meta property="og:description" content={socialMediaDescription ?? ''} />
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage.ogURL ?? image.ogURL ?? ''} />
+        )}
+        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
+        {/* <meta property="article:author" content="" /> */}
+        if(socialMediaAuthors){' '}
+        {socialMediaAuthors?.map((author, index) => {
+          return <meta key={index} property="article:author" content={author.url} />
+        })}{' '}
+        else if (authors && socialMediaAuthors === null){' '}
+        {authors?.map((author, index) => {
+          return <meta key={index} property="article:author" content={author.url} />
+        })}{' '}
+        else {undefined}
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />
-
         {tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
-
-        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
-        {/* <meta property="article:author" content="" /> */}
       </Helmet>
 
       <DesktopSocialMediaButtons shareUrl={canonicalURL} />
@@ -216,7 +236,17 @@ export function PeerArticleTemplateContainer({
 
   if (!articleData || !peer) return <NotFoundTemplate />
 
-  const {title, lead, image, tags, authors, publishedAt, updatedAt, blocks} = articleData
+  const {
+    title,
+    lead,
+    image,
+    tags,
+    authors,
+    publishedAt,
+    updatedAt,
+    blocks,
+    socialMediaImage
+  } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
   const canonicalURL = canonicalHost + path
@@ -232,7 +262,9 @@ export function PeerArticleTemplateContainer({
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage.ogURL ?? image.ogURL ?? ''} />
+        )}
 
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />

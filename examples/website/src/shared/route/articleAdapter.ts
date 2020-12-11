@@ -39,7 +39,11 @@ function articleMetaAdapter(article: any): ArticleMeta {
     slug: article.slug || undefined,
     authors: authorsAdapter(article.authors),
     isBreaking: article.breaking,
-    tags: article.tags
+    tags: article.tags,
+    socialMediaTitle: article.socialMediaTitle,
+    socialMediaDescription: article.socialMediaDescription,
+    socialMediaAuthors: authorsAdapter(article.socialMediaAuthors),
+    socialMediaImage: imageAdapter(article.socialMediaImage)
   }
 }
 
