@@ -137,7 +137,6 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
           })}
         {socialMediaAuthors?.length === 0 &&
           authors?.map((author, index) => {
-            console.log(socialMediaAuthors?.length)
             return <meta key={index} property="article:author" content={author.url} />
           })}
 
