@@ -99,13 +99,17 @@ describe('Articles', () => {
       const articles = await query({
         query: ArticleList,
         variables: {
-          first: 10
+          first: 100
         }
       })
       expect(articles).toMatchSnapshot({
         data: {
           articles: {
-            nodes: expect.any(Array),
+            nodes: Array.from({length: articleIds.length}, () => ({
+              createdAt: expect.any(String),
+              id: expect.any(String),
+              modifiedAt: expect.any(String)
+            })),
             pageInfo: {
               endCursor: expect.any(String),
               startCursor: expect.any(String)

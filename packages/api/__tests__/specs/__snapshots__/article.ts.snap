@@ -171,7 +171,65 @@ exports[`Articles can be created/edited/deleted: can be read in list 1`] = `
 Object {
   "data": Object {
     "articles": Object {
-      "nodes": Any<Array>,
+      "nodes": Array [
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "image": null,
+            "lead": "This article will rock your world. Never has there been a better article",
+            "preTitle": "Testing GraphQL",
+            "publishedAt": null,
+            "revision": 0,
+            "title": "This is the best test article",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "image": null,
+            "lead": "This article will rock your world. Never has there been a better article",
+            "preTitle": "Testing GraphQL",
+            "publishedAt": null,
+            "revision": 0,
+            "title": "This is the best test article",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "image": null,
+            "lead": "This article will rock your world. Never has there been a better article",
+            "preTitle": "Testing GraphQL",
+            "publishedAt": null,
+            "revision": 0,
+            "title": "This is the best test article",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+      ],
       "pageInfo": Object {
         "endCursor": Any<String>,
         "hasNextPage": false,
