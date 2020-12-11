@@ -374,9 +374,8 @@
         "editImage": "Edit Image",
         "removeImage": "Remove Image",
         "infoEditError": "Edit Token Error",
-        "callToAction": "Call to action information",
-        "callToActionText": "Text",
-        "callToActionURL": "URL"
+        "callToActionText": "Call to action Text",
+        "callToActionURL": "Call to action URL"
       }
     },
     "tokenList": {

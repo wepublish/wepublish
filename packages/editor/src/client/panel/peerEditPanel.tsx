@@ -211,10 +211,6 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
                 <DescriptionListItem label={t('peerList.panels.themeColor')}>
                   {profile?.themeColor}
                 </DescriptionListItem>
-              </DescriptionList>
-            </Panel>
-            <Panel header={t('peerList.panels.callToAction')}>
-              <DescriptionList>
                 <DescriptionListItem label={t('peerList.panels.callToActionText')}>
                   {!!profile?.callToActionText && (
                     <RichTextBlock
