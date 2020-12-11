@@ -51,12 +51,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setLogoImage(data.peerProfile.logo)
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
-      setCallToActionText(
-        data?.peerProfile?.callToActionText?.length
-          ? data.peerProfile.callToActionText
-          : createDefaultValue()
-      )
-      setCallToActionURL(data.peerProfile.callToActionURL || '')
+      setCallToActionText(data.peerProfile.callToActionText)
+      setCallToActionURL(data.peerProfile.callToActionURL)
     }
   }, [data?.peerProfile])
 
@@ -109,10 +105,6 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 onChange={value => setThemeColor(value)}
               />
             </FormGroup>
-          </Form>
-        </Panel>
-        <Panel header={t('peerList.panels.callToAction')}>
-          <Form fluid={true}>
             <FormGroup>
               <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
               <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
