@@ -211,6 +211,8 @@ export function PeerArticleTemplateContainer({
 
   if (loading || isPeerLoading) return <Loader text="Loading" />
 
+  if (!data) return <NotFoundTemplate />
+
   const articleData = articleAdapter(data.peerArticle)
   const peer = peerAdapter(peerData.peer)
 
