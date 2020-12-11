@@ -123,11 +123,13 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
         <link rel="canonical" href={canonicalURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
-        <meta property="og:description" content={socialMediaDescription} />
+        {socialMediaDescription && (
+          <meta property="og:description" content={socialMediaDescription} />
+        )}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalURL} />
         {(image || socialMediaImage) && (
-          <meta property="og:image" content={socialMediaImage.ogURL ?? image.ogURL ?? ''} />
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
         )}
       </Helmet>
       <PageTemplate title={slug !== '' ? data.page.title : undefined}>

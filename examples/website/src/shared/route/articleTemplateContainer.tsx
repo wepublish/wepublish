@@ -126,19 +126,21 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta property="og:url" content={canonicalURL} />
         <meta property="og:description" content={socialMediaDescription ?? ''} />
         {(image || socialMediaImage) && (
-          <meta property="og:image" content={socialMediaImage.ogURL ?? image.ogURL ?? ''} />
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
         )}
         {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
         {/* <meta property="article:author" content="" /> */}
-        if(socialMediaAuthors){' '}
-        {socialMediaAuthors?.map((author, index) => {
-          return <meta key={index} property="article:author" content={author.url} />
-        })}{' '}
-        else if (authors && socialMediaAuthors === null){' '}
-        {authors?.map((author, index) => {
-          return <meta key={index} property="article:author" content={author.url} />
-        })}{' '}
-        else {undefined}
+
+        {socialMediaAuthors &&
+          socialMediaAuthors?.map((author, index) => {
+            return <meta key={index} property="article:author" content={author.url} />
+          })}
+        {socialMediaAuthors?.length === 0 &&
+          authors?.map((author, index) => {
+            console.log(socialMediaAuthors?.length)
+            return <meta key={index} property="article:author" content={author.url} />
+          })}
+
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />
         {tags.map(tag => (
