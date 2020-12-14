@@ -142,7 +142,6 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
-            "eventKey",
             "componentClass",
             "autoComplete",
             "controlId",

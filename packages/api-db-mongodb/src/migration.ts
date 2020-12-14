@@ -436,97 +436,33 @@ export const Migrations: Migration[] = [
       await db.collection(CollectionName.Articles).updateMany(
         {
           pending: {$ne: null},
-          'pending.socialMediaTitle': {$exists: false},
-          'pending.socialMediaDescription': {$exists: false},
-          'pending.socialMediaAuthors': {$exists: false},
-          'pending.socialMediaImage': {$exists: false}
+          'pending.socialMediaAuthorsID': {$exists: false}
         },
         {
           $set: {
-            'pending.socialMediaTitle': false,
-            'pending.socialMediaDescription': false,
-            'pending.socialMediaAuthors': false,
-            'pending.socialMediaImage': false
+            'pending.socialMediaAuthorsID': []
           }
         }
       )
       await db.collection(CollectionName.Articles).updateMany(
         {
           published: {$ne: null},
-          'published.socialMediaTitle': {$exists: false},
-          'published.socialMediaDescription': {$exists: false},
-          'published.socialMediaAuthors': {$exists: false},
-          'published.socialMediaImage': {$exists: false}
+          'published.socialMediaAuthorsID': {$exists: false}
         },
         {
           $set: {
-            'published.socialMediaTitle': false,
-            'published.socialMediaDescription': false,
-            'published.socialMediaAuthors': false,
-            'published.socialMediaImage': false
+            'published.socialMediaAuthorsID': []
           }
         }
       )
       await db.collection(CollectionName.Articles).updateMany(
         {
           draft: {$ne: null},
-          'draft.socialMediaTitle': {$exists: false},
-          'draft.socialMediaDescription': {$exists: false},
-          'draft.socialMediaAuthors': {$exists: false},
-          'draft.socialMediaImage': {$exists: false}
+          'draft.socialMediaAuthorsID': {$exists: false}
         },
         {
           $set: {
-            'draft.socialMediaTitle': false,
-            'draft.socialMediaDescription': false,
-            'draft.socialMediaAuthors': false,
-            'draft.socialMediaImage': false
-          }
-        }
-      )
-      await db.collection(CollectionName.Pages).updateMany(
-        {
-          pending: {$ne: null},
-          'pending.socialMediaTitle': {$exists: false},
-          'pending.socialMediaDescription': {$exists: false},
-          'pending.socialMediaImage': {$exists: false}
-        },
-        {
-          $set: {
-            'pending.socialMediaTitle': false,
-            'pending.socialMediaDescription': false,
-            'pending.socialMediaAuthors': false,
-            'pending.socialMediaImage': false
-          }
-        }
-      )
-      await db.collection(CollectionName.Pages).updateMany(
-        {
-          published: {$ne: null},
-          'published.socialMediaTitle': {$exists: false},
-          'published.socialMediaDescription': {$exists: false},
-          'published.socialMediaImage': {$exists: false}
-        },
-        {
-          $set: {
-            'published.socialMediaTitle': false,
-            'published.socialMediaDescription': false,
-            'published.socialMediaImage': false
-          }
-        }
-      )
-      await db.collection(CollectionName.Pages).updateMany(
-        {
-          draft: {$ne: null},
-          'draft.socialMediaTitle': {$exists: false},
-          'draft.socialMediaDescription': {$exists: false},
-          'draft.socialMediaImage': {$exists: false}
-        },
-        {
-          $set: {
-            'draft.socialMediaTitle': false,
-            'draft.socialMediaDescription': false,
-            'draft.socialMediaImage': false
+            'draft.socialMediaAuthorsID': []
           }
         }
       )
