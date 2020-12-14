@@ -36,7 +36,28 @@ describe('Authors', () => {
       const authorInput: AuthorInput = {
         name: 'JRR Tolkien',
         slug: `tolkien-${authorIds.length}`,
-        bio: []
+        links: [
+          {title: 'link 1', url: 'www.link1.ch'},
+          {title: 'link 2', url: 'www.link2.ch'}
+        ],
+        bio: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Test Bio'
+              }
+            ]
+          },
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'bio text 😀'
+              }
+            ]
+          }
+        ]
       }
       const res = await mutate({
         mutation: CreateAuthor,
@@ -52,7 +73,28 @@ describe('Authors', () => {
       const authorInput: AuthorInput = {
         name: 'John Grisham',
         slug: 'john-grisham',
-        bio: []
+        links: [
+          {title: 'link 1', url: 'www.link1.ch'},
+          {title: 'link 2', url: 'www.link2.ch'}
+        ],
+        bio: [
+          {
+            type: 'heading-one',
+            children: [
+              {
+                text: 'Author Bio Heading'
+              }
+            ]
+          },
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'author bio text'
+              }
+            ]
+          }
+        ]
       }
       const res = await mutate({
         mutation: CreateAuthor,
