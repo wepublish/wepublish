@@ -1,7 +1,14 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CreateAuthor, AuthorInput, AuthorList} from '../api/private'
+import {
+  CreateAuthor,
+  AuthorInput,
+  AuthorList,
+  Author,
+  UpdateAuthor,
+  DeleteAuthor
+} from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -23,12 +30,12 @@ beforeAll(async () => {
 
 describe('Authors', () => {
   describe('can be created/edited/deleted:', () => {
-    let authorId = ''
+    let authorIds: string[] = []
     beforeEach(async () => {
       const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'JRR Tolkien',
-        slug: 'j-tolkien',
+        slug: `tolkien-${authorIds.length}`,
         bio: []
       }
       const res = await mutate({
@@ -37,15 +44,14 @@ describe('Authors', () => {
           input: authorInput
         }
       })
-      authorId = res.data?.createAuthor?.id
-      console.log(authorId)
+      authorIds.unshift(res.data?.createAuthor?.id)
     })
 
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const authorInput: AuthorInput = {
         name: 'John Grisham',
-        slug: 'j-grish',
+        slug: 'john-grisham',
         bio: []
       }
       const res = await mutate({
@@ -61,6 +67,7 @@ describe('Authors', () => {
           }
         }
       })
+      authorIds.unshift(res.data?.createAuthor?.id)
     })
 
     test('can be read in list', async () => {
@@ -68,22 +75,79 @@ describe('Authors', () => {
       const res = await query({
         query: AuthorList,
         variables: {
-          first: 5
+          first: 100
         }
       })
       expect(res).toMatchSnapshot({
         data: {
           authors: {
-            nodes: expect.any(Array),
+            nodes: Array.from({length: authorIds.length}, () => ({
+              id: expect.any(String)
+            })),
             pageInfo: {
               endCursor: expect.any(String),
               startCursor: expect.any(String)
-            }
-            //totalCount will return size of list which changes depending on how many tests were run
-            //expect any number?
+            },
+            totalCount: expect.any(Number)
           }
         }
       })
+      expect(res.data?.authors?.totalCount).toBe(authorIds.length)
+    })
+
+    test('can be read by id', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: Author,
+        variables: {
+          id: authorIds[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          author: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be updated', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: UpdateAuthor,
+        variables: {
+          input: {
+            name: 'Jane Austen',
+            slug: 'j-austen',
+            links: [{title: 'homepage', url: 'www.j-a.com'}]
+          },
+          id: authorIds[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          updateAuthor: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be deleted', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: DeleteAuthor,
+        variables: {
+          id: authorIds[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          deleteAuthor: expect.any(String)
+        }
+      })
+      authorIds.shift()
     })
   })
 })

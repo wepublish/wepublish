@@ -9,7 +9,44 @@ Object {
       "image": null,
       "links": null,
       "name": "John Grisham",
-      "slug": "j-grish",
+      "slug": "john-grisham",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Authors can be created/edited/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deleteAuthor": Any<String>,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Authors can be created/edited/deleted: can be read by id 1`] = `
+Object {
+  "data": Object {
+    "author": Object {
+      "bio": Array [],
+      "id": Any<String>,
+      "image": null,
+      "links": null,
+      "name": "JRR Tolkien",
+      "slug": "tolkien-3",
     },
   },
   "errors": undefined,
@@ -26,14 +63,66 @@ exports[`Authors can be created/edited/deleted: can be read in list 1`] = `
 Object {
   "data": Object {
     "authors": Object {
-      "nodes": Any<Array>,
+      "nodes": Array [
+        Object {
+          "bio": Array [],
+          "id": Any<String>,
+          "image": null,
+          "links": null,
+          "name": "JRR Tolkien",
+          "slug": "tolkien-2",
+        },
+        Object {
+          "bio": Array [],
+          "id": Any<String>,
+          "image": null,
+          "links": null,
+          "name": "John Grisham",
+          "slug": "john-grisham",
+        },
+        Object {
+          "bio": Array [],
+          "id": Any<String>,
+          "image": null,
+          "links": null,
+          "name": "JRR Tolkien",
+          "slug": "tolkien-0",
+        },
+      ],
       "pageInfo": Object {
         "endCursor": Any<String>,
         "hasNextPage": false,
         "hasPreviousPage": false,
         "startCursor": Any<String>,
       },
-      "totalCount": 2,
+      "totalCount": Any<Number>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Authors can be created/edited/deleted: can be updated 1`] = `
+Object {
+  "data": Object {
+    "updateAuthor": Object {
+      "bio": null,
+      "id": Any<String>,
+      "image": null,
+      "links": Array [
+        Object {
+          "title": "homepage",
+          "url": "www.j-a.com",
+        },
+      ],
+      "name": "Jane Austen",
+      "slug": "j-austen",
     },
   },
   "errors": undefined,
