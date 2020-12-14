@@ -131,6 +131,7 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
         {(image || socialMediaImage) && (
           <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
         )}
+        <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
       <PageTemplate title={slug !== '' ? data.page.title : undefined}>
         <BlockRenderer

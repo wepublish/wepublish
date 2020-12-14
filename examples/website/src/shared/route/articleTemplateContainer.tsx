@@ -145,6 +145,7 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         {tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
+        <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
       <DesktopSocialMediaButtons shareUrl={canonicalURL} />
