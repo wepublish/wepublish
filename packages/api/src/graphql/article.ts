@@ -139,7 +139,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
-      type: GraphQLList(GraphQLAuthor),
+      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
       resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
         return Promise.all(
           socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
