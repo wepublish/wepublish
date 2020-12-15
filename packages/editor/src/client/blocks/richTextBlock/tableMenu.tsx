@@ -7,7 +7,7 @@ import {SubMenuContext} from '../../atoms/toolbar'
 import {isFormatActive} from './editorUtils'
 import {BlockFormat} from './formats'
 
-import './richTextBlockTable.less'
+import './tableMenu.less'
 
 export function TableMenu() {
   const editor = useSlate()

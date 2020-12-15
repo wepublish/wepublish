@@ -274,7 +274,6 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
     if (tablePreventDelete('start', 'rangeIncludes')) {
       return
     }
-
     deleteFragment()
   }
 
@@ -282,7 +281,6 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
     if (tablePreventDelete('start', 'pointEquals')) {
       return
     }
-
     deleteBackward(unit)
   }
 
@@ -290,7 +288,6 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
     if (tablePreventDelete('end', 'pointEquals')) {
       return
     }
-
     deleteForward(unit)
   }
 
