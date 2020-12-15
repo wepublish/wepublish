@@ -44,7 +44,7 @@ export function PaymentMethodList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<FullPaymentMethodFragment>()
 
-  const {data, loading: isLoading} = usePaymentMethodListQuery({
+  const {data, loading: isLoading, refetch} = usePaymentMethodListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -134,19 +134,21 @@ export function PaymentMethodList() {
         }}>
         <PaymentMethodEditPanel
           id={editID}
-          onClose={() => {
+          onClose={async () => {
             setEditModalOpen(false)
             dispatch({
               type: RouteActionType.PushRoute,
               route: PaymentMethodListRoute.create({}, current ?? undefined)
             })
+            await refetch()
           }}
-          onSave={() => {
+          onSave={async () => {
             setEditModalOpen(false)
             dispatch({
               type: RouteActionType.PushRoute,
               route: PaymentMethodListRoute.create({}, current ?? undefined)
             })
+            await refetch()
           }}
         />
       </Drawer>
@@ -174,6 +176,7 @@ export function PaymentMethodList() {
                 variables: {id: currentPaymentMethod.id}
               })
 
+              await refetch()
               setConfirmationDialogOpen(false)
             }}
             color="red">

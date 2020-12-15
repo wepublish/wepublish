@@ -80,12 +80,23 @@ export interface DeleteUserSubscriptionArgs {
   readonly userId: string
 }
 
+export interface PaymentProviderCustomer {
+  readonly id: string
+  readonly createdAt: Date
+}
+
 export interface User {
   readonly id: string
   readonly name: string
   readonly email: string
   readonly roleIDs: string[]
   readonly subscription?: UserSubscription
+  readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+}
+
+export interface UpdatePaymentProviderCustomerArgs {
+  readonly userID: string
+  readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
 }
 
 export type OptionalUser = User | null
@@ -115,4 +126,6 @@ export interface DBUserAdapter {
 
   updateUserSubscription(args: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription>
   deleteUserSubscription(args: DeleteUserSubscriptionArgs): Promise<string | null>
+
+  updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
 }

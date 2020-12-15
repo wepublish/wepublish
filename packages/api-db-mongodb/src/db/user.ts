@@ -17,7 +17,8 @@ import {
   UserSort,
   OptionalUserSubscription,
   UpdateUserSubscriptionArgs,
-  DeleteUserSubscriptionArgs
+  DeleteUserSubscriptionArgs,
+  UpdatePaymentProviderCustomerArgs
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -47,7 +48,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         email: input.email,
         name: input.name,
         roleIDs: input.roleIDs,
-        password: passwordHash
+        password: passwordHash,
+        paymentProviderCustomers: {}
       })
 
       return this.getUserByID(id)
@@ -67,7 +69,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        roleIDs: user.roleIDs,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
       return null
@@ -125,7 +128,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         email: user.email,
         name: user.name,
         roleIDs: user.roleIDs,
-        subscription: user.subscription
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     })
   }
@@ -139,7 +143,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         email: user.email,
         name: user.name,
         roleIDs: user.roleIDs,
-        subscription: user.subscription
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     }
 
@@ -154,7 +159,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         email: user.email,
         name: user.name,
         roleIDs: user.roleIDs,
-        subscription: user.subscription
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
       return null
@@ -192,11 +198,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         }
       : {}
 
-    let textFilter: FilterQuery<any> = {}
+    const textFilter: FilterQuery<any> = {}
 
     // TODO: Rename to search
-    if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+    if (filter?.name !== undefined) {
+      textFilter.$or = [{name: {$regex: filter.name, $options: 'i'}}]
     }
 
     const [totalCount, users] = await Promise.all([
@@ -223,15 +229,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       limit.type === LimitType.First
         ? users.length > limitCount
         : cursor.type === InputCursorType.Before
-        ? true
-        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? users.length > limitCount
         : cursor.type === InputCursorType.After
-        ? true
-        : false
 
     const firstUser = nodes[0]
     const lastUser = nodes[nodes.length - 1]
@@ -307,6 +309,27 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?._id
+  }
+
+  async updatePaymentProviderCustomers({
+    userID,
+    paymentProviderCustomers
+  }: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          paymentProviderCustomers: paymentProviderCustomers
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
   }
 }
 

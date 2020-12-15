@@ -6,6 +6,7 @@ import {
   MetadataProperty,
   NavigationLink,
   PageBlock,
+  PaymentProviderCustomer,
   RichTextNode,
   UserSubscription
 } from '@wepublish/api'
@@ -89,6 +90,7 @@ export interface DBUser {
   roleIDs: string[]
 
   subscription?: UserSubscription
+  paymentProviderCustomers: Record<string, PaymentProviderCustomer>
 }
 
 export interface DBUserRole {
@@ -311,6 +313,7 @@ export interface DBPayment {
   modifiedAt: Date
 
   intentID: string
+  intentSecret: string
   amount: number
   invoiceID?: string
   intentData?: string

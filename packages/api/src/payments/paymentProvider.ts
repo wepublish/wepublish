@@ -12,12 +12,13 @@ export interface IntentStatus {
   successful: boolean
   open: boolean
   paymentData?: string
-  paymentUserID?: string
+  customerID?: string
 }
 
 export interface CreateIntentProps {
   invoice: Invoice
-  user?: string
+  saveCustomer: boolean
+  customerID?: string
   successURL?: string
   failureURL?: string
 }
@@ -40,6 +41,7 @@ export interface GetInvoiceIDFromWebhookProps {
 
 export interface IntentArgs {
   intentID: string
+  intentSecret: string
   amount: number
   intentData?: string
   open: boolean
@@ -99,7 +101,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus>
 }
 
-export async function updatePayment(
+async function updatePayment(
   payment: Payment,
   paymentStatus: IntentStatus,
   dbAdapter: DBAdapter
@@ -109,6 +111,7 @@ export async function updatePayment(
     id: payment.id,
     input: {
       intentID: payment.intentID,
+      intentSecret: payment.intentSecret,
       amount: payment.amount,
       invoiceID: payment.invoiceID,
       intentData: payment.intentData,
@@ -163,6 +166,22 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
             headers: req.headers
           })
           await updatePayment(payment, paymentStatus, context.dbAdapter)
+
+          if (paymentStatus.customerID) {
+            const invoice = await context.loaders.invoicesByID.load(invoiceID)
+            if (!invoice?.userID) return // no userID
+            const user = await context.dbAdapter.user.getUserByID(invoice.userID)
+            if (!user) return // no user
+            const {paymentProviderCustomers} = user
+            paymentProviderCustomers[paymentProvider.id] = {
+              id: paymentStatus.customerID,
+              createdAt: new Date()
+            }
+            await context.dbAdapter.user.updatePaymentProviderCustomers({
+              userID: user.id,
+              paymentProviderCustomers
+            })
+          }
         } catch (exception) {
           console.warn('Exception during payment update from webhook', exception)
         }

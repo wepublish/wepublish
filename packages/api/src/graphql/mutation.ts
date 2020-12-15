@@ -850,6 +850,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const intent = await paymentProvider.createIntent({
           invoice,
+          saveCustomer: true,
           ...(successURL ? {successURL} : {}),
           ...(failureURL ? {failureURL} : {})
         })
@@ -863,7 +864,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
             intentData: intent.intentData,
             paymentData: intent.paymentData,
             amount: intent.amount,
-            intentID: intent.intentID
+            intentID: intent.intentID,
+            intentSecret: intent.intentSecret
           }
         })
       }

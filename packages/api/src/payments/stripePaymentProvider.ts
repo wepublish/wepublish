@@ -52,10 +52,23 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
     switch (event.type) {
       case 'payment_intent.succeeded': {
+        let customerID
+        if (
+          intent.setup_future_usage === 'off_session' &&
+          intent.customer === null &&
+          intent.payment_method !== null
+        ) {
+          const customer = await this.stripe.customers.create({
+            email: intent.metadata.mail ?? '',
+            payment_method: intent.payment_method as string
+          })
+          customerID = customer.id
+        }
         return {
           successful: intent.status === 'succeeded',
           open: false,
-          paymentData: JSON.stringify(intent)
+          paymentData: JSON.stringify(intent),
+          customerID
         }
       }
       default: {
@@ -77,13 +90,16 @@ export class StripePaymentProvider extends BasePaymentProvider {
       ),
       currency: 'chf',
       // description: props.invoice.description, TODO: convert to text
+      ...(props.saveCustomer ? {setup_future_usage: 'off_session'} : {}),
       metadata: {
-        invoiceID: props.invoice.id
+        invoiceID: props.invoice.id,
+        mail: props.invoice.mail
       }
     })
 
     return {
       intentID: intent.id,
+      intentSecret: intent.client_secret ?? intent.id,
       amount: intent.amount,
       intentData: JSON.stringify(intent),
       open: true,

@@ -92,6 +92,7 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
 
     return {
       intentID: session.id,
+      intentSecret: session.id,
       amount: session.amount_total,
       intentData: JSON.stringify(session),
       open: true,

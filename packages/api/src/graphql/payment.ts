@@ -26,6 +26,7 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     intentID: {type: GraphQLNonNull(GraphQLString)},
+    intentSecret: {type: GraphQLNonNull(GraphQLString)},
     amount: {type: GraphQLNonNull(GraphQLInt)},
     invoice: {
       type: GraphQLInvoice,
@@ -34,12 +35,7 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
         return null
       })
     },
-    intentData: {
-      type: GraphQLString,
-      resolve: createProxyingResolver(({intentData}) => {
-        return JSON.stringify(intentData)
-      })
-    },
+    intentData: {type: GraphQLString},
     open: {type: GraphQLNonNull(GraphQLBoolean)},
     successful: {type: GraphQLNonNull(GraphQLBoolean)},
     paymentMethod: {
@@ -48,12 +44,7 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
     },
-    paymentData: {
-      type: GraphQLString,
-      resolve: createProxyingResolver(({paymentData}) => {
-        return JSON.stringify(paymentData)
-      })
-    }
+    paymentData: {type: GraphQLString}
   }
 })
 

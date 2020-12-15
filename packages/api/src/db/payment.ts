@@ -5,6 +5,7 @@ export interface Payment {
   createdAt: Date
   modifiedAt: Date
   intentID: string
+  intentSecret: string
   amount: number
   invoiceID?: string
   intentData?: string
@@ -16,6 +17,7 @@ export interface Payment {
 
 export interface PaymentInput {
   intentID: string
+  intentSecret: string
   amount: number
   invoiceID?: string
   intentData?: string

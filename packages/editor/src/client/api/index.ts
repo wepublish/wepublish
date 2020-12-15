@@ -977,6 +977,7 @@ export type Payment = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   intentID: Scalars['String'];
+  intentSecret: Scalars['String'];
   amount: Scalars['Int'];
   invoice?: Maybe<Invoice>;
   intentData?: Maybe<Scalars['String']>;
