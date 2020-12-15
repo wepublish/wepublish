@@ -123,8 +123,8 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
         <link rel="canonical" href={canonicalURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
-        {socialMediaDescription && (
-          <meta property="og:description" content={socialMediaDescription} />
+        {(socialMediaDescription || description) && (
+          <meta property="og:description" content={socialMediaDescription ?? description} />
         )}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalURL} />

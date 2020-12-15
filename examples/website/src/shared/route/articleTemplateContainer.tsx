@@ -87,6 +87,12 @@ export interface ArticleTemplateContainerProps {
   slug?: string
 }
 
+const mapAuthors = (metaData: any[] | undefined) => {
+  return metaData?.map((author, index) => {
+    return <meta key={index} property="article:author" content={author.url} />
+  })
+}
+
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
   const {data, loading} = useQuery(ArticleQuery, {variables: {id}})
@@ -124,21 +130,14 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
-        <meta property="og:description" content={socialMediaDescription ?? ''} />
+        {socialMediaDescription && (
+          <meta property="og:description" content={socialMediaDescription} />
+        )}
         {(image || socialMediaImage) && (
           <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
         )}
-        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
-        {/* <meta property="article:author" content="" /> */}
-
-        {socialMediaAuthors &&
-          socialMediaAuthors?.map((author, index) => {
-            return <meta key={index} property="article:author" content={author.url} />
-          })}
-        {socialMediaAuthors?.length === 0 &&
-          authors?.map((author, index) => {
-            return <meta key={index} property="article:author" content={author.url} />
-          })}
+        {socialMediaAuthors && mapAuthors(socialMediaAuthors)}
+        {socialMediaAuthors?.length === 0 && mapAuthors(authors)}
 
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />
@@ -247,7 +246,10 @@ export function PeerArticleTemplateContainer({
     publishedAt,
     updatedAt,
     blocks,
-    socialMediaImage
+    socialMediaImage,
+    socialMediaDescription,
+    socialMediaTitle,
+    socialMediaAuthors
   } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
@@ -261,12 +263,17 @@ export function PeerArticleTemplateContainer({
 
         <link rel="canonical" href={canonicalURL} />
 
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalURL} />
-        {(image || socialMediaImage) && (
-          <meta property="og:image" content={socialMediaImage.ogURL ?? image.ogURL ?? ''} />
+        {socialMediaDescription && (
+          <meta property="og:description" content={socialMediaDescription} />
         )}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
+        )}
+        {socialMediaAuthors && mapAuthors(socialMediaAuthors)}
+        {socialMediaAuthors?.length === 0 && mapAuthors(authors)}
 
         <meta property="article:published_time" content={publishedAt.toISOString()} />
         <meta property="article:modified_time" content={updatedAt.toISOString()} />

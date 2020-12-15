@@ -126,8 +126,8 @@ export function PageEditor({id}: PageEditorProps) {
           public: property.public
         })),
         image: image || undefined,
-        socialMediaTitle: socialMediaTitle ?? '',
-        socialMediaDescription: socialMediaDescription ?? '',
+        socialMediaTitle: socialMediaTitle || undefined,
+        socialMediaDescription: socialMediaDescription || undefined,
         socialMediaImage: socialMediaImage || undefined
       })
 
