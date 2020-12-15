@@ -5,10 +5,7 @@ import React, {
   useCallback,
   useRef,
   useState,
-  ReactElement,
-  createContext,
-  Ref,
-  RefObject
+  createContext
 } from 'react'
 
 import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
