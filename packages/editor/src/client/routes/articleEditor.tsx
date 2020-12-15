@@ -187,7 +187,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       hideAuthor: metadata.hideAuthor,
       socialMediaTitle: metadata.socialMediaTitle || undefined,
       socialMediaDescription: metadata.socialMediaDescription || undefined,
-      socialMediaAuthorIDs: metadata.socialMediaAuthors?.map(({id}) => id) || undefined,
+      socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
       socialMediaImageID: metadata.socialMediaImage?.id || undefined
     }
   }
