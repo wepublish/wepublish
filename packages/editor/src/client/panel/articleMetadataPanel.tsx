@@ -44,7 +44,7 @@ export interface ArticleMetadata {
   readonly hideAuthor: boolean
   readonly socialMediaTitle?: string
   readonly socialMediaDescription?: string
-  readonly socialMediaAuthors?: AuthorRefFragment[]
+  readonly socialMediaAuthors: AuthorRefFragment[]
   readonly socialMediaImage?: ImageRefFragment
 }
 
