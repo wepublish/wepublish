@@ -148,8 +148,8 @@ export function PageEditor({id}: PageEditorProps) {
       imageID: metadata.image?.id,
       tags: metadata.tags,
       properties: metadata.properties,
-      socialMediaTitle: metadata.socialMediaTitle,
-      socialMediaDescription: metadata.socialMediaDescription,
+      socialMediaTitle: metadata?.socialMediaTitle,
+      socialMediaDescription: metadata?.socialMediaDescription,
       socialMediaImageID: metadata.socialMediaImage?.id,
       blocks: blocks.map(unionMapForBlock)
     }
