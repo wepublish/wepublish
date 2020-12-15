@@ -191,42 +191,40 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
           </Form>
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
-          <>
-            <Panel header={t('peerList.panels.information')}>
-              <Panel
-                bordered={true}
-                style={{
-                  height: '200px',
-                  marginBottom: '20px',
-                  backgroundSize: 'cover',
-                  backgroundImage: `url(${
-                    profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
-                  }`
-                }}
-              />
-              <DescriptionList>
-                <DescriptionListItem label={t('peerList.panels.name')}>
-                  {profile?.name}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('peerList.panels.themeColor')}>
-                  {profile?.themeColor}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('peerList.panels.callToActionText')}>
-                  {!!profile?.callToActionText && (
-                    <RichTextBlock
-                      disabled
-                      // TODO: remove this
-                      onChange={console.log}
-                      value={profile?.callToActionText}
-                    />
-                  )}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
-                  {profile?.callToActionURL}
-                </DescriptionListItem>
-              </DescriptionList>
-            </Panel>
-          </>
+          <Panel header={t('peerList.panels.information')}>
+            <Panel
+              bordered={true}
+              style={{
+                height: '200px',
+                marginBottom: '20px',
+                backgroundSize: 'cover',
+                backgroundImage: `url(${
+                  profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
+                }`
+              }}
+            />
+            <DescriptionList>
+              <DescriptionListItem label={t('peerList.panels.name')}>
+                {profile?.name}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.themeColor')}>
+                {profile?.themeColor}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionText')}>
+                {!!profile?.callToActionText && (
+                  <RichTextBlock
+                    disabled
+                    // TODO: remove this
+                    onChange={console.log}
+                    value={profile?.callToActionText}
+                  />
+                )}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
+                {profile?.callToActionURL}
+              </DescriptionListItem>
+            </DescriptionList>
+          </Panel>
         )}
       </Drawer.Body>
 
