@@ -5,7 +5,10 @@ import React, {
   useCallback,
   useRef,
   useState,
-  ReactElement
+  ReactElement,
+  createContext,
+  Ref,
+  RefObject
 } from 'react'
 
 import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
@@ -102,10 +105,34 @@ export interface SubMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
   readonly children: ReactElement
 }
 
+interface SubMenuContextProps {
+  closeMenu: () => void
+  openMenu: () => void
+}
+
+export const SubMenuContext = createContext<SubMenuContextProps>({
+  closeMenu: () => {},
+  openMenu: () => {}
+})
+
 export function SubMenuButton({children, icon}: SubMenuButtonProps) {
+  /**
+   * The Submenu buttons provides some local context to it's children. For
+   * now this is only used to enable menu.close() handle from the child tableMenu.
+   * Couldb be little overkill only for the table menu, but probably there will be
+   * more usecases.
+   */
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const triggerRef = useRef<PopoverProps>(null)
+
+  const closeMenu = () => {
+    triggerRef.current!.close()
+  }
+
+  const openMenu = () => {
+    triggerRef.current!.open()
+  }
 
   const menuRef = useCallback((node: any) => {
     setIsMenuOpen(!!node)
@@ -114,16 +141,22 @@ export function SubMenuButton({children, icon}: SubMenuButtonProps) {
   const menu = <Popover ref={menuRef}>{children}</Popover>
 
   return (
-    <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
-      <ToolbarButton
-        active={isMenuOpen}
-        onMouseDown={e => {
-          e.preventDefault()
-          !isMenuOpen ? triggerRef.current!.open() : triggerRef.current!.close()
-        }}>
-        <Icon icon={isMenuOpen ? 'close' : icon} />
-      </ToolbarButton>
-    </Whisper>
+    <SubMenuContext.Provider
+      value={{
+        closeMenu,
+        openMenu
+      }}>
+      <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+        <ToolbarButton
+          active={isMenuOpen}
+          onMouseDown={e => {
+            e.preventDefault()
+            isMenuOpen ? closeMenu() : openMenu()
+          }}>
+          <Icon icon={isMenuOpen ? 'close' : icon} />
+        </ToolbarButton>
+      </Whisper>
+    </SubMenuContext.Provider>
   )
 }
 

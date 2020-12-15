@@ -1,8 +1,9 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, InputGroup, InputNumber, PopoverProps} from 'rsuite'
+import {Button, InputGroup, InputNumber} from 'rsuite'
 import {Editor, Transforms, Element as SlateElement} from 'slate'
 import {useSlate} from 'slate-react'
+import {SubMenuContext} from '../../atoms/toolbar'
 import {isFormatActive} from './editorUtils'
 import {BlockFormat} from './formats'
 
@@ -10,10 +11,7 @@ import './richTextBlockTable.less'
 
 export function TableMenu() {
   const editor = useSlate()
-
-  const thisRef = useRef<HTMLDivElement>(null)
-  const menuContainer = (ref: typeof thisRef): PopoverProps =>
-    ref.current!.parentElement as PopoverProps
+  const {closeMenu} = useContext(SubMenuContext)
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
@@ -76,8 +74,8 @@ export function TableMenu() {
         onClick={() => {
           Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
           // following is needed for the popover to nicely stick to the TableButton.
-          // menuContainer(thisRef)?.close()
-          // menuContainer(thisRef)?.open()
+          // menuClose()
+          // menuOpen()
         }}>
         {t('blocks.richTextTable.insertTable')}
       </Button>
@@ -108,7 +106,7 @@ export function TableMenu() {
     }
   }
 
-  const tableActiveControls = (
+  const tableModifyControls = (
     <>
       {!showRemoveConfirm ? (
         <>
@@ -138,8 +136,7 @@ export function TableMenu() {
             appearance="primary"
             onClick={() => {
               removeTable()
-              // menuContainer(thisRef)?.close()
-              console.log(menuContainer(thisRef))
+              closeMenu()
               setShowRemoveConfirm(false)
             }}>
             {t('blocks.richTextTable.delete')}
@@ -154,7 +151,6 @@ export function TableMenu() {
 
   return (
     <div
-      ref={thisRef}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -163,7 +159,7 @@ export function TableMenu() {
         height: '10em',
         width: '15em'
       }}>
-      {isFormatActive(editor, BlockFormat.Table) ? tableActiveControls : tableInsertControls}
+      {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
     </div>
   )
 }
