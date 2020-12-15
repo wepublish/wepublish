@@ -192,15 +192,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
-            <ChooseEditImage
-              disabled
-              imageStyle={{
-                display: 'block',
-                marginLeft: 'auto',
-                marginRight: 'auto'
-              }}
-              image={profile?.logo?.previewURL ?? '/static/placeholder-240x240.png'}
-            />
+            <ChooseEditImage disabled image={profile?.logo?.previewURL} />
             <DescriptionList>
               <DescriptionListItem label={t('peerList.panels.name')}>
                 {profile?.name}

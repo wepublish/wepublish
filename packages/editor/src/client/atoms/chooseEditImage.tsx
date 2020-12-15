@@ -5,7 +5,6 @@ import {useTranslation} from 'react-i18next'
 
 export interface ChooseEditImageProps {
   image: any
-  imageStyle?: any
   header?: string
   disabled: boolean
   openChooseModalOpen?: () => void
@@ -14,7 +13,6 @@ export interface ChooseEditImageProps {
 }
 
 export function ChooseEditImage({
-  imageStyle,
   image,
   header,
   disabled,
@@ -63,7 +61,7 @@ export function ChooseEditImage({
               </div>
             )}
             <img
-              style={imageStyle}
+              style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
               src={image.previewURL ?? '/static/placeholder-240x240.png'}
               height={200}
             />
