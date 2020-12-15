@@ -1216,7 +1216,7 @@ export type YouTubeVideoBlockInput = {
   videoID: Scalars['String']
 }
 
-export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id'> & {
+export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id' | 'shared'> & {
     draft?: Maybe<
       {__typename?: 'ArticleRevision'} & Pick<
         ArticleRevision,
@@ -1234,8 +1234,20 @@ export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, '
     >
     latest: {__typename?: 'ArticleRevision'} & Pick<
       ArticleRevision,
-      'publishedAt' | 'updatedAt' | 'revision'
-    >
+      | 'publishedAt'
+      | 'updatedAt'
+      | 'revision'
+      | 'title'
+      | 'preTitle'
+      | 'lead'
+      | 'slug'
+      | 'breaking'
+      | 'tags'
+    > & {
+        properties: Array<
+          {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
+        >
+      }
   }
 
 export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
@@ -1861,6 +1873,7 @@ export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'del
 export const MutationArticle = gql`
   fragment MutationArticle on Article {
     id
+    shared
     draft {
       publishedAt
       updatedAt
@@ -1879,6 +1892,17 @@ export const MutationArticle = gql`
       publishedAt
       updatedAt
       revision
+      title
+      preTitle
+      lead
+      slug
+      breaking
+      tags
+      properties {
+        key
+        value
+        public
+      }
     }
   }
 `
