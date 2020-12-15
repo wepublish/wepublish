@@ -149,7 +149,12 @@ export function SubMenuButton({children, icon}: ToolbarButtonProps & ToolbarIcon
             e.preventDefault()
             isMenuOpen ? closeMenu() : openMenu()
           }}>
-          <Icon icon={isMenuOpen ? 'close' : icon} />
+          <Icon
+            style={{
+              minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+            }}
+            icon={isMenuOpen ? 'close' : icon}
+          />
         </ToolbarButton>
       </Whisper>
     </SubMenuContext.Provider>

@@ -1012,14 +1012,29 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -1649,14 +1664,29 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -3845,14 +3875,29 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -4482,14 +4527,29 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -6256,14 +6316,29 @@ exports[`Author Edit Panel should render 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -6893,14 +6968,29 @@ exports[`Author Edit Panel should render 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -8669,14 +8759,29 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -9306,14 +9411,29 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
+                                            style={
+                                              Object {
+                                                "minWidth": "15px",
+                                              }
+                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
+                                              style={
+                                                Object {
+                                                  "minWidth": "15px",
+                                                }
+                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
+                                                style={
+                                                  Object {
+                                                    "minWidth": "15px",
+                                                  }
+                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
