@@ -41,7 +41,7 @@ export function PageList() {
   const listVariables = {filter: filter || undefined, first: PagesPerPage}
   const {data, fetchMore, loading: isLoading} = usePageListQuery({
     variables: {filter: filter || undefined, first: 50},
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'network-only'
   })
 
   useEffect(() => {
