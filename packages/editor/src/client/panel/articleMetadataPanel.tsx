@@ -76,16 +76,24 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [chosenImageType, setChosenImageType] = useState('')
 
   const {t} = useTranslation()
 
-  function handleImageChange(image: ImageRefFragment) {
-    onChange?.({...value, image})
-  }
-
-  function handleSocialMediaImageChange(socialMediaImage: ImageRefFragment) {
-    onChange?.({...value, socialMediaImage})
+  function handleImageChange(currentImage: ImageRefFragment) {
+    switch (activeKey) {
+      case MetaDataType.General: {
+        const image = currentImage
+        onChange?.({...value, image})
+        break
+      }
+      case MetaDataType.SocialMedia: {
+        const socialMediaImage = currentImage
+        onChange?.({...value, socialMediaImage})
+        break
+      }
+      default: {
+      }
+    }
   }
 
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
@@ -147,11 +155,9 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   disabled={false}
                   openChooseModalOpen={() => {
                     setChooseModalOpen(true)
-                    setChosenImageType('socialMediaImage')
                   }}
                   openEditModalOpen={() => {
                     setEditModalOpen(true)
-                    setChosenImageType('socialMediaImage')
                   }}
                   removeImage={() => onChange?.({...value, socialMediaImage: undefined})}
                 />
@@ -241,11 +247,9 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               disabled={false}
               openChooseModalOpen={() => {
                 setChooseModalOpen(true)
-                setChosenImageType('image')
               }}
               openEditModalOpen={() => {
                 setEditModalOpen(true)
-                setChosenImageType('image')
               }}
               removeImage={() => onChange?.({...value, image: undefined})}
             />
@@ -300,9 +304,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
             setChooseModalOpen(false)
-            chosenImageType === 'image'
-              ? handleImageChange(value)
-              : handleSocialMediaImageChange(value)
+            handleImageChange(value)
           }}
         />
       </Drawer>
@@ -314,7 +316,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             setEditModalOpen(false)
           }}>
           <ImagedEditPanel
-            id={chosenImageType === 'image' ? value.image?.id : value.socialMediaImage?.id}
+            id={activeKey === MetaDataType.General ? value.image?.id : value.socialMediaImage?.id}
             onClose={() => setEditModalOpen(false)}
           />
         </Drawer>
