@@ -68,7 +68,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     return (
       <button
         style={{
-          border: active ? 'blue 1px solid' : '',
+          border: `${active ? 'blue' : 'transparent'} 1px solid`,
           fontSize: 16,
 
           cursor: 'pointer',

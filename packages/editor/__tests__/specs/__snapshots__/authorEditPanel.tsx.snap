@@ -717,7 +717,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -754,7 +754,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -791,7 +791,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -849,7 +849,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -897,7 +897,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1000,7 +1000,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -1088,7 +1088,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1136,7 +1136,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1184,7 +1184,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1232,7 +1232,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1280,7 +1280,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1328,7 +1328,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1388,7 +1388,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1528,7 +1528,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -1637,7 +1637,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -3550,7 +3550,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3587,7 +3587,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3624,7 +3624,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3682,7 +3682,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -3730,7 +3730,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -3833,7 +3833,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -3921,7 +3921,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -3969,7 +3969,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4017,7 +4017,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4065,7 +4065,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4113,7 +4113,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4161,7 +4161,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4221,7 +4221,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4361,7 +4361,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4470,7 +4470,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -5961,7 +5961,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -5998,7 +5998,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -6035,7 +6035,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -6093,7 +6093,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6141,7 +6141,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6244,7 +6244,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -6332,7 +6332,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6380,7 +6380,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6428,7 +6428,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6476,7 +6476,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6524,7 +6524,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6572,7 +6572,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6632,7 +6632,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6772,7 +6772,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6881,7 +6881,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -8374,7 +8374,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8411,7 +8411,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8448,7 +8448,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "",
+                                        "border": "transparent 1px solid",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8506,7 +8506,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8554,7 +8554,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8657,7 +8657,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -8745,7 +8745,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8793,7 +8793,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8841,7 +8841,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8889,7 +8889,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8937,7 +8937,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8985,7 +8985,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9045,7 +9045,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9185,7 +9185,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "",
+                                          "border": "transparent 1px solid",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9294,7 +9294,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "",
+                                              "border": "transparent 1px solid",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
