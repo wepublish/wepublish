@@ -40,7 +40,7 @@ import {
   ToolbarButtonProps,
   SubMenuButton
 } from '../../atoms/toolbar'
-import {EmojiButton} from '../../atoms/emojiButton'
+import {EmojiButton, EmojiPicker} from '../../atoms/emojiPicker'
 import {RichTextBlockValue} from '../types'
 
 import {useTranslation} from 'react-i18next'
@@ -346,9 +346,8 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <EmojiButton icon="smile-o" />
-        <SubMenuButton icon="address-book">
-          <Icon icon="address-book" />
+        <SubMenuButton icon="smile-o">
+          <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </SubMenuButton>
       </Toolbar>
       <Editable
