@@ -63,8 +63,8 @@ export interface ToolbarButtonProps extends BaseToolbarButtonProps {
   readonly children?: ReactNode
 }
 
-const BaseToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function BaseToolbarButton({active, children, ...props}, ref) {
+export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
+  function ToolbarButton({active, children, ...props}, ref) {
     return (
       <button
         style={{
@@ -85,23 +85,15 @@ const BaseToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   }
 )
 
-export function ToolbarButton({active, children, ...props}: ToolbarButtonProps) {
-  return (
-    <BaseToolbarButton active={active} {...props}>
-      {children}
-    </BaseToolbarButton>
-  )
-}
-
 export interface ToolbarIconButtonProps extends BaseToolbarButtonProps {
   readonly icon: IconNames | SVGIcon
 }
 
 export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonProps) {
   return (
-    <BaseToolbarButton active={active} {...props}>
+    <ToolbarButton active={active} {...props}>
       <Icon icon={icon} element={icon} />
-    </BaseToolbarButton>
+    </ToolbarButton>
   )
 }
 
@@ -123,21 +115,14 @@ export function SubMenuButton({children, icon}: SubMenuButtonProps) {
 
   return (
     <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
-      <button
-        style={{
-          border: isMenuOpen ? 'blue 1px solid' : '',
-          fontSize: 16,
-          cursor: 'pointer',
-          borderRadius: 3,
-          backgroundColor: 'transparent',
-          padding: 2
-        }}
+      <ToolbarButton
+        active={isMenuOpen}
         onMouseDown={e => {
           e.preventDefault()
           !isMenuOpen ? triggerRef.current!.open() : triggerRef.current!.close()
         }}>
         <Icon icon={isMenuOpen ? 'close' : icon} />
-      </button>
+      </ToolbarButton>
     </Whisper>
   )
 }
