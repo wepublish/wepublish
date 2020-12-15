@@ -8,7 +8,7 @@ import React, {
   ReactElement
 } from 'react'
 
-import {Icon, Popover, Whisper} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -105,7 +105,7 @@ export interface SubMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
 export function SubMenuButton({children, icon}: SubMenuButtonProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const triggerRef = useRef<any>(null)
+  const triggerRef = useRef<PopoverProps>(null)
 
   const menuRef = useCallback((node: any) => {
     setIsMenuOpen(!!node)

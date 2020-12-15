@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  memo,
-  useEffect,
-  useMemo,
-  ButtonHTMLAttributes,
-  useRef,
-  useCallback
-} from 'react'
+import React, {useState, memo, useEffect, useMemo} from 'react'
 import {
   Editor,
   Node as SlateNode,
@@ -40,26 +32,13 @@ import {
   ToolbarButtonProps,
   SubMenuButton
 } from '../../atoms/toolbar'
-import {EmojiButton, EmojiPicker} from '../../atoms/emojiPicker'
+import {EmojiPicker} from '../../atoms/emojiPicker'
+import {TableMenu} from './tableMenu'
+
 import {RichTextBlockValue} from '../types'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  ControlLabel,
-  Form,
-  FormControl,
-  FormGroup,
-  InputGroup,
-  InputNumber,
-  Modal,
-  Popover,
-  Whisper
-} from 'rsuite'
-
-import './richTextBlockTable.less'
-import {SVGIcon} from 'rsuite/lib/@types/common'
-import Icon, {IconNames} from 'rsuite/lib/Icon'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 
 import {BlockFormat, InlineFormat, TextFormat, Format, InlineFormats} from './formats'
 
@@ -328,7 +307,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <TableButton icon="table" />
+        <SubMenuButton icon="table">
+          <TableMenu />
+        </SubMenuButton>
 
         <ToolbarDivider />
 
@@ -506,193 +487,6 @@ function RemoveLinkFormatButton() {
   )
 }
 
-export interface TableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly icon: IconNames | SVGIcon
-}
-
-function TableButton({icon}: TableButtonProps) {
-  const editor = useSlate()
-
-  const [nrows, setNrows] = useState(2)
-  const [ncols, setNcols] = useState(1)
-
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
-
-  const triggerRef = useRef<any>(null)
-
-  const popOverRef = useCallback((node: any) => {
-    setIsPopoverOpen(!!node)
-  }, [])
-
-  const {t} = useTranslation()
-
-  const openPopover = () => {
-    triggerRef.current!.open()
-  }
-
-  const closePopover = () => {
-    triggerRef.current!.close()
-  }
-
-  const isBorderVisible = () => {
-    const [match] = Editor.nodes(editor, {
-      match: node => node.borderColor && node.borderColor !== 'transparent',
-      mode: 'all'
-    })
-
-    return !!match
-  }
-
-  const tableInsertControls = (
-    <>
-      {[
-        {
-          label: t('blocks.richTextTable.rows'),
-          num: nrows,
-          setNumber: setNrows
-        },
-        {
-          label: t('blocks.richTextTable.columns'),
-          num: ncols,
-          setNumber: setNcols
-        }
-      ].map(({label, num, setNumber}, i) => (
-        <InputGroup
-          style={{width: '150px'}}
-          disabled={isFormatActive(editor, BlockFormat.Table)}
-          key={i}>
-          <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
-          <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
-        </InputGroup>
-      ))}
-      <Button
-        onClick={() => {
-          Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
-          // following is needed for the popover to nicely stick to the TableButton.
-          closePopover()
-          openPopover()
-        }}>
-        {t('blocks.richTextTable.insertTable')}
-      </Button>
-    </>
-  )
-
-  const removeTable = () => {
-    Transforms.removeNodes(editor, {
-      at: editor.selection ?? undefined,
-      match: node => node.type === BlockFormat.Table
-    })
-  }
-
-  const setTableCellBorderColor = (color: string) => {
-    const {selection} = editor
-    if (selection) {
-      const nodes = Array.from(
-        Editor.nodes(editor, {
-          at: selection,
-          match: node => node.type === BlockFormat.Table
-        })
-      )
-      Transforms.setNodes(
-        editor,
-        {borderColor: color},
-        {at: nodes[0][1], match: node => node.type === BlockFormat.TableCell}
-      )
-    }
-  }
-
-  const tableActiveControls = (
-    <>
-      {!showRemoveConfirm ? (
-        <>
-          {isBorderVisible() ? (
-            <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
-              {t('blocks.richTextTable.hideBorders')}
-            </Button>
-          ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
-              {t('blocks.richTextTable.showBorders')}
-            </Button>
-          )}
-          <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
-            {t('blocks.richTextTable.deleteTable')}
-          </Button>
-        </>
-      ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            width: '100%'
-          }}>
-          <Button
-            color="red"
-            appearance="primary"
-            onClick={() => {
-              removeTable()
-              closePopover()
-              setShowRemoveConfirm(false)
-            }}>
-            {t('blocks.richTextTable.delete')}
-          </Button>
-          <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
-            {t('blocks.richTextTable.cancel')}
-          </Button>
-        </div>
-      )}
-    </>
-  )
-
-  const tableSpecs = (
-    <Popover ref={popOverRef}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          height: '10em',
-          width: '15em'
-        }}>
-        {isFormatActive(editor, BlockFormat.Table) ? tableActiveControls : tableInsertControls}
-      </div>
-    </Popover>
-  )
-
-  const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
-
-  const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
-    {
-      type: BlockFormat.Table,
-      children: Array.from({length: nrows}).map(() => ({
-        type: BlockFormat.TableRow,
-        children: Array.from({length: ncols}).map(() => ({
-          type: BlockFormat.TableCell,
-          borderColor: 'black',
-          // Wrap all content inside cell into paragraph block to enable break lines.
-          children: [emptyTextParagraph()]
-        }))
-      }))
-    },
-    // Append empty paragraph after table block for easy continuation.
-    emptyTextParagraph()
-  ]
-
-  return (
-    <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
-      <ToolbarIconButton
-        icon={isPopoverOpen ? 'close' : icon}
-        active={isFormatActive(editor, BlockFormat.Table) || isPopoverOpen}
-        onMouseDown={e => {
-          e.preventDefault()
-          isPopoverOpen ? closePopover() : openPopover()
-        }}
-      />
-    </Whisper>
-  )
-}
 function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
   if (selection) {
     if (Range.isCollapsed(selection)) {
