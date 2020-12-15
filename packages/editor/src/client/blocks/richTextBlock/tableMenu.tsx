@@ -73,9 +73,6 @@ export function TableMenu() {
       <Button
         onClick={() => {
           Transforms.insertNodes(editor, emptyCellsTable(nrows, ncols))
-          // following is needed for the popover to nicely stick to the TableButton.
-          // menuClose()
-          // menuOpen()
         }}>
         {t('blocks.richTextTable.insertTable')}
       </Button>
