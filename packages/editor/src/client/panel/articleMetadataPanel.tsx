@@ -21,7 +21,7 @@ import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {MetatagType} from '../blocks/types'
+import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 export interface ArticleMetadataProperty {
@@ -72,7 +72,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     socialMediaImage
   } = value
 
-  const [activeKey, setActiveKey] = useState(MetatagType.General)
+  const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -99,7 +99,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
 
   function currentContent() {
     switch (activeKey) {
-      case MetatagType.SocialMedia:
+      case MetaDataType.SocialMedia:
         return (
           <>
             <Form fluid={true}>
@@ -159,7 +159,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
             </Form>
           </>
         )
-      case MetatagType.General:
+      case MetaDataType.General:
         return (
           <>
             <Form fluid={true}>
@@ -274,10 +274,10 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
           activeKey={activeKey}
           onSelect={activeKey => setActiveKey(activeKey)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={MetatagType.General} icon={<Icon icon="cog" />}>
+          <Nav.Item eventKey={MetaDataType.General} icon={<Icon icon="cog" />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
-          <Nav.Item eventKey={MetatagType.SocialMedia} icon={<Icon icon="share-alt" />}>
+          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
         </Nav>

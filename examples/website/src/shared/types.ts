@@ -58,7 +58,7 @@ export interface ArticleMeta {
 
   socialMediaTitle?: string
   socialMediaDescription?: string
-  socialMediaAuthors?: Author[]
+  socialMediaAuthors: Author[]
   socialMediaImage?: any
 
   teaserType?: TeaserType

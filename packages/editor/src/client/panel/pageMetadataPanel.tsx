@@ -16,7 +16,7 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageRefFragment} from '../api'
-import {MetatagType} from '../blocks/types'
+import {MetaDataType} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -61,7 +61,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [chosenImageType, setChosenImageType] = useState('')
 
-  const [activeKey, setActiveKey] = useState(MetatagType.General)
+  const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
   const {t} = useTranslation()
 
@@ -75,7 +75,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
 
   function currentContent() {
     switch (activeKey) {
-      case MetatagType.SocialMedia:
+      case MetaDataType.SocialMedia:
         return (
           <>
             <Form fluid={true}>
@@ -117,7 +117,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             </Form>
           </>
         )
-      case MetatagType.General:
+      case MetaDataType.General:
         return (
           <>
             <Panel>
@@ -186,10 +186,10 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           activeKey={activeKey}
           onSelect={activeKey => setActiveKey(activeKey)}
           style={{marginBottom: 20}}>
-          <Nav.Item eventKey={MetatagType.General} icon={<Icon icon="cog" />}>
+          <Nav.Item eventKey={MetaDataType.General} icon={<Icon icon="cog" />}>
             {t('articleEditor.panels.general')}
           </Nav.Item>
-          <Nav.Item eventKey={MetatagType.SocialMedia} icon={<Icon icon="share-alt" />}>
+          <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
             {t('articleEditor.panels.socialMedia')}
           </Nav.Item>
         </Nav>

@@ -75,8 +75,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     breaking: false,
     image: undefined,
     hideAuthor: false,
-    socialMediaTitle: '',
-    socialMediaDescription: '',
+    socialMediaTitle: undefined,
+    socialMediaDescription: undefined,
     socialMediaAuthors: [],
     socialMediaImage: undefined
   })
@@ -150,8 +150,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image || undefined,
         hideAuthor,
-        socialMediaTitle: socialMediaTitle ?? '',
-        socialMediaDescription: socialMediaDescription ?? '',
+        socialMediaTitle: socialMediaTitle || undefined,
+        socialMediaDescription: socialMediaDescription || undefined,
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],

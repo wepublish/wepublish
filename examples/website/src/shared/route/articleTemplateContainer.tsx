@@ -274,9 +274,6 @@ export function PeerArticleTemplateContainer({
         {tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
-
-        {/* TODO: Add OpenGraph authors as soon as author profiles are implemented */}
-        {/* <meta property="article:author" content="" /> */}
       </Helmet>
 
       <DesktopSocialMediaButtons shareUrl={canonicalURL} />

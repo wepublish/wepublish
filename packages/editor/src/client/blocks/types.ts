@@ -151,7 +151,7 @@ export enum TeaserType {
   Page = 'page'
 }
 
-export enum MetatagType {
+export enum MetaDataType {
   General = 'general',
   SocialMedia = 'socialMedia'
 }

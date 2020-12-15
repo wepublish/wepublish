@@ -212,7 +212,7 @@ export interface DBArticleRevision {
 
   socialMediaTitle?: string
   socialMediaDescription?: string
-  socialMediaAuthorIDs?: string[]
+  socialMediaAuthorIDs: string[]
   socialMediaImageID?: string
 }
 

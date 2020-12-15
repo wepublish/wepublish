@@ -20,7 +20,7 @@ export interface ArticleData {
 
   readonly socialMediaTitle?: string
   readonly socialMediaDescription?: string
-  readonly socialMediaAuthorIDs?: string[]
+  readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string
 }
 
