@@ -33,11 +33,12 @@ import {jsx} from 'slate-hyperscript'
 import {BlockProps} from '../../atoms/blockList'
 import {
   Toolbar,
-  ToolbarButtonProps,
-  ToolbarButton,
+  ToolbarIconButtonProps,
+  ToolbarIconButton,
   ToolbarDivider,
-  ToolbarButtonWithChildren,
-  BaseToolbarButtonProps
+  ToolbarButton,
+  ToolbarButtonProps,
+  SubMenuButton
 } from '../../atoms/toolbar'
 import {EmojiButton} from '../../atoms/emojiButton'
 import {RichTextBlockValue} from '../types'
@@ -58,18 +59,9 @@ import {
 
 import './richTextBlockTable.less'
 import {SVGIcon} from 'rsuite/lib/@types/common'
-import {IconNames} from 'rsuite/lib/Icon'
+import Icon, {IconNames} from 'rsuite/lib/Icon'
 
-import {
-  BlockFormat,
-  InlineFormat,
-  TextFormat,
-  Format,
-  BlockFormats,
-  InlineFormats,
-  TextFormats,
-  ListFormats
-} from './formats'
+import {BlockFormat, InlineFormat, TextFormat, Format, InlineFormats} from './formats'
 
 import {isFormatActive, toggleFormat} from './editorUtils'
 
@@ -336,7 +328,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <TableButton icon="table" iconActive="close" />
+        <TableButton icon="table" />
 
         <ToolbarDivider />
 
@@ -354,7 +346,10 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <EmojiButton icon="smile-o" iconActive="close" />
+        <EmojiButton icon="smile-o" />
+        <SubMenuButton icon="address-book">
+          <Icon icon="address-book" />
+        </SubMenuButton>
       </Toolbar>
       <Editable
         readOnly={disabled}
@@ -366,7 +361,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
 })
 
-interface SlateBlockButtonProps extends ToolbarButtonProps {
+interface SlateBlockButtonProps extends ToolbarIconButtonProps {
   readonly format: Format
 }
 
@@ -374,7 +369,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   const editor = useSlate()
 
   return (
-    <ToolbarButton
+    <ToolbarIconButton
       icon={icon}
       active={isFormatActive(editor, format)}
       onMouseDown={e => {
@@ -385,7 +380,7 @@ function FormatButton({icon, format}: SlateBlockButtonProps) {
   )
 }
 
-interface SlateBlockButtonWithChildrenProps extends BaseToolbarButtonProps {
+interface SlateBlockButtonWithChildrenProps extends ToolbarButtonProps {
   readonly format: Format
 }
 
@@ -393,14 +388,14 @@ function FormatButtonWithChildren({format, children}: SlateBlockButtonWithChildr
   const editor = useSlate()
 
   return (
-    <ToolbarButtonWithChildren
+    <ToolbarButton
       active={isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
         toggleFormat(editor, format)
       }}>
       {children}
-    </ToolbarButtonWithChildren>
+    </ToolbarButton>
   )
 }
 
@@ -419,7 +414,7 @@ function LinkFormatButton() {
 
   return (
     <>
-      <ToolbarButton
+      <ToolbarIconButton
         icon="link"
         active={isFormatActive(editor, InlineFormat.Link)}
         onMouseDown={e => {
@@ -500,7 +495,7 @@ function RemoveLinkFormatButton() {
   const editor = useSlate()
 
   return (
-    <ToolbarButton
+    <ToolbarIconButton
       icon="unlink"
       active={isFormatActive(editor, InlineFormat.Link)}
       disabled={!isFormatActive(editor, InlineFormat.Link)}
@@ -514,10 +509,9 @@ function RemoveLinkFormatButton() {
 
 export interface TableButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly icon: IconNames | SVGIcon
-  readonly iconActive?: IconNames | SVGIcon
 }
 
-function TableButton({icon, iconActive}: TableButtonProps) {
+function TableButton({icon}: TableButtonProps) {
   const editor = useSlate()
 
   const [nrows, setNrows] = useState(2)
@@ -689,8 +683,8 @@ function TableButton({icon, iconActive}: TableButtonProps) {
 
   return (
     <Whisper placement="top" speaker={tableSpecs} ref={triggerRef} trigger="none">
-      <ToolbarButton
-        icon={isPopoverOpen && iconActive ? iconActive : icon}
+      <ToolbarIconButton
+        icon={isPopoverOpen ? 'close' : icon}
         active={isFormatActive(editor, BlockFormat.Table) || isPopoverOpen}
         onMouseDown={e => {
           e.preventDefault()

@@ -1,6 +1,14 @@
-import React, {ReactNode, forwardRef, ButtonHTMLAttributes} from 'react'
+import React, {
+  ReactNode,
+  forwardRef,
+  ButtonHTMLAttributes,
+  useCallback,
+  useRef,
+  useState,
+  ReactElement
+} from 'react'
 
-import {Icon} from 'rsuite'
+import {Icon, Popover, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -47,12 +55,15 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
   )
 }
 
-export interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly active?: boolean
+}
+
+export interface ToolbarButtonProps extends BaseToolbarButtonProps {
   readonly children?: ReactNode
 }
 
-const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
+const BaseToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function BaseToolbarButton({active, children, ...props}, ref) {
     return (
       <button
@@ -74,12 +85,19 @@ const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
   }
 )
 
-export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly icon: IconNames | SVGIcon
-  readonly active?: boolean
+export function ToolbarButton({active, children, ...props}: ToolbarButtonProps) {
+  return (
+    <BaseToolbarButton active={active} {...props}>
+      {children}
+    </BaseToolbarButton>
+  )
 }
 
-export function ToolbarButton({icon, active, ...props}: ToolbarButtonProps) {
+export interface ToolbarIconButtonProps extends BaseToolbarButtonProps {
+  readonly icon: IconNames | SVGIcon
+}
+
+export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonProps) {
   return (
     <BaseToolbarButton active={active} {...props}>
       <Icon icon={icon} element={icon} />
@@ -87,11 +105,40 @@ export function ToolbarButton({icon, active, ...props}: ToolbarButtonProps) {
   )
 }
 
-export function ToolbarButtonWithChildren({active, children, ...props}: BaseToolbarButtonProps) {
+export interface SubMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly icon: IconNames | SVGIcon
+  readonly children: ReactElement
+}
+
+export function SubMenuButton({children, icon}: SubMenuButtonProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const triggerRef = useRef<any>(null)
+
+  const menuRef = useCallback((node: any) => {
+    setIsMenuOpen(!!node)
+  }, [])
+
+  const menu = <Popover ref={menuRef}>{children}</Popover>
+
   return (
-    <BaseToolbarButton active={active} {...props}>
-      {children}
-    </BaseToolbarButton>
+    <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+      <button
+        style={{
+          border: isMenuOpen ? 'blue 1px solid' : '',
+          fontSize: 16,
+          cursor: 'pointer',
+          borderRadius: 3,
+          backgroundColor: 'transparent',
+          padding: 2
+        }}
+        onMouseDown={e => {
+          e.preventDefault()
+          !isMenuOpen ? triggerRef.current!.open() : triggerRef.current!.close()
+        }}>
+        <Icon icon={isMenuOpen ? 'close' : icon} />
+      </button>
+    </Whisper>
   )
 }
 
