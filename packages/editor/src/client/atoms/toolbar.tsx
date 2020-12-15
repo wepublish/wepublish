@@ -100,22 +100,21 @@ export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonPro
   )
 }
 
-export interface SubMenuButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly icon: IconNames | SVGIcon
-  readonly children: ReactElement
-}
-
 interface SubMenuContextProps {
   closeMenu: () => void
   openMenu: () => void
 }
 
+const emtpyFn = () => {
+  /* do nothing */
+}
+
 export const SubMenuContext = createContext<SubMenuContextProps>({
-  closeMenu: () => {},
-  openMenu: () => {}
+  closeMenu: emtpyFn,
+  openMenu: emtpyFn
 })
 
-export function SubMenuButton({children, icon}: SubMenuButtonProps) {
+export function SubMenuButton({children, icon}: ToolbarButtonProps & ToolbarIconButtonProps) {
   /**
    * The Submenu buttons provides some local context to it's children. For
    * now this is only used to enable menu.close() handle from the child tableMenu.
