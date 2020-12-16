@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - c/dev-instances
+      - F/WEP-116-add-peer-call-to-action-info
 
 jobs:
   release:
