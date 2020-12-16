@@ -16,6 +16,122 @@ let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
+const titleBlock = {
+  title: {
+    title: 'title block title',
+    lead: 'title lead'
+  }
+}
+const listicleBlock = {
+  listicle: {
+    items: [
+      {
+        title: 'item title',
+        richText: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'p text listicle'
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+const richTextBlock = {
+  richText: {
+    richText: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'p rich text block'
+          }
+        ]
+      }
+    ]
+  }
+}
+const facebookPostBlock = {
+  facebookPost: {
+    userID: '',
+    postID: ''
+  }
+}
+const facebookVideoBlock = {
+  facebookVideo: {
+    userID: '',
+    videoID: ''
+  }
+}
+const instagramPostBlock = {
+  instagramPost: {postID: ''}
+}
+const twitterTweetBlock = {
+  twitterTweet: {
+    userID: '',
+    tweetID: ''
+  }
+}
+const vimeoVideoBlock = {
+  vimeoVideo: {
+    videoID: ''
+  }
+}
+const youTubeVideoBlock = {
+  youTubeVideo: {
+    videoID: ''
+  }
+}
+const soundCloudTrackBlock = {
+  soundCloudTrack: {
+    trackID: ''
+  }
+}
+const embedBlock = {
+  embed: {
+    url: ''
+  }
+}
+/*
+const linkPageBreakBlock = {
+  linkPageBreakBlock: {
+  
+    richText: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'p rich text block'
+          }
+        ]
+      }
+    ]
+    
+    
+      ,
+    hideButton: false
+  }
+}
+*/
+const blocks = [
+  titleBlock,
+  listicleBlock,
+  richTextBlock,
+  facebookPostBlock,
+  facebookVideoBlock,
+  instagramPostBlock,
+  twitterTweetBlock,
+  vimeoVideoBlock,
+  youTubeVideoBlock,
+  soundCloudTrackBlock,
+  embedBlock
+  //linkPageBreakBlock
+]
+
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
@@ -64,14 +180,7 @@ describe('Pages', () => {
           {key: 'private', value: 'private', public: false},
           {key: 'public', value: 'public', public: true}
         ],
-        blocks: [
-          {
-            title: {
-              title: 'title block title',
-              lead: 'title lead'
-            }
-          }
-        ]
+        blocks: blocks
       }
       const res = await mutate({
         mutation: CreatePage,
