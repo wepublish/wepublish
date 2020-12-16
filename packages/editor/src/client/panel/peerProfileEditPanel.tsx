@@ -51,9 +51,11 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       setLogoImage(data.peerProfile.logo)
       setName(data.peerProfile.name)
       setThemeColor(data.peerProfile.themeColor)
-      if (data.peerProfile.callToActionText.length) {
-        setCallToActionText(data.peerProfile.callToActionText)
-      }
+      setCallToActionText(
+        data.peerProfile.callToActionText.length
+          ? data.peerProfile.callToActionText
+          : createDefaultValue()
+      )
       setCallToActionURL(data.peerProfile.callToActionURL)
     }
   }, [data?.peerProfile])
