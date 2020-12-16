@@ -18,10 +18,24 @@ fragment MutationPage on Page {
     revision
   }
 
-  latest {
+latest {
     publishedAt
     updatedAt
-    revision
+    slug
+    title
+    description
+    image {
+      ...ImageRef
+    }
+    tags
+    properties {
+      key
+      value
+      public
+    }
+    blocks {
+      ...FullBlock
+    }
   }
 }
 

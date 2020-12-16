@@ -7,17 +7,10 @@ import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {Toolbar, ToolbarDivider, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {
-  FormatButtonWithChildren,
-  H1Icon,
-  H2Icon,
-  H3Icon,
-  FormatIconButton,
-  LinkFormatButton,
-  RemoveLinkFormatButton
-} from './buttons'
+import {FormatButton, H1Icon, H2Icon, H3Icon, FormatIconButton} from './buttons'
 import {renderElement, renderLeaf, withRichText} from './editor'
 import {BlockFormat, TextFormat} from './formats'
+import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
 import {TableMenu} from './tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
@@ -54,15 +47,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         if (value !== newValue) onChange(newValue)
       }}>
       <Toolbar fadeOut={!hasFocus} handleToolbarClick={focusAtPreviousLocation}>
-        <FormatButtonWithChildren format={BlockFormat.H1}>
+        <FormatButton format={BlockFormat.H1}>
           <H1Icon />
-        </FormatButtonWithChildren>
-        <FormatButtonWithChildren format={BlockFormat.H2}>
+        </FormatButton>
+        <FormatButton format={BlockFormat.H2}>
           <H2Icon />
-        </FormatButtonWithChildren>
-        <FormatButtonWithChildren format={BlockFormat.H3}>
+        </FormatButton>
+        <FormatButton format={BlockFormat.H3}>
           <H3Icon />
-        </FormatButtonWithChildren>
+        </FormatButton>
 
         <ToolbarDivider />
 
