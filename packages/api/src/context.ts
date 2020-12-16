@@ -99,7 +99,7 @@ export interface ContextOptions {
 }
 
 export async function contextFromRequest(
-  req: IncomingMessage,
+  req: IncomingMessage | null,
   {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -236,8 +236,8 @@ export async function contextFromRequest(
   }
 }
 
-export function tokenFromRequest(req: IncomingMessage): string | null {
-  if (req.headers.authorization) {
+export function tokenFromRequest(req: IncomingMessage | null): string | null {
+  if (req?.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
