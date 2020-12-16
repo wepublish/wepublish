@@ -13,13 +13,15 @@ import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export interface ToolbarProps {
+  readonly handleToolbarClick?: () => void
   readonly fadeOut?: boolean
   readonly children?: ReactNode
 }
 
-export function Toolbar({fadeOut = false, children}: ToolbarProps) {
+export function Toolbar({handleToolbarClick, fadeOut = false, children}: ToolbarProps) {
   return (
     <div
+      onClick={handleToolbarClick}
       style={{
         pointerEvents: 'none',
         display: 'flex',
@@ -27,7 +29,6 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
         alignItems: 'center',
 
         position: 'sticky',
-        top: 60 + 10, // TODO: Don't hardcode NavigationBar height into the toolbar, move all the position sticky stuff into own component
         zIndex: 1,
         marginBottom: 30
       }}>

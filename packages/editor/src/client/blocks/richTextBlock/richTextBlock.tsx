@@ -1,6 +1,6 @@
 import React, {memo, useMemo, useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {createEditor, Node as SlateNode} from 'slate'
+import {createEditor, Node as SlateNode, Transforms, Range, Editor} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
@@ -30,6 +30,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 }: RichTextBlockProps) {
   const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
   const [hasFocus, setFocus] = useState(false)
+  const [location, setLocation] = useState<typeof editor.selection>(null)
 
   const {t} = useTranslation()
 
@@ -39,6 +40,11 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
+  const focusAtPreviousLocation = () => {
+    if (!hasFocus && location) Transforms.select(editor, location)
+    ReactEditor.focus(editor)
+  }
+
   return (
     <Slate
       editor={editor}
@@ -47,7 +53,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) onChange(newValue)
       }}>
-      <Toolbar fadeOut={!hasFocus}>
+      <Toolbar fadeOut={!hasFocus} handleToolbarClick={focusAtPreviousLocation}>
         <FormatButtonWithChildren format={BlockFormat.H1}>
           <H1Icon />
         </FormatButtonWithChildren>
@@ -94,6 +100,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         placeholder={t('blocks.richText.startWriting')}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        onBlur={() => {
+          setLocation(editor.selection)
+        }}
       />
     </Slate>
   )
