@@ -192,7 +192,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
-            <ChooseEditImage disabled image={profile?.logo?.previewURL} />
+            <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
               <DescriptionListItem label={t('peerList.panels.name')}>
                 {profile?.name}
