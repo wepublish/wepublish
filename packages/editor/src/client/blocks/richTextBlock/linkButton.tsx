@@ -75,9 +75,9 @@ export function LinkFormatButton() {
               insertLink(editor, selection, validatedURL!, title || undefined)
               setLinkDialogOpen(false)
             }}>
-            {t('Apply')}
+            {t('blocks.richText.apply')}
           </Button>
-          <Button onClick={() => setLinkDialogOpen(false)}>{t('Cancel')}</Button>
+          <Button onClick={() => setLinkDialogOpen(false)}>{t('blocks.richText.cancel')}</Button>
         </Modal.Footer>
       </Modal>
     </>
