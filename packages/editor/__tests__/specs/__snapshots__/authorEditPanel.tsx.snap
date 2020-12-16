@@ -705,7 +705,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 }
                               }
                             >
-                              <FormatButtonWithChildren
+                              <FormatButton
                                 format="heading-one"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -741,8 +741,8 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     </H1Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-two"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -778,8 +778,8 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     </H2Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-three"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -815,7 +815,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     </H3Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
+                              </FormatButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -3538,7 +3538,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                 }
                               }
                             >
-                              <FormatButtonWithChildren
+                              <FormatButton
                                 format="heading-one"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -3574,8 +3574,8 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     </H1Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-two"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -3611,8 +3611,8 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     </H2Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-three"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -3648,7 +3648,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     </H3Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
+                              </FormatButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -5949,7 +5949,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 }
                               }
                             >
-                              <FormatButtonWithChildren
+                              <FormatButton
                                 format="heading-one"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -5985,8 +5985,8 @@ exports[`Author Edit Panel should render 1`] = `
                                     </H1Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-two"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -6022,8 +6022,8 @@ exports[`Author Edit Panel should render 1`] = `
                                     </H2Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-three"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -6059,7 +6059,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     </H3Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
+                              </FormatButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -8362,7 +8362,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 }
                               }
                             >
-                              <FormatButtonWithChildren
+                              <FormatButton
                                 format="heading-one"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -8398,8 +8398,8 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     </H1Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-two"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -8435,8 +8435,8 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     </H2Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
-                              <FormatButtonWithChildren
+                              </FormatButton>
+                              <FormatButton
                                 format="heading-three"
                               >
                                 <ForwardRef(ToolbarButton)
@@ -8472,7 +8472,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     </H3Icon>
                                   </button>
                                 </ForwardRef(ToolbarButton)>
-                              </FormatButtonWithChildren>
+                              </FormatButton>
                               <ToolbarDivider>
                                 <div
                                   style={
