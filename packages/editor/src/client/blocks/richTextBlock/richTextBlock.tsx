@@ -8,7 +8,7 @@ import {EmojiPicker} from '../../atoms/emojiPicker'
 import {Toolbar, ToolbarDivider, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {
-  FormatButtonWithChildren,
+  FormatButton,
   H1Icon,
   H2Icon,
   H3Icon,
@@ -48,15 +48,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         if (value !== newValue) onChange(newValue)
       }}>
       <Toolbar fadeOut={!hasFocus}>
-        <FormatButtonWithChildren format={BlockFormat.H1}>
+        <FormatButton format={BlockFormat.H1}>
           <H1Icon />
-        </FormatButtonWithChildren>
-        <FormatButtonWithChildren format={BlockFormat.H2}>
+        </FormatButton>
+        <FormatButton format={BlockFormat.H2}>
           <H2Icon />
-        </FormatButtonWithChildren>
-        <FormatButtonWithChildren format={BlockFormat.H3}>
+        </FormatButton>
+        <FormatButton format={BlockFormat.H3}>
           <H3Icon />
-        </FormatButtonWithChildren>
+        </FormatButton>
 
         <ToolbarDivider />
 
