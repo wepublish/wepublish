@@ -60,6 +60,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean']
   breaking: Scalars['Boolean']
   hideAuthor: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthorIDs: Array<Scalars['ID']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -2338,6 +2342,14 @@ export const Article = gql`
         }
         hideAuthor
         breaking
+        socialMediaTitle
+        socialMediaDescription
+        socialMediaAuthors {
+          ...AuthorRef
+        }
+        socialMediaImage {
+          ...ImageRef
+        }
         blocks {
           ...FullBlock
         }
