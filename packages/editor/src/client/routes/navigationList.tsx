@@ -82,12 +82,14 @@ export function NavigationList() {
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('navigation.overview.navigations')}</h2>
         </FlexboxGrid.Item>
-        <ButtonLink
-          appearance="primary"
-          disabled={isLoading}
-          route={NavigationCreateRoute.create({})}>
-          {t('navigation.overview.newNavigation')}
-        </ButtonLink>
+        <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
+          <ButtonLink
+            appearance="primary"
+            disabled={isLoading}
+            route={NavigationCreateRoute.create({})}>
+            {t('navigation.overview.newNavigation')}
+          </ButtonLink>
+        </FlexboxGrid.Item>
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
