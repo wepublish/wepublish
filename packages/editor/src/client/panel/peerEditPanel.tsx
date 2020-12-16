@@ -15,6 +15,7 @@ import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {RichTextBlock} from '../blocks/richTextBlock'
 
 export interface ImageEditPanelProps {
   id?: string
@@ -208,6 +209,19 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.themeColor')}>
                 {profile?.themeColor}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionText')}>
+                {!!profile?.callToActionText && (
+                  <RichTextBlock
+                    disabled
+                    // TODO: remove this
+                    onChange={console.log}
+                    value={profile?.callToActionText}
+                  />
+                )}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
+                {profile?.callToActionURL}
               </DescriptionListItem>
             </DescriptionList>
           </Panel>
