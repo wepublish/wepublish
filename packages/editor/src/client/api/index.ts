@@ -63,7 +63,7 @@ export type ArticleInput = {
   hideAuthor: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthorIDs?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
   socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
@@ -98,7 +98,7 @@ export type ArticleRevision = {
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthors?: Maybe<Array<Maybe<Author>>>;
+  socialMediaAuthors: Array<Maybe<Author>>;
   socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
@@ -1457,10 +1457,10 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors?: Maybe<Array<Maybe<(
+      )>>, socialMediaAuthors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>>, socialMediaImage?: Maybe<(
+      )>>, socialMediaImage?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, blocks: Array<(
