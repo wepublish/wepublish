@@ -428,6 +428,24 @@ export const Migrations: Migration[] = [
         {$set: {'draft.hideAuthor': false}}
       )
     }
+  },
+  {
+    // Add Call To Action Details to Peer Profile.
+    version: 7,
+    async migrate(db) {
+      await db.collection(CollectionName.PeerProfiles).updateMany(
+        {
+          callToActionURL: {$exists: false},
+          callToActionText: {$exists: false}
+        },
+        {
+          $set: {
+            callToActionURL: '',
+            callToActionText: []
+          }
+        }
+      )
+    }
   }
 ]
 
