@@ -62,7 +62,7 @@ export function ChooseEditImage({
             )}
             <img
               style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
-              src={image.previewURL ?? '/static/placeholder-240x240.png'}
+              src={image?.previewURL ?? '/static/placeholder-240x240.png'}
               height={200}
             />
           </div>
