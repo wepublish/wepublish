@@ -4,6 +4,9 @@ import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+import {capitalizeFirstLetter} from './utility'
+
+import eventEmitter from './events'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -11,11 +14,49 @@ export interface WepublishServerOpts extends ContextOptions {
   readonly tracing?: boolean
 }
 
+const methodsToProxy = [
+  {
+    key: 'user',
+    methods: ['create', 'update', 'delete']
+  },
+  {
+    key: 'article',
+    methods: ['create', 'update', 'delete']
+  }
+]
+
 export class WepublishServer {
   private readonly app: Application
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
+
+    const {dbAdapter} = opts
+
+    methodsToProxy.forEach(mtp => {
+      if (mtp.key in dbAdapter) {
+        mtp.methods.forEach(method => {
+          const methodName = `${method}${capitalizeFirstLetter(mtp.key)}`
+          // @ts-ignore
+          if (methodName in dbAdapter[mtp.key]) {
+            // @ts-ignore
+            dbAdapter[mtp.key][methodName] = new Proxy(dbAdapter[mtp.key][methodName], {
+              async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
+                console.log(`PRE-${mtp.key}-${methodName}`)
+                const result = await target.bind(thisArg)(...argArray)
+                eventEmitter.emit(
+                  `Post${capitalizeFirstLetter(methodName)}`,
+                  await contextFromRequest(null, opts),
+                  result
+                )
+                console.log(`POST-${mtp.key}-${methodName}`)
+                return result
+              }
+            })
+          }
+        })
+      }
+    })
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
