@@ -1,10 +1,10 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Icon, InputGroup, InputNumber} from 'rsuite'
-import {Editor, Transforms, Element as SlateElement, Path, Node as SlateNode} from 'slate'
+import {Transforms, Element as SlateElement} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext, HBar} from '../../atoms/toolbar'
-import {isFormatActive} from './editorUtils'
+import {isFormatActive, nearestAncestor} from './editorUtils'
 import {BlockFormat} from './formats'
 import {ColorPicker} from '../../atoms/colorPicker'
 
@@ -17,33 +17,45 @@ export function TableMenu() {
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
-  const [borderColor] = useState('black')
+  const [borderColor, setBorderColor] = useState('black')
 
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const {t} = useTranslation()
 
-  const nearestAncestor: (
-    type: BlockFormat
-  ) => {node: SlateNode; path: Path} | undefined = type => {
-    const {selection} = editor
-    if (selection) {
-      const nodes = Array.from(
-        Editor.nodes(editor, {
-          at: selection,
-          match: node => node.type === type
-        })
+  useEffect(() => {
+    // set borderColor in slate node tree on colorPicker change
+    const tablePath = nearestAncestor(editor, BlockFormat.Table)?.path
+    if (tablePath) {
+      Transforms.setNodes(
+        editor,
+        {borderColor},
+        {
+          at: tablePath,
+          match: node => node.type === BlockFormat.TableCell
+        }
       )
-      return {node: nodes[0][0], path: nodes[0][1]}
+    }
+  }, [borderColor])
+
+  useEffect(() => {
+    // Set borderColor of picker on menu mount.
+    getBorderColorOfFocusedTable()
+  }, [])
+
+  useEffect(() => {
+    // Update borderColor of picker if focusing other table.
+    getBorderColorOfFocusedTable()
+  }, [editor.selection])
+
+  const getBorderColorOfFocusedTable = () => {
+    const cellNode = nearestAncestor(editor, BlockFormat.TableCell)?.node
+    if (cellNode) {
+      setBorderColor(cellNode.borderColor as string)
     }
   }
 
-  const isBorderVisible = () => {
-    const cellNode = nearestAncestor(BlockFormat.TableCell)?.node
-    if (cellNode) {
-      return cellNode.borderColor && cellNode.borderColor !== 'transparent'
-    }
-  }
+  const isBorderVisible = borderColor !== 'transparent'
 
   const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
 
@@ -102,40 +114,25 @@ export function TableMenu() {
     })
   }
 
-  const setTableCellBorderColor = (color: string) => {
-    const tablePath = nearestAncestor(BlockFormat.Table)?.path
-    if (tablePath) {
-      Transforms.setNodes(
-        editor,
-        {borderColor: color},
-        {
-          at: tablePath,
-          match: node => node.type === BlockFormat.TableCell
-        }
-      )
-    }
-  }
-
   const tableModifyControls = (
     <>
       {!showRemoveConfirm ? (
         <>
-          {isBorderVisible() ? (
+          {isBorderVisible ? (
             <HBar dividerBottom>
               <ColorPicker
                 withColor={color => {
-                  setTableCellBorderColor(color)
+                  setBorderColor(color)
                 }}
+                currentColor={borderColor}
                 label={t('blocks.richTextTable.border')}
               />
-              <button
-                className="icon-button"
-                onClick={() => setTableCellBorderColor('transparent')}>
+              <button className="icon-button" onClick={() => setBorderColor('transparent')}>
                 <Icon icon="ban" style={{color: 'red'}} />
               </button>
             </HBar>
           ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor(borderColor)}>
+            <Button appearance="default" onClick={() => setBorderColor('black')}>
               {t('blocks.richTextTable.addBorders')}
             </Button>
           )}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import nanoid from 'nanoid'
 
 interface ColorPickerProps {
@@ -8,7 +8,6 @@ interface ColorPickerProps {
 }
 
 export function ColorPicker({withColor, currentColor = 'black', label}: ColorPickerProps) {
-  const [color, setColor] = useState(currentColor)
   const id = nanoid()
   return (
     <>
@@ -16,10 +15,9 @@ export function ColorPicker({withColor, currentColor = 'black', label}: ColorPic
       <input
         id={id}
         type="color"
-        value={color}
+        value={currentColor}
         onChange={e => {
-          setColor(e.target.value)
-          withColor(color)
+          withColor(e.target.value)
         }}
         style={{cursor: 'pointer'}}
       />
