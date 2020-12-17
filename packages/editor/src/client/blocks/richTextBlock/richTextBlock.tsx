@@ -1,6 +1,6 @@
 import React, {memo, useMemo, useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {createEditor, Node as SlateNode, Transforms, Range, Editor} from 'slate'
+import {createEditor, Node as SlateNode, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
@@ -85,7 +85,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         <ToolbarDivider />
 
         <SubMenuButton icon="smile-o">
-          <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
+          <EmojiPicker withEmoji={emoji => editor.insertText(emoji)} />
         </SubMenuButton>
       </Toolbar>
       <Editable

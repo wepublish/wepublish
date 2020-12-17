@@ -4,14 +4,14 @@ import './emojiPicker.less'
 import {Picker, BaseEmoji} from 'emoji-mart'
 
 interface EmojiPickerProps {
-  doWithEmoji: (emoji: string) => void
+  withEmoji: (emoji: string) => void
 }
 
-export function EmojiPicker({doWithEmoji}: EmojiPickerProps) {
+export function EmojiPicker({withEmoji}: EmojiPickerProps) {
   return (
     <Picker
       onSelect={({native}: BaseEmoji) => {
-        doWithEmoji(native)
+        withEmoji(native)
       }}
     />
   )
