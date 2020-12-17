@@ -16,6 +16,17 @@ let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
+const richTextNodes = [
+  {
+    type: 'paragraph',
+    children: [
+      {
+        text: 'p text rich text'
+      }
+    ]
+  }
+]
+
 const titleBlock = {
   title: {
     title: 'title block title',
@@ -27,96 +38,76 @@ const listicleBlock = {
     items: [
       {
         title: 'item title',
-        richText: [
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: 'p text listicle'
-              }
-            ]
-          }
-        ]
+        richText: richTextNodes
       }
     ]
   }
 }
 const richTextBlock = {
   richText: {
-    richText: [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            text: 'p rich text block'
-          }
-        ]
-      }
-    ]
+    richText: richTextNodes
   }
 }
 const facebookPostBlock = {
   facebookPost: {
-    userID: '',
-    postID: ''
+    userID: 'WePublish.Community',
+    postID: '2191372684210495'
   }
 }
 const facebookVideoBlock = {
   facebookVideo: {
-    userID: '',
-    videoID: ''
+    userID: 'WePublish.Community',
+    videoID: '2F1761095367238231'
   }
 }
 const instagramPostBlock = {
-  instagramPost: {postID: ''}
+  instagramPost: {postID: 'B_AfAKgARJ4'}
 }
 const twitterTweetBlock = {
   twitterTweet: {
-    userID: '',
-    tweetID: ''
+    userID: 'WePublish_media',
+    tweetID: '1021701711172395008'
   }
 }
 const vimeoVideoBlock = {
   vimeoVideo: {
-    videoID: ''
+    videoID: '472380240'
   }
 }
 const youTubeVideoBlock = {
   youTubeVideo: {
-    videoID: ''
+    videoID: 'FjtGLMYgY5Y'
   }
 }
 const soundCloudTrackBlock = {
   soundCloudTrack: {
-    trackID: ''
+    trackID: '310511381'
   }
 }
 const embedBlock = {
   embed: {
-    url: ''
+    url: 'https://www.youtube.com/embed/cPAbx5kgCJo'
   }
 }
-/*
 const linkPageBreakBlock = {
-  linkPageBreakBlock: {
-  
-    richText: [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            text: 'p rich text block'
-          }
-        ]
-      }
-    ]
-    
-    
-      ,
+  linkPageBreak: {
+    richText: richTextNodes,
     hideButton: false
   }
 }
-*/
+const teaserGridBlock = {
+  teaserGrid: {
+    teasers: [],
+    numColumns: 2
+  }
+}
+const quoteBlock = {
+  quote: {
+    quote: 'quote text',
+    author: 'author'
+  }
+}
+
 const blocks = [
   titleBlock,
   listicleBlock,
@@ -128,8 +119,10 @@ const blocks = [
   vimeoVideoBlock,
   youTubeVideoBlock,
   soundCloudTrackBlock,
-  embedBlock
-  //linkPageBreakBlock
+  embedBlock,
+  linkPageBreakBlock,
+  teaserGridBlock,
+  quoteBlock
 ]
 
 beforeAll(async () => {
