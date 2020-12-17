@@ -718,7 +718,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -755,7 +755,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -792,7 +792,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -1001,7 +1001,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -1013,11 +1013,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
@@ -1031,11 +1026,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -1653,7 +1643,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -1665,29 +1655,14 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -1728,7 +1703,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                         </div>
                       </Toolbar>
                       <Editable
-                        onBlur={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -3533,10 +3507,8 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
                       >
                         <div
-                          onClick={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -3545,6 +3517,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                               "marginBottom": 30,
                               "pointerEvents": "none",
                               "position": "sticky",
+                              "top": 70,
                               "zIndex": 1,
                             }
                           }
@@ -3583,7 +3556,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3620,7 +3593,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3657,7 +3630,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -3715,7 +3688,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -3763,7 +3736,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -3866,7 +3839,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -3878,29 +3851,14 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -3969,7 +3927,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4017,7 +3975,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4065,7 +4023,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4113,7 +4071,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4161,7 +4119,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4209,7 +4167,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4269,7 +4227,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4409,7 +4367,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -4518,7 +4476,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -4530,29 +4488,14 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -4593,7 +4536,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                         </div>
                       </Toolbar>
                       <Editable
-                        onBlur={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -5976,10 +5918,8 @@ exports[`Author Edit Panel should render 1`] = `
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
                       >
                         <div
-                          onClick={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -5988,6 +5928,7 @@ exports[`Author Edit Panel should render 1`] = `
                               "marginBottom": 30,
                               "pointerEvents": "none",
                               "position": "sticky",
+                              "top": 70,
                               "zIndex": 1,
                             }
                           }
@@ -6026,7 +5967,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -6063,7 +6004,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -6100,7 +6041,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -6158,7 +6099,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6206,7 +6147,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6309,7 +6250,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -6321,29 +6262,14 @@ exports[`Author Edit Panel should render 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -6412,7 +6338,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6460,7 +6386,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6508,7 +6434,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6556,7 +6482,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6604,7 +6530,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6652,7 +6578,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6712,7 +6638,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6852,7 +6778,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -6961,7 +6887,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -6973,29 +6899,14 @@ exports[`Author Edit Panel should render 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="smile-o"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -7036,7 +6947,6 @@ exports[`Author Edit Panel should render 1`] = `
                         </div>
                       </Toolbar>
                       <Editable
-                        onBlur={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -8421,10 +8331,8 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
                       >
                         <div
-                          onClick={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -8433,6 +8341,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                               "marginBottom": 30,
                               "pointerEvents": "none",
                               "position": "sticky",
+                              "top": 70,
                               "zIndex": 1,
                             }
                           }
@@ -8471,7 +8380,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8508,7 +8417,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8545,7 +8454,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     style={
                                       Object {
                                         "backgroundColor": "transparent",
-                                        "border": "transparent 1px solid",
+                                        "border": "",
                                         "borderRadius": 3,
                                         "cursor": "pointer",
                                         "fontSize": 16,
@@ -8603,7 +8512,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8651,7 +8560,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8754,7 +8663,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -8766,29 +8675,14 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             classPrefix="rs-icon"
                                             componentClass="i"
                                             icon="table"
-                                            style={
-                                              Object {
-                                                "minWidth": "15px",
-                                              }
-                                            }
                                           >
                                             <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-table"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
@@ -8857,7 +8751,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8905,7 +8799,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -8953,7 +8847,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9001,7 +8895,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9049,7 +8943,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9097,7 +8991,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9157,7 +9051,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9297,7 +9191,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       style={
                                         Object {
                                           "backgroundColor": "transparent",
-                                          "border": "transparent 1px solid",
+                                          "border": "",
                                           "borderRadius": 3,
                                           "cursor": "pointer",
                                           "fontSize": 16,
@@ -9406,7 +9300,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           style={
                                             Object {
                                               "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
+                                              "border": "",
                                               "borderRadius": 3,
                                               "cursor": "pointer",
                                               "fontSize": 16,
@@ -9428,19 +9322,9 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
-                                              style={
-                                                Object {
-                                                  "minWidth": "15px",
-                                                }
-                                              }
                                             >
                                               <i
                                                 className="rs-icon rs-icon-smile-o"
-                                                style={
-                                                  Object {
-                                                    "minWidth": "15px",
-                                                  }
-                                                }
                                               />
                                             </Icon>
                                           </defaultProps(Icon)>
