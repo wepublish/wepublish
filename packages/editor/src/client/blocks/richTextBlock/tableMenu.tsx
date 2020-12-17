@@ -45,6 +45,8 @@ export function TableMenu() {
 
   useEffect(() => {
     // Update borderColor of picker if focusing other table.
+    // If this does not turn out to be expensive and slow down site, this
+    // can be used for any controls to update on selection change.
     getBorderColorOfFocusedTable()
   }, [editor.selection])
 
