@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - f/WEP-87-social-media-metatags
 
 jobs:
   release:

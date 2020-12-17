@@ -431,7 +431,7 @@ export const Migrations: Migration[] = [
   },
   {
     // Add social media metatags to article.
-    version: 7,
+    version: 8,
     async migrate(db) {
       await db.collection(CollectionName.Articles).updateMany(
         {
