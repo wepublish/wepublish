@@ -116,6 +116,8 @@ export const peerMetaDataFragment = gql`
       logo {
         ...SimpleImageData
       }
+      callToActionText
+      callToActionURL
     }
   }
   ${simpleImageDataFragment}
