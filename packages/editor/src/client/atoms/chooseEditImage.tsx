@@ -19,7 +19,7 @@ export function ChooseEditImage({
   openChooseModalOpen,
   openEditModalOpen,
   removeImage
-}: ChooseEditImageProps) {
+}: ChooseEditImageProps): JSX.Element {
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
@@ -61,8 +61,8 @@ export function ChooseEditImage({
               </div>
             )}
             <img
-              src={image.previewURL ?? 'https://via.placeholder.com/200'}
-              width="100%"
+              style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
+              src={image?.previewURL ?? '/static/placeholder-240x240.png'}
               height={200}
             />
           </div>

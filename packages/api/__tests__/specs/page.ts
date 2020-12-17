@@ -16,6 +16,115 @@ let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
 
+const richTextNodes = [
+  {
+    type: 'paragraph',
+    children: [
+      {
+        text: 'p text rich text'
+      }
+    ]
+  }
+]
+
+const titleBlock = {
+  title: {
+    title: 'title block title',
+    lead: 'title lead'
+  }
+}
+const listicleBlock = {
+  listicle: {
+    items: [
+      {
+        title: 'item title',
+        richText: richTextNodes
+      }
+    ]
+  }
+}
+const richTextBlock = {
+  richText: {
+    richText: richTextNodes
+  }
+}
+const facebookPostBlock = {
+  facebookPost: {
+    userID: 'WePublish.Community',
+    postID: '2191372684210495'
+  }
+}
+const facebookVideoBlock = {
+  facebookVideo: {
+    userID: 'WePublish.Community',
+    videoID: '2F1761095367238231'
+  }
+}
+const instagramPostBlock = {
+  instagramPost: {postID: 'B_AfAKgARJ4'}
+}
+const twitterTweetBlock = {
+  twitterTweet: {
+    userID: 'WePublish_media',
+    tweetID: '1021701711172395008'
+  }
+}
+const vimeoVideoBlock = {
+  vimeoVideo: {
+    videoID: '472380240'
+  }
+}
+const youTubeVideoBlock = {
+  youTubeVideo: {
+    videoID: 'FjtGLMYgY5Y'
+  }
+}
+const soundCloudTrackBlock = {
+  soundCloudTrack: {
+    trackID: '310511381'
+  }
+}
+const embedBlock = {
+  embed: {
+    url: 'https://www.youtube.com/embed/cPAbx5kgCJo'
+  }
+}
+const linkPageBreakBlock = {
+  linkPageBreak: {
+    richText: richTextNodes,
+    hideButton: false
+  }
+}
+const teaserGridBlock = {
+  teaserGrid: {
+    teasers: [],
+    numColumns: 2
+  }
+}
+const quoteBlock = {
+  quote: {
+    quote: 'quote text',
+    author: 'author'
+  }
+}
+
+const blocks = [
+  titleBlock,
+  listicleBlock,
+  richTextBlock,
+  facebookPostBlock,
+  facebookVideoBlock,
+  instagramPostBlock,
+  twitterTweetBlock,
+  vimeoVideoBlock,
+  youTubeVideoBlock,
+  soundCloudTrackBlock,
+  embedBlock,
+  linkPageBreakBlock,
+  teaserGridBlock,
+  quoteBlock
+]
+
 beforeAll(async () => {
   try {
     const setupClient = await createGraphQLTestClientWithMongoDB()
@@ -64,14 +173,7 @@ describe('Pages', () => {
           {key: 'private', value: 'private', public: false},
           {key: 'public', value: 'public', public: true}
         ],
-        blocks: [
-          {
-            title: {
-              title: 'title block title',
-              lead: 'title lead'
-            }
-          }
-        ]
+        blocks: blocks
       }
       const res = await mutate({
         mutation: CreatePage,
