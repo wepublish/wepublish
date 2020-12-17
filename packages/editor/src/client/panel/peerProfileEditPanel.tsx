@@ -15,7 +15,7 @@ import {getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 type PeerProfileImage = NonNullable<PeerProfileQuery['peerProfile']>['logo']
