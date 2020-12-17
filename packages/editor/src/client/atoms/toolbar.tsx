@@ -8,7 +8,7 @@ import React, {
   createContext
 } from 'react'
 
-import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper, Divider} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -159,19 +159,29 @@ export function SubMenuButton({children, icon}: ToolbarButtonProps & ToolbarIcon
 }
 
 export function ToolbarDivider() {
+  return <Divider style={{height: '1.5em'}} vertical />
+}
+
+interface FlexHDivProps {
+  children: ReactNode
+  dividerTop?: boolean
+  dividerBottom?: boolean
+}
+
+export function HBar({children, dividerTop, dividerBottom}: FlexHDivProps) {
   return (
-    <div
-      style={{
-        width: '1px',
-        alignSelf: 'stretch',
-
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 2,
-        marginBottom: 2,
-
-        backgroundColor: 'gray'
-      }}
-    />
+    <div style={{width: '100%'}}>
+      {dividerTop && <Divider />}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          width: '100%'
+        }}>
+        {children}
+      </div>
+      {dividerBottom && <Divider />}
+    </div>
   )
 }

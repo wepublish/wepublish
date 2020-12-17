@@ -1,9 +1,9 @@
-import React, {useState, useContext, ReactNode} from 'react'
+import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Icon, IconStack, InputGroup, InputNumber} from 'rsuite'
-import {Editor, Transforms, Element as SlateElement} from 'slate'
+import {Button, Icon, InputGroup, InputNumber} from 'rsuite'
+import {Editor, Transforms, Element as SlateElement, Path, Node as SlateNode} from 'slate'
 import {useSlate} from 'slate-react'
-import {SubMenuContext} from '../../atoms/toolbar'
+import {SubMenuContext, HBar} from '../../atoms/toolbar'
 import {isFormatActive} from './editorUtils'
 import {BlockFormat} from './formats'
 import {ColorPicker} from '../../atoms/colorPicker'
@@ -12,22 +12,37 @@ import './tableMenu.less'
 
 export function TableMenu() {
   const editor = useSlate()
+
   const {closeMenu} = useContext(SubMenuContext)
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
+  const [borderColor] = useState('black')
 
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const {t} = useTranslation()
 
-  const isBorderVisible = () => {
-    const [match] = Editor.nodes(editor, {
-      match: node => (node.borderColor && node.borderColor !== 'transparent') as boolean,
-      mode: 'all'
-    })
+  const nearestAncestor: (
+    type: BlockFormat
+  ) => {node: SlateNode; path: Path} | undefined = type => {
+    const {selection} = editor
+    if (selection) {
+      const nodes = Array.from(
+        Editor.nodes(editor, {
+          at: selection,
+          match: node => node.type === type
+        })
+      )
+      return {node: nodes[0][0], path: nodes[0][1]}
+    }
+  }
 
-    return !!match
+  const isBorderVisible = () => {
+    const cellNode = nearestAncestor(BlockFormat.TableCell)?.node
+    if (cellNode) {
+      return cellNode.borderColor && cellNode.borderColor !== 'transparent'
+    }
   }
 
   const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
@@ -39,7 +54,7 @@ export function TableMenu() {
         type: BlockFormat.TableRow,
         children: Array.from({length: ncols}).map(() => ({
           type: BlockFormat.TableCell,
-          borderColor: 'black',
+          borderColor: borderColor,
           // Wrap all content inside cell into paragraph block to enable break lines.
           children: [emptyTextParagraph()]
         }))
@@ -88,18 +103,15 @@ export function TableMenu() {
   }
 
   const setTableCellBorderColor = (color: string) => {
-    const {selection} = editor
-    if (selection) {
-      const nodes = Array.from(
-        Editor.nodes(editor, {
-          at: selection,
-          match: node => node.type === BlockFormat.Table
-        })
-      )
+    const tablePath = nearestAncestor(BlockFormat.Table)?.path
+    if (tablePath) {
       Transforms.setNodes(
         editor,
         {borderColor: color},
-        {at: nodes[0][1], match: node => node.type === BlockFormat.TableCell}
+        {
+          at: tablePath,
+          match: node => node.type === BlockFormat.TableCell
+        }
       )
     }
   }
@@ -109,7 +121,7 @@ export function TableMenu() {
       {!showRemoveConfirm ? (
         <>
           {isBorderVisible() ? (
-            <FlexHDiv>
+            <HBar dividerBottom>
               <ColorPicker
                 withColor={color => {
                   setTableCellBorderColor(color)
@@ -121,9 +133,9 @@ export function TableMenu() {
                 onClick={() => setTableCellBorderColor('transparent')}>
                 <Icon icon="ban" style={{color: 'red'}} />
               </button>
-            </FlexHDiv>
+            </HBar>
           ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
+            <Button appearance="default" onClick={() => setTableCellBorderColor(borderColor)}>
               {t('blocks.richTextTable.addBorders')}
             </Button>
           )}
@@ -132,7 +144,7 @@ export function TableMenu() {
           </Button>
         </>
       ) : (
-        <FlexHDiv>
+        <HBar>
           <Button
             color="red"
             appearance="primary"
@@ -146,7 +158,7 @@ export function TableMenu() {
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
           </Button>
-        </FlexHDiv>
+        </HBar>
       )}
     </>
   )
@@ -162,24 +174,6 @@ export function TableMenu() {
         width: '15em'
       }}>
       {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
-    </div>
-  )
-}
-
-interface FlexHDivProps {
-  children: ReactNode
-}
-
-function FlexHDiv({children}: FlexHDivProps) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%'
-      }}>
-      {children}
     </div>
   )
 }
