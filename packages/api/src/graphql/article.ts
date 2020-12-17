@@ -139,7 +139,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
       resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
         return Promise.all(
           socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
@@ -268,7 +268,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
       resolve: createProxyingResolver(({socialMediaAuthorIDs}, args, {loaders}) => {
         return Promise.all(
           socialMediaAuthorIDs.map(socialMediaAuthorIDs =>
