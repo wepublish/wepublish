@@ -474,8 +474,8 @@
       "richTextTable": {
         "insertTable": "Insert Table",
         "deleteTable": "Delete Table",
+        "border": "Border",
         "addBorders": "Add Borders",
-        "clearBorders": "Clear Borders",
         "rows": "Rows",
         "columns": "Columns",
         "cancel": "Cancel",

@@ -1,6 +1,6 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, ReactNode} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, InputGroup, InputNumber} from 'rsuite'
+import {Button, Icon, IconStack, InputGroup, InputNumber} from 'rsuite'
 import {Editor, Transforms, Element as SlateElement} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../atoms/toolbar'
@@ -109,16 +109,19 @@ export function TableMenu() {
       {!showRemoveConfirm ? (
         <>
           {isBorderVisible() ? (
-            <>
+            <FlexHDiv>
               <ColorPicker
                 withColor={color => {
                   setTableCellBorderColor(color)
                 }}
+                label={t('blocks.richTextTable.border')}
               />
-              <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
-                {t('blocks.richTextTable.clearBorders')}
-              </Button>
-            </>
+              <button
+                className="icon-button"
+                onClick={() => setTableCellBorderColor('transparent')}>
+                <Icon icon="ban" style={{color: 'red'}} />
+              </button>
+            </FlexHDiv>
           ) : (
             <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
               {t('blocks.richTextTable.addBorders')}
@@ -129,13 +132,7 @@ export function TableMenu() {
           </Button>
         </>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            width: '100%'
-          }}>
+        <FlexHDiv>
           <Button
             color="red"
             appearance="primary"
@@ -149,7 +146,7 @@ export function TableMenu() {
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
           </Button>
-        </div>
+        </FlexHDiv>
       )}
     </>
   )
@@ -165,6 +162,24 @@ export function TableMenu() {
         width: '15em'
       }}>
       {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
+    </div>
+  )
+}
+
+interface FlexHDivProps {
+  children: ReactNode
+}
+
+function FlexHDiv({children}: FlexHDivProps) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%'
+      }}>
+      {children}
     </div>
   )
 }

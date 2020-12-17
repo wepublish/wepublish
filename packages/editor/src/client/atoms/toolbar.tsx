@@ -12,6 +12,8 @@ import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
+import './toolbar.less'
+
 export interface ToolbarProps {
   readonly handleToolbarClick?: () => void
   readonly fadeOut?: boolean
@@ -68,15 +70,9 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton({active, children, ...props}, ref) {
     return (
       <button
+        className="icon-button"
         style={{
-          border: `${active ? 'blue' : 'transparent'} 1px solid`,
-          fontSize: 16,
-
-          cursor: 'pointer',
-          borderRadius: 3,
-          backgroundColor: 'transparent',
-
-          padding: 2
+          border: `${active ? 'blue' : 'transparent'} 1px solid`
         }}
         ref={ref}
         {...props}>
