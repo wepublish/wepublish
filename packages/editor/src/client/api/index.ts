@@ -15,8 +15,8 @@ export type Scalars = {
   DateTime: string;
   /** A hexidecimal color value. */
   Color: string;
-  Slug: string;
   RichText: Node[];
+  Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -853,12 +853,16 @@ export type PeerProfile = {
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type Permission = {
@@ -2204,7 +2208,7 @@ export type PageQuery = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2659,6 +2663,8 @@ export const FullPeerProfileFragmentDoc = gql`
   logo {
     ...ImageRef
   }
+  callToActionText
+  callToActionURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`

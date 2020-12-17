@@ -8,7 +8,9 @@ export function peerAdapter(peer: any): Peer {
     name: peer.profile.name,
     logoURL: peer.profile.logo?.squareURL,
     websiteURL: peer.profile.websiteURL,
-    themeColor: peer.profile.themeColor
+    themeColor: peer.profile.themeColor,
+    callToActionText: peer.profile.callToActionText,
+    callToActionURL: peer.profile.callToActionURL
   }
 }
 
