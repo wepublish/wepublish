@@ -98,7 +98,7 @@ export type ArticleRevision = {
   breaking: Scalars['Boolean'];
   socialMediaTitle?: Maybe<Scalars['String']>;
   socialMediaDescription?: Maybe<Scalars['String']>;
-  socialMediaAuthors: Array<Maybe<Author>>;
+  socialMediaAuthors: Array<Author>;
   socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
@@ -1461,10 +1461,10 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaAuthors: Array<Maybe<(
+      )>>, socialMediaAuthors: Array<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, socialMediaImage?: Maybe<(
+      )>, socialMediaImage?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, blocks: Array<(
