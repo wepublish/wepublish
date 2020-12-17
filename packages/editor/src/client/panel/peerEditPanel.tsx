@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
 import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
   PeerListDocument,
@@ -192,17 +193,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
-            <Panel
-              bordered={true}
-              style={{
-                height: '200px',
-                marginBottom: '20px',
-                backgroundSize: 'cover',
-                backgroundImage: `url(${
-                  profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
-                }`
-              }}
-            />
+            <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
               <DescriptionListItem label={t('peerList.panels.name')}>
                 {profile?.name}
