@@ -16,7 +16,7 @@ import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {RichTextBlock} from '../blocks/richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 export interface ImageEditPanelProps {
   id?: string
