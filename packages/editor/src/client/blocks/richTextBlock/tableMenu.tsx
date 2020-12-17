@@ -6,6 +6,7 @@ import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../atoms/toolbar'
 import {isFormatActive} from './editorUtils'
 import {BlockFormat} from './formats'
+import {ColorPicker} from '../../atoms/colorPicker'
 
 import './tableMenu.less'
 
@@ -108,12 +109,19 @@ export function TableMenu() {
       {!showRemoveConfirm ? (
         <>
           {isBorderVisible() ? (
-            <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
-              {t('blocks.richTextTable.hideBorders')}
-            </Button>
+            <>
+              <ColorPicker
+                withColor={color => {
+                  setTableCellBorderColor(color)
+                }}
+              />
+              <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
+                {t('blocks.richTextTable.clearBorders')}
+              </Button>
+            </>
           ) : (
             <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
-              {t('blocks.richTextTable.showBorders')}
+              {t('blocks.richTextTable.addBorders')}
             </Button>
           )}
           <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
