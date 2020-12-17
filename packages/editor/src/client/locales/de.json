@@ -312,7 +312,11 @@
         "themeColor": "Theme Color",
         "chooseImage": "Choose Image",
         "editImage": "Edit Image",
-        "removeImage": "Remove Image"
+        "removeImage": "Remove Image",
+        "infoEditError": "Edit Token Error",
+        "callToAction": "Call To Action",
+        "callToActionText": "Call To Action Text",
+        "callToActionURL": "Call To Action URL"
       }
     },
     "tokenList": {

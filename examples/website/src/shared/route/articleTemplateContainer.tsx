@@ -37,6 +37,7 @@ import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
+import {RichText} from '../atoms/richText'
 
 const ArticleQuery = gql`
   query Article($id: ID!) {
@@ -305,6 +306,10 @@ const PeerProfileNameContainer = cssRule({
   flexBasis: 0
 })
 
+const PeerProfileCallToActionURL = cssRule({
+  textAlign: 'center'
+})
+
 const PeerProfileImageStyle = cssRule({
   width: pxToRem(50),
   height: pxToRem(50),
@@ -343,6 +348,13 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
           <p className={css(PeerProfileTextStyle)}>{peer.name}</p>
         </div>
         <div className={css(PeerProfileFiller)} />
+      </div>
+      <div className={css(PeerProfileCallToActionURL)}>
+        {peer?.callToActionText?.length && (
+          <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
+            <RichText value={peer?.callToActionText} />
+          </a>
+        )}
       </div>
     </div>
   )
