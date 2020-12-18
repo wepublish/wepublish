@@ -6,7 +6,13 @@ import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
 import {capitalizeFirstLetter} from './utility'
 
-import eventEmitter from './events'
+import {
+  userModelEvents,
+  articleModelEvents,
+  peerModelEvents,
+  EventsEmitter,
+  pageModelEvents
+} from './events'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -14,14 +20,35 @@ export interface WepublishServerOpts extends ContextOptions {
   readonly tracing?: boolean
 }
 
-const methodsToProxy = [
+type NormalProxyMethods = 'create' | 'update' | 'delete'
+type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
+
+interface MethodsToProxy {
+  key: string
+  methods: (NormalProxyMethods | PublishableProxyMethods)[]
+  eventEmitter: EventsEmitter
+}
+
+const methodsToProxy: MethodsToProxy[] = [
   {
     key: 'user',
-    methods: ['create', 'update', 'delete']
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: userModelEvents
+  },
+  {
+    key: 'peer',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: peerModelEvents
   },
   {
     key: 'article',
-    methods: ['create', 'update', 'delete']
+    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
+    eventEmitter: articleModelEvents
+  },
+  {
+    key: 'page',
+    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
+    eventEmitter: pageModelEvents
   }
 ]
 
@@ -42,14 +69,10 @@ export class WepublishServer {
             // @ts-ignore
             dbAdapter[mtp.key][methodName] = new Proxy(dbAdapter[mtp.key][methodName], {
               async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                console.log(`PRE-${mtp.key}-${methodName}`)
+                console.log(`${mtp.key}-${method}`)
                 const result = await target.bind(thisArg)(...argArray)
-                eventEmitter.emit(
-                  `Post${capitalizeFirstLetter(methodName)}`,
-                  await contextFromRequest(null, opts),
-                  result
-                )
-                console.log(`POST-${mtp.key}-${methodName}`)
+                // @ts-ignore
+                mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result)
                 return result
               }
             })
