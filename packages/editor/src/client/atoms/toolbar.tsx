@@ -1,6 +1,14 @@
-import React, {ReactNode, forwardRef, ButtonHTMLAttributes} from 'react'
+import React, {
+  ReactNode,
+  forwardRef,
+  ButtonHTMLAttributes,
+  useCallback,
+  useRef,
+  useState,
+  createContext
+} from 'react'
 
-import {Icon} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -47,13 +55,16 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
   )
 }
 
-export interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly active?: boolean
+}
+
+export interface ToolbarButtonProps extends BaseToolbarButtonProps {
   readonly children?: ReactNode
 }
 
-const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
-  function BaseToolbarButton({active, children, ...props}, ref) {
+export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
+  function ToolbarButton({active, children, ...props}, ref) {
     return (
       <button
         style={{
@@ -74,24 +85,74 @@ const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
   }
 )
 
-export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ToolbarIconButtonProps extends BaseToolbarButtonProps {
   readonly icon: IconNames | SVGIcon
-  readonly active?: boolean
 }
 
-export function ToolbarButton({icon, active, ...props}: ToolbarButtonProps) {
+export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonProps) {
   return (
-    <BaseToolbarButton active={active} {...props}>
+    <ToolbarButton active={active} {...props}>
       <Icon icon={icon} element={icon} />
-    </BaseToolbarButton>
+    </ToolbarButton>
   )
 }
 
-export function ToolbarButtonWithChildren({active, children, ...props}: BaseToolbarButtonProps) {
+interface SubMenuContextProps {
+  closeMenu: () => void
+  openMenu: () => void
+}
+
+const emtpyFn = () => {
+  /* do nothing */
+}
+
+export const SubMenuContext = createContext<SubMenuContextProps>({
+  closeMenu: emtpyFn,
+  openMenu: emtpyFn
+})
+
+export function SubMenuButton({children, icon}: ToolbarButtonProps & ToolbarIconButtonProps) {
+  /**
+   * The Submenu buttons provides some local context to it's children. For
+   * now this is only used to enable menu.close() handle from the child tableMenu.
+   * Couldb be little overkill only for the table menu, but probably there will be
+   * more usecases.
+   */
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const triggerRef = useRef<PopoverProps>(null)
+
+  const closeMenu = () => {
+    triggerRef.current!.close()
+  }
+
+  const openMenu = () => {
+    triggerRef.current!.open()
+  }
+
+  const menuRef = useCallback((node: any) => {
+    setIsMenuOpen(!!node)
+  }, [])
+
+  const menu = <Popover ref={menuRef}>{children}</Popover>
+
   return (
-    <BaseToolbarButton active={active} {...props}>
-      {children}
-    </BaseToolbarButton>
+    <SubMenuContext.Provider
+      value={{
+        closeMenu,
+        openMenu
+      }}>
+      <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+        <ToolbarButton
+          active={isMenuOpen}
+          onMouseDown={e => {
+            e.preventDefault()
+            isMenuOpen ? closeMenu() : openMenu()
+          }}>
+          <Icon icon={isMenuOpen ? 'close' : icon} />
+        </ToolbarButton>
+      </Whisper>
+    </SubMenuContext.Provider>
   )
 }
 
