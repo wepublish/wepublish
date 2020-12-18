@@ -114,10 +114,11 @@
         "general": "General",
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
-        "socialMediaAuthors": "Authors",
+        "socialMediaAuthors": "Authors for Social Media",
         "hideAuthors": "Hide Authors",
         "socialMediaImage": "Image for Social Media",
-        "postImage": "Image for Post"
+        "postImage": "Image for Post",
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
       }
     },
     "pages": {
@@ -185,7 +186,8 @@
         "updateDate": "Update Date",
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
-        "socialMediaImage": "Image for Social Media"
+        "socialMediaImage": "Image for Social Media",
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
       }
     },
     "authors": {

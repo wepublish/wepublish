@@ -150,8 +150,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image || undefined,
         hideAuthor,
-        socialMediaTitle: socialMediaTitle || undefined,
-        socialMediaDescription: socialMediaDescription || undefined,
+        socialMediaTitle: socialMediaTitle || '',
+        socialMediaDescription: socialMediaDescription || '',
         socialMediaAuthors: socialMediaAuthors?.filter(
           socialMediaAuthor => socialMediaAuthor != null
         ) as AuthorRefFragment[],

@@ -12,7 +12,9 @@ import {
   Toggle,
   HelpBlock,
   Nav,
-  Icon
+  Icon,
+  Panel,
+  Message
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -109,8 +111,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
-          <>
+          <Panel>
             <Form fluid={true}>
+              <FormGroup>
+                <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
+              </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}</ControlLabel>
                 <FormControl
@@ -163,11 +168,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 />
               </FormGroup>
             </Form>
-          </>
+          </Panel>
         )
       case MetaDataType.General:
         return (
-          <>
+          <Panel>
             <Form fluid={true}>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
@@ -253,7 +258,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               }}
               removeImage={() => onChange?.({...value, image: undefined})}
             />
-          </>
+          </Panel>
         )
       default:
         return <></>

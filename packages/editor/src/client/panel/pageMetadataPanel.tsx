@@ -8,6 +8,7 @@ import {
   FormControl,
   FormGroup,
   Icon,
+  Message,
   Nav,
   Panel,
   TagPicker
@@ -85,8 +86,11 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
-          <>
+          <Panel>
             <Form fluid={true}>
+              <FormGroup>
+                <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
+              </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.socialMediaTitle')}</ControlLabel>
                 <FormControl
@@ -95,6 +99,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
+              </FormGroup>
+              <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.socialMediaDescription')}</ControlLabel>
                 <FormControl
                   rows={5}
@@ -121,57 +127,55 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                 />
               </FormGroup>
             </Form>
-          </>
+          </Panel>
         )
       case MetaDataType.General:
         return (
-          <>
-            <Panel>
-              <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
-                  <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
-                  <FormControl value={title} onChange={title => onChange?.({...value, title})} />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
-                  <FormControl
-                    componentClass="textarea"
-                    value={description}
-                    onChange={description => onChange?.({...value, description})}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
-                  <TagPicker
-                    style={{width: '100%'}}
-                    creatable={true}
-                    value={tags}
-                    data={tags.map(tag => ({label: tag, value: tag}))}
-                    onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
-                  <ChooseEditImage
-                    header={''}
-                    image={image}
-                    disabled={false}
-                    openChooseModalOpen={() => {
-                      setChooseModalOpen(true)
-                    }}
-                    openEditModalOpen={() => {
-                      setEditModalOpen(true)
-                    }}
-                    removeImage={() => onChange?.({...value, image: undefined})}
-                  />
-                </FormGroup>
-              </Form>
-            </Panel>
-          </>
+          <Panel>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.slug')}</ControlLabel>
+                <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
+                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
+                <FormControl
+                  componentClass="textarea"
+                  value={description}
+                  onChange={description => onChange?.({...value, description})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
+                <TagPicker
+                  style={{width: '100%'}}
+                  creatable={true}
+                  value={tags}
+                  data={tags.map(tag => ({label: tag, value: tag}))}
+                  onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
+                <ChooseEditImage
+                  header={''}
+                  image={image}
+                  disabled={false}
+                  openChooseModalOpen={() => {
+                    setChooseModalOpen(true)
+                  }}
+                  openEditModalOpen={() => {
+                    setEditModalOpen(true)
+                  }}
+                  removeImage={() => onChange?.({...value, image: undefined})}
+                />
+              </FormGroup>
+            </Form>
+          </Panel>
         )
       default:
         return <></>
