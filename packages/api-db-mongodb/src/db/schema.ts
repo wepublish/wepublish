@@ -26,7 +26,9 @@ export enum CollectionName {
   ArticlesHistory = 'articles.history',
 
   Pages = 'pages',
-  PagesHistory = 'pages.history'
+  PagesHistory = 'pages.history',
+
+  MailLog = 'mail.log'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -262,4 +264,18 @@ export interface DBPageRevision {
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBMailLog {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  recipients: string[]
+  subject: string
+  done: boolean
+  successful: boolean
+  mailProviderID: string
+  mailData?: string
 }

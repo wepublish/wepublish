@@ -438,6 +438,19 @@ export type ListicleItemInput = {
   richText: Scalars['RichText'];
 };
 
+export type MailLog = {
+  __typename?: 'MailLog';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  recipients: Array<Scalars['String']>;
+  subject: Scalars['String'];
+  done: Scalars['Boolean'];
+  successful: Scalars['Boolean'];
+  mailProviderID: Scalars['String'];
+  mailData?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   updatePeerProfile: PeerProfile;
@@ -477,6 +490,7 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  sendMail?: Maybe<MailLog>;
 };
 
 

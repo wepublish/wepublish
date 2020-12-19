@@ -66,6 +66,7 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLMailLog} from './mailLog'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -679,6 +680,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    sendMail: {
+      type: GraphQLMailLog,
+      args: {},
+      async resolve(root, {}, {authenticate, sendMailFromProvider}) {
+        const {roles} = authenticate()
+        authorise(CanPublishPage, roles)
+
+        return await sendMailFromProvider({
+          recipient: ['nico@wepublish.ch'],
+          subject: 'Test Mail',
+          message: 'Hello from we.publish',
+          replyToAddress: 'dev@wepublish.ch'
+        })
       }
     }
   }

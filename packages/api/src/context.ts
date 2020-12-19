@@ -34,6 +34,8 @@ import {OptionalPage, OptionalPublicPage} from './db/page'
 
 import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
+import {BaseMailProvider} from './mails/mailProvider'
+import {MailLog, OptionalMailLog} from './db/mailLog'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -52,6 +54,8 @@ export interface DataLoaderContext {
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
+
+  readonly mailLogsByID: DataLoader<string, OptionalMailLog>
 
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>
@@ -72,6 +76,8 @@ export interface Context {
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
+
+  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
 
   authenticate(): Session
   authenticateToken(): TokenSession
@@ -94,13 +100,32 @@ export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
+  readonly mailProvider: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 }
 
+export interface SendMailFromProviderProps {
+  recipient: string[]
+  replyToAddress: string
+  subject: string
+  message?: string
+  template?: string
+  templateData?: Record<string, any>
+}
+
 export async function contextFromRequest(
   req: IncomingMessage,
-  {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
+  {
+    hostURL,
+    websiteURL,
+    dbAdapter,
+    mediaAdapter,
+    urlAdapter,
+    oauth2Providers,
+    hooks,
+    mailProvider
+  }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.session.getSessionByToken(token) : null
@@ -113,6 +138,22 @@ export async function contextFromRequest(
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
     dbAdapter.peer.getPeersByID(ids)
   )
+
+  const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
+    const mailLog = await dbAdapter.mailLog.createMailLog({
+      input: {
+        successful: false,
+        done: false,
+        subject: props.subject,
+        recipients: props.recipient,
+        mailProviderID: mailProvider.id
+      }
+    })
+
+    await mailProvider.sendMail({...props, mailLogID: mailLog.id})
+
+    return mailLog
+  }
 
   return {
     hostURL,
@@ -135,6 +176,8 @@ export async function contextFromRequest(
       publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
       userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+
+      mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
 
       peer: peerDataLoader,
       peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
@@ -201,6 +244,8 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     hooks,
+
+    sendMailFromProvider,
 
     authenticateUser() {
       if (!session || session.type !== SessionType.User) {

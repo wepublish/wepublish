@@ -4,6 +4,7 @@ import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -45,6 +46,8 @@ export class WepublishServer {
       ],
       methods: ['POST', 'GET', 'OPTIONS']
     }
+
+    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
 
     adminServer.applyMiddleware({
       app,

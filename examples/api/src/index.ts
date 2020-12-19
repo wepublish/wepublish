@@ -5,7 +5,8 @@ import {
   PublicArticle,
   PublicPage,
   Author,
-  Oauth2Provider
+  Oauth2Provider,
+  MailgunMailProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -113,12 +114,27 @@ async function asyncMain() {
     }
   ]
 
+  if (!process.env.MAILGUN_API_KEY) throw new Error('No MAILGUN_API_KEY defined in environment.')
+  if (!process.env.MAILGUN_BASE_URL) throw new Error('No MAILGUN_BASE_URL defined in environment.')
+  if (!process.env.MAILGUN_WEBHOOK_SECRET)
+    throw new Error('No MAILGUN_WEBHOOK_SECRET defined in environment.')
+
+  const mailgunMailProvider = new MailgunMailProvider({
+    id: 'mailgun',
+    name: 'Mailgun',
+    fromAddress: 'mails@wepublish.media',
+    webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
+    baseURL: process.env.MAILGUN_BASE_URL,
+    apiKey: process.env.MAILGUN_API_KEY
+  })
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,
+    mailProvider: mailgunMailProvider,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,

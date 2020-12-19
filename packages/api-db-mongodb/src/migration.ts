@@ -485,6 +485,14 @@ export const Migrations: Migration[] = [
         }
       )
     }
+  },
+  {
+    // Add new collection MailLog
+    version: 9,
+    async migrate(db) {
+      const mailLogs = await db.createCollection(CollectionName.MailLog, {strict: true})
+      await mailLogs.createIndex({subject: 1})
+    }
   }
 ]
 
