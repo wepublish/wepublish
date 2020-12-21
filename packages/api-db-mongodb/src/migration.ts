@@ -454,33 +454,33 @@ export const Migrations: Migration[] = [
       await db.collection(CollectionName.Articles).updateMany(
         {
           pending: {$ne: null},
-          'pending.socialMediaAuthorsID': {$exists: false}
+          'pending.socialMediaAuthorsIDs': {$exists: false}
         },
         {
           $set: {
-            'pending.socialMediaAuthorsID': []
+            'pending.socialMediaAuthorsIDs': []
           }
         }
       )
       await db.collection(CollectionName.Articles).updateMany(
         {
           published: {$ne: null},
-          'published.socialMediaAuthorsID': {$exists: false}
+          'published.socialMediaAuthorsIDs': {$exists: false}
         },
         {
           $set: {
-            'published.socialMediaAuthorsID': []
+            'published.socialMediaAuthorsIDs': []
           }
         }
       )
       await db.collection(CollectionName.Articles).updateMany(
         {
           draft: {$ne: null},
-          'draft.socialMediaAuthorsID': {$exists: false}
+          'draft.socialMediaAuthorsIDs': {$exists: false}
         },
         {
           $set: {
-            'draft.socialMediaAuthorsID': []
+            'draft.socialMediaAuthorsIDs': []
           }
         }
       )
