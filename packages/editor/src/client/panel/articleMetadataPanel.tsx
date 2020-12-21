@@ -143,9 +143,9 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
                   data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
                   onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
-                  onChange={socialMediaAuthorsID => {
+                  onChange={socialMediaAuthorIDs => {
                     const socialMediaAuthors = foundAuthors.filter(author =>
-                      socialMediaAuthorsID.includes(author.id)
+                      socialMediaAuthorIDs.includes(author.id)
                     )
                     onChange?.({...value, socialMediaAuthors})
                   }}
