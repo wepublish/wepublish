@@ -145,6 +145,10 @@ Object {
         "publishedAt": null,
         "revision": 0,
         "slug": "my-super-seo-slug-for-the-best-article",
+        "socialMediaAuthors": Array [],
+        "socialMediaDescription": "A social media description",
+        "socialMediaImage": null,
+        "socialMediaTitle": "A social media title",
         "tags": Array [
           "testing",
           "awesome",

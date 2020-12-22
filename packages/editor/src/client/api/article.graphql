@@ -166,6 +166,15 @@ query Article($id: ID!) {
       hideAuthor
 
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage{
+        ...ImageRef
+      }
+
       blocks {
         ...FullBlock
       }

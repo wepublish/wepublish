@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - F/WEP-116-add-peer-call-to-action-info
+      - f/WEP-87-social-media-metatags
 
 jobs:
   release:

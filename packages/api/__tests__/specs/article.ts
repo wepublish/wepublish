@@ -26,6 +26,7 @@ beforeAll(async () => {
     console.log('public', testClientPublic)
   } catch (error) {
     console.log('Error', error)
+
     throw new Error('Error during test setup')
   }
 })
@@ -49,6 +50,10 @@ describe('Articles', () => {
           {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
         ],
         authorIDs: [],
+        socialMediaTitle: 'A social media title',
+        socialMediaAuthorIDs: [],
+        socialMediaDescription: 'A social media description',
+        socialMediaImageID: '',
         blocks: []
       }
       const res = await mutate({
@@ -76,6 +81,10 @@ describe('Articles', () => {
           {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
         ],
         authorIDs: [],
+        socialMediaTitle: 'A social media title',
+        socialMediaAuthorIDs: [],
+        socialMediaDescription: 'A social media description',
+        socialMediaImageID: '',
         blocks: []
       }
       const res = await mutate({
@@ -159,6 +168,10 @@ describe('Articles', () => {
               {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
             ],
             authorIDs: [],
+            socialMediaTitle: 'A new social media title',
+            socialMediaAuthorIDs: [],
+            socialMediaDescription: 'A new social media description',
+            socialMediaImageID: '',
             blocks: []
           },
           id: articleIds[0]

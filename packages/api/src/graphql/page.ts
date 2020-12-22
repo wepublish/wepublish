@@ -77,6 +77,10 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
 
     imageID: {type: GraphQLID},
 
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaImageID: {type: GraphQLID},
+
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
     }
@@ -106,6 +110,15 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
 
@@ -179,6 +192,15 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}, info) => {
         return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+
+    socialMediaTitle: {type: GraphQLString},
+    socialMediaDescription: {type: GraphQLString},
+    socialMediaImage: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({socialMediaImageID}, args, {loaders}, info) => {
+        return socialMediaImageID ? loaders.images.load(socialMediaImageID) : null
       })
     },
 
