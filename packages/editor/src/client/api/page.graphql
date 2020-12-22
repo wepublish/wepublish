@@ -130,6 +130,11 @@ query Page($id: ID!) {
         value
         public
       }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage{
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }

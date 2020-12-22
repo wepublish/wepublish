@@ -16,6 +16,11 @@ export interface PageData {
   readonly properties: MetadataProperty[]
 
   readonly imageID?: string
+
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaImageID?: string
+
   readonly blocks: PageBlock[]
 }
 

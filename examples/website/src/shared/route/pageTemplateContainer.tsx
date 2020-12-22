@@ -40,6 +40,11 @@ const PageQuery = gql`
       slug
       title
       description
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...SimpleImageData
+      }
       image {
         ...SimpleImageData
       }
@@ -97,7 +102,15 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
   if (error) return <NotFoundTemplate statusCode={500} />
   if (!data?.page) return <NotFoundTemplate />
 
-  const {title, slug: pageSlug, description, image} = data.page
+  const {
+    title,
+    slug: pageSlug,
+    description,
+    image,
+    socialMediaTitle,
+    socialMediaDescription,
+    socialMediaImage
+  } = data.page
 
   const path = PageRoute.reverse({slug: pageSlug || undefined})
   const canonicalURL = canonicalHost + path
@@ -108,11 +121,16 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
         <title>Wepublish | {title}</title>
         {description && <meta name="description" content={description} />}
         <link rel="canonical" href={canonicalURL} />
-
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={socialMediaTitle ?? title} />
+        {(socialMediaDescription || description) && (
+          <meta property="og:description" content={socialMediaDescription ?? description} />
+        )}
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalURL} />
-        {image && <meta property="og:image" content={image.ogURL} />}
+        {(image || socialMediaImage) && (
+          <meta property="og:image" content={socialMediaImage?.ogURL ?? image?.ogURL ?? ''} />
+        )}
+        <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
       <PageTemplate title={slug !== '' ? data.page.title : undefined}>
         <BlockRenderer

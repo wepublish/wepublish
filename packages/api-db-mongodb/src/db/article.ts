@@ -101,7 +101,12 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
             'draft.blocks': data.blocks,
 
-            'draft.hideAuthor': data.hideAuthor
+            'draft.hideAuthor': data.hideAuthor,
+
+            'draft.socialMediaTitle': data.socialMediaTitle,
+            'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
+            'draft.socialMediaDescription': data.socialMediaDescription,
+            'draft.socialMediaImageID': data.socialMediaImageID
           }
         }
       ] as any,

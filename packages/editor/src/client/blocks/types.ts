@@ -151,6 +151,11 @@ export enum TeaserType {
   Page = 'page'
 }
 
+export enum MetaDataType {
+  General = 'general',
+  SocialMedia = 'socialMedia'
+}
+
 export interface ArticleTeaserLink {
   type: TeaserType.Article
   article: ArticleRefFragment
