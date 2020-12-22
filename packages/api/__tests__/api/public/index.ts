@@ -14,8 +14,8 @@ export type Scalars = {
   DateTime: string
   /** A hexidecimal color value. */
   Color: string
-  Slug: string
   RichText: Node[]
+  Slug: string
 }
 
 export type Article = {
@@ -329,6 +329,8 @@ export type PeerProfile = {
   themeColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type Point = {
