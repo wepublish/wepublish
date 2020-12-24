@@ -12,11 +12,11 @@ import {
 import {isFormatActive, toggleFormat} from './editorUtils'
 import {Format} from './formats'
 
-interface SlateBlockIconButtonProps extends ToolbarIconButtonProps {
+interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly format: Format
 }
 
-export function FormatIconButton({icon, format}: SlateBlockIconButtonProps) {
+export function FormatIconButton({icon, format}: FormatBlockIconButtonProps) {
   const editor = useSlate()
 
   return (
@@ -31,11 +31,11 @@ export function FormatIconButton({icon, format}: SlateBlockIconButtonProps) {
   )
 }
 
-interface SlateBlockButtonProps extends ToolbarButtonProps {
+interface FormatBlockButtonProps extends ToolbarButtonProps {
   readonly format: Format
 }
 
-export function FormatButton({format, children}: SlateBlockButtonProps) {
+export function FormatButton({format, children}: FormatBlockButtonProps) {
   const editor = useSlate()
 
   return (
@@ -50,11 +50,15 @@ export function FormatButton({format, children}: SlateBlockButtonProps) {
   )
 }
 
-interface SlateSubMenuButtonProps extends SubMenuButtonProps {
+interface EditorSubMenuButtonProps extends SubMenuButtonProps {
   editorHasFocus: boolean
 }
 
-export function SlateSubMenuButton({editorHasFocus, children, ...props}: SlateSubMenuButtonProps) {
+export function EditorSubMenuButton({
+  editorHasFocus,
+  children,
+  ...props
+}: EditorSubMenuButtonProps) {
   const triggerRef = useRef<PopoverProps>(null)
 
   useEffect(() => {

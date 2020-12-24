@@ -7,7 +7,7 @@ import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, FormatIconButton, SlateSubMenuButton} from './buttons'
+import {FormatButton, FormatIconButton, EditorSubMenuButton} from './buttons'
 import {renderElement, renderLeaf, withRichText} from './editor'
 import {BlockFormat, TextFormat} from './formats'
 import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
@@ -69,9 +69,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="table" editorHasFocus={hasFocus}>
+        <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
           <TableMenu />
-        </SlateSubMenuButton>
+        </EditorSubMenuButton>
 
         <ToolbarDivider />
 
@@ -89,9 +89,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
+        <EditorSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
-        </SlateSubMenuButton>
+        </EditorSubMenuButton>
       </Toolbar>
       <Editable
         readOnly={disabled}
