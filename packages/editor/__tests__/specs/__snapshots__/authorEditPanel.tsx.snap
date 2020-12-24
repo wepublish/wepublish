@@ -709,7 +709,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                               <FormatButton
                                 format="heading-one"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -741,12 +741,12 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       </svg>
                                     </H1Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-two"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -778,12 +778,12 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       </svg>
                                     </H2Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-three"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -815,7 +815,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       </svg>
                                     </H3Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <ToolbarDivider>
                                 <div
@@ -841,7 +841,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="list-ul"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -877,7 +877,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -889,7 +889,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="list-ol"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -925,7 +925,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -943,26 +943,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="table"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <TableMenu />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="table"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -973,15 +960,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -991,35 +976,43 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <TableMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
@@ -1029,48 +1022,59 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -1095,7 +1099,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="bold"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1131,7 +1135,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -1143,7 +1147,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="italic"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1179,7 +1183,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -1191,7 +1195,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="underline"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1227,7 +1231,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -1239,7 +1243,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="strikethrough"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1275,7 +1279,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -1287,7 +1291,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="superscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1323,7 +1327,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -1335,7 +1339,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="subscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1371,7 +1375,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -1395,7 +1399,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="link"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -1431,7 +1435,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                                 <defaultProps(Modal)
                                   animation={
@@ -1533,7 +1537,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   icon="unlink"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     disabled={true}
                                     onMouseDown={[Function]}
@@ -1571,7 +1575,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </RemoveLinkFormatButton>
                               <ToolbarDivider>
@@ -1589,28 +1593,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="smile-o"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <EmojiPicker
-                                        doWithEmoji={[Function]}
-                                      />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="smile-o"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -1623,15 +1612,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -1643,35 +1630,45 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <EmojiPicker
+                                              doWithEmoji={[Function]}
+                                            />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="smile-o"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -1681,48 +1678,59 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-smile-o"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="smile-o"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-smile-o"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -3574,7 +3582,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                               <FormatButton
                                 format="heading-one"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -3606,12 +3614,12 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       </svg>
                                     </H1Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-two"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -3643,12 +3651,12 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       </svg>
                                     </H2Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-three"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -3680,7 +3688,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       </svg>
                                     </H3Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <ToolbarDivider>
                                 <div
@@ -3706,7 +3714,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="list-ul"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -3742,7 +3750,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -3754,7 +3762,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="list-ol"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -3790,7 +3798,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -3808,26 +3816,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="table"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <TableMenu />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="table"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -3838,15 +3833,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -3856,35 +3849,43 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <TableMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
@@ -3894,48 +3895,59 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -3960,7 +3972,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="bold"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -3996,7 +4008,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -4008,7 +4020,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="italic"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4044,7 +4056,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -4056,7 +4068,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="underline"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4092,7 +4104,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -4104,7 +4116,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="strikethrough"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4140,7 +4152,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -4152,7 +4164,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="superscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4188,7 +4200,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -4200,7 +4212,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="subscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4236,7 +4248,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -4260,7 +4272,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="link"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -4296,7 +4308,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                                 <defaultProps(Modal)
                                   animation={
@@ -4398,7 +4410,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   icon="unlink"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     disabled={true}
                                     onMouseDown={[Function]}
@@ -4436,7 +4448,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </RemoveLinkFormatButton>
                               <ToolbarDivider>
@@ -4454,28 +4466,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="smile-o"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <EmojiPicker
-                                        doWithEmoji={[Function]}
-                                      />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="smile-o"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -4488,15 +4485,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -4508,35 +4503,45 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <EmojiPicker
+                                              doWithEmoji={[Function]}
+                                            />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="smile-o"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -4546,48 +4551,59 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-smile-o"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="smile-o"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-smile-o"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -6017,7 +6033,7 @@ exports[`Author Edit Panel should render 1`] = `
                               <FormatButton
                                 format="heading-one"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -6049,12 +6065,12 @@ exports[`Author Edit Panel should render 1`] = `
                                       </svg>
                                     </H1Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-two"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -6086,12 +6102,12 @@ exports[`Author Edit Panel should render 1`] = `
                                       </svg>
                                     </H2Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-three"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -6123,7 +6139,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       </svg>
                                     </H3Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <ToolbarDivider>
                                 <div
@@ -6149,7 +6165,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="list-ul"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6185,7 +6201,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6197,7 +6213,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="list-ol"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6233,7 +6249,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -6251,26 +6267,13 @@ exports[`Author Edit Panel should render 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="table"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <TableMenu />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="table"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -6281,15 +6284,13 @@ exports[`Author Edit Panel should render 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -6299,35 +6300,43 @@ exports[`Author Edit Panel should render 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <TableMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
@@ -6337,48 +6346,59 @@ exports[`Author Edit Panel should render 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -6403,7 +6423,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="bold"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6439,7 +6459,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6451,7 +6471,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="italic"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6487,7 +6507,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6499,7 +6519,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="underline"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6535,7 +6555,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6547,7 +6567,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="strikethrough"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6583,7 +6603,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6595,7 +6615,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="superscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6631,7 +6651,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -6643,7 +6663,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="subscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6679,7 +6699,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -6703,7 +6723,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="link"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -6739,7 +6759,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                                 <defaultProps(Modal)
                                   animation={
@@ -6841,7 +6861,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   icon="unlink"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     disabled={true}
                                     onMouseDown={[Function]}
@@ -6879,7 +6899,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </RemoveLinkFormatButton>
                               <ToolbarDivider>
@@ -6897,28 +6917,13 @@ exports[`Author Edit Panel should render 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="smile-o"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <EmojiPicker
-                                        doWithEmoji={[Function]}
-                                      />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="smile-o"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -6931,15 +6936,13 @@ exports[`Author Edit Panel should render 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -6951,35 +6954,45 @@ exports[`Author Edit Panel should render 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <EmojiPicker
+                                              doWithEmoji={[Function]}
+                                            />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="smile-o"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -6989,48 +7002,59 @@ exports[`Author Edit Panel should render 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-smile-o"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="smile-o"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-smile-o"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -8462,7 +8486,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                               <FormatButton
                                 format="heading-one"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -8494,12 +8518,12 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       </svg>
                                     </H1Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-two"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -8531,12 +8555,12 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       </svg>
                                     </H2Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <FormatButton
                                 format="heading-three"
                               >
-                                <ForwardRef(ToolbarButton)
+                                <ForwardRef
                                   active={false}
                                   onMouseDown={[Function]}
                                 >
@@ -8568,7 +8592,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       </svg>
                                     </H3Icon>
                                   </button>
-                                </ForwardRef(ToolbarButton)>
+                                </ForwardRef>
                               </FormatButton>
                               <ToolbarDivider>
                                 <div
@@ -8594,7 +8618,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="list-ul"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -8630,7 +8654,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -8642,7 +8666,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="list-ol"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -8678,7 +8702,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -8696,26 +8720,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="table"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <TableMenu />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="table"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -8726,15 +8737,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -8744,35 +8753,43 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <TableMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="table"
@@ -8782,48 +8799,59 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -8848,7 +8876,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="bold"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -8884,7 +8912,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -8896,7 +8924,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="italic"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -8932,7 +8960,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -8944,7 +8972,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="underline"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -8980,7 +9008,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -8992,7 +9020,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="strikethrough"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -9028,7 +9056,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -9040,7 +9068,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="superscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -9076,7 +9104,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <FormatIconButton
@@ -9088,7 +9116,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="subscript"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -9124,7 +9152,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </FormatIconButton>
                               <ToolbarDivider>
@@ -9148,7 +9176,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="link"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     onMouseDown={[Function]}
                                   >
@@ -9184,7 +9212,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                                 <defaultProps(Modal)
                                   animation={
@@ -9286,7 +9314,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   icon="unlink"
                                   onMouseDown={[Function]}
                                 >
-                                  <ForwardRef(ToolbarButton)
+                                  <ForwardRef
                                     active={false}
                                     disabled={true}
                                     onMouseDown={[Function]}
@@ -9324,7 +9352,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Icon>
                                       </defaultProps(Icon)>
                                     </button>
-                                  </ForwardRef(ToolbarButton)>
+                                  </ForwardRef>
                                 </ToolbarIconButton>
                               </RemoveLinkFormatButton>
                               <ToolbarDivider>
@@ -9342,28 +9370,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SubMenuButton
+                              <SlateSubMenuButton
                                 icon="smile-o"
                               >
-                                <withLocale(Whisper)
-                                  placement="top"
-                                  speaker={
-                                    <defaultProps(Popover)
-                                      classPrefix="rs-popover"
-                                    >
-                                      <EmojiPicker
-                                        doWithEmoji={[Function]}
-                                      />
-                                    </defaultProps(Popover)>
-                                  }
-                                  trigger="none"
+                                <ForwardRef
+                                  icon="smile-o"
                                 >
-                                  <Whisper
-                                    locale={
-                                      Object {
-                                        "formatDate": [Function],
-                                      }
-                                    }
+                                  <withLocale(Whisper)
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -9376,15 +9389,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <OverlayTrigger
-                                      delayHide={200}
+                                    <Whisper
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
-                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -9396,35 +9407,45 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <ForwardRef(ToolbarButton)
-                                        active={false}
-                                        key="triggerComponent"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <button
-                                          onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "backgroundColor": "transparent",
-                                              "border": "transparent 1px solid",
-                                              "borderRadius": 3,
-                                              "cursor": "pointer",
-                                              "fontSize": 16,
-                                              "padding": 2,
-                                            }
+                                      <OverlayTrigger
+                                        delayHide={200}
+                                        locale={
+                                          Object {
+                                            "formatDate": [Function],
                                           }
+                                        }
+                                        placement="top"
+                                        rootClose={true}
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
+                                          >
+                                            <EmojiPicker
+                                              doWithEmoji={[Function]}
+                                            />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
+                                          onMouseDown={[Function]}
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="smile-o"
+                                          <button
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "backgroundColor": "transparent",
+                                                "border": "transparent 1px solid",
+                                                "borderRadius": 3,
+                                                "cursor": "pointer",
+                                                "fontSize": 16,
+                                                "padding": 2,
                                               }
                                             }
                                           >
-                                            <Icon
+                                            <defaultProps(Icon)
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -9434,48 +9455,59 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-smile-o"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="smile-o"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-smile-o"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
-                                          containerInfo={<body />}
+                                          key="portal"
                                         >
-                                          <Overlay
-                                            placement="top"
-                                            rootClose={true}
-                                            target={[Function]}
+                                          <Portal
+                                            containerInfo={<body />}
                                           >
-                                            <BaseOverlay
+                                            <Overlay
                                               placement="top"
                                               rootClose={true}
                                               target={[Function]}
-                                              transition={
-                                                Object {
-                                                  "$$typeof": Symbol(react.forward_ref),
-                                                  "displayName": "Fade",
-                                                  "render": [Function],
+                                            >
+                                              <BaseOverlay
+                                                placement="top"
+                                                rootClose={true}
+                                                target={[Function]}
+                                                transition={
+                                                  Object {
+                                                    "$$typeof": Symbol(react.forward_ref),
+                                                    "displayName": "Fade",
+                                                    "render": [Function],
+                                                  }
                                                 }
-                                              }
-                                            />
-                                          </Overlay>
+                                              />
+                                            </Overlay>
+                                          </Portal>
                                         </Portal>
-                                      </Portal>
-                                    </OverlayTrigger>
-                                  </Whisper>
-                                </withLocale(Whisper)>
-                              </SubMenuButton>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </SlateSubMenuButton>
                             </div>
                           </div>
                         </div>

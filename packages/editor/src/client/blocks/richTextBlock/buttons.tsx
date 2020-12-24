@@ -1,5 +1,6 @@
-import React from 'react'
-import {useSlate} from 'slate-react'
+import React, {useEffect, useRef} from 'react'
+import {PopoverProps} from 'rsuite'
+import {ReactEditor, useSlate} from 'slate-react'
 import {
   ToolbarIconButtonProps,
   ToolbarButtonProps,
@@ -49,8 +50,22 @@ export function FormatButton({format, children}: SlateBlockButtonProps) {
   )
 }
 
-export function SlateSubMenuButton({children, ...props}: SubMenuButtonProps) {
-  return <SubMenuButton {...props}>{children}</SubMenuButton>
+interface SlateSubMenuButtonProps extends SubMenuButtonProps {
+  editorHasFocus: boolean
+}
+
+export function SlateSubMenuButton({editorHasFocus, children, ...props}: SlateSubMenuButtonProps) {
+  const triggerRef = useRef<PopoverProps>(null)
+
+  useEffect(() => {
+    if (!editorHasFocus && triggerRef.current) triggerRef.current!.close()
+  }, [editorHasFocus])
+
+  return (
+    <SubMenuButton {...props} ref={triggerRef}>
+      {children}
+    </SubMenuButton>
+  )
 }
 
 export function H1Icon() {

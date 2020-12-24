@@ -69,7 +69,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="table">
+        <SlateSubMenuButton icon="table" editorHasFocus={hasFocus}>
           <TableMenu />
         </SlateSubMenuButton>
 
@@ -89,7 +89,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="smile-o">
+        <SlateSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </SlateSubMenuButton>
       </Toolbar>
