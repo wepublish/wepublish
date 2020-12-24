@@ -1,6 +1,6 @@
 import React, {memo, useMemo, useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {createEditor, Node as SlateNode, Transforms} from 'slate'
+import {createEditor, Location, Node as SlateNode, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
@@ -23,7 +23,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 }: RichTextBlockProps) {
   const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
   const [hasFocus, setFocus] = useState(false)
-  const [location, setLocation] = useState<typeof editor.selection>(null)
+  const [location, setLocation] = useState<Location | null>(null)
 
   const {t} = useTranslation()
 
@@ -33,8 +33,8 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
-  const focusAtPreviousLocation = () => {
-    if (!hasFocus && location) Transforms.select(editor, location)
+  const focusAtPreviousLocation = (location: Location) => {
+    Transforms.select(editor, location)
     ReactEditor.focus(editor)
   }
 
@@ -46,7 +46,12 @@ export const RichTextBlock = memo(function RichTextBlock({
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) onChange(newValue)
       }}>
-      <Toolbar fadeOut={!hasFocus} handleToolbarClick={focusAtPreviousLocation}>
+      <Toolbar
+        fadeOut={!hasFocus}
+        onMouseDown={e => {
+          e.preventDefault()
+          if (!hasFocus && location) focusAtPreviousLocation(location)
+        }}>
         <FormatButton format={BlockFormat.H1}>
           <H1Icon />
         </FormatButton>

@@ -5,7 +5,8 @@ import React, {
   useCallback,
   useRef,
   useState,
-  createContext
+  createContext,
+  ReactEventHandler
 } from 'react'
 
 import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
@@ -13,15 +14,15 @@ import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export interface ToolbarProps {
-  readonly handleToolbarClick?: () => void
+  readonly onMouseDown?: ReactEventHandler
   readonly fadeOut?: boolean
   readonly children?: ReactNode
 }
 
-export function Toolbar({handleToolbarClick, fadeOut = false, children}: ToolbarProps) {
+export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) {
   return (
     <div
-      onClick={handleToolbarClick}
+      onMouseDown={onMouseDown}
       style={{
         pointerEvents: 'none',
         display: 'flex',
