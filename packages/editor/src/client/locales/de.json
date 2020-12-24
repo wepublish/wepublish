@@ -101,7 +101,17 @@
         "teaserStyle": "Style: {{label}}",
         "status": "Status: {{stateJoin}}",
         "uploadImage": "Upload Image",
-        "hideAuthors": "Hide Authors"
+        "removeTeaser": "Remove Teaser",
+        "sharedWithPeers": "Shared With Peers",
+        "socialMedia": "Social Media",
+        "general": "General",
+        "socialMediaTitle": "Title for Social Media",
+        "socialMediaDescription": "Description for Social Media",
+        "socialMediaAuthors": "Authors for Social Media",
+        "hideAuthors": "Hide Authors",
+        "socialMediaImage": "Image for Social Media",
+        "postImage": "Image for Post",
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
       }
     },
     "pages": {
@@ -151,7 +161,11 @@
         "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
         "publishDate": "Publish Date",
         "invalidDate": "Invalid Date",
-        "updateDate": "Update Date"
+        "updateDate": "Update Date",
+        "socialMediaTitle": "Title for Social Media",
+        "socialMediaDescription": "Description for Social Media",
+        "socialMediaImage": "Image for Social Media",
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
       }
     },
     "authors": {
