@@ -7,11 +7,12 @@ import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, FormatIconButton, EditorSubMenuButton} from './buttons'
-import {renderElement, renderLeaf, withRichText} from './editor'
-import {BlockFormat, TextFormat} from './formats'
-import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
-import {TableMenu} from './tableMenu'
+import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
+import {renderElement, renderLeaf} from './editor/render'
+import {BlockFormat, TextFormat} from './editor/formats'
+import {withRichText} from './editor/plugins'
+import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
+import {TableMenu} from './toolbar/tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 

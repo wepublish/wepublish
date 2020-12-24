@@ -8,9 +8,9 @@ import {
   ToolbarIconButton,
   SubMenuButton,
   SubMenuButtonProps
-} from '../../atoms/toolbar'
-import {isFormatActive, toggleFormat} from './editorUtils'
-import {Format} from './formats'
+} from '../../../atoms/toolbar'
+import {isFormatActive, toggleFormat} from '../editor/utils'
+import {Format} from '../editor/formats'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly format: Format
