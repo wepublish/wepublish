@@ -944,6 +944,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="table"
                               >
                                 <ForwardRef
@@ -1053,11 +1054,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -1594,6 +1597,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="smile-o"
                               >
                                 <ForwardRef
@@ -1709,11 +1713,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -3817,6 +3823,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="table"
                               >
                                 <ForwardRef
@@ -3926,11 +3933,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -4467,6 +4476,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="smile-o"
                               >
                                 <ForwardRef
@@ -4582,11 +4592,13 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -6268,6 +6280,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="table"
                               >
                                 <ForwardRef
@@ -6377,11 +6390,13 @@ exports[`Author Edit Panel should render 1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -6918,6 +6933,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="smile-o"
                               >
                                 <ForwardRef
@@ -7033,11 +7049,13 @@ exports[`Author Edit Panel should render 1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -8721,6 +8739,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="table"
                               >
                                 <ForwardRef
@@ -8830,11 +8849,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
@@ -9371,6 +9392,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 />
                               </ToolbarDivider>
                               <SlateSubMenuButton
+                                editorHasFocus={false}
                                 icon="smile-o"
                               >
                                 <ForwardRef
@@ -9486,11 +9508,13 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             <Overlay
                                               placement="top"
                                               rootClose={true}
+                                              show={false}
                                               target={[Function]}
                                             >
                                               <BaseOverlay
                                                 placement="top"
                                                 rootClose={true}
+                                                show={false}
                                                 target={[Function]}
                                                 transition={
                                                   Object {
