@@ -5,9 +5,9 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, SubMenuButton} from '../../atoms/toolbar'
+import {Toolbar, ToolbarDivider} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, H1Icon, H2Icon, H3Icon, FormatIconButton} from './buttons'
+import {FormatButton, H1Icon, H2Icon, H3Icon, FormatIconButton, SlateSubMenuButton} from './buttons'
 import {renderElement, renderLeaf, withRichText} from './editor'
 import {BlockFormat, TextFormat} from './formats'
 import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
@@ -69,9 +69,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SubMenuButton icon="table">
+        <SlateSubMenuButton icon="table">
           <TableMenu />
-        </SubMenuButton>
+        </SlateSubMenuButton>
 
         <ToolbarDivider />
 
@@ -89,9 +89,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SubMenuButton icon="smile-o">
+        <SlateSubMenuButton icon="smile-o">
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
-        </SubMenuButton>
+        </SlateSubMenuButton>
       </Toolbar>
       <Editable
         readOnly={disabled}

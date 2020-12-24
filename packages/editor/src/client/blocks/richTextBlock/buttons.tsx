@@ -4,7 +4,9 @@ import {
   ToolbarIconButtonProps,
   ToolbarButtonProps,
   ToolbarButton,
-  ToolbarIconButton
+  ToolbarIconButton,
+  SubMenuButton,
+  SubMenuButtonProps
 } from '../../atoms/toolbar'
 import {isFormatActive, toggleFormat} from './editorUtils'
 import {Format} from './formats'
@@ -45,6 +47,10 @@ export function FormatButton({format, children}: SlateBlockButtonProps) {
       {children}
     </ToolbarButton>
   )
+}
+
+export function SlateSubMenuButton({children, ...props}: SubMenuButtonProps) {
+  return <SubMenuButton {...props}>{children}</SubMenuButton>
 }
 
 export function H1Icon() {
