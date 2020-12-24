@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react'
 import {PopoverProps} from 'rsuite'
-import {ReactEditor, useSlate} from 'slate-react'
+import {useSlate} from 'slate-react'
 import {
   ToolbarIconButtonProps,
   ToolbarButtonProps,
