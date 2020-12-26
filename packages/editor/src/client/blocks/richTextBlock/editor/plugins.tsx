@@ -153,3 +153,95 @@ function deserialize(element: Element): any {
 
   return children
 }
+
+// TODO: add 2 normalizeNode plugins (either integrate into existing olugins or new modules?)
+// See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
+
+// import { Transforms, Element, Node } from 'slate'
+//
+// const withParagraphs = editor => {
+//
+// ************
+// TODO Adapt this slate example to tables:
+// Rules:
+// - Table needs TableRow as child
+// - TableRow needs TableCell as child
+// - TableCell needs Paragraph as child
+// ************
+//
+//   const { normalizeNode } = editor
+//
+//   editor.normalizeNode = entry => {
+//     const [node, path] = entry
+//
+//     // If the element is a paragraph, ensure its children are valid.
+//     if (Element.isElement(node) && node.type === 'paragraph') {
+//       for (const [child, childPath] of Node.children(editor, path)) {
+//         if (Element.isElement(child) && !editor.isInline(child)) {
+//           Transforms.unwrapNodes(editor, { at: childPath })
+//           return
+//         }
+//       }
+//     }
+//
+//     // Fall back to the original `normalizeNode` to enforce other constraints.
+//     normalizeNode(entry)
+//   }
+//
+//   return editor
+// }
+
+// const withSchema = defineSchema([
+//
+// ************
+// TODO This was started by previoud company of wepublish < implement?:
+// ************
+//
+//   {
+//     for: 'node',
+//     match: 'editor',
+//     validate: {
+//       children: [
+//         {
+//           match: [
+//             ([node]) =>
+//               node.type === BlockFormat.H1 ||
+//               node.type === BlockFormat.H2 ||
+//               node.type === BlockFormat.H3 ||
+//               node.type === BlockFormat.UnorderedList ||
+//               node.type === BlockFormat.OrderedList ||
+//               node.type === BlockFormat.Paragraph ||
+//               node.type === InlineFormat.Link
+//           ]
+//         }
+//       ]
+//     },
+//     normalize: (editor, error) => {
+//       const {code, path} = error
+
+//       switch (code) {
+//         case 'child_invalid':
+//           Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
+//           break
+//       }
+//     }
+//   },
+
+//   {
+//     for: 'node',
+//     match: ([node]) =>
+//       node.type === BlockFormat.UnorderedList || node.type === BlockFormat.OrderedList,
+//     validate: {
+//       children: [{match: [([node]) => node.type === BlockFormat.ListItem]}]
+//     },
+//     normalize: (editor, error) => {
+//       const {code, path} = error
+
+//       switch (code) {
+//         case 'child_invalid':
+//           Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
+//           break
+//       }
+//     }
+//   }
+// ])
