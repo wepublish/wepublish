@@ -1,4 +1,5 @@
 import express, {Application} from 'express'
+import bodyParser from 'body-parser'
 
 import {ApolloServer} from 'apollo-server-express'
 
@@ -47,6 +48,9 @@ export class WepublishServer {
       methods: ['POST', 'GET', 'OPTIONS']
     }
 
+    app.use(bodyParser.json())
+    app.use(express.urlencoded({extended: true}))
+    app.use(bodyParser.raw({type: 'application/json'}))
     app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
 
     adminServer.applyMiddleware({

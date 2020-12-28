@@ -119,6 +119,11 @@ async function asyncMain() {
   if (!process.env.MAILGUN_WEBHOOK_SECRET)
     throw new Error('No MAILGUN_WEBHOOK_SECRET defined in environment.')
 
+  if (!process.env.MAILCHIMP_API_KEY)
+    throw new Error('No MAILCHIMP_API_KEY defined in environment.')
+  if (!process.env.MAILCHIMP_WEBHOOK_SECRET)
+    throw new Error('No MAILCHIMP_WEBHOOK_SECRET defined in environment.')
+
   const mailgunMailProvider = new MailgunMailProvider({
     id: 'mailgun',
     name: 'Mailgun',
@@ -127,6 +132,15 @@ async function asyncMain() {
     baseURL: process.env.MAILGUN_BASE_URL,
     apiKey: process.env.MAILGUN_API_KEY
   })
+
+  /* const mailchimpMailProvider = new MailchimpMailProvider({
+    id: 'mailchimp',
+    name: 'Mailchimp Mandrill',
+    fromAddress: 'mails@wepublish.media',
+    webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
+    baseURL: 'test',
+    apiKey: process.env.MAILCHIMP_API_KEY
+  }) */
 
   const server = new WepublishServer({
     hostURL,

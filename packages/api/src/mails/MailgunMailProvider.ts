@@ -4,12 +4,12 @@ import FormData from 'form-data'
 
 import {
   BaseMailProvider,
-  GetMailIDFromWebhookProps,
+  MailLogStatus,
   MailProviderProps,
-  MailStatus,
   SendMailProps,
   WebhookForSendMailProps
 } from './mailProvider'
+import {MailLogState} from '../db/mailLog'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
@@ -22,6 +22,21 @@ interface VerifyWebhookSignatureProps {
   timestamp: string
   token: string
   signature: string
+}
+
+function mapMailgunEventToMailLogState(event: string): MailLogState | null {
+  switch (event) {
+    case 'accepted':
+      return MailLogState.Accepted
+    case 'delivered':
+      return MailLogState.Delivered
+    case 'failed':
+      return MailLogState.Bounced
+    case 'rejected':
+      return MailLogState.Rejected
+    default:
+      return null
+  }
 }
 
 export class MailgunMailProvider extends BaseMailProvider {
@@ -45,8 +60,8 @@ export class MailgunMailProvider extends BaseMailProvider {
     return encodedToken === props.signature
   }
 
-  getMailIDFromWebhook(props: GetMailIDFromWebhookProps): string {
-    const body = JSON.parse(props.body.toString())
+  async webhookForSendMail({req}: WebhookForSendMailProps): Promise<MailLogStatus[]> {
+    const {body} = req
     if (!body.signature) throw new Error('No signature in webhook body')
     const {signature, token, timestamp} = body.signature as VerifyWebhookSignatureProps
     if (
@@ -57,40 +72,25 @@ export class MailgunMailProvider extends BaseMailProvider {
     )
       throw new Error('Webhook signature failed')
 
+    const mailLogStatuses: MailLogStatus[] = []
     if (!body['event-data']) throw new Error('No event-data in webhook body')
+    const state = mapMailgunEventToMailLogState(body['event-data'].event)
     if (!body['event-data']['user-variables']) throw new Error('No user-variables in webhook body')
-    return body['event-data']['user-variables'].mail_log_id
-  }
-
-  async webhookForSendMail(props: WebhookForSendMailProps): Promise<MailStatus> {
-    const body = JSON.parse(props.body.toString())
-    if (!body.signature) throw new Error('No signature in webhook body')
-    const {signature, token, timestamp} = body.signature as VerifyWebhookSignatureProps
-    if (
-      !timestamp ||
-      !token ||
-      !signature ||
-      !this.verifyWebhookSignature({timestamp, token, signature})
-    )
-      throw new Error('Webhook signature failed')
-
-    if (!body['event-data']) throw new Error('No event-data in webhook body')
-
-    const done = body['event-data'].event === 'delivered'
-    const successful = body['event-data'].event === 'delivered'
-    return {
-      done,
-      successful,
-      mailData: JSON.stringify(body['event-data'])
+    const mailLogID = body['event-data']['user-variables'].mail_log_id
+    if (state !== null && mailLogID !== undefined) {
+      mailLogStatuses.push({
+        state,
+        mailLogID,
+        mailData: JSON.stringify(body['event-data'])
+      })
     }
+    return Promise.resolve(mailLogStatuses)
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
     const form = new FormData()
     form.append('from', this.fromAddress)
-    props.recipient.forEach(recipient => {
-      form.append('to', recipient)
-    })
+    form.append('to', props.recipient)
     form.append('subject', props.subject)
     form.append('text', props.message ?? '')
     form.append('v:mail_log_id', props.mailLogID)

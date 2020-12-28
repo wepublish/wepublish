@@ -66,7 +66,6 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {GraphQLMailLog} from './mailLog'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -321,12 +320,26 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLUser,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        password: {type: GraphQLNonNull(GraphQLString)},
+        sendMail: {type: GraphQLBoolean}
       },
-      resolve(root, {id, password}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {id, password, sendMail},
+        {authenticate, sendMailFromProvider, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanResetUserPassword, roles)
-        return dbAdapter.user.resetUserPassword({id, password})
+        const user = await dbAdapter.user.resetUserPassword({id, password})
+        if (sendMail && user) {
+          await sendMailFromProvider({
+            recipient: user.email,
+            subject: 'Your password has been reset',
+            message: `Hello ${user.name}\n\nYour password has been reset. You can login with your new password.`,
+            replyToAddress: 'dev@wepublish.ch'
+          })
+        }
+        return user
       }
     },
 
@@ -680,22 +693,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
-      }
-    },
-
-    sendMail: {
-      type: GraphQLMailLog,
-      args: {},
-      async resolve(root, {}, {authenticate, sendMailFromProvider}) {
-        const {roles} = authenticate()
-        authorise(CanPublishPage, roles)
-
-        return await sendMailFromProvider({
-          recipient: ['nico@wepublish.ch'],
-          subject: 'Test Mail',
-          message: 'Hello from we.publish',
-          replyToAddress: 'dev@wepublish.ch'
-        })
       }
     }
   }

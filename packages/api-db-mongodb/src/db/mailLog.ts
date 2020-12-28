@@ -32,10 +32,9 @@ export class MongoDBMailLogAdapter implements DBMailLogAdapter {
     const {ops} = await this.mailLog.insertOne({
       createdAt: new Date(),
       modifiedAt: new Date(),
-      recipients: input.recipients,
+      recipient: input.recipient,
       subject: input.subject,
-      done: input.done,
-      successful: input.successful,
+      state: input.state,
       mailProviderID: input.mailProviderID,
       mailData: input.mailData
     })
@@ -50,10 +49,9 @@ export class MongoDBMailLogAdapter implements DBMailLogAdapter {
       {
         $set: {
           modifiedAt: new Date(),
-          recipients: input.recipients,
+          recipient: input.recipient,
           subject: input.subject,
-          done: input.done,
-          successful: input.successful,
+          state: input.state,
           mailProviderID: input.mailProviderID,
           mailData: input.mailData
         }

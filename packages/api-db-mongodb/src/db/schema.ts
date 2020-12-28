@@ -4,7 +4,8 @@ import {
   MetadataProperty,
   NavigationLink,
   PageBlock,
-  RichTextNode
+  RichTextNode,
+  MailLogState
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -272,10 +273,9 @@ export interface DBMailLog {
   createdAt: Date
   modifiedAt: Date
 
-  recipients: string[]
+  recipient: string
   subject: string
-  done: boolean
-  successful: boolean
+  state: MailLogState
   mailProviderID: string
   mailData?: string
 }

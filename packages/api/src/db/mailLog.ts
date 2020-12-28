@@ -1,12 +1,11 @@
 import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
 export interface MailLogInput {
-  readonly recipients: string[]
+  readonly recipient: string
   readonly subject: string
-  readonly done: boolean
-  readonly successful: boolean
-  readonly mailProviderID: string
+  readonly state: MailLogState
   readonly mailData?: string
+  readonly mailProviderID: string
 }
 
 export interface CreateMailLogArgs {
@@ -30,16 +29,24 @@ export interface MailLogFilter {
   readonly subject?: string
 }
 
+export enum MailLogState {
+  Submitted = 'submitted',
+  Accepted = 'accepted',
+  Delivered = 'delivered',
+  Deferred = 'deferred',
+  Bounced = 'bounced',
+  Rejected = 'rejected'
+}
+
 export interface MailLog {
   readonly id: string
   readonly createdAt: Date
   readonly modifiedAt: Date
-  readonly recipients: string[]
+  readonly recipient: string
   readonly subject: string
-  readonly done: boolean
-  readonly successful: boolean
-  readonly mailProviderID: string
+  readonly state: MailLogState
   readonly mailData?: string
+  readonly mailProviderID: string
 }
 
 export type OptionalMailLog = MailLog | null

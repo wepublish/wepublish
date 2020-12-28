@@ -42,3 +42,4 @@ export * from './server'
 
 export * from './mails/mailProvider'
 export * from './mails/MailgunMailProvider'
+export * from './mails/MailchimpMailProvider'

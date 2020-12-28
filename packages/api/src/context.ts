@@ -7,19 +7,19 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLSchema, print, GraphQLError} from 'graphql'
+import {GraphQLError, GraphQLSchema, print} from 'graphql'
 
 import {
-  makeRemoteExecutableSchema,
-  introspectSchema,
   Fetcher,
-  IFetcherOperation
+  IFetcherOperation,
+  introspectSchema,
+  makeRemoteExecutableSchema
 } from 'graphql-tools'
 
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {TokenSession, UserSession, SessionType, OptionalSession, Session} from './db/session'
+import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
 
 import {DBAdapter} from './db/adapter'
 import {MediaAdapter} from './mediaAdapter'
@@ -35,7 +35,7 @@ import {OptionalPage, OptionalPublicPage} from './db/page'
 import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MailLog, OptionalMailLog} from './db/mailLog'
+import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -106,7 +106,7 @@ export interface ContextOptions {
 }
 
 export interface SendMailFromProviderProps {
-  recipient: string[]
+  recipient: string
   replyToAddress: string
   subject: string
   message?: string
@@ -142,14 +142,14 @@ export async function contextFromRequest(
   const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
     const mailLog = await dbAdapter.mailLog.createMailLog({
       input: {
-        successful: false,
-        done: false,
+        state: MailLogState.Submitted,
         subject: props.subject,
-        recipients: props.recipient,
+        recipient: props.recipient,
         mailProviderID: mailProvider.id
       }
     })
 
+    // TODO: handle sendMail error
     await mailProvider.sendMail({...props, mailLogID: mailLog.id})
 
     return mailLog

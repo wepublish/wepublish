@@ -6,15 +6,26 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLInputObjectType,
-  GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLEnumType
 } from 'graphql'
 
 import {Context} from '../context'
 
 import {GraphQLPageInfo} from './common'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {MailLog, MailLogSort} from '../db/mailLog'
+import {MailLog, MailLogSort, MailLogState} from '../db/mailLog'
+
+export const GraphQLMailLogState = new GraphQLEnumType({
+  name: 'MailLogState',
+  values: {
+    SUBMITTED: {value: MailLogState.Submitted},
+    ACCEPTED: {value: MailLogState.Accepted},
+    DELIVERED: {value: MailLogState.Delivered},
+    DEFERRED: {value: MailLogState.Deferred},
+    BOUNCED: {value: MailLogState.Bounced},
+    REJECTED: {value: MailLogState.Rejected}
+  }
+})
 
 export const GraphQLMailLog = new GraphQLObjectType<MailLog, Context>({
   name: 'MailLog',
@@ -24,10 +35,9 @@ export const GraphQLMailLog = new GraphQLObjectType<MailLog, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    recipients: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    recipient: {type: GraphQLNonNull(GraphQLString)},
     subject: {type: GraphQLNonNull(GraphQLString)},
-    done: {type: GraphQLNonNull(GraphQLBoolean)},
-    successful: {type: GraphQLNonNull(GraphQLBoolean)},
+    state: {type: GraphQLNonNull(GraphQLMailLogState)},
     mailProviderID: {type: GraphQLNonNull(GraphQLString)},
     mailData: {type: GraphQLString}
   }
