@@ -59,31 +59,32 @@ export abstract class BaseMailProvider implements MailProvider {
 export function setupMailProvider(opts: WepublishServerOpts): Router {
   const {mailProvider} = opts
   const mailProviderWebhookRouter = Router()
+  if (mailProvider) {
+    mailProviderWebhookRouter.route(`/${mailProvider.id}`).all(async (req, res, next) => {
+      res.status(200).send() // respond immediately with 200 since webhook was received.
+      try {
+        const mailLogStatuses = await mailProvider.webhookForSendMail({req})
+        const context = await contextFromRequest(req, opts)
 
-  mailProviderWebhookRouter.route(`/${mailProvider.id}`).all(async (req, res, next) => {
-    res.status(200).send() // respond immediately with 200 since webhook was received.
-    try {
-      const mailLogStatuses = await mailProvider.webhookForSendMail({req})
-      const context = await contextFromRequest(req, opts)
-
-      for (const mailLogStatus of mailLogStatuses) {
-        const mailLog = await context.loaders.mailLogsByID.load(mailLogStatus.mailLogID)
-        if (!mailLog) continue // TODO: handle missing mailLog
-        await context.dbAdapter.mailLog.updateMailLog({
-          id: mailLog.id,
-          input: {
-            recipient: mailLog.recipient,
-            subject: mailLog.subject,
-            mailProviderID: mailLog.mailProviderID,
-            state: mailLogStatus.state,
-            mailData: mailLogStatus.mailData
-          }
-        })
+        for (const mailLogStatus of mailLogStatuses) {
+          const mailLog = await context.loaders.mailLogsByID.load(mailLogStatus.mailLogID)
+          if (!mailLog) continue // TODO: handle missing mailLog
+          await context.dbAdapter.mailLog.updateMailLog({
+            id: mailLog.id,
+            input: {
+              recipient: mailLog.recipient,
+              subject: mailLog.subject,
+              mailProviderID: mailLog.mailProviderID,
+              state: mailLogStatus.state,
+              mailData: mailLogStatus.mailData
+            }
+          })
+        }
+      } catch (exception) {
+        console.warn('Exception during mail update from webhook', exception)
       }
-    } catch (exception) {
-      console.warn('Exception during mail update from webhook', exception)
-    }
-  })
+    })
+  }
 
   return mailProviderWebhookRouter
 }
