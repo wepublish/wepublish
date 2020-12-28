@@ -100,7 +100,7 @@ export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly mailProvider: BaseMailProvider
+  readonly mailProvider?: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 }
@@ -140,17 +140,18 @@ export async function contextFromRequest(
   )
 
   const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
+    const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
     const mailLog = await dbAdapter.mailLog.createMailLog({
       input: {
         state: MailLogState.Submitted,
         subject: props.subject,
         recipient: props.recipient,
-        mailProviderID: mailProvider.id
+        mailProviderID: mailProviderID
       }
     })
 
     // TODO: handle sendMail error
-    await mailProvider.sendMail({...props, mailLogID: mailLog.id})
+    if (mailProvider) await mailProvider.sendMail({...props, mailLogID: mailLog.id})
 
     return mailLog
   }
