@@ -52,3 +52,12 @@ mutation ResetUserPassword($id: ID!, $password: String!) {
 mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
 }
+
+mutation CreateSession($email: String!, $password: String!) {
+  createSession(email: $email, password: $password) {
+    user {
+      email
+    }
+    token
+  }
+}

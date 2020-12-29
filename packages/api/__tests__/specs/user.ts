@@ -8,7 +8,8 @@ import {
   User,
   UpdateUser,
   ResetUserPassword,
-  DeleteUser
+  DeleteUser,
+  CreateSession
 } from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
@@ -139,17 +140,48 @@ describe('Users', () => {
 
     test('can reset user password', async () => {
       const {mutate} = testClientPrivate
-      const res = await mutate({
+
+      const sessionRes = await mutate({
+        mutation: CreateSession,
+        variables: {
+          email: `bwayne@mymail5.com`,
+          password: 'p@$$w0rd'
+        }
+      })
+      expect(sessionRes).toMatchSnapshot({
+        data: {
+          createSession: {
+            token: expect.any(String)
+          }
+        }
+      })
+
+      const resetPwdRes = await mutate({
         mutation: ResetUserPassword,
         variables: {
           id: ids[0],
           password: 'NewUpdatedPassword321'
         }
       })
-      expect(res).toMatchSnapshot({
+      expect(resetPwdRes).toMatchSnapshot({
         data: {
           resetUserPassword: {
             id: expect.any(String)
+          }
+        }
+      })
+
+      const updatedPwdSession = await mutate({
+        mutation: CreateSession,
+        variables: {
+          email: `bwayne@mymail5.com`,
+          password: 'NewUpdatedPassword321'
+        }
+      })
+      expect(updatedPwdSession).toMatchSnapshot({
+        data: {
+          createSession: {
+            token: expect.any(String)
           }
         }
       })

@@ -361,11 +361,51 @@ Object {
 exports[`Users can be created/updated/edited/deleted: can reset user password 1`] = `
 Object {
   "data": Object {
+    "createSession": Object {
+      "token": Any<String>,
+      "user": Object {
+        "email": "bwayne@mymail5.com",
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Users can be created/updated/edited/deleted: can reset user password 2`] = `
+Object {
+  "data": Object {
     "resetUserPassword": Object {
       "email": "bwayne@mymail5.com",
       "id": Any<String>,
       "name": "Bruce Wayne",
       "roles": Array [],
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Users can be created/updated/edited/deleted: can reset user password 3`] = `
+Object {
+  "data": Object {
+    "createSession": Object {
+      "token": Any<String>,
+      "user": Object {
+        "email": "bwayne@mymail5.com",
+      },
     },
   },
   "errors": undefined,

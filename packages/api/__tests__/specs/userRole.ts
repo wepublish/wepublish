@@ -10,6 +10,7 @@ import {
   DeleteUserRole,
   PermissionList
 } from '../api/private'
+import {Permission} from '../../src'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -32,7 +33,8 @@ beforeAll(async () => {
 describe('User Roles', () => {
   describe('can be created/edited/deleted:', () => {
     const ids: string[] = []
-    //let permissionIDs: string[]
+    let permissionsList: Permission[]
+    let permissionIDs: string[]
 
     beforeEach(async () => {
       const {mutate} = testClientPrivate
@@ -57,10 +59,8 @@ describe('User Roles', () => {
       })
       expect(res).toMatchSnapshot()
 
-      const permissionsList = res.data?.permissions
-      console.log('permissions query res: ' + permissionsList[0].id)
-      const permissionIDs = permissionsList.map((permission: any) => permission.id)
-      console.log(permissionIDs[0])
+      permissionsList = res.data?.permissions
+      permissionIDs = permissionsList.map((permission: Permission) => permission.id)
     })
 
     test('can be created', async () => {
@@ -68,7 +68,7 @@ describe('User Roles', () => {
       const input: UserRoleInput = {
         name: `Role${ids.length}`,
         description: 'New Role',
-        permissionIDs: []
+        permissionIDs: permissionIDs
       }
 
       const res = await mutate({
@@ -137,7 +137,7 @@ describe('User Roles', () => {
           input: {
             name: 'UpdatedRole',
             description: 'Updated Role',
-            permissionIDs: []
+            permissionIDs: [permissionIDs[0], permissionIDs[3]]
           },
           id: ids[0]
         }

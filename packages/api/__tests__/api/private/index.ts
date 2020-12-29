@@ -1978,6 +1978,17 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUser'>
 
+export type CreateSessionMutationVariables = Exact<{
+  email: Scalars['String']
+  password: Scalars['String']
+}>
+
+export type CreateSessionMutation = {__typename?: 'Mutation'} & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
 export type FullPermissionFragment = {__typename?: 'Permission'} & Pick<
   Permission,
   'id' | 'description' | 'deprecated'
@@ -2865,6 +2876,16 @@ export const ResetUserPassword = gql`
 export const DeleteUser = gql`
   mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
+  }
+`
+export const CreateSession = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
   }
 `
 export const UserRoleList = gql`
