@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Peers can be created/edited/deleted: can be created 1`] = `
+Object {
+  "data": Object {
+    "createPeer": Object {
+      "hostURL": "https://host-url.ch/",
+      "id": Any<String>,
+      "name": "Create Peer Test",
+      "slug": "test-peer",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers can be created/edited/deleted: can be read by id 1`] = `
+Object {
+  "data": Object {
+    "peer": Object {
+      "hostURL": "https://host-url.ch/",
+      "id": Any<String>,
+      "name": "Peer Test 3",
+      "slug": "test-peer3",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers can be created/edited/deleted: can be read in list 1`] = `
+Object {
+  "data": Object {
+    "peers": Array [
+      Object {
+        "hostURL": "https://host-url.ch/",
+        "id": Any<String>,
+        "name": "Peer Test 2",
+        "profile": null,
+        "slug": "test-peer2",
+      },
+      Object {
+        "hostURL": "https://host-url.ch/",
+        "id": Any<String>,
+        "name": "Create Peer Test",
+        "profile": null,
+        "slug": "test-peer",
+      },
+      Object {
+        "hostURL": "https://host-url.ch/",
+        "id": Any<String>,
+        "name": "Peer Test 0",
+        "profile": null,
+        "slug": "test-peer0",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
