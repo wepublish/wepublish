@@ -114,11 +114,6 @@ async function asyncMain() {
     }
   ]
 
-  if (!process.env.MAILGUN_API_KEY) throw new Error('No MAILGUN_API_KEY defined in environment.')
-  if (!process.env.MAILGUN_BASE_URL) throw new Error('No MAILGUN_BASE_URL defined in environment.')
-  if (!process.env.MAILGUN_WEBHOOK_SECRET)
-    throw new Error('No MAILGUN_WEBHOOK_SECRET defined in environment.')
-
   let mailProvider
   if (
     process.env.MAILGUN_API_KEY &&
@@ -128,7 +123,7 @@ async function asyncMain() {
     mailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
-      fromAddress: 'mails@wepublish.media',
+      fromAddress: 'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
       baseURL: process.env.MAILGUN_BASE_URL,
       apiKey: process.env.MAILGUN_API_KEY
