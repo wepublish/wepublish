@@ -95,6 +95,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthors: Array<Author>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -710,6 +714,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
   imageID?: Maybe<Scalars['ID']>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -737,6 +744,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>
   properties: Array<Properties>
   image?: Maybe<Image>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -1381,12 +1391,16 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | 'tags'
           | 'hideAuthor'
           | 'breaking'
+          | 'socialMediaTitle'
+          | 'socialMediaDescription'
         > & {
             image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             properties: Array<
               {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
             >
             authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+            socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
+            socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             blocks: Array<
               | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
               | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)

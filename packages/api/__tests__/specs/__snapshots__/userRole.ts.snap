@@ -6,29 +6,8 @@ Object {
     "createUserRole": Object {
       "description": "New Role",
       "id": Any<String>,
-      "name": "Role1",
-      "permissions": Array [
-        Object {
-          "deprecated": false,
-          "description": "Allows to delete navigations",
-          "id": "CAN_DELETE_NAVIGATION",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to create authors",
-          "id": "CAN_CREATE_AUTHOR",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to get author",
-          "id": "CAN_GET_AUTHOR",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to all authors",
-          "id": "CAN_GET_AUTHORS",
-        },
-      ],
+      "name": "Role2",
+      "permissions": Array [],
       "systemRole": false,
     },
   },
@@ -86,36 +65,22 @@ Object {
         Object {
           "description": "User Role",
           "id": Any<String>,
-          "name": "Role2",
+          "name": "Role3",
           "permissions": Array [],
           "systemRole": false,
         },
         Object {
           "description": "New Role",
           "id": Any<String>,
+          "name": "Role2",
+          "permissions": Array [],
+          "systemRole": false,
+        },
+        Object {
+          "description": "User Role",
+          "id": Any<String>,
           "name": "Role1",
-          "permissions": Array [
-            Object {
-              "deprecated": false,
-              "description": "Allows to delete navigations",
-              "id": "CAN_DELETE_NAVIGATION",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to create authors",
-              "id": "CAN_CREATE_AUTHOR",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get author",
-              "id": "CAN_GET_AUTHOR",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to all authors",
-              "id": "CAN_GET_AUTHORS",
-            },
-          ],
+          "permissions": Array [],
           "systemRole": false,
         },
         Object {
@@ -496,28 +461,7 @@ Object {
       "description": "Updated Role",
       "id": Any<String>,
       "name": "UpdatedRole",
-      "permissions": Array [
-        Object {
-          "deprecated": false,
-          "description": "Allows to delete navigations",
-          "id": "CAN_DELETE_NAVIGATION",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to create authors",
-          "id": "CAN_CREATE_AUTHOR",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to get author",
-          "id": "CAN_GET_AUTHOR",
-        },
-        Object {
-          "deprecated": false,
-          "description": "Allows to all authors",
-          "id": "CAN_GET_AUTHORS",
-        },
-      ],
+      "permissions": Array [],
       "systemRole": false,
     },
   },

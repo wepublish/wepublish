@@ -33,6 +33,10 @@ export type Article = {
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthors: Array<Author>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -265,6 +269,9 @@ export type Page = {
   tags: Array<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 

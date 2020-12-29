@@ -29,33 +29,11 @@ beforeAll(async () => {
   }
 })
 
-const permissions = [
-  {
-    deprecated: false,
-    description: 'Allows to delete navigations',
-    id: 'CAN_DELETE_NAVIGATION'
-  },
-  {
-    deprecated: false,
-    description: 'Allows to create authors',
-    id: 'CAN_CREATE_AUTHOR'
-  },
-  {
-    deprecated: false,
-    description: 'Allows to get author',
-    id: 'CAN_GET_AUTHOR'
-  },
-  {
-    deprecated: false,
-    description: 'Allows to all authors',
-    id: 'CAN_GET_AUTHORS'
-  }
-]
-const permissionIDs = permissions.map(permission => permission.id)
-
 describe('User Roles', () => {
   describe('can be created/edited/deleted:', () => {
     const ids: string[] = []
+    //let permissionIDs: string[]
+
     beforeEach(async () => {
       const {mutate} = testClientPrivate
       const input: UserRoleInput = {
@@ -72,12 +50,25 @@ describe('User Roles', () => {
       ids.unshift(res.data?.createUserRole?.id)
     })
 
+    test('can read permission list', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: PermissionList
+      })
+      expect(res).toMatchSnapshot()
+
+      const permissionsList = res.data?.permissions
+      console.log('permissions query res: ' + permissionsList[0].id)
+      const permissionIDs = permissionsList.map((permission: any) => permission.id)
+      console.log(permissionIDs[0])
+    })
+
     test('can be created', async () => {
       const {mutate} = testClientPrivate
       const input: UserRoleInput = {
         name: `Role${ids.length}`,
         description: 'New Role',
-        permissionIDs: permissionIDs
+        permissionIDs: []
       }
 
       const res = await mutate({
@@ -121,14 +112,6 @@ describe('User Roles', () => {
       expect(res.data?.userRoles?.totalCount).toBe(ids.length + 3)
     })
 
-    test('can read permission list', async () => {
-      const {query} = testClientPrivate
-      const res = await query({
-        query: PermissionList
-      })
-      expect(res).toMatchSnapshot()
-    })
-
     test('can be read by id', async () => {
       const {query} = testClientPrivate
       const res = await query({
@@ -154,7 +137,7 @@ describe('User Roles', () => {
           input: {
             name: 'UpdatedRole',
             description: 'Updated Role',
-            permissionIDs: permissionIDs
+            permissionIDs: []
           },
           id: ids[0]
         }
