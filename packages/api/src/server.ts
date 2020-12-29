@@ -6,51 +6,13 @@ import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
 import {capitalizeFirstLetter} from './utility'
 
-import {
-  userModelEvents,
-  articleModelEvents,
-  peerModelEvents,
-  EventsEmitter,
-  pageModelEvents
-} from './events'
+import {methodsToProxy} from './events'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
   readonly introspection?: boolean
   readonly tracing?: boolean
 }
-
-type NormalProxyMethods = 'create' | 'update' | 'delete'
-type PublishableProxyMethods = NormalProxyMethods | 'publish' | 'unpublish'
-
-interface MethodsToProxy {
-  key: string
-  methods: (NormalProxyMethods | PublishableProxyMethods)[]
-  eventEmitter: EventsEmitter
-}
-
-const methodsToProxy: MethodsToProxy[] = [
-  {
-    key: 'user',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: userModelEvents
-  },
-  {
-    key: 'peer',
-    methods: ['create', 'update', 'delete'],
-    eventEmitter: peerModelEvents
-  },
-  {
-    key: 'article',
-    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
-    eventEmitter: articleModelEvents
-  },
-  {
-    key: 'page',
-    methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
-    eventEmitter: pageModelEvents
-  }
-]
 
 export class WepublishServer {
   private readonly app: Application
@@ -68,16 +30,27 @@ export class WepublishServer {
           if (methodName in dbAdapter[mtp.key]) {
             // @ts-ignore
             dbAdapter[mtp.key][methodName] = new Proxy(dbAdapter[mtp.key][methodName], {
+              // create proxy for method
               async apply(target: any, thisArg: any, argArray?: any): Promise<any> {
-                console.log(`${mtp.key}-${method}`)
-                const result = await target.bind(thisArg)(...argArray)
-                // @ts-ignore
-                mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result)
-                return result
+                const result = await target.bind(thisArg)(...argArray) // execute actual method "Create, Update, Publish, ..."
+                setImmediate(async () => {
+                  // make sure event gets executed in the next event loop
+                  try {
+                    // @ts-ignore
+                    mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
+                  } catch (error) {
+                    console.error(`Error during ${mtp.key}-${method} Event`, error)
+                  }
+                })
+                return result // return actual result "Article, Page, User, ..."
               }
             })
+          } else {
+            console.warn(`${methodName} does not exist in dbAdapter[${mtp.key}]`)
           }
         })
+      } else {
+        console.warn(`${mtp.key} does not exist in dbAdapter`)
       }
     })
 
