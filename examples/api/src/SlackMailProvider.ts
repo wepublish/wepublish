@@ -43,6 +43,5 @@ export class SlackMailProvider extends BaseMailProvider {
       },
       body: JSON.stringify(message)
     })
-    // await this.incomingWebhook.send(message)
   }
 }
