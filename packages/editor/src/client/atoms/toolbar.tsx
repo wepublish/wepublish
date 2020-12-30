@@ -5,7 +5,8 @@ import React, {
   useCallback,
   useRef,
   useState,
-  createContext
+  createContext,
+  ReactEventHandler
 } from 'react'
 
 import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
@@ -13,13 +14,15 @@ import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export interface ToolbarProps {
+  readonly onMouseDown?: ReactEventHandler
   readonly fadeOut?: boolean
   readonly children?: ReactNode
 }
 
-export function Toolbar({fadeOut = false, children}: ToolbarProps) {
+export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) {
   return (
     <div
+      onMouseDown={onMouseDown}
       style={{
         pointerEvents: 'none',
         display: 'flex',
@@ -27,7 +30,6 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
         alignItems: 'center',
 
         position: 'sticky',
-        top: 60 + 10, // TODO: Don't hardcode NavigationBar height into the toolbar, move all the position sticky stuff into own component
         zIndex: 1,
         marginBottom: 30
       }}>
@@ -64,11 +66,11 @@ export interface ToolbarButtonProps extends BaseToolbarButtonProps {
 }
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
-  function ToolbarButton({active, children, ...props}, ref) {
+  ({active, children, ...props}, ref) => {
     return (
       <button
         style={{
-          border: active ? 'blue 1px solid' : '',
+          border: `${active ? 'blue' : 'transparent'} 1px solid`,
           fontSize: 16,
 
           cursor: 'pointer',
@@ -111,50 +113,57 @@ export const SubMenuContext = createContext<SubMenuContextProps>({
   openMenu: emtpyFn
 })
 
-export function SubMenuButton({children, icon}: ToolbarButtonProps & ToolbarIconButtonProps) {
-  /**
-   * The Submenu buttons provides some local context to it's children. For
-   * now this is only used to enable menu.close() handle from the child tableMenu.
-   * Couldb be little overkill only for the table menu, but probably there will be
-   * more usecases.
-   */
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const triggerRef = useRef<PopoverProps>(null)
-
-  const closeMenu = () => {
-    triggerRef.current!.close()
-  }
-
-  const openMenu = () => {
-    triggerRef.current!.open()
-  }
-
-  const menuRef = useCallback((node: any) => {
-    setIsMenuOpen(!!node)
-  }, [])
-
-  const menu = <Popover ref={menuRef}>{children}</Popover>
-
-  return (
-    <SubMenuContext.Provider
-      value={{
-        closeMenu,
-        openMenu
-      }}>
-      <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
-        <ToolbarButton
-          active={isMenuOpen}
-          onMouseDown={e => {
-            e.preventDefault()
-            isMenuOpen ? closeMenu() : openMenu()
-          }}>
-          <Icon icon={isMenuOpen ? 'close' : icon} />
-        </ToolbarButton>
-      </Whisper>
-    </SubMenuContext.Provider>
-  )
+export interface SubMenuButtonProps extends ToolbarIconButtonProps {
+  readonly children?: ReactNode
 }
+
+export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
+  ({children, icon}, ref) => {
+    // The Submenu buttons provides some local context to it's children.
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const localRef = useRef<PopoverProps>(null)
+    // Optional forwarding ref from parent, else use local ref.
+    const triggerRef = (ref || localRef) as typeof localRef
+
+    const closeMenu = () => {
+      triggerRef.current!.close()
+    }
+
+    const openMenu = () => {
+      triggerRef.current!.open()
+    }
+
+    const menuRef = useCallback((node: any) => {
+      setIsMenuOpen(!!node)
+    }, [])
+
+    const menu = <Popover ref={menuRef}>{children}</Popover>
+
+    return (
+      <SubMenuContext.Provider
+        value={{
+          closeMenu,
+          openMenu
+        }}>
+        <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+          <ToolbarButton
+            active={isMenuOpen}
+            onMouseDown={e => {
+              e.preventDefault()
+              isMenuOpen ? closeMenu() : openMenu()
+            }}>
+            <Icon
+              style={{
+                minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+              }}
+              icon={isMenuOpen ? 'close' : icon}
+            />
+          </ToolbarButton>
+        </Whisper>
+      </SubMenuContext.Provider>
+    )
+  }
+)
 
 export function ToolbarDivider() {
   return (
