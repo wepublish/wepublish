@@ -2,6 +2,12 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {CreatePeerInput, CreatePeer, PeerList, Peer} from '../api/private'
+import {FetchMock} from 'jest-fetch-mock'
+import fetch from 'node-fetch'
+import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
+
+// Mocking Fetch calls from the "createFetcher" method in context
+;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
