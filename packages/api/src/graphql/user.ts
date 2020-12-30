@@ -32,6 +32,16 @@ export const GraphQLUser = new GraphQLObjectType({
   }
 })
 
+export const GraphQLPublicUser = new GraphQLObjectType({
+  name: 'User',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLString)},
+
+    name: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUserFilter = new GraphQLInputObjectType({
   name: 'UserFilter',
   fields: {
