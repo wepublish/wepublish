@@ -313,6 +313,11 @@ Object {
                   "description": "Allows to get all permissions",
                   "id": "CAN_GET_PERMISSIONS",
                 },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to login editor",
+                  "id": "CAN_LOGIN_EDITOR",
+                },
               ],
               "systemRole": true,
             },
