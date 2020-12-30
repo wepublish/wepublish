@@ -20,6 +20,7 @@ import {
 } from '../error'
 
 import {GraphQLArticleInput, GraphQLArticle} from './article'
+import {GraphQLCommentInput, GraphQLComment} from './comment'
 import {BlockMap, Block, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
@@ -52,7 +53,8 @@ import {
   CanDeleteUser,
   CanCreateUserRole,
   CanDeleteUserRole,
-  CanResetUserPassword
+  CanResetUserPassword,
+  CanCreateComment
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -531,6 +533,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         await mediaAdapter.deleteImage(id)
         return dbAdapter.image.deleteImage({id})
+      }
+    },
+
+    // Comment
+    // =======
+
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateComment, roles)
+
+        return dbAdapter.comment.createComment({
+          input: {...input}
+        })
       }
     },
 

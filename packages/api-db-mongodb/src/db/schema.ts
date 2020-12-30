@@ -1,5 +1,8 @@
 import {
   ArticleBlock,
+  CommentAuthorType,
+  CommentRejectionReason,
+  CommentStatus,
   FocalPoint,
   MetadataProperty,
   NavigationLink,
@@ -21,6 +24,8 @@ export enum CollectionName {
   Navigations = 'navigations',
   Authors = 'authors',
   Images = 'images',
+
+  Comments = 'comments',
 
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
@@ -173,6 +178,35 @@ export interface DBImage {
   license?: string
 
   focalPoint?: FocalPoint
+}
+
+export interface DBComment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  articleID?: string
+  imageID?: string
+
+  siteID?: string
+  userID: string
+  peerID?: string
+  permalink: string
+
+  revisions: [DBCommentRevision]
+  parentID?: string
+
+  status: CommentStatus
+  rejectionReason: CommentRejectionReason
+  authorType: CommentAuthorType
+}
+
+export interface DBCommentRevision {
+  id: string
+  text: RichTextNode[]
+  createdAt: Date
+  modifiedAt: Date
 }
 
 export interface DBArticle {

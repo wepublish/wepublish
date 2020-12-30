@@ -210,6 +210,62 @@ export type BlockInput = {
 };
 
 
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+};
+
+export enum CommentAuthorType {
+  Admin = 'Admin',
+  ArticleAuthor = 'ArticleAuthor',
+  Journalist = 'Journalist',
+  Moderator = 'Moderator',
+  PeerUser = 'PeerUser',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  totalCount: Scalars['Int'];
+};
+
+export type CommentInput = {
+  siteID: Scalars['ID'];
+  userID: Scalars['ID'];
+  permalink: Scalars['String'];
+  articleID: Scalars['ID'];
+  imageID: Scalars['ID'];
+  peerID: Scalars['ID'];
+  revisions: CommentRevisionInput;
+  parentID: Scalars['ID'];
+  status: CommentStatus;
+  rejectionReason: CommentRejectionReason;
+  authorType: CommentAuthorType;
+  createdAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export enum CommentRejectionReason {
+  Misconduct = 'MISCONDUCT',
+  Spam = 'SPAM'
+}
+
+export type CommentRevisionInput = {
+  id: Scalars['ID'];
+  text: Scalars['RichText'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export enum CommentStatus {
+  Approved = 'APPROVED',
+  PendingApproval = 'PENDING_APPROVAL',
+  PendingUserChanges = 'PENDING_USER_CHANGES',
+  Rejected = 'REJECTED'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -467,6 +523,7 @@ export type Mutation = {
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
   deleteImage?: Maybe<Scalars['Boolean']>;
+  createComment: Comment;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
   deleteArticle?: Maybe<Scalars['Boolean']>;
@@ -613,6 +670,11 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  input: CommentInput;
 };
 
 
@@ -911,6 +973,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -998,6 +1061,11 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentsArgs = {
+  filterByStatus?: Maybe<CommentStatus>;
 };
 
 
