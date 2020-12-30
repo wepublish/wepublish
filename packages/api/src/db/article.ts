@@ -17,6 +17,11 @@ export interface ArticleData {
   readonly blocks: ArticleBlock[]
 
   readonly hideAuthor: boolean
+
+  readonly socialMediaTitle?: string
+  readonly socialMediaDescription?: string
+  readonly socialMediaAuthorIDs: string[]
+  readonly socialMediaImageID?: string
 }
 
 // Article State Flow:

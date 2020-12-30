@@ -42,6 +42,8 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  callToActionURL: string
+  callToActionText: RichTextNode[]
 }
 
 export interface DBPeer {
@@ -209,6 +211,11 @@ export interface DBArticleRevision {
   blocks: ArticleBlock[]
 
   hideAuthor: boolean
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs: string[]
+  socialMediaImageID?: string
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
@@ -244,6 +251,10 @@ export interface DBPageRevision {
   properties: MetadataProperty[]
 
   imageID?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImageID?: string
 
   blocks: PageBlock[]
 }

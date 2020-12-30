@@ -1,17 +1,28 @@
-import React, {ReactNode, forwardRef, ButtonHTMLAttributes} from 'react'
+import React, {
+  ReactNode,
+  forwardRef,
+  ButtonHTMLAttributes,
+  useCallback,
+  useRef,
+  useState,
+  createContext,
+  ReactEventHandler
+} from 'react'
 
-import {Icon} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 export interface ToolbarProps {
+  readonly onMouseDown?: ReactEventHandler
   readonly fadeOut?: boolean
   readonly children?: ReactNode
 }
 
-export function Toolbar({fadeOut = false, children}: ToolbarProps) {
+export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) {
   return (
     <div
+      onMouseDown={onMouseDown}
       style={{
         pointerEvents: 'none',
         display: 'flex',
@@ -19,7 +30,6 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
         alignItems: 'center',
 
         position: 'sticky',
-        top: 60 + 10, // TODO: Don't hardcode NavigationBar height into the toolbar, move all the position sticky stuff into own component
         zIndex: 1,
         marginBottom: 30
       }}>
@@ -47,17 +57,20 @@ export function Toolbar({fadeOut = false, children}: ToolbarProps) {
   )
 }
 
-export interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly active?: boolean
+}
+
+export interface ToolbarButtonProps extends BaseToolbarButtonProps {
   readonly children?: ReactNode
 }
 
-const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
-  function BaseToolbarButton({active, children, ...props}, ref) {
+export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
+  ({active, children, ...props}, ref) => {
     return (
       <button
         style={{
-          border: active ? 'blue 1px solid' : '',
+          border: `${active ? 'blue' : 'transparent'} 1px solid`,
           fontSize: 16,
 
           cursor: 'pointer',
@@ -74,26 +87,83 @@ const BaseToolbarButton = forwardRef<HTMLButtonElement, BaseToolbarButtonProps>(
   }
 )
 
-export interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ToolbarIconButtonProps extends BaseToolbarButtonProps {
   readonly icon: IconNames | SVGIcon
-  readonly active?: boolean
 }
 
-export function ToolbarButton({icon, active, ...props}: ToolbarButtonProps) {
+export function ToolbarIconButton({icon, active, ...props}: ToolbarIconButtonProps) {
   return (
-    <BaseToolbarButton active={active} {...props}>
+    <ToolbarButton active={active} {...props}>
       <Icon icon={icon} element={icon} />
-    </BaseToolbarButton>
+    </ToolbarButton>
   )
 }
 
-export function ToolbarButtonWithChildren({active, children, ...props}: BaseToolbarButtonProps) {
-  return (
-    <BaseToolbarButton active={active} {...props}>
-      {children}
-    </BaseToolbarButton>
-  )
+interface SubMenuContextProps {
+  closeMenu: () => void
+  openMenu: () => void
 }
+
+const emtpyFn = () => {
+  /* do nothing */
+}
+
+export const SubMenuContext = createContext<SubMenuContextProps>({
+  closeMenu: emtpyFn,
+  openMenu: emtpyFn
+})
+
+export interface SubMenuButtonProps extends ToolbarIconButtonProps {
+  readonly children?: ReactNode
+}
+
+export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
+  ({children, icon}, ref) => {
+    // The Submenu buttons provides some local context to it's children.
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const localRef = useRef<PopoverProps>(null)
+    // Optional forwarding ref from parent, else use local ref.
+    const triggerRef = (ref || localRef) as typeof localRef
+
+    const closeMenu = () => {
+      triggerRef.current!.close()
+    }
+
+    const openMenu = () => {
+      triggerRef.current!.open()
+    }
+
+    const menuRef = useCallback((node: any) => {
+      setIsMenuOpen(!!node)
+    }, [])
+
+    const menu = <Popover ref={menuRef}>{children}</Popover>
+
+    return (
+      <SubMenuContext.Provider
+        value={{
+          closeMenu,
+          openMenu
+        }}>
+        <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+          <ToolbarButton
+            active={isMenuOpen}
+            onMouseDown={e => {
+              e.preventDefault()
+              isMenuOpen ? closeMenu() : openMenu()
+            }}>
+            <Icon
+              style={{
+                minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+              }}
+              icon={isMenuOpen ? 'close' : icon}
+            />
+          </ToolbarButton>
+        </Whisper>
+      </SubMenuContext.Provider>
+    )
+  }
+)
 
 export function ToolbarDivider() {
   return (

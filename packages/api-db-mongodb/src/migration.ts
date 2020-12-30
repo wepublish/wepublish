@@ -428,6 +428,63 @@ export const Migrations: Migration[] = [
         {$set: {'draft.hideAuthor': false}}
       )
     }
+  },
+  {
+    // Add Call To Action Details to Peer Profile.
+    version: 7,
+    async migrate(db) {
+      await db.collection(CollectionName.PeerProfiles).updateMany(
+        {
+          callToActionURL: {$exists: false},
+          callToActionText: {$exists: false}
+        },
+        {
+          $set: {
+            callToActionURL: '',
+            callToActionText: []
+          }
+        }
+      )
+    }
+  },
+  {
+    // Add social media metatags to article.
+    version: 8,
+    async migrate(db) {
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          pending: {$ne: null},
+          'pending.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'pending.socialMediaAuthorIDs': []
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          published: {$ne: null},
+          'published.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'published.socialMediaAuthorIDs': []
+          }
+        }
+      )
+      await db.collection(CollectionName.Articles).updateMany(
+        {
+          draft: {$ne: null},
+          'draft.socialMediaAuthorIDs': {$exists: false}
+        },
+        {
+          $set: {
+            'draft.socialMediaAuthorIDs': []
+          }
+        }
+      )
+    }
   }
 ]
 

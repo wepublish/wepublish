@@ -60,6 +60,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean']
   breaking: Scalars['Boolean']
   hideAuthor: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthorIDs: Array<Scalars['ID']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -1216,7 +1220,7 @@ export type YouTubeVideoBlockInput = {
   videoID: Scalars['String']
 }
 
-export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id'> & {
+export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id' | 'shared'> & {
     draft?: Maybe<
       {__typename?: 'ArticleRevision'} & Pick<
         ArticleRevision,
@@ -1234,8 +1238,20 @@ export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, '
     >
     latest: {__typename?: 'ArticleRevision'} & Pick<
       ArticleRevision,
-      'publishedAt' | 'updatedAt' | 'revision'
-    >
+      | 'publishedAt'
+      | 'updatedAt'
+      | 'revision'
+      | 'title'
+      | 'preTitle'
+      | 'lead'
+      | 'slug'
+      | 'breaking'
+      | 'tags'
+    > & {
+        properties: Array<
+          {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
+        >
+      }
   }
 
 export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
@@ -1677,8 +1693,31 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     >
     latest: {__typename?: 'PageRevision'} & Pick<
       PageRevision,
-      'publishedAt' | 'updatedAt' | 'revision'
-    >
+      'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'
+    > & {
+        image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+        properties: Array<
+          {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
+        >
+        blocks: Array<
+          | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
+          | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
+          | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
+          | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
+          | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
+          | ({__typename?: 'FacebookVideoBlock'} & FullBlock_FacebookVideoBlock_Fragment)
+          | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
+          | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
+          | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
+          | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
+          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
+          | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
+          | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
+          | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+        >
+      }
   }
 
 export type PageRefFragment = {__typename?: 'Page'} & Pick<
@@ -1861,6 +1900,7 @@ export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'del
 export const MutationArticle = gql`
   fragment MutationArticle on Article {
     id
+    shared
     draft {
       publishedAt
       updatedAt
@@ -1879,6 +1919,17 @@ export const MutationArticle = gql`
       publishedAt
       updatedAt
       revision
+      title
+      preTitle
+      lead
+      slug
+      breaking
+      tags
+      properties {
+        key
+        value
+        public
+      }
     }
   }
 `
@@ -1928,6 +1979,29 @@ export const FullAuthor = gql`
     ...AuthorRef
   }
   ${AuthorRef}
+`
+export const FullImage = gql`
+  fragment FullImage on Image {
+    id
+    createdAt
+    modifiedAt
+    filename
+    extension
+    width
+    height
+    fileSize
+    description
+    tags
+    author
+    source
+    license
+    focalPoint {
+      x
+      y
+    }
+    ...ImageRef
+  }
+  ${ImageRef}
 `
 export const ArticleRef = gql`
   fragment ArticleRef on Article {
@@ -2148,29 +2222,6 @@ export const FullBlock = gql`
   ${ImageRef}
   ${FullTeaser}
 `
-export const FullImage = gql`
-  fragment FullImage on Image {
-    id
-    createdAt
-    modifiedAt
-    filename
-    extension
-    width
-    height
-    fileSize
-    description
-    tags
-    author
-    source
-    license
-    focalPoint {
-      x
-      y
-    }
-    ...ImageRef
-  }
-  ${ImageRef}
-`
 export const MutationPage = gql`
   fragment MutationPage on Page {
     id
@@ -2191,9 +2242,25 @@ export const MutationPage = gql`
     latest {
       publishedAt
       updatedAt
-      revision
+      slug
+      title
+      description
+      image {
+        ...ImageRef
+      }
+      tags
+      properties {
+        key
+        value
+        public
+      }
+      blocks {
+        ...FullBlock
+      }
     }
   }
+  ${ImageRef}
+  ${FullBlock}
 `
 export const ArticleList = gql`
   query ArticleList($filter: String, $after: ID, $first: Int) {
@@ -2314,6 +2381,14 @@ export const Article = gql`
         }
         hideAuthor
         breaking
+        socialMediaTitle
+        socialMediaDescription
+        socialMediaAuthors {
+          ...AuthorRef
+        }
+        socialMediaImage {
+          ...ImageRef
+        }
         blocks {
           ...FullBlock
         }

@@ -15,8 +15,8 @@ export type Scalars = {
   DateTime: string;
   /** A hexidecimal color value. */
   Color: string;
-  Slug: string;
   RichText: Node[];
+  Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
@@ -61,6 +61,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
   hideAuthor: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -92,6 +96,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthors: Array<Author>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -729,6 +737,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -756,6 +767,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   image?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -839,12 +853,16 @@ export type PeerProfile = {
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type Permission = {
@@ -1433,7 +1451,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -1443,7 +1461,13 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, blocks: Array<(
+      )>>, socialMediaAuthors: Array<(
+        { __typename?: 'Author' }
+        & AuthorRefFragment
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
+      )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
       ) | (
@@ -2119,13 +2143,16 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -2181,7 +2208,7 @@ export type PageQuery = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2636,6 +2663,8 @@ export const FullPeerProfileFragmentDoc = gql`
   logo {
     ...ImageRef
   }
+  callToActionText
+  callToActionURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
@@ -3208,6 +3237,14 @@ export const ArticleDocument = gql`
       }
       hideAuthor
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage {
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }
@@ -4088,6 +4125,11 @@ export const PageDocument = gql`
         key
         value
         public
+      }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...ImageRef
       }
       blocks {
         ...FullBlock

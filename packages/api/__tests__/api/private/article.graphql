@@ -1,5 +1,6 @@
 fragment MutationArticle on Article {
     id
+    shared
 
     draft {
         publishedAt
@@ -22,6 +23,17 @@ fragment MutationArticle on Article {
         publishedAt
         updatedAt
         revision
+        title
+        preTitle
+        lead
+        slug
+        breaking
+        tags
+        properties {
+            key
+            value
+            public
+        }
     }
 }
 
@@ -166,6 +178,14 @@ query Article($id: ID!) {
             }
             hideAuthor
             breaking
+            socialMediaTitle
+            socialMediaDescription
+            socialMediaAuthors {
+              ...AuthorRef
+            }
+            socialMediaImage{
+              ...ImageRef
+            }
             blocks {
                 ...FullBlock
             }

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - c/dev-instances
+      - f/WEP-87-social-media-metatags
 
 jobs:
   release:

@@ -8,7 +8,9 @@ export function peerAdapter(peer: any): Peer {
     name: peer.profile.name,
     logoURL: peer.profile.logo?.squareURL,
     websiteURL: peer.profile.websiteURL,
-    themeColor: peer.profile.themeColor
+    themeColor: peer.profile.themeColor,
+    callToActionText: peer.profile.callToActionText,
+    callToActionURL: peer.profile.callToActionURL
   }
 }
 
@@ -39,7 +41,11 @@ function articleMetaAdapter(article: any): ArticleMeta {
     slug: article.slug || undefined,
     authors: authorsAdapter(article.authors),
     isBreaking: article.breaking,
-    tags: article.tags
+    tags: article.tags,
+    socialMediaTitle: article.socialMediaTitle,
+    socialMediaDescription: article.socialMediaDescription,
+    socialMediaAuthors: authorsAdapter(article.socialMediaAuthors),
+    socialMediaImage: imageAdapter(article.socialMediaImage)
   }
 }
 
