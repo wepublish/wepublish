@@ -444,7 +444,8 @@
       "password": "Password",
       "currentPassword": "Current password",
       "alternativeLogin": "Or login with: ",
-      "O2Auth": "Authenticating against OAuth2: "
+      "O2Auth": "Authenticating against OAuth2: ",
+      "unauthorized": "User is not authorized for login"
     }
   }
 }

@@ -24,7 +24,7 @@ export const GraphQLUser = new GraphQLObjectType({
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
     roles: {
-      type: GraphQLNonNull(GraphQLList(GraphQLUserRole)),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole))),
       resolve({roleIDs}, args, {loaders}) {
         return Promise.all(roleIDs.map((roleID: string) => loaders.userRolesByID.load(roleID)))
       }
