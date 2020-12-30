@@ -10,7 +10,7 @@ import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
-import {withRichText, withTable} from './editor/plugins'
+import {withRichText, withTable, withNormTables} from './editor/plugins'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 
@@ -22,7 +22,10 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange
 }: RichTextBlockProps) {
-  const editor = useMemo(() => withTable(withRichText(withHistory(withReact(createEditor())))), [])
+  const editor = useMemo(
+    () => withNormTables(withTable(withRichText(withHistory(withReact(createEditor()))))),
+    []
+  )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
 

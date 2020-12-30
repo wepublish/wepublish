@@ -1,4 +1,4 @@
-import {Editor, Point, Element as SlateElement, Range} from 'slate'
+import {Editor, Point, Transforms, Element as SlateElement, Node as SlateNode, Range} from 'slate'
 import {jsx} from 'slate-hyperscript'
 import {ReactEditor} from 'slate-react'
 import {InlineFormats, BlockFormat, InlineFormat, TextFormat} from './formats'
@@ -154,42 +154,46 @@ function deserialize(element: Element): any {
   return children
 }
 
-// TODO: add 2 normalizeNode plugins (either integrate into existing olugins or new modules?)
+// TODO: add 2 normalizeNode plugins (either integrate into existing plugins or new modules?)
 // See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
 
-// import { Transforms, Element, Node } from 'slate'
-//
-// const withParagraphs = editor => {
-//
-// ************
-// TODO Adapt this slate example to tables:
-// Rules:
-// - Table needs TableRow as child
-// - TableRow needs TableCell as child
-// - TableCell needs Paragraph as child
-// ************
-//
-//   const { normalizeNode } = editor
-//
-//   editor.normalizeNode = entry => {
-//     const [node, path] = entry
-//
-//     // If the element is a paragraph, ensure its children are valid.
-//     if (Element.isElement(node) && node.type === 'paragraph') {
-//       for (const [child, childPath] of Node.children(editor, path)) {
-//         if (Element.isElement(child) && !editor.isInline(child)) {
-//           Transforms.unwrapNodes(editor, { at: childPath })
-//           return
-//         }
-//       }
-//     }
-//
-//     // Fall back to the original `normalizeNode` to enforce other constraints.
-//     normalizeNode(entry)
-//   }
-//
-//   return editor
-// }
+export function withNormTables<T extends ReactEditor>(editor: T): T {
+  // ************
+  // TODO Adapt this slate example to tables:
+  // Rules:
+  // - Table needs TableRow as child
+  // - TableRow needs TableCell as child
+  // - TableCell needs Paragraph as child
+  // ************
+
+  const {normalizeNode} = editor
+
+  editor.normalizeNode = entry => {
+    const [node, path] = entry
+
+    // If the element is a paragraph, ensure its children are valid.
+    if (SlateElement.isElement(node) && node.type === BlockFormat.TableCell) {
+      //       for (const [child, childPath] of SlateNode.children(editor, path)) {
+      //         if (SlateElement.isElement(child) && !editor.isInline(child)) {
+      //           Transforms.unwrapNodes(editor, {at: childPath})
+      //           return
+      //         }
+      //       }
+      // const [child, childPath] = SlateNode.child(node, 0)
+      // {type: BlockFormat.Paragraph, children: [{text: ''}]}
+      //   if (!(SlateElement.isElement(child) === BlockFormat.Paragraph) {
+      //     Transforms.unwrapNodes(editor, {at: childPath})
+      //     return
+      //   }
+      // }
+    }
+
+    // Fall back to the original `normalizeNode` to enforce other constraints.
+    normalizeNode(entry)
+  }
+
+  return editor
+}
 
 // const withSchema = defineSchema([
 //
