@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navigations can be created/edited/deleted: can be created 1`] = `
+Object {
+  "data": Object {
+    "createNavigation": Object {
+      "id": Any<String>,
+      "key": "createNavKey321",
+      "links": Array [
+        Object {
+          "__typename": "ArticleNavigationLink",
+          "article": Object {
+            "createdAt": "2020-12-31T14:03:37.344Z",
+            "draft": Object {
+              "revision": 0,
+            },
+            "id": "hKCxZLFZ6Of0tqKv",
+            "latest": Object {
+              "image": null,
+              "lead": "Article Lead",
+              "preTitle": "Testing GraphQL",
+              "publishedAt": null,
+              "revision": 0,
+              "title": "Article Title",
+              "updatedAt": null,
+            },
+            "modifiedAt": "2020-12-31T14:03:37.344Z",
+            "pending": null,
+            "published": null,
+          },
+          "label": "Article Label",
+        },
+        Object {
+          "__typename": "ExternalNavigationLink",
+          "label": "External Label",
+          "url": "linkurl.ch/",
+        },
+        Object {
+          "__typename": "PageNavigationLink",
+          "label": "Page Label",
+          "page": Object {
+            "createdAt": "2020-12-31T14:03:37.305Z",
+            "draft": Object {
+              "revision": 0,
+            },
+            "id": "V9PI7xYD2pT9gk3o",
+            "latest": Object {
+              "description": null,
+              "image": null,
+              "publishedAt": null,
+              "revision": 0,
+              "title": "Testing Page",
+              "updatedAt": null,
+            },
+            "modifiedAt": "2020-12-31T14:03:37.305Z",
+            "pending": null,
+            "published": null,
+          },
+        },
+      ],
+      "name": "Create Navigation Name",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

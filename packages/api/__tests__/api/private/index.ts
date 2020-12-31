@@ -14,8 +14,8 @@ export type Scalars = {
   DateTime: string
   /** A hexidecimal color value. */
   Color: string
-  Slug: string
   RichText: Node[]
+  Slug: string
   /** The `Upload` scalar type represents a file upload. */
   Upload: File
 }
@@ -95,6 +95,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthors: Array<Author>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -710,6 +714,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
   imageID?: Maybe<Scalars['ID']>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -737,6 +744,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>
   properties: Array<Properties>
   image?: Maybe<Image>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -820,12 +830,16 @@ export type PeerProfile = {
   themeColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type PeerProfileInput = {
   name: Scalars['String']
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type Permission = {
@@ -1377,12 +1391,16 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | 'tags'
           | 'hideAuthor'
           | 'breaking'
+          | 'socialMediaTitle'
+          | 'socialMediaDescription'
         > & {
             image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             properties: Array<
               {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
             >
             authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+            socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
+            socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             blocks: Array<
               | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
               | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
@@ -1682,6 +1700,61 @@ export type DeleteImageMutationVariables = Exact<{
 }>
 
 export type DeleteImageMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteImage'>
+
+export type FullNavigationFragment = {__typename?: 'Navigation'} & Pick<
+  Navigation,
+  'id' | 'key' | 'name'
+> & {
+    links: Array<
+      | ({__typename: 'PageNavigationLink'} & Pick<PageNavigationLink, 'label'> & {
+            page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
+          })
+      | ({__typename: 'ArticleNavigationLink'} & Pick<ArticleNavigationLink, 'label'> & {
+            article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
+          })
+      | ({__typename: 'ExternalNavigationLink'} & Pick<ExternalNavigationLink, 'label' | 'url'>)
+    >
+  }
+
+export type NavigationListQueryVariables = Exact<{[key: string]: never}>
+
+export type NavigationListQuery = {__typename?: 'Query'} & {
+  navigations: Array<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type NavigationQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type NavigationQuery = {__typename?: 'Query'} & {
+  navigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type CreateNavigationMutationVariables = Exact<{
+  input: NavigationInput
+}>
+
+export type CreateNavigationMutation = {__typename?: 'Mutation'} & {
+  createNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type UpdateNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: NavigationInput
+}>
+
+export type UpdateNavigationMutation = {__typename?: 'Mutation'} & {
+  updateNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type DeleteNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteNavigationMutation = {__typename?: 'Mutation'} & Pick<
+  Mutation,
+  'deleteNavigation'
+>
 
 export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     draft?: Maybe<
@@ -2003,6 +2076,35 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
+export const PageRef = gql`
+  fragment PageRef on Page {
+    id
+    createdAt
+    modifiedAt
+    draft {
+      revision
+    }
+    pending {
+      revision
+    }
+    published {
+      publishedAt
+      updatedAt
+      revision
+    }
+    latest {
+      publishedAt
+      updatedAt
+      revision
+      title
+      description
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ${ImageRef}
+`
 export const ArticleRef = gql`
   fragment ArticleRef on Article {
     id
@@ -2033,6 +2135,34 @@ export const ArticleRef = gql`
   }
   ${ImageRef}
 `
+export const FullNavigation = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      __typename
+      ... on PageNavigationLink {
+        label
+        page {
+          ...PageRef
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...ArticleRef
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${PageRef}
+  ${ArticleRef}
+`
 export const PeerRef = gql`
   fragment PeerRef on Peer {
     id
@@ -2061,35 +2191,6 @@ export const PeerWithProfile = gql`
   }
   ${PeerRef}
   ${FullPeerProfile}
-`
-export const PageRef = gql`
-  fragment PageRef on Page {
-    id
-    createdAt
-    modifiedAt
-    draft {
-      revision
-    }
-    pending {
-      revision
-    }
-    published {
-      publishedAt
-      updatedAt
-      revision
-    }
-    latest {
-      publishedAt
-      updatedAt
-      revision
-      title
-      description
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ${ImageRef}
 `
 export const FullTeaser = gql`
   fragment FullTeaser on Teaser {
@@ -2488,6 +2589,43 @@ export const UpdateImage = gql`
 export const DeleteImage = gql`
   mutation DeleteImage($id: ID!) {
     deleteImage(id: $id)
+  }
+`
+export const NavigationList = gql`
+  query NavigationList {
+    navigations {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const Navigation = gql`
+  query Navigation($id: ID!) {
+    navigation(id: $id) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const CreateNavigation = gql`
+  mutation CreateNavigation($input: NavigationInput!) {
+    createNavigation(input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const UpdateNavigation = gql`
+  mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+    updateNavigation(id: $id, input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const DeleteNavigation = gql`
+  mutation DeleteNavigation($id: ID!) {
+    deleteNavigation(id: $id)
   }
 `
 export const PageList = gql`
