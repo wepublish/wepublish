@@ -226,25 +226,18 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
-export type CommentConnection = {
-  __typename?: 'CommentConnection';
-  totalCount: Scalars['Int'];
-};
-
 export type CommentInput = {
-  siteID: Scalars['ID'];
+  siteID?: Maybe<Scalars['ID']>;
   userID: Scalars['ID'];
   permalink: Scalars['String'];
-  articleID: Scalars['ID'];
-  imageID: Scalars['ID'];
-  peerID: Scalars['ID'];
+  articleID?: Maybe<Scalars['ID']>;
+  imageID?: Maybe<Scalars['ID']>;
+  peerID?: Maybe<Scalars['ID']>;
   revisions: CommentRevisionInput;
-  parentID: Scalars['ID'];
+  parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason: CommentRejectionReason;
   authorType: CommentAuthorType;
-  createdAt: Scalars['DateTime'];
-  modifiedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export enum CommentRejectionReason {
@@ -255,8 +248,6 @@ export enum CommentRejectionReason {
 export type CommentRevisionInput = {
   id: Scalars['ID'];
   text: Scalars['RichText'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export enum CommentStatus {
@@ -974,7 +965,6 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
-  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -1062,11 +1052,6 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
-};
-
-
-export type QueryCommentsArgs = {
-  filterByStatus?: Maybe<CommentStatus>;
 };
 
 

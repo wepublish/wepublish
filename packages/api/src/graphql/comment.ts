@@ -5,7 +5,8 @@ import {
   GraphQLString,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLList
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
@@ -60,33 +61,28 @@ export const GraphQLCommentRevisionInput = new GraphQLInputObjectType({
   name: 'CommentRevisionInput',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
-    text: {type: GraphQLNonNull(GraphQLRichText)},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLDateTime}
+    text: {type: GraphQLNonNull(GraphQLRichText)}
   }
 })
 
 export const GraphQLCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
-    siteID: {type: GraphQLNonNull(GraphQLID)},
+    siteID: {type: GraphQLID},
     userID: {type: GraphQLNonNull(GraphQLID)},
-    permalink: {type: GraphQLNonNull(GraphQLString)},
+    permalink: {type: GraphQLString},
 
-    articleID: {type: GraphQLNonNull(GraphQLID)},
-    imageID: {type: GraphQLNonNull(GraphQLID)},
+    articleID: {type: GraphQLID},
+    imageID: {type: GraphQLID},
 
-    peerID: {type: GraphQLNonNull(GraphQLID)},
+    peerID: {type: GraphQLID},
 
-    revisions: {type: GraphQLNonNull(GraphQLCommentRevisionInput)},
-    parentID: {type: GraphQLNonNull(GraphQLID)},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
+    parentID: {type: GraphQLID},
 
     status: {type: GraphQLNonNull(GraphQLCommentStatus)},
     rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)},
-    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
-
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLDateTime}
+    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
 })
 
