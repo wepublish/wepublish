@@ -9,6 +9,7 @@ import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
 import {DBTokenAdapter} from './token'
 import {DBUserRoleAdapter} from './userRole'
+import {DBMailLogAdapter} from './mailLog'
 
 export interface DBAdapter {
   readonly peer: DBPeerAdapter
@@ -22,4 +23,5 @@ export interface DBAdapter {
   readonly article: DBArticleAdapter
   readonly comment: DBCommentAdapter
   readonly page: DBPageAdapter
+  readonly mailLog: DBMailLogAdapter
 }

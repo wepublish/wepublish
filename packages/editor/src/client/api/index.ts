@@ -601,6 +601,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: Maybe<Scalars['Boolean']>;
 };
 
 
