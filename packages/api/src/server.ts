@@ -1,9 +1,11 @@
 import express, {Application} from 'express'
+import bodyParser from 'body-parser'
 
 import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {capitalizeFirstLetter} from './utility'
 
 import {methodsToProxy} from './events'
@@ -82,6 +84,11 @@ export class WepublishServer {
       ],
       methods: ['POST', 'GET', 'OPTIONS']
     }
+
+    app.use(bodyParser.json())
+    app.use(express.urlencoded({extended: true}))
+    app.use(bodyParser.raw({type: 'application/json'}))
+    app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
 
     adminServer.applyMiddleware({
       app,
