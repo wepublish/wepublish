@@ -1,7 +1,7 @@
 import {IncomingMessage} from 'http'
 import url from 'url'
 import crypto from 'crypto'
-
+import jwt, {Algorithm} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 
@@ -82,6 +82,9 @@ export interface Context {
   authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
+
+  generateJWT(userId: string): string
+  verifyJWT(token: string): string
 }
 
 export interface Oauth2Provider {
@@ -278,6 +281,25 @@ export async function contextFromRequest(
       }
 
       return session
+    },
+
+    generateJWT(userId: string): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const jwtOptions = {
+        issuer: hostURL,
+        audience: websiteURL,
+        algorithm: 'HS256' as Algorithm,
+        expiresIn: '5m'
+      }
+      console.log('test')
+      return jwt.sign({sub: userId}, process.env.JWT_SECRET_KEY, jwtOptions)
+    },
+
+    verifyJWT(token: string): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+      // @ts-ignore
+      return typeof ver === 'object' && 'sub' in ver ? ver.sub : ''
     }
   }
 }

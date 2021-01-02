@@ -29,3 +29,13 @@ mutation CreateSessionWithOAuth2Code($redirectUri: String!, $name: String!, $cod
     token
   }
 }
+
+
+mutation CreateSessionWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    user {
+      email
+    }
+    token
+  }
+}

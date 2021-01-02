@@ -18,6 +18,7 @@ import {Button, IconButton} from 'rsuite'
 
 export enum RouteType {
   Login = 'login',
+  LoginWithJWT = 'loginWithJWT',
   Logout = 'logout',
 
   Index = 'index',
@@ -62,6 +63,7 @@ export enum RouteType {
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
 export const LoginRoute = route(RouteType.Login, routePath`/login/${optional('provider')}`)
+export const LoginWithJWTRoute = route(RouteType.LoginWithJWT, routePath`/loginwithjwt`)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
 
 export const ArticleListRoute = route(RouteType.ArticleList, routePath`/articles`)
@@ -126,6 +128,7 @@ export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('
 export const routes = [
   IndexRoute,
   LoginRoute,
+  LoginWithJWTRoute,
   LogoutRoute,
   PageListRoute,
   PageCreateRoute,

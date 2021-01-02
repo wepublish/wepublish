@@ -23,6 +23,7 @@ import {NavigationList} from './routes/navigationList'
 export function contentForRoute(route: Route) {
   switch (route.type) {
     case RouteType.Login:
+    case RouteType.LoginWithJWT:
       return <Login />
 
     case RouteType.PeerList:

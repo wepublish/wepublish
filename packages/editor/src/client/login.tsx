@@ -9,7 +9,8 @@ import {
   useRoute,
   IndexRoute,
   LoginRoute,
-  IconButtonLink
+  IconButtonLink,
+  RouteType
 } from './route'
 import {AuthDispatchContext, AuthDispatchActionType} from './authContext'
 
@@ -17,6 +18,7 @@ import {LocalStorageKey} from './utility'
 import {Logo} from './logo'
 import {
   useCreateSessionWithOAuth2CodeMutation,
+  useCreateSessionWithJwtMutation,
   useCreateSessionMutation,
   useGetAuthProvidersQuery,
   FullUserRoleFragment
@@ -43,6 +45,11 @@ export function Login() {
     {loading: loadingOAuth2, error: errorOAuth2}
   ] = useCreateSessionWithOAuth2CodeMutation()
 
+  const [
+    authenticateWithJWT,
+    {loading: loadingJWT, error: errorJWT}
+  ] = useCreateSessionWithJwtMutation()
+
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
       redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
@@ -52,7 +59,29 @@ export function Login() {
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current !== null && current.params !== null && current.query && current.query.code) {
+    if (
+      current !== null &&
+      current.type === RouteType.LoginWithJWT &&
+      current.query &&
+      current.query.jwt
+    ) {
+      authenticateWithJWT({
+        variables: {
+          jwt: current.query.jwt
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail}
+          } = response.data.createSessionWithOAuth2Code
+
+          authenticateUser(sessionToken, responseEmail)
+        })
+        .catch(() => {
+          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+        })
+    } else if (current !== null && current.params !== null && current.query && current.query.code) {
       // TODO: fix this
       // eslint-disable-next-line
       // @ts-ignore
@@ -80,9 +109,9 @@ export function Login() {
   }, [current])
 
   useEffect(() => {
-    const error = errorLogin?.message ?? errorOAuth2?.message
+    const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
     if (error) Alert.error(error, 0)
-  }, [errorLogin, errorOAuth2])
+  }, [errorLogin, errorOAuth2, errorJWT])
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -198,6 +227,11 @@ export function Login() {
       {loadingOAuth2 && (
         <div>
           <p>{t('login.OAuth2')}</p>
+        </div>
+      )}
+      {loadingJWT && (
+        <div>
+          <p>{t('login.jwt')}</p>
         </div>
       )}
     </LoginTemplate>
