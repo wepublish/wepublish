@@ -118,7 +118,8 @@ async function asyncMain() {
   let mailProvider
   if (
     process.env.MAILGUN_API_KEY &&
-    process.env.MAILGUN_BASE_URL &&
+    process.env.MAILGUN_BASE_DOMAIN &&
+    process.env.MAILGUN_MAIL_DOMAIN &&
     process.env.MAILGUN_WEBHOOK_SECRET
   ) {
     mailProvider = new MailgunMailProvider({
@@ -126,7 +127,8 @@ async function asyncMain() {
       name: 'Mailgun',
       fromAddress: 'dev@wepublish.ch',
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
-      baseURL: process.env.MAILGUN_BASE_URL,
+      baseDomain: process.env.MAILGUN_BASE_DOMAIN,
+      mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
       apiKey: process.env.MAILGUN_API_KEY
     })
   }
