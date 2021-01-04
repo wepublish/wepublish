@@ -20,6 +20,21 @@ Object {
 }
 `;
 
+exports[`Peers can be created/edited/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deletePeer": Any<String>,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Peers can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
@@ -48,24 +63,89 @@ Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
         "name": "Peer Test 2",
-        "profile": null,
         "slug": "test-peer2",
       },
       Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
         "name": "Create Peer Test",
-        "profile": null,
         "slug": "test-peer",
       },
       Object {
         "hostURL": "https://host-url.ch/",
         "id": Any<String>,
         "name": "Peer Test 0",
-        "profile": null,
         "slug": "test-peer0",
       },
     ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers can be created/edited/deleted: can be updated 1`] = `
+Object {
+  "data": Object {
+    "updatePeer": Object {
+      "hostURL": "https://new-host-url.ch/",
+      "id": Any<String>,
+      "name": "Updated Peer",
+      "slug": "update-peer",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers can be created/edited/deleted: can read peer profile 1`] = `
+Object {
+  "data": Object {
+    "peerProfile": Object {
+      "callToActionText": Array [],
+      "callToActionURL": "",
+      "hostURL": "https://fakeURL",
+      "logo": null,
+      "name": "",
+      "themeColor": "#000000",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers can be created/edited/deleted: can update peer profile 1`] = `
+Object {
+  "data": Object {
+    "updatePeerProfile": Object {
+      "callToActionText": Array [
+        Object {
+          "text": "rich text call to action",
+        },
+      ],
+      "callToActionURL": "calltoactionurl.ch/",
+      "hostURL": "https://fakeURL",
+      "logo": null,
+      "name": "test peer profile",
+      "themeColor": "#4287f5",
+    },
   },
   "errors": undefined,
   "extensions": undefined,

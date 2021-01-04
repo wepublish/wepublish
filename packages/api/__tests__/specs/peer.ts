@@ -1,10 +1,20 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CreatePeerInput, CreatePeer, PeerList, Peer} from '../api/private'
+import {
+  CreatePeerInput,
+  CreatePeer,
+  PeerList,
+  Peer,
+  PeerProfile,
+  UpdatePeer,
+  DeletePeer,
+  UpdatePeerProfile
+} from '../api/private'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
+import {PeerProfileInput} from '../../lib'
 
 // Mocking Fetch calls from the "createFetcher" method in context
 ;((fetch as unknown) as FetchMock).mockResponse(JSON.stringify(fakePeerAdminSchema))
@@ -74,11 +84,9 @@ describe('Peers', () => {
 
     test('can be read in list', async () => {
       const {query} = testClientPrivate
-
       const res = await query({
         query: PeerList
       })
-
       expect(res).toMatchSnapshot({
         data: {
           peers: Array.from({length: ids.length}, () => ({
@@ -86,9 +94,7 @@ describe('Peers', () => {
           }))
         }
       })
-      console.log('total count: ' + res.data?.articles?.totalCount)
-      console.log('array length: ' + ids.length)
-      expect(res.data?.articles?.totalCount).toBe(ids.length)
+      expect(res.data?.peers?.length).toBe(ids.length)
     })
 
     test('can be read by id', async () => {
@@ -99,7 +105,6 @@ describe('Peers', () => {
           id: ids[0]
         }
       })
-
       expect(res).toMatchSnapshot({
         data: {
           peer: {
@@ -107,6 +112,71 @@ describe('Peers', () => {
           }
         }
       })
+    })
+
+    test('can be updated', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: UpdatePeer,
+        variables: {
+          input: {
+            name: 'Updated Peer',
+            slug: 'update-peer',
+            hostURL: 'https://new-host-url.ch/',
+            token: 'newTestTokenABC123'
+          },
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          updatePeer: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be deleted', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: DeletePeer,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          deletePeer: expect.any(String)
+        }
+      })
+      ids.shift()
+    })
+
+    test('can read peer profile', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: PeerProfile
+      })
+      expect(res).toMatchSnapshot()
+    })
+
+    test('can update peer profile', async () => {
+      const {mutate} = testClientPrivate
+      const input: PeerProfileInput = {
+        name: 'test peer profile',
+        logoID: 'logoID123',
+        themeColor: '#4287f5',
+        callToActionText: [{text: 'rich text call to action'}],
+        callToActionURL: 'calltoactionurl.ch/'
+      }
+      const res = await mutate({
+        mutation: UpdatePeerProfile,
+        variables: {
+          input: input
+        }
+      })
+      expect(res).toMatchSnapshot()
     })
   })
 })
