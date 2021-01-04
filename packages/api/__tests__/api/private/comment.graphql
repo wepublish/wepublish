@@ -1,0 +1,22 @@
+fragment MutationComment on Comment {
+  siteID
+  userID
+  permalink
+  articleID
+  imageID
+  peerID
+  revisions {
+    id
+    text
+  }
+  parentID
+  status
+  rejectionReason
+  authorType
+}
+
+mutation CreateComment($input: CommentInput!) {
+  createComment(input: $input) {
+    ...MutationComment
+  }
+}

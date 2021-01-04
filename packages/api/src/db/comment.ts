@@ -50,7 +50,6 @@ export interface CommentRevision {
   id: string
   text: RichTextNode[]
   createdAt: Date
-  modifiedAt: Date
 }
 
 export type CommentInput = CommentData

@@ -51,8 +51,8 @@ export const GraphQLCommentAuthorType = new GraphQLEnumType({
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
-    ID: {type: GraphQLNonNull(GraphQLID)},
-    text: {type: GraphQLNonNull(GraphQLRichText)},
+    id: {type: GraphQLNonNull(GraphQLID)},
+    text: {type: GraphQLRichText},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })
@@ -60,8 +60,7 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
 export const GraphQLCommentRevisionInput = new GraphQLInputObjectType({
   name: 'CommentRevisionInput',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    text: {type: GraphQLNonNull(GraphQLRichText)}
+    text: {type: GraphQLRichText}
   }
 })
 
@@ -79,7 +78,10 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
     parentID: {type: GraphQLID},
 
-    status: {type: GraphQLNonNull(GraphQLCommentStatus)},
+    status: {
+      type: GraphQLNonNull(GraphQLCommentStatus),
+      defaultValue: GraphQLCommentStatus.getValue('PENDING_APPROVAL')
+    },
     rejectionReason: {type: GraphQLCommentRejectionReason},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
@@ -90,7 +92,21 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    siteID: {type: GraphQLID},
+    userID: {type: GraphQLNonNull(GraphQLID)},
+    peerID: {type: GraphQLID},
+    permalink: {type: GraphQLString},
+
+    articleID: {type: GraphQLID},
+    imageID: {type: GraphQLID},
+
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
+    parentID: {type: GraphQLID},
+
+    status: {type: GraphQLNonNull(GraphQLCommentStatus)},
+    rejectionReason: {type: GraphQLCommentRejectionReason},
+    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
 })
 
@@ -109,11 +125,9 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
     articleID: {type: GraphQLID},
     imageID: {type: GraphQLID},
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
     parentID: {type: GraphQLID},
 
-    status: {type: GraphQLNonNull(GraphQLCommentStatus)},
-    rejectionReason: {type: GraphQLCommentRejectionReason},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
 })

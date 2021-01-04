@@ -224,6 +224,70 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>
 }
 
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  siteID?: Maybe<Scalars['ID']>
+  userID: Scalars['ID']
+  peerID?: Maybe<Scalars['ID']>
+  permalink?: Maybe<Scalars['String']>
+  articleID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['ID']>
+  revisions: Array<Maybe<CommentRevision>>
+  parentID?: Maybe<Scalars['ID']>
+  status: CommentStatus
+  rejectionReason?: Maybe<CommentRejectionReason>
+  authorType: CommentAuthorType
+}
+
+export enum CommentAuthorType {
+  Admin = 'Admin',
+  ArticleAuthor = 'ArticleAuthor',
+  Journalist = 'Journalist',
+  Moderator = 'Moderator',
+  PeerUser = 'PeerUser',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  siteID?: Maybe<Scalars['ID']>
+  userID: Scalars['ID']
+  peerID?: Maybe<Scalars['ID']>
+  permalink?: Maybe<Scalars['String']>
+  articleID?: Maybe<Scalars['ID']>
+  imageID?: Maybe<Scalars['ID']>
+  revisions: Array<Maybe<CommentRevisionInput>>
+  parentID?: Maybe<Scalars['ID']>
+  status: CommentStatus
+  rejectionReason?: Maybe<CommentRejectionReason>
+  authorType: CommentAuthorType
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'MISCONDUCT',
+  Spam = 'SPAM'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  id: Scalars['ID']
+  text?: Maybe<Scalars['RichText']>
+  createdAt: Scalars['DateTime']
+}
+
+export type CommentRevisionInput = {
+  text?: Maybe<Scalars['RichText']>
+}
+
+export enum CommentStatus {
+  Approved = 'APPROVED',
+  PendingApproval = 'PENDING_APPROVAL',
+  PendingUserChanges = 'PENDING_USER_CHANGES',
+  Rejected = 'REJECTED'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken'
   id: Scalars['ID']
@@ -479,6 +543,7 @@ export type Mutation = {
   uploadImage?: Maybe<Image>
   updateImage?: Maybe<Image>
   deleteImage?: Maybe<Scalars['Boolean']>
+  createComment: Comment
   createArticle: Article
   updateArticle?: Maybe<Article>
   deleteArticle?: Maybe<Scalars['Boolean']>
@@ -544,6 +609,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID']
   password: Scalars['String']
+  sendMail?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationDeleteUserArgs = {
@@ -600,6 +666,10 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID']
+}
+
+export type MutationCreateCommentArgs = {
+  input: CommentInput
 }
 
 export type MutationCreateArticleArgs = {
@@ -1619,6 +1689,30 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
 
+export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
+  Comment,
+  | 'siteID'
+  | 'userID'
+  | 'permalink'
+  | 'articleID'
+  | 'imageID'
+  | 'peerID'
+  | 'parentID'
+  | 'status'
+  | 'rejectionReason'
+  | 'authorType'
+> & {
+    revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'id' | 'text'>>>
+  }
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type CreateCommentMutation = {__typename?: 'Mutation'} & {
+  createComment: {__typename?: 'Comment'} & MutationCommentFragment
+}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -2137,6 +2231,24 @@ export const FullAuthor = gql`
   }
   ${AuthorRef}
 `
+export const MutationComment = gql`
+  fragment MutationComment on Comment {
+    siteID
+    userID
+    permalink
+    articleID
+    imageID
+    peerID
+    revisions {
+      id
+      text
+    }
+    parentID
+    status
+    rejectionReason
+    authorType
+  }
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -2631,6 +2743,14 @@ export const DeleteAuthor = gql`
   mutation DeleteAuthor($id: ID!) {
     deleteAuthor(id: $id)
   }
+`
+export const CreateComment = gql`
+  mutation CreateComment($input: CommentInput!) {
+    createComment(input: $input) {
+      ...MutationComment
+    }
+  }
+  ${MutationComment}
 `
 export const ImageList = gql`
   query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
