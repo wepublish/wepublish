@@ -108,7 +108,7 @@ export class MailgunMailProvider extends BaseMailProvider {
           }
         },
         (err, res) => {
-          return err ? reject(err) : resolve
+          return err || res.statusCode !== 200 ? reject(err || res) : resolve()
         }
       )
     })
