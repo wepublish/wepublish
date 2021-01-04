@@ -35,6 +35,9 @@ mutation CreateSessionWithJWT($jwt: String!) {
   createSessionWithJWT(jwt: $jwt) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }

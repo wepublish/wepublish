@@ -73,10 +73,10 @@ export function Login() {
         .then((response: any) => {
           const {
             token: sessionToken,
-            user: {email: responseEmail}
+            user: {email: responseEmail, roles}
           } = response.data.createSessionWithOAuth2Code
 
-          authenticateUser(sessionToken, responseEmail)
+          authenticateUser(sessionToken, responseEmail, roles)
         })
         .catch(() => {
           routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})

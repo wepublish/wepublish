@@ -1605,6 +1605,10 @@ export type CreateSessionWithJwtMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -3437,11 +3441,14 @@ export const CreateSessionWithJwtDocument = gql`
   createSessionWithJWT(jwt: $jwt) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 
 /**
