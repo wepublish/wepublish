@@ -17,6 +17,7 @@ import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBUserRoleAdapter} from './db/userRole'
+import {MongoDBMailLogAdapter} from './db/mailLog'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -65,6 +66,7 @@ export class MongoDBAdapter implements DBAdapter {
   readonly image: MongoDBImageAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
+  readonly mailLog: MongoDBMailLogAdapter
 
   // Init
   // ====
@@ -93,6 +95,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.image = new MongoDBImageAdapter(db, locale)
     this.article = new MongoDBArticleAdapter(db, locale)
     this.page = new MongoDBPageAdapter(db, locale)
+    this.mailLog = new MongoDBMailLogAdapter(db, locale)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {

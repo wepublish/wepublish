@@ -5,13 +5,14 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider} from '../../atoms/toolbar'
+import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, H1Icon, H2Icon, H3Icon, FormatIconButton, SlateSubMenuButton} from './buttons'
-import {renderElement, renderLeaf, withRichText} from './editor'
-import {BlockFormat, TextFormat} from './formats'
-import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
-import {TableMenu} from './tableMenu'
+import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
+import {renderElement, renderLeaf} from './editor/render'
+import {BlockFormat, TextFormat} from './editor/formats'
+import {withRichText, withTable} from './editor/plugins'
+import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
+import {TableMenu} from './toolbar/tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
@@ -21,7 +22,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange
 }: RichTextBlockProps) {
-  const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
+  const editor = useMemo(() => withTable(withRichText(withHistory(withReact(createEditor())))), [])
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
 
@@ -69,9 +70,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="table" editorHasFocus={hasFocus}>
+        <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
           <TableMenu />
-        </SlateSubMenuButton>
+        </EditorSubMenuButton>
 
         <ToolbarDivider />
 
@@ -89,9 +90,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SlateSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
+        <EditorSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
-        </SlateSubMenuButton>
+        </EditorSubMenuButton>
       </Toolbar>
       <Editable
         readOnly={disabled}

@@ -5,13 +5,15 @@ import {
   PublicArticle,
   PublicPage,
   Author,
-  Oauth2Provider
+  Oauth2Provider,
+  MailgunMailProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
+import {SlackMailProvider} from './SlackMailProvider'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -113,12 +115,38 @@ async function asyncMain() {
     }
   ]
 
+  let mailProvider
+  if (
+    process.env.MAILGUN_API_KEY &&
+    process.env.MAILGUN_BASE_URL &&
+    process.env.MAILGUN_WEBHOOK_SECRET
+  ) {
+    mailProvider = new MailgunMailProvider({
+      id: 'mailgun',
+      name: 'Mailgun',
+      fromAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
+      baseURL: process.env.MAILGUN_BASE_URL,
+      apiKey: process.env.MAILGUN_API_KEY
+    })
+  }
+
+  if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
+    mailProvider = new SlackMailProvider({
+      id: 'slackMail',
+      name: 'Slack Mail',
+      fromAddress: 'fakeMail@wepublish.media',
+      webhookURL: process.env.SLACK_DEV_MAIL_WEBHOOK_URL
+    })
+  }
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
     mediaAdapter,
     dbAdapter,
     oauth2Providers,
+    mailProvider,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
