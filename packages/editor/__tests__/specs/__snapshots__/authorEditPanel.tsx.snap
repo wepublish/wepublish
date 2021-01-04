@@ -943,7 +943,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="table"
                               >
@@ -1077,7 +1077,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -1596,7 +1596,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="smile-o"
                               >
@@ -1736,7 +1736,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -3822,7 +3822,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="table"
                               >
@@ -3956,7 +3956,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -4475,7 +4475,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="smile-o"
                               >
@@ -4615,7 +4615,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -6279,7 +6279,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="table"
                               >
@@ -6413,7 +6413,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -6932,7 +6932,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="smile-o"
                               >
@@ -7072,7 +7072,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                             </div>
                           </div>
                         </div>
@@ -8738,7 +8738,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="table"
                               >
@@ -8872,7 +8872,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                               <ToolbarDivider>
                                 <div
                                   style={
@@ -9391,7 +9391,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   }
                                 />
                               </ToolbarDivider>
-                              <SlateSubMenuButton
+                              <EditorSubMenuButton
                                 editorHasFocus={false}
                                 icon="smile-o"
                               >
@@ -9531,7 +9531,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     </Whisper>
                                   </withLocale(Whisper)>
                                 </ForwardRef>
-                              </SlateSubMenuButton>
+                              </EditorSubMenuButton>
                             </div>
                           </div>
                         </div>
