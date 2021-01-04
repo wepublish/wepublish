@@ -195,13 +195,13 @@ export interface DBComment {
   siteID?: string
   userID: string
   peerID?: string
-  permalink: string
+  permalink?: string
 
   revisions: [DBCommentRevision]
   parentID?: string
 
   status: CommentStatus
-  rejectionReason: CommentRejectionReason
+  rejectionReason?: CommentRejectionReason
   authorType: CommentAuthorType
 }
 

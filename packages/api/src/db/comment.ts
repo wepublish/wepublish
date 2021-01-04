@@ -25,7 +25,7 @@ export interface CommentData {
   siteID?: string
   userID: string
   peerID?: string
-  permalink: string
+  permalink?: string
 
   // comment could be on different types of data models
   articleID?: string
@@ -36,7 +36,7 @@ export interface CommentData {
 
   authorType: CommentAuthorType
   status: CommentStatus
-  rejectionReason: CommentRejectionReason
+  rejectionReason?: CommentRejectionReason
 }
 
 export interface Comment {

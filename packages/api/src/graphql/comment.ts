@@ -70,18 +70,17 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
   fields: {
     siteID: {type: GraphQLID},
     userID: {type: GraphQLNonNull(GraphQLID)},
+    peerID: {type: GraphQLID},
     permalink: {type: GraphQLString},
 
     articleID: {type: GraphQLID},
     imageID: {type: GraphQLID},
 
-    peerID: {type: GraphQLID},
-
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
     parentID: {type: GraphQLID},
 
     status: {type: GraphQLNonNull(GraphQLCommentStatus)},
-    rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)},
+    rejectionReason: {type: GraphQLCommentRejectionReason},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
 })
@@ -92,6 +91,30 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
     id: {type: GraphQLNonNull(GraphQLID)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+  }
+})
+
+export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
+  name: 'Comment',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+    siteID: {type: GraphQLID},
+    userID: {type: GraphQLNonNull(GraphQLID)},
+    peerID: {type: GraphQLID},
+    permalink: {type: GraphQLString},
+
+    articleID: {type: GraphQLID},
+    imageID: {type: GraphQLID},
+
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
+    parentID: {type: GraphQLID},
+
+    status: {type: GraphQLNonNull(GraphQLCommentStatus)},
+    rejectionReason: {type: GraphQLCommentRejectionReason},
+    authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
   }
 })
 
