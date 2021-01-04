@@ -202,7 +202,7 @@ export function RouteProvider({children}: RouteProviderProps) {
           }
 
           dispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
-        } else if (next.type === RouteType.Login) {
+        } else if (next.type === RouteType.Login || next.type === RouteType.LoginWithJWT) {
           if (session) {
             dispatch({type: RouteActionType.SetCurrentRoute, route: IndexRoute.create({})})
           } else {

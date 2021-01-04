@@ -74,11 +74,12 @@ export function Login() {
           const {
             token: sessionToken,
             user: {email: responseEmail, roles}
-          } = response.data.createSessionWithOAuth2Code
+          } = response.data.createSessionWithJWT
 
           authenticateUser(sessionToken, responseEmail, roles)
         })
-        .catch(() => {
+        .catch(error => {
+          console.warn('auth error', error)
           routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
         })
     } else if (current !== null && current.params !== null && current.query && current.query.code) {
