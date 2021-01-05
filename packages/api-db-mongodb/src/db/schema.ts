@@ -203,7 +203,6 @@ export interface DBComment {
 }
 
 export interface DBCommentRevision {
-  id: string
   text: RichTextNode[]
   createdAt: Date
 }

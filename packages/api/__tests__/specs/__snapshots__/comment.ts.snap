@@ -8,7 +8,6 @@ Object {
       "itemId": "d",
       "parentID": null,
       "peerID": null,
-      "rejectionReason": null,
       "revisions": Array [
         Object {
           "text": Array [
