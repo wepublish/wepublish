@@ -209,7 +209,6 @@ export interface DBCommentRevision {
   id: string
   text: RichTextNode[]
   createdAt: Date
-  modifiedAt: Date
 }
 
 export interface DBArticle {

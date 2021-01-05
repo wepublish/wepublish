@@ -210,53 +210,6 @@ export type BlockInput = {
 };
 
 
-export type Comment = {
-  __typename?: 'Comment';
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-};
-
-export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator',
-  PeerUser = 'PeerUser',
-  VerifiedUser = 'VerifiedUser'
-}
-
-export type CommentInput = {
-  siteID?: Maybe<Scalars['ID']>;
-  userID: Scalars['ID'];
-  permalink: Scalars['String'];
-  articleID?: Maybe<Scalars['ID']>;
-  imageID?: Maybe<Scalars['ID']>;
-  peerID?: Maybe<Scalars['ID']>;
-  revisions: CommentRevisionInput;
-  parentID?: Maybe<Scalars['ID']>;
-  status: CommentStatus;
-  rejectionReason: CommentRejectionReason;
-  authorType: CommentAuthorType;
-};
-
-export enum CommentRejectionReason {
-  Misconduct = 'MISCONDUCT',
-  Spam = 'SPAM'
-}
-
-export type CommentRevisionInput = {
-  id: Scalars['ID'];
-  text: Scalars['RichText'];
-};
-
-export enum CommentStatus {
-  Approved = 'APPROVED',
-  PendingApproval = 'PENDING_APPROVAL',
-  PendingUserChanges = 'PENDING_USER_CHANGES',
-  Rejected = 'REJECTED'
-}
-
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -514,7 +467,6 @@ export type Mutation = {
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
   deleteImage?: Maybe<Scalars['Boolean']>;
-  createComment: Comment;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
   deleteArticle?: Maybe<Scalars['Boolean']>;
@@ -662,11 +614,6 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
-};
-
-
-export type MutationCreateCommentArgs = {
-  input: CommentInput;
 };
 
 
@@ -1257,7 +1204,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
-  roles: Array<Maybe<UserRole>>;
+  roles: Array<UserRole>;
 };
 
 export type UserConnection = {
@@ -2410,10 +2357,10 @@ export type DeleteTokenMutation = (
 export type FullUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<Maybe<(
+  & { roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>> }
+  )> }
 );
 
 export type UserListQueryVariables = Exact<{
