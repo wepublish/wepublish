@@ -1535,6 +1535,10 @@ export type CreateSessionMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -1567,6 +1571,10 @@ export type CreateSessionWithOAuth2CodeMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -3286,11 +3294,14 @@ export const CreateSessionDocument = gql`
   createSession(email: $email, password: $password) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
 
 /**
@@ -3356,11 +3367,14 @@ export const CreateSessionWithOAuth2CodeDocument = gql`
   createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionWithOAuth2CodeMutationFn = Apollo.MutationFunction<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
 
 /**

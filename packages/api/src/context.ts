@@ -115,7 +115,7 @@ export interface SendMailFromProviderProps {
 }
 
 export async function contextFromRequest(
-  req: IncomingMessage,
+  req: IncomingMessage | null,
   {
     hostURL,
     websiteURL,
@@ -282,8 +282,8 @@ export async function contextFromRequest(
   }
 }
 
-export function tokenFromRequest(req: IncomingMessage): string | null {
-  if (req.headers.authorization) {
+export function tokenFromRequest(req: IncomingMessage | null): string | null {
+  if (req?.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
