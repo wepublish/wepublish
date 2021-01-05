@@ -50,7 +50,7 @@ describe('Comments', () => {
     })
 
     expect(res).toMatchSnapshot()
-    expect(res.data.createComment?.authorType).toContain('Admin')
+    expect(res?.data?.createComment?.authorType).toContain('Admin')
   })
 })
 
