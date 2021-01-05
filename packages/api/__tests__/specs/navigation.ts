@@ -7,7 +7,11 @@ import {
   PageInput,
   CreatePage,
   ArticleInput,
-  CreateArticle
+  CreateArticle,
+  NavigationList,
+  Navigation,
+  UpdateNavigation,
+  DeleteNavigation
 } from '../api/private'
 
 let testClientPublic: ApolloServerTestClient
@@ -43,7 +47,6 @@ beforeAll(async () => {
     }
   })
   pageID = pageRes.data?.createPage?.id
-  console.log('page id: ' + pageID)
 
   const articleInput: ArticleInput = {
     title: 'Article Title',
@@ -56,10 +59,7 @@ beforeAll(async () => {
     hideAuthor: false,
     properties: [],
     authorIDs: [],
-    socialMediaTitle: 'A social media title',
     socialMediaAuthorIDs: [],
-    socialMediaDescription: 'A social media description',
-    socialMediaImageID: '',
     blocks: []
   }
   const articleRes = await mutate({
@@ -69,7 +69,6 @@ beforeAll(async () => {
     }
   })
   articleID = articleRes.data?.createArticle?.id
-  console.log('article id: ' + articleID)
 })
 
 describe('Navigations', () => {
@@ -78,11 +77,11 @@ describe('Navigations', () => {
     beforeEach(async () => {
       const {mutate} = testClientPrivate
       const input: NavigationInput = {
-        name: 'Test Name',
-        key: 'Test Key',
+        name: `Test ${ids.length}`,
+        key: `TestKey${ids.length}`,
         links: [
-          {article: {label: 'Article Label', articleID: 'articleID123'}},
           {external: {label: 'External Label', url: 'linkurl.ch/'}},
+          {article: {label: 'Article Label', articleID: 'articleID123'}},
           {page: {label: 'Page Label', pageID: 'pageID123'}}
         ]
       }
@@ -101,8 +100,8 @@ describe('Navigations', () => {
         name: 'Create Navigation Name',
         key: 'createNavKey321',
         links: [
-          {article: {label: 'Article Label', articleID: articleID}},
           {external: {label: 'External Label', url: 'linkurl.ch/'}},
+          {article: {label: 'Article Label', articleID: articleID}},
           {page: {label: 'Page Label', pageID: pageID}}
         ]
       }
@@ -116,29 +115,102 @@ describe('Navigations', () => {
         data: {
           createNavigation: {
             id: expect.any(String),
-            links: Array.from({length: 3}, () => ({}))
+            links: expect.any(Array)
           }
-
-          /*
-            {
-              article: {
-                createdAt: expect.any(String),
-                id: expect.any(String),
-                modifiedAt: expect.any(String)
-              }
-            },
-            {
-              page: {
-                createdAt: expect.any(String),
-                id: expect.any(String),
-                modifiedAt: expect.any(String)
-              }
-            }
-            */
         }
       })
+
+      const links = res.data?.createNavigation?.links
+      expect(links).toHaveLength(3)
+      //external link
+      expect(links[0].label).toBe('External Label')
+      expect(links[0].url).toBe('linkurl.ch/')
+      //article
+      expect(links[1].label).toBe('Article Label')
+      expect(links[1].article.id).toBe(articleID)
+      //page
+      expect(links[2].label).toBe('Page Label')
+      expect(links[2].page.id).toBe(pageID)
+
       ids.unshift(res.data?.createNavigation?.id)
-      console.log(ids)
+    })
+
+    test('can be read in list', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: NavigationList
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          navigations: Array.from({length: ids.length}, () => ({
+            id: expect.any(String),
+            links: expect.any(Array)
+          }))
+        }
+      })
+      expect(res.data?.navigations?.length).toBe(ids.length)
+    })
+
+    test('can be read by id', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: Navigation,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          navigation: {
+            id: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.navigation.id).toBe(ids[0])
+    })
+
+    test('can be updated', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: UpdateNavigation,
+        variables: {
+          input: {
+            name: 'Updated Navigation Name',
+            key: 'updatedNavKey321',
+            links: [
+              {external: {label: 'New External Label', url: 'newlinkurl.ch/'}},
+              {article: {label: 'New Article Label', articleID: 'newID'}},
+              {page: {label: 'New Page Label', pageID: 'newID'}}
+            ]
+          },
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          updateNavigation: {
+            id: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.updateNavigation.id).toBe(ids[0])
+    })
+
+    test('can be deleted', async () => {
+      const {mutate} = testClientPrivate
+      const res = await mutate({
+        mutation: DeleteNavigation,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          deleteNavigation: expect.any(String)
+        }
+      })
+      expect(res.data?.deleteNavigation).toBe(ids[0])
+      ids.shift()
     })
   })
 })
