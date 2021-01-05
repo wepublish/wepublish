@@ -31,8 +31,8 @@ export const GraphQLCommentStatus = new GraphQLEnumType({
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    MISCONDUCT: {value: CommentRejectionReason.Misconduct},
-    SPAM: {value: CommentRejectionReason.Spam}
+    Misconduct: {value: CommentRejectionReason.Misconduct},
+    Spam: {value: CommentRejectionReason.Spam}
   }
 })
 
