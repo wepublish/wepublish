@@ -1684,7 +1684,7 @@ export type FullBlockFragment =
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
-  'itemId' | 'userID' | 'peerID' | 'parentID' | 'status' | 'rejectionReason' | 'authorType'
+  'itemId' | 'userID' | 'peerID' | 'parentID' | 'status' | 'authorType'
 > & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
 
 export type CreateCommentMutationVariables = Exact<{
@@ -1931,7 +1931,7 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor'
+  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
 > & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
@@ -1957,7 +1957,7 @@ export type UpdatePeerProfileMutation = {__typename?: 'Mutation'} & {
 export type PeerListQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerListQuery = {__typename?: 'Query'} & {
-  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerWithProfileFragment>>
+  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerRefFragment>>
 }
 
 export type PeerQueryVariables = Exact<{
@@ -2223,7 +2223,6 @@ export const MutationComment = gql`
     }
     parentID
     status
-    rejectionReason
     authorType
   }
 `
@@ -2296,6 +2295,8 @@ export const FullPeerProfile = gql`
     logo {
       ...ImageRef
     }
+    callToActionText
+    callToActionURL
   }
   ${ImageRef}
 `
@@ -2888,10 +2889,10 @@ export const UpdatePeerProfile = gql`
 export const PeerList = gql`
   query PeerList {
     peers {
-      ...PeerWithProfile
+      ...PeerRef
     }
   }
-  ${PeerWithProfile}
+  ${PeerRef}
 `
 export const Peer = gql`
   query Peer($id: ID!) {
