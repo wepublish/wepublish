@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - f/WEP-87-social-media-metatags
+      - b/135-article-in-teaser-grid-block-broken
 
 jobs:
   release:
