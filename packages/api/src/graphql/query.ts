@@ -30,10 +30,10 @@ import {
   GraphQLPeerArticleConnection
 } from './article'
 
-import {InputCursor, Limit} from '../db/common'
+import {InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
-import {SortOrder} from '../db/common'
+
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
 import {ImageSort} from '../db/image'
 
@@ -92,7 +92,8 @@ import {
   CanGetPeerProfile,
   CanGetPeers,
   CanGetPeer,
-  AllPermissions
+  AllPermissions,
+  CanGetComments
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -105,6 +106,11 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
+import {
+  GraphQLCommentConnection
+  // GraphQLCommentStatus
+} from './comment'
+// import {CommentStatus} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -415,6 +421,29 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         })
       }
     },
+
+    // Comments
+    // =======
+    // comments: {
+    //   type: GraphQLNonNull(GraphQLCommentConnection),
+    //   args: {
+    //     id: {type: GraphQLID},
+    //     filterByStatus: {type: GraphQLCommentStatus, defaultValue: CommentStatus.Approved}
+    //   },
+    //   resolve(root, {filterByStatus}, {authenticate, dbAdapter}) {
+    //     const {roles} = authenticate()
+
+    //     const canGetComments = isAuthorised(CanGetComments, roles)
+
+    //     if (canGetComments) {
+    //       return dbAdapter.comment.getPublicComments({
+    //         filter: {filterByStatus}
+    //       })
+    //     } else {
+    //       throw new NotAuthorisedError()
+    //     }
+    //   }
+    // },
 
     // Article
     // =======
@@ -901,6 +930,26 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve(root, {ids}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return dbAdapter.comment.getPublicComments(ids)
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     }
   }

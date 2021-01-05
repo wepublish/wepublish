@@ -93,7 +93,7 @@ export class MongoDBAdapter implements DBAdapter {
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)
-    this.comment = new MongoDBCommentAdapter(db)
+    this.comment = new MongoDBCommentAdapter(db, locale)
     this.author = new MongoDBAuthorAdapter(db, locale)
     this.image = new MongoDBImageAdapter(db, locale)
     this.article = new MongoDBArticleAdapter(db, locale)

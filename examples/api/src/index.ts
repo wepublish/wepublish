@@ -2,6 +2,7 @@
 import {
   WepublishServer,
   URLAdapter,
+  PublicComment,
   PublicArticle,
   PublicPage,
   Author,
@@ -36,6 +37,10 @@ class ExampleURLAdapter implements URLAdapter {
 
   getAuthorURL(author: Author): string {
     return `${this.websiteURL}/author/${author.slug || author.id}`
+  }
+
+  getCommentURL(article: PublicArticle, comment: PublicComment) {
+    return `${this.websiteURL}/article/${article.id}/${article.slug}#${comment.id}`
   }
 }
 

@@ -114,6 +114,7 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
   name: 'Comment',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 

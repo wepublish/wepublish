@@ -715,3 +715,24 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     }
   }
 })
+
+export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
+  name: 'Mutation',
+  fields: {
+    // Comment
+    // =======
+
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateComment, roles)
+
+        return dbAdapter.comment.createComment({
+          input: {...input}
+        })
+      }
+    }
+  }
+})

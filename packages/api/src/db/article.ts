@@ -22,6 +22,8 @@ export interface ArticleData {
   readonly socialMediaDescription?: string
   readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string
+
+  readonly commentIDs: string[]
 }
 
 // Article State Flow:
