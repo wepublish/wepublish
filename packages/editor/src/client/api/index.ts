@@ -210,6 +210,70 @@ export type BlockInput = {
 };
 
 
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  siteID?: Maybe<Scalars['ID']>;
+  userID: Scalars['ID'];
+  peerID?: Maybe<Scalars['ID']>;
+  permalink?: Maybe<Scalars['String']>;
+  articleID?: Maybe<Scalars['ID']>;
+  imageID?: Maybe<Scalars['ID']>;
+  revisions: Array<Maybe<CommentRevision>>;
+  parentID?: Maybe<Scalars['ID']>;
+  status: CommentStatus;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  authorType: CommentAuthorType;
+};
+
+export enum CommentAuthorType {
+  Admin = 'Admin',
+  ArticleAuthor = 'ArticleAuthor',
+  Journalist = 'Journalist',
+  Moderator = 'Moderator',
+  PeerUser = 'PeerUser',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  siteID?: Maybe<Scalars['ID']>;
+  userID: Scalars['ID'];
+  peerID?: Maybe<Scalars['ID']>;
+  permalink?: Maybe<Scalars['String']>;
+  articleID?: Maybe<Scalars['ID']>;
+  imageID?: Maybe<Scalars['ID']>;
+  revisions: Array<Maybe<CommentRevisionInput>>;
+  parentID?: Maybe<Scalars['ID']>;
+  status: CommentStatus;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  authorType: CommentAuthorType;
+};
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  id: Scalars['ID'];
+  text?: Maybe<Scalars['RichText']>;
+  createdAt: Scalars['DateTime'];
+};
+
+export type CommentRevisionInput = {
+  text?: Maybe<Scalars['RichText']>;
+};
+
+export enum CommentStatus {
+  Approved = 'APPROVED',
+  PendingApproval = 'PENDING_APPROVAL',
+  PendingUserChanges = 'PENDING_USER_CHANGES',
+  Rejected = 'REJECTED'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -467,6 +531,7 @@ export type Mutation = {
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
   deleteImage?: Maybe<Scalars['Boolean']>;
+  createComment: Comment;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
   deleteArticle?: Maybe<Scalars['Boolean']>;
@@ -544,6 +609,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -613,6 +679,11 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  input: CommentInput;
 };
 
 
@@ -1203,7 +1274,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
-  roles: Array<Maybe<UserRole>>;
+  roles: Array<UserRole>;
 };
 
 export type UserConnection = {
@@ -1534,10 +1605,10 @@ export type CreateSessionMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
-      & { roles: Array<Maybe<(
+      & { roles: Array<(
         { __typename?: 'UserRole' }
         & FullUserRoleFragment
-      )>> }
+      )> }
     ) }
   ) }
 );
@@ -1570,10 +1641,10 @@ export type CreateSessionWithOAuth2CodeMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
-      & { roles: Array<Maybe<(
+      & { roles: Array<(
         { __typename?: 'UserRole' }
         & FullUserRoleFragment
-      )>> }
+      )> }
     ) }
   ) }
 );
@@ -2364,10 +2435,10 @@ export type DeleteTokenMutation = (
 export type FullUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<Maybe<(
+  & { roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>> }
+  )> }
 );
 
 export type UserListQueryVariables = Exact<{
