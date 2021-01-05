@@ -159,6 +159,18 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanCreateComment: Permission = {
+  id: 'CAN_CREATE_COMMENT',
+  description: 'Allows to create comments',
+  deprecated: false
+}
+
+export const CanGetComments: Permission = {
+  id: 'CAN_GET_COMMENTS',
+  description: 'Allows to get all comments',
+  deprecated: false
+}
+
 export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
@@ -309,6 +321,12 @@ export const CanGetPermissions: Permission = {
   deprecated: false
 }
 
+export const CanLoginEditor: Permission = {
+  id: 'CAN_LOGIN_EDITOR',
+  description: 'Allows to login editor',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -354,7 +372,9 @@ export const AllPermissions: Permission[] = [
   CanGetUserRoles,
   CanDeleteUserRole,
   CanGetPermission,
-  CanGetPermissions
+  CanGetPermissions,
+  CanCreateComment,
+  CanLoginEditor
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -368,12 +388,14 @@ export const EditorPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanPublishArticle,
+  CanCreateComment,
   CanCreatePage,
   CanGetPage,
   CanGetPages,
   CanPublishPage,
   CanGetPeer,
-  CanGetPeers
+  CanGetPeers,
+  CanLoginEditor
 ]
 
 export const PeerPermissions: Permission[] = [

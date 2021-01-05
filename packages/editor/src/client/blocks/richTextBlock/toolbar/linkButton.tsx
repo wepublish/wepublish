@@ -3,9 +3,9 @@ import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 import {Editor, Transforms, Range} from 'slate'
 import {useSlate} from 'slate-react'
-import {ToolbarIconButton} from '../../atoms/toolbar'
-import {isFormatActive} from './editorUtils'
-import {InlineFormat} from './formats'
+import {ToolbarIconButton} from '../../../atoms/toolbar'
+import {isFormatActive} from '../editor/utils'
+import {InlineFormat} from '../editor/formats'
 
 export function LinkFormatButton() {
   const editor = useSlate()

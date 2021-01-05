@@ -20,6 +20,7 @@ import {
 } from '../error'
 
 import {GraphQLArticleInput, GraphQLArticle} from './article'
+import {GraphQLCommentInput, GraphQLComment} from './comment'
 import {BlockMap, Block, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
@@ -52,7 +53,8 @@ import {
   CanDeleteUser,
   CanCreateUserRole,
   CanDeleteUserRole,
-  CanResetUserPassword
+  CanResetUserPassword,
+  CanCreateComment
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -320,12 +322,26 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLUser,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        password: {type: GraphQLNonNull(GraphQLString)},
+        sendMail: {type: GraphQLBoolean}
       },
-      resolve(root, {id, password}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {id, password, sendMail},
+        {authenticate, sendMailFromProvider, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanResetUserPassword, roles)
-        return dbAdapter.user.resetUserPassword({id, password})
+        const user = await dbAdapter.user.resetUserPassword({id, password})
+        if (sendMail && user) {
+          await sendMailFromProvider({
+            recipient: user.email,
+            subject: 'Your password has been reset',
+            message: `Hello ${user.name}\n\nYour password has been reset. You can login with your new password.`,
+            replyToAddress: 'dev@wepublish.ch'
+          })
+        }
+        return user
       }
     },
 
@@ -531,6 +547,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         await mediaAdapter.deleteImage(id)
         return dbAdapter.image.deleteImage({id})
+      }
+    },
+
+    // Comment
+    // =======
+
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateComment, roles)
+
+        return dbAdapter.comment.createComment({
+          input: {...input}
+        })
       }
     },
 

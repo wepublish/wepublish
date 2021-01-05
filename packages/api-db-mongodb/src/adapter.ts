@@ -13,10 +13,12 @@ import {MongoDBNavigationAdapter} from './db/navigation'
 import {MongoDBImageAdapter} from './db/image'
 import {MongoDBTokenAdapter} from './db/token'
 import {DefaultSessionTTL, DefaultBcryptHashCostFactor} from './db/defaults'
+import {MongoDBCommentAdapter} from './db/comment'
 import {MongoDBArticleAdapter} from './db/article'
 import {MongoDBPageAdapter} from './db/page'
 import {DBMigration, CollectionName} from './db/schema'
 import {MongoDBUserRoleAdapter} from './db/userRole'
+import {MongoDBMailLogAdapter} from './db/mailLog'
 
 export interface MongoDBAdabterCommonArgs {
   readonly sessionTTL?: number
@@ -63,8 +65,10 @@ export class MongoDBAdapter implements DBAdapter {
   readonly navigation: MongoDBNavigationAdapter
   readonly author: MongoDBAuthorAdapter
   readonly image: MongoDBImageAdapter
+  readonly comment: MongoDBCommentAdapter
   readonly article: MongoDBArticleAdapter
   readonly page: MongoDBPageAdapter
+  readonly mailLog: MongoDBMailLogAdapter
 
   // Init
   // ====
@@ -89,10 +93,12 @@ export class MongoDBAdapter implements DBAdapter {
     this.session = new MongoDBSessionAdapter(db, this.user, this.userRole, sessionTTL)
     this.token = new MongoDBTokenAdapter(db)
     this.navigation = new MongoDBNavigationAdapter(db)
+    this.comment = new MongoDBCommentAdapter(db)
     this.author = new MongoDBAuthorAdapter(db, locale)
     this.image = new MongoDBImageAdapter(db, locale)
     this.article = new MongoDBArticleAdapter(db, locale)
     this.page = new MongoDBPageAdapter(db, locale)
+    this.mailLog = new MongoDBMailLogAdapter(db, locale)
   }
 
   static createMongoClient(url: string): Promise<MongoClient> {
