@@ -2132,6 +2132,10 @@ export type DeletePageMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
+export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
+  PeerProfile,
+  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
+> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
@@ -2265,14 +2269,9 @@ export type UpdatePeerProfileMutation = (
 
 export type PeerListQueryVariables = Exact<{ [key: string]: never; }>;
 
-
-export type PeerListQuery = (
-  { __typename?: 'Query' }
-  & { peers?: Maybe<Array<(
-    { __typename?: 'Peer' }
-    & PeerWithProfileFragment
-  )>> }
-);
+export type PeerListQuery = {__typename?: 'Query'} & {
+  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerRefFragment>>
+}
 
 export type PeerQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2762,15 +2761,16 @@ export const FullTeaser = gql`
     image {
       ...ImageRef
     }
-    preTitle
-    title
-    lead
-    peer {
-      ...PeerWithProfile
-    }
-    articleID
-    article {
-      ...ArticleRef
+    callToActionText
+    callToActionURL
+  }
+  ${ImageRef}
+`
+export const PeerWithProfile = gql`
+  fragment PeerWithProfile on Peer {
+    ...PeerRef
+    profile {
+      ...FullPeerProfile
     }
   }
   ... on PageTeaser {
@@ -3247,12 +3247,13 @@ export const UpdatePeerProfile = gql`
 }
     ${FullPeerProfile}`;
 export const PeerList = gql`
-    query PeerList {
-  peers {
-    ...PeerWithProfile
+
+  query PeerList {
+    peers {
+      ...PeerRef
+    }
   }
-}
-    ${PeerWithProfile}`;
+  ${PeerRef}`
 export const Peer = gql`
     query Peer($id: ID!) {
   peer(id: $id) {
