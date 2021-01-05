@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Comments can be created 1`] = `
+Object {
+  "data": Object {
+    "createComment": Object {
+      "authorType": "Admin",
+      "itemId": "d",
+      "parentID": null,
+      "peerID": null,
+      "rejectionReason": null,
+      "revisions": Array [
+        Object {
+          "text": Array [
+            Object {
+              "children": Array [
+                Object {
+                  "text": "hello",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "status": "Approved",
+      "userID": "ID!",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

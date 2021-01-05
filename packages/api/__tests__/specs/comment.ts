@@ -24,78 +24,33 @@ beforeAll(async () => {
 })
 
 describe('Comments', () => {
-  describe('can be created:', () => {
-    const CommentIds: string[] = []
-    beforeEach(async () => {
-      const {mutate} = testClientPrivate
-      const CommentInput: CommentInput = {
-        siteID: '',
-        userID: 'ID!',
-        permalink: 'String!',
-        articleID: 'ID',
-        imageID: 'ID',
-        peerID: 'ID',
-        revisions: [
-          {
-            text: [
-              {
-                type: 'paragraph',
-                children: [{text: 'hello'}]
-              }
-            ]
-          }
-        ],
-        parentID: 'ID',
-        status: CommentStatus.Approved,
-        authorType: CommentAuthorType.Admin
-      }
-      const res = await mutate({
-        mutation: CreateComment,
-        variables: {
-          input: CommentInput
+  test('can be created', async () => {
+    const {mutate} = testClientPrivate
+    const CommentInput: CommentInput = {
+      itemId: 'd',
+      userID: 'ID!',
+      revisions: [
+        {
+          text: [
+            {
+              type: 'paragraph',
+              children: [{text: 'hello'}]
+            }
+          ]
         }
-      })
-      CommentIds.unshift(res.data?.createComment?.id)
+      ],
+      status: CommentStatus.Approved,
+      authorType: CommentAuthorType.Admin
+    }
+    const res = await mutate({
+      mutation: CreateComment,
+      variables: {
+        input: CommentInput
+      }
     })
 
-    test('can be created', async () => {
-      const {mutate} = testClientPrivate
-      const CommentInput: CommentInput = {
-        siteID: '',
-        userID: 'ID!',
-        permalink: 'String!',
-        articleID: 'ID',
-        imageID: 'ID',
-        peerID: 'ID',
-        revisions: [
-          {
-            text: [
-              {
-                type: 'paragraph',
-                children: [{text: 'hello'}]
-              }
-            ]
-          }
-        ],
-        parentID: 'ID',
-        status: CommentStatus.Approved,
-        authorType: CommentAuthorType.Admin
-      }
-      const res = await mutate({
-        mutation: CreateComment,
-        variables: {
-          input: CommentInput
-        }
-      })
-      expect(res).toMatchSnapshot({
-        data: {
-          createComment: {
-            id: expect.any(String)
-          }
-        }
-      })
-      CommentIds.unshift(res.data?.createComment?.id)
-    })
+    expect(res).toMatchSnapshot()
+    expect(res.data.createComment?.authorType).toContain('Admin')
   })
 })
 

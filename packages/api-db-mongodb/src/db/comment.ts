@@ -1,4 +1,4 @@
-import {DBCommentAdapter, CreateCommentArgs, PrivateComment} from '@wepublish/api'
+import {DBCommentAdapter, CreateCommentArgs, Comment} from '@wepublish/api'
 
 import {Collection, Db} from 'mongodb'
 
@@ -16,7 +16,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     // this.locale = locale
   }
 
-  async createComment({input}: CreateCommentArgs): Promise<PrivateComment> {
+  async createComment({input}: CreateCommentArgs): Promise<Comment> {
     const {...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,

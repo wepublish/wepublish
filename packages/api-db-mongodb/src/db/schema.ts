@@ -190,13 +190,10 @@ export interface DBComment {
   createdAt: Date
   modifiedAt: Date
 
-  articleID?: string
-  imageID?: string
+  itemId: string
 
-  siteID?: string
   userID: string
   peerID?: string
-  permalink?: string
 
   revisions: [CommentRevision]
   parentID?: string

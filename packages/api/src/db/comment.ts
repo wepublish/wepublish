@@ -1,35 +1,31 @@
 import {RichTextNode} from '../graphql/richText'
 
 export enum CommentStatus {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export enum CommentRejectionReason {
-  Misconduct = 'misconduct',
-  Spam = 'spam'
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
 }
 
 export enum CommentAuthorType {
-  Admin = 'admin',
-  ArticleAuthor = 'articleAuthor',
-  VerifiedUser = 'verifiedUser',
-  PeerUser = 'peerUser',
-  Journalist = 'journalist',
-  Moderator = 'moderator'
+  Admin = 'Admin',
+  ArticleAuthor = 'ArticleAuthor',
+  VerifiedUser = 'VerifiedUser',
+  PeerUser = 'PeerUser',
+  Journalist = 'Journalist',
+  Moderator = 'Moderator'
 }
 
 export interface CommentData {
-  siteID?: string
   userID: string
   peerID?: string
-  permalink?: string
 
-  // comment could be on different types of data models
-  articleID?: string
-  imageID?: string
+  itemId: string
 
   revisions: [CommentRevision]
   parentID?: string
@@ -39,7 +35,7 @@ export interface CommentData {
   rejectionReason?: CommentRejectionReason
 }
 
-export interface Comment {
+export interface Comment extends CommentData {
   readonly id: string
 
   readonly createdAt: Date
@@ -47,14 +43,11 @@ export interface Comment {
 }
 
 export interface CommentRevision {
-  id: string
   text: RichTextNode[]
   createdAt: Date
 }
 
 export type CommentInput = CommentData
-
-export type PrivateComment = Comment & CommentData
 
 export interface CreateCommentArgs {
   readonly input: CommentInput
@@ -63,6 +56,6 @@ export interface CreateCommentArgs {
 export type OptionalComment = Comment | null
 
 export interface DBCommentAdapter {
-  createComment(args: CreateCommentArgs): Promise<PrivateComment>
+  createComment(args: CreateCommentArgs): Promise<Comment>
   // getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
 }
