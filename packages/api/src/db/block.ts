@@ -134,7 +134,6 @@ export enum TeaserType {
 
 export enum TeaserStyle {
   Default = 'default',
-  CapitalizedDefault = 'DEFAULT',
   Light = 'light',
   Text = 'text'
 }

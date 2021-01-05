@@ -100,7 +100,7 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
 
   if (loading) return <Loader text="Loading" />
 
-  const articleData = articleAdapter(data.article)
+  const articleData = articleAdapter(data?.article)
 
   if (!articleData) return <NotFoundTemplate />
 
