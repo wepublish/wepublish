@@ -2,6 +2,7 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {CommentInput, CreateComment} from '../api/private'
+import {CommentAuthorType, CommentStatus} from '../../lib'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -45,8 +46,8 @@ describe('Comments', () => {
           }
         ],
         parentID: 'ID',
-        status: 'APPROVED',
-        authorType: 'Admin'
+        status: CommentStatus.Approved,
+        authorType: CommentAuthorType.Admin
       }
       const res = await mutate({
         mutation: CreateComment,
@@ -77,9 +78,8 @@ describe('Comments', () => {
           }
         ],
         parentID: 'ID',
-        status: 'APPROVED',
-        rejectionReason: 'MISCONDUCT',
-        authorType: 'Admin'
+        status: CommentStatus.Approved,
+        authorType: CommentAuthorType.Admin
       }
       const res = await mutate({
         mutation: CreateComment,

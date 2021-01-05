@@ -1,5 +1,6 @@
 import {
   ArticleBlock,
+  CommentRevision,
   CommentAuthorType,
   CommentRejectionReason,
   CommentStatus,
@@ -197,18 +198,12 @@ export interface DBComment {
   peerID?: string
   permalink?: string
 
-  revisions: [DBCommentRevision]
+  revisions: [CommentRevision]
   parentID?: string
 
   status: CommentStatus
   rejectionReason?: CommentRejectionReason
   authorType: CommentAuthorType
-}
-
-export interface DBCommentRevision {
-  id: string
-  text: RichTextNode[]
-  createdAt: Date
 }
 
 export interface DBArticle {
