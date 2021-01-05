@@ -240,11 +240,8 @@ export type Comment = {
 }
 
 export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator',
-  PeerUser = 'PeerUser',
+  Author = 'Author',
+  Team = 'Team',
   VerifiedUser = 'VerifiedUser'
 }
 

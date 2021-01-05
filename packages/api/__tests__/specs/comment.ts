@@ -40,7 +40,7 @@ describe('Comments', () => {
         }
       ],
       status: CommentStatus.Approved,
-      authorType: CommentAuthorType.Admin
+      authorType: CommentAuthorType.Author
     }
     const res = await mutate({
       mutation: CreateComment,
@@ -50,7 +50,7 @@ describe('Comments', () => {
     })
 
     expect(res).toMatchSnapshot()
-    expect(res?.data?.createComment?.authorType).toContain('Admin')
+    expect(res?.data?.createComment?.authorType).toContain(CommentAuthorType.Author)
   })
 })
 

@@ -38,12 +38,9 @@ export const GraphQLCommentRejectionReason = new GraphQLEnumType({
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Admin: {value: CommentAuthorType.Admin},
-    ArticleAuthor: {value: CommentAuthorType.ArticleAuthor},
-    Journalist: {value: CommentAuthorType.Journalist},
-    Moderator: {value: CommentAuthorType.Moderator},
-    PeerUser: {value: CommentAuthorType.PeerUser},
-    VerifiedUser: {value: CommentAuthorType.VerifiedUser}
+    [CommentAuthorType.Author]: {value: CommentAuthorType.Author},
+    [CommentAuthorType.Team]: {value: CommentAuthorType.Team},
+    [CommentAuthorType.VerifiedUser]: {value: CommentAuthorType.VerifiedUser}
   }
 })
 

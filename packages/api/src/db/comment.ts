@@ -13,12 +13,9 @@ export enum CommentRejectionReason {
 }
 
 export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  VerifiedUser = 'VerifiedUser',
-  PeerUser = 'PeerUser',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator'
+  Team = 'Team',
+  Author = 'Author',
+  VerifiedUser = 'VerifiedUser'
 }
 
 export interface CommentData {

@@ -4,7 +4,7 @@ exports[`Comments can be created 1`] = `
 Object {
   "data": Object {
     "createComment": Object {
-      "authorType": "Admin",
+      "authorType": "Author",
       "itemId": "d",
       "parentID": null,
       "peerID": null,
