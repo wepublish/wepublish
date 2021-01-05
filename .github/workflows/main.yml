@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - b/135-article-in-teaser-grid-block-broken
+      - b/WEP-135-article-teaser-block-broken
 
 jobs:
   release:
