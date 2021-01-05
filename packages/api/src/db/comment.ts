@@ -44,10 +44,8 @@ export interface CommentRevision {
   createdAt: Date
 }
 
-export type CommentInput = CommentData
-
 export interface CreateCommentArgs {
-  readonly input: CommentInput
+  readonly input: CommentData
 }
 
 export type OptionalComment = Comment | null
