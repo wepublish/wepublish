@@ -7,19 +7,19 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLSchema, print, GraphQLError} from 'graphql'
+import {GraphQLError, GraphQLSchema, print} from 'graphql'
 
 import {
-  makeRemoteExecutableSchema,
-  introspectSchema,
   Fetcher,
-  IFetcherOperation
+  IFetcherOperation,
+  introspectSchema,
+  makeRemoteExecutableSchema
 } from 'graphql-tools'
 
 import {TokenExpiredError} from './error'
 import {Hooks} from './hooks'
 
-import {TokenSession, UserSession, SessionType, OptionalSession, Session} from './db/session'
+import {OptionalSession, Session, SessionType, TokenSession, UserSession} from './db/session'
 
 import {DBAdapter} from './db/adapter'
 import {MediaAdapter} from './mediaAdapter'
@@ -34,6 +34,8 @@ import {OptionalPage, OptionalPublicPage} from './db/page'
 
 import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
+import {BaseMailProvider} from './mails/mailProvider'
+import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -52,6 +54,8 @@ export interface DataLoaderContext {
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
 
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
+
+  readonly mailLogsByID: DataLoader<string, OptionalMailLog>
 
   readonly peer: DataLoader<string, OptionalPeer>
   readonly peerBySlug: DataLoader<string, OptionalPeer>
@@ -72,6 +76,8 @@ export interface Context {
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
+
+  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
 
   authenticate(): Session
   authenticateToken(): TokenSession
@@ -94,13 +100,32 @@ export interface ContextOptions {
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
+  readonly mailProvider?: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly hooks?: Hooks
 }
 
+export interface SendMailFromProviderProps {
+  recipient: string
+  replyToAddress: string
+  subject: string
+  message?: string
+  template?: string
+  templateData?: Record<string, any>
+}
+
 export async function contextFromRequest(
-  req: IncomingMessage,
-  {hostURL, websiteURL, dbAdapter, mediaAdapter, urlAdapter, oauth2Providers, hooks}: ContextOptions
+  req: IncomingMessage | null,
+  {
+    hostURL,
+    websiteURL,
+    dbAdapter,
+    mediaAdapter,
+    urlAdapter,
+    oauth2Providers,
+    hooks,
+    mailProvider
+  }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
   const session = token ? await dbAdapter.session.getSessionByToken(token) : null
@@ -113,6 +138,23 @@ export async function contextFromRequest(
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
     dbAdapter.peer.getPeersByID(ids)
   )
+
+  const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
+    const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
+    const mailLog = await dbAdapter.mailLog.createMailLog({
+      input: {
+        state: MailLogState.Submitted,
+        subject: props.subject,
+        recipient: props.recipient,
+        mailProviderID: mailProviderID
+      }
+    })
+
+    // TODO: handle sendMail error
+    if (mailProvider) await mailProvider.sendMail({...props, mailLogID: mailLog.id})
+
+    return mailLog
+  }
 
   return {
     hostURL,
@@ -135,6 +177,8 @@ export async function contextFromRequest(
       publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
       userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+
+      mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
 
       peer: peerDataLoader,
       peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
@@ -202,6 +246,8 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
 
+    sendMailFromProvider,
+
     authenticateUser() {
       if (!session || session.type !== SessionType.User) {
         throw new AuthenticationError('Invalid user session!')
@@ -236,8 +282,8 @@ export async function contextFromRequest(
   }
 }
 
-export function tokenFromRequest(req: IncomingMessage): string | null {
-  if (req.headers.authorization) {
+export function tokenFromRequest(req: IncomingMessage | null): string | null {
+  if (req?.headers.authorization) {
     const [, token] = req.headers.authorization.match(/Bearer (.+?$)/i) || []
     return token || null
   }
@@ -275,7 +321,6 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
                 ]
               }
             }
-
             return await fetchResult.json()
           } catch (err) {
             if (err.type === 'aborted') {

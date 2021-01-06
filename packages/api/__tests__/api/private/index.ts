@@ -1910,7 +1910,7 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor'
+  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
 > & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
@@ -1936,7 +1936,7 @@ export type UpdatePeerProfileMutation = {__typename?: 'Mutation'} & {
 export type PeerListQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerListQuery = {__typename?: 'Query'} & {
-  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerWithProfileFragment>>
+  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerRefFragment>>
 }
 
 export type PeerQueryVariables = Exact<{
@@ -1969,6 +1969,145 @@ export type DeletePeerMutationVariables = Exact<{
 }>
 
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
+
+export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
+    roles: Array<Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>>
+  }
+
+export type UserListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}>
+
+export type UserListQuery = {__typename?: 'Query'} & {
+  users: {__typename?: 'UserConnection'} & Pick<UserConnection, 'totalCount'> & {
+      nodes: Array<{__typename?: 'User'} & FullUserFragment>
+      pageInfo: {__typename?: 'PageInfo'} & Pick<
+        PageInfo,
+        'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+      >
+    }
+}
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type UserQuery = {__typename?: 'Query'} & {
+  user?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type CreateUserMutationVariables = Exact<{
+  input: UserInput
+  password: Scalars['String']
+}>
+
+export type CreateUserMutation = {__typename?: 'Mutation'} & {
+  createUser?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UserInput
+}>
+
+export type UpdateUserMutation = {__typename?: 'Mutation'} & {
+  updateUser?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type ResetUserPasswordMutationVariables = Exact<{
+  id: Scalars['ID']
+  password: Scalars['String']
+}>
+
+export type ResetUserPasswordMutation = {__typename?: 'Mutation'} & {
+  resetUserPassword?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type DeleteUserMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteUserMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUser'>
+
+export type CreateSessionMutationVariables = Exact<{
+  email: Scalars['String']
+  password: Scalars['String']
+}>
+
+export type CreateSessionMutation = {__typename?: 'Mutation'} & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type FullPermissionFragment = {__typename?: 'Permission'} & Pick<
+  Permission,
+  'id' | 'description' | 'deprecated'
+>
+
+export type FullUserRoleFragment = {__typename?: 'UserRole'} & Pick<
+  UserRole,
+  'id' | 'name' | 'description' | 'systemRole'
+> & {permissions: Array<{__typename?: 'Permission'} & FullPermissionFragment>}
+
+export type UserRoleListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}>
+
+export type UserRoleListQuery = {__typename?: 'Query'} & {
+  userRoles: {__typename?: 'UserRoleConnection'} & Pick<UserRoleConnection, 'totalCount'> & {
+      nodes: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
+      pageInfo: {__typename?: 'PageInfo'} & Pick<
+        PageInfo,
+        'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+      >
+    }
+}
+
+export type PermissionListQueryVariables = Exact<{[key: string]: never}>
+
+export type PermissionListQuery = {__typename?: 'Query'} & {
+  permissions?: Maybe<Array<{__typename?: 'Permission'} & FullPermissionFragment>>
+}
+
+export type UserRoleQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type UserRoleQuery = {__typename?: 'Query'} & {
+  userRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type CreateUserRoleMutationVariables = Exact<{
+  input: UserRoleInput
+}>
+
+export type CreateUserRoleMutation = {__typename?: 'Mutation'} & {
+  createUserRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type UpdateUserRoleMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UserRoleInput
+}>
+
+export type UpdateUserRoleMutation = {__typename?: 'Mutation'} & {
+  updateUserRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type DeleteUserRoleMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteUserRoleMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUserRole'>
 
 export const MutationArticle = gql`
   fragment MutationArticle on Article {
@@ -2179,6 +2318,8 @@ export const FullPeerProfile = gql`
     logo {
       ...ImageRef
     }
+    callToActionText
+    callToActionURL
   }
   ${ImageRef}
 `
@@ -2362,6 +2503,36 @@ export const MutationPage = gql`
   }
   ${ImageRef}
   ${FullBlock}
+`
+export const FullPermission = gql`
+  fragment FullPermission on Permission {
+    id
+    description
+    deprecated
+  }
+`
+export const FullUserRole = gql`
+  fragment FullUserRole on UserRole {
+    id
+    name
+    description
+    systemRole
+    permissions {
+      ...FullPermission
+    }
+  }
+  ${FullPermission}
+`
+export const FullUser = gql`
+  fragment FullUser on User {
+    id
+    name
+    email
+    roles {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
 `
 export const ArticleList = gql`
   query ArticleList($filter: String, $after: ID, $first: Int) {
@@ -2741,10 +2912,10 @@ export const UpdatePeerProfile = gql`
 export const PeerList = gql`
   query PeerList {
     peers {
-      ...PeerWithProfile
+      ...PeerRef
     }
   }
-  ${PeerWithProfile}
+  ${PeerRef}
 `
 export const Peer = gql`
   query Peer($id: ID!) {
@@ -2773,5 +2944,123 @@ export const UpdatePeer = gql`
 export const DeletePeer = gql`
   mutation DeletePeer($id: ID!) {
     deletePeer(id: $id)
+  }
+`
+export const UserList = gql`
+  query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+      nodes {
+        ...FullUser
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullUser}
+`
+export const User = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const CreateUser = gql`
+  mutation CreateUser($input: UserInput!, $password: String!) {
+    createUser(input: $input, password: $password) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const UpdateUser = gql`
+  mutation UpdateUser($id: ID!, $input: UserInput!) {
+    updateUser(id: $id, input: $input) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const ResetUserPassword = gql`
+  mutation ResetUserPassword($id: ID!, $password: String!) {
+    resetUserPassword(id: $id, password: $password) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const DeleteUser = gql`
+  mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+  }
+`
+export const CreateSession = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const UserRoleList = gql`
+  query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+      nodes {
+        ...FullUserRole
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullUserRole}
+`
+export const PermissionList = gql`
+  query PermissionList {
+    permissions {
+      ...FullPermission
+    }
+  }
+  ${FullPermission}
+`
+export const UserRole = gql`
+  query UserRole($id: ID!) {
+    userRole(id: $id) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const CreateUserRole = gql`
+  mutation CreateUserRole($input: UserRoleInput!) {
+    createUserRole(input: $input) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const UpdateUserRole = gql`
+  mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+    updateUserRole(id: $id, input: $input) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const DeleteUserRole = gql`
+  mutation DeleteUserRole($id: ID!) {
+    deleteUserRole(id: $id)
   }
 `

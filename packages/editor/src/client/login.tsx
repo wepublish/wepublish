@@ -18,20 +18,12 @@ import {Logo} from './logo'
 import {
   useCreateSessionWithOAuth2CodeMutation,
   useCreateSessionMutation,
-  useGetAuthProvidersQuery
+  useGetAuthProvidersQuery,
+  FullUserRoleFragment
 } from './api'
 
 import {useTranslation} from 'react-i18next'
-import {
-  ControlLabel,
-  Button,
-  Form,
-  FormControl,
-  FormGroup,
-  Divider,
-  Icon,
-  Notification
-} from 'rsuite'
+import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -44,7 +36,7 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  const [authenticate, {loading, error}] = useCreateSessionMutation()
+  const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
   const [
     authenticateWithOAuth2Code,
@@ -76,10 +68,10 @@ export function Login() {
         .then((response: any) => {
           const {
             token: sessionToken,
-            user: {email: responseEmail}
+            user: {email: responseEmail, roles}
           } = response.data.createSessionWithOAuth2Code
 
-          authenticateUser(sessionToken, responseEmail)
+          authenticateUser(sessionToken, responseEmail, roles)
         })
         .catch(() => {
           routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
@@ -88,19 +80,9 @@ export function Login() {
   }, [current])
 
   useEffect(() => {
-    if (error) {
-      Notification.error({
-        title: error.message,
-        duration: 5000
-      })
-    }
-    if (errorOAuth2) {
-      Notification.error({
-        title: errorOAuth2.message,
-        duration: 5000
-      })
-    }
-  }, [error, errorOAuth2])
+    const error = errorLogin?.message ?? errorOAuth2?.message
+    if (error) Alert.error(error, 0)
+  }, [errorLogin, errorOAuth2])
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -111,13 +93,26 @@ export function Login() {
 
     const {
       token: sessionToken,
-      user: {email: responseEmail}
+      user: {email: responseEmail, roles}
     } = response.data.createSession
 
-    authenticateUser(sessionToken, responseEmail)
+    authenticateUser(sessionToken, responseEmail, roles)
   }
 
-  function authenticateUser(sessionToken: string, responseEmail: string) {
+  function authenticateUser(
+    sessionToken: string,
+    responseEmail: string,
+    userRoles: FullUserRoleFragment[]
+  ) {
+    const permissions = userRoles.reduce((permissions, userRole) => {
+      return [...permissions, ...userRole.permissions.map(permission => permission.id)]
+    }, [] as string[])
+
+    if (!permissions.includes('CAN_LOGIN_EDITOR')) {
+      Alert.error(t('login.unauthorized'), 0)
+      return
+    }
+
     localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
 
     authDispatch({
