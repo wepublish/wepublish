@@ -193,7 +193,10 @@ describe('Navigations', () => {
           }
         }
       })
-      expect(res.data?.updateNavigation.id).toBe(ids[0])
+      const updatedNav = res.data?.updateNavigation
+      expect(updatedNav.id).toBe(ids[0])
+      expect(updatedNav.name).toBe('Updated Navigation Name')
+      expect(updatedNav.key).toBe('updatedNavKey321')
     })
 
     test('can be deleted', async () => {
