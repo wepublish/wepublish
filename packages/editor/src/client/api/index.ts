@@ -1121,9 +1121,9 @@ export type TeaserInput = {
 };
 
 export enum TeaserStyle {
-  Default = 'DEFAULT',
-  Light = 'LIGHT',
-  Text = 'TEXT'
+  Default = 'default',
+  Light = 'light',
+  Text = 'text'
 }
 
 export type TitleBlock = {

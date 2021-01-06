@@ -277,11 +277,11 @@ export function teaserAdapter(teaser: any): ArticleMeta | null {
   let teaserStyle: TeaserStyle
 
   switch (style) {
-    case 'LIGHT':
+    case [TeaserStyle.Light]:
       teaserStyle = TeaserStyle.Light
       break
 
-    case 'TEXT':
+    case [TeaserStyle.Text]:
       teaserStyle = TeaserStyle.Text
       break
 
