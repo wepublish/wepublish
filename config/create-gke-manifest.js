@@ -647,13 +647,12 @@ async function applyApiServer() {
                   }
                 },
                 {
-                  name: 'MAILGUN_BASE_URL',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: 'wepublish-secrets',
-                      key: 'mailgun_base_url'
-                    }
-                  }
+                  name: 'MAILGUN_BASE_DOMAIN',
+                  value: 'api.eu.mailgun.net'
+                },
+                {
+                  name: 'MAILGUN_MAIL_DOMAIN',
+                  value: 'mg.wepublish.media'
                 },
                 {
                   name: 'MAILGUN_WEBHOOK_SECRET',
