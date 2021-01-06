@@ -1,4 +1,4 @@
-import {Editor, Point, Transforms, Element as SlateElement, Node as SlateNode, Range} from 'slate'
+import {Editor, Point, Element as SlateElement, Range} from 'slate'
 import {jsx} from 'slate-hyperscript'
 import {ReactEditor} from 'slate-react'
 import {InlineFormats, BlockFormat, InlineFormat, TextFormat} from './formats'
