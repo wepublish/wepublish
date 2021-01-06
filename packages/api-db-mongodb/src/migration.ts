@@ -498,9 +498,11 @@ export const Migrations: Migration[] = [
     // Add Commenting Table.
     version: 10,
     async migrate(db) {
-      await db.createCollection(CollectionName.Comments, {
+      const comments = await db.createCollection(CollectionName.Comments, {
         strict: true
       })
+      await comments.createIndex({createdAt: -1})
+      await comments.createIndex({'revisions.createdAt': -1})
     }
   }
 ]
