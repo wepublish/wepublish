@@ -1,7 +1,7 @@
 import {IncomingMessage} from 'http'
 import url from 'url'
 import crypto from 'crypto'
-import jwt, {Algorithm} from 'jsonwebtoken'
+import jwt, {SignOptions} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 
@@ -83,7 +83,7 @@ export interface Context {
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
 
-  generateJWT(userId: string): string
+  generateJWT(props: GenerateJWTProps): string
   verifyJWT(token: string): string
 }
 
@@ -115,6 +115,12 @@ export interface SendMailFromProviderProps {
   message?: string
   template?: string
   templateData?: Record<string, any>
+}
+
+export interface GenerateJWTProps {
+  userID: string
+  audience?: string
+  experiesInMinutes?: number
 }
 
 export async function contextFromRequest(
@@ -283,23 +289,21 @@ export async function contextFromRequest(
       return session
     },
 
-    generateJWT(userId: string): string {
+    generateJWT(props: GenerateJWTProps): string {
       if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-      const jwtOptions = {
+      const jwtOptions: SignOptions = {
         issuer: hostURL,
-        audience: websiteURL,
-        algorithm: 'HS256' as Algorithm,
-        expiresIn: '5m'
+        audience: props.audience ?? websiteURL,
+        algorithm: 'HS256',
+        expiresIn: `${props.experiesInMinutes ?? 5}m`
       }
-      console.log('test')
-      return jwt.sign({sub: userId}, process.env.JWT_SECRET_KEY, jwtOptions)
+      return jwt.sign({sub: props.userID}, process.env.JWT_SECRET_KEY, jwtOptions)
     },
 
     verifyJWT(token: string): string {
       if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
       const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      // @ts-ignore
-      return typeof ver === 'object' && 'sub' in ver ? ver.sub : ''
+      return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
     }
   }
 }
