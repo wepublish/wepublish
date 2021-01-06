@@ -231,7 +231,8 @@ export type Comment = {
   modifiedAt: Scalars['DateTime']
   userID: Scalars['ID']
   peerID?: Maybe<Scalars['ID']>
-  itemId: Scalars['ID']
+  itemID: Scalars['ID']
+  itemType: CommentItemType
   revisions: Array<Maybe<CommentRevision>>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
@@ -248,12 +249,18 @@ export enum CommentAuthorType {
 export type CommentInput = {
   userID: Scalars['ID']
   peerID?: Maybe<Scalars['ID']>
-  itemId: Scalars['ID']
+  itemID: Scalars['ID']
+  itemType: CommentItemType
   revisions: Array<Maybe<CommentRevisionInput>>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
   rejectionReason?: Maybe<CommentRejectionReason>
   authorType: CommentAuthorType
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
 }
 
 export enum CommentRejectionReason {
@@ -1681,7 +1688,7 @@ export type FullBlockFragment =
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
-  'itemId' | 'userID' | 'peerID' | 'parentID' | 'status' | 'authorType'
+  'itemID' | 'itemType' | 'userID' | 'peerID' | 'parentID' | 'status' | 'authorType'
 > & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
 
 export type CreateCommentMutationVariables = Exact<{
@@ -2212,7 +2219,8 @@ export const FullAuthor = gql`
 `
 export const MutationComment = gql`
   fragment MutationComment on Comment {
-    itemId
+    itemID
+    itemType
     userID
     peerID
     revisions {

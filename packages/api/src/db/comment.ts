@@ -18,11 +18,17 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
 export interface CommentData {
   userID: string
   peerID?: string
 
-  itemId: string
+  itemID: string
+  itemType: CommentItemType
 
   revisions: [CommentRevision]
   parentID?: string

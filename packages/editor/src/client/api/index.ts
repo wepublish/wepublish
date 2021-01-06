@@ -217,7 +217,7 @@ export type Comment = {
   modifiedAt: Scalars['DateTime'];
   userID: Scalars['ID'];
   peerID?: Maybe<Scalars['ID']>;
-  itemId: Scalars['ID'];
+  itemID: Scalars['ID'];
   revisions: Array<Maybe<CommentRevision>>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
@@ -226,24 +226,27 @@ export type Comment = {
 };
 
 export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator',
-  PeerUser = 'PeerUser',
+  Author = 'Author',
+  Team = 'Team',
   VerifiedUser = 'VerifiedUser'
 }
 
 export type CommentInput = {
   userID: Scalars['ID'];
   peerID?: Maybe<Scalars['ID']>;
-  itemId: Scalars['ID'];
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
   revisions: Array<Maybe<CommentRevisionInput>>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason?: Maybe<CommentRejectionReason>;
   authorType: CommentAuthorType;
 };
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
 
 export enum CommentRejectionReason {
   Misconduct = 'Misconduct',
@@ -252,7 +255,6 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  id: Scalars['ID'];
   text?: Maybe<Scalars['RichText']>;
   createdAt: Scalars['DateTime'];
 };

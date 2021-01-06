@@ -1,5 +1,6 @@
 import {
   ArticleBlock,
+  CommentItemType,
   CommentAuthorType,
   CommentRejectionReason,
   CommentStatus,
@@ -189,7 +190,8 @@ export interface DBComment {
   createdAt: Date
   modifiedAt: Date
 
-  itemId: string
+  itemID: string
+  itemType: CommentItemType
 
   userID: string
   peerID?: string

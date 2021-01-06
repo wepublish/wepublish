@@ -11,6 +11,7 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {
   CommentAuthorType,
+  CommentItemType,
   CommentRejectionReason,
   CommentRevision,
   CommentStatus
@@ -44,6 +45,14 @@ export const GraphQLCommentAuthorType = new GraphQLEnumType({
   }
 })
 
+export const GraphQLCommentItemType = new GraphQLEnumType({
+  name: 'CommentItemType',
+  values: {
+    [CommentItemType.Article]: {value: CommentItemType.Article},
+    [CommentItemType.Page]: {value: CommentItemType.Page}
+  }
+})
+
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
@@ -65,7 +74,11 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
     userID: {type: GraphQLNonNull(GraphQLID)},
     peerID: {type: GraphQLID},
 
-    itemId: {type: GraphQLNonNull(GraphQLID)},
+    itemID: {type: GraphQLNonNull(GraphQLID)},
+    itemType: {
+      type: GraphQLNonNull(GraphQLCommentItemType),
+      defaultValue: GraphQLCommentStatus.getValue(CommentItemType.Article)
+    },
 
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
     parentID: {type: GraphQLID},
@@ -89,7 +102,10 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
     userID: {type: GraphQLNonNull(GraphQLID)},
     peerID: {type: GraphQLID},
 
-    itemId: {type: GraphQLNonNull(GraphQLID)},
+    itemID: {type: GraphQLNonNull(GraphQLID)},
+    itemType: {
+      type: GraphQLNonNull(GraphQLCommentItemType)
+    },
 
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
     parentID: {type: GraphQLID},
@@ -110,7 +126,10 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
     userID: {type: GraphQLNonNull(GraphQLID)},
     peerID: {type: GraphQLID},
 
-    itemId: {type: GraphQLNonNull(GraphQLID)},
+    itemID: {type: GraphQLNonNull(GraphQLID)},
+    itemType: {
+      type: GraphQLNonNull(GraphQLCommentItemType)
+    },
 
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
     parentID: {type: GraphQLID},

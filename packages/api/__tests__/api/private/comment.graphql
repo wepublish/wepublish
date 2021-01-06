@@ -1,5 +1,6 @@
 fragment MutationComment on Comment {
-  itemId
+  itemID
+  itemType
   userID
   peerID
   revisions {

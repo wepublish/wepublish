@@ -2,7 +2,7 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
 import {CommentInput, CommentStatus, CreateComment} from '../api/private'
-import {CommentAuthorType} from '../../lib'
+import {CommentAuthorType, CommentItemType} from '../../lib'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -27,7 +27,8 @@ describe('Comments', () => {
   test('can be created', async () => {
     const {mutate} = testClientPrivate
     const CommentInput: CommentInput = {
-      itemId: 'd',
+      itemID: 'd',
+      itemType: CommentItemType.Article,
       userID: 'ID!',
       revisions: [
         {
