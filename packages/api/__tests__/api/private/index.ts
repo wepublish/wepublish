@@ -14,8 +14,8 @@ export type Scalars = {
   DateTime: string
   /** A hexidecimal color value. */
   Color: string
-  Slug: string
   RichText: Node[]
+  Slug: string
   /** The `Upload` scalar type represents a file upload. */
   Upload: File
 }
@@ -60,6 +60,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean']
   breaking: Scalars['Boolean']
   hideAuthor: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthorIDs: Array<Scalars['ID']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -91,6 +95,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthors: Array<Author>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -706,6 +714,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
   imageID?: Maybe<Scalars['ID']>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImageID?: Maybe<Scalars['ID']>
   blocks: Array<BlockInput>
 }
 
@@ -733,6 +744,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>
   properties: Array<Properties>
   image?: Maybe<Image>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -816,12 +830,16 @@ export type PeerProfile = {
   themeColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type PeerProfileInput = {
   name: Scalars['String']
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type Permission = {
@@ -1216,7 +1234,7 @@ export type YouTubeVideoBlockInput = {
   videoID: Scalars['String']
 }
 
-export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id'> & {
+export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, 'id' | 'shared'> & {
     draft?: Maybe<
       {__typename?: 'ArticleRevision'} & Pick<
         ArticleRevision,
@@ -1234,8 +1252,20 @@ export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, '
     >
     latest: {__typename?: 'ArticleRevision'} & Pick<
       ArticleRevision,
-      'publishedAt' | 'updatedAt' | 'revision'
-    >
+      | 'publishedAt'
+      | 'updatedAt'
+      | 'revision'
+      | 'title'
+      | 'preTitle'
+      | 'lead'
+      | 'slug'
+      | 'breaking'
+      | 'tags'
+    > & {
+        properties: Array<
+          {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
+        >
+      }
   }
 
 export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
@@ -1361,12 +1391,16 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | 'tags'
           | 'hideAuthor'
           | 'breaking'
+          | 'socialMediaTitle'
+          | 'socialMediaDescription'
         > & {
             image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             properties: Array<
               {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
             >
             authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+            socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
+            socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
             blocks: Array<
               | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
               | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
@@ -1667,6 +1701,61 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteImage'>
 
+export type FullNavigationFragment = {__typename?: 'Navigation'} & Pick<
+  Navigation,
+  'id' | 'key' | 'name'
+> & {
+    links: Array<
+      | ({__typename: 'PageNavigationLink'} & Pick<PageNavigationLink, 'label'> & {
+            page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
+          })
+      | ({__typename: 'ArticleNavigationLink'} & Pick<ArticleNavigationLink, 'label'> & {
+            article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
+          })
+      | ({__typename: 'ExternalNavigationLink'} & Pick<ExternalNavigationLink, 'label' | 'url'>)
+    >
+  }
+
+export type NavigationListQueryVariables = Exact<{[key: string]: never}>
+
+export type NavigationListQuery = {__typename?: 'Query'} & {
+  navigations: Array<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type NavigationQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type NavigationQuery = {__typename?: 'Query'} & {
+  navigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type CreateNavigationMutationVariables = Exact<{
+  input: NavigationInput
+}>
+
+export type CreateNavigationMutation = {__typename?: 'Mutation'} & {
+  createNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type UpdateNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: NavigationInput
+}>
+
+export type UpdateNavigationMutation = {__typename?: 'Mutation'} & {
+  updateNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type DeleteNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteNavigationMutation = {__typename?: 'Mutation'} & Pick<
+  Mutation,
+  'deleteNavigation'
+>
+
 export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     draft?: Maybe<
       {__typename?: 'PageRevision'} & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -1677,8 +1766,31 @@ export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     >
     latest: {__typename?: 'PageRevision'} & Pick<
       PageRevision,
-      'publishedAt' | 'updatedAt' | 'revision'
-    >
+      'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'
+    > & {
+        image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+        properties: Array<
+          {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
+        >
+        blocks: Array<
+          | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
+          | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
+          | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
+          | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
+          | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
+          | ({__typename?: 'FacebookVideoBlock'} & FullBlock_FacebookVideoBlock_Fragment)
+          | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
+          | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
+          | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
+          | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
+          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
+          | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
+          | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
+          | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
+          | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+        >
+      }
   }
 
 export type PageRefFragment = {__typename?: 'Page'} & Pick<
@@ -1798,7 +1910,7 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor'
+  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
 > & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
@@ -1824,7 +1936,7 @@ export type UpdatePeerProfileMutation = {__typename?: 'Mutation'} & {
 export type PeerListQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerListQuery = {__typename?: 'Query'} & {
-  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerWithProfileFragment>>
+  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerRefFragment>>
 }
 
 export type PeerQueryVariables = Exact<{
@@ -1858,9 +1970,149 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
+export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
+    roles: Array<Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>>
+  }
+
+export type UserListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}>
+
+export type UserListQuery = {__typename?: 'Query'} & {
+  users: {__typename?: 'UserConnection'} & Pick<UserConnection, 'totalCount'> & {
+      nodes: Array<{__typename?: 'User'} & FullUserFragment>
+      pageInfo: {__typename?: 'PageInfo'} & Pick<
+        PageInfo,
+        'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+      >
+    }
+}
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type UserQuery = {__typename?: 'Query'} & {
+  user?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type CreateUserMutationVariables = Exact<{
+  input: UserInput
+  password: Scalars['String']
+}>
+
+export type CreateUserMutation = {__typename?: 'Mutation'} & {
+  createUser?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UserInput
+}>
+
+export type UpdateUserMutation = {__typename?: 'Mutation'} & {
+  updateUser?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type ResetUserPasswordMutationVariables = Exact<{
+  id: Scalars['ID']
+  password: Scalars['String']
+}>
+
+export type ResetUserPasswordMutation = {__typename?: 'Mutation'} & {
+  resetUserPassword?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
+export type DeleteUserMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteUserMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUser'>
+
+export type CreateSessionMutationVariables = Exact<{
+  email: Scalars['String']
+  password: Scalars['String']
+}>
+
+export type CreateSessionMutation = {__typename?: 'Mutation'} & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type FullPermissionFragment = {__typename?: 'Permission'} & Pick<
+  Permission,
+  'id' | 'description' | 'deprecated'
+>
+
+export type FullUserRoleFragment = {__typename?: 'UserRole'} & Pick<
+  UserRole,
+  'id' | 'name' | 'description' | 'systemRole'
+> & {permissions: Array<{__typename?: 'Permission'} & FullPermissionFragment>}
+
+export type UserRoleListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+}>
+
+export type UserRoleListQuery = {__typename?: 'Query'} & {
+  userRoles: {__typename?: 'UserRoleConnection'} & Pick<UserRoleConnection, 'totalCount'> & {
+      nodes: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
+      pageInfo: {__typename?: 'PageInfo'} & Pick<
+        PageInfo,
+        'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
+      >
+    }
+}
+
+export type PermissionListQueryVariables = Exact<{[key: string]: never}>
+
+export type PermissionListQuery = {__typename?: 'Query'} & {
+  permissions?: Maybe<Array<{__typename?: 'Permission'} & FullPermissionFragment>>
+}
+
+export type UserRoleQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type UserRoleQuery = {__typename?: 'Query'} & {
+  userRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type CreateUserRoleMutationVariables = Exact<{
+  input: UserRoleInput
+}>
+
+export type CreateUserRoleMutation = {__typename?: 'Mutation'} & {
+  createUserRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type UpdateUserRoleMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UserRoleInput
+}>
+
+export type UpdateUserRoleMutation = {__typename?: 'Mutation'} & {
+  updateUserRole?: Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>
+}
+
+export type DeleteUserRoleMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteUserRoleMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteUserRole'>
+
 export const MutationArticle = gql`
   fragment MutationArticle on Article {
     id
+    shared
     draft {
       publishedAt
       updatedAt
@@ -1879,6 +2131,17 @@ export const MutationArticle = gql`
       publishedAt
       updatedAt
       revision
+      title
+      preTitle
+      lead
+      slug
+      breaking
+      tags
+      properties {
+        key
+        value
+        public
+      }
     }
   }
 `
@@ -1929,6 +2192,58 @@ export const FullAuthor = gql`
   }
   ${AuthorRef}
 `
+export const FullImage = gql`
+  fragment FullImage on Image {
+    id
+    createdAt
+    modifiedAt
+    filename
+    extension
+    width
+    height
+    fileSize
+    description
+    tags
+    author
+    source
+    license
+    focalPoint {
+      x
+      y
+    }
+    ...ImageRef
+  }
+  ${ImageRef}
+`
+export const PageRef = gql`
+  fragment PageRef on Page {
+    id
+    createdAt
+    modifiedAt
+    draft {
+      revision
+    }
+    pending {
+      revision
+    }
+    published {
+      publishedAt
+      updatedAt
+      revision
+    }
+    latest {
+      publishedAt
+      updatedAt
+      revision
+      title
+      description
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ${ImageRef}
+`
 export const ArticleRef = gql`
   fragment ArticleRef on Article {
     id
@@ -1959,6 +2274,34 @@ export const ArticleRef = gql`
   }
   ${ImageRef}
 `
+export const FullNavigation = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      __typename
+      ... on PageNavigationLink {
+        label
+        page {
+          ...PageRef
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...ArticleRef
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${PageRef}
+  ${ArticleRef}
+`
 export const PeerRef = gql`
   fragment PeerRef on Peer {
     id
@@ -1975,6 +2318,8 @@ export const FullPeerProfile = gql`
     logo {
       ...ImageRef
     }
+    callToActionText
+    callToActionURL
   }
   ${ImageRef}
 `
@@ -1987,35 +2332,6 @@ export const PeerWithProfile = gql`
   }
   ${PeerRef}
   ${FullPeerProfile}
-`
-export const PageRef = gql`
-  fragment PageRef on Page {
-    id
-    createdAt
-    modifiedAt
-    draft {
-      revision
-    }
-    pending {
-      revision
-    }
-    published {
-      publishedAt
-      updatedAt
-      revision
-    }
-    latest {
-      publishedAt
-      updatedAt
-      revision
-      title
-      description
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ${ImageRef}
 `
 export const FullTeaser = gql`
   fragment FullTeaser on Teaser {
@@ -2148,29 +2464,6 @@ export const FullBlock = gql`
   ${ImageRef}
   ${FullTeaser}
 `
-export const FullImage = gql`
-  fragment FullImage on Image {
-    id
-    createdAt
-    modifiedAt
-    filename
-    extension
-    width
-    height
-    fileSize
-    description
-    tags
-    author
-    source
-    license
-    focalPoint {
-      x
-      y
-    }
-    ...ImageRef
-  }
-  ${ImageRef}
-`
 export const MutationPage = gql`
   fragment MutationPage on Page {
     id
@@ -2191,9 +2484,55 @@ export const MutationPage = gql`
     latest {
       publishedAt
       updatedAt
-      revision
+      slug
+      title
+      description
+      image {
+        ...ImageRef
+      }
+      tags
+      properties {
+        key
+        value
+        public
+      }
+      blocks {
+        ...FullBlock
+      }
     }
   }
+  ${ImageRef}
+  ${FullBlock}
+`
+export const FullPermission = gql`
+  fragment FullPermission on Permission {
+    id
+    description
+    deprecated
+  }
+`
+export const FullUserRole = gql`
+  fragment FullUserRole on UserRole {
+    id
+    name
+    description
+    systemRole
+    permissions {
+      ...FullPermission
+    }
+  }
+  ${FullPermission}
+`
+export const FullUser = gql`
+  fragment FullUser on User {
+    id
+    name
+    email
+    roles {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
 `
 export const ArticleList = gql`
   query ArticleList($filter: String, $after: ID, $first: Int) {
@@ -2314,6 +2653,14 @@ export const Article = gql`
         }
         hideAuthor
         breaking
+        socialMediaTitle
+        socialMediaDescription
+        socialMediaAuthors {
+          ...AuthorRef
+        }
+        socialMediaImage {
+          ...ImageRef
+        }
         blocks {
           ...FullBlock
         }
@@ -2413,6 +2760,43 @@ export const UpdateImage = gql`
 export const DeleteImage = gql`
   mutation DeleteImage($id: ID!) {
     deleteImage(id: $id)
+  }
+`
+export const NavigationList = gql`
+  query NavigationList {
+    navigations {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const Navigation = gql`
+  query Navigation($id: ID!) {
+    navigation(id: $id) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const CreateNavigation = gql`
+  mutation CreateNavigation($input: NavigationInput!) {
+    createNavigation(input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const UpdateNavigation = gql`
+  mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+    updateNavigation(id: $id, input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const DeleteNavigation = gql`
+  mutation DeleteNavigation($id: ID!) {
+    deleteNavigation(id: $id)
   }
 `
 export const PageList = gql`
@@ -2528,10 +2912,10 @@ export const UpdatePeerProfile = gql`
 export const PeerList = gql`
   query PeerList {
     peers {
-      ...PeerWithProfile
+      ...PeerRef
     }
   }
-  ${PeerWithProfile}
+  ${PeerRef}
 `
 export const Peer = gql`
   query Peer($id: ID!) {
@@ -2560,5 +2944,123 @@ export const UpdatePeer = gql`
 export const DeletePeer = gql`
   mutation DeletePeer($id: ID!) {
     deletePeer(id: $id)
+  }
+`
+export const UserList = gql`
+  query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+      nodes {
+        ...FullUser
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullUser}
+`
+export const User = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const CreateUser = gql`
+  mutation CreateUser($input: UserInput!, $password: String!) {
+    createUser(input: $input, password: $password) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const UpdateUser = gql`
+  mutation UpdateUser($id: ID!, $input: UserInput!) {
+    updateUser(id: $id, input: $input) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const ResetUserPassword = gql`
+  mutation ResetUserPassword($id: ID!, $password: String!) {
+    resetUserPassword(id: $id, password: $password) {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
+export const DeleteUser = gql`
+  mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+  }
+`
+export const CreateSession = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const UserRoleList = gql`
+  query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+      nodes {
+        ...FullUserRole
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+  ${FullUserRole}
+`
+export const PermissionList = gql`
+  query PermissionList {
+    permissions {
+      ...FullPermission
+    }
+  }
+  ${FullPermission}
+`
+export const UserRole = gql`
+  query UserRole($id: ID!) {
+    userRole(id: $id) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const CreateUserRole = gql`
+  mutation CreateUserRole($input: UserRoleInput!) {
+    createUserRole(input: $input) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const UpdateUserRole = gql`
+  mutation UpdateUserRole($id: ID!, $input: UserRoleInput!) {
+    updateUserRole(id: $id, input: $input) {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
+export const DeleteUserRole = gql`
+  mutation DeleteUserRole($id: ID!) {
+    deleteUserRole(id: $id)
   }
 `

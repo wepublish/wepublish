@@ -74,7 +74,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     shared: false,
     breaking: false,
     image: undefined,
-    hideAuthor: false
+    hideAuthor: false,
+    socialMediaTitle: undefined,
+    socialMediaDescription: undefined,
+    socialMediaAuthors: [],
+    socialMediaImage: undefined
   })
 
   const isNew = id === undefined
@@ -120,7 +124,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         image,
         blocks,
         properties,
-        hideAuthor
+        hideAuthor,
+        socialMediaTitle,
+        socialMediaDescription,
+        socialMediaAuthors,
+        socialMediaImage
       } = latest
       const {publishedAt} = published ?? {}
 
@@ -141,7 +149,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image || undefined,
-        hideAuthor
+        hideAuthor,
+        socialMediaTitle: socialMediaTitle || '',
+        socialMediaDescription: socialMediaDescription || '',
+        socialMediaAuthors: socialMediaAuthors?.filter(
+          socialMediaAuthor => socialMediaAuthor != null
+        ) as AuthorRefFragment[],
+        socialMediaImage: socialMediaImage || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -170,7 +184,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       tags: metadata.tags,
       properties: metadata.properties,
       blocks: blocks.map(unionMapForBlock),
-      hideAuthor: metadata.hideAuthor
+      hideAuthor: metadata.hideAuthor,
+      socialMediaTitle: metadata.socialMediaTitle || undefined,
+      socialMediaDescription: metadata.socialMediaDescription || undefined,
+      socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined
     }
   }
 

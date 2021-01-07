@@ -14,7 +14,7 @@ import {
   SelectPicker
 } from 'rsuite'
 
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock'
+import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {

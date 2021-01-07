@@ -79,6 +79,15 @@ export const articleMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+
+    socialMediaTitle
+    socialMediaDescription
+    socialMediaAuthors {
+      ...AuthorsData
+    }
+    socialMediaImage {
+      ...SimpleImageData
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}
@@ -116,6 +125,8 @@ export const peerMetaDataFragment = gql`
       logo {
         ...SimpleImageData
       }
+      callToActionText
+      callToActionURL
     }
   }
   ${simpleImageDataFragment}

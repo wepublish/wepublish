@@ -6,14 +6,16 @@ import {
   PublicPage,
   Author,
   Oauth2Provider,
-  StripeCheckoutPaymentProvider
+  MailgunMailProvider,
+  StripeCheckoutPaymentProvider,
+  StripePaymentProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
-import {StripePaymentProvider} from '@wepublish/api/lib/payments/stripePaymentProvider'
+import {SlackMailProvider} from './SlackMailProvider'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -117,6 +119,33 @@ async function asyncMain() {
     }
   ]
 
+  let mailProvider
+  if (
+    process.env.MAILGUN_API_KEY &&
+    process.env.MAILGUN_BASE_DOMAIN &&
+    process.env.MAILGUN_MAIL_DOMAIN &&
+    process.env.MAILGUN_WEBHOOK_SECRET
+  ) {
+    mailProvider = new MailgunMailProvider({
+      id: 'mailgun',
+      name: 'Mailgun',
+      fromAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
+      baseDomain: process.env.MAILGUN_BASE_DOMAIN,
+      mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
+      apiKey: process.env.MAILGUN_API_KEY
+    })
+  }
+
+  if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
+    mailProvider = new SlackMailProvider({
+      id: 'slackMail',
+      name: 'Slack Mail',
+      fromAddress: 'fakeMail@wepublish.media',
+      webhookURL: process.env.SLACK_DEV_MAIL_WEBHOOK_URL
+    })
+  }
+
   const paymentProviders = [
     new StripeCheckoutPaymentProvider({
       id: 'stripe_checkout',
@@ -142,6 +171,7 @@ async function asyncMain() {
     mediaAdapter,
     dbAdapter,
     oauth2Providers,
+    mailProvider,
     paymentProviders,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,

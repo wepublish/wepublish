@@ -60,7 +60,10 @@ export function PageEditor({id}: PageEditorProps) {
     description: '',
     tags: [],
     properties: [],
-    image: undefined
+    image: undefined,
+    socialMediaTitle: undefined,
+    socialMediaDescription: undefined,
+    socialMediaImage: undefined
   })
 
   const isNew = id === undefined
@@ -96,7 +99,18 @@ export function PageEditor({id}: PageEditorProps) {
   useEffect(() => {
     if (pageData?.page) {
       const {latest, published} = pageData.page
-      const {slug, title, description, tags, image, blocks, properties} = latest
+      const {
+        slug,
+        title,
+        description,
+        tags,
+        image,
+        blocks,
+        properties,
+        socialMediaTitle,
+        socialMediaDescription,
+        socialMediaImage
+      } = latest
       const {publishedAt} = published ?? {}
 
       if (publishedAt) setPublishedAt(new Date(publishedAt))
@@ -111,7 +125,10 @@ export function PageEditor({id}: PageEditorProps) {
           value: property.value,
           public: property.public
         })),
-        image: image || undefined
+        image: image || undefined,
+        socialMediaTitle: socialMediaTitle || '',
+        socialMediaDescription: socialMediaDescription || '',
+        socialMediaImage: socialMediaImage || undefined
       })
 
       setBlocks(blocks.map(blockForQueryBlock))
@@ -131,6 +148,9 @@ export function PageEditor({id}: PageEditorProps) {
       imageID: metadata.image?.id,
       tags: metadata.tags,
       properties: metadata.properties,
+      socialMediaTitle: metadata.socialMediaTitle || undefined,
+      socialMediaDescription: metadata.socialMediaDescription || undefined,
+      socialMediaImageID: metadata.socialMediaImage?.id || undefined,
       blocks: blocks.map(unionMapForBlock)
     }
   }

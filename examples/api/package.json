@@ -25,6 +25,7 @@
     "@wepublish/api": "*",
     "@wepublish/api-db-mongodb": "*",
     "@wepublish/api-media-karma": "*",
+    "cross-fetch": "^3.0.6",
     "graphql": "^14.6.0"
   },
   "devDependencies": {

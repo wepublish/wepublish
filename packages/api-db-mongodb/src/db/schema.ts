@@ -8,7 +8,8 @@ import {
   PageBlock,
   PaymentProviderCustomer,
   RichTextNode,
-  UserSubscription
+  UserSubscription,
+  MailLogState
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -35,7 +36,9 @@ export enum CollectionName {
   MemberPlans = 'member.plans',
   PaymentMethods = 'payment.methods',
   Invoices = 'invoices',
-  Payments = 'payments'
+  Payments = 'payments',
+
+  MailLog = 'mail.log'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -51,6 +54,8 @@ export interface DBPeerProfile {
   name: string
   logoID?: string
   themeColor: string
+  callToActionURL: string
+  callToActionText: RichTextNode[]
 }
 
 export interface DBPeer {
@@ -221,6 +226,11 @@ export interface DBArticleRevision {
   blocks: ArticleBlock[]
 
   hideAuthor: boolean
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs: string[]
+  socialMediaImageID?: string
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
@@ -256,6 +266,10 @@ export interface DBPageRevision {
   properties: MetadataProperty[]
 
   imageID?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImageID?: string
 
   blocks: PageBlock[]
 }
@@ -321,4 +335,17 @@ export interface DBPayment {
   successful: boolean
   paymentMethodID: string
   paymentData?: string
+}
+
+export interface DBMailLog {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  recipient: string
+  subject: string
+  state: MailLogState
+  mailProviderID: string
+  mailData?: string
 }

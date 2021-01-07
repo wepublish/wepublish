@@ -61,6 +61,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
   hideAuthor: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -92,6 +96,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthors: Array<Author>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -663,6 +671,7 @@ export type MutationUpdateUserSubscriptionArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -914,6 +923,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -941,6 +953,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   image?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -1087,12 +1102,16 @@ export type PeerProfile = {
   themeColor: Scalars['Color'];
   hostURL: Scalars['String'];
   websiteURL: Scalars['String'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type PeerProfileInput = {
   name: Scalars['String'];
   logoID?: Maybe<Scalars['ID']>;
   themeColor: Scalars['Color'];
+  callToActionText: Scalars['RichText'];
+  callToActionURL: Scalars['String'];
 };
 
 export type Permission = {
@@ -1495,7 +1514,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
-  roles: Array<Maybe<UserRole>>;
+  roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
 };
 
@@ -1767,7 +1786,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -1777,7 +1796,13 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, blocks: Array<(
+      )>>, socialMediaAuthors: Array<(
+        { __typename?: 'Author' }
+        & AuthorRefFragment
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
+      )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
       ) | (
@@ -1844,6 +1869,10 @@ export type CreateSessionMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -1876,6 +1905,10 @@ export type CreateSessionWithOAuth2CodeMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -2550,13 +2583,16 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -2698,7 +2734,7 @@ export type DeletePaymentMethodMutation = (
 
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
-  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor'>
+  & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
   & { logo?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2855,10 +2891,10 @@ export type FullUserSubscriptionFragment = (
 export type FullUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<Maybe<(
+  & { roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>>, subscription?: Maybe<(
+  )>, subscription?: Maybe<(
     { __typename?: 'UserSubscription' }
     & FullUserSubscriptionFragment
   )> }
@@ -3189,6 +3225,8 @@ export const FullPeerProfileFragmentDoc = gql`
   logo {
     ...ImageRef
   }
+  callToActionText
+  callToActionURL
 }
     ${ImageRefFragmentDoc}`;
 export const PeerWithProfileFragmentDoc = gql`
@@ -3824,6 +3862,14 @@ export const ArticleDocument = gql`
       }
       hideAuthor
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage {
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }
@@ -3864,11 +3910,14 @@ export const CreateSessionDocument = gql`
   createSession(email: $email, password: $password) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
 
 /**
@@ -3934,11 +3983,14 @@ export const CreateSessionWithOAuth2CodeDocument = gql`
   createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionWithOAuth2CodeMutationFn = Apollo.MutationFunction<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
 
 /**
@@ -4878,6 +4930,11 @@ export const PageDocument = gql`
         key
         value
         public
+      }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...ImageRef
       }
       blocks {
         ...FullBlock

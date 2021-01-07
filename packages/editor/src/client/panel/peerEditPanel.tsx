@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
 import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
+import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
   PeerListDocument,
@@ -15,6 +16,7 @@ import {slugify, getOperationNameFromDocument} from '../utility'
 
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 export interface ImageEditPanelProps {
   id?: string
@@ -191,23 +193,26 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
-            <Panel
-              bordered={true}
-              style={{
-                height: '200px',
-                marginBottom: '20px',
-                backgroundSize: 'cover',
-                backgroundImage: `url(${
-                  profile?.logo?.previewURL ?? 'https://via.placeholder.com/240x240'
-                }`
-              }}
-            />
+            <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
               <DescriptionListItem label={t('peerList.panels.name')}>
                 {profile?.name}
               </DescriptionListItem>
               <DescriptionListItem label={t('peerList.panels.themeColor')}>
                 {profile?.themeColor}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionText')}>
+                {!!profile?.callToActionText && (
+                  <RichTextBlock
+                    disabled
+                    // TODO: remove this
+                    onChange={console.log}
+                    value={profile?.callToActionText}
+                  />
+                )}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('peerList.panels.callToActionURL')}>
+                {profile?.callToActionURL}
               </DescriptionListItem>
             </DescriptionList>
           </Panel>

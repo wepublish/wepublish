@@ -405,6 +405,12 @@ export const CanGetPaymentProviders: Permission = {
   deprecated: false
 }
 
+export const CanLoginEditor: Permission = {
+  id: 'CAN_LOGIN_EDITOR',
+  description: 'Allows to login editor',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanCreateNavigation,
   CanGetNavigation,
@@ -466,7 +472,8 @@ export const AllPermissions: Permission[] = [
   CanCreatePayment,
   CanGetPayment,
   CanGetPayments,
-  CanGetPaymentProviders
+  CanGetPaymentProviders,
+  CanLoginEditor
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -485,7 +492,8 @@ export const EditorPermissions: Permission[] = [
   CanGetPages,
   CanPublishPage,
   CanGetPeer,
-  CanGetPeers
+  CanGetPeers,
+  CanLoginEditor
 ]
 
 export const PeerPermissions: Permission[] = [

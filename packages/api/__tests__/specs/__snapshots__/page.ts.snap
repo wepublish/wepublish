@@ -1,0 +1,438 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be created 1`] = `
+Object {
+  "data": Object {
+    "createPage": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "blocks": Array [
+          Object {
+            "__typename": "TitleBlock",
+            "lead": "title lead",
+            "title": "title block title",
+          },
+          Object {
+            "__typename": "ListicleBlock",
+            "items": Array [
+              Object {
+                "image": null,
+                "richText": Array [
+                  Object {
+                    "children": Array [
+                      Object {
+                        "text": "p text rich text",
+                      },
+                    ],
+                    "type": "paragraph",
+                  },
+                ],
+                "title": "item title",
+              },
+            ],
+          },
+          Object {
+            "__typename": "RichTextBlock",
+            "richText": Array [
+              Object {
+                "children": Array [
+                  Object {
+                    "text": "p text rich text",
+                  },
+                ],
+                "type": "paragraph",
+              },
+            ],
+          },
+          Object {
+            "__typename": "FacebookPostBlock",
+            "postID": "2191372684210495",
+            "userID": "WePublish.Community",
+          },
+          Object {
+            "__typename": "FacebookVideoBlock",
+            "userID": "WePublish.Community",
+            "videoID": "2F1761095367238231",
+          },
+          Object {
+            "__typename": "InstagramPostBlock",
+            "postID": "B_AfAKgARJ4",
+          },
+          Object {
+            "__typename": "TwitterTweetBlock",
+            "tweetID": "1021701711172395008",
+            "userID": "WePublish_media",
+          },
+          Object {
+            "__typename": "VimeoVideoBlock",
+            "videoID": "472380240",
+          },
+          Object {
+            "__typename": "YouTubeVideoBlock",
+            "videoID": "FjtGLMYgY5Y",
+          },
+          Object {
+            "__typename": "SoundCloudTrackBlock",
+            "trackID": "310511381",
+          },
+          Object {
+            "__typename": "EmbedBlock",
+            "height": null,
+            "styleCustom": null,
+            "title": null,
+            "url": "https://www.youtube.com/embed/cPAbx5kgCJo",
+            "width": null,
+          },
+          Object {
+            "__typename": "LinkPageBreakBlock",
+            "linkText": null,
+            "linkURL": null,
+            "text": null,
+          },
+          Object {
+            "__typename": "TeaserGridBlock",
+            "numColumns": 2,
+            "teasers": Array [],
+          },
+          Object {
+            "__typename": "QuoteBlock",
+            "author": "author",
+            "quote": "quote text",
+          },
+        ],
+        "description": null,
+        "image": null,
+        "properties": Array [
+          Object {
+            "key": "private",
+            "public": false,
+            "value": "private",
+          },
+          Object {
+            "key": "public",
+            "public": true,
+            "value": "public",
+          },
+        ],
+        "publishedAt": null,
+        "slug": "testing-page",
+        "tags": Array [
+          "one",
+          "two",
+          "three",
+        ],
+        "title": "Testing Page",
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deletePage": true,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be published 1`] = `
+Object {
+  "data": Object {
+    "publishPage": Object {
+      "draft": null,
+      "id": Any<String>,
+      "latest": Object {
+        "blocks": Array [],
+        "description": null,
+        "image": null,
+        "properties": Array [
+          Object {
+            "key": "private",
+            "public": false,
+            "value": "private",
+          },
+          Object {
+            "key": "public",
+            "public": true,
+            "value": "public",
+          },
+        ],
+        "publishedAt": "2020-11-25T23:55:35.000Z",
+        "slug": "testing-page",
+        "tags": Array [
+          "one",
+          "two",
+          "three",
+        ],
+        "title": "Testing Page",
+        "updatedAt": "2020-11-25T23:55:35.000Z",
+      },
+      "pending": null,
+      "published": Object {
+        "publishedAt": "2020-11-25T23:55:35.000Z",
+        "revision": 0,
+        "updatedAt": "2020-11-25T23:55:35.000Z",
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be read by id 1`] = `
+Object {
+  "data": Object {
+    "page": Object {
+      "id": Any<String>,
+      "latest": Object {
+        "blocks": Array [],
+        "description": null,
+        "image": null,
+        "properties": Array [
+          Object {
+            "key": "private",
+            "public": false,
+            "value": "private",
+          },
+          Object {
+            "key": "public",
+            "public": true,
+            "value": "public",
+          },
+        ],
+        "publishedAt": null,
+        "slug": "testing-page",
+        "tags": Array [
+          "one",
+          "two",
+          "three",
+        ],
+        "title": "Testing Page",
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be read in list 1`] = `
+Object {
+  "data": Object {
+    "pages": Object {
+      "nodes": Array [
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "description": null,
+            "image": null,
+            "publishedAt": null,
+            "revision": 0,
+            "title": "Testing Page",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "description": null,
+            "image": null,
+            "publishedAt": null,
+            "revision": 0,
+            "title": "Testing Page",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+        Object {
+          "createdAt": Any<String>,
+          "draft": Object {
+            "revision": 0,
+          },
+          "id": Any<String>,
+          "latest": Object {
+            "description": null,
+            "image": null,
+            "publishedAt": null,
+            "revision": 0,
+            "title": "Testing Page",
+            "updatedAt": null,
+          },
+          "modifiedAt": Any<String>,
+          "pending": null,
+          "published": null,
+        },
+      ],
+      "pageInfo": Object {
+        "endCursor": Any<String>,
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": Any<String>,
+      },
+      "totalCount": Any<Number>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be unpublished 1`] = `
+Object {
+  "data": Object {
+    "unpublishPage": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "blocks": Array [],
+        "description": null,
+        "image": null,
+        "properties": Array [
+          Object {
+            "key": "private",
+            "public": false,
+            "value": "private",
+          },
+          Object {
+            "key": "public",
+            "public": true,
+            "value": "public",
+          },
+        ],
+        "publishedAt": null,
+        "slug": "testing-page",
+        "tags": Array [
+          "one",
+          "two",
+          "three",
+        ],
+        "title": "Testing Page",
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be updated 1`] = `
+Object {
+  "data": Object {
+    "updatePage": Object {
+      "draft": Object {
+        "publishedAt": null,
+        "revision": 0,
+        "updatedAt": null,
+      },
+      "id": Any<String>,
+      "latest": Object {
+        "blocks": Array [
+          Object {
+            "__typename": "TitleBlock",
+            "lead": "update lead",
+            "title": "new updated title",
+          },
+        ],
+        "description": null,
+        "image": null,
+        "properties": Array [
+          Object {
+            "key": "private",
+            "public": false,
+            "value": "private",
+          },
+          Object {
+            "key": "public",
+            "public": true,
+            "value": "public",
+          },
+        ],
+        "publishedAt": null,
+        "slug": "update-slug",
+        "tags": Array [
+          "update",
+          "tags",
+        ],
+        "title": "Update Title",
+        "updatedAt": null,
+      },
+      "pending": null,
+      "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
