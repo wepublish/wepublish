@@ -328,7 +328,6 @@ export function createFetcher(hostURL: string, token: string): Fetcher {
                 ]
               }
             }
-
             return await fetchResult.json()
           } catch (err) {
             if (err.type === 'aborted') {

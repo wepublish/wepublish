@@ -5,6 +5,8 @@ fragment FullPeerProfile on PeerProfile {
   logo {
     ...ImageRef
   }
+  callToActionText
+  callToActionURL
 }
 
 fragment PeerRef on Peer {
@@ -35,7 +37,7 @@ mutation UpdatePeerProfile($input: PeerProfileInput!) {
 
 query PeerList {
   peers {
-    ...PeerWithProfile
+    ...PeerRef
   }
 }
 
