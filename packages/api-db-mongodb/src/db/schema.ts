@@ -9,7 +9,8 @@ import {
   NavigationLink,
   PageBlock,
   RichTextNode,
-  MailLogState
+  MailLogState,
+  CommentRevision
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -195,17 +196,12 @@ export interface DBComment {
 
   userID: string
 
-  revisions: [DBCommentRevision]
+  revisions: [CommentRevision]
   parentID?: string
 
   status: CommentStatus
   rejectionReason?: CommentRejectionReason
   authorType: CommentAuthorType
-}
-
-export interface DBCommentRevision {
-  text: RichTextNode[]
-  createdAt: Date
 }
 
 export interface DBArticle {
