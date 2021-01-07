@@ -20,18 +20,18 @@ import {GraphQLRichText} from './richText'
 export const GraphQLCommentStatus = new GraphQLEnumType({
   name: 'CommentStatus',
   values: {
-    Approved: {value: CommentStatus.Approved},
-    PendingApproval: {value: CommentStatus.PendingApproval},
-    PendingUserChanges: {value: CommentStatus.PendingUserChanges},
-    Rejected: {value: CommentStatus.Rejected}
+    [CommentStatus.Approved]: {value: CommentStatus.Approved},
+    [CommentStatus.PendingApproval]: {value: CommentStatus.PendingApproval},
+    [CommentStatus.PendingUserChanges]: {value: CommentStatus.PendingUserChanges},
+    [CommentStatus.Rejected]: {value: CommentStatus.Rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    Misconduct: {value: CommentRejectionReason.Misconduct},
-    Spam: {value: CommentRejectionReason.Spam}
+    [CommentRejectionReason.Misconduct]: {value: CommentRejectionReason.Misconduct},
+    [CommentRejectionReason.Spam]: {value: CommentRejectionReason.Spam}
   }
 })
 
