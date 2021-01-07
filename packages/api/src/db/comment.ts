@@ -25,7 +25,6 @@ export enum CommentItemType {
 
 export interface CommentData {
   userID: string
-  peerID?: string
 
   itemID: string
   itemType: CommentItemType

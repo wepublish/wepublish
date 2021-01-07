@@ -194,7 +194,6 @@ export interface DBComment {
   itemType: CommentItemType
 
   userID: string
-  peerID?: string
 
   revisions: [DBCommentRevision]
   parentID?: string

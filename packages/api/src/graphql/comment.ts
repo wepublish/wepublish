@@ -4,7 +4,6 @@ import {
   GraphQLID,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLInt,
   GraphQLList
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -72,7 +71,6 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
@@ -100,7 +98,6 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
@@ -124,24 +121,10 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
-
-    itemID: {type: GraphQLNonNull(GraphQLID)},
-    itemType: {
-      type: GraphQLNonNull(GraphQLCommentItemType)
-    },
 
     revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
     parentID: {type: GraphQLID},
 
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
-  }
-})
-
-// TODO: not sure the need for this
-export const GraphQLCommentConnection = new GraphQLObjectType({
-  name: 'CommentConnection',
-  fields: {
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

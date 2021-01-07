@@ -230,7 +230,6 @@ export type Comment = {
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
   userID: Scalars['ID']
-  peerID?: Maybe<Scalars['ID']>
   itemID: Scalars['ID']
   itemType: CommentItemType
   revisions: Array<Maybe<CommentRevision>>
@@ -248,7 +247,6 @@ export enum CommentAuthorType {
 
 export type CommentInput = {
   userID: Scalars['ID']
-  peerID?: Maybe<Scalars['ID']>
   itemID: Scalars['ID']
   itemType: CommentItemType
   revisions: Array<Maybe<CommentRevisionInput>>
@@ -1688,7 +1686,7 @@ export type FullBlockFragment =
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
-  'itemID' | 'itemType' | 'userID' | 'peerID' | 'parentID' | 'status' | 'authorType'
+  'itemID' | 'itemType' | 'userID' | 'parentID' | 'status' | 'authorType'
 > & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
 
 export type CreateCommentMutationVariables = Exact<{
@@ -2222,7 +2220,6 @@ export const MutationComment = gql`
     itemID
     itemType
     userID
-    peerID
     revisions {
       text
     }
