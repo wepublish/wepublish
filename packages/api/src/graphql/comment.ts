@@ -55,7 +55,7 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
-    text: {type: GraphQLRichText},
+    text: {type: GraphQLNonNull(GraphQLRichText)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })
@@ -63,7 +63,7 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
 export const GraphQLCommentRevisionInput = new GraphQLInputObjectType({
   name: 'CommentRevisionInput',
   fields: {
-    text: {type: GraphQLRichText}
+    text: {type: GraphQLNonNull(GraphQLRichText)}
   }
 })
 
