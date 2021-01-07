@@ -78,7 +78,7 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
       defaultValue: GraphQLCommentStatus.getValue(CommentItemType.Article)
     },
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevisionInput)))},
     parentID: {type: GraphQLID},
 
     status: {
@@ -104,7 +104,7 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))},
     parentID: {type: GraphQLID},
 
     status: {type: GraphQLNonNull(GraphQLCommentStatus)},
@@ -122,7 +122,7 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
 
     userID: {type: GraphQLNonNull(GraphQLID)},
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))},
     parentID: {type: GraphQLID},
 
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}

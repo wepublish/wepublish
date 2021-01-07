@@ -216,8 +216,8 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   userID: Scalars['ID'];
-  peerID?: Maybe<Scalars['ID']>;
   itemID: Scalars['ID'];
+  itemType: CommentItemType;
   revisions: Array<Maybe<CommentRevision>>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
@@ -233,7 +233,6 @@ export enum CommentAuthorType {
 
 export type CommentInput = {
   userID: Scalars['ID'];
-  peerID?: Maybe<Scalars['ID']>;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   revisions: Array<Maybe<CommentRevisionInput>>;
