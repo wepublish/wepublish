@@ -2,8 +2,10 @@ import {Transforms, Element as SlateElement, Node as SlateNode, Editor, NodeEntr
 import {ReactEditor} from 'slate-react'
 import {BlockFormat} from './formats'
 
-// TODO: add 2 normalizeNode plugins (either integrate into existing plugins or new modules?)
 // See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
+
+// TODO
+// - TableCell needs Paragraph as child
 
 export function withNormTables<T extends ReactEditor>(editor: T): T {
   const {normalizeNode} = editor
@@ -49,7 +51,6 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
     if (SlateElement.isElement(node)) {
       switch (node.type) {
         case BlockFormat.Table:
-          // recursive / multipass / kicking off a new normalization pass
           ensureChildType(BlockFormat.TableRow)
           return
 
@@ -64,11 +65,6 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
           return
       }
     }
-
-    // ************
-    // Rules:
-    // - TableCell needs Paragraph as child (TODO)
-    // ************
 
     // Fall back to the original `normalizeNode` to enforce builtin constraints.
     normalizeNode(entry)
