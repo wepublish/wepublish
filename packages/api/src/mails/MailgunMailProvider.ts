@@ -1,4 +1,3 @@
-import fetch from 'cross-fetch'
 import crypto from 'crypto'
 import FormData from 'form-data'
 
@@ -13,7 +12,8 @@ import {MailLogState} from '../db/mailLog'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
-  baseURL: string
+  baseDomain: string
+  mailDomain: string
   webhookEndpointSecret: string
   fromAddress: string
 }
@@ -41,13 +41,15 @@ function mapMailgunEventToMailLogState(event: string): MailLogState | null {
 
 export class MailgunMailProvider extends BaseMailProvider {
   readonly auth: string
-  readonly domain: string
+  readonly baseDomain: string
+  readonly mailDomain: string
   readonly webhookEndpointSecret: string
 
   constructor(props: MailgunMailProviderProps) {
     super(props)
     this.auth = Buffer.from(`api:${props.apiKey}`).toString('base64')
-    this.domain = props.baseURL
+    this.baseDomain = props.baseDomain
+    this.mailDomain = props.mailDomain
     this.webhookEndpointSecret = props.webhookEndpointSecret
   }
 
@@ -88,21 +90,27 @@ export class MailgunMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    const form = new FormData()
-    form.append('from', this.fromAddress)
-    form.append('to', props.recipient)
-    form.append('subject', props.subject)
-    form.append('text', props.message ?? '')
-    form.append('v:mail_log_id', props.mailLogID)
-    const res = await fetch(`${this.domain}/messages`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Basic ${this.auth}`
-      },
-      // @ts-ignore
-      body: form
+    return new Promise((resolve, reject) => {
+      const form = new FormData()
+      form.append('from', this.fromAddress)
+      form.append('to', props.recipient)
+      form.append('subject', props.subject)
+      form.append('text', props.message ?? '')
+      form.append('v:mail_log_id', props.mailLogID)
+      form.submit(
+        {
+          host: this.baseDomain,
+          path: `/v3/${this.mailDomain}/messages`,
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Basic ${this.auth}`
+          }
+        },
+        (err, res) => {
+          return err || res.statusCode !== 200 ? reject(err || res) : resolve()
+        }
+      )
     })
-    if (res.status !== 200) throw new Error(`Mailgun returned NOK with status code ${res.status}`)
   }
 }
