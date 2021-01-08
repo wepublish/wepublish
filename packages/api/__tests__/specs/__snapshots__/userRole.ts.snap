@@ -10,7 +10,7 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to get navigation",
+          "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
         Object {
@@ -312,7 +312,7 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
-              "description": "Allows to get navigation",
+              "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
             Object {
@@ -685,7 +685,7 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
-              "description": "Allows to get navigation",
+              "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
             Object {
@@ -951,7 +951,7 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to get navigation",
+          "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
         Object {
@@ -979,7 +979,7 @@ Object {
     "permissions": Array [
       Object {
         "deprecated": false,
-        "description": "Allows to get navigation",
+        "description": "Allows to create navigation",
         "id": "CAN_CREATE_NAVIGATION",
       },
       Object {
