@@ -25,7 +25,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       switch (node.type) {
         case BlockFormat.Table:
           ensureChildType(BlockFormat.TableRow)
-          ensureSubsequentType(BlockFormat.Paragraph)
+          ensureSubseedingParagraph(BlockFormat.Paragraph)
           return
 
         case BlockFormat.TableRow:
@@ -48,7 +48,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       }
     }
 
-    function ensureChildType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
+    function ensureChildType(type: BlockFormat, extraWrapperAttrs: {[key: string]: any} = {}) {
       if (SlateElement.isElement(node)) {
         for (const [child, childPath] of SlateNode.children(editor, path)) {
           if (!SlateElement.isElement(child) || child.type !== type) {
@@ -59,7 +59,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       }
     }
 
-    function ensureParentType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
+    function ensureParentType(type: BlockFormat, extraWrapperAttrs: {[key: string]: any} = {}) {
       const parent = SlateNode.parent(editor, path)
       if (!SlateElement.isElement(parent) || parent.type !== type) {
         wrapAllChildren(type, [node, path], extraWrapperAttrs)
@@ -81,8 +81,11 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       )
     }
 
-    function ensureSubsequentType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
-      // Type of next Sibling node at the bottom
+    function ensureSubseedingParagraph(
+      type: BlockFormat,
+      extraWrapperAttrs: {[key: string]: any} = {}
+    ) {
+      // Ensure Table is followed by paragraph at bottom for flawless continuation
       const pathOfSubsequent: Path = [path[0] + 1]
       const subsequentNode = SlateNode.has(editor, pathOfSubsequent)
         ? SlateNode.get(editor, pathOfSubsequent)
@@ -100,7 +103,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
     normalizeNode(entry)
   }
 
-  // const ensurePrecedentType
+  // const ensurePreceeding....
   // Type of previous Sibling node on top
 
   return editor
