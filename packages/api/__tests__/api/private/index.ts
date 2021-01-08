@@ -457,10 +457,12 @@ export type Mutation = {
   updatePeer: Peer
   deletePeer?: Maybe<Scalars['ID']>
   createSession: SessionWithToken
+  createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeSession: Scalars['Boolean']
   revokeActiveSession: Scalars['Boolean']
   sessions: Array<Session>
+  sendJWTLogin: Scalars['String']
   createToken: CreatedToken
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
@@ -513,6 +515,10 @@ export type MutationCreateSessionArgs = {
   password: Scalars['String']
 }
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String']
+}
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
@@ -521,6 +527,11 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID']
+}
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String']
+  email: Scalars['String']
 }
 
 export type MutationCreateTokenArgs = {
@@ -544,6 +555,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID']
   password: Scalars['String']
+  sendMail?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationDeleteUserArgs = {
@@ -1160,7 +1172,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
-  roles: Array<Maybe<UserRole>>
+  roles: Array<UserRole>
 }
 
 export type UserConnection = {
@@ -1701,6 +1713,61 @@ export type DeleteImageMutationVariables = Exact<{
 
 export type DeleteImageMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteImage'>
 
+export type FullNavigationFragment = {__typename?: 'Navigation'} & Pick<
+  Navigation,
+  'id' | 'key' | 'name'
+> & {
+    links: Array<
+      | ({__typename: 'PageNavigationLink'} & Pick<PageNavigationLink, 'label'> & {
+            page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
+          })
+      | ({__typename: 'ArticleNavigationLink'} & Pick<ArticleNavigationLink, 'label'> & {
+            article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
+          })
+      | ({__typename: 'ExternalNavigationLink'} & Pick<ExternalNavigationLink, 'label' | 'url'>)
+    >
+  }
+
+export type NavigationListQueryVariables = Exact<{[key: string]: never}>
+
+export type NavigationListQuery = {__typename?: 'Query'} & {
+  navigations: Array<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type NavigationQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type NavigationQuery = {__typename?: 'Query'} & {
+  navigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type CreateNavigationMutationVariables = Exact<{
+  input: NavigationInput
+}>
+
+export type CreateNavigationMutation = {__typename?: 'Mutation'} & {
+  createNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type UpdateNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: NavigationInput
+}>
+
+export type UpdateNavigationMutation = {__typename?: 'Mutation'} & {
+  updateNavigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationFragment>
+}
+
+export type DeleteNavigationMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteNavigationMutation = {__typename?: 'Mutation'} & Pick<
+  Mutation,
+  'deleteNavigation'
+>
+
 export type MutationPageFragment = {__typename?: 'Page'} & Pick<Page, 'id'> & {
     draft?: Maybe<
       {__typename?: 'PageRevision'} & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -1855,7 +1922,7 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor'
+  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
 > & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
@@ -1881,7 +1948,7 @@ export type UpdatePeerProfileMutation = {__typename?: 'Mutation'} & {
 export type PeerListQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerListQuery = {__typename?: 'Query'} & {
-  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerWithProfileFragment>>
+  peers?: Maybe<Array<{__typename?: 'Peer'} & PeerRefFragment>>
 }
 
 export type PeerQueryVariables = Exact<{
@@ -1916,7 +1983,7 @@ export type DeletePeerMutationVariables = Exact<{
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
-    roles: Array<Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>>
+    roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
   }
 
 export type UserListQueryVariables = Exact<{
@@ -1935,6 +2002,12 @@ export type UserListQuery = {__typename?: 'Query'} & {
         'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
       >
     }
+}
+
+export type MeQueryVariables = Exact<{[key: string]: never}>
+
+export type MeQuery = {__typename?: 'Query'} & {
+  me?: Maybe<{__typename?: 'User'} & FullUserFragment>
 }
 
 export type UserQueryVariables = Exact<{
@@ -1985,6 +2058,16 @@ export type CreateSessionMutationVariables = Exact<{
 
 export type CreateSessionMutation = {__typename?: 'Mutation'} & {
   createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String']
+}>
+
+export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
+  createSessionWithJWT: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
       user: {__typename?: 'User'} & Pick<User, 'email'>
     }
 }
@@ -2160,6 +2243,35 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
+export const PageRef = gql`
+  fragment PageRef on Page {
+    id
+    createdAt
+    modifiedAt
+    draft {
+      revision
+    }
+    pending {
+      revision
+    }
+    published {
+      publishedAt
+      updatedAt
+      revision
+    }
+    latest {
+      publishedAt
+      updatedAt
+      revision
+      title
+      description
+      image {
+        ...ImageRef
+      }
+    }
+  }
+  ${ImageRef}
+`
 export const ArticleRef = gql`
   fragment ArticleRef on Article {
     id
@@ -2190,6 +2302,34 @@ export const ArticleRef = gql`
   }
   ${ImageRef}
 `
+export const FullNavigation = gql`
+  fragment FullNavigation on Navigation {
+    id
+    key
+    name
+    links {
+      __typename
+      ... on PageNavigationLink {
+        label
+        page {
+          ...PageRef
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...ArticleRef
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${PageRef}
+  ${ArticleRef}
+`
 export const PeerRef = gql`
   fragment PeerRef on Peer {
     id
@@ -2206,6 +2346,8 @@ export const FullPeerProfile = gql`
     logo {
       ...ImageRef
     }
+    callToActionText
+    callToActionURL
   }
   ${ImageRef}
 `
@@ -2218,35 +2360,6 @@ export const PeerWithProfile = gql`
   }
   ${PeerRef}
   ${FullPeerProfile}
-`
-export const PageRef = gql`
-  fragment PageRef on Page {
-    id
-    createdAt
-    modifiedAt
-    draft {
-      revision
-    }
-    pending {
-      revision
-    }
-    published {
-      publishedAt
-      updatedAt
-      revision
-    }
-    latest {
-      publishedAt
-      updatedAt
-      revision
-      title
-      description
-      image {
-        ...ImageRef
-      }
-    }
-  }
-  ${ImageRef}
 `
 export const FullTeaser = gql`
   fragment FullTeaser on Teaser {
@@ -2677,6 +2790,43 @@ export const DeleteImage = gql`
     deleteImage(id: $id)
   }
 `
+export const NavigationList = gql`
+  query NavigationList {
+    navigations {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const Navigation = gql`
+  query Navigation($id: ID!) {
+    navigation(id: $id) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const CreateNavigation = gql`
+  mutation CreateNavigation($input: NavigationInput!) {
+    createNavigation(input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const UpdateNavigation = gql`
+  mutation UpdateNavigation($id: ID!, $input: NavigationInput!) {
+    updateNavigation(id: $id, input: $input) {
+      ...FullNavigation
+    }
+  }
+  ${FullNavigation}
+`
+export const DeleteNavigation = gql`
+  mutation DeleteNavigation($id: ID!) {
+    deleteNavigation(id: $id)
+  }
+`
 export const PageList = gql`
   query PageList($filter: String, $after: ID, $first: Int) {
     pages(first: $first, after: $after, filter: {title: $filter}) {
@@ -2790,10 +2940,10 @@ export const UpdatePeerProfile = gql`
 export const PeerList = gql`
   query PeerList {
     peers {
-      ...PeerWithProfile
+      ...PeerRef
     }
   }
-  ${PeerWithProfile}
+  ${PeerRef}
 `
 export const Peer = gql`
   query Peer($id: ID!) {
@@ -2841,6 +2991,14 @@ export const UserList = gql`
   }
   ${FullUser}
 `
+export const Me = gql`
+  query Me {
+    me {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
 export const User = gql`
   query User($id: ID!) {
     user(id: $id) {
@@ -2881,6 +3039,16 @@ export const DeleteUser = gql`
 export const CreateSession = gql`
   mutation CreateSession($email: String!, $password: String!) {
     createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const CreateSessionWithJwt = gql`
+  mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
       user {
         email
       }

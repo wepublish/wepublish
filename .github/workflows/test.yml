@@ -22,4 +22,5 @@ jobs:
       - run: yarn build:production
       - run: yarn test
         env:
+          JWT_SECRET_KEY: 'ThisIsSuperSecret'
           TEST_MONGO_URL: 'mongodb://localhost:27017/wepublish_test'
