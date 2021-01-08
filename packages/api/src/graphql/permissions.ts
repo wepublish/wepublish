@@ -47,7 +47,7 @@ export const CanGetNavigations: Permission = {
 
 export const CanCreateNavigation: Permission = {
   id: 'CAN_CREATE_NAVIGATION',
-  description: 'Allows to get navigation',
+  description: 'Allows to create navigation',
   deprecated: false
 }
 
