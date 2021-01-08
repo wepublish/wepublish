@@ -560,7 +560,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanCreateComment, roles)
 
-        return dbAdapter.comment.createComment({
+        return await dbAdapter.comment.createComment({
           input: {...input}
         })
       }
