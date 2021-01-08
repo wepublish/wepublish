@@ -11,13 +11,13 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
   editor.normalizeNode = entry => {
     const [node, path] = entry
 
-    const ensureChildType = (childType: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) => {
+    const ensureChildType = (type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) => {
       if (SlateElement.isElement(node)) {
         for (const [child, childPath] of SlateNode.children(editor, path)) {
-          if (SlateElement.isElement(child) && child.type !== childType) {
+          if (SlateElement.isElement(child) && child.type !== type) {
             Transforms.wrapNodes(
               editor,
-              {type: childType, children: child.children, ...extraWrapperAttrs},
+              {type, children: child.children, ...extraWrapperAttrs},
               {
                 at: childPath,
                 mode: 'all'
@@ -29,20 +29,15 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
       }
     }
 
-    const ensureParentType = (
-      parentType: BlockFormat,
-      extraWrapperAttrs?: {[key: string]: any}
-    ) => {
+    const ensureParentType = (type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) => {
       const parent = SlateNode.parent(editor, path)
-      console.log('node:', node)
-      console.log('parent:', parent)
       if (
         !SlateElement.isElement(parent) ||
-        (SlateElement.isElement(parent) && parent.type !== parentType)
+        (SlateElement.isElement(parent) && parent.type !== type)
       ) {
         Transforms.wrapNodes(
           editor,
-          {type: parentType, children: node.children as SlateElement[], ...extraWrapperAttrs}, // TODO simply =node  ?
+          {type, children: node.children as SlateElement[], ...extraWrapperAttrs}, // TODO simply =node  ?
           {
             at: path,
             mode: 'all'
@@ -59,12 +54,12 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
           return
 
         case BlockFormat.TableRow:
+          // order is important !
           ensureChildType(BlockFormat.TableCell, {borderColor: 'black'})
           ensureParentType(BlockFormat.Table)
           return
 
         case BlockFormat.TableCell:
-          console.log('is cell')
           ensureParentType(BlockFormat.TableRow)
           return
       }
@@ -74,50 +69,6 @@ export function withNormTables<T extends ReactEditor>(editor: T): T {
     // Rules:
     // - TableCell needs Paragraph as child (TODO)
     // ************
-
-    // - TableCell needs TableRow as parent
-    // if (SlateElement.isElement(node) && node.type === BlockFormat.TableCell) {
-    //   const parent = SlateNode.parent(editor, path)
-    //   console.log(BlockFormat.TableCell)
-    //   console.log('node:', node)
-    //   console.log('parent:', parent)
-    //   if (
-    //     !SlateElement.isElement(parent) ||
-    //     (SlateElement.isElement(parent) && parent.type !== BlockFormat.TableRow)
-    //   ) {
-    //     Transforms.wrapNodes(
-    //       editor,
-    //       {type: BlockFormat.TableRow, children: parent.children},
-    //       {
-    //         at: path,
-    //         mode: 'all'
-    //       }
-    //     )
-    //     return
-    //   }
-    // }
-
-    // // - TableRow needs Table as parent
-    // if (SlateElement.isElement(node) && node.type === BlockFormat.TableRow) {
-    //   const parent = SlateNode.parent(editor, path)
-    //   console.log(BlockFormat.TableRow)
-    //   console.log('node:', node)
-    //   console.log('parent:', parent)
-    //   if (
-    //     !SlateElement.isElement(parent) ||
-    //     (SlateElement.isElement(parent) && parent.type !== BlockFormat.Table)
-    //   ) {
-    //     Transforms.wrapNodes(
-    //       editor,
-    //       {type: BlockFormat.Table, children: node.children},
-    //       {
-    //         at: path,
-    //         mode: 'all'
-    //       }
-    //     )
-    //     return
-    //   }
-    // }
 
     // Fall back to the original `normalizeNode` to enforce builtin constraints.
     normalizeNode(entry)
