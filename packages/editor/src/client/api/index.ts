@@ -47,6 +47,7 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>;
   authors?: Maybe<Array<Scalars['ID']>>;
   tags?: Maybe<Array<Scalars['String']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type ArticleInput = {
@@ -218,7 +219,7 @@ export type Comment = {
   userID: Scalars['ID'];
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  revisions: Array<Maybe<CommentRevision>>;
+  revisions: Array<CommentRevision>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -231,11 +232,23 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentFilter = {
+  title?: Maybe<Scalars['String']>;
+  status?: Maybe<CommentStatus>;
+};
+
 export type CommentInput = {
   userID: Scalars['ID'];
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  revisions: Array<Maybe<CommentRevisionInput>>;
+  revisions: Array<CommentRevisionInput>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -254,12 +267,12 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text?: Maybe<Scalars['RichText']>;
+  text: Scalars['RichText'];
   createdAt: Scalars['DateTime'];
 };
 
 export type CommentRevisionInput = {
-  text?: Maybe<Scalars['RichText']>;
+  text: Scalars['RichText'];
 };
 
 export enum CommentStatus {
@@ -990,6 +1003,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -1075,6 +1089,17 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
+  sort?: Maybe<ImageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
 };
