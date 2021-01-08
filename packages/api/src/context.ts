@@ -1,7 +1,7 @@
 import {IncomingMessage} from 'http'
 import url from 'url'
 import crypto from 'crypto'
-
+import jwt, {SignOptions} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 
@@ -82,6 +82,9 @@ export interface Context {
   authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
+
+  generateJWT(props: GenerateJWTProps): string
+  verifyJWT(token: string): string
 }
 
 export interface Oauth2Provider {
@@ -112,6 +115,12 @@ export interface SendMailFromProviderProps {
   message?: string
   template?: string
   templateData?: Record<string, any>
+}
+
+export interface GenerateJWTProps {
+  userID: string
+  audience?: string
+  experiesInMinutes?: number
 }
 
 export async function contextFromRequest(
@@ -278,6 +287,23 @@ export async function contextFromRequest(
       }
 
       return session
+    },
+
+    generateJWT(props: GenerateJWTProps): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const jwtOptions: SignOptions = {
+        issuer: hostURL,
+        audience: props.audience ?? websiteURL,
+        algorithm: 'HS256',
+        expiresIn: `${props.experiesInMinutes ?? 5}m`
+      }
+      return jwt.sign({sub: props.userID}, process.env.JWT_SECRET_KEY, jwtOptions)
+    },
+
+    verifyJWT(token: string): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+      return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
     }
   }
 }
