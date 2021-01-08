@@ -6,7 +6,7 @@ import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {isFormatActive} from '../editor/utils'
 import {BlockFormat} from '../editor/formats'
-import {emptyCellsTable} from '../editor/elements'
+import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
 
 import './tableMenu.less'
 
@@ -93,7 +93,9 @@ export function TableMenu() {
               {t('blocks.richTextTable.hideBorders')}
             </Button>
           ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
+            <Button
+              appearance="default"
+              onClick={() => setTableCellBorderColor(defaultBorderColor)}>
               {t('blocks.richTextTable.showBorders')}
             </Button>
           )}

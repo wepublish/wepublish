@@ -7,7 +7,7 @@ import {
   Path
 } from 'slate'
 import {ReactEditor} from 'slate-react'
-import {emptyTextParagraph} from './elements'
+import {defaultBorderColor, emptyTextParagraph} from './elements'
 import {BlockFormat} from './formats'
 
 // See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
@@ -33,22 +33,29 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
         case BlockFormat.TableRow:
           // order is important !
-          ensureChildType(BlockFormat.TableCell, {borderColor: 'black'})
+          ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})
           ensureParentType(BlockFormat.Table)
           return
 
         case BlockFormat.TableCell:
           ensureParentType(BlockFormat.TableRow)
+          ensureHasBorderColor()
           return
       }
       // TODO ensure ol / li structure (see at bottom)
+    }
+
+    function ensureHasBorderColor() {
+      if (!node.borderColor) {
+        Transforms.setNodes(editor, {borderColor: defaultBorderColor}, {at: path})
+      }
     }
 
     function ensureChildType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
       if (SlateElement.isElement(node)) {
         for (const [child, childPath] of SlateNode.children(editor, path)) {
           if (!SlateElement.isElement(child) || child.type !== type) {
-            wrapAllNodes(type, [child, childPath], extraWrapperAttrs)
+            wrapAllChildren(type, [child, childPath], extraWrapperAttrs)
             return
           }
         }
@@ -58,11 +65,11 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
     function ensureParentType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
       const parent = SlateNode.parent(editor, path)
       if (!SlateElement.isElement(parent) || parent.type !== type) {
-        wrapAllNodes(type, [node, path], extraWrapperAttrs)
+        wrapAllChildren(type, [node, path], extraWrapperAttrs)
       }
     }
 
-    function wrapAllNodes(
+    function wrapAllChildren(
       type: BlockFormat,
       [node, path]: typeof entry,
       extraWrapperAttrs?: {[key: string]: any}

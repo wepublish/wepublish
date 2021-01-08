@@ -3,7 +3,8 @@ import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {pTest} from '../utils'
 import {
   emptyTextParagraph,
-  emptyCellsTable
+  emptyCellsTable,
+  defaultBorderColor
 } from '../../src/client/blocks/richTextBlock/editor/elements'
 
 interface EmptyCellsTableTest {
@@ -27,7 +28,7 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: 'black',
+                  borderColor: defaultBorderColor,
                   children: [emptyTextParagraph()]
                 }
               ]
@@ -49,12 +50,12 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: 'black',
+                  borderColor: defaultBorderColor,
                   children: [emptyTextParagraph()]
                 },
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: 'black',
+                  borderColor: defaultBorderColor,
                   children: [emptyTextParagraph()]
                 }
               ]
@@ -64,12 +65,12 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: 'black',
+                  borderColor: defaultBorderColor,
                   children: [emptyTextParagraph()]
                 },
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: 'black',
+                  borderColor: defaultBorderColor,
                   children: [emptyTextParagraph()]
                 }
               ]

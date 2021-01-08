@@ -5,7 +5,8 @@ import {withNormalizeNode} from '../../src/client/blocks/richTextBlock/editor/no
 import {pTest} from '../utils'
 import {
   emptyTextParagraph,
-  emptyCellsTable
+  emptyCellsTable,
+  defaultBorderColor
 } from '../../src/client/blocks/richTextBlock/editor/elements'
 
 interface WithNormalizeNodeTest {
@@ -18,17 +19,17 @@ pTest(
   'withNormalizeNode',
   [
     {
-      name: 'should return unmodified valid simple data',
+      name: 'should return unmodified data, given simple valid table',
       entryData: emptyCellsTable(1, 1),
       normalizedData: emptyCellsTable(1, 1)
     },
     {
-      name: 'should return unmodified valid deeply nested data',
+      name: 'should return unmodified data, given valid multiple cells table',
       entryData: emptyCellsTable(33, 97), // TODO choose meaningful
       normalizedData: emptyCellsTable(33, 97)
     },
     {
-      name: 'should return valid table given a nakedTableRow',
+      name: 'should return fixed table given a nakedTableRow',
       entryData: [
         {
           type: BlockFormat.TableRow,
@@ -46,11 +47,33 @@ pTest(
         },
         {
           type: BlockFormat.TableCell,
-          borderColor: 'black',
+          borderColor: defaultBorderColor,
           children: [emptyTextParagraph()]
         }
       ],
       normalizedData: [...emptyCellsTable(1, 1), ...emptyCellsTable(1, 1)]
+    },
+    {
+      name: 'should add borderColor to tableCell if missing',
+      entryData: [
+        {
+          type: BlockFormat.Table,
+          children: [
+            {
+              type: BlockFormat.TableRow,
+              children: [
+                {
+                  type: BlockFormat.TableCell,
+                  // borderColor: defaultBorderColor, TO BE FIXED
+                  children: [emptyTextParagraph()]
+                }
+              ]
+            }
+          ]
+        },
+        emptyTextParagraph()
+      ],
+      normalizedData: emptyCellsTable(1, 1)
     }
   ],
   (t: WithNormalizeNodeTest) => {
