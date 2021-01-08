@@ -3,25 +3,10 @@ import {createEditor, Transforms, Element as SlateElement} from 'slate'
 import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {withNormalizeNode} from '../../src/client/blocks/richTextBlock/editor/normalizing'
 import {pTest} from '../utils'
-
-const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
-
-const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
-  {
-    type: BlockFormat.Table,
-    children: Array.from({length: nrows}).map(() => ({
-      type: BlockFormat.TableRow,
-      children: Array.from({length: ncols}).map(() => ({
-        type: BlockFormat.TableCell,
-        borderColor: 'black',
-        // Wrap all content inside cell into paragraph block to enable break lines.
-        children: [emptyTextParagraph()]
-      }))
-    }))
-  }
-  // Append empty paragraph after table block for easy continuation.
-  // emptyTextParagraph() TODO
-]
+import {
+  emptyTextParagraph,
+  emptyCellsTable
+} from '../../src/client/blocks/richTextBlock/editor/elements'
 
 const invalidTable: SlateElement[] = [
   {
