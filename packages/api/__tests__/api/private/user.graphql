@@ -25,6 +25,12 @@ query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int
     }
 }
 
+query Me {
+    me {
+        ...FullUser
+    }
+}
+
 query User($id: ID!) {
     user(id: $id) {
         ...FullUser
@@ -60,4 +66,13 @@ mutation CreateSession($email: String!, $password: String!) {
     }
     token
   }
+}
+
+mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
+        user {
+            email
+        }
+        token
+    }
 }
