@@ -7,7 +7,7 @@ import {BlockFormat} from './formats'
 // TODO
 // - TableCell needs Paragraph as child
 
-export function withNormTables<T extends ReactEditor>(editor: T): T {
+export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
   const {normalizeNode} = editor
 
   editor.normalizeNode = entry => {

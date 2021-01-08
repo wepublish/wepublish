@@ -11,7 +11,7 @@ import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/but
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
-import {withNormTables} from './editor/normalizing'
+import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 
@@ -24,7 +24,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   onChange
 }: RichTextBlockProps) {
   const editor = useMemo(
-    () => withNormTables(withTable(withRichText(withHistory(withReact(createEditor()))))),
+    () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
     []
   )
   const [hasFocus, setFocus] = useState(false)
