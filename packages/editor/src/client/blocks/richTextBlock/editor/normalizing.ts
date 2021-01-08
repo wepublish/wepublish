@@ -23,20 +23,21 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
     if (SlateElement.isElement(node)) {
       switch (node.type) {
-        case BlockFormat.Table:
-          ensureChildType(BlockFormat.TableRow)
-          ensureSubseedingParagraph(BlockFormat.Paragraph)
-          return
-
-        case BlockFormat.TableRow:
-          // order is important !
-          ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})
-          ensureParentType(BlockFormat.Table)
-          return
+        // order of corrections is important !
 
         case BlockFormat.TableCell:
           ensureParentType(BlockFormat.TableRow)
           ensureHasBorderColor()
+          return
+
+        case BlockFormat.TableRow:
+          ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})
+          ensureParentType(BlockFormat.Table)
+          return
+
+        case BlockFormat.Table:
+          ensureChildType(BlockFormat.TableRow)
+          ensureSubseedingParagraph()
           return
       }
       // TODO ensure ol / li structure (see at bottom)
@@ -81,10 +82,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       )
     }
 
-    function ensureSubseedingParagraph(
-      type: BlockFormat,
-      extraWrapperAttrs: {[key: string]: any} = {}
-    ) {
+    function ensureSubseedingParagraph() {
       // Ensure Table is followed by paragraph at bottom for flawless continuation
       const pathOfSubsequent: Path = [path[0] + 1]
       const subsequentNode = SlateNode.has(editor, pathOfSubsequent)
@@ -112,7 +110,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 // const withSchema = defineSchema([
 //
 // ************
-// TODO This was started by previous company of wepublish < implement?:
+// TODO
 // ************
 //
 //   {
