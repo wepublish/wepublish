@@ -46,6 +46,7 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>
   authors?: Maybe<Array<Scalars['ID']>>
   tags?: Maybe<Array<Scalars['String']>>
+  comments?: Maybe<Array<Scalars['ID']>>
 }
 
 export type ArticleInput = {
@@ -232,7 +233,7 @@ export type Comment = {
   userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<Maybe<CommentRevision>>
+  revisions: Array<CommentRevision>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -245,11 +246,23 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentFilter = {
+  title?: Maybe<Scalars['String']>
+  status?: Maybe<CommentStatus>
+}
+
 export type CommentInput = {
   userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<Maybe<CommentRevisionInput>>
+  revisions: Array<CommentRevisionInput>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -268,12 +281,12 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision'
-  text?: Maybe<Scalars['RichText']>
+  text: Scalars['RichText']
   createdAt: Scalars['DateTime']
 }
 
 export type CommentRevisionInput = {
-  text?: Maybe<Scalars['RichText']>
+  text: Scalars['RichText']
 }
 
 export enum CommentStatus {
@@ -667,10 +680,6 @@ export type MutationCreateCommentArgs = {
   input: CommentInput
 }
 
-export type MutationCreateCommentArgs = {
-  input: CommentInput
-}
-
 export type MutationCreateArticleArgs = {
   input: ArticleInput
 }
@@ -957,6 +966,7 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
@@ -1031,6 +1041,16 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
+  sort?: Maybe<ImageSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<CommentFilter>
   sort?: Maybe<ImageSort>
   order?: Maybe<SortOrder>
 }
@@ -1435,62 +1455,6 @@ export type DeleteArticleMutationVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type ArticleQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type ArticleQuery = {__typename?: 'Query'} & {
-  article?: Maybe<
-    {__typename?: 'Article'} & Pick<Article, 'id' | 'shared'> & {
-        pending?: Maybe<{__typename?: 'ArticleRevision'} & Pick<ArticleRevision, 'publishAt'>>
-        published?: Maybe<
-          {__typename?: 'ArticleRevision'} & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
-        >
-        latest: {__typename?: 'ArticleRevision'} & Pick<
-          ArticleRevision,
-          | 'publishedAt'
-          | 'updatedAt'
-          | 'revision'
-          | 'slug'
-          | 'preTitle'
-          | 'title'
-          | 'lead'
-          | 'tags'
-          | 'hideAuthor'
-          | 'breaking'
-          | 'socialMediaTitle'
-          | 'socialMediaDescription'
-        > & {
-            image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-            properties: Array<
-              {__typename?: 'Properties'} & Pick<Properties, 'key' | 'value' | 'public'>
-            >
-            authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
-            socialMediaAuthors: Array<{__typename?: 'Author'} & AuthorRefFragment>
-            socialMediaImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-            blocks: Array<
-              | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
-              | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
-              | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
-              | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
-              | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
-              | ({__typename?: 'FacebookVideoBlock'} & FullBlock_FacebookVideoBlock_Fragment)
-              | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
-              | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
-              | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
-              | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
-              | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
-              | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
-              | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
-              | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
-              | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
-              | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
-            >
-          }
-      }
-  >
-}
-
 export type DeleteArticleMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteArticle'>
 
 export type ArticleQueryVariables = Exact<{
@@ -1744,176 +1708,10 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
 
-export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
-    largeURL: Image['transformURL']
-    mediumURL: Image['transformURL']
-    thumbURL: Image['transformURL']
-    squareURL: Image['transformURL']
-    previewURL: Image['transformURL']
-    column1URL: Image['transformURL']
-    column6URL: Image['transformURL']
-  }
-
-export type ImageRefFragment = {__typename?: 'Image'} & Pick<
-  Image,
-  'id' | 'filename' | 'extension' | 'title' | 'description' | 'width' | 'height'
-> &
-  ImageUrLsFragment
-
-export type FullImageFragment = {__typename?: 'Image'} & Pick<
-  Image,
-  | 'id'
-  | 'createdAt'
-  | 'modifiedAt'
-  | 'filename'
-  | 'extension'
-  | 'width'
-  | 'height'
-  | 'fileSize'
-  | 'description'
-  | 'tags'
-  | 'author'
-  | 'source'
-  | 'license'
-> & {focalPoint?: Maybe<{__typename?: 'Point'} & Pick<Point, 'x' | 'y'>>} & ImageRefFragment
-
-export type ImageListQueryVariables = Exact<{
-  filter?: Maybe<Scalars['String']>
-  after?: Maybe<Scalars['ID']>
-  before?: Maybe<Scalars['ID']>
-  first?: Maybe<Scalars['Int']>
-  last?: Maybe<Scalars['Int']>
-}>
-
-export type ImageListQuery = {__typename?: 'Query'} & {
-  images: {__typename?: 'ImageConnection'} & {
-    nodes: Array<{__typename?: 'Image'} & ImageRefFragment>
-    pageInfo: {__typename?: 'PageInfo'} & Pick<
-      PageInfo,
-      'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
-    >
-  }
-}
-
-export type ImageQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type ImageQuery = {__typename?: 'Query'} & {
-  image?: Maybe<{__typename?: 'Image'} & FullImageFragment>
-}
-
-export type UploadImageMutationVariables = Exact<{
-  input: UploadImageInput
-}>
-
-type FullBlock_ImageBlock_Fragment = {__typename: 'ImageBlock'} & Pick<ImageBlock, 'caption'> & {
-    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-  }
-
-type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'} & {
-  images: Array<
-    {__typename?: 'GalleryImageEdge'} & Pick<GalleryImageEdge, 'caption'> & {
-        image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-      }
-  >
-}
-
-type FullBlock_ListicleBlock_Fragment = {__typename: 'ListicleBlock'} & {
-  items: Array<
-    {__typename?: 'ListicleItem'} & Pick<ListicleItem, 'title' | 'richText'> & {
-        image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-      }
-  >
-}
-
-type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'} & Pick<
-  FacebookPostBlock,
-  'userID' | 'postID'
->
-
-type FullBlock_FacebookVideoBlock_Fragment = {__typename: 'FacebookVideoBlock'} & Pick<
-  FacebookVideoBlock,
-  'userID' | 'videoID'
->
-
-type FullBlock_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'} & Pick<
-  InstagramPostBlock,
-  'postID'
->
-
-type FullBlock_TwitterTweetBlock_Fragment = {__typename: 'TwitterTweetBlock'} & Pick<
-  TwitterTweetBlock,
-  'userID' | 'tweetID'
->
-
-type FullBlock_VimeoVideoBlock_Fragment = {__typename: 'VimeoVideoBlock'} & Pick<
-  VimeoVideoBlock,
-  'videoID'
->
-
-type FullBlock_YouTubeVideoBlock_Fragment = {__typename: 'YouTubeVideoBlock'} & Pick<
-  YouTubeVideoBlock,
-  'videoID'
->
-
-type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'} & Pick<
-  SoundCloudTrackBlock,
-  'trackID'
->
-
-type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
-  EmbedBlock,
-  'url' | 'title' | 'width' | 'height' | 'styleCustom'
->
-
-type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
-  LinkPageBreakBlock,
-  'text' | 'linkText' | 'linkURL'
->
-
-type FullBlock_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<TitleBlock, 'title' | 'lead'>
-
-type FullBlock_QuoteBlock_Fragment = {__typename: 'QuoteBlock'} & Pick<
-  QuoteBlock,
-  'quote' | 'author'
->
-
-type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick<
-  TeaserGridBlock,
-  'numColumns'
-> & {
-    teasers: Array<
-      Maybe<
-        | ({__typename?: 'ArticleTeaser'} & FullTeaser_ArticleTeaser_Fragment)
-        | ({__typename?: 'PeerArticleTeaser'} & FullTeaser_PeerArticleTeaser_Fragment)
-        | ({__typename?: 'PageTeaser'} & FullTeaser_PageTeaser_Fragment)
-      >
-    >
-  }
-
-export type FullBlockFragment =
-  | FullBlock_RichTextBlock_Fragment
-  | FullBlock_ImageBlock_Fragment
-  | FullBlock_ImageGalleryBlock_Fragment
-  | FullBlock_ListicleBlock_Fragment
-  | FullBlock_FacebookPostBlock_Fragment
-  | FullBlock_FacebookVideoBlock_Fragment
-  | FullBlock_InstagramPostBlock_Fragment
-  | FullBlock_TwitterTweetBlock_Fragment
-  | FullBlock_VimeoVideoBlock_Fragment
-  | FullBlock_YouTubeVideoBlock_Fragment
-  | FullBlock_SoundCloudTrackBlock_Fragment
-  | FullBlock_EmbedBlock_Fragment
-  | FullBlock_LinkPageBreakBlock_Fragment
-  | FullBlock_TitleBlock_Fragment
-  | FullBlock_QuoteBlock_Fragment
-  | FullBlock_TeaserGridBlock_Fragment
-
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
   'itemID' | 'itemType' | 'userID' | 'parentID' | 'status' | 'authorType'
-> & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
+> & {revisions: Array<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>}
 
 export type CreateCommentMutationVariables = Exact<{
   input: CommentInput
@@ -2485,11 +2283,14 @@ export const AuthorRef = gql`
   ${ImageRef}
 `
 export const FullAuthor = gql`
-    fragment FullAuthor on Author {
-  slug
-  links {
-    title
-    url
+  fragment FullAuthor on Author {
+    slug
+    links {
+      title
+      url
+    }
+    bio
+    ...AuthorRef
   }
   ${AuthorRef}
 `
@@ -2818,6 +2619,36 @@ export const MutationPage = gql`
   ${ImageRef}
   ${FullBlock}
 `
+export const FullPermission = gql`
+  fragment FullPermission on Permission {
+    id
+    description
+    deprecated
+  }
+`
+export const FullUserRole = gql`
+  fragment FullUserRole on UserRole {
+    id
+    name
+    description
+    systemRole
+    permissions {
+      ...FullPermission
+    }
+  }
+  ${FullPermission}
+`
+export const FullUser = gql`
+  fragment FullUser on User {
+    id
+    name
+    email
+    roles {
+      ...FullUserRole
+    }
+  }
+  ${FullUserRole}
+`
 export const ArticleList = gql`
   query ArticleList($filter: String, $after: ID, $first: Int) {
     articles(first: $first, after: $after, filter: {title: $filter}) {
@@ -2904,123 +2735,57 @@ export const DeleteArticle = gql`
   }
 `
 export const Article = gql`
-    query Article($id: ID!) {
-  article(id: $id) {
-    id
-    shared
-    pending {
-      publishAt
-    }
-    published {
-      publishedAt
-      updatedAt
-    }
-    latest {
-      publishedAt
-      updatedAt
-      revision
-      slug
-      preTitle
-      title
-      lead
-      image {
-        ...ImageRef
+  query Article($id: ID!) {
+    article(id: $id) {
+      id
+      shared
+      pending {
+        publishAt
       }
-      tags
-      properties {
-        key
-        value
-        public
+      published {
+        publishedAt
+        updatedAt
       }
-      blocks {
-        ...FullBlock
+      latest {
+        publishedAt
+        updatedAt
+        revision
+        slug
+        preTitle
+        title
+        lead
+        image {
+          ...ImageRef
+        }
+        tags
+        properties {
+          key
+          value
+          public
+        }
+        authors {
+          ...AuthorRef
+        }
+        hideAuthor
+        breaking
+        socialMediaTitle
+        socialMediaDescription
+        socialMediaAuthors {
+          ...AuthorRef
+        }
+        socialMediaImage {
+          ...ImageRef
+        }
+        blocks {
+          ...FullBlock
+        }
       }
     }
   }
   ${ImageRef}
+  ${AuthorRef}
   ${FullBlock}
 `
-export const FullPermission = gql`
-  fragment FullPermission on Permission {
-    id
-    description
-    deprecated
-  }
-`
-export const FullUserRole = gql`
-  fragment FullUserRole on UserRole {
-    id
-    name
-    description
-    systemRole
-    permissions {
-      ...FullPermission
-    }
-  }
-  ${FullPermission}
-`
-export const FullUser = gql`
-  fragment FullUser on User {
-    id
-    name
-    email
-    roles {
-      ...FullUserRole
-    }
-  }
-  ${FullUserRole}
-`
-export const ArticleList = gql`
-  query ArticleList($filter: String, $after: ID, $first: Int) {
-    articles(first: $first, after: $after, filter: {title: $filter}) {
-      nodes {
-        ...ArticleRef
-      }
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
-    }
-  }
-  ${ArticleRef}
-`
-export const PeerArticleList = gql`
-  query PeerArticleList($filter: String, $after: ID, $first: Int) {
-    peerArticles(first: $first, after: $after, filter: {title: $filter}) {
-      nodes {
-        peer {
-          ...PeerWithProfile
-        }
-        article {
-          ...ArticleRef
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      hideAuthor
-      breaking
-      socialMediaTitle
-      socialMediaDescription
-      socialMediaAuthors {
-        ...AuthorRef
-      }
-      socialMediaImage {
-        ...ImageRef
-      }
-      blocks {
-        ...FullBlock
-      }
-    }
-  }
-}
-    ${ImageRef}
-${AuthorRef}
-${FullBlock}`
 export const AuthorList = gql`
   query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
     authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {

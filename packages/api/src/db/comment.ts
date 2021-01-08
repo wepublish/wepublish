@@ -1,6 +1,5 @@
 import {RichTextNode} from '../graphql/richText'
-import {ConnectionResult} from './common'
-// import {ConnectionResult} from './common'
+import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
 
 export enum CommentStatus {
   Approved = 'Approved',
@@ -59,27 +58,37 @@ export interface PublicComment extends CommentData {
 
 export type CommentInput = CommentData
 
-export type PrivateComment = Comment & CommentData
+export enum CommentSort {
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt'
+}
 
 export interface CreateCommentArgs {
   readonly input: CommentData
 }
 
+export interface CommentFilterOptions {
+  readonly title?: string
+  readonly status?: CommentStatus
+}
+
 export interface GetCommentsArgs {
-  articleID?: readonly string[]
-  imageID?: readonly string[]
+  readonly filter?: CommentFilterOptions
+  readonly cursor: InputCursor
+  readonly limit: Limit
+  readonly sort: CommentSort
+  readonly order: SortOrder
 }
 
 export interface GetPublicCommentsArgs {
-  articleID?: readonly string[]
-  imageID?: readonly string[]
+  itemID?: readonly string[]
 }
 
-export type OptionalComment = PrivateComment | null
+export type OptionalComment = Comment | null
 export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
   createComment(args: CreateCommentArgs): Promise<Comment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
-  getPublicComments(args: GetPublicCommentsArgs): Promise<PublicComment[]>
+  // getPublicComments(ids: readonly string[]): Promise<PublicComment[]>
 }

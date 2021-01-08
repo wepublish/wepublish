@@ -374,7 +374,8 @@ export const AllPermissions: Permission[] = [
   CanGetPermission,
   CanGetPermissions,
   CanCreateComment,
-  CanLoginEditor
+  CanLoginEditor,
+  CanGetComments
 ]
 
 export const EditorPermissions: Permission[] = [

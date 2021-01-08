@@ -3,11 +3,10 @@ import {
   CreateCommentArgs,
   Comment,
   GetCommentsArgs,
-  GetPublicCommentsArgs,
   ConnectionResult
 } from '@wepublish/api'
 
-import {Collection, Db} from 'mongodb'
+import {Collection, Db, FilterQuery} from 'mongodb'
 
 import {CollectionName, DBComment} from './schema'
 
@@ -24,6 +23,12 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     const {...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,
+      revisions: [
+        {
+          ...data.revisions[0],
+          createdAt: new Date()
+        }
+      ],
       createdAt: new Date(),
       modifiedAt: new Date()
     })
@@ -33,32 +38,21 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     return {id, ...comment}
   }
 
-  // async getComments({filter}: GetCommentsArgs): Promise<ConnectionResult<PrivateComment>> {
-  //   const [totalCount, comments] = await Promise.all([
-  //     this.comments.countDocuments(), // MongoCountPreferences doesn't include collation
+  async getComments({filter, limit}: GetCommentsArgs): Promise<ConnectionResult<Comment>> {
+    const metaFilters: FilterQuery<any> = []
 
-  //     this.comments.aggregate([], {collation: {locale: this.locale, strength: 2}}).toArray()
-  //   ])
-
-  //   return {
-  //     nodes: comments.map<PrivateComment>(({_id: id, ...comment}) => ({id, ...comment})),
-  //     pageInfo: {
-  //       startCursor: '',
-  //       endCursor: '',
-  //       hasNextPage: true,
-  //       hasPreviousPage: false
-  //     },
-  //     totalCount: totalCount
-  //   }
-  // }
-
-  async getPublicComments(ids: readonly string[]): Promise<ConnectionResult<PrivateComment>> {
-    console.log(ids)
+    if (filter?.status) {
+      metaFilters.push({status: filter.status})
+    }
 
     const [totalCount, comments] = await Promise.all([
       this.comments.countDocuments(), // MongoCountPreferences doesn't include collation
 
-      this.comments.aggregate([], {collation: {locale: this.locale, strength: 2}}).toArray()
+      this.comments
+        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+
+        .match(metaFilters.length ? {$and: metaFilters} : {})
+        .toArray()
     ])
 
     return {
@@ -72,4 +66,25 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       totalCount: totalCount
     }
   }
+
+  // async getPublicComments(ids: readonly string[]): Promise<ConnectionResult<Comment>> {
+  //   console.log(ids)
+
+  //   const [totalCount, comments] = await Promise.all([
+  //     this.comments.countDocuments(), // MongoCountPreferences doesn't include collation
+
+  //     this.comments.aggregate([], {collation: {locale: this.locale, strength: 2}}).toArray()
+  //   ])
+
+  //   return {
+  //     nodes: comments.map<Comment>(({_id: id, ...comment}) => ({id, ...comment})),
+  //     pageInfo: {
+  //       startCursor: '',
+  //       endCursor: '',
+  //       hasNextPage: true,
+  //       hasPreviousPage: false
+  //     },
+  //     totalCount: totalCount
+  //   }
+  // }
 }
