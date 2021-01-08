@@ -38,7 +38,7 @@ pTest(
       normalizedData: emptyCellsTable(1, 1)
     },
     {
-      name: 'returns given string its length equals maxLength',
+      name: 'should return fixed tables given multiple invalid table parts',
       entryData: [
         {
           type: BlockFormat.Table,
