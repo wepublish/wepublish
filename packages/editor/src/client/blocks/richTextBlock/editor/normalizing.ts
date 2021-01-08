@@ -48,14 +48,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       if (SlateElement.isElement(node)) {
         for (const [child, childPath] of SlateNode.children(editor, path)) {
           if (!SlateElement.isElement(child) || child.type !== type) {
-            Transforms.wrapNodes(
-              editor,
-              {type, children: child.children as SlateElement[], ...extraWrapperAttrs},
-              {
-                at: childPath,
-                mode: 'all'
-              }
-            )
+            wrapAllNodes(type, [child, childPath], extraWrapperAttrs)
             return
           }
         }
@@ -65,15 +58,23 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
     function ensureParentType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
       const parent = SlateNode.parent(editor, path)
       if (!SlateElement.isElement(parent) || parent.type !== type) {
-        Transforms.wrapNodes(
-          editor,
-          {type, children: node.children as SlateElement[], ...extraWrapperAttrs}, // TODO simply =node  ?
-          {
-            at: path,
-            mode: 'all'
-          }
-        )
+        wrapAllNodes(type, [node, path], extraWrapperAttrs)
       }
+    }
+
+    function wrapAllNodes(
+      type: BlockFormat,
+      [node, path]: typeof entry,
+      extraWrapperAttrs?: {[key: string]: any}
+    ) {
+      Transforms.wrapNodes(
+        editor,
+        {type, children: node.children as SlateElement[], ...extraWrapperAttrs}, // TODO simply =node  ?
+        {
+          at: path,
+          mode: 'all'
+        }
+      )
     }
 
     function ensureSubsequentType(type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) {
