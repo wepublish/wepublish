@@ -1,12 +1,6 @@
 import {Editor, Transforms, Node as SlateNode, Path} from 'slate'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
 
-// Slate docs can be confusing providing different concepts, APIs and terminology. For example, there are
-// many possible ways to get a nodes children. There is no much guidance though. Further the package is in
-// early stage and changing. Therefore all operations on the slate node tree are collected here.
-
-// distinguish: with selection / without selection
-
 export function isFormatActive(editor: Editor, format: Format) {
   if (TextFormats.includes(format)) {
     const marks = Editor.marks(editor)

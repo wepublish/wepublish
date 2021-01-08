@@ -20,9 +20,6 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
   editor.normalizeNode = entry => {
     const [node, path] = entry
-    // const ensurePrecedentType = (type: BlockFormat, extraWrapperAttrs?: {[key: string]: any}) => {
-    // if neede, use fn name
-    // Type of previous Sibling node on top
 
     if (SlateElement.isElement(node)) {
       switch (node.type) {
@@ -102,6 +99,9 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
     // Fall back to the original `normalizeNode` to enforce builtin constraints.
     normalizeNode(entry)
   }
+
+  // const ensurePrecedentType
+  // Type of previous Sibling node on top
 
   return editor
 }
