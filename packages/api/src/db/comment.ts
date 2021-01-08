@@ -3,35 +3,33 @@ import {ConnectionResult} from './common'
 // import {ConnectionResult} from './common'
 
 export enum CommentStatus {
-  Approved = 'approved',
-  PendingApproval = 'pendingApproval',
-  PendingUserChanges = 'pendingUserChanges',
-  Rejected = 'rejected'
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export enum CommentRejectionReason {
-  Misconduct = 'misconduct',
-  Spam = 'spam'
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
 }
 
 export enum CommentAuthorType {
-  Admin = 'admin',
-  ArticleAuthor = 'articleAuthor',
-  VerifiedUser = 'verifiedUser',
-  PeerUser = 'peerUser',
-  Journalist = 'journalist',
-  Moderator = 'moderator'
+  Team = 'Team',
+  Author = 'Author',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
 }
 
 export interface CommentData {
-  siteID?: string
   userID: string
-  peerID?: string
-  permalink?: string
 
-  // comment could be on different types of data models
-  articleID?: string
-  imageID?: string
+  itemID: string
+  itemType: CommentItemType
 
   revisions: [CommentRevision]
   parentID?: string
@@ -41,7 +39,7 @@ export interface CommentData {
   rejectionReason?: CommentRejectionReason
 }
 
-export interface Comment {
+export interface Comment extends CommentData {
   readonly id: string
 
   readonly createdAt: Date
@@ -49,7 +47,6 @@ export interface Comment {
 }
 
 export interface CommentRevision {
-  id: string
   text: RichTextNode[]
   createdAt: Date
 }
@@ -65,10 +62,10 @@ export type CommentInput = CommentData
 export type PrivateComment = Comment & CommentData
 
 export interface CreateCommentArgs {
-  readonly input: CommentInput
+  readonly input: CommentData
 }
 
-export interface GetPrivateCommentsArgs {
+export interface GetCommentsArgs {
   articleID?: readonly string[]
   imageID?: readonly string[]
 }
@@ -82,7 +79,7 @@ export type OptionalComment = PrivateComment | null
 export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
-  createComment(args: CreateCommentArgs): Promise<PrivateComment>
-  getPrivateComments(args: GetPrivateCommentsArgs): Promise<ConnectionResult<PrivateComment[]>>
+  createComment(args: CreateCommentArgs): Promise<Comment>
+  getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getPublicComments(args: GetPublicCommentsArgs): Promise<PublicComment[]>
 }

@@ -1,17 +1,12 @@
 fragment MutationComment on Comment {
-  siteID
+  itemID
+  itemType
   userID
-  permalink
-  articleID
-  imageID
-  peerID
   revisions {
-    id
     text
   }
   parentID
   status
-  rejectionReason
   authorType
 }
 

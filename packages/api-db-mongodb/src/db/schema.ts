@@ -1,5 +1,6 @@
 import {
   ArticleBlock,
+  CommentItemType,
   CommentAuthorType,
   CommentRejectionReason,
   CommentStatus,
@@ -8,7 +9,8 @@ import {
   NavigationLink,
   PageBlock,
   RichTextNode,
-  MailLogState
+  MailLogState,
+  CommentRevision
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -189,26 +191,17 @@ export interface DBComment {
   createdAt: Date
   modifiedAt: Date
 
-  articleID?: string
-  imageID?: string
+  itemID: string
+  itemType: CommentItemType
 
-  siteID?: string
   userID: string
-  peerID?: string
-  permalink?: string
 
-  revisions: [DBCommentRevision]
+  revisions: [CommentRevision]
   parentID?: string
 
   status: CommentStatus
   rejectionReason?: CommentRejectionReason
   authorType: CommentAuthorType
-}
-
-export interface DBCommentRevision {
-  id: string
-  text: RichTextNode[]
-  createdAt: Date
 }
 
 export interface DBArticle {

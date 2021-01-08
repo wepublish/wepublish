@@ -1,7 +1,8 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CommentInput, CreateComment} from '../api/private'
+import {CommentInput, CommentStatus, CreateComment} from '../api/private'
+import {CommentAuthorType, CommentItemType} from '../../lib'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -23,79 +24,34 @@ beforeAll(async () => {
 })
 
 describe('Comments', () => {
-  describe('can be created:', () => {
-    const CommentIds: string[] = []
-    beforeEach(async () => {
-      const {mutate} = testClientPrivate
-      const CommentInput: CommentInput = {
-        siteID: '',
-        userID: 'ID!',
-        permalink: 'String!',
-        articleID: 'ID',
-        imageID: 'ID',
-        peerID: 'ID',
-        revisions: [
-          {
-            text: [
-              {
-                type: 'paragraph',
-                children: [{text: 'hello'}]
-              }
-            ]
-          }
-        ],
-        parentID: 'ID',
-        status: 'APPROVED',
-        authorType: 'Admin'
-      }
-      const res = await mutate({
-        mutation: CreateComment,
-        variables: {
-          input: CommentInput
+  test('can be created', async () => {
+    const {mutate} = testClientPrivate
+    const CommentInput: CommentInput = {
+      itemID: 'd',
+      itemType: CommentItemType.Article,
+      userID: 'ID!',
+      revisions: [
+        {
+          text: [
+            {
+              type: 'paragraph',
+              children: [{text: 'hello'}]
+            }
+          ]
         }
-      })
-      CommentIds.unshift(res.data?.createComment?.id)
+      ],
+      status: CommentStatus.Approved,
+      authorType: CommentAuthorType.Author
+    }
+    const res = await mutate({
+      mutation: CreateComment,
+      variables: {
+        input: CommentInput
+      }
     })
 
-    test('can be created', async () => {
-      const {mutate} = testClientPrivate
-      const CommentInput: CommentInput = {
-        siteID: '',
-        userID: 'ID!',
-        permalink: 'String!',
-        articleID: 'ID',
-        imageID: 'ID',
-        peerID: 'ID',
-        revisions: [
-          {
-            text: [
-              {
-                type: 'paragraph',
-                children: [{text: 'hello'}]
-              }
-            ]
-          }
-        ],
-        parentID: 'ID',
-        status: 'APPROVED',
-        rejectionReason: 'MISCONDUCT',
-        authorType: 'Admin'
-      }
-      const res = await mutate({
-        mutation: CreateComment,
-        variables: {
-          input: CommentInput
-        }
-      })
-      expect(res).toMatchSnapshot({
-        data: {
-          createComment: {
-            id: expect.any(String)
-          }
-        }
-      })
-      CommentIds.unshift(res.data?.createComment?.id)
-    })
+    expect(res).toMatchSnapshot()
+    expect(res?.data?.createComment?.authorType).toContain(CommentAuthorType.Author)
   })
 })
 

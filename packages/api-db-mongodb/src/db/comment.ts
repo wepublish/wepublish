@@ -1,9 +1,9 @@
 import {
   DBCommentAdapter,
   CreateCommentArgs,
-  PrivateComment,
-  // GetCommentsArgs,
-  // GetPublicCommentsArgs,
+  Comment,
+  GetCommentsArgs,
+  GetPublicCommentsArgs,
   ConnectionResult
 } from '@wepublish/api'
 
@@ -20,7 +20,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     this.locale = locale
   }
 
-  async createComment({input}: CreateCommentArgs): Promise<PrivateComment> {
+  async createComment({input}: CreateCommentArgs): Promise<Comment> {
     const {...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,
@@ -62,7 +62,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     ])
 
     return {
-      nodes: comments.map<PrivateComment>(({_id: id, ...comment}) => ({id, ...comment})),
+      nodes: comments.map<Comment>(({_id: id, ...comment}) => ({id, ...comment})),
       pageInfo: {
         startCursor: '',
         endCursor: '',

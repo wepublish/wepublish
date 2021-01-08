@@ -210,6 +210,65 @@ export type BlockInput = {
 };
 
 
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  userID: Scalars['ID'];
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  revisions: Array<Maybe<CommentRevision>>;
+  parentID?: Maybe<Scalars['ID']>;
+  status: CommentStatus;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  authorType: CommentAuthorType;
+};
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  userID: Scalars['ID'];
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  revisions: Array<Maybe<CommentRevisionInput>>;
+  parentID?: Maybe<Scalars['ID']>;
+  status: CommentStatus;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  authorType: CommentAuthorType;
+};
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  text?: Maybe<Scalars['RichText']>;
+  createdAt: Scalars['DateTime'];
+};
+
+export type CommentRevisionInput = {
+  text?: Maybe<Scalars['RichText']>;
+};
+
+export enum CommentStatus {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -467,6 +526,7 @@ export type Mutation = {
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
   deleteImage?: Maybe<Scalars['Boolean']>;
+  createComment: Comment;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
   deleteArticle?: Maybe<Scalars['Boolean']>;
@@ -614,6 +674,11 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  input: CommentInput;
 };
 
 

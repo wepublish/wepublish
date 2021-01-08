@@ -229,63 +229,9 @@ export type Comment = {
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
-}
-
-export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator',
-  PeerUser = 'PeerUser',
-  VerifiedUser = 'VerifiedUser'
-}
-
-export type CommentInput = {
-  siteID: Scalars['ID']
   userID: Scalars['ID']
-  permalink: Scalars['String']
-  articleID: Scalars['ID']
-  imageID: Scalars['ID']
-  peerID: Scalars['ID']
-  revisions: CommentRevisionInput
-  parentID: Scalars['ID']
-  status: CommentStatus
-  rejectionReason: CommentRejectionReason
-  authorType: CommentAuthorType
-  createdAt: Scalars['DateTime']
-  modifiedAt?: Maybe<Scalars['DateTime']>
-}
-
-export enum CommentRejectionReason {
-  Misconduct = 'MISCONDUCT',
-  Spam = 'SPAM'
-}
-
-export type CommentRevisionInput = {
-  id: Scalars['ID']
-  text: Scalars['RichText']
-  createdAt: Scalars['DateTime']
-  modifiedAt?: Maybe<Scalars['DateTime']>
-}
-
-export enum CommentStatus {
-  Approved = 'APPROVED',
-  PendingApproval = 'PENDING_APPROVAL',
-  PendingUserChanges = 'PENDING_USER_CHANGES',
-  Rejected = 'REJECTED'
-}
-
-export type Comment = {
-  __typename?: 'Comment'
-  id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  siteID?: Maybe<Scalars['ID']>
-  userID: Scalars['ID']
-  peerID?: Maybe<Scalars['ID']>
-  permalink?: Maybe<Scalars['String']>
-  articleID?: Maybe<Scalars['ID']>
-  imageID?: Maybe<Scalars['ID']>
+  itemID: Scalars['ID']
+  itemType: CommentItemType
   revisions: Array<Maybe<CommentRevision>>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
@@ -294,21 +240,15 @@ export type Comment = {
 }
 
 export enum CommentAuthorType {
-  Admin = 'Admin',
-  ArticleAuthor = 'ArticleAuthor',
-  Journalist = 'Journalist',
-  Moderator = 'Moderator',
-  PeerUser = 'PeerUser',
+  Author = 'Author',
+  Team = 'Team',
   VerifiedUser = 'VerifiedUser'
 }
 
 export type CommentInput = {
-  siteID?: Maybe<Scalars['ID']>
   userID: Scalars['ID']
-  peerID?: Maybe<Scalars['ID']>
-  permalink?: Maybe<Scalars['String']>
-  articleID?: Maybe<Scalars['ID']>
-  imageID?: Maybe<Scalars['ID']>
+  itemID: Scalars['ID']
+  itemType: CommentItemType
   revisions: Array<Maybe<CommentRevisionInput>>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
@@ -316,14 +256,18 @@ export type CommentInput = {
   authorType: CommentAuthorType
 }
 
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
 export enum CommentRejectionReason {
-  Misconduct = 'MISCONDUCT',
-  Spam = 'SPAM'
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
 }
 
 export type CommentRevision = {
   __typename?: 'CommentRevision'
-  id: Scalars['ID']
   text?: Maybe<Scalars['RichText']>
   createdAt: Scalars['DateTime']
 }
@@ -333,10 +277,10 @@ export type CommentRevisionInput = {
 }
 
 export enum CommentStatus {
-  Approved = 'APPROVED',
-  PendingApproval = 'PENDING_APPROVAL',
-  PendingUserChanges = 'PENDING_USER_CHANGES',
-  Rejected = 'REJECTED'
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export type CreatedToken = {
@@ -1285,7 +1229,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
-  roles: Array<Maybe<UserRole>>
+  roles: Array<UserRole>
 }
 
 export type UserConnection = {
@@ -1968,19 +1912,8 @@ export type FullBlockFragment =
 
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
-  | 'siteID'
-  | 'userID'
-  | 'permalink'
-  | 'articleID'
-  | 'imageID'
-  | 'peerID'
-  | 'parentID'
-  | 'status'
-  | 'rejectionReason'
-  | 'authorType'
-> & {
-    revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'id' | 'text'>>>
-  }
+  'itemID' | 'itemType' | 'userID' | 'parentID' | 'status' | 'authorType'
+> & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
 
 export type CreateCommentMutationVariables = Exact<{
   input: CommentInput
@@ -2342,7 +2275,7 @@ export type DeletePeerMutationVariables = Exact<{
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
-    roles: Array<Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>>
+    roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
   }
 
 export type UserListQueryVariables = Exact<{
@@ -2562,19 +2495,14 @@ export const FullAuthor = gql`
 `
 export const MutationComment = gql`
   fragment MutationComment on Comment {
-    siteID
+    itemID
+    itemType
     userID
-    permalink
-    articleID
-    imageID
-    peerID
     revisions {
-      id
       text
     }
     parentID
     status
-    rejectionReason
     authorType
   }
 `

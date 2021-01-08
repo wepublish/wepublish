@@ -2,16 +2,15 @@ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLString,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLInt,
   GraphQLList
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
 import {
   CommentAuthorType,
+  CommentItemType,
   CommentRejectionReason,
   CommentRevision,
   CommentStatus
@@ -21,38 +20,42 @@ import {GraphQLRichText} from './richText'
 export const GraphQLCommentStatus = new GraphQLEnumType({
   name: 'CommentStatus',
   values: {
-    APPROVED: {value: CommentStatus.Approved},
-    PENDING_APPROVAL: {value: CommentStatus.PendingApproval},
-    PENDING_USER_CHANGES: {value: CommentStatus.PendingUserChanges},
-    REJECTED: {value: CommentStatus.Rejected}
+    [CommentStatus.Approved]: {value: CommentStatus.Approved},
+    [CommentStatus.PendingApproval]: {value: CommentStatus.PendingApproval},
+    [CommentStatus.PendingUserChanges]: {value: CommentStatus.PendingUserChanges},
+    [CommentStatus.Rejected]: {value: CommentStatus.Rejected}
   }
 })
 
 export const GraphQLCommentRejectionReason = new GraphQLEnumType({
   name: 'CommentRejectionReason',
   values: {
-    MISCONDUCT: {value: CommentRejectionReason.Misconduct},
-    SPAM: {value: CommentRejectionReason.Spam}
+    [CommentRejectionReason.Misconduct]: {value: CommentRejectionReason.Misconduct},
+    [CommentRejectionReason.Spam]: {value: CommentRejectionReason.Spam}
   }
 })
 
 export const GraphQLCommentAuthorType = new GraphQLEnumType({
   name: 'CommentAuthorType',
   values: {
-    Admin: {value: CommentAuthorType.Admin},
-    ArticleAuthor: {value: CommentAuthorType.ArticleAuthor},
-    Journalist: {value: CommentAuthorType.Journalist},
-    Moderator: {value: CommentAuthorType.Moderator},
-    PeerUser: {value: CommentAuthorType.PeerUser},
-    VerifiedUser: {value: CommentAuthorType.VerifiedUser}
+    [CommentAuthorType.Author]: {value: CommentAuthorType.Author},
+    [CommentAuthorType.Team]: {value: CommentAuthorType.Team},
+    [CommentAuthorType.VerifiedUser]: {value: CommentAuthorType.VerifiedUser}
+  }
+})
+
+export const GraphQLCommentItemType = new GraphQLEnumType({
+  name: 'CommentItemType',
+  values: {
+    [CommentItemType.Article]: {value: CommentItemType.Article},
+    [CommentItemType.Page]: {value: CommentItemType.Page}
   }
 })
 
 export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Context>({
   name: 'CommentRevision',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    text: {type: GraphQLRichText},
+    text: {type: GraphQLNonNull(GraphQLRichText)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)}
   }
 })
@@ -60,27 +63,27 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
 export const GraphQLCommentRevisionInput = new GraphQLInputObjectType({
   name: 'CommentRevisionInput',
   fields: {
-    text: {type: GraphQLRichText}
+    text: {type: GraphQLNonNull(GraphQLRichText)}
   }
 })
 
 export const GraphQLCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {
-    siteID: {type: GraphQLID},
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
-    permalink: {type: GraphQLString},
 
-    articleID: {type: GraphQLID},
-    imageID: {type: GraphQLID},
+    itemID: {type: GraphQLNonNull(GraphQLID)},
+    itemType: {
+      type: GraphQLNonNull(GraphQLCommentItemType),
+      defaultValue: GraphQLCommentStatus.getValue(CommentItemType.Article)
+    },
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevisionInput))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevisionInput)))},
     parentID: {type: GraphQLID},
 
     status: {
       type: GraphQLNonNull(GraphQLCommentStatus),
-      defaultValue: GraphQLCommentStatus.getValue('PENDING_APPROVAL')
+      defaultValue: GraphQLCommentStatus.getValue(CommentStatus.PendingApproval)
     },
     rejectionReason: {type: GraphQLCommentRejectionReason},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
@@ -93,15 +96,15 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
     id: {type: GraphQLNonNull(GraphQLID)},
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    siteID: {type: GraphQLID},
+
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
-    permalink: {type: GraphQLString},
 
-    articleID: {type: GraphQLID},
-    imageID: {type: GraphQLID},
+    itemID: {type: GraphQLNonNull(GraphQLID)},
+    itemType: {
+      type: GraphQLNonNull(GraphQLCommentItemType)
+    },
 
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))},
     parentID: {type: GraphQLID},
 
     status: {type: GraphQLNonNull(GraphQLCommentStatus)},
@@ -118,25 +121,11 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    siteID: {type: GraphQLID},
     userID: {type: GraphQLNonNull(GraphQLID)},
-    peerID: {type: GraphQLID},
-    permalink: {type: GraphQLString},
 
-    articleID: {type: GraphQLID},
-    imageID: {type: GraphQLID},
-
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLCommentRevision))},
+    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))},
     parentID: {type: GraphQLID},
 
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
-  }
-})
-
-// TODO: not sure the need for this
-export const GraphQLCommentConnection = new GraphQLObjectType({
-  name: 'CommentConnection',
-  fields: {
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

@@ -315,6 +315,11 @@ Object {
                 },
                 Object {
                   "deprecated": false,
+                  "description": "Allows to create comments",
+                  "id": "CAN_CREATE_COMMENT",
+                },
+                Object {
+                  "deprecated": false,
                   "description": "Allows to login editor",
                   "id": "CAN_LOGIN_EDITOR",
                 },
