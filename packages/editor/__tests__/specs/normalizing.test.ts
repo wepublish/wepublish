@@ -18,9 +18,14 @@ pTest(
   'withNormalizeNode',
   [
     {
-      name: 'should return unmodified valid data',
+      name: 'should return unmodified valid simple data',
       entryData: emptyCellsTable(1, 1),
       normalizedData: emptyCellsTable(1, 1)
+    },
+    {
+      name: 'should return unmodified valid deeply nested data',
+      entryData: emptyCellsTable(33, 97), // TODO choose meaningful
+      normalizedData: emptyCellsTable(33, 97)
     },
     {
       name: 'should return valid table given a nakedTableRow',
