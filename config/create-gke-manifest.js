@@ -662,6 +662,15 @@ async function applyApiServer() {
                       key: 'mailgun_webhook_secret'
                     }
                   }
+                },
+                {
+                  name: 'JWT_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'jwt_secret_key'
+                    }
+                  }
                 }
               ],
               ports: [

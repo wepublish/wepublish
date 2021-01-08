@@ -47,7 +47,7 @@ export const CanGetNavigations: Permission = {
 
 export const CanCreateNavigation: Permission = {
   id: 'CAN_CREATE_NAVIGATION',
-  description: 'Allows to get navigation',
+  description: 'Allows to create navigation',
   deprecated: false
 }
 
@@ -321,6 +321,12 @@ export const CanGetPermissions: Permission = {
   deprecated: false
 }
 
+export const CanSendJWTLogin: Permission = {
+  id: 'CAN_SEND_JWT_LOGIN',
+  description: 'Allows to send a JWT Login',
+  deprecated: false
+}
+
 export const CanLoginEditor: Permission = {
   id: 'CAN_LOGIN_EDITOR',
   description: 'Allows to login editor',
@@ -375,7 +381,9 @@ export const AllPermissions: Permission[] = [
   CanGetPermissions,
   CanCreateComment,
   CanLoginEditor,
-  CanGetComments
+  CanGetComments,
+  CanSendJWTLogin,
+  CanLoginEditor
 ]
 
 export const EditorPermissions: Permission[] = [

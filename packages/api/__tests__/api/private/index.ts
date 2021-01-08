@@ -529,10 +529,12 @@ export type Mutation = {
   updatePeer: Peer
   deletePeer?: Maybe<Scalars['ID']>
   createSession: SessionWithToken
+  createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeSession: Scalars['Boolean']
   revokeActiveSession: Scalars['Boolean']
   sessions: Array<Session>
+  sendJWTLogin: Scalars['String']
   createToken: CreatedToken
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
@@ -586,6 +588,10 @@ export type MutationCreateSessionArgs = {
   password: Scalars['String']
 }
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String']
+}
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
@@ -594,6 +600,11 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID']
+}
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String']
+  email: Scalars['String']
 }
 
 export type MutationCreateTokenArgs = {
@@ -2094,6 +2105,12 @@ export type UserListQuery = {__typename?: 'Query'} & {
     }
 }
 
+export type MeQueryVariables = Exact<{[key: string]: never}>
+
+export type MeQuery = {__typename?: 'Query'} & {
+  me?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2142,6 +2159,16 @@ export type CreateSessionMutationVariables = Exact<{
 
 export type CreateSessionMutation = {__typename?: 'Mutation'} & {
   createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String']
+}>
+
+export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
+  createSessionWithJWT: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
       user: {__typename?: 'User'} & Pick<User, 'email'>
     }
 }
@@ -3086,6 +3113,14 @@ export const UserList = gql`
   }
   ${FullUser}
 `
+export const Me = gql`
+  query Me {
+    me {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
 export const User = gql`
   query User($id: ID!) {
     user(id: $id) {
@@ -3126,6 +3161,16 @@ export const DeleteUser = gql`
 export const CreateSession = gql`
   mutation CreateSession($email: String!, $password: String!) {
     createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const CreateSessionWithJwt = gql`
+  mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
       user {
         email
       }
