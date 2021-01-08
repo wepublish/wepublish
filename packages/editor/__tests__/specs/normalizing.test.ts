@@ -4,7 +4,6 @@
 
 import {withReact} from 'slate-react'
 import {createEditor, Transforms, Element as SlateElement} from 'slate'
-import {allNodes} from '../../src/client/blocks/richTextBlock/editor/utils'
 import {BlockFormat} from '../../src/client/blocks/richTextBlock/editor/formats'
 import {withNormTables} from '../../src/client/blocks/richTextBlock/editor/normalizing'
 
@@ -31,6 +30,11 @@ const invalidTable: SlateElement[] = [
   {
     type: BlockFormat.Table,
     children: [emptyTextParagraph()]
+  },
+  {
+    type: BlockFormat.TableCell,
+    borderColor: 'black',
+    children: [emptyTextParagraph()]
   }
 ]
 
@@ -38,6 +42,6 @@ describe('test', () => {
   const editor = withNormTables(withReact(createEditor()))
   Transforms.insertNodes(editor, invalidTable)
   it('should ', () => {
-    expect(allNodes(editor)).toEqual(emptyCellsTable(1, 1))
+    expect(editor.children).toEqual([...emptyCellsTable(1, 1), ...emptyCellsTable(1, 1)])
   })
 })
