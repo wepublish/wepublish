@@ -105,6 +105,24 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
+          for (const [node] of SlateNode.texts(editor)) {
+            if (SlateNode.isNode(node) && node.text === '') {
+              // FIX for firefox focus problem
+              editor.insertText(' ')
+            }
+            // only check first text node
+            return
+          }
+        }}
+        onFocus={() => {
+          for (const [node, path] of SlateNode.texts(editor)) {
+            if (SlateNode.isNode(node) && node.text === ' ') {
+              // FIX for firefox focus problem
+              Transforms.delete(editor, {at: path})
+            }
+            // only check first text node
+            return
+          }
         }}
       />
     </Slate>
