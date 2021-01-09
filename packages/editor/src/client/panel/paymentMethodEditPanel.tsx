@@ -102,7 +102,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
   async function handleSave() {
     if (!paymentProvider) {
-      return //TODO: handle validation
+      return // TODO: handle validation
     }
 
     if (id) {
