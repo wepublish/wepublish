@@ -7,8 +7,7 @@ import {
   RouteActionType,
   fullPathForRoute,
   zeroOrMore,
-  required,
-  optional
+  required
 } from '@karma.run/react'
 
 import {AuthContext, AuthDispatchContext, AuthDispatchActionType} from './authContext'
@@ -69,7 +68,12 @@ export enum RouteType {
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
-export const LoginRoute = route(RouteType.Login, routePath`/login/${optional('provider')}`)
+export const LoginRoute = route(RouteType.Login, routePath`/login`)
+export const LoginOAuthRoute = route(
+  RouteType.Login,
+  routePath`/login/oauth/${required('provider')}`
+)
+export const LoginJWTRoute = route(RouteType.Login, routePath`/login/jwt`)
 export const LogoutRoute = route(RouteType.Logout, routePath`/logout`)
 
 export const ArticleListRoute = route(RouteType.ArticleList, routePath`/articles`)
@@ -154,6 +158,8 @@ export const NotFoundRoute = route(RouteType.NotFound, routePath`/${zeroOrMore('
 export const routes = [
   IndexRoute,
   LoginRoute,
+  LoginOAuthRoute,
+  LoginJWTRoute,
   LogoutRoute,
   PageListRoute,
   PageCreateRoute,

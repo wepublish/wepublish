@@ -90,7 +90,7 @@ Object {
               "permissions": Array [
                 Object {
                   "deprecated": false,
-                  "description": "Allows to get navigation",
+                  "description": "Allows to create navigation",
                   "id": "CAN_CREATE_NAVIGATION",
                 },
                 Object {
@@ -392,6 +392,11 @@ Object {
                   "deprecated": false,
                   "description": "Allows to get all payment providers",
                   "id": "CAN_GET_PAYMENT_PROVIDERS",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to send a JWT Login",
+                  "id": "CAN_SEND_JWT_LOGIN",
                 },
                 Object {
                   "deprecated": false,
