@@ -98,7 +98,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         dbAdapter,
         mediaAdapter,
         urlAdapter: new ExampleURLAdapter(),
-        oauth2Providers: []
+        oauth2Providers: [],
+        paymentProviders: []
       })
   })
 
@@ -114,7 +115,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         dbAdapter,
         mediaAdapter,
         urlAdapter: new ExampleURLAdapter(),
-        oauth2Providers: []
+        oauth2Providers: [],
+        paymentProviders: []
       })
   })
 
