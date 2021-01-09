@@ -9,6 +9,11 @@ import {Author} from './db/author'
 import {Image} from './db/image'
 import {Navigation} from './db/navigation'
 import {UserRole} from './db/userRole'
+import {Invoice} from './db/invoice'
+import {MailLog} from './db/mailLog'
+import {MemberPlan} from './db/memberPlan'
+import {Payment} from './db/payment'
+import {PaymentMethod} from './db/paymentMethod'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -28,11 +33,26 @@ export const authorModelEvents = new EventEmitter() as AuthorModelEventsEmitter
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
 
+export type InvoiceModelEventsEmitter = TypedEmitter<ModelEvents<Invoice>>
+export const invoiceModelEvents = new EventEmitter() as InvoiceModelEventsEmitter
+
+export type MailLogModelEventsEmitter = TypedEmitter<ModelEvents<MailLog>>
+export const mailLogModelEvents = new EventEmitter() as MailLogModelEventsEmitter
+
+export type MemberPlanModelEventsEmitter = TypedEmitter<ModelEvents<MemberPlan>>
+export const memberPlanModelEvents = new EventEmitter() as MemberPlanModelEventsEmitter
+
 export type NavigationModelEventsEmitter = TypedEmitter<ModelEvents<Navigation>>
 export const navigationModelEvents = new EventEmitter() as NavigationModelEventsEmitter
 
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
+
+export type PaymentModelEventEmitter = TypedEmitter<ModelEvents<Payment>>
+export const paymentModelEvents = new EventEmitter() as PaymentModelEventEmitter
+
+export type PaymentMethodModelEventEmitter = TypedEmitter<ModelEvents<PaymentMethod>>
+export const paymentMethodModelEvents = new EventEmitter() as PaymentMethodModelEventEmitter
 
 export type PeerModelEventsEmitter = TypedEmitter<ModelEvents<Peer>>
 export const peerModelEvents = new EventEmitter() as PeerModelEventsEmitter
@@ -47,8 +67,13 @@ export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
   | ImageModelEventsEmitter
+  | InvoiceModelEventsEmitter
+  | MailLogModelEventsEmitter
+  | MemberPlanModelEventsEmitter
   | NavigationModelEventsEmitter
   | PageModelEventEmitter
+  | PaymentModelEventEmitter
+  | PaymentMethodModelEventEmitter
   | PeerModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
@@ -79,6 +104,21 @@ export const methodsToProxy: MethodsToProxy[] = [
     eventEmitter: imageModelEvents
   },
   {
+    key: 'invoice',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: invoiceModelEvents
+  },
+  {
+    key: 'mailLog',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: mailLogModelEvents
+  },
+  {
+    key: 'memberPlan',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: memberPlanModelEvents
+  },
+  {
     key: 'navigation',
     methods: ['create', 'update', 'delete'],
     eventEmitter: navigationModelEvents
@@ -87,6 +127,16 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'page',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: pageModelEvents
+  },
+  {
+    key: 'payment',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: paymentModelEvents
+  },
+  {
+    key: 'paymentMethod',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: paymentMethodModelEvents
   },
   {
     key: 'peer',

@@ -5,6 +5,7 @@ import {Payment, PaymentState} from '../db/payment'
 import {Invoice} from '../db/invoice'
 import {NextHandleFunction} from 'connect'
 import bodyParser from 'body-parser'
+import {paymentModelEvents} from '../events'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
@@ -135,6 +136,23 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders} = opts
   const paymentProviderWebhookRouter = Router()
+
+  paymentModelEvents.on('update', async (context, model) => {
+    if (model.state === PaymentState.Payed) {
+      const invoice = await context.loaders.invoicesByID.load(model.invoiceID)
+      if (!invoice) {
+        console.warn(`No invoice with id ${model.invoiceID}`)
+        return
+      }
+      await context.dbAdapter.invoice.updateInvoice({
+        id: invoice.id,
+        input: {
+          ...invoice,
+          payedAt: new Date()
+        }
+      })
+    }
+  })
 
   paymentProviders.forEach(paymentProvider => {
     paymentProviderWebhookRouter
