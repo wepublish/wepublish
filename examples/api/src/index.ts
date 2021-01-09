@@ -8,7 +8,8 @@ import {
   Oauth2Provider,
   MailgunMailProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
+  StripePaymentProvider,
+  PayrexxPaymentProvider
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -163,6 +164,25 @@ async function asyncMain() {
       secretKey: process.env.STRIPE_SECRET_KEY,
       webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A',
       incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+    }),
+    new PayrexxPaymentProvider({
+      id: 'payrexx',
+      name: 'Payrexx',
+      offSessionPayments: false,
+      instanceName: 'tsridev',
+      instanceAPISecret: 'KHwwzMkl7Igd40lVSjMDhf7PVecQYH',
+      psp: [0, 15, 17, 2, 3, 36],
+      pm: [
+        'postfinance_card',
+        'postfinance_efinance',
+        // "mastercard",
+        // "visa",
+        'twint',
+        // "invoice",
+        'paypal'
+      ],
+      vatRate: 7.7,
+      incomingRequestHandler: bodyParser.json()
     })
   ]
 
