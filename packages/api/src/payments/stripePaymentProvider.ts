@@ -1,18 +1,35 @@
 import {
   BasePaymentProvider,
   CheckIntentProps,
-  CreateIntentProps,
-  GetInvoiceIDFromWebhookProps,
-  IntentArgs,
-  IntentStatus,
+  CreatePaymentIntentProps,
+  Intent,
+  IntentState,
   PaymentProviderProps,
-  WebhookUpdatesProps
+  WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
+import {PaymentState} from '../db/payment'
 
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
   webhookEndpointSecret: string
+}
+
+function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
+  switch (event) {
+    case 'requires_payment_method':
+    case 'requires_confirmation':
+    case 'requires_action':
+      return PaymentState.RequiresUserAction
+    case 'processing':
+      return PaymentState.Processing
+    case 'succeeded':
+      return PaymentState.Payed
+    case 'canceled':
+      return PaymentState.Canceled
+    default:
+      return null
+  }
 }
 
 export class StripePaymentProvider extends BasePaymentProvider {
@@ -31,58 +48,41 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
 
-  getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string {
-    const signature = props.headers['stripe-signature']
-    const event = this.getWebhookEvent(props.body, signature)
-
-    const intent = event.data.object as Stripe.PaymentIntent
-
-    return intent.metadata.invoiceID ?? ''
-  }
-
-  async webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus> {
-    const signature = props.headers['stripe-signature']
-    const event = this.getWebhookEvent(props.body, signature)
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+    const signature = props.req.headers['stripe-signature'] as string
+    const event = this.getWebhookEvent(props.req.body, signature)
 
     if (!event.type.startsWith('payment_intent')) {
       throw new Error(`Can not handle ${event.type}`)
     }
 
     const intent = event.data.object as Stripe.PaymentIntent
-
-    switch (event.type) {
-      case 'payment_intent.succeeded': {
-        let customerID
-        if (
-          intent.setup_future_usage === 'off_session' &&
-          intent.customer === null &&
-          intent.payment_method !== null
-        ) {
-          const customer = await this.stripe.customers.create({
-            email: intent.metadata.mail ?? '',
-            payment_method: intent.payment_method as string
-          })
-          customerID = customer.id
-        }
-        return {
-          successful: intent.status === 'succeeded',
-          open: false,
-          paymentData: JSON.stringify(intent),
-          customerID
-        }
+    const intentStates: IntentState[] = []
+    const state = mapStripeEventToPaymentStatue(intent.status)
+    if (state !== null && intent.metadata.paymentID !== undefined) {
+      let customerID
+      if (
+        intent.setup_future_usage === 'off_session' &&
+        intent.customer === null &&
+        intent.payment_method !== null
+      ) {
+        const customer = await this.stripe.customers.create({
+          email: intent.metadata.mail ?? '',
+          payment_method: intent.payment_method as string
+        })
+        customerID = customer.id
       }
-      default: {
-        return {
-          successful: false,
-          open: true
-        }
-      }
+      intentStates.push({
+        paymentID: intent.metadata.paymentID,
+        paymentData: JSON.stringify(intent),
+        state,
+        customerID
+      })
     }
+    return intentStates
   }
 
-  // TODO: teste create Intent with this provider.
-  // Error on Thursday was something about successURL should not be empty
-  async createIntent(props: CreateIntentProps): Promise<IntentArgs> {
+  async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     const intent = await this.stripe.paymentIntents.create({
       amount: props.invoice.items.reduce(
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
@@ -92,28 +92,31 @@ export class StripePaymentProvider extends BasePaymentProvider {
       // description: props.invoice.description, TODO: convert to text
       ...(props.saveCustomer ? {setup_future_usage: 'off_session'} : {}),
       metadata: {
-        invoiceID: props.invoice.id,
+        paymentID: props.paymentID,
         mail: props.invoice.mail
       }
     })
 
     return {
       intentID: intent.id,
-      intentSecret: intent.client_secret ?? intent.id,
-      amount: intent.amount,
+      intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      open: true,
-      successful: false
+      state: PaymentState.Submitted
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus> {
-    const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
+    // TODO: fix this
+    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
 
     return {
       successful: intent.status === 'succeeded',
       open: intent.status === 'succeeded' || intent.status === 'canceled',
       paymentData: JSON.stringify(intent)
+    } */
+    return {
+      state: PaymentState.Processing,
+      paymentID: 'aasd'
     }
   }
 }

@@ -16,6 +16,7 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
+import bodyParser from 'body-parser'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -151,17 +152,17 @@ async function asyncMain() {
       id: 'stripe_checkout',
       name: 'Stripe Checkout',
       offSessionPayments: false,
-      hostURL,
       secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A'
+      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A',
+      incomingRequestHandler: bodyParser.raw({type: 'application/json'})
     }),
     new StripePaymentProvider({
       id: 'stripe',
       name: 'Stripe',
       offSessionPayments: true,
-      hostURL,
       secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A'
+      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A',
+      incomingRequestHandler: bodyParser.raw({type: 'application/json'})
     })
   ]
 

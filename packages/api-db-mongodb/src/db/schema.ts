@@ -9,7 +9,8 @@ import {
   PaymentProviderCustomer,
   RichTextNode,
   UserSubscription,
-  MailLogState
+  MailLogState,
+  PaymentState
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -326,14 +327,14 @@ export interface DBPayment {
   createdAt: Date
   modifiedAt: Date
 
-  intentID: string
-  intentSecret: string
-  amount: number
-  invoiceID?: string
-  intentData?: string
-  open: boolean
-  successful: boolean
+  invoiceID: string
+  state: PaymentState
   paymentMethodID: string
+
+  intentID?: string
+  intentSecret?: string
+  intentData?: string
+
   paymentData?: string
 }
 

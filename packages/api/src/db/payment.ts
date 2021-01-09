@@ -1,29 +1,35 @@
 import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
 
+export enum PaymentState {
+  Created = 'created',
+  Submitted = 'submitted',
+  RequiresUserAction = 'requiresUserAction',
+  Processing = 'processing',
+  Payed = 'payed',
+  Canceled = 'canceled',
+  Declined = 'declined'
+}
+
 export interface Payment {
   id: string
   createdAt: Date
   modifiedAt: Date
-  intentID: string
-  intentSecret: string
-  amount: number
-  invoiceID?: string
-  intentData?: string
-  open: boolean
-  successful: boolean
   paymentMethodID: string
+  state: PaymentState
+  invoiceID: string
+  intentID?: string
+  intentSecret?: string
+  intentData?: string
   paymentData?: string
 }
 
 export interface PaymentInput {
-  intentID: string
-  intentSecret: string
-  amount: number
-  invoiceID?: string
-  intentData?: string
-  open: boolean
-  successful: boolean
   paymentMethodID: string
+  state: PaymentState
+  invoiceID: string
+  intentID?: string
+  intentSecret?: string
+  intentData?: string
   paymentData?: string
 }
 

@@ -7,15 +7,27 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLInputObjectType,
-  GraphQLEnumType,
-  GraphQLBoolean
+  GraphQLEnumType
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
-import {Payment, PaymentSort} from '../db/payment'
+import {Payment, PaymentSort, PaymentState} from '../db/payment'
 import {GraphQLInvoice} from './invoice'
 import {GraphQLPaymentMethod} from './paymentMethod'
+
+export const GraphQLPaymentState = new GraphQLEnumType({
+  name: 'PaymentState',
+  values: {
+    Created: {value: PaymentState.Created},
+    Submitted: {value: PaymentState.Submitted},
+    RequiresUserAction: {value: PaymentState.RequiresUserAction},
+    Processing: {value: PaymentState.Processing},
+    Payed: {value: PaymentState.Payed},
+    Canceled: {value: PaymentState.Canceled},
+    Declined: {value: PaymentState.Declined}
+  }
+})
 
 export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
   name: 'Payment',
@@ -25,25 +37,23 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
-    intentID: {type: GraphQLNonNull(GraphQLString)},
-    intentSecret: {type: GraphQLNonNull(GraphQLString)},
-    amount: {type: GraphQLNonNull(GraphQLInt)},
+    intentID: {type: GraphQLString},
+    intentSecret: {type: GraphQLString},
+    state: {type: GraphQLNonNull(GraphQLPaymentState)},
     invoice: {
-      type: GraphQLInvoice,
+      type: GraphQLNonNull(GraphQLInvoice),
       resolve: createProxyingResolver(({invoiceID}, {}, {loaders}) => {
-        if (invoiceID) return loaders.invoicesByID.load(invoiceID)
-        return null
+        return loaders.invoicesByID.load(invoiceID)
       })
     },
     intentData: {type: GraphQLString},
-    open: {type: GraphQLNonNull(GraphQLBoolean)},
-    successful: {type: GraphQLNonNull(GraphQLBoolean)},
     paymentMethod: {
       type: GraphQLNonNull(GraphQLPaymentMethod),
       resolve: createProxyingResolver(({paymentMethodID}, {}, {loaders}) => {
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
     },
+    payedAt: {type: GraphQLDateTime},
     paymentData: {type: GraphQLString}
   }
 })

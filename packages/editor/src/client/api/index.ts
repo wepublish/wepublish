@@ -991,14 +991,13 @@ export type Payment = {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
-  intentID: Scalars['String'];
-  intentSecret: Scalars['String'];
-  amount: Scalars['Int'];
-  invoice?: Maybe<Invoice>;
+  intentID?: Maybe<Scalars['String']>;
+  intentSecret?: Maybe<Scalars['String']>;
+  state: PaymentState;
+  invoice: Invoice;
   intentData?: Maybe<Scalars['String']>;
-  open: Scalars['Boolean'];
-  successful: Scalars['Boolean'];
   paymentMethod: PaymentMethod;
+  payedAt?: Maybe<Scalars['DateTime']>;
   paymentData?: Maybe<Scalars['String']>;
 };
 
@@ -1047,6 +1046,16 @@ export type PaymentProvider = {
 export enum PaymentSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum PaymentState {
+  Created = 'Created',
+  Submitted = 'Submitted',
+  RequiresUserAction = 'RequiresUserAction',
+  Processing = 'Processing',
+  Payed = 'Payed',
+  Canceled = 'Canceled',
+  Declined = 'Declined'
 }
 
 export type Peer = {

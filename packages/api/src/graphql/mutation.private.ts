@@ -1,10 +1,10 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
   GraphQLBoolean,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
@@ -14,15 +14,15 @@ import {Context} from '../context'
 
 import {
   InvalidCredentialsError,
-  OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
+  OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
 
-import {GraphQLArticleInput, GraphQLArticle} from './article'
-import {BlockMap, Block, BlockType} from '../db/block'
+import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {Block, BlockMap, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
+import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 
@@ -30,36 +30,36 @@ import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} f
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 
 import {
+  authorise,
   CanCreateArticle,
   CanCreateAuthor,
   CanCreateImage,
+  CanCreateInvoice,
+  CanCreateMemberPlan,
+  CanCreateNavigation,
   CanCreatePage,
+  CanCreatePayment,
+  CanCreatePaymentMethod,
+  CanCreatePeer,
+  CanCreateToken,
+  CanCreateUser,
+  CanCreateUserRole,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteImage,
+  CanDeleteInvoice,
+  CanDeleteMemberPlan,
+  CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePaymentMethod,
+  CanDeletePeer,
+  CanDeleteToken,
+  CanDeleteUser,
+  CanDeleteUserRole,
   CanPublishArticle,
   CanPublishPage,
-  authorise,
-  CanCreatePeer,
-  CanUpdatePeerProfile,
-  CanDeletePeer,
-  CanCreateToken,
-  CanDeleteToken,
-  CanCreateNavigation,
-  CanDeleteNavigation,
-  CanCreateUser,
-  CanDeleteUser,
-  CanCreateUserRole,
-  CanDeleteUserRole,
   CanResetUserPassword,
-  CanCreateMemberPlan,
-  CanDeleteMemberPlan,
-  CanCreatePaymentMethod,
-  CanDeletePaymentMethod,
-  CanCreateInvoice,
-  CanDeleteInvoice,
-  CanCreatePayment
+  CanUpdatePeerProfile
 } from './permissions'
 import {
   GraphQLUser,
@@ -70,10 +70,10 @@ import {
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
+  GraphQLCreatePeerInput,
   GraphQLPeer,
   GraphQLPeerProfile,
   GraphQLPeerProfileInput,
-  GraphQLCreatePeerInput,
   GraphQLUpdatePeerInput
 } from './peer'
 
@@ -82,6 +82,7 @@ import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {PaymentState} from '../db/payment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -862,24 +863,32 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           throw new Error('Invalid data') // TODO: better error handling
         }
 
-        const intent = await paymentProvider.createIntent({
-          invoice,
-          saveCustomer: true,
-          ...(successURL ? {successURL} : {}),
-          ...(failureURL ? {failureURL} : {})
-        })
-
-        return await dbAdapter.payment.createPayment({
+        const payment = await dbAdapter.payment.createPayment({
           input: {
             paymentMethodID,
             invoiceID,
-            successful: intent.successful,
-            open: intent.open,
-            intentData: intent.intentData,
-            paymentData: intent.paymentData,
-            amount: intent.amount,
+            state: PaymentState.Created
+          }
+        })
+
+        const intent = await paymentProvider.createIntent({
+          paymentID: payment.id,
+          invoice,
+          saveCustomer: true,
+          successURL,
+          failureURL
+        })
+
+        return await dbAdapter.payment.updatePayment({
+          id: payment.id,
+          input: {
+            state: intent.state,
             intentID: intent.intentID,
-            intentSecret: intent.intentSecret
+            intentData: intent.intentData,
+            intentSecret: intent.intentSecret,
+            paymentData: intent.paymentData,
+            paymentMethodID: payment.paymentMethodID,
+            invoiceID: payment.invoiceID
           }
         })
       }

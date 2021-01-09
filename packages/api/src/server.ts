@@ -1,12 +1,12 @@
 import express, {Application} from 'express'
-import bodyParser from 'body-parser'
+// import bodyParser from 'body-parser'
 
 import {ApolloServer} from 'apollo-server-express'
 
 import {contextFromRequest, ContextOptions} from './context'
 import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
-import {setupPaymentProvider, WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
+import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 import {capitalizeFirstLetter} from './utility'
 
 import {methodsToProxy} from './events'
@@ -86,11 +86,11 @@ export class WepublishServer {
       methods: ['POST', 'GET', 'OPTIONS']
     }
 
-    app.use(bodyParser.json())
+    /* app.use(bodyParser.json())
     app.use(express.urlencoded({extended: true}))
-    app.use(bodyParser.raw({type: 'application/json'}))
+    app.use(bodyParser.raw({type: 'application/json'})) */
     app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
-    app.use(`/${WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
+    app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
 
     adminServer.applyMiddleware({
       app,

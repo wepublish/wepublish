@@ -1,21 +1,27 @@
-import {Invoice} from '../db/invoice'
-import {Router} from 'express'
+import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
 import {WepublishServerOpts} from '../server'
-import {DBAdapter} from '../db/adapter'
-import {Payment} from '../db/payment'
+import {Payment, PaymentState} from '../db/payment'
+import {Invoice} from '../db/invoice'
+import {NextHandleFunction} from 'connect'
 import bodyParser from 'body-parser'
 
-export const WEBHOOK_PATH_PREFIX = 'payment-webhooks'
+export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
-export interface IntentStatus {
-  successful: boolean
-  open: boolean
+export interface WebhookForPaymentIntentProps {
+  req: express.Request
+}
+
+export interface IntentState {
+  paymentID: string
+  state: PaymentState
+  payedAt?: Date
   paymentData?: string
   customerID?: string
 }
 
-export interface CreateIntentProps {
+export interface CreatePaymentIntentProps {
+  paymentID: string
   invoice: Invoice
   saveCustomer: boolean
   customerID?: string
@@ -24,8 +30,7 @@ export interface CreateIntentProps {
 }
 
 export interface CheckIntentProps {
-  payment: Payment
-  data: string
+  intentID: string
 }
 
 export interface WebhookUpdatesProps {
@@ -39,13 +44,12 @@ export interface GetInvoiceIDFromWebhookProps {
   headers: any
 }
 
-export interface IntentArgs {
+export interface Intent {
   intentID: string
   intentSecret: string
-  amount: number
+  state: PaymentState
+  payedAt?: Date
   intentData?: string
-  open: boolean
-  successful: boolean
   paymentData?: string
 }
 
@@ -54,24 +58,20 @@ export interface PaymentProvider {
   name: string
   offSessionPayments: boolean
 
-  hostURL: string
+  incomingRequestHandler: NextHandleFunction
 
-  getWebhookURL(): string
+  webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]>
 
-  getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string
+  createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
-  webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus>
-
-  createIntent(props: CreateIntentProps): Promise<IntentArgs>
-
-  checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus>
+  checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 }
 
 export interface PaymentProviderProps {
   id: string
   name: string
-  hostURL: string
   offSessionPayments: boolean
+  incomingRequestHandler?: NextHandleFunction
 }
 
 export abstract class BasePaymentProvider implements PaymentProvider {
@@ -79,31 +79,25 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly name: string
   readonly offSessionPayments: boolean
 
-  readonly hostURL: string
+  readonly incomingRequestHandler: NextHandleFunction
 
   protected constructor(props: PaymentProviderProps) {
     this.id = props.id
     this.name = props.name
-    this.hostURL = props.hostURL
     this.offSessionPayments = props.offSessionPayments
+    this.incomingRequestHandler = props.incomingRequestHandler ?? bodyParser.json()
   }
 
-  getWebhookURL(): string {
-    return `${this.hostURL}/${WEBHOOK_PATH_PREFIX}/${this.id}`
-  }
+  abstract webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]>
 
-  abstract getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string
+  abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
-  abstract webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus>
-
-  abstract createIntent(props: CreateIntentProps): Promise<IntentArgs>
-
-  abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus>
+  abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 }
 
-async function updatePayment(
+/* async function updatePayment(
   payment: Payment,
-  paymentStatus: IntentStatus,
+  paymentStatus: IntentState,
   dbAdapter: DBAdapter
 ): Promise<Payment> {
   const {successful, open, paymentData} = paymentStatus
@@ -136,7 +130,7 @@ async function updatePayment(
   }
 
   return updatedPayment
-}
+} */
 
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders} = opts
@@ -145,42 +139,43 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   paymentProviders.forEach(paymentProvider => {
     paymentProviderWebhookRouter
       .route(`/${paymentProvider.id}`)
-      .all(bodyParser.raw({type: 'application/json'}), async (req, res, next) => {
-        res.status(200).send() // respond immediately with 200 since webhook was received.
+      .all(paymentProvider.incomingRequestHandler, async (req, res, next) => {
+        await res.status(200).send() // respond immediately with 200 since webhook was received.
         try {
-          const {body} = req
-          const invoiceID = paymentProvider.getInvoiceIDFromWebhook({body, headers: req.headers})
-
+          const paymentStatuses = await paymentProvider.webhookForPaymentIntent({req})
           const context = await contextFromRequest(req, opts)
-          const payments = await context.dbAdapter.payment.getPaymentsByInvoiceID(invoiceID)
-          const payment = payments.find(payment => payment?.open)
-          if (!payment) {
-            // TODO: implement error handling
-            console.warn('No payment found')
-            return
-          }
 
-          const paymentStatus = await paymentProvider.webhookUpdate({
-            payment,
-            body,
-            headers: req.headers
-          })
-          await updatePayment(payment, paymentStatus, context.dbAdapter)
-
-          if (paymentStatus.customerID) {
-            const invoice = await context.loaders.invoicesByID.load(invoiceID)
-            if (!invoice?.userID) return // no userID
-            const user = await context.dbAdapter.user.getUserByID(invoice.userID)
-            if (!user) return // no user
-            const {paymentProviderCustomers} = user
-            paymentProviderCustomers[paymentProvider.id] = {
-              id: paymentStatus.customerID,
-              createdAt: new Date()
-            }
-            await context.dbAdapter.user.updatePaymentProviderCustomers({
-              userID: user.id,
-              paymentProviderCustomers
+          for (const paymentStatus of paymentStatuses) {
+            const payment = await context.loaders.paymentsByID.load(paymentStatus.paymentID)
+            if (!payment) continue // TODO: handle missing payment
+            await context.dbAdapter.payment.updatePayment({
+              id: payment.id,
+              input: {
+                state: paymentStatus.state,
+                paymentData: paymentStatus.paymentData,
+                intentData: payment.intentData,
+                intentSecret: payment.intentSecret,
+                intentID: payment.intentID,
+                invoiceID: payment.invoiceID,
+                paymentMethodID: payment.paymentMethodID
+              }
             })
+
+            if (paymentStatus.customerID && payment.invoiceID) {
+              const invoice = await context.loaders.invoicesByID.load(payment.invoiceID)
+              if (!invoice?.userID) return // no userID
+              const user = await context.dbAdapter.user.getUserByID(invoice.userID)
+              if (!user) return // no user
+              const {paymentProviderCustomers} = user
+              paymentProviderCustomers[paymentProvider.id] = {
+                id: paymentStatus.customerID,
+                createdAt: new Date()
+              }
+              await context.dbAdapter.user.updatePaymentProviderCustomers({
+                userID: user.id,
+                paymentProviderCustomers
+              })
+            }
           }
         } catch (exception) {
           console.warn('Exception during payment update from webhook', exception)

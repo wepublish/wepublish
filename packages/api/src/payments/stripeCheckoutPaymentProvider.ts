@@ -1,18 +1,35 @@
 import {
   BasePaymentProvider,
   CheckIntentProps,
-  CreateIntentProps,
-  IntentArgs,
+  CreatePaymentIntentProps,
+  Intent,
+  IntentState,
   PaymentProviderProps,
-  IntentStatus,
-  WebhookUpdatesProps,
-  GetInvoiceIDFromWebhookProps
+  WebhookForPaymentIntentProps
 } from './paymentProvider'
 import Stripe from 'stripe'
+import {PaymentState} from '../db/payment'
 
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
   secretKey: string
   webhookEndpointSecret: string
+}
+
+function mapStripeCheckoutEventToPaymentStatue(event: string): PaymentState | null {
+  switch (event) {
+    case 'requires_payment_method':
+    case 'requires_confirmation':
+    case 'requires_action':
+      return PaymentState.RequiresUserAction
+    case 'processing':
+      return PaymentState.Processing
+    case 'succeeded':
+      return PaymentState.Payed
+    case 'canceled':
+      return PaymentState.Canceled
+    default:
+      return null
+  }
 }
 
 export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
@@ -31,42 +48,33 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
 
-  getInvoiceIDFromWebhook(props: GetInvoiceIDFromWebhookProps): string {
-    const signature = props.headers['stripe-signature']
-    const event = this.getWebhookEvent(props.body, signature)
-
-    const session = event.data.object as Stripe.Checkout.Session
-
-    return session.client_reference_id ?? ''
-  }
-
-  async webhookUpdate(props: WebhookUpdatesProps): Promise<IntentStatus> {
-    const signature = props.headers['stripe-signature']
-    const event = this.getWebhookEvent(props.body, signature)
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+    const signature = props.req.headers['stripe-signature'] as string
+    const event = this.getWebhookEvent(props.req.body, signature)
 
     if (!event.type.startsWith('checkout.session')) throw new Error(`Can not handle ${event.type}`)
 
     const session = event.data.object as Stripe.Checkout.Session
-
+    const intentStates: IntentState[] = []
     switch (event.type) {
       case 'checkout.session.completed': {
         const intent = await this.stripe.paymentIntents.retrieve(session.payment_intent as string)
-        return {
-          successful: intent.status === 'succeeded',
-          open: false,
-          paymentData: JSON.stringify(intent)
-        }
-      }
-      default: {
-        return {
-          successful: false,
-          open: true
+        const state = mapStripeCheckoutEventToPaymentStatue(intent.status)
+        if (state !== null && session.client_reference_id !== null) {
+          intentStates.push({
+            paymentID: session.client_reference_id,
+            paymentData: JSON.stringify(intent),
+            state
+          })
         }
       }
     }
+    return intentStates
   }
 
-  async createIntent(props: CreateIntentProps): Promise<IntentArgs> {
+  async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
+    if (!props.successURL) throw new Error('SuccessURL is not defined')
+    if (!props.failureURL) throw new Error('FailureURL is not defined')
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: props.invoice.items.map(item => ({
@@ -80,9 +88,9 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
         quantity: item.quantity
       })),
       mode: 'payment',
-      success_url: props.successURL ?? '',
-      cancel_url: props.failureURL ?? '',
-      client_reference_id: props.invoice.id,
+      success_url: props.successURL,
+      cancel_url: props.failureURL,
+      client_reference_id: props.paymentID,
       customer_email: props.invoice.mail
     })
 
@@ -93,21 +101,23 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     return {
       intentID: session.id,
       intentSecret: session.id,
-      amount: session.amount_total,
       intentData: JSON.stringify(session),
-      open: true,
-      successful: false
+      state: PaymentState.Submitted
     }
   }
 
-  async checkIntentStatus(props: CheckIntentProps): Promise<IntentStatus> {
+  async checkIntentStatus(props: CheckIntentProps): Promise<IntentState> {
     // TODO: fix this
-    const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
+    /* const intent = await this.stripe.paymentIntents.retrieve(props.payment.intentID)
 
     return {
       successful: intent.status === 'succeeded',
       open: intent.status === 'succeeded' || intent.status === 'canceled',
       paymentData: JSON.stringify(intent)
+    } */
+    return {
+      state: PaymentState.Processing,
+      paymentID: 'aasd'
     }
   }
 }

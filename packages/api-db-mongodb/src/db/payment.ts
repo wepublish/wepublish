@@ -35,10 +35,8 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
       intentID: input.intentID,
       intentSecret: input.intentSecret,
       intentData: input.intentData,
-      amount: input.amount,
       invoiceID: input.invoiceID,
-      open: input.open,
-      successful: input.successful,
+      state: input.state,
       paymentMethodID: input.paymentMethodID,
       paymentData: input.paymentData
     })
@@ -56,10 +54,8 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
           intentID: input.intentID,
           intentData: input.intentData,
           intentSecret: input.intentSecret,
-          amount: input.amount,
           invoiceID: input.invoiceID,
-          open: input.open,
-          successful: input.successful,
+          state: input.state,
           paymentMethodID: input.paymentMethodID,
           paymentData: input.paymentData
         }
