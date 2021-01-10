@@ -1844,7 +1844,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   "type": "paragraph",
                                 }
                               }
-                              key="0"
+                              key="8"
                               renderElement={[Function]}
                               renderLeaf={[Function]}
                               selection={null}
@@ -1872,7 +1872,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   <Text
                                     decorations={Array []}
                                     isLast={true}
-                                    key="1"
+                                    key="9"
                                     parent={
                                       Object {
                                         "children": Array [
@@ -1895,7 +1895,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     >
                                       <Leaf
                                         isLast={true}
-                                        key="1-0"
+                                        key="9-0"
                                         leaf={
                                           Object {
                                             "text": "",
@@ -4628,7 +4628,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   "type": "paragraph",
                                 }
                               }
-                              key="0"
+                              key="6"
                               renderElement={[Function]}
                               renderLeaf={[Function]}
                               selection={null}
@@ -4656,7 +4656,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   <Text
                                     decorations={Array []}
                                     isLast={true}
-                                    key="1"
+                                    key="7"
                                     parent={
                                       Object {
                                         "children": Array [
@@ -4679,7 +4679,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     >
                                       <Leaf
                                         isLast={true}
-                                        key="1-0"
+                                        key="7-0"
                                         leaf={
                                           Object {
                                             "text": "",
@@ -9354,7 +9354,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   "type": "paragraph",
                                 }
                               }
-                              key="0"
+                              key="4"
                               renderElement={[Function]}
                               renderLeaf={[Function]}
                               selection={null}
@@ -9382,7 +9382,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   <Text
                                     decorations={Array []}
                                     isLast={true}
-                                    key="1"
+                                    key="5"
                                     parent={
                                       Object {
                                         "children": Array [
@@ -9405,7 +9405,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     >
                                       <Leaf
                                         isLast={true}
-                                        key="1-0"
+                                        key="5-0"
                                         leaf={
                                           Object {
                                             "text": "",
