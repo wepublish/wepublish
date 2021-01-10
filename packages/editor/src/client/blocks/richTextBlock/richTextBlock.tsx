@@ -16,10 +16,6 @@ import {TableMenu} from './toolbar/tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
-export function createDefaultValue(): RichTextBlockValue {
-  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
-}
-
 export const RichTextBlock = memo(function RichTextBlock({
   value,
   autofocus,
@@ -122,3 +118,7 @@ export const RichTextBlock = memo(function RichTextBlock({
     </Slate>
   )
 })
+
+export function createDefaultValue(): RichTextBlockValue {
+  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+}
