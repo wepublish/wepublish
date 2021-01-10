@@ -39,7 +39,7 @@ pTest(
       normalizedData: emptyCellsTable(1, 1)
     },
     {
-      name: 'should return fixed tables given multiple invalid table parts',
+      name: 'should return merged fixed tables given multiple invalid table parts',
       entryData: [
         {
           type: BlockFormat.Table,
@@ -51,7 +51,7 @@ pTest(
           children: [emptyTextParagraph()]
         }
       ],
-      normalizedData: [...emptyCellsTable(1, 1), ...emptyCellsTable(1, 1)]
+      normalizedData: emptyCellsTable(2, 1)
     },
     {
       name: 'should add borderColor to tableCell if missing',

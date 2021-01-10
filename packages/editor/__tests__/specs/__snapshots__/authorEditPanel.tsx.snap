@@ -1743,7 +1743,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                       </Toolbar>
                       <Editable
                         onBlur={[Function]}
-                        onFocus={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -4623,7 +4622,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                       </Toolbar>
                       <Editable
                         onBlur={[Function]}
-                        onFocus={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -7081,7 +7079,6 @@ exports[`Author Edit Panel should render 1`] = `
                       </Toolbar>
                       <Editable
                         onBlur={[Function]}
-                        onFocus={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
@@ -9541,7 +9538,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </Toolbar>
                       <Editable
                         onBlur={[Function]}
-                        onFocus={[Function]}
                         placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
