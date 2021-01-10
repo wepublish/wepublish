@@ -34,6 +34,16 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
+  for (const [node] of SlateNode.texts(editor)) {
+    if (SlateNode.isNode(node) && node.text === '') {
+      // FIX for firefox focus problem
+      editor.insertText(' ')
+    }
+    // only check first text node  textcolor: #cad5e4
+
+    return
+  }
+
   const focusAtPreviousLocation = (location: Location) => {
     Transforms.select(editor, location)
     ReactEditor.focus(editor)
@@ -96,29 +106,11 @@ export const RichTextBlock = memo(function RichTextBlock({
       </Toolbar>
       <Editable
         readOnly={disabled}
-        placeholder={t('blocks.richText.startWriting')}
+        // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
-          for (const [node] of SlateNode.texts(editor)) {
-            if (SlateNode.isNode(node) && node.text === '') {
-              // FIX for firefox focus problem
-              editor.insertText(' ')
-            }
-            // only check first text node
-            return
-          }
-        }}
-        onFocus={() => {
-          for (const [node, path] of SlateNode.texts(editor)) {
-            if (SlateNode.isNode(node) && node.text === ' ') {
-              // FIX for firefox focus problem
-              Transforms.delete(editor, {at: path})
-            }
-            // only check first text node
-            return
-          }
         }}
       />
     </Slate>
