@@ -96,43 +96,6 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 }
 
-/* async function updatePayment(
-  payment: Payment,
-  paymentStatus: IntentState,
-  dbAdapter: DBAdapter
-): Promise<Payment> {
-  const {successful, open, paymentData} = paymentStatus
-  const updatedPayment = await dbAdapter.payment.updatePayment({
-    id: payment.id,
-    input: {
-      intentID: payment.intentID,
-      intentSecret: payment.intentSecret,
-      amount: payment.amount,
-      invoiceID: payment.invoiceID,
-      intentData: payment.intentData,
-      open: open,
-      successful: successful,
-      paymentMethodID: payment.paymentMethodID,
-      paymentData: paymentData || payment.paymentData
-    }
-  })
-
-  if (!updatedPayment) {
-    throw new Error('Error updating payment')
-  }
-
-  if (
-    updatedPayment &&
-    !updatedPayment.open &&
-    updatedPayment?.successful &&
-    updatedPayment.invoiceID
-  ) {
-    // TODO: mark invoice as payed
-  }
-
-  return updatedPayment
-} */
-
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders} = opts
   const paymentProviderWebhookRouter = Router()
