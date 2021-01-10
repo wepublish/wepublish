@@ -16,6 +16,8 @@ import {TableMenu} from './toolbar/tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
+const initEditorState: RichTextBlockValue = [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+
 export const RichTextBlock = memo(function RichTextBlock({
   value,
   autofocus,
@@ -25,6 +27,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   const editor = useMemo(() => withTable(withRichText(withHistory(withReact(createEditor())))), [])
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
+  const [isEmpty, setIsEmpty] = useState(true)
 
   const {t} = useTranslation()
 
@@ -33,16 +36,6 @@ export const RichTextBlock = memo(function RichTextBlock({
       ReactEditor.focus(editor)
     }
   }, [])
-
-  for (const [node] of SlateNode.texts(editor)) {
-    if (SlateNode.isNode(node) && node.text === '') {
-      // FIX for firefox focus problem
-      editor.insertText(' ')
-    }
-    // only check first text node  textcolor: #cad5e4
-
-    return
-  }
 
   const focusAtPreviousLocation = (location: Location) => {
     Transforms.select(editor, location)
@@ -55,7 +48,10 @@ export const RichTextBlock = memo(function RichTextBlock({
       value={value}
       onChange={(newValue: SlateNode[]) => {
         setFocus(ReactEditor.isFocused(editor))
-        if (value !== newValue) onChange(newValue)
+        if (value !== newValue) {
+          onChange(newValue)
+          setIsEmpty(false)
+        }
       }}>
       <Toolbar
         fadeOut={!hasFocus}
@@ -104,6 +100,11 @@ export const RichTextBlock = memo(function RichTextBlock({
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </EditorSubMenuButton>
       </Toolbar>
+      {isEmpty && (
+        <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+          {t('blocks.richText.startWriting')}
+        </div>
+      )}
       <Editable
         readOnly={disabled}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
@@ -111,6 +112,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
+          setIsEmpty(
+            JSON.stringify(Array.from(editor.children)) === JSON.stringify(initEditorState)
+          )
         }}
       />
     </Slate>
@@ -118,5 +122,5 @@ export const RichTextBlock = memo(function RichTextBlock({
 })
 
 export function createDefaultValue(): RichTextBlockValue {
-  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+  return initEditorState
 }
