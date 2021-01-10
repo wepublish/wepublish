@@ -19,6 +19,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
         // order of corrections is important !
 
         case BlockFormat.TableCell:
+          // if (ensureChildType(BlockFormat.Paragraph)) return TODO
           if (ensureParentType(BlockFormat.TableRow)) return
           if (ensureHasBorderColor()) return
           break
@@ -31,6 +32,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
         case BlockFormat.Table:
           if (ensureChildType(BlockFormat.TableRow)) return
+          if (mergeAdjacent()) return // needed when copy pasting tables
           if (ensureSubseedingParagraph()) return
           // mergeAdjacentTables()
           break
@@ -82,6 +84,18 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
       )
     }
 
+    function mergeAdjacent() {
+      const pathOfPreceding: Path = [path[0] + 1]
+      const precedingNode = SlateNode.has(editor, pathOfPreceding)
+        ? SlateNode.get(editor, pathOfPreceding)
+        : null
+      if (SlateElement.isElement(precedingNode) && precedingNode.type === node.type) {
+        Transforms.mergeNodes(editor, {at: pathOfPreceding})
+        return true
+      }
+      return false
+    }
+
     function ensureSubseedingParagraph() {
       // Ensure Table is followed by paragraph at bottom for flawless continuation
       const pathOfSubsequent: Path = [path[0] + 1]
@@ -105,6 +119,21 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
     // Fall back to the original `normalizeNode` to enforce builtin constraints.
     normalizeNode(entry)
   }
+
+  // function ensureTableCellOneOfTypes(
+  //   types: [BlockFormat],
+  //   extraWrapperAttrs: {[key: string]: any} = {}
+  // ) {
+  //   if (SlateElement.isElement(node)) {
+  //     for (const [child, childPath] of SlateNode.children(editor, path)) {
+  //       if (!SlateElement.isElement(child) || types.indexOf(child.type as BlockFormat) < 0) {
+  //         wrapAllChildren(BlockFormat.Paragraph, [child, childPath], extraWrapperAttrs)
+  //         return true
+  //       }
+  //     }
+  //   }
+  //   return false
+  // }
 
   // const ensurePreceeding....
   // Type of previous Sibling node on top
