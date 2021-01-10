@@ -7,6 +7,7 @@ import {
   Author,
   Oauth2Provider,
   MailgunMailProvider,
+  // MailchimpMailProvider, // left here intentionally for testing
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   PayrexxPaymentProvider
@@ -145,9 +146,22 @@ async function asyncMain() {
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
-      apiKey: process.env.MAILGUN_API_KEY
+      apiKey: process.env.MAILGUN_API_KEY,
+      incomingRequestHandler: bodyParser.json()
     })
   }
+  // left here intentionally for testing
+  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+    mailProvider = new MailchimpMailProvider({
+      id: 'mailchimp',
+      name: 'Mailchimp',
+      fromAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
+      apiKey: process.env.MAILCHIMP_API_KEY,
+      baseURL: '',
+      incomingRequestHandler: bodyParser.urlencoded({extended: true})
+    })
+  } */
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
