@@ -16,7 +16,9 @@ import {TableMenu} from './toolbar/tableMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
-const initEditorState: RichTextBlockValue = [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+export function createDefaultValue(): RichTextBlockValue {
+  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value,
@@ -113,14 +115,10 @@ export const RichTextBlock = memo(function RichTextBlock({
         onBlur={() => {
           setLocation(editor.selection)
           setIsEmpty(
-            JSON.stringify(Array.from(editor.children)) === JSON.stringify(initEditorState)
+            JSON.stringify(Array.from(editor.children)) === JSON.stringify(createDefaultValue())
           )
         }}
       />
     </Slate>
   )
 })
-
-export function createDefaultValue(): RichTextBlockValue {
-  return initEditorState
-}
