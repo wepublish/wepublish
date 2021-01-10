@@ -46,8 +46,18 @@ class ExampleURLAdapter implements URLAdapter {
 async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
+
   if (!process.env.STRIPE_SECRET_KEY)
     throw new Error('No STRIPE_SECRET_KEY defined in environment.')
+  if (!process.env.STRIPE_WEBHOOK_SECRET)
+    throw new Error('No STRIPE_WEBHOOK_SECRET defined in environment')
+  if (!process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET)
+    throw new Error('No STRIPE_CHECKOUT_WEBHOOK_SECRET defined in environment')
+
+  if (!process.env.PAYREXX_INSTANCE_NAME)
+    throw new Error('No PAYREXX_INSTANCE_NAME defined in environment')
+  if (!process.env.PAYREXX_API_SECRET)
+    throw new Error('No PAYREXX_API_SECRET defined in environment')
 
   const hostURL = process.env.HOST_URL
   const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
@@ -154,7 +164,7 @@ async function asyncMain() {
       name: 'Stripe Checkout',
       offSessionPayments: false,
       secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A',
+      webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
       incomingRequestHandler: bodyParser.raw({type: 'application/json'})
     }),
     new StripePaymentProvider({
@@ -162,15 +172,15 @@ async function asyncMain() {
       name: 'Stripe',
       offSessionPayments: true,
       secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: 'whsec_XRpbPckio2icvxMobXGdQ1l7kFG8gk5A',
+      webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
       incomingRequestHandler: bodyParser.raw({type: 'application/json'})
     }),
     new PayrexxPaymentProvider({
       id: 'payrexx',
       name: 'Payrexx',
       offSessionPayments: false,
-      instanceName: 'tsridev',
-      instanceAPISecret: 'KHwwzMkl7Igd40lVSjMDhf7PVecQYH',
+      instanceName: process.env.PAYREXX_INSTANCE_NAME,
+      instanceAPISecret: process.env.PAYREXX_API_SECRET,
       psp: [0, 15, 17, 2, 3, 36],
       pm: [
         'postfinance_card',

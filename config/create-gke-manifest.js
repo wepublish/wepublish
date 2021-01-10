@@ -671,7 +671,47 @@ async function applyApiServer() {
                       key: 'jwt_secret_key'
                     }
                   }
-                }
+                },
+                {
+                  name: 'STRIPE_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_secret_key'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_CHECKOUT_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_checkout_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'PAYREXX_INSTANCE_NAME',
+                  value: 'tsridev'
+                },
+                {
+                  name: 'PAYREXX_API_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'payrexx_api_secret'
+                    }
+                  }
+                },
               ],
               ports: [
                 {
