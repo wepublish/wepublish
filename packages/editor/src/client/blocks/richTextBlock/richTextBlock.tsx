@@ -98,7 +98,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </EditorSubMenuButton>
       </Toolbar>
-      {isEmpty && (
+      {isEmpty && ( // Alternative placeholder
         <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
           {t('blocks.richText.startWriting')}
         </div>
