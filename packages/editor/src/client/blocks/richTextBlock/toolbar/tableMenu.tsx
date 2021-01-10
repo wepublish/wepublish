@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, InputGroup, InputNumber} from 'rsuite'
-import {Editor, Transforms, Element as SlateElement} from 'slate'
+import {Editor, Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {isFormatActive} from '../editor/utils'
