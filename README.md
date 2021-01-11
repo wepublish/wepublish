@@ -10,6 +10,10 @@
 *** github_username, repo_name, twitter_handle, email
 -->
 
+
+
+
+
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -18,13 +22,15 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-
 [![CI][cicd-shield]][cicd-url]
 [![GitHub tag (latest by date)][tag-shield]][tag-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+
+
+
 
 <!-- PROJECT LOGO -->
 <br />
@@ -49,26 +55,28 @@
   </p>
 </p>
 
-<!-- TABLE OF CONTENTS -->
 
+
+<!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-- [About the Project](#about-the-project)
-  - [Built With](#built-with)
-- [Demo](#demo)
-- [Packages](#packages)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [License](#license)
-- [Contact](#contact)
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Demo](#demo)
+* [Packages](#packages)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Troubleshooting](#troubleshooting)
+* [Contributing](#contributing)
+* [Code of Conduct](#code-of-conduct)
+* [License](#license)
+* [Contact](#contact)
+
+
 
 <!-- ABOUT THE PROJECT -->
-
 ## About The Project
 
 <!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
@@ -77,14 +85,14 @@ TBD
 
 ### Built With
 
-- [Node.js](https://nodejs.org/)
-- [GraphQL](https://graphql.org/)
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [:green_heart:]()
+* [Node.js](https://nodejs.org/)
+* [GraphQL](https://graphql.org/)
+* [React](https://reactjs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [:green_heart:]()
+
 
 ## Demo
-
 - [Editor](https://editor.demo.wepublish.media)
   - username: `dev@wepublish.ch`
   - password: `123`
@@ -102,43 +110,35 @@ TBD
 - [@wepublish/oauth2](./packages/oauth2)
 
 <!-- GETTING STARTED -->
-
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-- [Node v12.x.x][node-download-url]
-- [Yarn v1.17.x][yarn-download-url]
-- [Docker v19.x.x][docker-download-url]
+
+* [Node v12.x.x][node-download-url]
+* [Yarn v1.17.x][yarn-download-url]
+* [Docker v19.x.x][docker-download-url]
 
 ### Installation
 
 1. Clone the repo
-
 ```sh
 git clone https://github.com/wepublish/wepublish.git
 ```
-
 2. Install NPM packages
-
 ```sh
 yarn install
 ```
-
 3. Setup and build project. The setup command will create the necessary `.env` files.
-
 ```sh
 yarn setup && yarn build
 ```
-
 4. Run the project (starts a mongoDB with Docker)
-
 ```sh
 yarn dev
 ```
-
 If you rather wish to run docker-compose separately you can just watch the packages via:
 
 ```
@@ -151,14 +151,7 @@ Or if you want to watch only certain packages:
 yarn run-p watch:api watch:api-example watch:editor
 ```
 
-## Technologies used:
-
-### API:
-
-- Node.js, GraphQl
-
 <!-- USAGE EXAMPLES -->
-
 ## Usage
 
 - **API:** [http://localhost:4000](http://localhost:4000)
@@ -167,8 +160,8 @@ yarn run-p watch:api watch:api-example watch:editor
 - **Webpack Dev Server:** [http://localhost:3001](http://localhost:3001)
 - **MongoDB:** [http://localhost:27017](http://localhost:27017)
 
-<!-- CONTRIBUTING -->
 
+<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -186,37 +179,40 @@ A good place to start is with an issue that has the label [good first issue](htt
 
 - Then import them in `/api/index/`
 
-## Code of Conduct
 
-We.publish is dedicated to building a welcoming, diverse, safe community.
-We expect everyone participating in the we.publish community to abide by our [Code of Conduct][code-of-conduct-url].
-Please read it. Please follow it.
+## Code of Conduct
+We.publish is dedicated to building a welcoming, diverse, safe community. 
+We expect everyone participating in the we.publish community to abide by our [Code of Conduct][code-of-conduct-url]. 
+Please read it. Please follow it. 
 
 <!-- FAQ -->
-
 ## Troubleshooting
 
 If you encounter problems you can check our [FAQ][faq-md-url] or write us [dev@wepublish.ch](mailto:dev@wepublish.ch).
 
-<!-- LICENSE -->
 
+<!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-<!-- CONTACT -->
 
+
+<!-- CONTACT -->
 ## Contact
 
 We.Publish - [@WePublish_media](https://twitter.com/WePublish_media) - [dev@wepublish.ch](mailto:dev@wepublish.ch)
 
 Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 
+
+
 <!-- ACKNOWLEDGEMENTS -->
+
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
 [cicd-shield]: https://github.com/wepublish/wepublish/workflows/CI%2FCD/badge.svg
 [cicd-url]: https://github.com/wepublish/wepublish/actions?query=workflow%3ACI%2FCD
 [tag-shield]: https://img.shields.io/github/v/tag/wepublish/wepublish?style=flat
