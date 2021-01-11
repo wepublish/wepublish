@@ -15,7 +15,8 @@ import {
   CommentItemType,
   CommentRejectionReason,
   CommentRevision,
-  CommentStatus
+  CommentStatus,
+  PublicComment
 } from '../db/comment'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
@@ -123,8 +124,11 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
   }
 })
 
-export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
-  name: 'Comment',
+export const GraphQLPublicComment: GraphQLObjectType<
+  PublicComment,
+  Context
+> = new GraphQLObjectType<PublicComment, Context>({
+  name: 'PublicComment',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 

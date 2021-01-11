@@ -1,4 +1,5 @@
 import {ArticleBlock} from './block'
+import {OptionalPublicComment} from './comment'
 import {SortOrder, Limit, InputCursor, ConnectionResult, MetadataProperty} from './common'
 
 export interface ArticleData {
@@ -23,7 +24,7 @@ export interface ArticleData {
   readonly socialMediaAuthorIDs: string[]
   readonly socialMediaImageID?: string
 
-  readonly commentIDs: string[]
+  readonly comments: OptionalPublicComment[]
 }
 
 // Article State Flow:

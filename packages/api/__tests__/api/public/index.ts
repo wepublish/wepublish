@@ -38,6 +38,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<PublicComment>
 }
 
 export type ArticleConnection = {
@@ -128,6 +129,57 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  userID: Scalars['ID']
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  revisions: Array<CommentRevision>
+  parentID?: Maybe<Scalars['ID']>
+  status: CommentStatus
+  rejectionReason?: Maybe<CommentRejectionReason>
+  authorType: CommentAuthorType
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  text: Scalars['RichText']
+  createdAt: Scalars['DateTime']
+}
+
+export enum CommentStatus {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
+}
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
@@ -369,6 +421,17 @@ export type Point = {
   y: Scalars['Float']
 }
 
+export type PublicComment = {
+  __typename?: 'PublicComment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  userID: Scalars['ID']
+  revisions: Array<CommentRevision>
+  parentID?: Maybe<Scalars['ID']>
+  authorType: CommentAuthorType
+}
+
 export type PublicProperties = {
   __typename?: 'PublicProperties'
   key: Scalars['String']
@@ -396,6 +459,7 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  comments: CommentConnection
 }
 
 export type QueryPeerArgs = {
@@ -456,6 +520,10 @@ export type QueryPagesArgs = {
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryCommentsArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>
 }
 
 export type QuoteBlock = {

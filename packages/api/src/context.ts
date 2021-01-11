@@ -36,7 +36,7 @@ import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
-// import {OptionalPublicComment} from './db/comment'
+import {OptionalPublicComment} from './db/comment'
 
 // TODO: what's the usage of the DataLoaderContext?
 export interface DataLoaderContext {
@@ -46,7 +46,7 @@ export interface DataLoaderContext {
   readonly authorsByID: DataLoader<string, OptionalAuthor>
   readonly authorsBySlug: DataLoader<string, OptionalAuthor>
 
-  // readonly publicComments: DataLoader<string, OptionalPublicComment>
+  readonly publicComments: DataLoader<string, OptionalPublicComment>
 
   readonly images: DataLoader<string, OptionalImage>
 
@@ -182,7 +182,7 @@ export async function contextFromRequest(
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-      // publicComments: new DataLoader(ids => dbAdapter.comment.getPublicComments(ids)),
+      publicComments: new DataLoader(ids => dbAdapter.comment.getPublicComments(ids)),
 
       articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
       publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),

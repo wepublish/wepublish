@@ -3,7 +3,8 @@ import {
   CreateCommentArgs,
   Comment,
   GetCommentsArgs,
-  ConnectionResult
+  ConnectionResult,
+  CommentStatus
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery} from 'mongodb'
@@ -67,24 +68,22 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  // async getPublicComments(ids: readonly string[]): Promise<ConnectionResult<Comment>> {
-  //   console.log(ids)
+  async getPublicComments(ids: readonly string[]): Promise<Comment[]> {
+    const [comments] = await Promise.all([
+      // TODO: add count
+      // TODO: add sort revisions' array by createdAt
+      this.comments
+        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .match({
+          $and: [{itemID: ids[0]}, {status: CommentStatus.Approved}]
+        })
+        .toArray()
+    ])
 
-  //   const [totalCount, comments] = await Promise.all([
-  //     this.comments.countDocuments(), // MongoCountPreferences doesn't include collation
-
-  //     this.comments.aggregate([], {collation: {locale: this.locale, strength: 2}}).toArray()
-  //   ])
-
-  //   return {
-  //     nodes: comments.map<Comment>(({_id: id, ...comment}) => ({id, ...comment})),
-  //     pageInfo: {
-  //       startCursor: '',
-  //       endCursor: '',
-  //       hasNextPage: true,
-  //       hasPreviousPage: false
-  //     },
-  //     totalCount: totalCount
-  //   }
-  // }
+    return comments.map<Comment>(({_id: id, revisions, ...comment}) => ({
+      id,
+      revisions: [revisions[revisions.length - 1]],
+      ...comment
+    }))
+  }
 }

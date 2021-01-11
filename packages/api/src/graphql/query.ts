@@ -841,14 +841,15 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLPublicArticle,
       args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
+      async resolve(root, {id}, {session, loaders, dbAdapter}) {
         const article = await loaders.publicArticles.load(id)
+        const articleComments = await dbAdapter.comment.getPublicComments([id])
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
 
-        return article
+        return {...article, comments: articleComments}
       }
     },
 
@@ -954,7 +955,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     //   args: {
     //     ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
     //   },
-    //   resolve(root, {ids}, {authenticate, dbAdapter}) {
+    //   resolve(root, { ids }, { authenticate, dbAdapter }) {
     //     const {roles} = authenticate()
 
     //     const canGetComments = isAuthorised(CanGetComments, roles)

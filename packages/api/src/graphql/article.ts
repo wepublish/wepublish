@@ -28,6 +28,7 @@ import {
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
+import {GraphQLPublicComment} from './comment'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -285,7 +286,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+
+    comments: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment)))}
   }
 })
 
