@@ -117,6 +117,44 @@ Object {
 }
 `;
 
+exports[`Articles can be created/edited/deleted: can be read by id - published 1`] = `
+Object {
+  "data": Object {
+    "article": Object {
+      "authors": Array [],
+      "blocks": Array [],
+      "breaking": true,
+      "id": Any<String>,
+      "image": null,
+      "lead": "This article will rock your world. Never has there been a better article",
+      "preTitle": "Testing GraphQL",
+      "properties": Array [
+        Object {
+          "key": "testingKey",
+          "value": "testingValue",
+        },
+      ],
+      "publishedAt": "2020-11-25T23:55:35.000Z",
+      "slug": "my-super-seo-slug-for-the-best-article",
+      "tags": Array [
+        "testing",
+        "awesome",
+      ],
+      "title": "This is the best test article",
+      "updatedAt": "2020-11-25T23:55:35.000Z",
+      "url": Any<String>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Articles can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
@@ -159,6 +197,44 @@ Object {
       "pending": null,
       "published": null,
       "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can be read in list - published 1`] = `
+Object {
+  "data": Object {
+    "articles": Object {
+      "nodes": Array [
+        Object {
+          "id": Any<String>,
+          "image": null,
+          "lead": "This article will rock your world. Never has there been a better article",
+          "preTitle": "Testing GraphQL",
+          "publishedAt": "2020-11-25T23:55:35.000Z",
+          "tags": Array [
+            "testing",
+            "awesome",
+          ],
+          "title": "This is the best test article",
+          "updatedAt": "2020-11-25T23:55:35.000Z",
+        },
+      ],
+      "pageInfo": Object {
+        "endCursor": Any<String>,
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": Any<String>,
+      },
+      "totalCount": 1,
     },
   },
   "errors": undefined,

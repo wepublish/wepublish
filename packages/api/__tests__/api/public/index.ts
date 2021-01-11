@@ -446,6 +446,14 @@ export type RichTextBlock = {
   richText: Scalars['RichText']
 }
 
+export type SessionWithToken = {
+  __typename?: 'SessionWithToken'
+  user: User
+  token: Scalars['String']
+  createdAt: Scalars['DateTime']
+  expiresAt: Scalars['DateTime']
+}
+
 export enum SortOrder {
   Ascending = 'ASCENDING',
   Descending = 'DESCENDING'
@@ -480,6 +488,13 @@ export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock'
   userID: Scalars['String']
   tweetID: Scalars['String']
+}
+
+export type User = {
+  __typename?: 'User'
+  id: Scalars['String']
+  name: Scalars['String']
+  email: Scalars['String']
 }
 
 export type VimeoVideoBlock = {

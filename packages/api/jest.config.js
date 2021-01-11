@@ -13,7 +13,7 @@ module.exports = {
   setupFilesAfterEnv: ['./__tests__/setup.ts'],
   verbose: true,
   testURL: 'http://localhost/',
-  coveragePathIgnorePatterns: ['node_modules', 'verion.ts'],
+  coveragePathIgnorePatterns: ['node_modules', '/__tests__/', '/lib/'],
   coverageDirectory: '__tests__/coverage',
   coverageThreshold: {
     global: {

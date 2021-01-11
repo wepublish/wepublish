@@ -544,6 +544,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID']
   password: Scalars['String']
+  sendMail?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationDeleteUserArgs = {
@@ -1160,7 +1161,7 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
-  roles: Array<Maybe<UserRole>>
+  roles: Array<UserRole>
 }
 
 export type UserConnection = {
@@ -1451,7 +1452,8 @@ export type AuthorListQuery = {__typename?: 'Query'} & {
 }
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type AuthorQuery = {__typename?: 'Query'} & {
@@ -1916,7 +1918,7 @@ export type DeletePeerMutationVariables = Exact<{
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
 export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
-    roles: Array<Maybe<{__typename?: 'UserRole'} & FullUserRoleFragment>>
+    roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
   }
 
 export type UserListQueryVariables = Exact<{
@@ -2606,8 +2608,8 @@ export const AuthorList = gql`
   ${FullAuthor}
 `
 export const Author = gql`
-  query Author($id: ID!) {
-    author(id: $id) {
+  query Author($id: ID, $slug: Slug) {
+    author(id: $id, slug: $slug) {
       ...FullAuthor
     }
   }

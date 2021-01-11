@@ -11,6 +11,7 @@ import {
   PublishArticle,
   UnpublishArticle
 } from '../api/private'
+import {Article as PublicArticle, ArticleList as ArticleListPublic} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -143,6 +144,64 @@ describe('Articles', () => {
         data: {
           article: {
             id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be read by id - published', async () => {
+      //publish article
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishArticle,
+        variables: {
+          id: articleIds[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      //read published
+      const {query} = testClientPublic
+      const article = await query({
+        query: PublicArticle,
+        variables: {
+          id: articleIds[0]
+        }
+      })
+
+      expect(article).toMatchSnapshot({
+        data: {
+          article: {
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+      expect(article.data?.article.id).toBe(articleIds[0])
+      expect(article.data?.article.url).toContain(articleIds[0])
+    })
+
+    test('can be read in list - published', async () => {
+      const {query} = testClientPublic
+      const articles = await query({
+        query: ArticleListPublic,
+        variables: {
+          first: 100
+        }
+      })
+      expect(articles).toMatchSnapshot({
+        data: {
+          articles: {
+            nodes: [
+              {
+                id: expect.any(String)
+              }
+            ],
+            pageInfo: {
+              endCursor: expect.any(String),
+              startCursor: expect.any(String)
+            }
           }
         }
       })

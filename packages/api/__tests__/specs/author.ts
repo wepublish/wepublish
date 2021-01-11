@@ -152,6 +152,25 @@ describe('Authors', () => {
           }
         }
       })
+      expect(res.data?.author.id).toBe(authorIds[0])
+    })
+
+    test('can be read by slug', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: Author,
+        variables: {
+          slug: 'john-grisham'
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          author: {
+            id: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.author.slug).toBe('john-grisham')
     })
 
     test('can be updated', async () => {
@@ -190,6 +209,22 @@ describe('Authors', () => {
         }
       })
       authorIds.shift()
+    })
+
+    test('should require either slug or ID to read', async () => {
+      const {query} = testClientPrivate
+
+      let res = await query({query: Author})
+      expect(res).toMatchSnapshot()
+
+      res = await query({
+        query: Author,
+        variables: {
+          id: authorIds[0],
+          slug: 'john-grisham'
+        }
+      })
+      expect(res).toMatchSnapshot()
     })
   })
 })
