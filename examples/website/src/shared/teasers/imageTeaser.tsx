@@ -1,11 +1,11 @@
 import React from 'react'
 import {cssRule, useStyle} from '@karma.run/react'
-import {Peer, ImageData, Author} from '../types'
+import {Peer} from '../types'
 
 import {Image, ImageFit} from '../atoms/image'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
-
+import {ImageData, Author} from '../types'
 import {getHumanReadableTimePassed} from '../utility'
 import {pxToRem, hexToRgb, whenTablet} from '../style/helpers'
 import {
@@ -125,7 +125,7 @@ export function ImageTeaser({
   lead,
   route,
   preTitle
-}: LightTeaserProps): JSX.Element {
+}: LightTeaserProps) {
   const css = useStyle({isSingle})
   return (
     <div className={css(ImageTeaserStyle)}>
@@ -133,12 +133,8 @@ export function ImageTeaser({
       <Link route={route}>
         <div className={css(ImageTeaserImageStyle)}>
           <Image
-            src={
-              image?.format === 'gif'
-                ? image?.url
-                : image?.largeURL || 'https://via.placeholder.com/240x240'
-            }
-            alt={image?.description || image?.caption}
+            src={image.format === 'gif' ? image.url : image.largeURL}
+            alt={image.description || image.caption}
             fit={ImageFit.Cover}
           />
         </div>
