@@ -5,8 +5,7 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLList,
-  GraphQLInt,
-  GraphQLString
+  GraphQLInt
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
@@ -20,6 +19,7 @@ import {
 } from '../db/comment'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
+
 export const GraphQLCommentStatus = new GraphQLEnumType({
   name: 'CommentStatus',
   values: {
@@ -58,7 +58,6 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
 export const GraphQLCommentFilter = new GraphQLInputObjectType({
   name: 'CommentFilter',
   fields: {
-    title: {type: GraphQLString},
     status: {type: GraphQLCommentStatus}
   }
 })

@@ -68,7 +68,6 @@ export interface CreateCommentArgs {
 }
 
 export interface CommentFilterOptions {
-  readonly title?: string
   readonly status?: CommentStatus
 }
 
