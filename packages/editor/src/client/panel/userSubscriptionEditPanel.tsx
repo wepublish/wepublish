@@ -54,10 +54,10 @@ export function UserSubscriptionEditPanel({
   )
 
   const [payedUntil /* setPayedUntil */] = useState(
-    subscription ? new Date(subscription.payedUntil) : new Date()
+    subscription?.payedUntil ? new Date(subscription.payedUntil) : null
   )
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod ?? 'CC') // TODO: find smart default
+  const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod)
   const [deactivatedAt, setDeactivatedAt] = useState(
     subscription?.deactivatedAt ? new Date(subscription.deactivatedAt) : null
   )
@@ -115,18 +115,20 @@ export function UserSubscriptionEditPanel({
 
   async function handleSave() {
     if (!memberPlan) return
+    if (!paymentMethod) return
+    // TODO: show error
 
     const {data} = await updateUserSubscription({
       variables: {
         userID,
         input: {
-          memberPlanId: memberPlan.id,
+          memberPlanID: memberPlan.id,
           monthlyAmount,
           paymentPeriodicity,
           autoRenew,
           startsAt: startsAt.toISOString(),
-          payedUntil: payedUntil.toISOString(),
-          paymentMethod,
+          payedUntil: payedUntil ? payedUntil.toISOString() : null,
+          paymentMethodID: paymentMethod.id,
           deactivatedAt: deactivatedAt ? deactivatedAt.toISOString() : null
         }
       }
@@ -202,18 +204,24 @@ export function UserSubscriptionEditPanel({
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
-              <DatePicker block value={payedUntil} disabled={true /* TODO fix this */} />
+              <DatePicker
+                block
+                value={payedUntil ?? undefined}
+                disabled={true /* TODO fix this */}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
               <SelectPicker
                 block
+                disabled={isDisabled || hasNoMemberPlanSelected}
                 data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                value={paymentMethod}
-                onChange={value => setPaymentMethod(value)}
+                value={subscription?.paymentMethod.id}
+                onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
               />
             </FormGroup>
             {/* TODO Payment Method */}
+
             <FormGroup>
               <ControlLabel>{t('userSubscriptionEdit.deactivatedAt')}</ControlLabel>
               <DatePicker

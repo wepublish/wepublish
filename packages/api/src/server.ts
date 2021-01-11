@@ -9,6 +9,7 @@ import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paym
 import {capitalizeFirstLetter} from './utility'
 
 import {methodsToProxy} from './events'
+import {runJob} from './jobs'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -18,10 +19,11 @@ export interface WepublishServerOpts extends ContextOptions {
 
 export class WepublishServer {
   private readonly app: Application
+  private readonly opts: WepublishServerOpts
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
-
+    this.opts = opts
     const {dbAdapter} = opts
 
     methodsToProxy.forEach(mtp => {
@@ -105,5 +107,15 @@ export class WepublishServer {
 
   async listen(port?: number, hostname?: string): Promise<void> {
     this.app.listen(port ?? 4000, hostname ?? 'localhost')
+  }
+
+  async runJob(command: string): Promise<void> {
+    try {
+      const context = await contextFromRequest(null, this.opts)
+      await runJob('dailyMembershipRenewal', context)
+    } catch (error) {
+      // TODO: error handling
+      console.warn(`Error while running Job: ${command}`, error)
+    }
   }
 }

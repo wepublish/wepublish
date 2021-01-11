@@ -239,6 +239,19 @@ export type CreatePeerInput = {
   token: Scalars['String'];
 };
 
+export type DateFilter = {
+  date?: Maybe<Scalars['DateTime']>;
+  comparison: DateFilterComparison;
+};
+
+export enum DateFilterComparison {
+  Greater = 'GREATER',
+  GreaterOrEqual = 'GREATER_OR_EQUAL',
+  Equal = 'EQUAL',
+  Lower = 'LOWER',
+  LowerOrEqual = 'LOWER_OR_EQUAL'
+}
+
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
@@ -1548,6 +1561,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>;
+  subscription?: Maybe<UserSubscriptionFilter>;
 };
 
 export type UserInput = {
@@ -1599,19 +1613,26 @@ export type UserSubscription = {
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
+  payedUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethod: PaymentMethod;
   deactivatedAt?: Maybe<Scalars['DateTime']>;
 };
 
+export type UserSubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  payedUntil?: Maybe<DateFilter>;
+  deactivatedAt?: Maybe<DateFilter>;
+  autoRenew?: Maybe<Scalars['Boolean']>;
+};
+
 export type UserSubscriptionInput = {
-  memberPlanId: Scalars['String'];
+  memberPlanID: Scalars['String'];
   paymentPeriodicity: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
+  payedUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
   deactivatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -2923,10 +2944,13 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'paymentMethod' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'deactivatedAt'>
   & { memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
+  ), paymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
   ) }
 );
 
@@ -3598,10 +3622,13 @@ export const FullUserSubscriptionFragmentDoc = gql`
   autoRenew
   startsAt
   payedUntil
-  paymentMethod
+  paymentMethod {
+    ...FullPaymentMethod
+  }
   deactivatedAt
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullPaymentMethodFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id

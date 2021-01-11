@@ -27,6 +27,7 @@ import {DBUser, CollectionName} from './schema'
 import {MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -199,10 +200,40 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       : {}
 
     const textFilter: FilterQuery<any> = {}
-
+    if (filter && JSON.stringify(filter) !== '{}') {
+      textFilter.$and = []
+    }
     // TODO: Rename to search
     if (filter?.name !== undefined) {
-      textFilter.$or = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+    }
+    if (filter?.subscription !== undefined) {
+      textFilter.$and?.push({subscription: {$exists: true}})
+    }
+    if (filter?.subscription?.startsAt !== undefined) {
+      const {comparison, date} = filter.subscription.startsAt
+      textFilter.$and?.push({
+        'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+    if (filter?.subscription?.payedUntil !== undefined) {
+      const {comparison, date} = filter.subscription.payedUntil
+      textFilter.$and?.push({
+        'subscription.payedUntil': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.deactivatedAt !== undefined) {
+      const {comparison, date} = filter.subscription.deactivatedAt
+      textFilter.$and?.push({
+        'subscription.deactivatedAt': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.autoRenew !== undefined) {
+      textFilter.$and?.push({'subscription.autoRenew': {$eq: true}})
     }
 
     const [totalCount, users] = await Promise.all([
@@ -271,7 +302,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       autoRenew,
       startsAt,
       payedUntil,
-      paymentMethod,
+      paymentMethodID,
       deactivatedAt
     } = input
     const {value} = await this.users.findOneAndUpdate(
@@ -285,7 +316,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           'subscription.autoRenew': autoRenew,
           'subscription.startsAt': startsAt,
           'subscription.payedUntil': payedUntil,
-          'subscription.paymentMethod': paymentMethod,
+          'subscription.paymentMethodID': paymentMethodID,
           'subscription.deactivatedAt': deactivatedAt
         }
       },

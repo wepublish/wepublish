@@ -1,4 +1,4 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from './common'
+import {ConnectionResult, DateFilter, InputCursor, Limit, SortOrder} from './common'
 import {PaymentPeriodicity} from './memberPlan'
 
 export interface UserInput {
@@ -36,8 +36,16 @@ export enum UserSort {
   ModifiedAt = 'modifiedAt'
 }
 
+export interface UserSubscriptionFilter {
+  readonly startsAt?: DateFilter
+  readonly payedUntil?: DateFilter
+  readonly deactivatedAt?: DateFilter
+  readonly autoRenew?: boolean
+}
+
 export interface UserFilter {
   readonly name?: string
+  readonly subscription?: UserSubscriptionFilter
 }
 
 export interface UserSubscriptionPeriod {
@@ -45,7 +53,7 @@ export interface UserSubscriptionPeriod {
   readonly endsAt: Date
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly amount: number
-  readonly billId: string
+  readonly invoiceID: string
 }
 
 export interface UserSubscription {
@@ -54,10 +62,10 @@ export interface UserSubscription {
   readonly monthlyAmount: number
   readonly autoRenew: boolean
   readonly startsAt: Date
-  readonly payedUntil: Date
+  readonly payedUntil: Date | null
   readonly subscriptionPeriods: UserSubscriptionPeriod[]
-  readonly paymentMethod: string
-  readonly deactivatedAt?: Date
+  readonly paymentMethodID: string
+  readonly deactivatedAt: Date | null
 }
 
 export interface UserSubscriptionInput {
@@ -66,9 +74,9 @@ export interface UserSubscriptionInput {
   readonly monthlyAmount: number
   readonly autoRenew: boolean
   readonly startsAt: Date
-  readonly payedUntil: Date
-  readonly paymentMethod: string
-  readonly deactivatedAt?: Date
+  readonly payedUntil: Date | null
+  readonly paymentMethodID: string
+  readonly deactivatedAt: Date | null
 }
 
 export interface UpdateUserSubscriptionArgs {
