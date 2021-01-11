@@ -254,7 +254,6 @@ export type CommentConnection = {
 }
 
 export type CommentFilter = {
-  title?: Maybe<Scalars['String']>
   status?: Maybe<CommentStatus>
 }
 

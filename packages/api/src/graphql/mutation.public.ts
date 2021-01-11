@@ -11,6 +11,7 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError
 } from '../error'
+import {GraphQLComment, GraphQLCommentInput} from './comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -78,6 +79,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
+      }
+    },
+
+    // Comment
+    // =======
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        // TODO: Handle authorization
+        const {roles} = authenticate()
+        console.log(roles)
+
+        if (input.revisions[0].text[0].children[0].text.length > 1000) {
+          throw new Error(`Comment Length should be maximum of 1000 characters`)
+        }
+
+        return await dbAdapter.comment.createComment({
+          input: {...input}
+        })
       }
     }
   }

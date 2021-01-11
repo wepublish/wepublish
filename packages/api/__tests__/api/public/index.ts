@@ -130,16 +130,70 @@ export type Block =
   | QuoteBlock
   | TeaserGridBlock
 
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  userID: Scalars['ID']
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  revisions: Array<CommentRevision>
+  parentID?: Maybe<Scalars['ID']>
+  status: CommentStatus
+  rejectionReason?: Maybe<CommentRejectionReason>
+  authorType: CommentAuthorType
+}
+
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentInput = {
+  userID: Scalars['ID']
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  revisions: Array<CommentRevisionInput>
+  parentID?: Maybe<Scalars['ID']>
+  status: CommentStatus
+  rejectionReason?: Maybe<CommentRejectionReason>
+  authorType: CommentAuthorType
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
 export type CommentRevision = {
   __typename?: 'CommentRevision'
   text: Scalars['RichText']
   createdAt: Scalars['DateTime']
+}
+
+export type CommentRevisionInput = {
+  text: Scalars['RichText']
+}
+
+export enum CommentStatus {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export type EmbedBlock = {
@@ -266,6 +320,7 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
+  createComment: Comment
 }
 
 export type MutationCreateSessionArgs = {
@@ -281,6 +336,10 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
   redirectUri: Scalars['String']
+}
+
+export type MutationCreateCommentArgs = {
+  input: CommentInput
 }
 
 export type Navigation = {
@@ -420,6 +479,7 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  comments: CommentConnection
 }
 
 export type QueryPeerArgs = {
@@ -480,6 +540,10 @@ export type QueryPagesArgs = {
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryCommentsArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>
 }
 
 export type QuoteBlock = {

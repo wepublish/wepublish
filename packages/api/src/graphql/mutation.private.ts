@@ -600,8 +600,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLComment),
       args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
       async resolve(root, {input}, {authenticate, dbAdapter}) {
+        // TODO: Handle authorization
         const {roles} = authenticate()
-        authorise(CanCreateComment, roles)
+        console.log(roles)
+
+        if (input.revisions[0].text[0].children[0].text.length > 1000) {
+          throw new Error(`Comment Length should be maximum of 1000 characters`)
+        }
 
         return await dbAdapter.comment.createComment({
           input: {...input}
