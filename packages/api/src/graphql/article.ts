@@ -28,6 +28,7 @@ import {
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
+import {GraphQLPublicComment} from './comment'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -37,7 +38,8 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
   }
 })
 
@@ -284,7 +286,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+
+    comments: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment)))}
   }
 })
 

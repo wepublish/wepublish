@@ -30,10 +30,10 @@ import {
   GraphQLPeerArticleConnection
 } from './article'
 
-import {InputCursor, Limit} from '../db/common'
+import {InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
-import {SortOrder} from '../db/common'
+
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
 import {ImageSort} from '../db/image'
 
@@ -92,7 +92,8 @@ import {
   CanGetPeerProfile,
   CanGetPeers,
   CanGetPeer,
-  AllPermissions
+  AllPermissions,
+  CanGetComments
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -105,6 +106,12 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
+import {
+  GraphQLCommentConnection,
+  GraphQLCommentFilter
+  // GraphQLCommentStatus
+} from './comment'
+// import {CommentStatus} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -413,6 +420,42 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLCommentFilter},
+        sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return await dbAdapter.comment.getComments({
+            filter,
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
@@ -798,14 +841,15 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLPublicArticle,
       args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
+      async resolve(root, {id}, {session, loaders, dbAdapter}) {
         const article = await loaders.publicArticles.load(id)
+        const articleComments = await dbAdapter.comment.getPublicComments([id])
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
 
-        return article
+        return {...article, comments: articleComments}
       }
     },
 
@@ -901,6 +945,26 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve(root, {ids}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return dbAdapter.comment.getPublicComments(ids)
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     }
   }

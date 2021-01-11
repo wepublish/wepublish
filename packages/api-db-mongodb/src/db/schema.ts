@@ -10,7 +10,8 @@ import {
   PageBlock,
   RichTextNode,
   MailLogState,
-  CommentRevision
+  CommentRevision,
+  OptionalPublicComment
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -245,6 +246,8 @@ export interface DBArticleRevision {
   socialMediaDescription?: string
   socialMediaAuthorIDs: string[]
   socialMediaImageID?: string
+
+  comments: OptionalPublicComment[]
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {

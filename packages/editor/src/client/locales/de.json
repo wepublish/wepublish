@@ -281,7 +281,10 @@
         "delete": "Delete",
         "search": "Search",
         "noUserRolesFound": "No UserRoles found",
-        "Unknown": "Unknown"
+        "Unknown": "Unknown",
+        "name": "Name",
+        "description": "Description",
+        "action": "Action"
       },
       "panels": {
         "deleteUserRole": "Delete User Role?",

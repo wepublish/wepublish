@@ -38,6 +38,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<PublicComment>
 }
 
 export type ArticleConnection = {
@@ -128,6 +129,18 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  text: Scalars['RichText']
+  createdAt: Scalars['DateTime']
+}
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
@@ -250,6 +263,7 @@ export type ListicleItem = {
 export type Mutation = {
   __typename?: 'Mutation'
   createSession: SessionWithToken
+  createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
 }
@@ -257,6 +271,10 @@ export type Mutation = {
 export type MutationCreateSessionArgs = {
   email: Scalars['String']
   password: Scalars['String']
+}
+
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String']
 }
 
 export type MutationCreateSessionWithOAuth2CodeArgs = {
@@ -362,6 +380,17 @@ export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
   y: Scalars['Float']
+}
+
+export type PublicComment = {
+  __typename?: 'PublicComment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  userID: Scalars['ID']
+  revisions: Array<CommentRevision>
+  parentID?: Maybe<Scalars['ID']>
+  authorType: CommentAuthorType
 }
 
 export type PublicProperties = {
@@ -918,6 +947,29 @@ export type PeerQuery = {__typename?: 'Query'} & {
   peer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
 }
 
+export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'name' | 'email'>
+
+export type CreateSessionMutationVariables = Exact<{
+  email: Scalars['String']
+  password: Scalars['String']
+}>
+
+export type CreateSessionMutation = {__typename?: 'Mutation'} & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String']
+}>
+
+export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
+  createSessionWithJWT: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
 export const ImageUrLs = gql`
   fragment ImageURLs on Image {
     url
@@ -1172,6 +1224,12 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
+export const FullUser = gql`
+  fragment FullUser on User {
+    name
+    email
+  }
+`
 export const ArticleList = gql`
   query ArticleList($filter: [String!], $after: ID, $first: Int) {
     articles(first: $first, after: $after, filter: {tags: $filter}) {
@@ -1335,4 +1393,24 @@ export const Peer = gql`
     }
   }
   ${PeerRef}
+`
+export const CreateSession = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const CreateSessionWithJwt = gql`
+  mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
+      user {
+        email
+      }
+      token
+    }
+  }
 `

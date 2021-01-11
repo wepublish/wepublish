@@ -47,6 +47,7 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>;
   authors?: Maybe<Array<Scalars['ID']>>;
   tags?: Maybe<Array<Scalars['String']>>;
+  comments?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type ArticleInput = {
@@ -218,7 +219,7 @@ export type Comment = {
   userID: Scalars['ID'];
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  revisions: Array<Maybe<CommentRevision>>;
+  revisions: Array<CommentRevision>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -231,11 +232,23 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentFilter = {
+  title?: Maybe<Scalars['String']>;
+  status?: Maybe<CommentStatus>;
+};
+
 export type CommentInput = {
   userID: Scalars['ID'];
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  revisions: Array<Maybe<CommentRevisionInput>>;
+  revisions: Array<CommentRevisionInput>;
   parentID?: Maybe<Scalars['ID']>;
   status: CommentStatus;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -254,12 +267,12 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision';
-  text?: Maybe<Scalars['RichText']>;
+  text: Scalars['RichText'];
   createdAt: Scalars['DateTime'];
 };
 
 export type CommentRevisionInput = {
-  text?: Maybe<Scalars['RichText']>;
+  text: Scalars['RichText'];
 };
 
 export enum CommentStatus {
@@ -504,10 +517,12 @@ export type Mutation = {
   updatePeer: Peer;
   deletePeer?: Maybe<Scalars['ID']>;
   createSession: SessionWithToken;
+  createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
   revokeSession: Scalars['Boolean'];
   revokeActiveSession: Scalars['Boolean'];
   sessions: Array<Session>;
+  sendJWTLogin: Scalars['String'];
   createToken: CreatedToken;
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
@@ -567,6 +582,11 @@ export type MutationCreateSessionArgs = {
 };
 
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String'];
+};
+
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String'];
   code: Scalars['String'];
@@ -576,6 +596,12 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String'];
+  email: Scalars['String'];
 };
 
 
@@ -977,6 +1003,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -1062,6 +1089,17 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
+  sort?: Maybe<ImageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -1631,6 +1669,27 @@ export type CreateSessionWithOAuth2CodeMutationVariables = Exact<{
 export type CreateSessionWithOAuth2CodeMutation = (
   { __typename?: 'Mutation' }
   & { createSessionWithOAuth2Code: (
+    { __typename?: 'SessionWithToken' }
+    & Pick<SessionWithToken, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
+    ) }
+  ) }
+);
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String'];
+}>;
+
+
+export type CreateSessionWithJwtMutation = (
+  { __typename?: 'Mutation' }
+  & { createSessionWithJWT: (
     { __typename?: 'SessionWithToken' }
     & Pick<SessionWithToken, 'token'>
     & { user: (
@@ -3467,6 +3526,44 @@ export function useCreateSessionWithOAuth2CodeMutation(baseOptions?: Apollo.Muta
 export type CreateSessionWithOAuth2CodeMutationHookResult = ReturnType<typeof useCreateSessionWithOAuth2CodeMutation>;
 export type CreateSessionWithOAuth2CodeMutationResult = Apollo.MutationResult<CreateSessionWithOAuth2CodeMutation>;
 export type CreateSessionWithOAuth2CodeMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
+export const CreateSessionWithJwtDocument = gql`
+    mutation CreateSessionWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
+
+/**
+ * __useCreateSessionWithJwtMutation__
+ *
+ * To run a mutation, you first call `useCreateSessionWithJwtMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSessionWithJwtMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSessionWithJwtMutation, { data, loading, error }] = useCreateSessionWithJwtMutation({
+ *   variables: {
+ *      jwt: // value for 'jwt'
+ *   },
+ * });
+ */
+export function useCreateSessionWithJwtMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>) {
+        return Apollo.useMutation<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>(CreateSessionWithJwtDocument, baseOptions);
+      }
+export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreateSessionWithJwtMutation>;
+export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
+export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {

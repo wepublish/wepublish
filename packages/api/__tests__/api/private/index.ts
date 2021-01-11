@@ -46,6 +46,7 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>
   authors?: Maybe<Array<Scalars['ID']>>
   tags?: Maybe<Array<Scalars['String']>>
+  comments?: Maybe<Array<Scalars['ID']>>
 }
 
 export type ArticleInput = {
@@ -232,7 +233,7 @@ export type Comment = {
   userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<Maybe<CommentRevision>>
+  revisions: Array<CommentRevision>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -245,11 +246,23 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentFilter = {
+  title?: Maybe<Scalars['String']>
+  status?: Maybe<CommentStatus>
+}
+
 export type CommentInput = {
   userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<Maybe<CommentRevisionInput>>
+  revisions: Array<CommentRevisionInput>
   parentID?: Maybe<Scalars['ID']>
   status: CommentStatus
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -268,12 +281,12 @@ export enum CommentRejectionReason {
 
 export type CommentRevision = {
   __typename?: 'CommentRevision'
-  text?: Maybe<Scalars['RichText']>
+  text: Scalars['RichText']
   createdAt: Scalars['DateTime']
 }
 
 export type CommentRevisionInput = {
-  text?: Maybe<Scalars['RichText']>
+  text: Scalars['RichText']
 }
 
 export enum CommentStatus {
@@ -516,10 +529,12 @@ export type Mutation = {
   updatePeer: Peer
   deletePeer?: Maybe<Scalars['ID']>
   createSession: SessionWithToken
+  createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeSession: Scalars['Boolean']
   revokeActiveSession: Scalars['Boolean']
   sessions: Array<Session>
+  sendJWTLogin: Scalars['String']
   createToken: CreatedToken
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
@@ -573,6 +588,10 @@ export type MutationCreateSessionArgs = {
   password: Scalars['String']
 }
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String']
+}
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
@@ -581,6 +600,11 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID']
+}
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String']
+  email: Scalars['String']
 }
 
 export type MutationCreateTokenArgs = {
@@ -953,6 +977,7 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
@@ -1027,6 +1052,16 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
+  sort?: Maybe<ImageSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<CommentFilter>
   sort?: Maybe<ImageSort>
   order?: Maybe<SortOrder>
 }
@@ -1687,7 +1722,7 @@ export type FullBlockFragment =
 export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   Comment,
   'itemID' | 'itemType' | 'userID' | 'parentID' | 'status' | 'authorType'
-> & {revisions: Array<Maybe<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>>}
+> & {revisions: Array<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>}
 
 export type CreateCommentMutationVariables = Exact<{
   input: CommentInput
@@ -2070,6 +2105,12 @@ export type UserListQuery = {__typename?: 'Query'} & {
     }
 }
 
+export type MeQueryVariables = Exact<{[key: string]: never}>
+
+export type MeQuery = {__typename?: 'Query'} & {
+  me?: Maybe<{__typename?: 'User'} & FullUserFragment>
+}
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2118,6 +2159,16 @@ export type CreateSessionMutationVariables = Exact<{
 
 export type CreateSessionMutation = {__typename?: 'Mutation'} & {
   createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String']
+}>
+
+export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
+  createSessionWithJWT: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
       user: {__typename?: 'User'} & Pick<User, 'email'>
     }
 }
@@ -3062,6 +3113,14 @@ export const UserList = gql`
   }
   ${FullUser}
 `
+export const Me = gql`
+  query Me {
+    me {
+      ...FullUser
+    }
+  }
+  ${FullUser}
+`
 export const User = gql`
   query User($id: ID!) {
     user(id: $id) {
@@ -3102,6 +3161,16 @@ export const DeleteUser = gql`
 export const CreateSession = gql`
   mutation CreateSession($email: String!, $password: String!) {
     createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const CreateSessionWithJwt = gql`
+  mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
       user {
         email
       }

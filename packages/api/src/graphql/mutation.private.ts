@@ -54,7 +54,8 @@ import {
   CanCreateUserRole,
   CanDeleteUserRole,
   CanResetUserPassword,
-  CanCreateComment
+  CanCreateComment,
+  CanSendJWTLogin
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -209,6 +210,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createSessionWithJWT: {
+      type: GraphQLNonNull(GraphQLSessionWithToken),
+      args: {
+        jwt: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {jwt}, {dbAdapter, verifyJWT}) {
+        const userID = verifyJWT(jwt)
+
+        const user = await dbAdapter.user.getUserByID(userID)
+        if (!user) throw new InvalidCredentialsError()
+        return await dbAdapter.session.createUserSession(user)
+      }
+    },
+
     createSessionWithOAuth2Code: {
       type: GraphQLNonNull(GraphQLSessionWithToken),
       args: {
@@ -260,6 +275,34 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
         return dbAdapter.session.getUserSessions(user)
+      }
+    },
+
+    sendJWTLogin: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        url: {type: GraphQLNonNull(GraphQLString)},
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, dbAdapter, generateJWT, sendMailFromProvider}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanSendJWTLogin, roles)
+
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) throw new Error('User does not exist') // TODO: make this proper error
+        const token = generateJWT({userID: user.id})
+        const link = `${url}?jwt=${token}`
+        await sendMailFromProvider({
+          message: `Click the link to login:\n\n${link}`,
+          recipient: email,
+          subject: 'Login Link',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+        return email
       }
     },
 
@@ -711,6 +754,27 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    }
+  }
+})
+
+export const GraphQLMutation = new GraphQLObjectType<undefined, Context>({
+  name: 'Mutation',
+  fields: {
+    // Comment
+    // =======
+
+    createComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      async resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateComment, roles)
+
+        return dbAdapter.comment.createComment({
+          input: {...input}
+        })
       }
     }
   }

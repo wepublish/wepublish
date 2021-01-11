@@ -4,7 +4,9 @@ import {
   GraphQLID,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLList
+  GraphQLList,
+  GraphQLInt,
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
@@ -13,10 +15,11 @@ import {
   CommentItemType,
   CommentRejectionReason,
   CommentRevision,
-  CommentStatus
+  CommentStatus,
+  PublicComment
 } from '../db/comment'
+import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
-
 export const GraphQLCommentStatus = new GraphQLEnumType({
   name: 'CommentStatus',
   values: {
@@ -49,6 +52,14 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   values: {
     [CommentItemType.Article]: {value: CommentItemType.Article},
     [CommentItemType.Page]: {value: CommentItemType.Page}
+  }
+})
+
+export const GraphQLCommentFilter = new GraphQLInputObjectType({
+  name: 'CommentFilter',
+  fields: {
+    title: {type: GraphQLString},
+    status: {type: GraphQLCommentStatus}
   }
 })
 
@@ -113,10 +124,14 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
   }
 })
 
-export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
-  name: 'Comment',
+export const GraphQLPublicComment: GraphQLObjectType<
+  PublicComment,
+  Context
+> = new GraphQLObjectType<PublicComment, Context>({
+  name: 'PublicComment',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
+
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
@@ -126,5 +141,14 @@ export const GraphQLPublicComment = new GraphQLObjectType<Comment, Context>({
     parentID: {type: GraphQLID},
 
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)}
+  }
+})
+
+export const GraphQLCommentConnection = new GraphQLObjectType({
+  name: 'CommentConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLComment)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })

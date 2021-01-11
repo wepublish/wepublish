@@ -1,7 +1,7 @@
 import {IncomingMessage} from 'http'
 import url from 'url'
 import crypto from 'crypto'
-
+import jwt, {SignOptions} from 'jsonwebtoken'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 
@@ -36,13 +36,17 @@ import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
+import {OptionalPublicComment} from './db/comment'
 
+// TODO: what's the usage of the DataLoaderContext?
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
   readonly navigationByKey: DataLoader<string, OptionalNavigation>
 
   readonly authorsByID: DataLoader<string, OptionalAuthor>
   readonly authorsBySlug: DataLoader<string, OptionalAuthor>
+
+  readonly publicComments: DataLoader<string, OptionalPublicComment>
 
   readonly images: DataLoader<string, OptionalImage>
 
@@ -82,6 +86,9 @@ export interface Context {
   authenticate(): Session
   authenticateToken(): TokenSession
   authenticateUser(): UserSession
+
+  generateJWT(props: GenerateJWTProps): string
+  verifyJWT(token: string): string
 }
 
 export interface Oauth2Provider {
@@ -112,6 +119,12 @@ export interface SendMailFromProviderProps {
   message?: string
   template?: string
   templateData?: Record<string, any>
+}
+
+export interface GenerateJWTProps {
+  userID: string
+  audience?: string
+  experiesInMinutes?: number
 }
 
 export async function contextFromRequest(
@@ -168,6 +181,8 @@ export async function contextFromRequest(
       authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
+
+      publicComments: new DataLoader(ids => dbAdapter.comment.getPublicComments(ids)),
 
       articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
       publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
@@ -278,6 +293,23 @@ export async function contextFromRequest(
       }
 
       return session
+    },
+
+    generateJWT(props: GenerateJWTProps): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const jwtOptions: SignOptions = {
+        issuer: hostURL,
+        audience: props.audience ?? websiteURL,
+        algorithm: 'HS256',
+        expiresIn: `${props.experiesInMinutes ?? 5}m`
+      }
+      return jwt.sign({sub: props.userID}, process.env.JWT_SECRET_KEY, jwtOptions)
+    },
+
+    verifyJWT(token: string): string {
+      if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
+      const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
+      return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
     }
   }
 }
