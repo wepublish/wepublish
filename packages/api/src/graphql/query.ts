@@ -946,26 +946,26 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           limit: Limit(first, last)
         })
       }
-    }
+    },
 
     // Comments
     // =======
-    // comments: {
-    //   type: GraphQLNonNull(GraphQLCommentConnection),
-    //   args: {
-    //     ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
-    //   },
-    //   resolve(root, { ids }, { authenticate, dbAdapter }) {
-    //     const {roles} = authenticate()
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+      },
+      resolve(root, {ids}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
 
-    //     const canGetComments = isAuthorised(CanGetComments, roles)
+        const canGetComments = isAuthorised(CanGetComments, roles)
 
-    //     if (canGetComments) {
-    //       return dbAdapter.comment.getPublicComments(ids)
-    //     } else {
-    //       throw new NotAuthorisedError()
-    //     }
-    //   }
-    // }
+        if (canGetComments) {
+          return dbAdapter.comment.getPublicComments(ids)
+        } else {
+          throw new NotAuthorisedError()
+        }
+      }
+    }
   }
 })
