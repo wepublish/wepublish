@@ -11,6 +11,7 @@ import {
   DeletePeer,
   UpdatePeerProfile
 } from '../api/private'
+import {Peer as PublicPeer} from '../api/public'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
@@ -101,6 +102,23 @@ describe('Peers', () => {
       const {query} = testClientPrivate
       const res = await query({
         query: Peer,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          peer: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be read by id - public', async () => {
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPeer,
         variables: {
           id: ids[0]
         }

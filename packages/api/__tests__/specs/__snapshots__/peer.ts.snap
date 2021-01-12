@@ -35,6 +35,26 @@ Object {
 }
 `;
 
+exports[`Peers can be created/edited/deleted: can be read by id - public 1`] = `
+Object {
+  "data": Object {
+    "peer": Object {
+      "hostURL": "https://host-url.ch/",
+      "id": Any<String>,
+      "name": "Peer Test 4",
+      "slug": "test-peer4",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Peers can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
