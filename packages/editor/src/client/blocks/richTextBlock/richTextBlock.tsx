@@ -14,6 +14,7 @@ import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
+import {WepublishEditor} from './editor/wepublishEditor'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
@@ -29,6 +30,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
+  const [isEmpty, setIsEmpty] = useState(true)
 
   const {t} = useTranslation()
 
@@ -49,7 +51,10 @@ export const RichTextBlock = memo(function RichTextBlock({
       value={value}
       onChange={(newValue: SlateNode[]) => {
         setFocus(ReactEditor.isFocused(editor))
-        if (value !== newValue) onChange(newValue)
+        if (value !== newValue) {
+          onChange(newValue)
+          setIsEmpty(false)
+        }
       }}>
       <Toolbar
         fadeOut={!hasFocus}
@@ -98,13 +103,19 @@ export const RichTextBlock = memo(function RichTextBlock({
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </EditorSubMenuButton>
       </Toolbar>
+      {isEmpty && ( // Alternative placeholder
+        <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+          {t('blocks.richText.startWriting')}
+        </div>
+      )}
       <Editable
         readOnly={disabled}
-        placeholder={t('blocks.richText.startWriting')}
+        // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
+          setIsEmpty(WepublishEditor.isEmpty(editor))
         }}
       />
     </Slate>
@@ -112,5 +123,5 @@ export const RichTextBlock = memo(function RichTextBlock({
 })
 
 export function createDefaultValue(): RichTextBlockValue {
-  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+  return WepublishEditor.createDefaultValue()
 }

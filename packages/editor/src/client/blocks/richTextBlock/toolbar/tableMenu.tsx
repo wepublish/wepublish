@@ -1,10 +1,10 @@
 import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, InputGroup, InputNumber} from 'rsuite'
-import {Editor, Transforms} from 'slate'
+import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
-import {isFormatActive} from '../editor/utils'
+import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
 import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
 
@@ -22,7 +22,7 @@ export function TableMenu() {
   const {t} = useTranslation()
 
   const isBorderVisible = () => {
-    const [match] = Editor.nodes(editor, {
+    const [match] = WepublishEditor.nodes(editor, {
       match: node => (node.borderColor && node.borderColor !== 'transparent') as boolean,
       mode: 'all'
     })
@@ -45,7 +45,7 @@ export function TableMenu() {
       ].map(({label, num, setNumber}, i) => (
         <InputGroup
           style={{width: '150px'}}
-          disabled={isFormatActive(editor, BlockFormat.Table)}
+          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
           key={i}>
           <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
           <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
@@ -71,7 +71,7 @@ export function TableMenu() {
     const {selection} = editor
     if (selection) {
       const nodes = Array.from(
-        Editor.nodes(editor, {
+        WepublishEditor.nodes(editor, {
           at: selection,
           match: node => node.type === BlockFormat.Table
         })
@@ -139,7 +139,9 @@ export function TableMenu() {
         height: '10em',
         width: '15em'
       }}>
-      {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
+      {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
+        ? tableModifyControls
+        : tableInsertControls}
     </div>
   )
 }
