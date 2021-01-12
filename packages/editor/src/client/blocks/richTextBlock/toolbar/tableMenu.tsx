@@ -25,7 +25,7 @@ export function TableMenu() {
 
   useEffect(() => {
     // set borderColor in slate node tree on colorPicker change
-    const tablePath = nearestAncestor(editor, BlockFormat.Table)?.path
+    const tablePath = WepublishEditor.nearestAncestor(editor, BlockFormat.Table)?.path
     if (tablePath) {
       Transforms.setNodes(
         editor,
@@ -51,7 +51,7 @@ export function TableMenu() {
   }, [editor.selection])
 
   const getBorderColorOfFocusedTable = () => {
-    const cellNode = nearestAncestor(editor, BlockFormat.TableCell)?.node
+    const cellNode = WepublishEditor.nearestAncestor(editor, BlockFormat.TableCell)?.node
     if (cellNode) {
       setBorderColor(cellNode.borderColor as string)
     }

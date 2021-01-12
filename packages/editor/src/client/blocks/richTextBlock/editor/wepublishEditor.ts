@@ -1,4 +1,4 @@
-import {Editor, Transforms} from 'slate'
+import {Editor, Transforms, Node as SlateNode, Path} from 'slate'
 import {RichTextBlockValue} from '../../types'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
 
@@ -57,5 +57,18 @@ export const WepublishEditor = {
 
   isEmpty(editor: Editor) {
     return JSON.stringify(editor.children) === JSON.stringify(this.createDefaultValue())
+  },
+
+  nearestAncestor(editor: Editor, type: BlockFormat): {node: SlateNode; path: Path} | null {
+    const {selection} = editor
+    if (!selection) return null
+    const nodes = Array.from(
+      Editor.nodes(editor, {
+        at: selection,
+        match: node => node.type === type
+      })
+    )
+    if (!nodes![0]) return null
+    return {node: nodes[0][0], path: nodes[0][1]}
   }
 }
