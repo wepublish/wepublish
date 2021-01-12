@@ -13,6 +13,7 @@ import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
+import {WepublishEditor} from './editor/wepublishEditor'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
@@ -110,9 +111,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
-          setIsEmpty(
-            JSON.stringify(Array.from(editor.children)) === JSON.stringify(createDefaultValue())
-          )
+          setIsEmpty(WepublishEditor.isEmpty(editor))
         }}
       />
     </Slate>
@@ -120,5 +119,5 @@ export const RichTextBlock = memo(function RichTextBlock({
 })
 
 export function createDefaultValue(): RichTextBlockValue {
-  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+  return WepublishEditor.createDefaultValue()
 }
