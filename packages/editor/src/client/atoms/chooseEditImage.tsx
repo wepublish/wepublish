@@ -22,20 +22,22 @@ export function ChooseEditImage({
 }: ChooseEditImageProps): JSX.Element {
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
+  const panelHeight = image ? (image.height < 240 ? image.height : 240) : 240
   return (
-    <Panel
-      header={header}
-      style={{
-        height: 300
-      }}>
+    <Panel header={header} style={{}}>
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
             style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: panelHeight
             }}>
+            <img
+              style={{maxHeight: '240'}}
+              src={image?.largeURL ?? '/static/placeholder-240x240.png'}
+            />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
               <div style={{position: 'absolute', zIndex: 1, left: 5, top: 5}}>
                 <Dropdown
@@ -60,11 +62,6 @@ export function ChooseEditImage({
                 </Dropdown>
               </div>
             )}
-            <img
-              style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
-              src={image?.previewURL ?? '/static/placeholder-240x240.png'}
-              height={200}
-            />
           </div>
         )}
       </PlaceholderInput>
