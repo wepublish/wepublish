@@ -167,7 +167,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
 //       switch (code) {
 //         case 'child_invalid':
-//           Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
+//           Transforms.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
 //           break
 //       }
 //     }
@@ -185,7 +185,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
 //       switch (code) {
 //         case 'child_invalid':
-//           Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
+//           Transforms.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
 //           break
 //       }
 //     }
