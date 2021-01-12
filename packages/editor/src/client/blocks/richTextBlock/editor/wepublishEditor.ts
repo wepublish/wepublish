@@ -1,5 +1,6 @@
 import {Editor, Transforms} from 'slate'
 import {RichTextBlockValue} from '../../types'
+import {emptyTextParagraph} from './elements'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
 
 export const WepublishEditor = {
@@ -52,7 +53,7 @@ export const WepublishEditor = {
   },
 
   createDefaultValue(): RichTextBlockValue {
-    return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+    return [emptyTextParagraph()]
   },
 
   isEmpty(editor: Editor) {
