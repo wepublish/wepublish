@@ -3,11 +3,6 @@ import {ReactEditor} from 'slate-react'
 import {defaultBorderColor, emptyTextParagraph} from './elements'
 import {BlockFormat} from './formats'
 
-// See: https://github.com/ianstormtaylor/slate/blob/master/Changelog.md#0530--december-10-2019
-
-// TODO
-// - TableCell needs Paragraph as child
-
 export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
   const {normalizeNode} = editor
 
@@ -16,15 +11,17 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
     if (SlateElement.isElement(node)) {
       switch (node.type) {
-        // order of corrections is important !
-
         case BlockFormat.TableCell:
-          // if (ensureChildType(BlockFormat.Paragraph)) return TODO
           if (ensureParentType(BlockFormat.TableRow)) return
           if (ensureHasBorderColor()) return
+          // TODO if child is text node wrap into paragraph. Text directly in tablecell behaves wrongly
           break
 
         case BlockFormat.TableRow:
+          // Order of corrections is important!
+          // Seems to have an effect when requiring constraints on parent and children.
+          // Actually, IMO it should not have an effectt, as every new or modified node gets checked from it's lowest node
+          // upwards (see https://docs.slatejs.org/concepts/10-normalizing#multi-pass-normalizing).
           if (ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})) return
           if (ensureParentType(BlockFormat.Table)) return
           // TODO? mergeAdjacentRows()
@@ -34,7 +31,6 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
           if (ensureChildType(BlockFormat.TableRow)) return
           if (mergeAdjacent()) return // needed when copy pasting tables
           if (ensureSubseedingParagraph()) return
-          // mergeAdjacentTables()
           break
       }
       // TODO ensure ol / li structure (see at bottom)
