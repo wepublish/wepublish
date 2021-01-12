@@ -445,10 +445,12 @@ export type Mutation = {
   updatePeer: Peer;
   deletePeer?: Maybe<Scalars['ID']>;
   createSession: SessionWithToken;
+  createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
   revokeSession: Scalars['Boolean'];
   revokeActiveSession: Scalars['Boolean'];
   sessions: Array<Session>;
+  sendJWTLogin: Scalars['String'];
   createToken: CreatedToken;
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
@@ -507,6 +509,11 @@ export type MutationCreateSessionArgs = {
 };
 
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String'];
+};
+
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String'];
   code: Scalars['String'];
@@ -516,6 +523,12 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String'];
+  email: Scalars['String'];
 };
 
 
