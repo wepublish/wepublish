@@ -9,6 +9,7 @@ import {
   UpdateAuthor,
   DeleteAuthor
 } from '../api/private'
+import {Author as PublicAuthor} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -156,9 +157,9 @@ describe('Authors', () => {
     })
 
     test('can be read by slug', async () => {
-      const {query} = testClientPrivate
+      const {query} = testClientPublic
       const res = await query({
-        query: Author,
+        query: PublicAuthor,
         variables: {
           slug: 'john-grisham'
         }
@@ -212,13 +213,13 @@ describe('Authors', () => {
     })
 
     test('should require either slug or ID to read', async () => {
-      const {query} = testClientPrivate
-
-      let res = await query({query: Author})
+      const {query} = testClientPublic
+      //none
+      let res = await query({query: PublicAuthor})
       expect(res).toMatchSnapshot()
-
+      //both
       res = await query({
-        query: Author,
+        query: PublicAuthor,
         variables: {
           id: authorIds[0],
           slug: 'john-grisham'

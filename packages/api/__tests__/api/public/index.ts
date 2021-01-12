@@ -247,6 +247,24 @@ export type ListicleItem = {
   richText: Scalars['RichText']
 }
 
+export type Mutation = {
+  __typename?: 'Mutation'
+  createSession: SessionWithToken
+  createSessionWithOAuth2Code: SessionWithToken
+  revokeActiveSession: Scalars['Boolean']
+}
+
+export type MutationCreateSessionArgs = {
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
+export type MutationCreateSessionWithOAuth2CodeArgs = {
+  name: Scalars['String']
+  code: Scalars['String']
+  redirectUri: Scalars['String']
+}
+
 export type Navigation = {
   __typename?: 'Navigation'
   id: Scalars['ID']
@@ -647,7 +665,8 @@ export type AuthorListQuery = {__typename?: 'Query'} & {
 }
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type AuthorQuery = {__typename?: 'Query'} & {
@@ -841,7 +860,8 @@ export type PageListQuery = {__typename?: 'Query'} & {
 }
 
 export type PageQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type PageQuery = {__typename?: 'Query'} & {
@@ -1253,8 +1273,8 @@ export const AuthorList = gql`
   ${FullAuthor}
 `
 export const Author = gql`
-  query Author($id: ID!) {
-    author(id: $id) {
+  query Author($id: ID, $slug: Slug) {
+    author(id: $id, slug: $slug) {
       ...FullAuthor
     }
   }
@@ -1278,8 +1298,8 @@ export const PageList = gql`
   ${PageRef}
 `
 export const Page = gql`
-  query Page($id: ID!) {
-    page(id: $id) {
+  query Page($id: ID, $slug: Slug) {
+    page(id: $id, slug: $slug) {
       id
       publishedAt
       updatedAt

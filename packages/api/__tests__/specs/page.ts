@@ -11,6 +11,7 @@ import {
   UnpublishPage,
   DeletePage
 } from '../api/private'
+import {Page as PublicPage} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -316,6 +317,60 @@ describe('Pages', () => {
       })
       expect(res).toMatchSnapshot()
       ids.shift()
+    })
+
+    test('can be read by id - published', async () => {
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: ids[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPage,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          page: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be read by slug - published', async () => {
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: ids[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPage,
+        variables: {
+          slug: 'testing-page'
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          page: {
+            id: expect.any(String)
+          }
+        }
+      })
     })
   })
 })

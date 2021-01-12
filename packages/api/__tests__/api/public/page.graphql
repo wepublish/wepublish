@@ -27,8 +27,8 @@ query PageList($filter: [String!], $after: ID, $first: Int) {
 }
 
 
-query Page($id: ID!) {
-  page(id: $id) {
+query Page($id: ID, $slug: Slug) {
+  page(id: $id, slug: $slug) {
     id
     publishedAt
     updatedAt

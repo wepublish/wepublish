@@ -208,6 +208,41 @@ Object {
 }
 `;
 
+exports[`Pages can be created/edited/published/unpublished/deleted: can be read by id - published 1`] = `
+Object {
+  "data": Object {
+    "page": Object {
+      "blocks": Array [],
+      "description": null,
+      "id": Any<String>,
+      "image": null,
+      "properties": Array [
+        Object {
+          "key": "public",
+          "value": "public",
+        },
+      ],
+      "publishedAt": "2020-11-25T23:55:35.000Z",
+      "slug": "testing-page",
+      "tags": Array [
+        "one",
+        "two",
+        "three",
+      ],
+      "title": "Testing Page",
+      "updatedAt": "2020-11-25T23:55:35.000Z",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Pages can be created/edited/published/unpublished/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
@@ -241,6 +276,41 @@ Object {
       },
       "pending": null,
       "published": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be read by slug - published 1`] = `
+Object {
+  "data": Object {
+    "page": Object {
+      "blocks": Array [],
+      "description": null,
+      "id": Any<String>,
+      "image": null,
+      "properties": Array [
+        Object {
+          "key": "public",
+          "value": "public",
+        },
+      ],
+      "publishedAt": "2020-11-25T23:55:35.000Z",
+      "slug": "testing-page",
+      "tags": Array [
+        "one",
+        "two",
+        "three",
+      ],
+      "title": "Testing Page",
+      "updatedAt": "2020-11-25T23:55:35.000Z",
     },
   },
   "errors": undefined,
