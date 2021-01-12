@@ -4,12 +4,38 @@ import {
   Comment,
   GetCommentsArgs,
   ConnectionResult,
-  CommentStatus
+  CommentState,
+  LimitType,
+  InputCursorType,
+  CommentSort,
+  SortOrder
 } from '@wepublish/api'
 
-import {Collection, Db, FilterQuery} from 'mongodb'
+import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
+import {Cursor} from './cursor'
+import {MaxResultsPerPage} from './defaults'
 
 import {CollectionName, DBComment} from './schema'
+
+function commentSortFieldForSort(sort: CommentSort) {
+  switch (sort) {
+    case CommentSort.CreatedAt:
+      return 'createdAt'
+
+    case CommentSort.ModifiedAt:
+      return 'modifiedAt'
+  }
+}
+
+function commentDateForSort(comment: DBComment, sort: CommentSort): Date {
+  switch (sort) {
+    case CommentSort.CreatedAt:
+      return comment.createdAt
+
+    case CommentSort.ModifiedAt:
+      return comment.modifiedAt
+  }
+}
 
 export class MongoDBCommentAdapter implements DBCommentAdapter {
   private comments: Collection<DBComment>
@@ -39,32 +65,93 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     return {id, ...comment}
   }
 
-  async getComments({filter, limit}: GetCommentsArgs): Promise<ConnectionResult<Comment>> {
+  async getComments({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetCommentsArgs): Promise<ConnectionResult<Comment>> {
     const metaFilters: FilterQuery<any> = []
 
-    if (filter?.status) {
-      metaFilters.push({status: filter.status})
+    if (filter?.state) {
+      metaFilters.push({state: filter.state})
     }
 
+    const limitCount = Math.min(limit.count, MaxResultsPerPage)
+    const sortDirection = limit.type === LimitType.First ? order : -order
+
+    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
+
+    const expr =
+      order === SortOrder.Ascending
+        ? cursor.type === InputCursorType.After
+          ? '$gt'
+          : '$lt'
+        : cursor.type === InputCursorType.After
+        ? '$lt'
+        : '$gt'
+
+    const sortField = commentSortFieldForSort(sort)
+    const cursorFilter = cursorData
+      ? {
+          $or: [
+            {[sortField]: {[expr]: cursorData.date}},
+            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
+          ]
+        }
+      : {}
+
     const [totalCount, comments] = await Promise.all([
-      this.comments.countDocuments(), // MongoCountPreferences doesn't include collation
+      this.comments.countDocuments({}, {
+        collation: {locale: this.locale, strength: 2}
+      } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
 
       this.comments
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
-
         .match(metaFilters.length ? {$and: metaFilters} : {})
+        .match(cursorFilter)
+        .sort({[sortField]: sortDirection, _id: sortDirection})
+        .limit(limitCount + 1)
         .toArray()
     ])
+
+    const nodes = comments.slice(0, limitCount)
+
+    if (limit.type === LimitType.Last) {
+      nodes.reverse()
+    }
+
+    const hasNextPage =
+      limit.type === LimitType.First
+        ? comments.length > limitCount
+        : cursor.type === InputCursorType.Before
+
+    const hasPreviousPage =
+      limit.type === LimitType.Last
+        ? comments.length > limitCount
+        : cursor.type === InputCursorType.After
+
+    const firstComment = nodes[0]
+    const lastComment = nodes[nodes.length - 1]
+
+    const startCursor = firstComment
+      ? new Cursor(firstComment._id, commentDateForSort(firstComment, sort)).toString()
+      : null
+
+    const endCursor = lastComment
+      ? new Cursor(lastComment._id, commentDateForSort(lastComment, sort)).toString()
+      : null
 
     return {
       nodes: comments.map<Comment>(({_id: id, ...comment}) => ({id, ...comment})),
       pageInfo: {
-        startCursor: '',
-        endCursor: '',
-        hasNextPage: true,
-        hasPreviousPage: false
+        startCursor,
+        endCursor,
+        hasNextPage,
+        hasPreviousPage
       },
-      totalCount: totalCount
+      totalCount
     }
   }
 
@@ -75,7 +162,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       this.comments
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
         .match({
-          $and: [{itemID: ids[0]}, {status: CommentStatus.Approved}]
+          $and: [{itemID: ids[0]}, {state: CommentState.Approved}]
         })
         .toArray()
     ])
