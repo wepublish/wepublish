@@ -19,9 +19,11 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
         case BlockFormat.TableRow:
           // Order of corrections is important!
+          // Explanation (missing):
           // Seems to have an effect when requiring constraints on parent and children.
-          // Actually, IMO it should not have an effectt, as every new or modified node gets checked from it's lowest node
-          // upwards (see https://docs.slatejs.org/concepts/10-normalizing#multi-pass-normalizing).
+          // Actually, (IMO) it should not have an effect, as every new or modified node gets checked from it's lowest node upwards
+          // (see https://docs.slatejs.org/concepts/10-normalizing#multi-pass-normalizing).
+          // TODO find reason or report to slate?
           if (ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})) return
           if (ensureParentType(BlockFormat.Table)) return
           // TODO? mergeAdjacentRows()
