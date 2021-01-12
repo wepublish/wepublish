@@ -10,7 +10,7 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to get navigation",
+          "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
         Object {
@@ -235,6 +235,11 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to send a JWT Login",
+          "id": "CAN_SEND_JWT_LOGIN",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to login editor",
           "id": "CAN_LOGIN_EDITOR",
         },
@@ -307,7 +312,7 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
-              "description": "Allows to get navigation",
+              "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
             Object {
@@ -529,6 +534,11 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to send a JWT Login",
+              "id": "CAN_SEND_JWT_LOGIN",
             },
             Object {
               "deprecated": false,
@@ -675,7 +685,7 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
-              "description": "Allows to get navigation",
+              "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
             Object {
@@ -900,6 +910,11 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to send a JWT Login",
+              "id": "CAN_SEND_JWT_LOGIN",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to login editor",
               "id": "CAN_LOGIN_EDITOR",
             },
@@ -936,7 +951,7 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to get navigation",
+          "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
         Object {
@@ -964,7 +979,7 @@ Object {
     "permissions": Array [
       Object {
         "deprecated": false,
-        "description": "Allows to get navigation",
+        "description": "Allows to create navigation",
         "id": "CAN_CREATE_NAVIGATION",
       },
       Object {
@@ -1186,6 +1201,11 @@ Object {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to send a JWT Login",
+        "id": "CAN_SEND_JWT_LOGIN",
       },
       Object {
         "deprecated": false,

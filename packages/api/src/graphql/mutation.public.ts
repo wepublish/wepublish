@@ -31,6 +31,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createSessionWithJWT: {
+      type: GraphQLNonNull(GraphQLPublicSessionWithToken),
+      args: {
+        jwt: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {jwt}, {dbAdapter, verifyJWT}) {
+        const userID = verifyJWT(jwt)
+
+        const user = await dbAdapter.user.getUserByID(userID)
+        if (!user) throw new InvalidCredentialsError()
+        return await dbAdapter.session.createUserSession(user)
+      }
+    },
+
     createSessionWithOAuth2Code: {
       type: GraphQLNonNull(GraphQLPublicSessionWithToken),
       args: {
