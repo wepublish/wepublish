@@ -52,7 +52,8 @@ import {
   CanDeleteUser,
   CanCreateUserRole,
   CanDeleteUserRole,
-  CanResetUserPassword
+  CanResetUserPassword,
+  CanSendJWTLogin
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -207,6 +208,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    createSessionWithJWT: {
+      type: GraphQLNonNull(GraphQLSessionWithToken),
+      args: {
+        jwt: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {jwt}, {dbAdapter, verifyJWT}) {
+        const userID = verifyJWT(jwt)
+
+        const user = await dbAdapter.user.getUserByID(userID)
+        if (!user) throw new InvalidCredentialsError()
+        return await dbAdapter.session.createUserSession(user)
+      }
+    },
+
     createSessionWithOAuth2Code: {
       type: GraphQLNonNull(GraphQLSessionWithToken),
       args: {
@@ -258,6 +273,34 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
         return dbAdapter.session.getUserSessions(user)
+      }
+    },
+
+    sendJWTLogin: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        url: {type: GraphQLNonNull(GraphQLString)},
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {url, email},
+        {authenticate, dbAdapter, generateJWT, sendMailFromProvider}
+      ) {
+        const {roles} = authenticate()
+        authorise(CanSendJWTLogin, roles)
+
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) throw new Error('User does not exist') // TODO: make this proper error
+        const token = generateJWT({userID: user.id})
+        const link = `${url}?jwt=${token}`
+        await sendMailFromProvider({
+          message: `Click the link to login:\n\n${link}`,
+          recipient: email,
+          subject: 'Login Link',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+        return email
       }
     },
 
@@ -320,12 +363,26 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLUser,
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        password: {type: GraphQLNonNull(GraphQLString)},
+        sendMail: {type: GraphQLBoolean}
       },
-      resolve(root, {id, password}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {id, password, sendMail},
+        {authenticate, sendMailFromProvider, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanResetUserPassword, roles)
-        return dbAdapter.user.resetUserPassword({id, password})
+        const user = await dbAdapter.user.resetUserPassword({id, password})
+        if (sendMail && user) {
+          await sendMailFromProvider({
+            recipient: user.email,
+            subject: 'Your password has been reset',
+            message: `Hello ${user.name}\n\nYour password has been reset. You can login with your new password.`,
+            replyToAddress: 'dev@wepublish.ch'
+          })
+        }
+        return user
       }
     },
 

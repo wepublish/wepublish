@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - F/WEP-116-add-peer-call-to-action-info
+      - f/magic-login-link
 
 jobs:
   release:

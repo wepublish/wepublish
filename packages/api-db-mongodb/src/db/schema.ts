@@ -4,7 +4,8 @@ import {
   MetadataProperty,
   NavigationLink,
   PageBlock,
-  RichTextNode
+  RichTextNode,
+  MailLogState
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -26,7 +27,9 @@ export enum CollectionName {
   ArticlesHistory = 'articles.history',
 
   Pages = 'pages',
-  PagesHistory = 'pages.history'
+  PagesHistory = 'pages.history',
+
+  MailLog = 'mail.log'
 }
 
 // NOTE: _id has to be of type any for insert operations not requiring _id to be provided.
@@ -211,6 +214,11 @@ export interface DBArticleRevision {
   blocks: ArticleBlock[]
 
   hideAuthor: boolean
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthorIDs: string[]
+  socialMediaImageID?: string
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {
@@ -247,10 +255,27 @@ export interface DBPageRevision {
 
   imageID?: string
 
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImageID?: string
+
   blocks: PageBlock[]
 }
 
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBMailLog {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  recipient: string
+  subject: string
+  state: MailLogState
+  mailProviderID: string
+  mailData?: string
 }

@@ -636,6 +636,41 @@ async function applyApiServer() {
                       key: 'oauth_wepublish_redirect_url'
                     }
                   }
+                },
+                {
+                  name: 'MAILGUN_API_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'mailgun_api_key'
+                    }
+                  }
+                },
+                {
+                  name: 'MAILGUN_BASE_DOMAIN',
+                  value: 'api.eu.mailgun.net'
+                },
+                {
+                  name: 'MAILGUN_MAIL_DOMAIN',
+                  value: 'mg.wepublish.media'
+                },
+                {
+                  name: 'MAILGUN_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'mailgun_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'JWT_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'jwt_secret_key'
+                    }
+                  }
                 }
               ],
               ports: [

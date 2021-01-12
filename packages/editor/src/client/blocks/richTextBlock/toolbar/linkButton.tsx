@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
-import {Editor, Transforms, Range} from 'slate'
+import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-import {ToolbarIconButton} from '../../atoms/toolbar'
-import {isFormatActive} from './editorUtils'
-import {InlineFormat} from './formats'
+import {ToolbarIconButton} from '../../../atoms/toolbar'
+import {WepublishEditor} from '../editor/wepublishEditor'
+import {InlineFormat} from '../editor/formats'
 
 export function LinkFormatButton() {
   const editor = useSlate()
@@ -24,12 +24,12 @@ export function LinkFormatButton() {
     <>
       <ToolbarIconButton
         icon="link"
-        active={isFormatActive(editor, InlineFormat.Link)}
+        active={WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
         onMouseDown={e => {
           e.preventDefault()
 
           const nodes = Array.from(
-            Editor.nodes(editor, {
+            WepublishEditor.nodes(editor, {
               at: editor.selection ?? undefined,
               match: node => node.type === InlineFormat.Link
             })
@@ -105,8 +105,8 @@ export function RemoveLinkFormatButton() {
   return (
     <ToolbarIconButton
       icon="unlink"
-      active={isFormatActive(editor, InlineFormat.Link)}
-      disabled={!isFormatActive(editor, InlineFormat.Link)}
+      active={WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
+      disabled={!WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
       onMouseDown={e => {
         e.preventDefault()
         removeLink(editor)
@@ -119,7 +119,7 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
   if (selection) {
     if (Range.isCollapsed(selection)) {
       const nodes = Array.from(
-        Editor.nodes(editor, {
+        WepublishEditor.nodes(editor, {
           at: selection,
           match: node => node.type === InlineFormat.Link
         })

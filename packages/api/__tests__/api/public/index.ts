@@ -14,8 +14,8 @@ export type Scalars = {
   DateTime: string
   /** A hexidecimal color value. */
   Color: string
-  Slug: string
   RichText: Node[]
+  Slug: string
 }
 
 export type Article = {
@@ -33,6 +33,10 @@ export type Article = {
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaAuthors: Array<Author>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -243,6 +247,29 @@ export type ListicleItem = {
   richText: Scalars['RichText']
 }
 
+export type Mutation = {
+  __typename?: 'Mutation'
+  createSession: SessionWithToken
+  createSessionWithJWT: SessionWithToken
+  createSessionWithOAuth2Code: SessionWithToken
+  revokeActiveSession: Scalars['Boolean']
+}
+
+export type MutationCreateSessionArgs = {
+  email: Scalars['String']
+  password: Scalars['String']
+}
+
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String']
+}
+
+export type MutationCreateSessionWithOAuth2CodeArgs = {
+  name: Scalars['String']
+  code: Scalars['String']
+  redirectUri: Scalars['String']
+}
+
 export type Navigation = {
   __typename?: 'Navigation'
   id: Scalars['ID']
@@ -265,6 +292,9 @@ export type Page = {
   tags: Array<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
+  socialMediaTitle?: Maybe<Scalars['String']>
+  socialMediaDescription?: Maybe<Scalars['String']>
+  socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
 }
 
@@ -329,6 +359,8 @@ export type PeerProfile = {
   themeColor: Scalars['Color']
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
+  callToActionText: Scalars['RichText']
+  callToActionURL: Scalars['String']
 }
 
 export type Point = {
@@ -437,6 +469,14 @@ export type RichTextBlock = {
   richText: Scalars['RichText']
 }
 
+export type SessionWithToken = {
+  __typename?: 'SessionWithToken'
+  user: User
+  token: Scalars['String']
+  createdAt: Scalars['DateTime']
+  expiresAt: Scalars['DateTime']
+}
+
 export enum SortOrder {
   Ascending = 'ASCENDING',
   Descending = 'DESCENDING'
@@ -471,6 +511,13 @@ export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock'
   userID: Scalars['String']
   tweetID: Scalars['String']
+}
+
+export type User = {
+  __typename?: 'User'
+  id: Scalars['String']
+  name: Scalars['String']
+  email: Scalars['String']
 }
 
 export type VimeoVideoBlock = {
@@ -876,6 +923,29 @@ export type PeerQuery = {__typename?: 'Query'} & {
   peer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
 }
 
+export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'name' | 'email'>
+
+export type CreateSessionMutationVariables = Exact<{
+  email: Scalars['String']
+  password: Scalars['String']
+}>
+
+export type CreateSessionMutation = {__typename?: 'Mutation'} & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String']
+}>
+
+export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
+  createSessionWithJWT: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+      user: {__typename?: 'User'} & Pick<User, 'email'>
+    }
+}
+
 export const ImageUrLs = gql`
   fragment ImageURLs on Image {
     url
@@ -1130,6 +1200,12 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
+export const FullUser = gql`
+  fragment FullUser on User {
+    name
+    email
+  }
+`
 export const ArticleList = gql`
   query ArticleList($filter: [String!], $after: ID, $first: Int) {
     articles(first: $first, after: $after, filter: {tags: $filter}) {
@@ -1293,4 +1369,24 @@ export const Peer = gql`
     }
   }
   ${PeerRef}
+`
+export const CreateSession = gql`
+  mutation CreateSession($email: String!, $password: String!) {
+    createSession(email: $email, password: $password) {
+      user {
+        email
+      }
+      token
+    }
+  }
+`
+export const CreateSessionWithJwt = gql`
+  mutation CreateSessionWithJWT($jwt: String!) {
+    createSessionWithJWT(jwt: $jwt) {
+      user {
+        email
+      }
+      token
+    }
+  }
 `

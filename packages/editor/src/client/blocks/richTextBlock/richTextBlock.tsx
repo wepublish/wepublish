@@ -1,17 +1,19 @@
 import React, {memo, useMemo, useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {createEditor, Node as SlateNode, Transforms} from 'slate'
+import {createEditor, Location, Node as SlateNode, Transforms} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, SubMenuButton} from '../../atoms/toolbar'
+import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, H1Icon, H2Icon, H3Icon, FormatIconButton} from './buttons'
-import {renderElement, renderLeaf, withRichText} from './editor'
-import {BlockFormat, TextFormat} from './formats'
-import {LinkFormatButton, RemoveLinkFormatButton} from './linkButton'
-import {TableMenu} from './tableMenu'
+import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
+import {renderElement, renderLeaf} from './editor/render'
+import {BlockFormat, TextFormat} from './editor/formats'
+import {withRichText, withTable} from './editor/plugins'
+import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
+import {TableMenu} from './toolbar/tableMenu'
+import {WepublishEditor} from './editor/wepublishEditor'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
@@ -21,9 +23,10 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange
 }: RichTextBlockProps) {
-  const editor = useMemo(() => withRichText(withHistory(withReact(createEditor()))), [])
+  const editor = useMemo(() => withTable(withRichText(withHistory(withReact(createEditor())))), [])
   const [hasFocus, setFocus] = useState(false)
-  const [location, setLocation] = useState<typeof editor.selection>(null)
+  const [location, setLocation] = useState<Location | null>(null)
+  const [isEmpty, setIsEmpty] = useState(true)
 
   const {t} = useTranslation()
 
@@ -33,8 +36,8 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }, [])
 
-  const focusAtPreviousLocation = () => {
-    if (!hasFocus && location) Transforms.select(editor, location)
+  const focusAtPreviousLocation = (location: Location) => {
+    Transforms.select(editor, location)
     ReactEditor.focus(editor)
   }
 
@@ -44,9 +47,17 @@ export const RichTextBlock = memo(function RichTextBlock({
       value={value}
       onChange={(newValue: SlateNode[]) => {
         setFocus(ReactEditor.isFocused(editor))
-        if (value !== newValue) onChange(newValue)
+        if (value !== newValue) {
+          onChange(newValue)
+          setIsEmpty(false)
+        }
       }}>
-      <Toolbar fadeOut={!hasFocus} handleToolbarClick={focusAtPreviousLocation}>
+      <Toolbar
+        fadeOut={!hasFocus}
+        onMouseDown={e => {
+          e.preventDefault()
+          if (!hasFocus && location) focusAtPreviousLocation(location)
+        }}>
         <FormatButton format={BlockFormat.H1}>
           <H1Icon />
         </FormatButton>
@@ -64,9 +75,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <SubMenuButton icon="table">
+        <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
           <TableMenu />
-        </SubMenuButton>
+        </EditorSubMenuButton>
 
         <ToolbarDivider />
 
@@ -88,13 +99,19 @@ export const RichTextBlock = memo(function RichTextBlock({
           <EmojiPicker withEmoji={emoji => editor.insertText(emoji)} />
         </SubMenuButton>
       </Toolbar>
+      {isEmpty && ( // Alternative placeholder
+        <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+          {t('blocks.richText.startWriting')}
+        </div>
+      )}
       <Editable
         readOnly={disabled}
-        placeholder={t('blocks.richText.startWriting')}
+        // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
+          setIsEmpty(WepublishEditor.isEmpty(editor))
         }}
       />
     </Slate>
@@ -102,5 +119,5 @@ export const RichTextBlock = memo(function RichTextBlock({
 })
 
 export function createDefaultValue(): RichTextBlockValue {
-  return [{type: BlockFormat.Paragraph, children: [{text: ''}]}]
+  return WepublishEditor.createDefaultValue()
 }

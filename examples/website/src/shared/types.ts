@@ -56,6 +56,11 @@ export interface ArticleMeta {
   slug?: string
   isBreaking: boolean
 
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaAuthors: Author[]
+  socialMediaImage?: any
+
   teaserType?: TeaserType
   teaserStyle?: TeaserStyle
 }

@@ -3,10 +3,10 @@ import {useTranslation} from 'react-i18next'
 import {Button, Icon, InputGroup, InputNumber} from 'rsuite'
 import {Transforms, Element as SlateElement} from 'slate'
 import {useSlate} from 'slate-react'
-import {SubMenuContext, HBar} from '../../atoms/toolbar'
-import {isFormatActive, nearestAncestor} from './editorUtils'
-import {BlockFormat} from './formats'
-import {ColorPicker} from '../../atoms/colorPicker'
+import {ColorPicker} from '../../../atoms/colorPicker'
+import {HBar, SubMenuContext} from '../../../atoms/toolbar'
+import {WepublishEditor} from '../editor/wepublishEditor'
+import {BlockFormat} from '../editor/formats'
 
 import './tableMenu.less'
 
@@ -94,7 +94,7 @@ export function TableMenu() {
       ].map(({label, num, setNumber}, i) => (
         <InputGroup
           style={{width: '150px'}}
-          disabled={isFormatActive(editor, BlockFormat.Table)}
+          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
           key={i}>
           <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
           <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
@@ -172,7 +172,9 @@ export function TableMenu() {
         height: '10em',
         width: '15em'
       }}>
-      {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
+      {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
+        ? tableModifyControls
+        : tableInsertControls}
     </div>
   )
 }

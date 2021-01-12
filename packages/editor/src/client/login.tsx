@@ -1,5 +1,5 @@
 import React, {useState, useContext, FormEvent, useEffect} from 'react'
-import {RouteActionType} from '@karma.run/react'
+import {RouteActionType, RouteInstance} from '@karma.run/react'
 
 import {LoginTemplate} from './atoms/loginTemplate'
 
@@ -17,21 +17,14 @@ import {LocalStorageKey} from './utility'
 import {Logo} from './logo'
 import {
   useCreateSessionWithOAuth2CodeMutation,
+  useCreateSessionWithJwtMutation,
   useCreateSessionMutation,
-  useGetAuthProvidersQuery
+  useGetAuthProvidersQuery,
+  FullUserRoleFragment
 } from './api'
 
 import {useTranslation} from 'react-i18next'
-import {
-  ControlLabel,
-  Button,
-  Form,
-  FormControl,
-  FormGroup,
-  Divider,
-  Icon,
-  Notification
-} from 'rsuite'
+import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -44,27 +37,48 @@ export function Login() {
   const authDispatch = useContext(AuthDispatchContext)
   const routeDispatch = useRouteDispatch()
 
-  const [authenticate, {loading, error}] = useCreateSessionMutation()
+  const [authenticate, {loading, error: errorLogin}] = useCreateSessionMutation()
 
   const [
     authenticateWithOAuth2Code,
     {loading: loadingOAuth2, error: errorOAuth2}
   ] = useCreateSessionWithOAuth2CodeMutation()
 
+  const [
+    authenticateWithJWT,
+    {loading: loadingJWT, error: errorJWT}
+  ] = useCreateSessionWithJwtMutation()
+
   const {data: providerData} = useGetAuthProvidersQuery({
     variables: {
-      redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+      redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}/oauth`
     }
   })
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (current !== null && current.params !== null && current.query && current.query.code) {
+    if (current !== null && current.path === '/login/jwt' && current.query && current.query.jwt) {
+      authenticateWithJWT({
+        variables: {
+          jwt: current.query.jwt
+        }
+      })
+        .then((response: any) => {
+          const {
+            token: sessionToken,
+            user: {email: responseEmail, roles}
+          } = response.data.createSessionWithJWT
+
+          authenticateUser(sessionToken, responseEmail, roles)
+        })
+        .catch(error => {
+          console.warn('auth error', error)
+          routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
+        })
+    } else if (current !== null && current.params !== null && current.query && current.query.code) {
       // TODO: fix this
-      // eslint-disable-next-line
-      // @ts-ignore
-      const provider = current.params.provider
+      const provider = (current as RouteInstance).params.provider
       const {code} = current!.query
       authenticateWithOAuth2Code({
         variables: {
@@ -76,10 +90,10 @@ export function Login() {
         .then((response: any) => {
           const {
             token: sessionToken,
-            user: {email: responseEmail}
+            user: {email: responseEmail, roles}
           } = response.data.createSessionWithOAuth2Code
 
-          authenticateUser(sessionToken, responseEmail)
+          authenticateUser(sessionToken, responseEmail, roles)
         })
         .catch(() => {
           routeDispatch({type: RouteActionType.ReplaceRoute, route: LoginRoute.create({})})
@@ -88,19 +102,9 @@ export function Login() {
   }, [current])
 
   useEffect(() => {
-    if (error) {
-      Notification.error({
-        title: error.message,
-        duration: 5000
-      })
-    }
-    if (errorOAuth2) {
-      Notification.error({
-        title: errorOAuth2.message,
-        duration: 5000
-      })
-    }
-  }, [error, errorOAuth2])
+    const error = errorLogin?.message ?? errorOAuth2?.message ?? errorJWT?.message
+    if (error) Alert.error(error, 0)
+  }, [errorLogin, errorOAuth2, errorJWT])
 
   async function login(e: FormEvent) {
     e.preventDefault()
@@ -111,13 +115,26 @@ export function Login() {
 
     const {
       token: sessionToken,
-      user: {email: responseEmail}
+      user: {email: responseEmail, roles}
     } = response.data.createSession
 
-    authenticateUser(sessionToken, responseEmail)
+    authenticateUser(sessionToken, responseEmail, roles)
   }
 
-  function authenticateUser(sessionToken: string, responseEmail: string) {
+  function authenticateUser(
+    sessionToken: string,
+    responseEmail: string,
+    userRoles: FullUserRoleFragment[]
+  ) {
+    const permissions = userRoles.reduce((permissions, userRole) => {
+      return [...permissions, ...userRole.permissions.map(permission => permission.id)]
+    }, [] as string[])
+
+    if (!permissions.includes('CAN_LOGIN_EDITOR')) {
+      Alert.error(t('login.unauthorized'), 0)
+      return
+    }
+
     localStorage.setItem(LocalStorageKey.SessionToken, sessionToken)
 
     authDispatch({
@@ -203,6 +220,11 @@ export function Login() {
       {loadingOAuth2 && (
         <div>
           <p>{t('login.OAuth2')}</p>
+        </div>
+      )}
+      {loadingJWT && (
+        <div>
+          <p>{t('login.jwt')}</p>
         </div>
       )}
     </LoginTemplate>

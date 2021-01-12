@@ -61,6 +61,10 @@ export type ArticleInput = {
   shared: Scalars['Boolean'];
   breaking: Scalars['Boolean'];
   hideAuthor: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthorIDs: Array<Scalars['ID']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -92,6 +96,10 @@ export type ArticleRevision = {
   image?: Maybe<Image>;
   authors: Array<Maybe<Author>>;
   breaking: Scalars['Boolean'];
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaAuthors: Array<Author>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -437,10 +445,12 @@ export type Mutation = {
   updatePeer: Peer;
   deletePeer?: Maybe<Scalars['ID']>;
   createSession: SessionWithToken;
+  createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
   revokeSession: Scalars['Boolean'];
   revokeActiveSession: Scalars['Boolean'];
   sessions: Array<Session>;
+  sendJWTLogin: Scalars['String'];
   createToken: CreatedToken;
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
@@ -499,6 +509,11 @@ export type MutationCreateSessionArgs = {
 };
 
 
+export type MutationCreateSessionWithJwtArgs = {
+  jwt: Scalars['String'];
+};
+
+
 export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String'];
   code: Scalars['String'];
@@ -508,6 +523,12 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationRevokeSessionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationSendJwtLoginArgs = {
+  url: Scalars['String'];
+  email: Scalars['String'];
 };
 
 
@@ -536,6 +557,7 @@ export type MutationUpdateUserArgs = {
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -729,6 +751,9 @@ export type PageInput = {
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImageID?: Maybe<Scalars['ID']>;
   blocks: Array<BlockInput>;
 };
 
@@ -756,6 +781,9 @@ export type PageRevision = {
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
   image?: Maybe<Image>;
+  socialMediaTitle?: Maybe<Scalars['String']>;
+  socialMediaDescription?: Maybe<Scalars['String']>;
+  socialMediaImage?: Maybe<Image>;
   blocks: Array<Block>;
 };
 
@@ -1189,7 +1217,7 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
-  roles: Array<Maybe<UserRole>>;
+  roles: Array<UserRole>;
 };
 
 export type UserConnection = {
@@ -1437,7 +1465,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -1447,7 +1475,13 @@ export type ArticleQuery = (
       )>, authors: Array<Maybe<(
         { __typename?: 'Author' }
         & AuthorRefFragment
-      )>>, blocks: Array<(
+      )>>, socialMediaAuthors: Array<(
+        { __typename?: 'Author' }
+        & AuthorRefFragment
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
+      )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
       ) | (
@@ -1514,6 +1548,10 @@ export type CreateSessionMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -1546,6 +1584,31 @@ export type CreateSessionWithOAuth2CodeMutation = (
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
+    ) }
+  ) }
+);
+
+export type CreateSessionWithJwtMutationVariables = Exact<{
+  jwt: Scalars['String'];
+}>;
+
+
+export type CreateSessionWithJwtMutation = (
+  { __typename?: 'Mutation' }
+  & { createSessionWithJWT: (
+    { __typename?: 'SessionWithToken' }
+    & Pick<SessionWithToken, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+      & { roles: Array<(
+        { __typename?: 'UserRole' }
+        & FullUserRoleFragment
+      )> }
     ) }
   ) }
 );
@@ -2123,13 +2186,16 @@ export type PageQuery = (
       & Pick<PageRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'PageRevision' }
-      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'>
+      & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
       )>, properties: Array<(
         { __typename?: 'Properties' }
         & Pick<Properties, 'key' | 'value' | 'public'>
+      )>, socialMediaImage?: Maybe<(
+        { __typename?: 'Image' }
+        & ImageRefFragment
       )>, blocks: Array<(
         { __typename?: 'RichTextBlock' }
         & FullBlock_RichTextBlock_Fragment
@@ -2333,10 +2399,10 @@ export type DeleteTokenMutation = (
 export type FullUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<Maybe<(
+  & { roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
-  )>> }
+  )> }
 );
 
 export type UserListQueryVariables = Exact<{
@@ -3214,6 +3280,14 @@ export const ArticleDocument = gql`
       }
       hideAuthor
       breaking
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaAuthors {
+        ...AuthorRef
+      }
+      socialMediaImage {
+        ...ImageRef
+      }
       blocks {
         ...FullBlock
       }
@@ -3254,11 +3328,14 @@ export const CreateSessionDocument = gql`
   createSession(email: $email, password: $password) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionMutationFn = Apollo.MutationFunction<CreateSessionMutation, CreateSessionMutationVariables>;
 
 /**
@@ -3324,11 +3401,14 @@ export const CreateSessionWithOAuth2CodeDocument = gql`
   createSessionWithOAuth2Code(redirectUri: $redirectUri, name: $name, code: $code) {
     user {
       email
+      roles {
+        ...FullUserRole
+      }
     }
     token
   }
 }
-    `;
+    ${FullUserRoleFragmentDoc}`;
 export type CreateSessionWithOAuth2CodeMutationFn = Apollo.MutationFunction<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
 
 /**
@@ -3356,6 +3436,44 @@ export function useCreateSessionWithOAuth2CodeMutation(baseOptions?: Apollo.Muta
 export type CreateSessionWithOAuth2CodeMutationHookResult = ReturnType<typeof useCreateSessionWithOAuth2CodeMutation>;
 export type CreateSessionWithOAuth2CodeMutationResult = Apollo.MutationResult<CreateSessionWithOAuth2CodeMutation>;
 export type CreateSessionWithOAuth2CodeMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithOAuth2CodeMutation, CreateSessionWithOAuth2CodeMutationVariables>;
+export const CreateSessionWithJwtDocument = gql`
+    mutation CreateSessionWithJWT($jwt: String!) {
+  createSessionWithJWT(jwt: $jwt) {
+    user {
+      email
+      roles {
+        ...FullUserRole
+      }
+    }
+    token
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export type CreateSessionWithJwtMutationFn = Apollo.MutationFunction<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
+
+/**
+ * __useCreateSessionWithJwtMutation__
+ *
+ * To run a mutation, you first call `useCreateSessionWithJwtMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSessionWithJwtMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSessionWithJwtMutation, { data, loading, error }] = useCreateSessionWithJwtMutation({
+ *   variables: {
+ *      jwt: // value for 'jwt'
+ *   },
+ * });
+ */
+export function useCreateSessionWithJwtMutation(baseOptions?: Apollo.MutationHookOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>) {
+        return Apollo.useMutation<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>(CreateSessionWithJwtDocument, baseOptions);
+      }
+export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreateSessionWithJwtMutation>;
+export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
+export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
     query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
@@ -4094,6 +4212,11 @@ export const PageDocument = gql`
         key
         value
         public
+      }
+      socialMediaTitle
+      socialMediaDescription
+      socialMediaImage {
+        ...ImageRef
       }
       blocks {
         ...FullBlock
