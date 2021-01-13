@@ -262,28 +262,16 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             <defaultProps(Panel)
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={
-                Object {
-                  "height": 300,
-                }
-              }
+              style={Object {}}
             >
               <Panel
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={
-                  Object {
-                    "height": 300,
-                  }
-                }
+                style={Object {}}
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={
-                    Object {
-                      "height": 300,
-                    }
-                  }
+                  style={Object {}}
                 >
                   <div
                     className="rs-panel-heading"
@@ -2719,28 +2707,16 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             <defaultProps(Panel)
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={
-                Object {
-                  "height": 300,
-                }
-              }
+              style={Object {}}
             >
               <Panel
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={
-                  Object {
-                    "height": 300,
-                  }
-                }
+                style={Object {}}
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={
-                    Object {
-                      "height": 300,
-                    }
-                  }
+                  style={Object {}}
                 >
                   <div
                     className="rs-panel-heading"
@@ -5598,28 +5574,16 @@ exports[`Author Edit Panel should render 1`] = `
             <defaultProps(Panel)
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={
-                Object {
-                  "height": 300,
-                }
-              }
+              style={Object {}}
             >
               <Panel
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={
-                  Object {
-                    "height": 300,
-                  }
-                }
+                style={Object {}}
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={
-                    Object {
-                      "height": 300,
-                    }
-                  }
+                  style={Object {}}
                 >
                   <div
                     className="rs-panel-heading"
@@ -8057,28 +8021,16 @@ exports[`Author Edit Panel should render with ID 1`] = `
             <defaultProps(Panel)
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={
-                Object {
-                  "height": 300,
-                }
-              }
+              style={Object {}}
             >
               <Panel
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={
-                  Object {
-                    "height": 300,
-                  }
-                }
+                style={Object {}}
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={
-                    Object {
-                      "height": 300,
-                    }
-                  }
+                  style={Object {}}
                 >
                   <div
                     className="rs-panel-heading"
