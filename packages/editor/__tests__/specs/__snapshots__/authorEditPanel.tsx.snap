@@ -1729,9 +1729,18 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                           </div>
                         </div>
                       </Toolbar>
+                      <div
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "color": "#cad5e4",
+                          }
+                        }
+                      >
+                        blocks.richText.startWriting
+                      </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -1765,28 +1774,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                         >
                           <Children
                             decorate={[Function]}
-                            decorations={
-                              Array [
-                                Object {
-                                  "anchor": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "focus": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "placeholder": "blocks.richText.startWriting",
-                                  Symbol(placeholder): true,
-                                },
-                              ]
-                            }
+                            decorations={Array []}
                             node={
                               Object {
                                 "addMark": [Function],
@@ -1833,28 +1821,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                           >
                             <Element
                               decorate={[Function]}
-                              decorations={
-                                Array [
-                                  Object {
-                                    "anchor": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "focus": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "placeholder": "blocks.richText.startWriting",
-                                    Symbol(placeholder): true,
-                                  },
-                                ]
-                              }
+                              decorations={Array []}
                               element={
                                 Object {
                                   "children": Array [
@@ -1875,28 +1842,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                               >
                                 <Children
                                   decorate={[Function]}
-                                  decorations={
-                                    Array [
-                                      Object {
-                                        "anchor": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "focus": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "placeholder": "blocks.richText.startWriting",
-                                        Symbol(placeholder): true,
-                                      },
-                                    ]
-                                  }
+                                  decorations={Array []}
                                   node={
                                     Object {
                                       "children": Array [
@@ -1912,28 +1858,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   selection={null}
                                 >
                                   <Text
-                                    decorations={
-                                      Array [
-                                        Object {
-                                          "anchor": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "focus": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "placeholder": "blocks.richText.startWriting",
-                                          Symbol(placeholder): true,
-                                        },
-                                      ]
-                                    }
+                                    decorations={Array []}
                                     isLast={true}
                                     key="9"
                                     parent={
@@ -1961,9 +1886,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         key="9-0"
                                         leaf={
                                           Object {
-                                            "placeholder": "blocks.richText.startWriting",
                                             "text": "",
-                                            Symbol(placeholder): true,
                                           }
                                         }
                                         parent={
@@ -1986,29 +1909,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         <span
                                           data-slate-leaf={true}
                                         >
-                                          <span
-                                            contentEditable={false}
-                                            style={
-                                              Object {
-                                                "display": "inline-block",
-                                                "maxWidth": "100%",
-                                                "opacity": "0.333",
-                                                "pointerEvents": "none",
-                                                "verticalAlign": "text-top",
-                                                "whiteSpace": "nowrap",
-                                                "width": "0",
-                                              }
-                                            }
-                                          >
-                                            blocks.richText.startWriting
-                                          </span>
                                           <String
                                             isLast={true}
                                             leaf={
                                               Object {
-                                                "placeholder": "blocks.richText.startWriting",
                                                 "text": "",
-                                                Symbol(placeholder): true,
                                               }
                                             }
                                             parent={
@@ -4596,9 +4501,18 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                           </div>
                         </div>
                       </Toolbar>
+                      <div
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "color": "#cad5e4",
+                          }
+                        }
+                      >
+                        blocks.richText.startWriting
+                      </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -4632,28 +4546,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                         >
                           <Children
                             decorate={[Function]}
-                            decorations={
-                              Array [
-                                Object {
-                                  "anchor": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "focus": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "placeholder": "blocks.richText.startWriting",
-                                  Symbol(placeholder): true,
-                                },
-                              ]
-                            }
+                            decorations={Array []}
                             node={
                               Object {
                                 "addMark": [Function],
@@ -4700,28 +4593,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                           >
                             <Element
                               decorate={[Function]}
-                              decorations={
-                                Array [
-                                  Object {
-                                    "anchor": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "focus": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "placeholder": "blocks.richText.startWriting",
-                                    Symbol(placeholder): true,
-                                  },
-                                ]
-                              }
+                              decorations={Array []}
                               element={
                                 Object {
                                   "children": Array [
@@ -4742,28 +4614,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                               >
                                 <Children
                                   decorate={[Function]}
-                                  decorations={
-                                    Array [
-                                      Object {
-                                        "anchor": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "focus": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "placeholder": "blocks.richText.startWriting",
-                                        Symbol(placeholder): true,
-                                      },
-                                    ]
-                                  }
+                                  decorations={Array []}
                                   node={
                                     Object {
                                       "children": Array [
@@ -4779,28 +4630,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   selection={null}
                                 >
                                   <Text
-                                    decorations={
-                                      Array [
-                                        Object {
-                                          "anchor": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "focus": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "placeholder": "blocks.richText.startWriting",
-                                          Symbol(placeholder): true,
-                                        },
-                                      ]
-                                    }
+                                    decorations={Array []}
                                     isLast={true}
                                     key="7"
                                     parent={
@@ -4828,9 +4658,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         key="7-0"
                                         leaf={
                                           Object {
-                                            "placeholder": "blocks.richText.startWriting",
                                             "text": "",
-                                            Symbol(placeholder): true,
                                           }
                                         }
                                         parent={
@@ -4853,29 +4681,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         <span
                                           data-slate-leaf={true}
                                         >
-                                          <span
-                                            contentEditable={false}
-                                            style={
-                                              Object {
-                                                "display": "inline-block",
-                                                "maxWidth": "100%",
-                                                "opacity": "0.333",
-                                                "pointerEvents": "none",
-                                                "verticalAlign": "text-top",
-                                                "whiteSpace": "nowrap",
-                                                "width": "0",
-                                              }
-                                            }
-                                          >
-                                            blocks.richText.startWriting
-                                          </span>
                                           <String
                                             isLast={true}
                                             leaf={
                                               Object {
-                                                "placeholder": "blocks.richText.startWriting",
                                                 "text": "",
-                                                Symbol(placeholder): true,
                                               }
                                             }
                                             parent={
@@ -7041,9 +6851,18 @@ exports[`Author Edit Panel should render 1`] = `
                           </div>
                         </div>
                       </Toolbar>
+                      <div
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "color": "#cad5e4",
+                          }
+                        }
+                      >
+                        blocks.richText.startWriting
+                      </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -7077,28 +6896,7 @@ exports[`Author Edit Panel should render 1`] = `
                         >
                           <Children
                             decorate={[Function]}
-                            decorations={
-                              Array [
-                                Object {
-                                  "anchor": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "focus": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "placeholder": "blocks.richText.startWriting",
-                                  Symbol(placeholder): true,
-                                },
-                              ]
-                            }
+                            decorations={Array []}
                             node={
                               Object {
                                 "addMark": [Function],
@@ -7145,28 +6943,7 @@ exports[`Author Edit Panel should render 1`] = `
                           >
                             <Element
                               decorate={[Function]}
-                              decorations={
-                                Array [
-                                  Object {
-                                    "anchor": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "focus": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "placeholder": "blocks.richText.startWriting",
-                                    Symbol(placeholder): true,
-                                  },
-                                ]
-                              }
+                              decorations={Array []}
                               element={
                                 Object {
                                   "children": Array [
@@ -7187,28 +6964,7 @@ exports[`Author Edit Panel should render 1`] = `
                               >
                                 <Children
                                   decorate={[Function]}
-                                  decorations={
-                                    Array [
-                                      Object {
-                                        "anchor": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "focus": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "placeholder": "blocks.richText.startWriting",
-                                        Symbol(placeholder): true,
-                                      },
-                                    ]
-                                  }
+                                  decorations={Array []}
                                   node={
                                     Object {
                                       "children": Array [
@@ -7224,28 +6980,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   selection={null}
                                 >
                                   <Text
-                                    decorations={
-                                      Array [
-                                        Object {
-                                          "anchor": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "focus": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "placeholder": "blocks.richText.startWriting",
-                                          Symbol(placeholder): true,
-                                        },
-                                      ]
-                                    }
+                                    decorations={Array []}
                                     isLast={true}
                                     key="1"
                                     parent={
@@ -7273,9 +7008,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         key="1-0"
                                         leaf={
                                           Object {
-                                            "placeholder": "blocks.richText.startWriting",
                                             "text": "",
-                                            Symbol(placeholder): true,
                                           }
                                         }
                                         parent={
@@ -7298,29 +7031,11 @@ exports[`Author Edit Panel should render 1`] = `
                                         <span
                                           data-slate-leaf={true}
                                         >
-                                          <span
-                                            contentEditable={false}
-                                            style={
-                                              Object {
-                                                "display": "inline-block",
-                                                "maxWidth": "100%",
-                                                "opacity": "0.333",
-                                                "pointerEvents": "none",
-                                                "verticalAlign": "text-top",
-                                                "whiteSpace": "nowrap",
-                                                "width": "0",
-                                              }
-                                            }
-                                          >
-                                            blocks.richText.startWriting
-                                          </span>
                                           <String
                                             isLast={true}
                                             leaf={
                                               Object {
-                                                "placeholder": "blocks.richText.startWriting",
                                                 "text": "",
-                                                Symbol(placeholder): true,
                                               }
                                             }
                                             parent={
@@ -9488,9 +9203,18 @@ exports[`Author Edit Panel should render with ID 1`] = `
                           </div>
                         </div>
                       </Toolbar>
+                      <div
+                        onClick={[Function]}
+                        style={
+                          Object {
+                            "color": "#cad5e4",
+                          }
+                        }
+                      >
+                        blocks.richText.startWriting
+                      </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -9524,28 +9248,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                         >
                           <Children
                             decorate={[Function]}
-                            decorations={
-                              Array [
-                                Object {
-                                  "anchor": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "focus": Object {
-                                    "offset": 0,
-                                    "path": Array [
-                                      0,
-                                      0,
-                                    ],
-                                  },
-                                  "placeholder": "blocks.richText.startWriting",
-                                  Symbol(placeholder): true,
-                                },
-                              ]
-                            }
+                            decorations={Array []}
                             node={
                               Object {
                                 "addMark": [Function],
@@ -9592,28 +9295,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                           >
                             <Element
                               decorate={[Function]}
-                              decorations={
-                                Array [
-                                  Object {
-                                    "anchor": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "focus": Object {
-                                      "offset": 0,
-                                      "path": Array [
-                                        0,
-                                        0,
-                                      ],
-                                    },
-                                    "placeholder": "blocks.richText.startWriting",
-                                    Symbol(placeholder): true,
-                                  },
-                                ]
-                              }
+                              decorations={Array []}
                               element={
                                 Object {
                                   "children": Array [
@@ -9634,28 +9316,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                               >
                                 <Children
                                   decorate={[Function]}
-                                  decorations={
-                                    Array [
-                                      Object {
-                                        "anchor": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "focus": Object {
-                                          "offset": 0,
-                                          "path": Array [
-                                            0,
-                                            0,
-                                          ],
-                                        },
-                                        "placeholder": "blocks.richText.startWriting",
-                                        Symbol(placeholder): true,
-                                      },
-                                    ]
-                                  }
+                                  decorations={Array []}
                                   node={
                                     Object {
                                       "children": Array [
@@ -9671,28 +9332,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   selection={null}
                                 >
                                   <Text
-                                    decorations={
-                                      Array [
-                                        Object {
-                                          "anchor": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "focus": Object {
-                                            "offset": 0,
-                                            "path": Array [
-                                              0,
-                                              0,
-                                            ],
-                                          },
-                                          "placeholder": "blocks.richText.startWriting",
-                                          Symbol(placeholder): true,
-                                        },
-                                      ]
-                                    }
+                                    decorations={Array []}
                                     isLast={true}
                                     key="5"
                                     parent={
@@ -9720,9 +9360,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         key="5-0"
                                         leaf={
                                           Object {
-                                            "placeholder": "blocks.richText.startWriting",
                                             "text": "",
-                                            Symbol(placeholder): true,
                                           }
                                         }
                                         parent={
@@ -9745,29 +9383,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         <span
                                           data-slate-leaf={true}
                                         >
-                                          <span
-                                            contentEditable={false}
-                                            style={
-                                              Object {
-                                                "display": "inline-block",
-                                                "maxWidth": "100%",
-                                                "opacity": "0.333",
-                                                "pointerEvents": "none",
-                                                "verticalAlign": "text-top",
-                                                "whiteSpace": "nowrap",
-                                                "width": "0",
-                                              }
-                                            }
-                                          >
-                                            blocks.richText.startWriting
-                                          </span>
                                           <String
                                             isLast={true}
                                             leaf={
                                               Object {
-                                                "placeholder": "blocks.richText.startWriting",
                                                 "text": "",
-                                                Symbol(placeholder): true,
                                               }
                                             }
                                             parent={

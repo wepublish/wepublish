@@ -119,7 +119,7 @@ export function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 
 //       switch (code) {
 //         case 'child_invalid':
-//           Editor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
+//           WepublishEditor.setNodes(editor, {type: BlockFormat.Paragraph}, {at: path})
 //           break
 //       }
 //     }
@@ -137,7 +137,7 @@ export function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
 
 //       switch (code) {
 //         case 'child_invalid':
-//           Editor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
+//           WepublishEditor.setNodes(editor, {type: BlockFormat.ListItem}, {at: path})
 //           break
 //       }
 //     }
