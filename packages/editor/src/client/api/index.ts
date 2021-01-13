@@ -410,7 +410,7 @@ export type Invoice = {
   mail: Scalars['String'];
   user?: Maybe<User>;
   description?: Maybe<Scalars['RichText']>;
-  payedAt?: Maybe<Scalars['DateTime']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
   items: Array<InvoiceItem>;
   total: Scalars['Int'];
 };
@@ -430,7 +430,7 @@ export type InvoiceInput = {
   mail: Scalars['String'];
   userID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  payedAt?: Maybe<Scalars['DateTime']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
   items: Array<InvoiceItemInput>;
 };
 
@@ -455,7 +455,7 @@ export type InvoiceItemInput = {
 export enum InvoiceSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT',
-  PayedAt = 'PAYED_AT'
+  PaidAt = 'PAID_AT'
 }
 
 export type LinkPageBreakBlock = {
@@ -676,7 +676,7 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationUpdateUserSubscriptionArgs = {
-  userId: Scalars['ID'];
+  userID: Scalars['ID'];
   input: UserSubscriptionInput;
 };
 
@@ -694,7 +694,7 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationDeleteUserSubscriptionArgs = {
-  userId: Scalars['ID'];
+  userID: Scalars['ID'];
 };
 
 
@@ -1010,7 +1010,6 @@ export type Payment = {
   invoice: Invoice;
   intentData?: Maybe<Scalars['String']>;
   paymentMethod: PaymentMethod;
-  payedAt?: Maybe<Scalars['DateTime']>;
   paymentData?: Maybe<Scalars['String']>;
 };
 
@@ -3009,7 +3008,7 @@ export type UpdateUserMutation = (
 );
 
 export type UpdateUserSubscriptionMutationVariables = Exact<{
-  userId: Scalars['ID'];
+  userID: Scalars['ID'];
   input: UserSubscriptionInput;
 }>;
 
@@ -3047,7 +3046,7 @@ export type DeleteUserMutation = (
 );
 
 export type DeleteUserSubscriptionMutationVariables = Exact<{
-  userId: Scalars['ID'];
+  userID: Scalars['ID'];
 }>;
 
 
@@ -5709,8 +5708,8 @@ export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutati
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const UpdateUserSubscriptionDocument = gql`
-    mutation UpdateUserSubscription($userId: ID!, $input: UserSubscriptionInput!) {
-  updateUserSubscription(userId: $userId, input: $input) {
+    mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
+  updateUserSubscription(userID: $userID, input: $input) {
     ...FullUserSubscription
   }
 }
@@ -5730,7 +5729,7 @@ export type UpdateUserSubscriptionMutationFn = Apollo.MutationFunction<UpdateUse
  * @example
  * const [updateUserSubscriptionMutation, { data, loading, error }] = useUpdateUserSubscriptionMutation({
  *   variables: {
- *      userId: // value for 'userId'
+ *      userID: // value for 'userID'
  *      input: // value for 'input'
  *   },
  * });
@@ -5805,8 +5804,8 @@ export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutati
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const DeleteUserSubscriptionDocument = gql`
-    mutation DeleteUserSubscription($userId: ID!) {
-  deleteUserSubscription(userId: $userId)
+    mutation DeleteUserSubscription($userID: ID!) {
+  deleteUserSubscription(userID: $userID)
 }
     `;
 export type DeleteUserSubscriptionMutationFn = Apollo.MutationFunction<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
@@ -5824,7 +5823,7 @@ export type DeleteUserSubscriptionMutationFn = Apollo.MutationFunction<DeleteUse
  * @example
  * const [deleteUserSubscriptionMutation, { data, loading, error }] = useDeleteUserSubscriptionMutation({
  *   variables: {
- *      userId: // value for 'userId'
+ *      userID: // value for 'userID'
  *   },
  * });
  */

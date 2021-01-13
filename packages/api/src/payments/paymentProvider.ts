@@ -16,7 +16,7 @@ export interface WebhookForPaymentIntentProps {
 export interface IntentState {
   paymentID: string
   state: PaymentState
-  payedAt?: Date
+  paidAt?: Date
   paymentData?: string
   customerID?: string
 }
@@ -49,7 +49,7 @@ export interface Intent {
   intentID: string
   intentSecret: string
   state: PaymentState
-  payedAt?: Date
+  paidAt?: Date
   intentData?: string
   paymentData?: string
 }
@@ -101,7 +101,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const paymentProviderWebhookRouter = Router()
 
   paymentModelEvents.on('update', async (context, model) => {
-    if (model.state === PaymentState.Payed) {
+    if (model.state === PaymentState.Paid) {
       const invoice = await context.loaders.invoicesByID.load(model.invoiceID)
       if (!invoice) {
         console.warn(`No invoice with id ${model.invoiceID}`)
@@ -111,7 +111,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
         id: invoice.id,
         input: {
           ...invoice,
-          payedAt: new Date()
+          paidAt: new Date()
         }
       })
     }

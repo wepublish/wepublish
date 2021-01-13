@@ -383,7 +383,7 @@ export const CanDeleteInvoice: Permission = {
 
 export const CanCreatePayment: Permission = {
   id: 'CAN_CREATE_PAYMENT',
-  description: 'Allows to create an payment',
+  description: 'Allows to create a payment',
   deprecated: false
 }
 

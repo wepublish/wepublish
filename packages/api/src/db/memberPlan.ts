@@ -18,7 +18,7 @@ export const AllPaymentPeriodicity: PaymentPeriodicity[] = [
 export interface AvailablePaymentMethod {
   paymentMethodIDs: string[]
   paymentPeriodicities: PaymentPeriodicity[]
-  //minimumDurationMonths: number
+  // minimumDurationMonths: number
   forceAutoRenewal: boolean
 }
 

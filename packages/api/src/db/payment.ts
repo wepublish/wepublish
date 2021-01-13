@@ -5,7 +5,7 @@ export enum PaymentState {
   Submitted = 'submitted',
   RequiresUserAction = 'requiresUserAction',
   Processing = 'processing',
-  Payed = 'payed',
+  Paid = 'paid',
   Canceled = 'canceled',
   Declined = 'declined'
 }

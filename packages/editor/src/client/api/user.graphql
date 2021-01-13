@@ -61,8 +61,8 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
     }
 }
 
-mutation UpdateUserSubscription($userId: ID!, $input: UserSubscriptionInput!) {
-    updateUserSubscription(userId: $userId, input: $input) {
+mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
+    updateUserSubscription(userID: $userID, input: $input) {
         ...FullUserSubscription
     }
 }
@@ -77,6 +77,6 @@ mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
 }
 
-mutation DeleteUserSubscription($userId: ID!) {
-    deleteUserSubscription(userId: $userId)
+mutation DeleteUserSubscription($userID: ID!) {
+    deleteUserSubscription(userID: $userID)
 }

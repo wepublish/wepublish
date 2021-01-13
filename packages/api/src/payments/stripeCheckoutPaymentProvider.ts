@@ -24,7 +24,7 @@ function mapStripeCheckoutEventToPaymentStatue(event: string): PaymentState | nu
     case 'processing':
       return PaymentState.Processing
     case 'succeeded':
-      return PaymentState.Payed
+      return PaymentState.Paid
     case 'canceled':
       return PaymentState.Canceled
     default:

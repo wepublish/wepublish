@@ -379,13 +379,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateUserSubscription: {
       type: GraphQLUserSubscription,
       args: {
-        userId: {type: GraphQLNonNull(GraphQLID)},
+        userID: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
       },
-      resolve(root, {userId, input}, {authenticate, dbAdapter}) {
+      resolve(root, {userID, input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanCreateUser, roles)
-        return dbAdapter.user.updateUserSubscription({userId, input})
+        return dbAdapter.user.updateUserSubscription({userID, input})
       }
     },
 
@@ -432,13 +432,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteUserSubscription: {
       type: GraphQLString,
       args: {
-        userId: {type: GraphQLNonNull(GraphQLID)}
+        userID: {type: GraphQLNonNull(GraphQLID)}
       },
-      async resolve(root, {userId}, {authenticate, dbAdapter}) {
+      async resolve(root, {userID}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteUser, roles)
-        await dbAdapter.user.deleteUserSubscription({userId})
-        return userId
+        await dbAdapter.user.deleteUserSubscription({userID})
+        return userID
       }
     },
 
@@ -793,7 +793,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanCreateMemberPlan, roles)
 
         if (input.minimumDuration < 0) {
-          throw new Error('Input.minimupDuration can not be < 0')
+          throw new Error('Input.minimumDuration can not be < 0')
         } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
           throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
         }

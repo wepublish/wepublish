@@ -49,7 +49,7 @@ export interface UserSubscriptionPeriod {
 }
 
 export interface UserSubscription {
-  readonly memberPlanId: string
+  readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number
   readonly autoRenew: boolean
@@ -61,7 +61,7 @@ export interface UserSubscription {
 }
 
 export interface UserSubscriptionInput {
-  readonly memberPlanId: string
+  readonly memberPlanID: string
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly monthlyAmount: number
   readonly autoRenew: boolean
@@ -72,12 +72,12 @@ export interface UserSubscriptionInput {
 }
 
 export interface UpdateUserSubscriptionArgs {
-  readonly userId: string
+  readonly userID: string
   readonly input: UserSubscriptionInput
 }
 
 export interface DeleteUserSubscriptionArgs {
-  readonly userId: string
+  readonly userID: string
 }
 
 export interface PaymentProviderCustomer {

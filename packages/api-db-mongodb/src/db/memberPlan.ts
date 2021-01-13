@@ -63,8 +63,8 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
 
     if (!value) return null
 
-    const {_id: outId, ...memberPlan} = value
-    return {id: outId, ...memberPlan}
+    const {_id: outID, ...memberPlan} = value
+    return {id: outID, ...memberPlan}
   }
 
   async deleteMemberPlan({id}: DeleteMemberPlanArgs): Promise<string | null> {
@@ -112,11 +112,11 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
         }
       : {}
 
-    let textFilter: FilterQuery<any> = {}
+    const textFilter: FilterQuery<any> = {}
 
     // TODO: Rename to search
-    if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+    if (filter?.name !== undefined) {
+      textFilter.$or = [{name: {$regex: filter.name, $options: 'i'}}]
     }
 
     const [totalCount, memberPlans] = await Promise.all([
@@ -143,15 +143,11 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       limit.type === LimitType.First
         ? memberPlans.length > limitCount
         : cursor.type === InputCursorType.Before
-        ? true
-        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? memberPlans.length > limitCount
         : cursor.type === InputCursorType.After
-        ? true
-        : false
 
     const firstMemberPlan = nodes[0]
     const lastMemberPlan = nodes[nodes.length - 1]

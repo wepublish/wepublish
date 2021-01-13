@@ -16,7 +16,8 @@ export interface Invoice {
   mail: string
   userID?: string
   description?: RichTextNode[]
-  payedAt: Date | null
+  paidAt: Date | null
+  canceledAt: Date | null
   items: InvoiceItem[]
 }
 
@@ -26,7 +27,8 @@ export interface InvoiceInput {
   mail: string
   userID?: string
   description?: RichTextNode[]
-  payedAt: Date | null
+  paidAt: Date | null
+  canceledAt: Date | null
   items: InvoiceItem[]
 }
 
@@ -46,7 +48,7 @@ export interface DeleteInvoiceArgs {
 export enum InvoiceSort {
   CreatedAt = 'modifiedAt',
   ModifiedAt = 'modifiedAt',
-  PayedAt = 'payedAt'
+  PaidAt = 'paidAt'
 }
 
 export interface InvoiceFilter {

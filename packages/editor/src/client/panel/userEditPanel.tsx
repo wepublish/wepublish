@@ -254,7 +254,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           size={'sm'}
           onHide={() => setIsUserSubscriptonEditOpen(false)}>
           <UserSubscriptionEditPanel
-            userId={id}
+            userID={id}
             subscription={subscription}
             onClose={() => setIsUserSubscriptonEditOpen(false)}
             onSave={value => {

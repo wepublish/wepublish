@@ -261,11 +261,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
   }
 
   async updateUserSubscription({
-    userId,
+    userID,
     input
   }: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription> {
     const {
-      memberPlanId,
+      memberPlanID,
       paymentPeriodicity,
       monthlyAmount,
       autoRenew,
@@ -275,11 +275,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       deactivatedAt
     } = input
     const {value} = await this.users.findOneAndUpdate(
-      {_id: userId},
+      {_id: userID},
       {
         $set: {
           modifiedAt: new Date(),
-          'subscription.memberPlanId': memberPlanId,
+          'subscription.memberPlanID': memberPlanID,
           'subscription.paymentPeriodicity': paymentPeriodicity,
           'subscription.monthlyAmount': monthlyAmount,
           'subscription.autoRenew': autoRenew,
@@ -295,9 +295,9 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     return value?.subscription ? value.subscription : null
   }
 
-  async deleteUserSubscription({userId}: DeleteUserSubscriptionArgs): Promise<string | null> {
+  async deleteUserSubscription({userID}: DeleteUserSubscriptionArgs): Promise<string | null> {
     const {value} = await this.users.findOneAndUpdate(
-      {_id: userId},
+      {_id: userID},
       {
         $set: {
           modifiedAt: new Date()

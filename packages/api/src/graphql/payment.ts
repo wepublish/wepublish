@@ -23,7 +23,7 @@ export const GraphQLPaymentState = new GraphQLEnumType({
     Submitted: {value: PaymentState.Submitted},
     RequiresUserAction: {value: PaymentState.RequiresUserAction},
     Processing: {value: PaymentState.Processing},
-    Payed: {value: PaymentState.Payed},
+    Payed: {value: PaymentState.Paid},
     Canceled: {value: PaymentState.Canceled},
     Declined: {value: PaymentState.Declined}
   }
@@ -53,7 +53,6 @@ export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
     },
-    payedAt: {type: GraphQLDateTime},
     paymentData: {type: GraphQLString}
   }
 })

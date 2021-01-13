@@ -50,7 +50,7 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
       })
     },
     description: {type: GraphQLRichText},
-    payedAt: {type: GraphQLDateTime},
+    paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     total: {
       type: GraphQLNonNull(GraphQLInt),
@@ -75,7 +75,7 @@ export const GraphQLInvoiceSort = new GraphQLEnumType({
   values: {
     CREATED_AT: {value: InvoiceSort.CreatedAt},
     MODIFIED_AT: {value: InvoiceSort.ModifiedAt},
-    PAYED_AT: {value: InvoiceSort.PayedAt}
+    PAID_AT: {value: InvoiceSort.PaidAt}
   }
 })
 
@@ -104,7 +104,7 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
     mail: {type: GraphQLNonNull(GraphQLString)},
     userID: {type: GraphQLID},
     description: {type: GraphQLRichText},
-    payedAt: {type: GraphQLDateTime},
+    paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

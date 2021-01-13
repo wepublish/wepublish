@@ -35,7 +35,8 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       mail: input.mail,
       userID: input.userID,
       description: input.description,
-      payedAt: input.payedAt,
+      paidAt: input.paidAt,
+      canceledAt: input.canceledAt,
       items: input.items
     })
 
@@ -52,7 +53,8 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
           mail: input.mail,
           userID: input.userID,
           description: input.description,
-          payedAt: input.payedAt,
+          paidAt: input.paidAt,
+          canceledAt: input.canceledAt,
           items: input.items
         }
       },
@@ -110,11 +112,11 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
         }
       : {}
 
-    let textFilter: FilterQuery<any> = {}
+    const textFilter: FilterQuery<any> = {}
 
     // TODO: Rename to search
     if (filter?.mail !== undefined) {
-      textFilter['$or'] = [{mail: {$regex: filter.mail, $options: 'i'}}]
+      textFilter.$or = [{mail: {$regex: filter.mail, $options: 'i'}}]
     }
 
     const [totalCount, invoices] = await Promise.all([
@@ -141,15 +143,11 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       limit.type === LimitType.First
         ? invoices.length > limitCount
         : cursor.type === InputCursorType.Before
-        ? true
-        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? invoices.length > limitCount
         : cursor.type === InputCursorType.After
-        ? true
-        : false
 
     const firstInvoice = nodes[0]
     const lastInvoice = nodes[nodes.length - 1]
@@ -185,8 +183,8 @@ function invoiceSortFieldForSort(sort: InvoiceSort) {
     case InvoiceSort.ModifiedAt:
       return 'modifiedAt'
 
-    case InvoiceSort.PayedAt:
-      return 'payedAt'
+    case InvoiceSort.PaidAt:
+      return 'paidAt'
   }
 }
 
@@ -199,7 +197,7 @@ function invoiceDateForSort(invoice: DBInvoice, sort: InvoiceSort): Date {
     case InvoiceSort.ModifiedAt:
       return invoice.modifiedAt
 
-    case InvoiceSort.PayedAt:
-      if (invoice.payedAt) return invoice.payedAt
+    case InvoiceSort.PaidAt:
+      if (invoice.paidAt) return invoice.paidAt
   }
 }

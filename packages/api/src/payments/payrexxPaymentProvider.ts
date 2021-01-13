@@ -25,7 +25,7 @@ function mapPayrexxEventToPaymentStatue(event: string): PaymentState | null {
     case 'waiting':
       return PaymentState.Processing
     case 'confirmed':
-      return PaymentState.Payed
+      return PaymentState.Paid
     case 'cancelled':
       return PaymentState.Canceled
     case 'declined':

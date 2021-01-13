@@ -27,7 +27,7 @@ import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 export interface UserSubscriptionEditPanelProps {
-  userId: string
+  userID: string
   subscription?: FullUserSubscriptionFragment
 
   onClose?(): void
@@ -35,7 +35,7 @@ export interface UserSubscriptionEditPanelProps {
 }
 
 export function UserSubscriptionEditPanel({
-  userId,
+  userID,
   subscription,
   onClose,
   onSave
@@ -118,7 +118,7 @@ export function UserSubscriptionEditPanel({
 
     const {data} = await updateUserSubscription({
       variables: {
-        userId,
+        userID,
         input: {
           memberPlanId: memberPlan.id,
           monthlyAmount,

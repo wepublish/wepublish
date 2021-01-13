@@ -317,7 +317,8 @@ export interface DBInvoice {
 
   userID?: string
   description?: RichTextNode[]
-  payedAt: Date | null
+  paidAt: Date | null
+  canceledAt: Date | null
   items: InvoiceItem[]
 }
 
