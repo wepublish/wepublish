@@ -9,7 +9,7 @@ import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paym
 import {capitalizeFirstLetter} from './utility'
 
 import {methodsToProxy} from './events'
-import {runJob} from './jobs'
+import {JobType, runJob} from './jobs'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -109,10 +109,10 @@ export class WepublishServer {
     this.app.listen(port ?? 4000, hostname ?? 'localhost')
   }
 
-  async runJob(command: string): Promise<void> {
+  async runJob(command: JobType, data: any): Promise<void> {
     try {
       const context = await contextFromRequest(null, this.opts)
-      await runJob('dailyMembershipRenewal', context)
+      await runJob(command, context, data)
     } catch (error) {
       // TODO: error handling
       console.warn(`Error while running Job: ${command}`, error)
