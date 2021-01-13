@@ -9,7 +9,7 @@ import {
   SubMenuButton,
   SubMenuButtonProps
 } from '../../../atoms/toolbar'
-import {isFormatActive, toggleFormat} from '../editor/utils'
+import {WepublishEditor} from '../editor/wepublishEditor'
 import {Format} from '../editor/formats'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
@@ -22,10 +22,10 @@ export function FormatIconButton({icon, format}: FormatBlockIconButtonProps) {
   return (
     <ToolbarIconButton
       icon={icon}
-      active={isFormatActive(editor, format)}
+      active={WepublishEditor.isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
-        toggleFormat(editor, format)
+        WepublishEditor.toggleFormat(editor, format)
       }}
     />
   )
@@ -40,10 +40,10 @@ export function FormatButton({format, children}: FormatBlockButtonProps) {
 
   return (
     <ToolbarButton
-      active={isFormatActive(editor, format)}
+      active={WepublishEditor.isFormatActive(editor, format)}
       onMouseDown={e => {
         e.preventDefault()
-        toggleFormat(editor, format)
+        WepublishEditor.toggleFormat(editor, format)
       }}>
       {children}
     </ToolbarButton>
