@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 import {
-  WepublishServer,
-  URLAdapter,
+  Author,
+  MailgunMailProvider,
+  Oauth2Provider,
+  PayrexxPaymentProvider,
   PublicArticle,
   PublicPage,
-  Author,
-  Oauth2Provider,
-  MailgunMailProvider,
-  // MailchimpMailProvider, // left here intentionally for testing
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxPaymentProvider
+  URLAdapter,
+  WepublishServer
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -19,6 +18,10 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
+import yargs from 'yargs'
+// @ts-ignore
+import {hideBin} from 'yargs/helpers'
+import {JobType} from '@wepublish/api/lib/jobs'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -224,7 +227,42 @@ async function asyncMain() {
     tracing: true
   })
 
-  await server.listen(port, address)
+  // eslint-disable-next-line no-unused-expressions
+  yargs(hideBin(process.argv))
+    .command(
+      ['listen', '$0'],
+      'start the server',
+      () => {},
+      async argv => {
+        await server.listen(port, address)
+      }
+    )
+    .command(
+      'sendTestMail [recipient]',
+      'send a test mail',
+      yargs => {
+        yargs.positional('recipient', {
+          type: 'string',
+          default: 'dev@wepublish.ch',
+          describe: 'recipient of the test mail'
+        })
+      },
+      async argv => {
+        await server.runJob(JobType.SendTestMail, {
+          subject: 'This is a test mail from a we.publish instance',
+          recipient: argv.recipient,
+          message: 'Hello from the other side',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+        console.log(`Sent test mail to ${argv.recipient}`)
+        process.exit(0)
+      }
+    )
+    .option('verbose', {
+      alias: 'v',
+      type: 'boolean',
+      description: 'Run with verbose logging'
+    }).argv
 }
 
 asyncMain().catch(err => {
