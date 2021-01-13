@@ -173,12 +173,6 @@ A good place to start is with an issue that has the label [good first issue](htt
 4. Push to the Branch (`git push origin f/AmazingFeature`)
 5. Open a Pull Request
 
-### Adding new API
-
-- Add into `/api/db` and `/api/graphql` your definitions.
-
-- Then import them in `/api/index/`
-
 
 ## Code of Conduct
 We.publish is dedicated to building a welcoming, diverse, safe community. 
