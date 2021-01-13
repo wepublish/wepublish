@@ -19,6 +19,7 @@ import {
 } from '../db/comment'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
+import {GraphQLPublicUser, GraphQLUser} from './user'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -91,7 +92,7 @@ export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    userID: {type: GraphQLNonNull(GraphQLID)},
+    userID: {type: GraphQLNonNull(GraphQLUser)},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
@@ -121,7 +122,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
-    userID: {type: GraphQLNonNull(GraphQLID)},
+    userID: {type: GraphQLNonNull(GraphQLPublicUser)},
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
