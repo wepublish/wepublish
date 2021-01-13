@@ -20,7 +20,6 @@ import {
 } from '../error'
 
 import {GraphQLArticleInput, GraphQLArticle} from './article'
-import {GraphQLCommentInput, GraphQLComment} from './comment'
 import {BlockMap, Block, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
@@ -589,27 +588,6 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         await mediaAdapter.deleteImage(id)
         return dbAdapter.image.deleteImage({id})
-      }
-    },
-
-    // Comment
-    // =======
-
-    createComment: {
-      type: GraphQLNonNull(GraphQLComment),
-      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
-        // TODO: Handle authorization
-        const {roles} = authenticate()
-        console.log(roles)
-
-        if (input.revisions[0].text[0].children[0].text.length > 1000) {
-          throw new Error(`Comment Length should be maximum of 1000 characters`)
-        }
-
-        return await dbAdapter.comment.createComment({
-          input: {...input}
-        })
       }
     },
 
