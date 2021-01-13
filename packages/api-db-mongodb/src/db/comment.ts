@@ -8,7 +8,9 @@ import {
   LimitType,
   InputCursorType,
   CommentSort,
-  SortOrder
+  SortOrder,
+  PublicComment,
+  CommentAuthorType
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -47,12 +49,14 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
   }
 
   async createComment({input}: CreateCommentArgs): Promise<Comment> {
-    const {...data} = input
+    const {text, ...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,
+      state: CommentState.PendingApproval,
+      authorType: CommentAuthorType.Author,
       revisions: [
         {
-          ...data.revisions[0],
+          text,
           createdAt: new Date()
         }
       ],
@@ -155,7 +159,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async getPublicComments(ids: readonly string[]): Promise<Comment[]> {
+  async getCommentsForItemByID(ids: readonly string[]): Promise<PublicComment[]> {
     const [comments] = await Promise.all([
       // TODO: add count
       // TODO: add sort revisions' array by createdAt
@@ -167,9 +171,9 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
         .toArray()
     ])
 
-    return comments.map<Comment>(({_id: id, revisions, ...comment}) => ({
+    return comments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
       id,
-      revisions: [revisions[revisions.length - 1]],
+      text: revisions[revisions.length - 1].text,
       ...comment
     }))
   }

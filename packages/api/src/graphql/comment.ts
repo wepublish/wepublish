@@ -117,7 +117,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
   PublicComment,
   Context
 > = new GraphQLObjectType<PublicComment, Context>({
-  name: 'PublicComment',
+  name: 'Comment',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
@@ -140,6 +140,15 @@ export const GraphQLCommentConnection = new GraphQLObjectType({
   name: 'CommentConnection',
   fields: {
     nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLComment)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLPublicCommentConnection = new GraphQLObjectType({
+  name: 'CommentConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment)))},
     pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }

@@ -46,7 +46,7 @@ export interface DataLoaderContext {
   readonly authorsByID: DataLoader<string, OptionalAuthor>
   readonly authorsBySlug: DataLoader<string, OptionalAuthor>
 
-  readonly publicComments: DataLoader<string, OptionalPublicComment>
+  readonly getCommentsForItemByID: DataLoader<string, OptionalPublicComment>
 
   readonly images: DataLoader<string, OptionalImage>
 
@@ -182,7 +182,7 @@ export async function contextFromRequest(
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-      publicComments: new DataLoader(ids => dbAdapter.comment.getPublicComments(ids)),
+      getCommentsForItemByID: new DataLoader(ids => dbAdapter.comment.getCommentsForItemByID(ids)),
 
       articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
       publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),

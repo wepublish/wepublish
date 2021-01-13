@@ -3,15 +3,14 @@ import {
   CommentItemType,
   CommentAuthorType,
   CommentRejectionReason,
-  CommentStatus,
+  CommentState,
   FocalPoint,
   MetadataProperty,
   NavigationLink,
   PageBlock,
   RichTextNode,
   MailLogState,
-  CommentRevision,
-  OptionalPublicComment
+  CommentRevision
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -197,10 +196,10 @@ export interface DBComment {
 
   userID: string
 
-  revisions: [CommentRevision]
+  revisions: CommentRevision[]
   parentID?: string
 
-  status: CommentStatus
+  state: CommentState
   rejectionReason?: CommentRejectionReason
   authorType: CommentAuthorType
 }
@@ -246,8 +245,6 @@ export interface DBArticleRevision {
   socialMediaDescription?: string
   socialMediaAuthorIDs: string[]
   socialMediaImageID?: string
-
-  comments: OptionalPublicComment[]
 }
 
 export interface DBArticleHistoryRevision extends DBArticleRevision {

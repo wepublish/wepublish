@@ -11,7 +11,7 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError
 } from '../error'
-import {GraphQLComment, GraphQLCommentInput} from './comment'
+import {GraphQLCommentInput, GraphQLPublicComment} from './comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -85,7 +85,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     // Comment
     // =======
     createComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
       async resolve(root, {input}, {authenticate, dbAdapter}) {
         // TODO: Handle authorization

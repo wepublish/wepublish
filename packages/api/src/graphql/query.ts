@@ -108,10 +108,9 @@ import {UserRoleSort} from '../db/userRole'
 import {NotAuthorisedError} from '../error'
 import {
   GraphQLCommentConnection,
-  GraphQLCommentFilter
-  // GraphQLCommentStatus
+  GraphQLCommentFilter,
+  GraphQLPublicCommentConnection
 } from './comment'
-// import {CommentStatus} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -841,15 +840,14 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     article: {
       type: GraphQLPublicArticle,
       args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders, dbAdapter}) {
+      async resolve(root, {id}, {session, loaders}) {
         const article = await loaders.publicArticles.load(id)
-        const articleComments = await dbAdapter.comment.getPublicComments([id])
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
         }
 
-        return {...article, comments: articleComments}
+        return article
       }
     },
 
@@ -951,7 +949,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     // Comments
     // =======
     comments: {
-      type: GraphQLNonNull(GraphQLCommentConnection),
+      type: GraphQLNonNull(GraphQLPublicCommentConnection),
       args: {
         ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
       },
@@ -961,7 +959,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         const canGetComments = isAuthorised(CanGetComments, roles)
 
         if (canGetComments) {
-          return dbAdapter.comment.getPublicComments(ids)
+          return dbAdapter.comment.getCommentsForItemByID(ids)
         } else {
           throw new NotAuthorisedError()
         }
