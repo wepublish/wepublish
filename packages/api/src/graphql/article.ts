@@ -38,8 +38,7 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-    comments: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
 
