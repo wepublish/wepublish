@@ -288,7 +288,13 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
 
-    comments: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment)))}
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: createProxyingResolver(async ({id}, _, {dbAdapter}) => {
+        const articleComments = await dbAdapter.comment.getCommentsForItemByID([id])
+        return articleComments
+      })
+    }
   }
 })
 
