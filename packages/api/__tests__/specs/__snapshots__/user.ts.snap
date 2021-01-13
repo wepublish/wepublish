@@ -375,7 +375,7 @@ Object {
                 },
                 Object {
                   "deprecated": false,
-                  "description": "Allows to create an payment",
+                  "description": "Allows to create a payment",
                   "id": "CAN_CREATE_PAYMENT",
                 },
                 Object {
