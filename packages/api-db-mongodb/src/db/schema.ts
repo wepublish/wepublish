@@ -314,11 +314,13 @@ export interface DBInvoice {
   modifiedAt: Date
 
   mail: string
+  dueAt: Date
 
   userID?: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null
+  sentReminderAt?: Date
   items: InvoiceItem[]
 }
 

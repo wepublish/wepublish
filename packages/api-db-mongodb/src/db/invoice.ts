@@ -18,6 +18,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBInvoice} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
+import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
 
 export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
   private invoices: Collection<DBInvoice>
@@ -33,10 +34,12 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       createdAt: new Date(),
       modifiedAt: new Date(),
       mail: input.mail,
+      dueAt: input.dueAt,
       userID: input.userID,
       description: input.description,
       paidAt: input.paidAt,
       canceledAt: input.canceledAt,
+      sentReminderAt: input.sentReminderAt,
       items: input.items
     })
 
@@ -51,10 +54,12 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
         $set: {
           modifiedAt: new Date(),
           mail: input.mail,
+          dueAt: input.dueAt,
           userID: input.userID,
           description: input.description,
           paidAt: input.paidAt,
           canceledAt: input.canceledAt,
+          sentReminderAt: input.sentReminderAt,
           items: input.items
         }
       },
@@ -113,10 +118,31 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
       : {}
 
     const textFilter: FilterQuery<any> = {}
+    if (filter && JSON.stringify(filter) !== '{}') {
+      textFilter.$and = []
+    }
 
     // TODO: Rename to search
     if (filter?.mail !== undefined) {
-      textFilter.$or = [{mail: {$regex: filter.mail, $options: 'i'}}]
+      textFilter.$and?.push({mail: {$regex: filter.mail, $options: 'i'}})
+    }
+
+    if (filter?.paidAt !== undefined) {
+      const {comparison, date} = filter.paidAt
+      textFilter.$and?.push({
+        paidAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.canceledAt !== undefined) {
+      const {comparison, date} = filter.canceledAt
+      textFilter.$and?.push({
+        canceledAt: {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+
+    if (filter?.userID !== undefined) {
+      textFilter.$and?.push({userID: {$eq: filter.userID}})
     }
 
     const [totalCount, invoices] = await Promise.all([

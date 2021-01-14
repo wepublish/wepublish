@@ -1,4 +1,4 @@
-import {ConnectionResult, InputCursor, Limit, SortOrder} from '..'
+import {ConnectionResult, DateFilter, InputCursor, Limit, SortOrder} from '..'
 
 export interface InvoiceItem {
   createdAt: Date
@@ -14,10 +14,12 @@ export interface Invoice {
   createdAt: Date
   modifiedAt: Date
   mail: string
+  dueAt: Date
   userID?: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null
+  sentReminderAt?: Date
   items: InvoiceItem[]
 }
 
@@ -25,10 +27,12 @@ export type OptionalInvoice = Invoice | null
 
 export interface InvoiceInput {
   mail: string
+  dueAt: Date
   userID?: string
   description?: string
   paidAt: Date | null
   canceledAt: Date | null
+  sentReminderAt?: Date
   items: InvoiceItem[]
 }
 
@@ -53,6 +57,9 @@ export enum InvoiceSort {
 
 export interface InvoiceFilter {
   mail?: string
+  paidAt?: DateFilter
+  canceledAt?: DateFilter
+  userID?: string
 }
 
 export interface GetInvoicesArgs {
