@@ -858,6 +858,19 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
 
+export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
+  Comment,
+  'itemID' | 'itemType' | 'text' | 'parentID'
+>
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type CreateCommentMutation = {__typename?: 'Mutation'} & {
+  createComment: {__typename?: 'Comment'} & MutationCommentFragment
+}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -1226,6 +1239,14 @@ export const FullBlock = gql`
   ${ImageRef}
   ${FullTeaser}
 `
+export const MutationComment = gql`
+  fragment MutationComment on Comment {
+    itemID
+    itemType
+    text
+    parentID
+  }
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -1360,6 +1381,14 @@ export const Author = gql`
     }
   }
   ${FullAuthor}
+`
+export const CreateComment = gql`
+  mutation CreateComment($input: CommentInput!) {
+    createComment(input: $input) {
+      ...MutationComment
+    }
+  }
+  ${MutationComment}
 `
 export const PageList = gql`
   query PageList($filter: [String!], $after: ID, $first: Int) {

@@ -1,7 +1,7 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-import {CommentInput, CommentStatus, CreateComment} from '../api/private'
+import {CommentInput, CreateComment} from '../api/public'
 import {CommentAuthorType, CommentItemType} from '../../lib'
 
 let testClientPublic: ApolloServerTestClient
@@ -35,9 +35,7 @@ describe('Comments', () => {
           type: 'paragraph',
           children: [{text: 'hello'}]
         }
-      ],
-      status: CommentStatus.Approved,
-      authorType: CommentAuthorType.Author
+      ]
     }
     const res = await mutate({
       mutation: CreateComment,

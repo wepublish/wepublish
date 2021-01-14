@@ -710,6 +710,11 @@ Object {
               "description": "Allows to login editor",
               "id": "CAN_LOGIN_EDITOR",
             },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create comments",
+              "id": "CAN_CREATE_COMMENT",
+            },
           ],
           "systemRole": true,
         },

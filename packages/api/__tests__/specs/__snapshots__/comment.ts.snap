@@ -2,31 +2,12 @@
 
 exports[`Comments can be created 1`] = `
 Object {
-  "data": Object {
-    "createComment": Object {
-      "authorType": "Author",
-      "itemID": "d",
-      "itemType": "Article",
-      "parentID": null,
-      "revisions": Array [
-        Object {
-          "text": Array [
-            Object {
-              "children": Array [
-                Object {
-                  "text": "hello",
-                },
-              ],
-              "type": "paragraph",
-            },
-          ],
-        },
-      ],
-      "status": "Approved",
-      "userID": "ID!",
-    },
-  },
-  "errors": undefined,
+  "data": undefined,
+  "errors": Array [
+    [ValidationError: Unknown type "CommentInput". Did you mean "TokenInput", "CommentFilter", "CommentState", "Comment", or "CommentItemType"?],
+    [ValidationError: Cannot query field "createComment" on type "Mutation". Did you mean "createToken", "createPeer", "createUser", or "createPage"?],
+    [ValidationError: Cannot query field "text" on type "Comment".],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

@@ -2,12 +2,8 @@ fragment MutationComment on Comment {
   itemID
   itemType
   userID
-  revisions {
-    text
-  }
+  text
   parentID
-  status
-  authorType
 }
 
 mutation CreateComment($input: CommentInput!) {
