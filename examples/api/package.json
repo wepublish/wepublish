@@ -28,6 +28,8 @@
     "body-parser": "^1.19.0",
     "cross-fetch": "^3.0.6",
     "graphql": "^14.6.0",
+    "neat-csv": "^6.0.0",
+    "node-csv-query": "^0.1.0",
     "yargs": "^16.2.0"
   },
   "devDependencies": {

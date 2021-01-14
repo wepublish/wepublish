@@ -53,8 +53,8 @@ export function UserSubscriptionEditPanel({
     subscription ? new Date(subscription.startsAt) : new Date()
   )
 
-  const [payedUntil /* setPayedUntil */] = useState(
-    subscription?.payedUntil ? new Date(subscription.payedUntil) : null
+  const [paidUntil /* setPaidUntil */] = useState(
+    subscription?.paidUntil ? new Date(subscription.paidUntil) : null
   )
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
   const [paymentMethod, setPaymentMethod] = useState(subscription?.paymentMethod)
@@ -127,7 +127,7 @@ export function UserSubscriptionEditPanel({
           paymentPeriodicity,
           autoRenew,
           startsAt: startsAt.toISOString(),
-          payedUntil: payedUntil ? payedUntil.toISOString() : null,
+          paidUntil: paidUntil ? paidUntil.toISOString() : null,
           paymentMethodID: paymentMethod.id,
           deactivatedAt: deactivatedAt ? deactivatedAt.toISOString() : null
         }
@@ -206,7 +206,7 @@ export function UserSubscriptionEditPanel({
               <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
               <DatePicker
                 block
-                value={payedUntil ?? undefined}
+                value={paidUntil ?? undefined}
                 disabled={true /* TODO fix this */}
               />
             </FormGroup>

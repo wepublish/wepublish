@@ -18,7 +18,9 @@ import {
   OptionalUserSubscription,
   UpdateUserSubscriptionArgs,
   DeleteUserSubscriptionArgs,
-  UpdatePaymentProviderCustomerArgs
+  UpdatePaymentProviderCustomerArgs,
+  CreateUserSubscriptionPeriodArgs,
+  DeleteUserSubscriptionPeriodArgs
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -28,6 +30,7 @@ import {MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
+import nanoid from 'nanoid'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -216,10 +219,10 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
       })
     }
-    if (filter?.subscription?.payedUntil !== undefined) {
-      const {comparison, date} = filter.subscription.payedUntil
+    if (filter?.subscription?.paidUntil !== undefined) {
+      const {comparison, date} = filter.subscription.paidUntil
       textFilter.$and?.push({
-        'subscription.payedUntil': {
+        'subscription.paidUntil': {
           [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
         }
       })
@@ -301,7 +304,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       monthlyAmount,
       autoRenew,
       startsAt,
-      payedUntil,
+      paidUntil,
       paymentMethodID,
       deactivatedAt
     } = input
@@ -315,7 +318,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           'subscription.monthlyAmount': monthlyAmount,
           'subscription.autoRenew': autoRenew,
           'subscription.startsAt': startsAt,
-          'subscription.payedUntil': payedUntil,
+          'subscription.paidUntil': paidUntil,
           'subscription.paymentMethodID': paymentMethodID,
           'subscription.deactivatedAt': deactivatedAt
         }
@@ -340,6 +343,63 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?._id
+  }
+
+  async addUserSubscriptionPeriod({
+    userID,
+    input
+  }: CreateUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    periods.push({
+      id: nanoid(),
+      createdAt: new Date(),
+      amount: input.amount,
+      paymentPeriodicity: input.paymentPeriodicity,
+      startsAt: input.startsAt,
+      endsAt: input.endsAt,
+      invoiceID: input.invoiceID
+    })
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': periods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async deleteUserSubscriptionPeriod({
+    userID,
+    periodID
+  }: DeleteUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    const updatedPeriods = periods.filter(period => period.id !== periodID)
+
+    // TODO implement checks if data is connected to invoices and stuff
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': updatedPeriods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
   }
 
   async updatePaymentProviderCustomers({

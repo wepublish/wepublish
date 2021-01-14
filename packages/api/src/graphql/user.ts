@@ -29,7 +29,7 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    payedUntil: {type: GraphQLDateTime},
+    paidUntil: {type: GraphQLDateTime},
     paymentMethod: {
       type: GraphQLNonNull(GraphQLPaymentMethod),
       resolve({paymentMethodID}, args, {loaders}) {
@@ -74,7 +74,7 @@ export const GraphQLUserSubscriptionFilter = new GraphQLInputObjectType({
   name: 'UserSubscriptionFilter',
   fields: {
     startsAt: {type: GraphQLDateFilter},
-    payedUntil: {type: GraphQLDateFilter},
+    paidUntil: {type: GraphQLDateFilter},
     deactivatedAt: {type: GraphQLDateFilter},
     autoRenew: {type: GraphQLBoolean}
   }
@@ -122,7 +122,7 @@ export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    payedUntil: {type: GraphQLDateTime},
+    paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
     deactivatedAt: {type: GraphQLDateTime}
   }

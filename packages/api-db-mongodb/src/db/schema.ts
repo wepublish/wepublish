@@ -302,7 +302,7 @@ export interface DBPaymentMethod {
   modifiedAt: Date
 
   name: string
-  description: RichTextNode[]
+  description: string
   paymentProviderID: string
   active: boolean
 }
@@ -316,7 +316,7 @@ export interface DBInvoice {
   mail: string
 
   userID?: string
-  description?: RichTextNode[]
+  description?: string
   paidAt: Date | null
   canceledAt: Date | null
   items: InvoiceItem[]

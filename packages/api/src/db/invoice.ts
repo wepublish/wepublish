@@ -1,10 +1,10 @@
-import {ConnectionResult, InputCursor, Limit, RichTextNode, SortOrder} from '..'
+import {ConnectionResult, InputCursor, Limit, SortOrder} from '..'
 
 export interface InvoiceItem {
   createdAt: Date
   modifiedAt: Date
   name: string
-  description?: RichTextNode[]
+  description?: string
   quantity: number
   amount: number
 }
@@ -15,7 +15,7 @@ export interface Invoice {
   modifiedAt: Date
   mail: string
   userID?: string
-  description?: RichTextNode[]
+  description?: string
   paidAt: Date | null
   canceledAt: Date | null
   items: InvoiceItem[]
@@ -26,7 +26,7 @@ export type OptionalInvoice = Invoice | null
 export interface InvoiceInput {
   mail: string
   userID?: string
-  description?: RichTextNode[]
+  description?: string
   paidAt: Date | null
   canceledAt: Date | null
   items: InvoiceItem[]

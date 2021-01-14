@@ -38,7 +38,7 @@ export enum UserSort {
 
 export interface UserSubscriptionFilter {
   readonly startsAt?: DateFilter
-  readonly payedUntil?: DateFilter
+  readonly paidUntil?: DateFilter
   readonly deactivatedAt?: DateFilter
   readonly autoRenew?: boolean
 }
@@ -49,11 +49,31 @@ export interface UserFilter {
 }
 
 export interface UserSubscriptionPeriod {
+  readonly id: string
+  readonly createdAt: Date
   readonly startsAt: Date
   readonly endsAt: Date
   readonly paymentPeriodicity: PaymentPeriodicity
   readonly amount: number
   readonly invoiceID: string
+}
+
+export interface UserSubscriptionPeriodInput {
+  readonly startsAt: Date
+  readonly endsAt: Date
+  readonly paymentPeriodicity: PaymentPeriodicity
+  readonly amount: number
+  readonly invoiceID: string
+}
+
+export interface CreateUserSubscriptionPeriodArgs {
+  readonly userID: string
+  readonly input: UserSubscriptionPeriodInput
+}
+
+export interface DeleteUserSubscriptionPeriodArgs {
+  readonly userID: string
+  readonly periodID: string
 }
 
 export interface UserSubscription {
@@ -62,8 +82,8 @@ export interface UserSubscription {
   readonly monthlyAmount: number
   readonly autoRenew: boolean
   readonly startsAt: Date
-  readonly payedUntil: Date | null
-  readonly subscriptionPeriods: UserSubscriptionPeriod[]
+  readonly paidUntil: Date | null
+  readonly periods: UserSubscriptionPeriod[]
   readonly paymentMethodID: string
   readonly deactivatedAt: Date | null
 }
@@ -74,7 +94,7 @@ export interface UserSubscriptionInput {
   readonly monthlyAmount: number
   readonly autoRenew: boolean
   readonly startsAt: Date
-  readonly payedUntil: Date | null
+  readonly paidUntil: Date | null
   readonly paymentMethodID: string
   readonly deactivatedAt: Date | null
 }
@@ -134,6 +154,12 @@ export interface DBUserAdapter {
 
   updateUserSubscription(args: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription>
   deleteUserSubscription(args: DeleteUserSubscriptionArgs): Promise<string | null>
+  addUserSubscriptionPeriod(
+    args: CreateUserSubscriptionPeriodArgs
+  ): Promise<OptionalUserSubscription>
+  deleteUserSubscriptionPeriod(
+    args: DeleteUserSubscriptionPeriodArgs
+  ): Promise<OptionalUserSubscription>
 
   updatePaymentProviderCustomers(args: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser>
 }

@@ -8,7 +8,6 @@ import {
 } from 'graphql'
 import {PaymentMethod} from '../db/paymentMethod'
 import {Context} from '../context'
-import {GraphQLRichText} from './richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {PaymentProvider} from '../payments/paymentProvider'
 import {createProxyingResolver} from '../utility'
@@ -30,7 +29,7 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLRichText)},
+    description: {type: GraphQLNonNull(GraphQLString)},
     paymentProvider: {
       type: GraphQLNonNull(GraphQLPaymentProvider),
       resolve: createProxyingResolver(({paymentProviderID}, {}, {paymentProviders}) => {
@@ -45,7 +44,7 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
   name: 'PaymentMethodInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLNonNull(GraphQLRichText)},
+    description: {type: GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
     active: {type: GraphQLNonNull(GraphQLBoolean)}
   }
