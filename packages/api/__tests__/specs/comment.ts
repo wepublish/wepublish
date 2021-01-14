@@ -30,14 +30,10 @@ describe('Comments', () => {
       itemID: 'd',
       itemType: CommentItemType.Article,
       userID: 'ID!',
-      revisions: [
+      text: [
         {
-          text: [
-            {
-              type: 'paragraph',
-              children: [{text: 'hello'}]
-            }
-          ]
+          type: 'paragraph',
+          children: [{text: 'hello'}]
         }
       ],
       status: CommentStatus.Approved,

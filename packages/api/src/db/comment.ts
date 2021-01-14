@@ -96,7 +96,7 @@ export type OptionalComment = Comment | null
 export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
-  createComment(args: CreateCommentArgs): Promise<Comment>
+  createComment(args: CreateCommentArgs): Promise<PublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getCommentsForItemByID(ids: readonly string[]): Promise<PublicComment[]>
 }

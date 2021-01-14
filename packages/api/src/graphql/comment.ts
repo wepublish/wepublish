@@ -83,7 +83,15 @@ export const GraphQLCommentInput = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
 
-    text: {type: GraphQLNonNull(GraphQLRichText)}
+    text: {
+      type: new GraphQLNonNull(GraphQLRichText)
+      // resolve: createProxyingResolver(({ text }, args, { loaders }, info) => {
+      //   return [];
+      //   if (text[0].children[0].text.length > 1000) {
+      //     throw new Error(`Comment Length should be maximum of 1000 characters`)
+      //   }
+      // }
+    }
   }
 })
 

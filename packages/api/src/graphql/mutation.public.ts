@@ -12,6 +12,7 @@ import {
   UserNotFoundError
 } from '../error'
 import {GraphQLCommentInput, GraphQLPublicComment} from './comment'
+import {authorise, CanCreateComment} from './permissions'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -88,14 +89,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
       async resolve(root, {input}, {authenticate, dbAdapter}) {
-        // TODO: Handle authorization
         const {roles} = authenticate()
-        console.log(roles)
-
-        if (input.revisions[0].text[0].children[0].text.length > 1000) {
-          throw new Error(`Comment Length should be maximum of 1000 characters`)
-        }
-
+        authorise(CanCreateComment, roles)
         return await dbAdapter.comment.createComment({
           input: {...input}
         })

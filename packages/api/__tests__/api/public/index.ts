@@ -38,7 +38,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
-  comments: Array<PublicComment>
+  comments: Array<Comment>
 }
 
 export type ArticleConnection = {
@@ -133,16 +133,13 @@ export type Block =
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  userID: Scalars['ID']
+  parentID?: Maybe<Scalars['ID']>
+  userID: User
+  authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<CommentRevision>
-  parentID?: Maybe<Scalars['ID']>
-  status: CommentStatus
-  rejectionReason?: Maybe<CommentRejectionReason>
-  authorType: CommentAuthorType
+  text: Scalars['RichText']
+  modifiedAt: Scalars['DateTime']
 }
 
 export enum CommentAuthorType {
@@ -159,41 +156,16 @@ export type CommentConnection = {
 }
 
 export type CommentInput = {
+  parentID?: Maybe<Scalars['ID']>
   userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<CommentRevisionInput>
-  parentID?: Maybe<Scalars['ID']>
-  status: CommentStatus
-  rejectionReason?: Maybe<CommentRejectionReason>
-  authorType: CommentAuthorType
+  text: Scalars['RichText']
 }
 
 export enum CommentItemType {
   Article = 'Article',
   Page = 'Page'
-}
-
-export enum CommentRejectionReason {
-  Misconduct = 'Misconduct',
-  Spam = 'Spam'
-}
-
-export type CommentRevision = {
-  __typename?: 'CommentRevision'
-  text: Scalars['RichText']
-  createdAt: Scalars['DateTime']
-}
-
-export type CommentRevisionInput = {
-  text: Scalars['RichText']
-}
-
-export enum CommentStatus {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
 }
 
 export type EmbedBlock = {
@@ -439,17 +411,6 @@ export type Point = {
   __typename?: 'Point'
   x: Scalars['Float']
   y: Scalars['Float']
-}
-
-export type PublicComment = {
-  __typename?: 'PublicComment'
-  id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  userID: Scalars['ID']
-  revisions: Array<CommentRevision>
-  parentID?: Maybe<Scalars['ID']>
-  authorType: CommentAuthorType
 }
 
 export type PublicProperties = {

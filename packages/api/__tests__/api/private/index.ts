@@ -46,7 +46,6 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>
   authors?: Maybe<Array<Scalars['ID']>>
   tags?: Maybe<Array<Scalars['String']>>
-  comments?: Maybe<Array<Scalars['ID']>>
 }
 
 export type ArticleInput = {
@@ -228,16 +227,16 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  modifiedAt: Scalars['DateTime']
-  userID: Scalars['ID']
+  userID: User
+  authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
-  revisions: Array<CommentRevision>
   parentID?: Maybe<Scalars['ID']>
-  status: CommentStatus
+  revisions: Array<CommentRevision>
+  state: CommentState
   rejectionReason?: Maybe<CommentRejectionReason>
-  authorType: CommentAuthorType
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
 }
 
 export enum CommentAuthorType {
@@ -254,18 +253,7 @@ export type CommentConnection = {
 }
 
 export type CommentFilter = {
-  status?: Maybe<CommentStatus>
-}
-
-export type CommentInput = {
-  userID: Scalars['ID']
-  itemID: Scalars['ID']
-  itemType: CommentItemType
-  revisions: Array<CommentRevisionInput>
-  parentID?: Maybe<Scalars['ID']>
-  status: CommentStatus
-  rejectionReason?: Maybe<CommentRejectionReason>
-  authorType: CommentAuthorType
+  state?: Maybe<CommentState>
 }
 
 export enum CommentItemType {
@@ -284,11 +272,7 @@ export type CommentRevision = {
   createdAt: Scalars['DateTime']
 }
 
-export type CommentRevisionInput = {
-  text: Scalars['RichText']
-}
-
-export enum CommentStatus {
+export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
   PendingUserChanges = 'PendingUserChanges',
@@ -552,7 +536,6 @@ export type Mutation = {
   uploadImage?: Maybe<Image>
   updateImage?: Maybe<Image>
   deleteImage?: Maybe<Scalars['Boolean']>
-  createComment: Comment
   createArticle: Article
   updateArticle?: Maybe<Article>
   deleteArticle?: Maybe<Scalars['Boolean']>
@@ -684,10 +667,6 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID']
-}
-
-export type MutationCreateCommentArgs = {
-  input: CommentInput
 }
 
 export type MutationCreateArticleArgs = {
@@ -1718,19 +1697,6 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
 
-export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
-  Comment,
-  'itemID' | 'itemType' | 'userID' | 'parentID' | 'status' | 'authorType'
-> & {revisions: Array<{__typename?: 'CommentRevision'} & Pick<CommentRevision, 'text'>>}
-
-export type CreateCommentMutationVariables = Exact<{
-  input: CommentInput
-}>
-
-export type CreateCommentMutation = {__typename?: 'Mutation'} & {
-  createComment: {__typename?: 'Comment'} & MutationCommentFragment
-}
-
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -2320,19 +2286,6 @@ export const FullAuthor = gql`
   }
   ${AuthorRef}
 `
-export const MutationComment = gql`
-  fragment MutationComment on Comment {
-    itemID
-    itemType
-    userID
-    revisions {
-      text
-    }
-    parentID
-    status
-    authorType
-  }
-`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -2857,14 +2810,6 @@ export const DeleteAuthor = gql`
   mutation DeleteAuthor($id: ID!) {
     deleteAuthor(id: $id)
   }
-`
-export const CreateComment = gql`
-  mutation CreateComment($input: CommentInput!) {
-    createComment(input: $input) {
-      ...MutationComment
-    }
-  }
-  ${MutationComment}
 `
 export const ImageList = gql`
   query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {

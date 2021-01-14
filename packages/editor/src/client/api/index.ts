@@ -47,7 +47,6 @@ export type ArticleFilter = {
   pending?: Maybe<Scalars['Boolean']>;
   authors?: Maybe<Array<Scalars['ID']>>;
   tags?: Maybe<Array<Scalars['String']>>;
-  comments?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type ArticleInput = {
@@ -214,16 +213,16 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  userID: Scalars['ID'];
+  userID: User;
+  authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  revisions: Array<CommentRevision>;
   parentID?: Maybe<Scalars['ID']>;
-  status: CommentStatus;
+  revisions: Array<CommentRevision>;
+  state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
-  authorType: CommentAuthorType;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
 };
 
 export enum CommentAuthorType {
@@ -240,18 +239,7 @@ export type CommentConnection = {
 };
 
 export type CommentFilter = {
-  status?: Maybe<CommentStatus>;
-};
-
-export type CommentInput = {
-  userID: Scalars['ID'];
-  itemID: Scalars['ID'];
-  itemType: CommentItemType;
-  revisions: Array<CommentRevisionInput>;
-  parentID?: Maybe<Scalars['ID']>;
-  status: CommentStatus;
-  rejectionReason?: Maybe<CommentRejectionReason>;
-  authorType: CommentAuthorType;
+  state?: Maybe<CommentState>;
 };
 
 export enum CommentItemType {
@@ -270,11 +258,7 @@ export type CommentRevision = {
   createdAt: Scalars['DateTime'];
 };
 
-export type CommentRevisionInput = {
-  text: Scalars['RichText'];
-};
-
-export enum CommentStatus {
+export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
   PendingUserChanges = 'PendingUserChanges',
@@ -540,7 +524,6 @@ export type Mutation = {
   uploadImage?: Maybe<Image>;
   updateImage?: Maybe<Image>;
   deleteImage?: Maybe<Scalars['Boolean']>;
-  createComment: Comment;
   createArticle: Article;
   updateArticle?: Maybe<Article>;
   deleteArticle?: Maybe<Scalars['Boolean']>;
@@ -699,11 +682,6 @@ export type MutationUpdateImageArgs = {
 
 export type MutationDeleteImageArgs = {
   id: Scalars['ID'];
-};
-
-
-export type MutationCreateCommentArgs = {
-  input: CommentInput;
 };
 
 

@@ -404,7 +404,8 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
-  CanLoginEditor
+  CanLoginEditor,
+  CanCreateComment
 ]
 
 export const PeerPermissions: Permission[] = [
