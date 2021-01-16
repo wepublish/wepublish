@@ -20,3 +20,11 @@ export async function updateWrapper(wrapper: Enzyme.ReactWrapper, amount = 0) {
     wrapper.update()
   })
 }
+
+export interface Named {
+  name: string
+}
+
+export function pTest<T extends Named>(name: string, cases: T[], test: (testCase: T) => any) {
+  describe(name, () => cases.forEach((t: T) => it(t.name, () => test(t))))
+}
