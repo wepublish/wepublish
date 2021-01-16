@@ -285,14 +285,14 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
         }
       : {}
 
-    const stateFilter: FilterQuery<any> = {}
-    const textFilter: FilterQuery<any> = {}
+    let stateFilter: FilterQuery<any> = {}
+    let textFilter: FilterQuery<any> = {}
 
-    const metaFilters: FilterQuery<any> = []
+    let metaFilters: FilterQuery<any> = []
 
     if (filter?.title != undefined) {
       // TODO: Only match based on state filter
-      textFilter.$or = [
+      textFilter['$or'] = [
         {'draft.title': {$regex: filter.title, $options: 'i'}},
         {'pending.title': {$regex: filter.title, $options: 'i'}},
         {'published.title': {$regex: filter.title, $options: 'i'}}
@@ -300,19 +300,19 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     }
 
     if (filter?.published != undefined) {
-      stateFilter.published = {[filter.published ? '$ne' : '$eq']: null}
+      stateFilter['published'] = {[filter.published ? '$ne' : '$eq']: null}
     }
 
     if (filter?.draft != undefined) {
-      stateFilter.draft = {[filter.draft ? '$ne' : '$eq']: null}
+      stateFilter['draft'] = {[filter.draft ? '$ne' : '$eq']: null}
     }
 
     if (filter?.pending != undefined) {
-      stateFilter.pending = {[filter.pending ? '$ne' : '$eq']: null}
+      stateFilter['pending'] = {[filter.pending ? '$ne' : '$eq']: null}
     }
 
     if (filter?.shared != undefined) {
-      stateFilter.shared = {[filter.shared ? '$ne' : '$eq']: false}
+      stateFilter['shared'] = {[filter.shared ? '$ne' : '$eq']: false}
     }
 
     if (filter?.tags) {
@@ -365,11 +365,15 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
       limit.type === LimitType.First
         ? articles.length > limitCount
         : cursor.type === InputCursorType.Before
+        ? true
+        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? articles.length > limitCount
         : cursor.type === InputCursorType.After
+        ? true
+        : false
 
     const firstArticle = nodes[0]
     const lastArticle = nodes[nodes.length - 1]
