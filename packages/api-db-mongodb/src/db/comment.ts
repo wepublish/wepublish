@@ -1,6 +1,6 @@
 import {
   DBCommentAdapter,
-  CreateCommentArgs,
+  AddPublicCommentArgs,
   Comment,
   GetCommentsArgs,
   ConnectionResult,
@@ -48,7 +48,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     this.locale = locale
   }
 
-  async createComment({input}: CreateCommentArgs): Promise<PublicComment> {
+  async addPublicComment({input}: AddPublicCommentArgs): Promise<PublicComment> {
     const {text, ...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,

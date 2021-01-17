@@ -72,7 +72,7 @@ export interface CommentInput extends CommentData {
   readonly text: RichTextNode[]
 }
 
-export interface CreateCommentArgs {
+export interface AddPublicCommentArgs {
   readonly input: CommentInput
 }
 
@@ -96,7 +96,7 @@ export type OptionalComment = Comment | null
 export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
-  createComment(args: CreateCommentArgs): Promise<PublicComment>
+  addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getCommentsForItemByID(ids: readonly string[]): Promise<PublicComment[]>
 }

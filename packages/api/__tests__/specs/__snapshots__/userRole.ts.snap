@@ -672,11 +672,6 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to create comments",
-              "id": "CAN_CREATE_COMMENT",
-            },
-            Object {
-              "deprecated": false,
               "description": "Allows to create Pages",
               "id": "CAN_CREATE_PAGE",
             },

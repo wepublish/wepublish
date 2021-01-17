@@ -1,13 +1,13 @@
 fragment MutationComment on Comment {
   itemID
   itemType
-  userID
+  userID { id }
   text
   parentID
 }
 
-mutation CreateComment($input: CommentInput!) {
-  createComment(input: $input) {
+mutation AddPublicComment($input: CommentInput!) {
+  addPublicComment(input: $input) {
     ...MutationComment
   }
 }
