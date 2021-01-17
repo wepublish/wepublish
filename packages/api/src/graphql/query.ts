@@ -106,11 +106,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
-import {
-  GraphQLCommentConnection,
-  GraphQLCommentFilter,
-  GraphQLPublicCommentConnection
-} from './comment'
+import {GraphQLCommentConnection, GraphQLCommentFilter} from './comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -943,26 +939,6 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
-      }
-    },
-
-    // Comments
-    // =======
-    comments: {
-      type: GraphQLNonNull(GraphQLPublicCommentConnection),
-      args: {
-        ids: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
-      },
-      resolve(root, {ids}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-
-        const canGetComments = isAuthorised(CanGetComments, roles)
-
-        if (canGetComments) {
-          return dbAdapter.comment.getCommentsForItemByID(ids)
-        } else {
-          throw new NotAuthorisedError()
-        }
       }
     }
   }

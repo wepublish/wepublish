@@ -38,7 +38,6 @@ import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {OptionalPublicComment} from './db/comment'
 
-// TODO: what's the usage of the DataLoaderContext?
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
   readonly navigationByKey: DataLoader<string, OptionalNavigation>
