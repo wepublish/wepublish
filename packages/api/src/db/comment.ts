@@ -2,26 +2,26 @@ import {RichTextNode} from '../graphql/richText'
 import {SortOrder, Limit, InputCursor, ConnectionResult} from './common'
 
 export enum CommentState {
-  Approved = 'Approved',
-  PendingApproval = 'PendingApproval',
-  PendingUserChanges = 'PendingUserChanges',
-  Rejected = 'Rejected'
+  Approved = 'approved',
+  PendingApproval = 'pendingApproval',
+  PendingUserChanges = 'pendingUserChanges',
+  Rejected = 'rejected'
 }
 
 export enum CommentRejectionReason {
-  Misconduct = 'Misconduct',
-  Spam = 'Spam'
+  Misconduct = 'misconduct',
+  Spam = 'spam'
 }
 
 export enum CommentAuthorType {
-  Team = 'Team',
-  Author = 'Author',
-  VerifiedUser = 'VerifiedUser'
+  Team = 'team',
+  Author = 'author',
+  VerifiedUser = 'verifiedUser'
 }
 
 export enum CommentItemType {
-  Article = 'Article',
-  Page = 'Page'
+  Article = 'article',
+  Page = 'page'
 }
 
 export interface CommentData {
