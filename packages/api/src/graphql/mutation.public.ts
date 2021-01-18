@@ -88,11 +88,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     addPublicComment: {
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
-      async resolve(root, {input}, {authenticate, dbAdapter}) {
+      async resolve(_, {input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanAddPublicComment, roles)
         return await dbAdapter.comment.addPublicComment({
-          input: {...input}
+          input
         })
       }
     }

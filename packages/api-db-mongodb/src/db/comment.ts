@@ -53,7 +53,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     const {ops} = await this.comments.insertOne({
       ...data,
       state: CommentState.PendingApproval,
-      authorType: CommentAuthorType.Author,
+      authorType: CommentAuthorType.VerifiedUser,
       revisions: [
         {
           text,
