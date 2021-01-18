@@ -235,8 +235,8 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to create comments",
-          "id": "CAN_CREATE_COMMENT",
+          "description": "Allows to add public comments on item",
+          "id": "CAN_ADD_PUBLIC_COMMENT",
         },
         Object {
           "deprecated": false,
@@ -552,8 +552,8 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to create comments",
-              "id": "CAN_CREATE_COMMENT",
+              "description": "Allows to add public comments on item",
+              "id": "CAN_ADD_PUBLIC_COMMENT",
             },
             Object {
               "deprecated": false,
@@ -707,8 +707,8 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to create comments",
-              "id": "CAN_CREATE_COMMENT",
+              "description": "Allows to add public comments on item",
+              "id": "CAN_ADD_PUBLIC_COMMENT",
             },
           ],
           "systemRole": true,
@@ -945,8 +945,8 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to create comments",
-              "id": "CAN_CREATE_COMMENT",
+              "description": "Allows to add public comments on item",
+              "id": "CAN_ADD_PUBLIC_COMMENT",
             },
             Object {
               "deprecated": false,
@@ -1254,8 +1254,8 @@ Object {
       },
       Object {
         "deprecated": false,
-        "description": "Allows to create comments",
-        "id": "CAN_CREATE_COMMENT",
+        "description": "Allows to add public comments on item",
+        "id": "CAN_ADD_PUBLIC_COMMENT",
       },
       Object {
         "deprecated": false,
