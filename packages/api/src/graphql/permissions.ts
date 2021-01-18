@@ -160,8 +160,8 @@ export const CanDeleteArticle: Permission = {
 }
 
 export const CanAddPublicComment: Permission = {
-  id: 'CAN_CREATE_COMMENT',
-  description: 'Allows to create comments',
+  id: 'CAN_ADD_PUBLIC_COMMENT',
+  description: 'Allows to add public comments on item',
   deprecated: false
 }
 
