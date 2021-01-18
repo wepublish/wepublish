@@ -9,8 +9,7 @@ import {
   InputCursorType,
   CommentSort,
   SortOrder,
-  PublicComment,
-  CommentAuthorType
+  PublicComment
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -53,7 +52,6 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     const {ops} = await this.comments.insertOne({
       ...data,
       state: CommentState.PendingApproval,
-      authorType: CommentAuthorType.VerifiedUser,
       revisions: [
         {
           text,

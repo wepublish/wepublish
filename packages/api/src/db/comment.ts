@@ -25,27 +25,26 @@ export enum CommentItemType {
 }
 
 export interface CommentData {
+  readonly id: string
   readonly userID: string
+
+  readonly authorType: CommentAuthorType
 
   readonly itemID: string
   readonly itemType: CommentItemType
 
   readonly parentID?: string
+
+  readonly createdAt: Date
+  readonly modifiedAt: Date
 }
 
 export interface Comment extends CommentData {
-  readonly id: string
-
-  readonly authorType: CommentAuthorType
-
   readonly revisions: CommentRevision[]
 
   readonly state: CommentState
 
   readonly rejectionReason?: CommentRejectionReason
-
-  readonly createdAt: Date
-  readonly modifiedAt: Date
 }
 
 export interface CommentRevision {
@@ -54,13 +53,7 @@ export interface CommentRevision {
 }
 
 export interface PublicComment extends CommentData {
-  readonly id: string
-
-  readonly authorType: CommentAuthorType
-
   readonly text: RichTextNode[]
-
-  readonly modifiedAt: Date
 }
 
 export enum CommentSort {
@@ -68,7 +61,16 @@ export enum CommentSort {
   ModifiedAt = 'modifiedAt'
 }
 
-export interface CommentInput extends CommentData {
+export interface CommentInput {
+  readonly userID: string
+
+  readonly itemID: string
+  readonly itemType: CommentItemType
+
+  readonly parentID?: string
+
+  readonly authorType: CommentAuthorType
+
   readonly text: RichTextNode[]
 }
 

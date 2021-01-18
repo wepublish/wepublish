@@ -13,6 +13,7 @@ import {
 } from '../error'
 import {GraphQLCommentInput, GraphQLPublicComment} from './comment'
 import {authorise, CanAddPublicComment} from './permissions'
+import {CommentAuthorType} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -92,7 +93,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanAddPublicComment, roles)
         return await dbAdapter.comment.addPublicComment({
-          input
+          input: {
+            ...input,
+            authorType: CommentAuthorType.VerifiedUser
+          }
         })
       }
     }

@@ -148,13 +148,6 @@ export enum CommentAuthorType {
   VerifiedUser = 'VerifiedUser'
 }
 
-export type CommentConnection = {
-  __typename?: 'CommentConnection'
-  nodes: Array<Comment>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
 export type CommentInput = {
   parentID?: Maybe<Scalars['ID']>
   userID: Scalars['ID']
@@ -440,7 +433,6 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
-  comments: CommentConnection
 }
 
 export type QueryPeerArgs = {
@@ -501,10 +493,6 @@ export type QueryPagesArgs = {
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
-}
-
-export type QueryCommentsArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>
 }
 
 export type QuoteBlock = {
