@@ -9,7 +9,8 @@ import {
   FormGroup,
   Panel,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Alert
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -36,7 +37,7 @@ export function TeaserEditPanel({
   onClose,
   onConfirm,
   closeLabel = 'Close'
-}: TeaserEditPanelProps) {
+}: TeaserEditPanelProps): JSX.Element {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
@@ -97,16 +98,20 @@ export function TeaserEditPanel({
       <Drawer.Footer>
         <Button
           appearance={'primary'}
-          onClick={() =>
-            onConfirm({
-              ...initialTeaser,
-              style,
-              preTitle: preTitle || undefined,
-              title: title || undefined,
-              lead: lead || undefined,
-              image
-            })
-          }>
+          onClick={() => {
+            if (!image && style === TeaserStyle.Light) {
+              Alert.error(t('articleEditor.panels.lightStyledWithNoImageError'), 0)
+            } else {
+              onConfirm({
+                ...initialTeaser,
+                style,
+                preTitle: preTitle || undefined,
+                title: title || undefined,
+                lead: lead || undefined,
+                image
+              })
+            }
+          }}>
           {t('articleEditor.panels.confirm')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
