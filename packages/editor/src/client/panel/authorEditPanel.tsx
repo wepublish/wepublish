@@ -9,7 +9,10 @@ import {
   FormGroup,
   Panel,
   Input,
-  Alert
+  Alert,
+  PanelGroup,
+  InputGroup,
+  Icon
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -139,62 +142,74 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('authors.panels.name')}</ControlLabel>
-              <FormControl
-                name={t('authors.panels.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={value => {
-                  setName(value)
-                  setSlug(slugify(value))
-                }}
-              />
-            </FormGroup>
-          </Form>
-        </Panel>
-
-        <ChooseEditImage
-          image={image}
-          disabled={isLoading}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => setImage(undefined)}
-        />
-
-        <Panel header={t('authors.panels.links')}>
-          <ListInput
-            value={links}
-            onChange={links => setLinks(links)}
-            defaultValue={{title: '', url: ''}}>
-            {({value, onChange}) => (
-              <div style={{display: 'flex', flexDirection: 'row'}}>
-                <Input
-                  placeholder={t('authors.panels.title')}
-                  style={{
-                    flexBasis: '30%',
-                    marginRight: '10px'
+        <PanelGroup accordion>
+          <Panel header={t('authors.panels.name')} defaultExpanded>
+            <Form fluid={true}>
+              <InputGroup inside>
+                <InputGroup.Addon>
+                  <Icon icon="avatar" />
+                </InputGroup.Addon>
+                <FormControl
+                  name={t('authors.panels.name')}
+                  value={name}
+                  disabled={isDisabled}
+                  onChange={value => {
+                    setName(value)
+                    setSlug(slugify(value))
                   }}
-                  value={value.title}
-                  onChange={title => onChange({...value, title})}
                 />
-                <Input
-                  placeholder={t('authors.panels.link')}
-                  style={{
-                    flexBasis: '70%'
-                  }}
-                  value={value.url}
-                  onChange={url => onChange({...value, url})}
-                />
-              </div>
-            )}
-          </ListInput>
-        </Panel>
-        <Panel header={t('authors.panels.bioInformation')}>
-          <RichTextBlock value={bio} onChange={value => setBio(value)} />
-        </Panel>
+              </InputGroup>
+            </Form>
+          </Panel>
+          <Panel header={t('authors.panels.image')}>
+            <ChooseEditImage
+              image={image}
+              header={''}
+              top={0}
+              left={0}
+              disabled={isLoading}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => setImage(undefined)}
+            />
+          </Panel>
+          <Panel header={t('authors.panels.links')}>
+            <ListInput
+              value={links}
+              onChange={links => setLinks(links)}
+              defaultValue={{title: '', url: ''}}>
+              {({value, onChange}) => (
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <Input
+                    placeholder={t('authors.panels.title')}
+                    style={{
+                      width: '30%',
+                      marginRight: '10px'
+                    }}
+                    value={value.title}
+                    onChange={title => onChange({...value, title})}
+                  />
+                  <InputGroup inside>
+                    <InputGroup.Addon>
+                      <Icon icon="link" />
+                    </InputGroup.Addon>
+                    <Input
+                      placeholder={t('authors.panels.link')}
+                      style={{
+                        width: '70%'
+                      }}
+                      value={value.url}
+                      onChange={url => onChange({...value, url})}
+                    />
+                  </InputGroup>
+                </div>
+              )}
+            </ListInput>
+          </Panel>
+          <Panel header={t('authors.panels.bioInformation')}>
+            <RichTextBlock value={bio} onChange={value => setBio(value)} />
+          </Panel>
+        </PanelGroup>
       </Drawer.Body>
 
       <Drawer.Footer>

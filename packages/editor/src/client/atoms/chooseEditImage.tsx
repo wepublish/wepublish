@@ -7,6 +7,8 @@ export interface ChooseEditImageProps {
   image: any
   header?: string
   disabled: boolean
+  left: number
+  top: number
   openChooseModalOpen?: () => void
   openEditModalOpen?: () => void
   removeImage?: () => void
@@ -16,6 +18,8 @@ export function ChooseEditImage({
   image,
   header,
   disabled,
+  left,
+  top,
   openChooseModalOpen,
   openEditModalOpen,
   removeImage
@@ -39,7 +43,7 @@ export function ChooseEditImage({
               src={image?.largeURL ?? '/static/placeholder-240x240.png'}
             />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', zIndex: 1, left: 5, top: 5}}>
+              <div style={{position: 'absolute', left: left, top: top}}>
                 <Dropdown
                   renderTitle={() => {
                     return <IconButton appearance="primary" icon={<Icon icon="wrench" />} circle />

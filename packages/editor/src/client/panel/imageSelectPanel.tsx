@@ -115,12 +115,14 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                       shaded
                       bordered
                       bodyFill>
-                      <img
-                        src={mediumURL || ''}
-                        style={{display: 'block', margin: '0 auto', maxHeight: '300'}}
-                      />
+                      <div style={{backgroundColor: '#f7f7fa'}}>
+                        <img
+                          src={mediumURL || ''}
+                          style={{display: 'block', margin: '0 auto', maxHeight: '300'}}
+                        />
+                      </div>
                       <Panel>
-                        <Typography variant={'subtitle1'}>{`${
+                        <Typography variant={'subtitle1'} ellipsize>{`${
                           filename || t('images.panels.untitled')
                         }${extension}`}</Typography>
                         <Typography variant={'body2'}>

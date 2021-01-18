@@ -78,6 +78,8 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           header={''}
           image={image}
           disabled={false}
+          left={5}
+          top={0}
           openChooseModalOpen={() => setChooseModalOpen(true)}
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => onChange?.({...value, image: null})}
