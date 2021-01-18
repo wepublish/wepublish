@@ -88,15 +88,10 @@ export interface GetCommentsArgs {
   readonly order: SortOrder
 }
 
-export interface GetCommentsForItemByIDArgs {
-  itemID?: readonly string[]
-}
-
-export type OptionalComment = Comment | null
 export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
   addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
-  getCommentsForItemByID(ids: readonly string[]): Promise<PublicComment[]>
+  getCommentsForItemByID(id: readonly string[]): Promise<PublicComment[]>
 }

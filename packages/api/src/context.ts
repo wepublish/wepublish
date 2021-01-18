@@ -181,7 +181,7 @@ export async function contextFromRequest(
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
 
-      getCommentsForItemByID: new DataLoader(ids => dbAdapter.comment.getCommentsForItemByID(ids)),
+      getCommentsForItemByID: new DataLoader(id => dbAdapter.comment.getCommentsForItemByID(id)),
 
       articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
       publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
