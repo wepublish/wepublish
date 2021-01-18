@@ -260,18 +260,35 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
             removeImage={[Function]}
           >
             <defaultProps(Panel)
+              bodyFill={true}
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={Object {}}
+              style={
+                Object {
+                  "height": 240,
+                  "marginBottom": 10,
+                }
+              }
             >
               <Panel
+                bodyFill={true}
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={Object {}}
+                style={
+                  Object {
+                    "height": 240,
+                    "marginBottom": 10,
+                  }
+                }
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={Object {}}
+                  style={
+                    Object {
+                      "height": 240,
+                      "marginBottom": 10,
+                    }
+                  }
                 >
                   <div
                     className="rs-panel-heading"
@@ -282,7 +299,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     chooseEditImage.header
                   </div>
                   <div
-                    className="rs-panel-body"
+                    className="rs-panel-body rs-panel-body-fill"
                   >
                     <PlaceholderInput
                       onAddClick={[Function]}
@@ -2610,18 +2627,35 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
             removeImage={[Function]}
           >
             <defaultProps(Panel)
+              bodyFill={true}
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={Object {}}
+              style={
+                Object {
+                  "height": 240,
+                  "marginBottom": 10,
+                }
+              }
             >
               <Panel
+                bodyFill={true}
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={Object {}}
+                style={
+                  Object {
+                    "height": 240,
+                    "marginBottom": 10,
+                  }
+                }
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={Object {}}
+                  style={
+                    Object {
+                      "height": 240,
+                      "marginBottom": 10,
+                    }
+                  }
                 >
                   <div
                     className="rs-panel-heading"
@@ -2632,7 +2666,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                     chooseEditImage.header
                   </div>
                   <div
-                    className="rs-panel-body"
+                    className="rs-panel-body rs-panel-body-fill"
                   >
                     <PlaceholderInput
                       onAddClick={[Function]}
@@ -5382,18 +5416,35 @@ exports[`Author Edit Panel should render 1`] = `
             removeImage={[Function]}
           >
             <defaultProps(Panel)
+              bodyFill={true}
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={Object {}}
+              style={
+                Object {
+                  "height": 240,
+                  "marginBottom": 10,
+                }
+              }
             >
               <Panel
+                bodyFill={true}
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={Object {}}
+                style={
+                  Object {
+                    "height": 240,
+                    "marginBottom": 10,
+                  }
+                }
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={Object {}}
+                  style={
+                    Object {
+                      "height": 240,
+                      "marginBottom": 10,
+                    }
+                  }
                 >
                   <div
                     className="rs-panel-heading"
@@ -5404,7 +5455,7 @@ exports[`Author Edit Panel should render 1`] = `
                     chooseEditImage.header
                   </div>
                   <div
-                    className="rs-panel-body"
+                    className="rs-panel-body rs-panel-body-fill"
                   >
                     <PlaceholderInput
                       onAddClick={[Function]}
@@ -7734,18 +7785,35 @@ exports[`Author Edit Panel should render with ID 1`] = `
             removeImage={[Function]}
           >
             <defaultProps(Panel)
+              bodyFill={true}
               classPrefix="rs-panel"
               header="chooseEditImage.header"
-              style={Object {}}
+              style={
+                Object {
+                  "height": 240,
+                  "marginBottom": 10,
+                }
+              }
             >
               <Panel
+                bodyFill={true}
                 classPrefix="rs-panel"
                 header="chooseEditImage.header"
-                style={Object {}}
+                style={
+                  Object {
+                    "height": 240,
+                    "marginBottom": 10,
+                  }
+                }
               >
                 <div
                   className="rs-panel rs-panel-default"
-                  style={Object {}}
+                  style={
+                    Object {
+                      "height": 240,
+                      "marginBottom": 10,
+                    }
+                  }
                 >
                   <div
                     className="rs-panel-heading"
@@ -7756,7 +7824,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     chooseEditImage.header
                   </div>
                   <div
-                    className="rs-panel-body"
+                    className="rs-panel-body rs-panel-body-fill"
                   >
                     <PlaceholderInput
                       onAddClick={[Function]}
