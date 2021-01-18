@@ -62,12 +62,12 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       modifiedAt: new Date()
     })
 
-    const {_id: id, revisions, ...comment} = ops[0]
+    const {_id: id, ...comment} = ops[0]
 
     return {
       ...comment,
       id,
-      text: revisions[revisions.length - 1].text
+      text
     }
   }
 
