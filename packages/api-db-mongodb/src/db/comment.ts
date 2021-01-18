@@ -166,7 +166,9 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       // TODO: add count
       // TODO: add sort revisions' array by createdAt
       this.comments
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .aggregate([{$sort: {'createdAt.date': -1}}], {
+          collation: {locale: this.locale, strength: 2}
+        })
         .match({
           $and: [{itemID: id[0]}, {state: CommentState.Approved}]
         })
