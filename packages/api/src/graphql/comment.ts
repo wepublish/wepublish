@@ -76,8 +76,6 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   fields: {
     parentID: {type: GraphQLID},
 
-    userID: {type: GraphQLNonNull(GraphQLID)},
-
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)

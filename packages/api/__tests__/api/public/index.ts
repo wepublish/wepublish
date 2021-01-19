@@ -150,7 +150,6 @@ export enum CommentAuthorType {
 
 export type CommentInput = {
   parentID?: Maybe<Scalars['ID']>
-  userID: Scalars['ID']
   itemID: Scalars['ID']
   itemType: CommentItemType
   text: Scalars['RichText']
