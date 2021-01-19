@@ -315,11 +315,6 @@ Object {
                 },
                 Object {
                   "deprecated": false,
-                  "description": "Allows to add public comments on item",
-                  "id": "CAN_ADD_PUBLIC_COMMENT",
-                },
-                Object {
-                  "deprecated": false,
                   "description": "Allows to login editor",
                   "id": "CAN_LOGIN_EDITOR",
                 },

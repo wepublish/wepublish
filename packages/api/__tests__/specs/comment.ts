@@ -1,7 +1,7 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {ApolloServerTestClient} from 'apollo-server-testing'
 import {createGraphQLTestClientWithMongoDB} from '../utility'
-// import {CommentInput, AddPublicComment} from '../api/public'
+// import {CommentInput, AddComment} from '../api/public'
 // import {CommentAuthorType, CommentItemType} from '../../lib'
 
 let testClientPublic: ApolloServerTestClient
@@ -29,7 +29,6 @@ describe('Comments', () => {
     // const CommentInput: CommentInput = {
     //   itemID: 'd',
     //   itemType: CommentItemType.Article,
-    //   userID: 'ID!',
     //   text: [
     //     {
     //       type: 'paragraph',
@@ -38,13 +37,13 @@ describe('Comments', () => {
     //   ]
     // }
     // const res = await mutate({
-    //   mutation: AddPublicComment,
+    //   mutation: AddComment,
     //   variables: {
     //     input: CommentInput
     //   }
     // })
     // expect(res).toMatchSnapshot()
-    // expect(res?.data?.AddPublicComment?.authorType).toContain(CommentAuthorType.Author)
+    // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
   })
 })
 

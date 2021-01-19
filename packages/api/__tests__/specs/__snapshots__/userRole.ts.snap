@@ -235,11 +235,6 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to add public comments on item",
-          "id": "CAN_ADD_PUBLIC_COMMENT",
-        },
-        Object {
-          "deprecated": false,
           "description": "Allows to login editor",
           "id": "CAN_LOGIN_EDITOR",
         },
@@ -552,11 +547,6 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to add public comments on item",
-              "id": "CAN_ADD_PUBLIC_COMMENT",
-            },
-            Object {
-              "deprecated": false,
               "description": "Allows to login editor",
               "id": "CAN_LOGIN_EDITOR",
             },
@@ -704,11 +694,6 @@ Object {
               "deprecated": false,
               "description": "Allows to login editor",
               "id": "CAN_LOGIN_EDITOR",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to add public comments on item",
-              "id": "CAN_ADD_PUBLIC_COMMENT",
             },
           ],
           "systemRole": true,
@@ -942,11 +927,6 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to add public comments on item",
-              "id": "CAN_ADD_PUBLIC_COMMENT",
             },
             Object {
               "deprecated": false,
@@ -1251,11 +1231,6 @@ Object {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
-      },
-      Object {
-        "deprecated": false,
-        "description": "Allows to add public comments on item",
-        "id": "CAN_ADD_PUBLIC_COMMENT",
       },
       Object {
         "deprecated": false,

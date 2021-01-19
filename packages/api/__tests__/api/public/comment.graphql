@@ -6,8 +6,8 @@ fragment MutationComment on Comment {
   parentID
 }
 
-mutation AddPublicComment($input: CommentInput!) {
-  addPublicComment(input: $input) {
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
     ...MutationComment
   }
 }
