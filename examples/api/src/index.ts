@@ -19,6 +19,7 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
+import pino from 'pino'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
@@ -213,6 +214,10 @@ async function asyncMain() {
     })
   ]
 
+  const logger = pino({
+    name: 'we.publish-example'
+  })
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
@@ -224,7 +229,8 @@ async function asyncMain() {
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
-    tracing: true
+    tracing: true,
+    logger
   })
 
   // eslint-disable-next-line no-unused-expressions
