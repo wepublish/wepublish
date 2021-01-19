@@ -160,7 +160,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async getCommentsForItemByID(id: readonly string[]): Promise<PublicComment[]> {
+  async getPublicCommentsForItemByID(id: readonly string[]): Promise<PublicComment[]> {
     const [comments] = await Promise.all([
       // TODO: add count
       // TODO: add sort revisions' array by createdAt
