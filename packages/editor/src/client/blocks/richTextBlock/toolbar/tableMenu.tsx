@@ -4,7 +4,7 @@ import {Button, Icon, InputGroup, InputNumber} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 import {ColorPicker} from '../../../atoms/colorPicker'
-import {HBar, SubMenuContext} from '../../../atoms/toolbar'
+import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
 import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
@@ -96,7 +96,7 @@ export function TableMenu() {
       {!showRemoveConfirm ? (
         <>
           {borderColor && borderColor !== 'transparent' ? (
-            <HBar dividerBottom>
+            <ControlsContainer dividerBottom>
               <ColorPicker
                 withColor={color => {
                   setBorderColor(color)
@@ -107,7 +107,7 @@ export function TableMenu() {
               <button className="icon-button" onClick={() => setBorderColor('transparent')}>
                 <Icon icon="ban" style={{color: 'red'}} />
               </button>
-            </HBar>
+            </ControlsContainer>
           ) : (
             <Button appearance="default" onClick={() => setBorderColor(defaultBorderColor)}>
               {t('blocks.richTextTable.addBorders')}
@@ -118,7 +118,7 @@ export function TableMenu() {
           </Button>
         </>
       ) : (
-        <HBar>
+        <ControlsContainer>
           <Button
             color="red"
             appearance="primary"
@@ -132,7 +132,7 @@ export function TableMenu() {
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
           </Button>
-        </HBar>
+        </ControlsContainer>
       )}
     </>
   )

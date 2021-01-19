@@ -165,13 +165,14 @@ export function ToolbarDivider() {
   return <Divider style={{height: '1.5em'}} vertical />
 }
 
-interface FlexHDivProps {
+interface ControlsContainerProps {
   children: ReactNode
   dividerTop?: boolean
   dividerBottom?: boolean
 }
 
-export function HBar({children, dividerTop, dividerBottom}: FlexHDivProps) {
+export function ControlsContainer({children, dividerTop, dividerBottom}: ControlsContainerProps) {
+  // TODO find rsuite component
   return (
     <div style={{width: '100%'}}>
       {dividerTop && <Divider />}
