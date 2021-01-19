@@ -290,7 +290,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     comments: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
       resolve: createProxyingResolver(async ({id}, _, {dbAdapter}) => {
-        const articleComments = await dbAdapter.comment.getPublicCommentsForItemByID([id])
+        const articleComments = await dbAdapter.comment.getPublicCommentsForItemByID(id)
         return articleComments
       })
     }

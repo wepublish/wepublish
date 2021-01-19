@@ -36,7 +36,6 @@ import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
-import {OptionalPublicComment} from './db/comment'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -44,8 +43,6 @@ export interface DataLoaderContext {
 
   readonly authorsByID: DataLoader<string, OptionalAuthor>
   readonly authorsBySlug: DataLoader<string, OptionalAuthor>
-
-  readonly getPublicCommentsForItemByID: DataLoader<string, OptionalPublicComment>
 
   readonly images: DataLoader<string, OptionalImage>
 
@@ -180,10 +177,6 @@ export async function contextFromRequest(
       authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
 
       images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
-
-      getPublicCommentsForItemByID: new DataLoader(id =>
-        dbAdapter.comment.getPublicCommentsForItemByID(id)
-      ),
 
       articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
       publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
