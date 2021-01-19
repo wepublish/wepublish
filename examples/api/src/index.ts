@@ -297,12 +297,7 @@ async function asyncMain() {
         await server.runJob(JobType.DailyInvoiceCharger, {})
         process.exit(0)
       }
-    )
-    .option('verbose', {
-      alias: 'v',
-      type: 'boolean',
-      description: 'Run with verbose logging'
-    }).argv
+    ).argv
 }
 
 asyncMain().catch(err => {

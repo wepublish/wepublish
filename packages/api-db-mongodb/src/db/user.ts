@@ -308,6 +308,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       paymentMethodID,
       deactivatedAt
     } = input
+
+    const user = await this.getUserByID(userID)
+
+    if (!user) return null
+
     const {value} = await this.users.findOneAndUpdate(
       {_id: userID},
       {
@@ -318,6 +323,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           'subscription.monthlyAmount': monthlyAmount,
           'subscription.autoRenew': autoRenew,
           'subscription.startsAt': startsAt,
+          'subscription.periods': user.subscription?.periods ?? [],
           'subscription.paidUntil': paidUntil,
           'subscription.paymentMethodID': paymentMethodID,
           'subscription.deactivatedAt': deactivatedAt
@@ -387,7 +393,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
 
     const updatedPeriods = periods.filter(period => period.id !== periodID)
 
-    // TODO implement checks if data is connected to invoices and stuff
     const {value} = await this.users.findOneAndUpdate(
       {_id: userID},
       {

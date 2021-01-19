@@ -114,8 +114,6 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
           paidAt: new Date()
         }
       })
-
-      // TODO: cancel all open payments for this invoice
     }
   })
 

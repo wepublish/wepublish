@@ -160,7 +160,6 @@ userModelEvents.on('create', (context, model) => {
   console.log(`User ${model.name} created`)
 })
 
-// TODO: write up what needs to be done until FRIDAY
 invoiceModelEvents.on('update', async (context, model) => {
   if (model.paidAt !== null && model.userID) {
     const user = await context.dbAdapter.user.getUserByID(model.userID)
