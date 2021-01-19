@@ -1,4 +1,4 @@
-import {Editor, Transforms, Node as SlateNode, Path} from 'slate'
+import {Editor, Transforms} from 'slate'
 import {RichTextBlockValue} from '../../types'
 import {emptyTextParagraph} from './elements'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
