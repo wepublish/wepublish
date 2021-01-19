@@ -13,7 +13,7 @@ import {
 } from '../error'
 import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
 import {authorise, CanAddPublicComment} from './permissions'
-import {CommentAuthorType} from '../db/comment'
+import {CommentAuthorType, CommentState} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -86,7 +86,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
     // Comment
     // =======
-    addPublicComment: {
+    addComment: {
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       async resolve(_, {input}, {authenticate, authenticateUser, dbAdapter}) {
@@ -97,7 +97,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           input: {
             ...input,
             userID: user.id,
-            authorType: CommentAuthorType.VerifiedUser
+            authorType: CommentAuthorType.VerifiedUser,
+            state: CommentState.PendingApproval
           }
         })
       }

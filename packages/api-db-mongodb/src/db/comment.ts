@@ -51,7 +51,6 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     const {text, ...data} = input
     const {ops} = await this.comments.insertOne({
       ...data,
-      state: CommentState.PendingApproval,
       revisions: [
         {
           text,

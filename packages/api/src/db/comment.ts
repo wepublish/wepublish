@@ -69,6 +69,7 @@ export interface CommentInput {
 
   readonly parentID?: string
 
+  readonly state: CommentState
   readonly authorType: CommentAuthorType
 
   readonly text: RichTextNode[]
