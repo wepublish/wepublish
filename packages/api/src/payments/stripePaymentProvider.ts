@@ -83,11 +83,29 @@ export class StripePaymentProvider extends BasePaymentProvider {
   }
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
+    let paymentMethod: Stripe.PaymentMethod | undefined
+    if (props.customerID) {
+      const paymentMethods = await this.stripe.paymentMethods.list({
+        customer: props.customerID,
+        type: 'card'
+      })
+      paymentMethod = paymentMethods.data.length > 0 ? paymentMethods.data[0] : undefined
+    }
+
     const intent = await this.stripe.paymentIntents.create({
       amount: props.invoice.items.reduce(
         (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
         0
       ),
+      ...(props.customerID
+        ? {
+            confirm: true,
+            customer: props.customerID,
+            off_session: true,
+            payment_method: paymentMethod?.id,
+            payment_method_types: ['card']
+          }
+        : {}),
       currency: 'chf',
       // description: props.invoice.description, TODO: convert to text
       ...(props.saveCustomer ? {setup_future_usage: 'off_session'} : {}),
@@ -97,11 +115,13 @@ export class StripePaymentProvider extends BasePaymentProvider {
       }
     })
 
+    const state = mapStripeEventToPaymentStatue(intent.status)
+
     return {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
       intentData: JSON.stringify(intent),
-      state: PaymentState.Submitted
+      state: state ?? PaymentState.Submitted
     }
   }
 

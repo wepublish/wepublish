@@ -159,3 +159,22 @@ export const methodsToProxy: MethodsToProxy[] = [
 userModelEvents.on('create', (context, model) => {
   console.log(`User ${model.name} created`)
 })
+
+// TODO: write up what needs to be done until FRIDAY
+invoiceModelEvents.on('update', async (context, model) => {
+  if (model.paidAt !== null && model.userID) {
+    const user = await context.dbAdapter.user.getUserByID(model.userID)
+    if (!user || !user.subscription) return
+    const {periods} = user.subscription
+    const period = periods.find(period => period.invoiceID === model.id)
+    if (!period) return
+    if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil)
+      await context.dbAdapter.user.updateUserSubscription({
+        userID: user.id,
+        input: {
+          ...user.subscription,
+          paidUntil: period.endsAt
+        }
+      })
+  }
+})

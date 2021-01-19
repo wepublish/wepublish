@@ -3,6 +3,7 @@ import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/comm
 import {UserSort} from './db/user'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {InvoiceSort} from './db/invoice'
+import {PaymentState} from './db/payment'
 
 const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
@@ -11,6 +12,7 @@ const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
 
 export enum JobType {
   DailyMembershipRenewal = 'dailyMembershipRenewal',
+  DailyInvoiceCharger = 'dailyInvoiceCharger',
   DailyInvoiceReminder = 'dailyInvoiceReminder',
   SendTestMail = 'sendTestMail'
 }
@@ -51,7 +53,7 @@ async function dailyMembershipRenewal(context: Context, data: any): Promise<void
   const startDate = data?.startDate ? new Date(data?.startDate) : new Date()
   const inAWeek = new Date(startDate.getTime() + 7 * ONE_DAY_IN_MILLISECONDS)
 
-  const users = await dbAdapter.user.getUsers({
+  const usersPaidUntil = await dbAdapter.user.getUsers({
     filter: {
       subscription: {
         autoRenew: true,
@@ -65,69 +67,182 @@ async function dailyMembershipRenewal(context: Context, data: any): Promise<void
     cursor: InputCursor()
   })
 
-  for (const user of users.nodes) {
+  const usersPaidNull = await dbAdapter.user.getUsers({
+    filter: {
+      subscription: {
+        autoRenew: true,
+        paidUntil: {date: null, comparison: DateFilterComparison.Equal},
+        deactivatedAt: {date: null, comparison: DateFilterComparison.Equal}
+      }
+    },
+    limit: {type: LimitType.First, count: 200},
+    order: SortOrder.Ascending,
+    sort: UserSort.CreatedAt,
+    cursor: InputCursor()
+  })
+
+  const users = [...usersPaidUntil.nodes, ...usersPaidNull.nodes]
+
+  for (const user of users) {
     try {
       const {subscription} = user
-      if (!subscription || subscription.paidUntil === null) continue // TODO: log warning
-      const {periods, paidUntil} = subscription
+      if (!subscription) continue // TODO: log warning
+      const {periods = [], paidUntil} = subscription
       periods.sort((periodA, periodB) => {
         if (periodA.endsAt < periodB.endsAt) return -1
         if (periodA.endsAt > periodB.endsAt) return 1
         return 0
       })
-      const lastPeriod = periods[periods.length - 1]
-      if (lastPeriod.endsAt <= paidUntil) {
-        // TODO create new Period
-        const startDate = new Date(paidUntil?.getTime() + 1 * ONE_DAY_IN_MILLISECONDS)
-        const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
-        const amount = calculateAmountForPeriodicity(
-          subscription.monthlyAmount,
-          subscription.paymentPeriodicity
-        )
+      if (
+        periods.length > 0 &&
+        (periods[periods.length - 1].endsAt > inAWeek ||
+          (paidUntil !== null && periods[periods.length - 1].endsAt > paidUntil))
+      )
+        continue
+      // if (paidUntil !== null && periods.length > 0 && periods[periods.length -1].endsAt > paidUntil) continue
+      // TODO: implement check if paidUntil is super long time ago
+      const startDate = new Date(
+        paidUntil ? paidUntil.getTime() + 1 * ONE_DAY_IN_MILLISECONDS : new Date().getTime()
+      )
+      const nextDate = getNextDateForPeriodicity(startDate, subscription.paymentPeriodicity)
+      const amount = calculateAmountForPeriodicity(
+        subscription.monthlyAmount,
+        subscription.paymentPeriodicity
+      )
 
-        const newInvoice = await dbAdapter.invoice.createInvoice({
-          input: {
-            userID: user.id,
-            description: `Membership from ${startDate.toISOString()} for ${
-              user.name || user.email
-            }`,
-            mail: user.email,
-            dueAt: startDate,
-            items: [
-              {
-                createdAt: new Date(),
-                modifiedAt: new Date(),
-                name: 'Membership',
-                description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
-                amount,
-                quantity: 1
-              }
-            ],
-            paidAt: null,
-            canceledAt: null
-          }
-        })
-
-        await dbAdapter.user.addUserSubscriptionPeriod({
+      const newInvoice = await dbAdapter.invoice.createInvoice({
+        input: {
           userID: user.id,
-          input: {
-            amount,
-            paymentPeriodicity: subscription.paymentPeriodicity,
-            startsAt: startDate,
-            endsAt: nextDate,
-            invoiceID: newInvoice.id
-          }
-        })
+          description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
+          mail: user.email,
+          dueAt: startDate,
+          items: [
+            {
+              createdAt: new Date(),
+              modifiedAt: new Date(),
+              name: 'Membership',
+              description: `From ${startDate.toISOString()} to ${nextDate.toISOString()}`,
+              amount,
+              quantity: 1
+            }
+          ],
+          paidAt: null,
+          canceledAt: null
+        }
+      })
 
-        console.log(`
-          Create new Period for user ${user.name}
-          from: ${startDate.toISOString()}
-          to: ${nextDate.toISOString()}
-          for: ${amount}
-      `)
-      }
+      await dbAdapter.user.addUserSubscriptionPeriod({
+        userID: user.id,
+        input: {
+          amount,
+          paymentPeriodicity: subscription.paymentPeriodicity,
+          startsAt: startDate,
+          endsAt: nextDate,
+          invoiceID: newInvoice.id
+        }
+      })
+
+      console.log(`
+        Create new Period for user ${user.name}
+        from: ${startDate.toISOString()}
+        to: ${nextDate.toISOString()}
+        for: ${amount}
+    `)
     } catch (error) {
       console.warn('Error while creating new periods', error)
+    }
+  }
+}
+
+async function dailyInvoiceCharger(context: Context): Promise<void> {
+  const {dbAdapter, paymentProviders} = context
+  const offSessionPaymentProvidersID = paymentProviders
+    .filter(provider => provider.offSessionPayments)
+    .map(provider => provider.id)
+
+  const paymentMethods = await dbAdapter.paymentMethod.getPaymentMethods()
+  const paymentMethodIDs = paymentMethods
+    .filter(method => offSessionPaymentProvidersID.includes(method.paymentProviderID))
+    .map(method => method.id)
+
+  const invoices = await dbAdapter.invoice.getInvoices({
+    filter: {
+      paidAt: {
+        comparison: DateFilterComparison.Equal,
+        date: null
+      },
+      canceledAt: {
+        comparison: DateFilterComparison.Equal,
+        date: null
+      }
+    },
+    limit: {type: LimitType.First, count: 200},
+    order: SortOrder.Ascending,
+    sort: InvoiceSort.CreatedAt,
+    cursor: InputCursor()
+  })
+
+  for (const invoice of invoices.nodes) {
+    if (!invoice.userID) {
+      console.warn('Invoice without userID', invoice)
+      continue
+    }
+
+    const user = await dbAdapter.user.getUserByID(invoice.userID)
+    if (!user || !user.subscription) {
+      console.warn('User does not exist')
+      continue
+    }
+
+    if (paymentMethodIDs.includes(user.subscription.paymentMethodID)) {
+      const payment = await dbAdapter.payment.createPayment({
+        input: {
+          paymentMethodID: user.subscription.paymentMethodID,
+          invoiceID: invoice.id,
+          state: PaymentState.Created
+        }
+      })
+
+      const paymentMethod = paymentMethods.find(
+        method => method.id === user?.subscription?.paymentMethodID
+      )
+      if (!paymentMethod) {
+        console.warn('Payment Method does not exist')
+        continue
+      }
+      const paymentProvider = paymentProviders.find(
+        provider => provider.id === paymentMethod.paymentProviderID
+      )
+      if (!paymentProvider) {
+        console.warn('Payment Method does not exist')
+        continue
+      }
+
+      const customerID = user.paymentProviderCustomers[paymentProvider.id]
+
+      if (!customerID) {
+        console.warn('Customer ID does not exist')
+      }
+
+      const intent = await paymentProvider.createIntent({
+        paymentID: payment.id,
+        invoice,
+        saveCustomer: false,
+        customerID: customerID.id
+      })
+
+      await dbAdapter.payment.updatePayment({
+        id: payment.id,
+        input: {
+          state: intent.state,
+          intentID: intent.intentID,
+          intentData: intent.intentData,
+          intentSecret: intent.intentSecret,
+          paymentData: intent.paymentData,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
     }
   }
 }
@@ -264,6 +379,9 @@ export async function runJob(command: JobType, context: Context, data: any): Pro
       break
     case JobType.DailyInvoiceReminder:
       await dailyInvoiceReminder(context, data)
+      break
+    case JobType.DailyInvoiceCharger:
+      await dailyInvoiceCharger(context)
       break
   }
 }

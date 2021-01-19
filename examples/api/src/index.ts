@@ -3,7 +3,6 @@ import {
   Author,
   MailgunMailProvider,
   Oauth2Provider,
-  PaymentPeriodicity,
   PayrexxPaymentProvider,
   PublicArticle,
   PublicPage,
@@ -11,23 +10,18 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer
-} from "@wepublish/api";
+} from '@wepublish/api'
 
-import { KarmaMediaAdapter } from "@wepublish/api-media-karma";
-import { MongoDBAdapter } from "@wepublish/api-db-mongodb";
+import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
+import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
-import { URL } from "url";
-import { SlackMailProvider } from "./SlackMailProvider";
-import bodyParser from "body-parser";
-import yargs from "yargs";
+import {URL} from 'url'
+import {SlackMailProvider} from './SlackMailProvider'
+import bodyParser from 'body-parser'
+import yargs from 'yargs'
 // @ts-ignore
-import { hideBin } from "yargs/helpers";
-import { JobType } from "@wepublish/api/lib/jobs";
-// @ts-ignore
-import csvdb from "node-csv-query";
-import neatCsv from "neat-csv";
-import path from "path";
-import * as fs from "fs";
+import {hideBin} from 'yargs/helpers'
+import {JobType} from '@wepublish/api/lib/jobs'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -238,7 +232,9 @@ async function asyncMain() {
     .command(
       ['listen', '$0'],
       'start the server',
-      () => {},
+      () => {
+        /* do nothing */
+      },
       async argv => {
         await server.listen(port, address)
       }
@@ -266,136 +262,40 @@ async function asyncMain() {
     .command(
       'dmr',
       'Renew Memberships',
-      () => {},
+      () => {
+        /* do nothing */
+      },
       async argv => {
         await server.runJob(JobType.DailyMembershipRenewal, {
           startDate: new Date()
         })
-        console.log(`Sent test mail to ${argv.recipient}`)
         process.exit(0)
       }
     )
     .command(
-      'import',
-      'import subscriptions',
-      () => {},
-      async (argv) => {
-        console.log(`Starting IMport`)
-        const filePath = path.join(__dirname, '../users.csv');
-        fs.readFile(filePath, async (error, data) => {
-          if (error) {
-            return console.log('error reading file', error);
-          }
-
-          const users = await neatCsv(data)
-          const periodsDb = await csvdb(`${__dirname}/../periods.csv`)
-          const lineDb = await csvdb(`${__dirname}/../lineitems.csv`)
-
-          for (const user of users) {
-            console.log(`Importing User ${user.name} with ID ${user.id}`)
-            if(!user.subscription_id) {
-              console.warn(`User ${user.id} does not have a subscription`)
-              continue
-            }
-            const periodsLine = []
-            const periods = await periodsDb.find({subscription_id: user.subscription_id})
-            for (const period of periods) {
-              const lineItem = await lineDb.findOne({id: period.line_item_id})
-              const dateStart = new Date(period.starts_on)
-              const dateEnd = new Date(period.ends_on)
-              const difference = dateEnd.getTime() - dateStart.getTime()
-              const differenceInDays = difference / (1000 * 3600 * 24)
-              let periodicity = ''
-              if(differenceInDays < 80) {
-                periodicity = PaymentPeriodicity.Monthly
-              } else if(differenceInDays < 300) {
-                periodicity = PaymentPeriodicity.Quarterly
-              } else {
-                periodicity = PaymentPeriodicity.Yearly
-              }
-              periodsLine.push({
-                ...period,
-                periodicity,
-                lineItem
-              })
-            }
-
-            const newUser = await dbAdapter.user.createUser({
-              input: {
-                email: user.email,
-                name: user.full_name,
-                roleIDs: []
-              },
-              password: 'randomTestPasswor'
-            })
-
-            if(!newUser) {
-              console.log('Could not create user', user)
-              continue
-            }
-
-            let paymentPeriodicity: PaymentPeriodicity = PaymentPeriodicity.Monthly
-            let monthlyAmount = 5
-            switch(user.subscription_periodicity) {
-              case 'jährlich':
-                paymentPeriodicity = PaymentPeriodicity.Yearly
-                monthlyAmount = Math.floor(parseInt(user.subscription_amount) / 12)
-                break
-              case 'vierteljährlich':
-                paymentPeriodicity = PaymentPeriodicity.Quarterly
-                monthlyAmount = Math.floor(parseInt(user.subscription_amount) / 3)
-                break
-              case 'monatlich':
-                paymentPeriodicity = PaymentPeriodicity.Monthly
-                monthlyAmount = parseInt(user.subscription_amount)
-            }
-
-            const subscription = await dbAdapter.user.updateUserSubscription({
-              userId: newUser.id,
-              input: {
-                payedUntil: user.subscription_paid_until ? new Date(user.subscription_paid_until) : null,
-                autoRenew: user.subscription_renew_automatically === '1',
-                memberPlanID: 'HVYylbcT3lTfvCDi',
-                deactivatedAt: user.subscription_ends_on === '-' ? null :  new Date(user.subscription_ends_on),
-                paymentPeriodicity,
-                monthlyAmount,
-                paymentMethodID: 'dxah6HJc2NNIZUyZ',
-                startsAt: new Date(user.subscription_starts_on)
-              }
-            })
-
-            for (const period of periodsLine) {
-              const invoice = await dbAdapter.invoice.createInvoice({
-                input: {
-                  payedAt: period?.lineItem?.created_at ? new Date(period?.lineItem?.created_at) : new Date(),
-                  items: [{
-                    name: period?.lineItem?.title ?? 'N/A',
-                    quantity: 1,
-                    amount: parseInt(period?.lineItem?.amount),
-                    createdAt: new Date(period?.lineItem?.created_at),
-                    modifiedAt: new Date(period?.lineItem?.created_at),
-                  }],
-                  mail: newUser.email,
-                  userID: newUser.id
-                }
-              })
-
-              await dbAdapter.user.addUserSubscriptionPeriod({
-                userID: newUser.id,
-                input: {
-                  invoiceID: invoice.id,
-                  startsAt: new Date(period.starts_on),
-                  endsAt: new Date(period.ends_on),
-                  paymentPeriodicity: period.periodicity as PaymentPeriodicity,
-                  amount: parseInt(period.lineItem?.amount)
-                }
-              })
-            }
-
-            console.log('subscription', subscription)
-          }
-          process.exit(0)
+      'dir',
+      'Remind open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceReminder, {
+          userPaymentURL: `${websiteURL}/user/invocies`,
+          replyToAddress: 'info@tsri.ch',
+          sendEveryDays: 3
         })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dic',
+      'charge open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceCharger, {})
+        process.exit(0)
       }
     )
     .option('verbose', {
