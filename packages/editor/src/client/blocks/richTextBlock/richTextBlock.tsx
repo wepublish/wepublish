@@ -30,7 +30,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
-  const [isEmpty, setIsEmpty] = useState(true)
 
   const {t} = useTranslation()
 
@@ -53,7 +52,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) {
           onChange(newValue)
-          setIsEmpty(false)
         }
       }}>
       <Toolbar
@@ -103,7 +101,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
         </EditorSubMenuButton>
       </Toolbar>
-      {isEmpty && ( // Alternative placeholder
+      {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
         <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
           {t('blocks.richText.startWriting')}
         </div>
@@ -115,7 +113,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
-          setIsEmpty(WepublishEditor.isEmpty(editor))
         }}
       />
     </Slate>
