@@ -668,10 +668,10 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
+                        onMouseDown={[Function]}
                       >
                         <div
-                          onClick={[Function]}
+                          onMouseDown={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -1009,22 +1009,17 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         }
                                         trigger="none"
                                       >
-                                        <button
-                                          className="icon-button"
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
                                           onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "border": "transparent 1px solid",
-                                            }
-                                          }
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            className="icon-button"
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "border": "transparent 1px solid",
                                               }
                                             }
                                           >
@@ -1038,21 +1033,28 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
                                           key="portal"
                                         >
@@ -1623,8 +1625,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   </Divider>
                                 </defaultProps(Divider)>
                               </ToolbarDivider>
-                              <EditorSubMenuButton
-                                editorHasFocus={false}
+                              <ForwardRef
                                 icon="smile-o"
                               >
                                 <withLocale(Whisper)
@@ -1640,7 +1641,12 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                   }
                                   trigger="none"
                                 >
-                                  <withLocale(Whisper)
+                                  <Whisper
+                                    locale={
+                                      Object {
+                                        "formatDate": [Function],
+                                      }
+                                    }
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -1653,13 +1659,15 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <Whisper
+                                    <OverlayTrigger
+                                      delayHide={200}
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
+                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -1671,25 +1679,10 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <OverlayTrigger
-                                        delayHide={200}
-                                        locale={
-                                          Object {
-                                            "formatDate": [Function],
-                                          }
-                                        }
-                                        placement="top"
-                                        rootClose={true}
-                                        speaker={
-                                          <defaultProps(Popover)
-                                            classPrefix="rs-popover"
-                                          >
-                                            <EmojiPicker
-                                              doWithEmoji={[Function]}
-                                            />
-                                          </defaultProps(Popover)>
-                                        }
-                                        trigger="none"
+                                      <ForwardRef
+                                        active={false}
+                                        key="triggerComponent"
+                                        onMouseDown={[Function]}
                                       >
                                         <button
                                           className="icon-button"
@@ -1710,7 +1703,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               }
                                             }
                                           >
-                                            <defaultProps(Icon)
+                                            <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -1731,43 +1724,37 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </Icon>
                                           </defaultProps(Icon)>
                                         </button>
-                                      </ForwardRef(ToolbarButton)>
+                                      </ForwardRef>
                                       <Portal
                                         key="portal"
                                       >
                                         <Portal
-                                          key="portal"
+                                          containerInfo={<body />}
                                         >
-                                          <Portal
-                                            containerInfo={<body />}
+                                          <Overlay
+                                            placement="top"
+                                            rootClose={true}
+                                            target={[Function]}
                                           >
-                                            <Overlay
+                                            <BaseOverlay
                                               placement="top"
                                               rootClose={true}
-                                              show={false}
                                               target={[Function]}
-                                            >
-                                              <BaseOverlay
-                                                placement="top"
-                                                rootClose={true}
-                                                show={false}
-                                                target={[Function]}
-                                                transition={
-                                                  Object {
-                                                    "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
-                                                    "render": [Function],
-                                                  }
+                                              transition={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "displayName": "Fade",
+                                                  "render": [Function],
                                                 }
-                                              />
-                                            </Overlay>
-                                          </Portal>
+                                              }
+                                            />
+                                          </Overlay>
                                         </Portal>
-                                      </OverlayTrigger>
-                                    </Whisper>
-                                  </withLocale(Whisper)>
-                                </ForwardRef>
-                              </EditorSubMenuButton>
+                                      </Portal>
+                                    </OverlayTrigger>
+                                  </Whisper>
+                                </withLocale(Whisper)>
+                              </ForwardRef>
                             </div>
                           </div>
                         </div>
@@ -1784,7 +1771,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                       </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -3484,10 +3470,10 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
+                        onMouseDown={[Function]}
                       >
                         <div
-                          onClick={[Function]}
+                          onMouseDown={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -3825,22 +3811,17 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         }
                                         trigger="none"
                                       >
-                                        <button
-                                          className="icon-button"
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
                                           onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "border": "transparent 1px solid",
-                                            }
-                                          }
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            className="icon-button"
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "border": "transparent 1px solid",
                                               }
                                             }
                                           >
@@ -3854,21 +3835,28 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
                                           key="portal"
                                         >
@@ -4439,8 +4427,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   </Divider>
                                 </defaultProps(Divider)>
                               </ToolbarDivider>
-                              <EditorSubMenuButton
-                                editorHasFocus={false}
+                              <ForwardRef
                                 icon="smile-o"
                               >
                                 <withLocale(Whisper)
@@ -4456,7 +4443,12 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                   }
                                   trigger="none"
                                 >
-                                  <withLocale(Whisper)
+                                  <Whisper
+                                    locale={
+                                      Object {
+                                        "formatDate": [Function],
+                                      }
+                                    }
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -4469,13 +4461,15 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     }
                                     trigger="none"
                                   >
-                                    <Whisper
+                                    <OverlayTrigger
+                                      delayHide={200}
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
+                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -4487,25 +4481,10 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       }
                                       trigger="none"
                                     >
-                                      <OverlayTrigger
-                                        delayHide={200}
-                                        locale={
-                                          Object {
-                                            "formatDate": [Function],
-                                          }
-                                        }
-                                        placement="top"
-                                        rootClose={true}
-                                        speaker={
-                                          <defaultProps(Popover)
-                                            classPrefix="rs-popover"
-                                          >
-                                            <EmojiPicker
-                                              doWithEmoji={[Function]}
-                                            />
-                                          </defaultProps(Popover)>
-                                        }
-                                        trigger="none"
+                                      <ForwardRef
+                                        active={false}
+                                        key="triggerComponent"
+                                        onMouseDown={[Function]}
                                       >
                                         <button
                                           className="icon-button"
@@ -4526,7 +4505,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                               }
                                             }
                                           >
-                                            <defaultProps(Icon)
+                                            <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -4547,43 +4526,37 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </Icon>
                                           </defaultProps(Icon)>
                                         </button>
-                                      </ForwardRef(ToolbarButton)>
+                                      </ForwardRef>
                                       <Portal
                                         key="portal"
                                       >
                                         <Portal
-                                          key="portal"
+                                          containerInfo={<body />}
                                         >
-                                          <Portal
-                                            containerInfo={<body />}
+                                          <Overlay
+                                            placement="top"
+                                            rootClose={true}
+                                            target={[Function]}
                                           >
-                                            <Overlay
+                                            <BaseOverlay
                                               placement="top"
                                               rootClose={true}
-                                              show={false}
                                               target={[Function]}
-                                            >
-                                              <BaseOverlay
-                                                placement="top"
-                                                rootClose={true}
-                                                show={false}
-                                                target={[Function]}
-                                                transition={
-                                                  Object {
-                                                    "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
-                                                    "render": [Function],
-                                                  }
+                                              transition={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "displayName": "Fade",
+                                                  "render": [Function],
                                                 }
-                                              />
-                                            </Overlay>
-                                          </Portal>
+                                              }
+                                            />
+                                          </Overlay>
                                         </Portal>
-                                      </OverlayTrigger>
-                                    </Whisper>
-                                  </withLocale(Whisper)>
-                                </ForwardRef>
-                              </EditorSubMenuButton>
+                                      </Portal>
+                                    </OverlayTrigger>
+                                  </Whisper>
+                                </withLocale(Whisper)>
+                              </ForwardRef>
                             </div>
                           </div>
                         </div>
@@ -4600,7 +4573,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                       </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -5878,10 +5850,10 @@ exports[`Author Edit Panel should render 1`] = `
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
+                        onMouseDown={[Function]}
                       >
                         <div
-                          onClick={[Function]}
+                          onMouseDown={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -6219,22 +6191,17 @@ exports[`Author Edit Panel should render 1`] = `
                                         }
                                         trigger="none"
                                       >
-                                        <button
-                                          className="icon-button"
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
                                           onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "border": "transparent 1px solid",
-                                            }
-                                          }
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            className="icon-button"
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "border": "transparent 1px solid",
                                               }
                                             }
                                           >
@@ -6248,21 +6215,28 @@ exports[`Author Edit Panel should render 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
                                           key="portal"
                                         >
@@ -6833,8 +6807,7 @@ exports[`Author Edit Panel should render 1`] = `
                                   </Divider>
                                 </defaultProps(Divider)>
                               </ToolbarDivider>
-                              <EditorSubMenuButton
-                                editorHasFocus={false}
+                              <ForwardRef
                                 icon="smile-o"
                               >
                                 <withLocale(Whisper)
@@ -6850,7 +6823,12 @@ exports[`Author Edit Panel should render 1`] = `
                                   }
                                   trigger="none"
                                 >
-                                  <withLocale(Whisper)
+                                  <Whisper
+                                    locale={
+                                      Object {
+                                        "formatDate": [Function],
+                                      }
+                                    }
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -6863,13 +6841,15 @@ exports[`Author Edit Panel should render 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <Whisper
+                                    <OverlayTrigger
+                                      delayHide={200}
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
+                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -6881,25 +6861,10 @@ exports[`Author Edit Panel should render 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <OverlayTrigger
-                                        delayHide={200}
-                                        locale={
-                                          Object {
-                                            "formatDate": [Function],
-                                          }
-                                        }
-                                        placement="top"
-                                        rootClose={true}
-                                        speaker={
-                                          <defaultProps(Popover)
-                                            classPrefix="rs-popover"
-                                          >
-                                            <EmojiPicker
-                                              doWithEmoji={[Function]}
-                                            />
-                                          </defaultProps(Popover)>
-                                        }
-                                        trigger="none"
+                                      <ForwardRef
+                                        active={false}
+                                        key="triggerComponent"
+                                        onMouseDown={[Function]}
                                       >
                                         <button
                                           className="icon-button"
@@ -6920,7 +6885,7 @@ exports[`Author Edit Panel should render 1`] = `
                                               }
                                             }
                                           >
-                                            <defaultProps(Icon)
+                                            <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -6941,43 +6906,37 @@ exports[`Author Edit Panel should render 1`] = `
                                             </Icon>
                                           </defaultProps(Icon)>
                                         </button>
-                                      </ForwardRef(ToolbarButton)>
+                                      </ForwardRef>
                                       <Portal
                                         key="portal"
                                       >
                                         <Portal
-                                          key="portal"
+                                          containerInfo={<body />}
                                         >
-                                          <Portal
-                                            containerInfo={<body />}
+                                          <Overlay
+                                            placement="top"
+                                            rootClose={true}
+                                            target={[Function]}
                                           >
-                                            <Overlay
+                                            <BaseOverlay
                                               placement="top"
                                               rootClose={true}
-                                              show={false}
                                               target={[Function]}
-                                            >
-                                              <BaseOverlay
-                                                placement="top"
-                                                rootClose={true}
-                                                show={false}
-                                                target={[Function]}
-                                                transition={
-                                                  Object {
-                                                    "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
-                                                    "render": [Function],
-                                                  }
+                                              transition={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "displayName": "Fade",
+                                                  "render": [Function],
                                                 }
-                                              />
-                                            </Overlay>
-                                          </Portal>
+                                              }
+                                            />
+                                          </Overlay>
                                         </Portal>
-                                      </OverlayTrigger>
-                                    </Whisper>
-                                  </withLocale(Whisper)>
-                                </ForwardRef>
-                              </EditorSubMenuButton>
+                                      </Portal>
+                                    </OverlayTrigger>
+                                  </Whisper>
+                                </withLocale(Whisper)>
+                              </ForwardRef>
                             </div>
                           </div>
                         </div>
@@ -6994,7 +6953,6 @@ exports[`Author Edit Panel should render 1`] = `
                       </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
@@ -8274,10 +8232,10 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     >
                       <Toolbar
                         fadeOut={true}
-                        handleToolbarClick={[Function]}
+                        onMouseDown={[Function]}
                       >
                         <div
-                          onClick={[Function]}
+                          onMouseDown={[Function]}
                           style={
                             Object {
                               "alignItems": "center",
@@ -8615,22 +8573,17 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         }
                                         trigger="none"
                                       >
-                                        <button
-                                          className="icon-button"
+                                        <ForwardRef
+                                          active={false}
+                                          key="triggerComponent"
                                           onMouseDown={[Function]}
-                                          style={
-                                            Object {
-                                              "border": "transparent 1px solid",
-                                            }
-                                          }
                                         >
-                                          <defaultProps(Icon)
-                                            classPrefix="rs-icon"
-                                            componentClass="i"
-                                            icon="table"
+                                          <button
+                                            className="icon-button"
+                                            onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "minWidth": "15px",
+                                                "border": "transparent 1px solid",
                                               }
                                             }
                                           >
@@ -8644,21 +8597,28 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 }
                                               }
                                             >
-                                              <i
-                                                className="rs-icon rs-icon-table"
+                                              <Icon
+                                                classPrefix="rs-icon"
+                                                componentClass="i"
+                                                icon="table"
                                                 style={
                                                   Object {
                                                     "minWidth": "15px",
                                                   }
                                                 }
-                                              />
-                                            </Icon>
-                                          </defaultProps(Icon)>
-                                        </button>
-                                      </ForwardRef(ToolbarButton)>
-                                      <Portal
-                                        key="portal"
-                                      >
+                                              >
+                                                <i
+                                                  className="rs-icon rs-icon-table"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                />
+                                              </Icon>
+                                            </defaultProps(Icon)>
+                                          </button>
+                                        </ForwardRef>
                                         <Portal
                                           key="portal"
                                         >
@@ -9229,8 +9189,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   </Divider>
                                 </defaultProps(Divider)>
                               </ToolbarDivider>
-                              <EditorSubMenuButton
-                                editorHasFocus={false}
+                              <ForwardRef
                                 icon="smile-o"
                               >
                                 <withLocale(Whisper)
@@ -9246,7 +9205,12 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                   }
                                   trigger="none"
                                 >
-                                  <withLocale(Whisper)
+                                  <Whisper
+                                    locale={
+                                      Object {
+                                        "formatDate": [Function],
+                                      }
+                                    }
                                     placement="top"
                                     speaker={
                                       <defaultProps(Popover)
@@ -9259,13 +9223,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     }
                                     trigger="none"
                                   >
-                                    <Whisper
+                                    <OverlayTrigger
+                                      delayHide={200}
                                       locale={
                                         Object {
                                           "formatDate": [Function],
                                         }
                                       }
                                       placement="top"
+                                      rootClose={true}
                                       speaker={
                                         <defaultProps(Popover)
                                           classPrefix="rs-popover"
@@ -9277,25 +9243,10 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       }
                                       trigger="none"
                                     >
-                                      <OverlayTrigger
-                                        delayHide={200}
-                                        locale={
-                                          Object {
-                                            "formatDate": [Function],
-                                          }
-                                        }
-                                        placement="top"
-                                        rootClose={true}
-                                        speaker={
-                                          <defaultProps(Popover)
-                                            classPrefix="rs-popover"
-                                          >
-                                            <EmojiPicker
-                                              doWithEmoji={[Function]}
-                                            />
-                                          </defaultProps(Popover)>
-                                        }
-                                        trigger="none"
+                                      <ForwardRef
+                                        active={false}
+                                        key="triggerComponent"
+                                        onMouseDown={[Function]}
                                       >
                                         <button
                                           className="icon-button"
@@ -9316,7 +9267,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               }
                                             }
                                           >
-                                            <defaultProps(Icon)
+                                            <Icon
                                               classPrefix="rs-icon"
                                               componentClass="i"
                                               icon="smile-o"
@@ -9337,43 +9288,37 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </Icon>
                                           </defaultProps(Icon)>
                                         </button>
-                                      </ForwardRef(ToolbarButton)>
+                                      </ForwardRef>
                                       <Portal
                                         key="portal"
                                       >
                                         <Portal
-                                          key="portal"
+                                          containerInfo={<body />}
                                         >
-                                          <Portal
-                                            containerInfo={<body />}
+                                          <Overlay
+                                            placement="top"
+                                            rootClose={true}
+                                            target={[Function]}
                                           >
-                                            <Overlay
+                                            <BaseOverlay
                                               placement="top"
                                               rootClose={true}
-                                              show={false}
                                               target={[Function]}
-                                            >
-                                              <BaseOverlay
-                                                placement="top"
-                                                rootClose={true}
-                                                show={false}
-                                                target={[Function]}
-                                                transition={
-                                                  Object {
-                                                    "$$typeof": Symbol(react.forward_ref),
-                                                    "displayName": "Fade",
-                                                    "render": [Function],
-                                                  }
+                                              transition={
+                                                Object {
+                                                  "$$typeof": Symbol(react.forward_ref),
+                                                  "displayName": "Fade",
+                                                  "render": [Function],
                                                 }
-                                              />
-                                            </Overlay>
-                                          </Portal>
+                                              }
+                                            />
+                                          </Overlay>
                                         </Portal>
-                                      </OverlayTrigger>
-                                    </Whisper>
-                                  </withLocale(Whisper)>
-                                </ForwardRef>
-                              </EditorSubMenuButton>
+                                      </Portal>
+                                    </OverlayTrigger>
+                                  </Whisper>
+                                </withLocale(Whisper)>
+                              </ForwardRef>
                             </div>
                           </div>
                         </div>
@@ -9390,7 +9335,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </div>
                       <Editable
                         onBlur={[Function]}
-                        placeholder="blocks.richText.startWriting"
                         renderElement={[Function]}
                         renderLeaf={[Function]}
                       >
