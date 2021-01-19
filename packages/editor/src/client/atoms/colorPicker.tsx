@@ -7,7 +7,7 @@ interface ColorPickerProps {
   label?: string
 }
 
-export function ColorPicker({withColor, currentColor = 'black', label}: ColorPickerProps) {
+export function ColorPicker({withColor, currentColor, label}: ColorPickerProps) {
   const id = nanoid()
   return (
     <>

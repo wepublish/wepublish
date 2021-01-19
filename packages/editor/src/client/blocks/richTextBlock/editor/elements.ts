@@ -10,7 +10,7 @@ export interface TableCell extends SlateElement {
   borderColor: string
 }
 
-export const defaultBorderColor: TableCell['borderColor'] = 'black'
+export const defaultBorderColor: TableCell['borderColor'] = '#000000'
 
 export function emptyCellsTable(nrows: number, ncols: number): SlateElement[] {
   return [

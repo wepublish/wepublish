@@ -18,41 +18,13 @@ export function TableMenu() {
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
-  const [borderColor, setBorderColor] = useState(defaultBorderColor)
+  const [borderColor, setBorderColor] = useState<string>()
 
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const {t} = useTranslation()
 
   useEffect(() => {
-    // set borderColor in slate node tree on colorPicker change
-    const nodes = WepublishEditor.nodes(editor, {
-      match: node => node.type === BlockFormat.Table
-    })
-    for (const [, path] of nodes) {
-      Transforms.setNodes(
-        editor,
-        {borderColor},
-        {
-          at: path,
-          match: node => node.type === BlockFormat.TableCell
-        }
-      )
-      return
-    }
-  }, [borderColor])
-
-  useEffect(() => {
-    // Set borderColor of picker on menu mount.
-    getBorderColorOfFocusedTable()
-  }, [])
-
-  useEffect(() => {
-    // Update borderColor of picker when focusing other table.
-    getBorderColorOfFocusedTable()
-  }, [editor.selection])
-
-  const getBorderColorOfFocusedTable = () => {
     const nodes = WepublishEditor.nodes(editor, {
       match: node => node.type === BlockFormat.TableCell
     })
@@ -60,9 +32,26 @@ export function TableMenu() {
       setBorderColor(node.borderColor as string)
       return
     }
-  }
+  }, [editor.selection])
 
-  const isBorderVisible = borderColor !== 'transparent'
+  useEffect(() => {
+    if (borderColor) {
+      const nodes = WepublishEditor.nodes(editor, {
+        match: node => node.type === BlockFormat.Table
+      })
+      for (const [, path] of nodes) {
+        Transforms.setNodes(
+          editor,
+          {borderColor},
+          {
+            at: path,
+            match: node => node.type === BlockFormat.TableCell
+          }
+        )
+        return
+      }
+    }
+  }, [borderColor])
 
   const tableInsertControls = (
     <>
@@ -106,7 +95,7 @@ export function TableMenu() {
     <>
       {!showRemoveConfirm ? (
         <>
-          {isBorderVisible ? (
+          {borderColor && borderColor !== 'transparent' ? (
             <HBar dividerBottom>
               <ColorPicker
                 withColor={color => {
