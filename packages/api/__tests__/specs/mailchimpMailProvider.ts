@@ -1,5 +1,5 @@
-// import {Mandrill} from 'mandrill-api'
-// jest.mock('mandrill-api')
+import {MailchimpMailProvider} from '../../src'
+
 const mockSend = jest.fn()
 jest.mock('mandrill-api', () => {
   return {
@@ -12,8 +12,6 @@ jest.mock('mandrill-api', () => {
     })
   }
 })
-
-import {MailchimpMailProvider} from '../../src/mails/MailchimpMailProvider'
 
 let mailChimpMailProvider: MailchimpMailProvider
 
