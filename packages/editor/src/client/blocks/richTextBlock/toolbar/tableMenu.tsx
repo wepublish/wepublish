@@ -18,7 +18,7 @@ export function TableMenu() {
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
-  const [borderColor, setBorderColor] = useState('black')
+  const [borderColor, setBorderColor] = useState(defaultBorderColor)
 
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
@@ -26,16 +26,19 @@ export function TableMenu() {
 
   useEffect(() => {
     // set borderColor in slate node tree on colorPicker change
-    const tablePath = WepublishEditor.nearestAncestor(editor, BlockFormat.Table)?.path
-    if (tablePath) {
+    const nodes = WepublishEditor.nodes(editor, {
+      match: node => node.type === BlockFormat.Table
+    })
+    for (const [, path] of nodes) {
       Transforms.setNodes(
         editor,
         {borderColor},
         {
-          at: tablePath,
+          at: path,
           match: node => node.type === BlockFormat.TableCell
         }
       )
+      return
     }
   }, [borderColor])
 
@@ -45,16 +48,17 @@ export function TableMenu() {
   }, [])
 
   useEffect(() => {
-    // Update borderColor of picker if focusing other table.
-    // If this does not turn out to be expensive and slow down site, this
-    // can be used for any controls to update on selection change.
+    // Update borderColor of picker when focusing other table.
     getBorderColorOfFocusedTable()
   }, [editor.selection])
 
   const getBorderColorOfFocusedTable = () => {
-    const cellNode = WepublishEditor.nearestAncestor(editor, BlockFormat.TableCell)?.node
-    if (cellNode) {
-      setBorderColor(cellNode.borderColor as string)
+    const nodes = WepublishEditor.nodes(editor, {
+      match: node => node.type === BlockFormat.TableCell
+    })
+    for (const [node] of nodes) {
+      setBorderColor(node.borderColor as string)
+      return
     }
   }
 
