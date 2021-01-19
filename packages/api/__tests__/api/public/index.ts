@@ -284,7 +284,7 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
-  addPublicComment: Comment
+  addComment: Comment
 }
 
 export type MutationCreateSessionArgs = {
@@ -302,7 +302,7 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   redirectUri: Scalars['String']
 }
 
-export type MutationAddPublicCommentArgs = {
+export type MutationAddCommentArgs = {
   input: CommentInput
 }
 
@@ -850,12 +850,12 @@ export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
   'itemID' | 'itemType' | 'text' | 'parentID'
 > & {userID: {__typename?: 'User'} & Pick<User, 'id'>}
 
-export type AddPublicCommentMutationVariables = Exact<{
+export type AddCommentMutationVariables = Exact<{
   input: CommentInput
 }>
 
-export type AddPublicCommentMutation = {__typename?: 'Mutation'} & {
-  addPublicComment: {__typename?: 'Comment'} & MutationCommentFragment
+export type AddCommentMutation = {__typename?: 'Mutation'} & {
+  addComment: {__typename?: 'Comment'} & MutationCommentFragment
 }
 
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
@@ -1372,9 +1372,9 @@ export const Author = gql`
   }
   ${FullAuthor}
 `
-export const AddPublicComment = gql`
-  mutation AddPublicComment($input: CommentInput!) {
-    addPublicComment(input: $input) {
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
       ...MutationComment
     }
   }

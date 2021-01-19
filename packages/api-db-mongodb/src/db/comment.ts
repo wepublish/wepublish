@@ -165,18 +165,25 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       // TODO: add count
       // TODO: add sort revisions' array by createdAt
       this.comments
-        .aggregate([{$sort: {'createdAt.date': -1}}], {
-          collation: {locale: this.locale, strength: 2}
-        })
+        .aggregate(
+          [
+            {$sort: {'createdAt.date': -1}},
+            {$lookup: {from: 'users', localField: 'userID', foreignField: '_id', as: 'userID'}}
+          ],
+          {
+            collation: {locale: this.locale, strength: 2}
+          }
+        )
         .match({
           $and: [{itemID: id[0]}, {state: CommentState.Approved}]
         })
         .toArray()
     ])
 
-    return comments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
+    return comments.map<PublicComment>(({_id: id, userID, revisions, ...comment}) => ({
       id,
       text: revisions[revisions.length - 1].text,
+      userID: userID[0],
       ...comment
     }))
   }

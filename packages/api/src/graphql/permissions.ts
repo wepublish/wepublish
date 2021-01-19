@@ -159,12 +159,6 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
-export const CanAddPublicComment: Permission = {
-  id: 'CAN_ADD_PUBLIC_COMMENT',
-  description: 'Allows to add public comments on item',
-  deprecated: false
-}
-
 export const CanGetComments: Permission = {
   id: 'CAN_GET_COMMENTS',
   description: 'Allows to get all comments',
@@ -379,7 +373,6 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
-  CanAddPublicComment,
   CanLoginEditor,
   CanGetComments,
   CanSendJWTLogin,
@@ -403,8 +396,7 @@ export const EditorPermissions: Permission[] = [
   CanPublishPage,
   CanGetPeer,
   CanGetPeers,
-  CanLoginEditor,
-  CanAddPublicComment
+  CanLoginEditor
 ]
 
 export const PeerPermissions: Permission[] = [

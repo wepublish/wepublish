@@ -12,7 +12,6 @@ import {
   UserNotFoundError
 } from '../error'
 import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
-import {authorise, CanAddPublicComment} from './permissions'
 import {CommentAuthorType, CommentState} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -89,10 +88,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     addComment: {
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
-      async resolve(_, {input}, {authenticate, authenticateUser, dbAdapter}) {
-        const {roles} = authenticate()
+      async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
-        authorise(CanAddPublicComment, roles)
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
