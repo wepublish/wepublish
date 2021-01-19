@@ -7,8 +7,8 @@ export interface ChooseEditImageProps {
   image: any
   header?: string
   disabled: boolean
-  left: number
-  top: number
+  left?: number
+  top?: number
   openChooseModalOpen?: () => void
   openEditModalOpen?: () => void
   removeImage?: () => void
