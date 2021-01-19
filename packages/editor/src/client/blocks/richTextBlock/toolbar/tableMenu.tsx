@@ -1,11 +1,12 @@
 import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, InputGroup, InputNumber} from 'rsuite'
-import {Transforms, Element as SlateElement} from 'slate'
+import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
+import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
 
 import './tableMenu.less'
 
@@ -28,26 +29,6 @@ export function TableMenu() {
 
     return !!match
   }
-
-  const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
-
-  const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
-    {
-      type: BlockFormat.Table,
-      children: Array.from({length: nrows}).map(() => ({
-        type: BlockFormat.TableRow,
-        children: Array.from({length: ncols}).map(() => ({
-          type: BlockFormat.TableCell,
-          borderColor: 'black',
-          // Wrap all content inside cell into paragraph block to enable break lines.
-          children: [emptyTextParagraph()]
-        }))
-      }))
-    },
-    // Append empty paragraph after table block for easy continuation.
-    emptyTextParagraph()
-  ]
-
   const tableInsertControls = (
     <>
       {[
@@ -112,7 +93,9 @@ export function TableMenu() {
               {t('blocks.richTextTable.hideBorders')}
             </Button>
           ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
+            <Button
+              appearance="default"
+              onClick={() => setTableCellBorderColor(defaultBorderColor)}>
               {t('blocks.richTextTable.showBorders')}
             </Button>
           )}

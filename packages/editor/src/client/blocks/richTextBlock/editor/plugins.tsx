@@ -39,8 +39,6 @@ const TextTags: any = {
 
 export function withRichText<T extends ReactEditor>(editor: T): T {
   const {insertData, isInline} = editor
-  // The delete commands are adjusted to avoid modifying the table structure directly. Some
-  // unwanted  behaviour occurs when doing so.
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
 
@@ -60,6 +58,8 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
 }
 
 export function withTable<T extends ReactEditor>(editor: T): T {
+  // The delete commands are adjusted to avoid modifying the table structure directly. Some
+  // unwanted  behaviour occurs when doing so.
   const {deleteForward, deleteBackward, deleteFragment} = editor
 
   const tablePreventDelete = (
