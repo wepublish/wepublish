@@ -9,7 +9,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer
+  WepublishServer,
+  JobType
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -21,7 +22,6 @@ import bodyParser from 'body-parser'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-import {JobType} from '@wepublish/api/lib/jobs'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
