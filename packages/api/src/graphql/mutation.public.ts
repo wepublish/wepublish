@@ -11,7 +11,7 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError
 } from '../error'
-import {GraphQLCommentInput, GraphQLPublicComment} from './comment'
+import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
 import {authorise, CanAddPublicComment} from './permissions'
 import {CommentAuthorType} from '../db/comment'
 
@@ -88,7 +88,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     // =======
     addPublicComment: {
       type: GraphQLNonNull(GraphQLPublicComment),
-      args: {input: {type: GraphQLNonNull(GraphQLCommentInput)}},
+      args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
       async resolve(_, {input}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanAddPublicComment, roles)
