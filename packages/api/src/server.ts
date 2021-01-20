@@ -101,7 +101,8 @@ export class WepublishServer {
 
     app.use(
       pinoHttp({
-        logger: serverLogger
+        logger: serverLogger,
+        useLevel: 'debug'
       })
     )
 

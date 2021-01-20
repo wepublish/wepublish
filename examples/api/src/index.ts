@@ -215,7 +215,8 @@ async function asyncMain() {
   ]
 
   const logger = pino({
-    name: 'we.publish-example'
+    name: 'we.publish-example',
+    prettyPrint: process.env.NODE_ENV === 'development'
   })
 
   const server = new WepublishServer({

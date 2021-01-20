@@ -504,15 +504,33 @@ async function applyApiServer() {
           }
         },
         spec: {
+          volumes: [
+            {
+              name: 'google-cloud-key',
+              secret: {
+                secretName: 'log-the-things'
+              }
+            }
+          ],
           containers: [
             {
               name: appName,
               image: image,
-              command: ['node', './examples/api/dist/index.js'],
+              command: ['node', './examples/api/dist/index.js', '|', 'pino-stackdriver', '--project wepublish-269314'],
+              volumeMounts: [
+                {
+                  "name": "google-cloud-key",
+                  "mountPath": "/var/secrets/google"
+                }
+              ],
               env: [
                 {
                   name: 'NODE_ENV',
                   value: `production`
+                },
+                {
+                  "name": "GOOGLE_APPLICATION_CREDENTIALS",
+                  "value": "/var/secrets/google/key.json"
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
