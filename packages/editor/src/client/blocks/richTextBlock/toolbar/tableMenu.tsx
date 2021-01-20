@@ -1,11 +1,12 @@
 import React, {useState, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, InputGroup, InputNumber} from 'rsuite'
-import {Editor, Transforms, Element as SlateElement} from 'slate'
+import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
 import {SubMenuContext} from '../../../atoms/toolbar'
-import {isFormatActive} from '../editor/utils'
+import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
+import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
 
 import './tableMenu.less'
 
@@ -21,33 +22,13 @@ export function TableMenu() {
   const {t} = useTranslation()
 
   const isBorderVisible = () => {
-    const [match] = Editor.nodes(editor, {
+    const [match] = WepublishEditor.nodes(editor, {
       match: node => (node.borderColor && node.borderColor !== 'transparent') as boolean,
       mode: 'all'
     })
 
     return !!match
   }
-
-  const emptyTextParagraph = () => ({type: BlockFormat.Paragraph, children: [{text: ''}]})
-
-  const emptyCellsTable = (nrows: number, ncols: number): SlateElement[] => [
-    {
-      type: BlockFormat.Table,
-      children: Array.from({length: nrows}).map(() => ({
-        type: BlockFormat.TableRow,
-        children: Array.from({length: ncols}).map(() => ({
-          type: BlockFormat.TableCell,
-          borderColor: 'black',
-          // Wrap all content inside cell into paragraph block to enable break lines.
-          children: [emptyTextParagraph()]
-        }))
-      }))
-    },
-    // Append empty paragraph after table block for easy continuation.
-    emptyTextParagraph()
-  ]
-
   const tableInsertControls = (
     <>
       {[
@@ -64,7 +45,7 @@ export function TableMenu() {
       ].map(({label, num, setNumber}, i) => (
         <InputGroup
           style={{width: '150px'}}
-          disabled={isFormatActive(editor, BlockFormat.Table)}
+          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
           key={i}>
           <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
           <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
@@ -90,7 +71,7 @@ export function TableMenu() {
     const {selection} = editor
     if (selection) {
       const nodes = Array.from(
-        Editor.nodes(editor, {
+        WepublishEditor.nodes(editor, {
           at: selection,
           match: node => node.type === BlockFormat.Table
         })
@@ -112,7 +93,9 @@ export function TableMenu() {
               {t('blocks.richTextTable.hideBorders')}
             </Button>
           ) : (
-            <Button appearance="default" onClick={() => setTableCellBorderColor('black')}>
+            <Button
+              appearance="default"
+              onClick={() => setTableCellBorderColor(defaultBorderColor)}>
               {t('blocks.richTextTable.showBorders')}
             </Button>
           )}
@@ -156,7 +139,9 @@ export function TableMenu() {
         height: '10em',
         width: '15em'
       }}>
-      {isFormatActive(editor, BlockFormat.Table) ? tableModifyControls : tableInsertControls}
+      {WepublishEditor.isFormatActive(editor, BlockFormat.Table)
+        ? tableModifyControls
+        : tableInsertControls}
     </div>
   )
 }

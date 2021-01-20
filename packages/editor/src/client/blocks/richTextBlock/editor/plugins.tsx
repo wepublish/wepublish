@@ -1,4 +1,5 @@
-import {Editor, Point, Element as SlateElement, Range} from 'slate'
+import {Point, Element as SlateElement, Range} from 'slate'
+import {WepublishEditor} from './wepublishEditor'
 import {jsx} from 'slate-hyperscript'
 import {ReactEditor} from 'slate-react'
 import {InlineFormats, BlockFormat, InlineFormat, TextFormat} from './formats'
@@ -38,8 +39,6 @@ const TextTags: any = {
 
 export function withRichText<T extends ReactEditor>(editor: T): T {
   const {insertData, isInline} = editor
-  // The delete commands are adjusted to avoid modifying the table structure directly. Some
-  // unwanted  behaviour occurs when doing so.
 
   editor.isInline = node => (InlineFormats.includes(node.type as string) ? true : isInline(node))
 
@@ -49,7 +48,7 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
     if (html) {
       const parsed = new DOMParser().parseFromString(html, 'text/html')
       const fragment = deserialize(parsed.body)
-      Editor.insertFragment(editor, fragment)
+      WepublishEditor.insertFragment(editor, fragment)
     } else {
       insertData(data)
     }
@@ -59,6 +58,8 @@ export function withRichText<T extends ReactEditor>(editor: T): T {
 }
 
 export function withTable<T extends ReactEditor>(editor: T): T {
+  // The delete commands are adjusted to avoid modifying the table structure directly. Some
+  // unwanted  behaviour occurs when doing so.
   const {deleteForward, deleteBackward, deleteFragment} = editor
 
   const tablePreventDelete = (
@@ -68,14 +69,16 @@ export function withTable<T extends ReactEditor>(editor: T): T {
     const {selection} = editor
 
     if (selection) {
-      const [cell] = Editor.nodes(editor, {
+      const [cell] = WepublishEditor.nodes(editor, {
         match: n =>
-          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === BlockFormat.TableCell
+          !WepublishEditor.isEditor(n) &&
+          SlateElement.isElement(n) &&
+          n.type === BlockFormat.TableCell
       })
 
       if (cell) {
         const [, cellPath] = cell
-        const point = Editor[location](editor, cellPath)
+        const point = WepublishEditor[location](editor, cellPath)
 
         if (check === 'pointEquals') {
           return Point.equals(selection.anchor, point)
