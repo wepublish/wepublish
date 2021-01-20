@@ -17,6 +17,7 @@ import {
   CommentState,
   PublicComment
 } from '../db/comment'
+import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {GraphQLRichText} from './richText'
 import {GraphQLPublicUser, GraphQLUser} from './user'
@@ -128,7 +129,12 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
-    userID: {type: GraphQLNonNull(GraphQLPublicUser)},
+    userID: {
+      type: GraphQLNonNull(GraphQLPublicUser),
+      resolve: createProxyingResolver(async (data, args, {dbAdapter}, info) => {
+        return dbAdapter.user.getUserByID(data.userID)
+      })
+    },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
