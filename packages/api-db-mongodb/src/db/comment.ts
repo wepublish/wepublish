@@ -1,6 +1,7 @@
 import {
   DBCommentAdapter,
   AddPublicCommentArgs,
+  UpdatePublicCommentArgs,
   Comment,
   GetCommentsArgs,
   ConnectionResult,
@@ -66,6 +67,35 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     return {
       ...comment,
       id,
+      text
+    }
+  }
+
+  async updatePublicComment({input, id}: UpdatePublicCommentArgs): Promise<PublicComment> {
+    const {text, ...data} = input
+    const {value} = await this.comments.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          ...data,
+          revisions: [
+            {
+              text,
+              createdAt: new Date()
+            }
+          ],
+          modifiedAt: new Date()
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    )
+    //@ts-ignore
+    const {_id: outID, ...comment} = value
+    return {
+      ...comment,
+      id: outID,
       text
     }
   }

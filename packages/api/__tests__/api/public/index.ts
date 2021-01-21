@@ -285,6 +285,7 @@ export type Mutation = {
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
   addComment: Comment
+  updateComment: Comment
 }
 
 export type MutationCreateSessionArgs = {
@@ -303,6 +304,11 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 }
 
 export type MutationAddCommentArgs = {
+  input: CommentInput
+}
+
+export type MutationUpdateCommentArgs = {
+  id: Scalars['ID']
   input: CommentInput
 }
 

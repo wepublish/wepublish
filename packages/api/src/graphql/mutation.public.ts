@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLID} from 'graphql'
 
 import {Issuer} from 'openid-client'
 
@@ -95,6 +95,23 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             ...input,
             userID: user.id,
             authorType: CommentAuthorType.VerifiedUser,
+            state: CommentState.PendingApproval
+          }
+        })
+      }
+    },
+
+    updateComment: {
+      type: GraphQLNonNull(GraphQLPublicComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}
+      },
+      async resolve(_, {input, id}, {dbAdapter}) {
+        return await dbAdapter.comment.updatePublicComment({
+          id,
+          input: {
+            ...input,
             state: CommentState.PendingApproval
           }
         })

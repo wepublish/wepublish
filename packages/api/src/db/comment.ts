@@ -78,6 +78,10 @@ export interface CommentInput {
 export interface AddPublicCommentArgs {
   readonly input: CommentInput
 }
+export interface UpdatePublicCommentArgs {
+  readonly id: string
+  readonly input: CommentInput
+}
 
 export interface CommentFilterOptions {
   readonly state?: CommentState
@@ -95,6 +99,7 @@ export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
   addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
+  updatePublicComment(args: UpdatePublicCommentArgs): Promise<PublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getPublicCommentsForItemByID(id: string): Promise<PublicComment[]>
 }
