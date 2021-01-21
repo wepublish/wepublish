@@ -737,6 +737,9 @@ async function applyApiServer() {
                       key: 'sentry_dsn'
                     }
                   }
+                },{
+                  name: 'GOOGLE_PROJECT',
+                  value: PROJECT_ID
                 }
               ],
               ports: [
