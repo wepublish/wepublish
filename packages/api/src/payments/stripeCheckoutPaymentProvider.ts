@@ -9,6 +9,7 @@ import {
 } from './paymentProvider'
 import Stripe from 'stripe'
 import {PaymentState} from '../db/payment'
+import {logger} from '../server'
 
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -97,7 +98,11 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     if (session.amount_total === null) {
       throw new Error('Error amount_total can not be null')
     }
-
+    logger('stripeCheckoutPaymentProvider').info(
+      'Created Stripe checkout session with ID: %s for paymentProvider %s',
+      session.id,
+      this.id
+    )
     return {
       intentID: session.id,
       intentSecret: session.id,

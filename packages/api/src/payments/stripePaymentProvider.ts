@@ -9,6 +9,7 @@ import {
 } from './paymentProvider'
 import Stripe from 'stripe'
 import {PaymentState} from '../db/payment'
+import {logger} from '../server'
 
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -116,7 +117,11 @@ export class StripePaymentProvider extends BasePaymentProvider {
     })
 
     const state = mapStripeEventToPaymentStatue(intent.status)
-
+    logger('stripePaymentProvider').info(
+      'Created Stripe intent with ID: %s for paymentProvider %s',
+      intent.id,
+      this.id
+    )
     return {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
