@@ -19,24 +19,12 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
-import * as Sentry from '@sentry/node'
-// import * as Tracing from "@sentry/tracing";
 import pinoMultiStream from 'pino-multi-stream'
 import pinoStackdriver from 'pino-stackdriver'
 import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-
-if (process.env.SENTRY_DSN) {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.HOST_URL ?? 'dev',
-    // We recommend adjusting this value in production, or using tracesSampler
-    // for finer control
-    tracesSampleRate: 1.0
-  })
-}
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -245,7 +233,8 @@ async function asyncMain() {
     streams.push({
       level: 'error',
       stream: createWriteStream({
-        dsn: process.env.SENTRY_DSN
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.HOST_URL ?? 'dev'
       })
     })
   }
