@@ -72,6 +72,16 @@ export const GraphQLCommentRevision = new GraphQLObjectType<CommentRevision, Con
   }
 })
 
+export const GraphQLPublicCommentUpdateInput = new GraphQLInputObjectType({
+  name: 'CommentUpdateInput',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    text: {
+      type: new GraphQLNonNull(GraphQLRichText)
+    }
+  }
+})
+
 export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   name: 'CommentInput',
   fields: {

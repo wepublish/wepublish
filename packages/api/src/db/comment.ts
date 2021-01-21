@@ -80,7 +80,10 @@ export interface AddPublicCommentArgs {
 }
 export interface UpdatePublicCommentArgs {
   readonly id: string
-  readonly input: CommentInput
+
+  readonly state: CommentState
+
+  readonly text: RichTextNode[]
 }
 
 export interface CommentFilterOptions {

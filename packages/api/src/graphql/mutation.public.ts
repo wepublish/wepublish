@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLID} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
 
 import {Issuer} from 'openid-client'
 
@@ -11,7 +11,11 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError
 } from '../error'
-import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
+import {
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput,
+  GraphQLPublicComment
+} from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
@@ -104,16 +108,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     updateComment: {
       type: GraphQLNonNull(GraphQLPublicComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}
+        input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
       },
-      async resolve(_, {input, id}, {dbAdapter}) {
+      async resolve(_, {input}, {dbAdapter}) {
+        const {id, text} = input
         return await dbAdapter.comment.updatePublicComment({
           id,
-          input: {
-            ...input,
-            state: CommentState.PendingApproval
-          }
+          text,
+          state: CommentState.PendingApproval
         })
       }
     }
