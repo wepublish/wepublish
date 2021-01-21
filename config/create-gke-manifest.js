@@ -516,7 +516,7 @@ async function applyApiServer() {
             {
               name: appName,
               image: image,
-              command: ['node', './examples/api/dist/index.js', '|', 'pino-stackdriver', '--project wepublish-269314'],
+              command: ['node', './examples/api/dist/index.js'],
               volumeMounts: [
                 {
                   "name": "google-cloud-key",
@@ -529,8 +529,8 @@ async function applyApiServer() {
                   value: `production`
                 },
                 {
-                  "name": "GOOGLE_APPLICATION_CREDENTIALS",
-                  "value": "/var/secrets/google/key.json"
+                  name: "GOOGLE_APPLICATION_CREDENTIALS",
+                  value: "/var/secrets/google/key.json"
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
@@ -729,7 +729,15 @@ async function applyApiServer() {
                       key: 'payrexx_api_secret'
                     }
                   }
-                },
+                },{
+                  name: 'SENTRY_DSN',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'sentry_dsn'
+                    }
+                  }
+                }
               ],
               ports: [
                 {

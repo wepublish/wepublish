@@ -19,10 +19,24 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
-import pino from 'pino'
+import * as Sentry from '@sentry/node'
+// import * as Tracing from "@sentry/tracing";
+import pinoMultiStream from 'pino-multi-stream'
+import pinoStackdriver from 'pino-stackdriver'
+import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.HOST_URL ?? 'dev',
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0
+  })
+}
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -214,9 +228,31 @@ async function asyncMain() {
     })
   ]
 
-  const logger = pino({
-    name: 'we.publish-example',
-    prettyPrint: process.env.NODE_ENV === 'development'
+  const prettyStream = pinoMultiStream.prettyStream()
+  const streams: pinoMultiStream.Streams = [{stream: prettyStream}]
+
+  if (process.env.GOOGLE_PROJECT) {
+    streams.push({
+      level: 'info',
+      stream: pinoStackdriver.createWriteStream({
+        projectId: process.env.GOOGLE_PROJECT,
+        logName: 'wepublish_api'
+      })
+    })
+  }
+
+  if (process.env.SENTRY_DSN) {
+    streams.push({
+      level: 'error',
+      stream: createWriteStream({
+        dsn: process.env.SENTRY_DSN
+      })
+    })
+  }
+
+  const logger = pinoMultiStream({
+    streams,
+    level: 'debug'
   })
 
   const server = new WepublishServer({
