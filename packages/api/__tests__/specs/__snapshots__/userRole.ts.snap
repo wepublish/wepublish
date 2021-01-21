@@ -235,6 +235,16 @@ Object {
         },
         Object {
           "deprecated": false,
+          "description": "Allows to login editor",
+          "id": "CAN_LOGIN_EDITOR",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all comments",
+          "id": "CAN_GET_COMMENTS",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to send a JWT Login",
           "id": "CAN_SEND_JWT_LOGIN",
         },
@@ -534,6 +544,16 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to login editor",
+              "id": "CAN_LOGIN_EDITOR",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
             },
             Object {
               "deprecated": false,
@@ -910,6 +930,16 @@ Object {
             },
             Object {
               "deprecated": false,
+              "description": "Allows to login editor",
+              "id": "CAN_LOGIN_EDITOR",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to send a JWT Login",
               "id": "CAN_SEND_JWT_LOGIN",
             },
@@ -1201,6 +1231,16 @@ Object {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to login editor",
+        "id": "CAN_LOGIN_EDITOR",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all comments",
+        "id": "CAN_GET_COMMENTS",
       },
       Object {
         "deprecated": false,

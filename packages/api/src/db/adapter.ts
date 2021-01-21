@@ -4,6 +4,7 @@ import {DBNavigationAdapter} from './navigation'
 import {DBAuthorAdapter} from './author'
 import {DBImageAdapter} from './image'
 import {DBArticleAdapter} from './article'
+import {DBCommentAdapter} from './comment'
 import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
 import {DBTokenAdapter} from './token'
@@ -20,6 +21,7 @@ export interface DBAdapter {
   readonly author: DBAuthorAdapter
   readonly image: DBImageAdapter
   readonly article: DBArticleAdapter
+  readonly comment: DBCommentAdapter
   readonly page: DBPageAdapter
   readonly mailLog: DBMailLogAdapter
 }

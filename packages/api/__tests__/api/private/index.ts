@@ -224,6 +224,61 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>
 }
 
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  userID: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  parentID?: Maybe<Scalars['ID']>
+  revisions: Array<CommentRevision>
+  state: CommentState
+  rejectionReason?: Maybe<CommentRejectionReason>
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentFilter = {
+  state?: Maybe<CommentState>
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  text: Scalars['RichText']
+  createdAt: Scalars['DateTime']
+}
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken'
   id: Scalars['ID']
@@ -900,6 +955,7 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
@@ -974,6 +1030,16 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<ImageFilter>
+  sort?: Maybe<ImageSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<CommentFilter>
   sort?: Maybe<ImageSort>
   order?: Maybe<SortOrder>
 }

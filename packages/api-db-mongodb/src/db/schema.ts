@@ -1,11 +1,16 @@
 import {
   ArticleBlock,
+  CommentItemType,
+  CommentAuthorType,
+  CommentRejectionReason,
+  CommentState,
   FocalPoint,
   MetadataProperty,
   NavigationLink,
   PageBlock,
   RichTextNode,
-  MailLogState
+  MailLogState,
+  CommentRevision
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -22,6 +27,8 @@ export enum CollectionName {
   Navigations = 'navigations',
   Authors = 'authors',
   Images = 'images',
+
+  Comments = 'comments',
 
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
@@ -176,6 +183,25 @@ export interface DBImage {
   license?: string
 
   focalPoint?: FocalPoint
+}
+
+export interface DBComment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  itemID: string
+  itemType: CommentItemType
+
+  userID: string
+
+  revisions: CommentRevision[]
+  parentID?: string
+
+  state: CommentState
+  rejectionReason?: CommentRejectionReason
+  authorType: CommentAuthorType
 }
 
 export interface DBArticle {

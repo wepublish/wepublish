@@ -38,6 +38,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<Comment>
 }
 
 export type ArticleConnection = {
@@ -128,6 +129,36 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  parentID?: Maybe<Scalars['ID']>
+  userID: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  text: Scalars['RichText']
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  parentID?: Maybe<Scalars['ID']>
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  text: Scalars['RichText']
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
@@ -253,6 +284,7 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
+  addComment: Comment
 }
 
 export type MutationCreateSessionArgs = {
@@ -268,6 +300,10 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
   redirectUri: Scalars['String']
+}
+
+export type MutationAddCommentArgs = {
+  input: CommentInput
 }
 
 export type Navigation = {
@@ -809,6 +845,19 @@ export type FullBlockFragment =
   | FullBlock_QuoteBlock_Fragment
   | FullBlock_TeaserGridBlock_Fragment
 
+export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
+  Comment,
+  'itemID' | 'itemType' | 'text' | 'parentID'
+> & {userID: {__typename?: 'User'} & Pick<User, 'id'>}
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type AddCommentMutation = {__typename?: 'Mutation'} & {
+  addComment: {__typename?: 'Comment'} & MutationCommentFragment
+}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -1177,6 +1226,17 @@ export const FullBlock = gql`
   ${ImageRef}
   ${FullTeaser}
 `
+export const MutationComment = gql`
+  fragment MutationComment on Comment {
+    itemID
+    itemType
+    userID {
+      id
+    }
+    text
+    parentID
+  }
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -1311,6 +1371,14 @@ export const Author = gql`
     }
   }
   ${FullAuthor}
+`
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      ...MutationComment
+    }
+  }
+  ${MutationComment}
 `
 export const PageList = gql`
   query PageList($filter: [String!], $after: ID, $first: Int) {

@@ -11,6 +11,8 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError
 } from '../error'
+import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
+import {CommentAuthorType, CommentState} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -78,6 +80,24 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
+      }
+    },
+
+    // Comment
+    // =======
+    addComment: {
+      type: GraphQLNonNull(GraphQLPublicComment),
+      args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
+      async resolve(_, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        return await dbAdapter.comment.addPublicComment({
+          input: {
+            ...input,
+            userID: user.id,
+            authorType: CommentAuthorType.VerifiedUser,
+            state: CommentState.PendingApproval
+          }
+        })
       }
     }
   }

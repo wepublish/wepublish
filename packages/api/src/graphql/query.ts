@@ -30,10 +30,10 @@ import {
   GraphQLPeerArticleConnection
 } from './article'
 
-import {InputCursor, Limit} from '../db/common'
+import {InputCursor, Limit, SortOrder} from '../db/common'
 import {ArticleSort, PeerArticle} from '../db/article'
 import {GraphQLSortOrder} from './common'
-import {SortOrder} from '../db/common'
+
 import {GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort, GraphQLImage} from './image'
 import {ImageSort} from '../db/image'
 
@@ -92,7 +92,8 @@ import {
   CanGetPeerProfile,
   CanGetPeers,
   CanGetPeer,
-  AllPermissions
+  AllPermissions,
+  CanGetComments
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -105,6 +106,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
+import {GraphQLCommentConnection, GraphQLCommentFilter} from './comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -413,6 +415,42 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLCommentFilter},
+        sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return await dbAdapter.comment.getComments({
+            filter,
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
