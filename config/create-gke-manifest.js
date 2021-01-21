@@ -738,6 +738,9 @@ async function applyApiServer() {
                     }
                   }
                 },{
+                  name: 'SENTRY_ENV',
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
+                },{
                   name: 'GOOGLE_PROJECT',
                   value: PROJECT_ID
                 }

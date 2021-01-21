@@ -234,7 +234,7 @@ async function asyncMain() {
       level: 'error',
       stream: createWriteStream({
         dsn: process.env.SENTRY_DSN,
-        environment: process.env.HOST_URL ?? 'dev'
+        environment: process.env.SENTRY_ENV ?? 'dev'
       })
     })
   }
