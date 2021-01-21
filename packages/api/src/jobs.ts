@@ -358,7 +358,6 @@ async function dailyInvoiceReminder(context: Context, data: any): Promise<void> 
 }
 
 async function sendTestMail(context: Context, data: any): Promise<void> {
-  throw new Error('uncaught error')
   const {
     subject = 'Test Mail',
     recipient = 'fake@fake.com',

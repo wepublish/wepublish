@@ -66,7 +66,7 @@ export class WepublishServer {
           }
         })
       } else {
-        logger('server').warn('%s does not exist in dbAdapter')
+        logger('server').warn('%s does not exist in dbAdapter', mtp.key)
       }
     })
 
@@ -108,12 +108,6 @@ export class WepublishServer {
 
     app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
     app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
-
-    app.get('/error', (req, res) => {
-      // logger('server').error(new Error('This is a test error'), 'Test Error')
-      throw new Error('uncaught error')
-      return res.send('error logged')
-    })
 
     adminServer.applyMiddleware({
       app,
