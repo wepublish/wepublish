@@ -762,7 +762,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         return await dbAdapter.comment.takeActionOnComment({
           id,
-          state
+          state,
+          rejectionReason
         })
       }
     }
