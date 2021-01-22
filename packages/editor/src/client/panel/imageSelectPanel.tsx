@@ -118,7 +118,13 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                       <div style={{backgroundColor: '#f7f7fa'}}>
                         <img
                           src={mediumURL || ''}
-                          style={{display: 'block', margin: '0 auto', maxHeight: '300'}}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            maxWidth: '240',
+                            maxHeight: '240',
+                            width: '100%'
+                          }}
                         />
                       </div>
                       <Panel>
