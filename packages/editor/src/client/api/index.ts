@@ -225,6 +225,11 @@ export type Comment = {
   modifiedAt: Scalars['DateTime'];
 };
 
+export type CommentActionInput = {
+  state: CommentState;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+};
+
 export enum CommentAuthorType {
   Author = 'Author',
   Team = 'Team',
@@ -534,6 +539,7 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  takeActionOnComment: Comment;
 };
 
 
@@ -740,6 +746,12 @@ export type MutationPublishPageArgs = {
 
 export type MutationUnpublishPageArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationTakeActionOnCommentArgs = {
+  id: Scalars['ID'];
+  input: CommentActionInput;
 };
 
 export type Navigation = {

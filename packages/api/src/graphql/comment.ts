@@ -165,3 +165,14 @@ export const GraphQLPublicCommentConnection = new GraphQLObjectType({
     totalCount: {type: GraphQLNonNull(GraphQLInt)}
   }
 })
+
+export const GraphQLCommentActionInput = new GraphQLInputObjectType({
+  name: 'CommentActionInput',
+  fields: {
+    state: {
+      type: GraphQLNonNull(GraphQLCommentState)
+    },
+
+    rejectionReason: {type: GraphQLCommentRejectionReason}
+  }
+})

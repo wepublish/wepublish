@@ -53,7 +53,8 @@ import {
   CanCreateUserRole,
   CanDeleteUserRole,
   CanResetUserPassword,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanTakeActionOnComment
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -67,6 +68,8 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLComment, GraphQLCommentActionInput} from './comment'
+import {CommentState} from '../db/comment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -736,6 +739,31 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    takeActionOnComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLCommentActionInput)}
+      },
+      async resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        const {state, rejectionReason} = input
+        if (
+          [CommentState.PendingUserChanges, CommentState.Rejected].includes(state) &&
+          !rejectionReason
+        ) {
+          throw new Error('Rejection Reason is required')
+        }
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state
+        })
       }
     }
   }
