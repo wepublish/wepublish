@@ -7,7 +7,7 @@ import {ColorPicker} from '../../../atoms/colorPicker'
 import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
-import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
+import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 
 import './tableMenu.less'
 
@@ -95,21 +95,21 @@ export function TableMenu() {
     <>
       {!showRemoveConfirm ? (
         <>
-          {borderColor && borderColor !== 'transparent' ? (
+          {borderColor && borderColor !== '#00000000' ? (
             <ControlsContainer dividerBottom>
               <ColorPicker
-                withColor={color => {
+                setColor={color => {
                   setBorderColor(color)
                 }}
                 currentColor={borderColor}
                 label={t('blocks.richTextTable.border')}
               />
-              <button className="icon-button" onClick={() => setBorderColor('transparent')}>
-                <Icon icon="ban" style={{color: 'red'}} />
+              <button className="icon-button" onClick={() => setBorderColor('#00000000')}>
+                <Icon icon="ban" style={{color: '#FF0000'}} />
               </button>
             </ControlsContainer>
           ) : (
-            <Button appearance="default" onClick={() => setBorderColor(defaultBorderColor)}>
+            <Button appearance="default" onClick={() => setBorderColor(DEFAULT_BORDER_COLOR)}>
               {t('blocks.richTextTable.addBorders')}
             </Button>
           )}

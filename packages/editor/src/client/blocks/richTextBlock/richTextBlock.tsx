@@ -98,7 +98,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         <ToolbarDivider />
 
         <SubMenuButton icon="smile-o">
-          <EmojiPicker withEmoji={emoji => editor.insertText(emoji)} />
+          <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
         </SubMenuButton>
       </Toolbar>
       {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder

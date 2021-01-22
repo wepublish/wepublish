@@ -73,7 +73,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       <button
         className="icon-button"
         style={{
-          border: `${active ? 'blue' : 'transparent'} 1px solid`
+          border: `${active ? 'blue' : '#00000000'} 1px solid`
         }}
         ref={ref}
         {...props}>

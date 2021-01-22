@@ -2,12 +2,12 @@ import React from 'react'
 import nanoid from 'nanoid'
 
 interface ColorPickerProps {
-  withColor: (color: string) => void
+  setColor: (color: string) => void
   currentColor?: string
   label?: string
 }
 
-export function ColorPicker({withColor, currentColor, label}: ColorPickerProps) {
+export function ColorPicker({setColor, currentColor, label}: ColorPickerProps) {
   const id = nanoid()
   return (
     <>
@@ -17,7 +17,7 @@ export function ColorPicker({withColor, currentColor, label}: ColorPickerProps) 
         type="color"
         value={currentColor}
         onChange={e => {
-          withColor(e.target.value)
+          setColor(e.target.value)
         }}
         style={{cursor: 'pointer'}}
       />

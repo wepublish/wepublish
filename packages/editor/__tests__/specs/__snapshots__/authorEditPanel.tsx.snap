@@ -718,7 +718,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -751,7 +751,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -784,7 +784,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -855,7 +855,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -899,7 +899,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1019,7 +1019,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "border": "transparent 1px solid",
+                                                "border": "#00000000 1px solid",
                                               }
                                             }
                                           >
@@ -1138,7 +1138,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1182,7 +1182,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1226,7 +1226,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1270,7 +1270,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1314,7 +1314,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1358,7 +1358,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1431,7 +1431,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1567,7 +1567,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -1635,7 +1635,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       classPrefix="rs-popover"
                                     >
                                       <EmojiPicker
-                                        withEmoji={[Function]}
+                                        setEmoji={[Function]}
                                       />
                                     </defaultProps(Popover)>
                                   }
@@ -1653,7 +1653,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         classPrefix="rs-popover"
                                       >
                                         <EmojiPicker
-                                          withEmoji={[Function]}
+                                          setEmoji={[Function]}
                                         />
                                       </defaultProps(Popover)>
                                     }
@@ -1673,7 +1673,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           classPrefix="rs-popover"
                                         >
                                           <EmojiPicker
-                                            withEmoji={[Function]}
+                                            setEmoji={[Function]}
                                           />
                                         </defaultProps(Popover)>
                                       }
@@ -1689,7 +1689,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                           onMouseDown={[Function]}
                                           style={
                                             Object {
-                                              "border": "transparent 1px solid",
+                                              "border": "#00000000 1px solid",
                                             }
                                           }
                                         >
@@ -3520,7 +3520,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -3553,7 +3553,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -3586,7 +3586,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -3657,7 +3657,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -3701,7 +3701,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -3821,7 +3821,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "border": "transparent 1px solid",
+                                                "border": "#00000000 1px solid",
                                               }
                                             }
                                           >
@@ -3940,7 +3940,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -3984,7 +3984,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4028,7 +4028,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4072,7 +4072,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4116,7 +4116,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4160,7 +4160,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4233,7 +4233,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4369,7 +4369,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -4437,7 +4437,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       classPrefix="rs-popover"
                                     >
                                       <EmojiPicker
-                                        withEmoji={[Function]}
+                                        setEmoji={[Function]}
                                       />
                                     </defaultProps(Popover)>
                                   }
@@ -4455,7 +4455,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         classPrefix="rs-popover"
                                       >
                                         <EmojiPicker
-                                          withEmoji={[Function]}
+                                          setEmoji={[Function]}
                                         />
                                       </defaultProps(Popover)>
                                     }
@@ -4475,7 +4475,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           classPrefix="rs-popover"
                                         >
                                           <EmojiPicker
-                                            withEmoji={[Function]}
+                                            setEmoji={[Function]}
                                           />
                                         </defaultProps(Popover)>
                                       }
@@ -4491,7 +4491,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           onMouseDown={[Function]}
                                           style={
                                             Object {
-                                              "border": "transparent 1px solid",
+                                              "border": "#00000000 1px solid",
                                             }
                                           }
                                         >
@@ -5900,7 +5900,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -5933,7 +5933,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -5966,7 +5966,7 @@ exports[`Author Edit Panel should render 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -6037,7 +6037,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6081,7 +6081,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6201,7 +6201,7 @@ exports[`Author Edit Panel should render 1`] = `
                                             onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "border": "transparent 1px solid",
+                                                "border": "#00000000 1px solid",
                                               }
                                             }
                                           >
@@ -6320,7 +6320,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6364,7 +6364,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6408,7 +6408,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6452,7 +6452,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6496,7 +6496,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6540,7 +6540,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6613,7 +6613,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6749,7 +6749,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -6817,7 +6817,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       classPrefix="rs-popover"
                                     >
                                       <EmojiPicker
-                                        withEmoji={[Function]}
+                                        setEmoji={[Function]}
                                       />
                                     </defaultProps(Popover)>
                                   }
@@ -6835,7 +6835,7 @@ exports[`Author Edit Panel should render 1`] = `
                                         classPrefix="rs-popover"
                                       >
                                         <EmojiPicker
-                                          withEmoji={[Function]}
+                                          setEmoji={[Function]}
                                         />
                                       </defaultProps(Popover)>
                                     }
@@ -6855,7 +6855,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           classPrefix="rs-popover"
                                         >
                                           <EmojiPicker
-                                            withEmoji={[Function]}
+                                            setEmoji={[Function]}
                                           />
                                         </defaultProps(Popover)>
                                       }
@@ -6871,7 +6871,7 @@ exports[`Author Edit Panel should render 1`] = `
                                           onMouseDown={[Function]}
                                           style={
                                             Object {
-                                              "border": "transparent 1px solid",
+                                              "border": "#00000000 1px solid",
                                             }
                                           }
                                         >
@@ -8272,7 +8272,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -8305,7 +8305,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -8338,7 +8338,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                     onMouseDown={[Function]}
                                     style={
                                       Object {
-                                        "border": "transparent 1px solid",
+                                        "border": "#00000000 1px solid",
                                       }
                                     }
                                   >
@@ -8409,7 +8409,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8453,7 +8453,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8573,7 +8573,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             onMouseDown={[Function]}
                                             style={
                                               Object {
-                                                "border": "transparent 1px solid",
+                                                "border": "#00000000 1px solid",
                                               }
                                             }
                                           >
@@ -8692,7 +8692,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8736,7 +8736,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8780,7 +8780,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8824,7 +8824,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8868,7 +8868,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8912,7 +8912,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -8985,7 +8985,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -9121,7 +9121,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       onMouseDown={[Function]}
                                       style={
                                         Object {
-                                          "border": "transparent 1px solid",
+                                          "border": "#00000000 1px solid",
                                         }
                                       }
                                     >
@@ -9189,7 +9189,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       classPrefix="rs-popover"
                                     >
                                       <EmojiPicker
-                                        withEmoji={[Function]}
+                                        setEmoji={[Function]}
                                       />
                                     </defaultProps(Popover)>
                                   }
@@ -9207,7 +9207,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         classPrefix="rs-popover"
                                       >
                                         <EmojiPicker
-                                          withEmoji={[Function]}
+                                          setEmoji={[Function]}
                                         />
                                       </defaultProps(Popover)>
                                     }
@@ -9227,7 +9227,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           classPrefix="rs-popover"
                                         >
                                           <EmojiPicker
-                                            withEmoji={[Function]}
+                                            setEmoji={[Function]}
                                           />
                                         </defaultProps(Popover)>
                                       }
@@ -9243,7 +9243,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                           onMouseDown={[Function]}
                                           style={
                                             Object {
-                                              "border": "transparent 1px solid",
+                                              "border": "#00000000 1px solid",
                                             }
                                           }
                                         >
