@@ -7696,118 +7696,143 @@ exports[`Author Edit Panel should render 1`] = `
                                                       />
                                                     </defaultProps(Popover)>
                                                   }
-                                                  trigger="none"
-                                                >
-                                                  <OverlayTrigger
-                                                    delayHide={200}
-                                                    locale={
-                                                      Object {
-                                                        "formatDate": [Function],
-                                                      }
-                                                    }
-                                                    placement="top"
-                                                    rootClose={true}
-                                                    speaker={
-                                                      <defaultProps(Popover)
-                                                        classPrefix="rs-popover"
-                                                      >
-                                                        <EmojiPicker
-                                                          doWithEmoji={[Function]}
-                                                        />
-                                                      </defaultProps(Popover)>
-                                                    }
-                                                    trigger="none"
-                                                  >
-                                                    <ForwardRef
-                                                      active={false}
-                                                      key="triggerComponent"
-                                                      onMouseDown={[Function]}
-                                                    >
-                                                      <button
-                                                        onMouseDown={[Function]}
-                                                        style={
-                                                          Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
-                                                          }
-                                                        }
-                                                      >
-                                                        <defaultProps(Icon)
-                                                          classPrefix="rs-icon"
-                                                          componentClass="i"
-                                                          icon="smile-o"
-                                                          style={
-                                                            Object {
-                                                              "minWidth": "15px",
-                                                            }
-                                                          }
-                                                        >
-                                                          <Icon
-                                                            classPrefix="rs-icon"
-                                                            componentClass="i"
-                                                            icon="smile-o"
-                                                            style={
-                                                              Object {
-                                                                "minWidth": "15px",
-                                                              }
-                                                            }
-                                                          >
-                                                            <i
-                                                              className="rs-icon rs-icon-smile-o"
-                                                              style={
-                                                                Object {
-                                                                  "minWidth": "15px",
-                                                                }
-                                                              }
-                                                            />
-                                                          </Icon>
-                                                        </defaultProps(Icon)>
-                                                      </button>
-                                                    </ForwardRef>
-                                                    <Portal
-                                                      key="portal"
-                                                    >
-                                                      <Portal
-                                                        containerInfo={<body />}
-                                                      >
-                                                        <Overlay
-                                                          placement="top"
-                                                          rootClose={true}
-                                                          show={false}
-                                                          target={[Function]}
-                                                        >
-                                                          <BaseOverlay
-                                                            placement="top"
-                                                            rootClose={true}
-                                                            show={false}
-                                                            target={[Function]}
-                                                            transition={
-                                                              Object {
-                                                                "$$typeof": Symbol(react.forward_ref),
-                                                                "displayName": "Fade",
-                                                                "render": [Function],
-                                                              }
-                                                            }
-                                                          />
-                                                        </Overlay>
-                                                      </Portal>
-                                                    </Portal>
-                                                  </OverlayTrigger>
-                                                </Whisper>
-                                              </withLocale(Whisper)>
-                                            </ForwardRef>
-                                          </EditorSubMenuButton>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </Toolbar>
-                                  <div
-                                    onClick={[Function]}
-                                    style={
+                                                }
+                                              />
+                                            </Overlay>
+                                          </Portal>
+                                        </Portal>
+                                      </OverlayTrigger>
+                                    </Whisper>
+                                  </withLocale(Whisper)>
+                                </ForwardRef>
+                              </EditorSubMenuButton>
+                            </div>
+                          </div>
+                        </div>
+                      </Toolbar>
+                      <Editable
+                        onBlur={[Function]}
+                        renderElement={[Function]}
+                        renderLeaf={[Function]}
+                      >
+                        <div
+                          contentEditable={true}
+                          data-gramm={false}
+                          data-slate-editor={true}
+                          data-slate-node="value"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onClick={[Function]}
+                          onCompositionEnd={[Function]}
+                          onCompositionStart={[Function]}
+                          onCopy={[Function]}
+                          onCut={[Function]}
+                          onDragOver={[Function]}
+                          onDragStart={[Function]}
+                          onDrop={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          role="textbox"
+                          style={
+                            Object {
+                              "outline": "none",
+                              "whiteSpace": "pre-wrap",
+                              "wordWrap": "break-word",
+                            }
+                          }
+                          suppressContentEditableWarning={true}
+                        >
+                          <Children
+                            decorate={[Function]}
+                            decorations={Array []}
+                            node={
+                              Object {
+                                "addMark": [Function],
+                                "apply": [Function],
+                                "children": Array [
+                                  Object {
+                                    "children": Array [
+                                      Object {
+                                        "text": "",
+                                      },
+                                    ],
+                                    "type": "paragraph",
+                                  },
+                                ],
+                                "deleteBackward": [Function],
+                                "deleteForward": [Function],
+                                "deleteFragment": [Function],
+                                "getFragment": [Function],
+                                "history": Object {
+                                  "redos": Array [],
+                                  "undos": Array [],
+                                },
+                                "insertBreak": [Function],
+                                "insertData": [Function],
+                                "insertFragment": [Function],
+                                "insertNode": [Function],
+                                "insertText": [Function],
+                                "isInline": [Function],
+                                "isVoid": [Function],
+                                "marks": null,
+                                "normalizeNode": [Function],
+                                "onChange": [Function],
+                                "operations": Array [],
+                                "redo": [Function],
+                                "removeMark": [Function],
+                                "selection": null,
+                                "setFragmentData": [Function],
+                                "undo": [Function],
+                              }
+                            }
+                            renderElement={[Function]}
+                            renderLeaf={[Function]}
+                            selection={null}
+                          >
+                            <Element
+                              decorate={[Function]}
+                              decorations={Array []}
+                              element={
+                                Object {
+                                  "children": Array [
+                                    Object {
+                                      "text": "",
+                                    },
+                                  ],
+                                  "type": "paragraph",
+                                }
+                              }
+                              key="0"
+                              renderElement={[Function]}
+                              renderLeaf={[Function]}
+                              selection={null}
+                            >
+                              <p
+                                data-slate-node="element"
+                              >
+                                <Children
+                                  decorate={[Function]}
+                                  decorations={Array []}
+                                  node={
+                                    Object {
+                                      "children": Array [
+                                        Object {
+                                          "text": "",
+                                        },
+                                      ],
+                                      "type": "paragraph",
+                                    }
+                                  }
+                                  renderElement={[Function]}
+                                  renderLeaf={[Function]}
+                                  selection={null}
+                                >
+                                  <Text
+                                    decorations={Array []}
+                                    isLast={true}
+                                    key="1"
+                                    parent={
                                       Object {
                                         "color": "#cad5e4",
                                       }
