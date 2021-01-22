@@ -10,7 +10,8 @@ import {
   InputCursorType,
   CommentSort,
   SortOrder,
-  PublicComment
+  PublicComment,
+  OptionalPublicComment
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -71,7 +72,11 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async updatePublicComment({id, text, state}: UpdatePublicCommentArgs): Promise<PublicComment> {
+  async updatePublicComment({
+    id,
+    text,
+    state
+  }: UpdatePublicCommentArgs): Promise<OptionalPublicComment> {
     const {value} = await this.comments.findOneAndUpdate(
       {_id: id},
       {
@@ -90,7 +95,9 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
         returnOriginal: false
       }
     )
-    //@ts-ignore
+
+    if (!value) return null
+
     const {_id: outID, ...comment} = value
     return {
       ...comment,

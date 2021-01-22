@@ -102,7 +102,7 @@ export type OptionalPublicComment = PublicComment | null
 
 export interface DBCommentAdapter {
   addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
-  updatePublicComment(args: UpdatePublicCommentArgs): Promise<PublicComment>
+  updatePublicComment(args: UpdatePublicCommentArgs): Promise<OptionalPublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getPublicCommentsForItemByID(id: string): Promise<PublicComment[]>
 }
