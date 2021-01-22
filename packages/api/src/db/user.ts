@@ -32,8 +32,9 @@ export interface GetUserForCredentialsArgs {
 }
 
 export enum UserSort {
-  CreatedAt = 'modifiedAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export interface UserSubscriptionFilter {
@@ -115,6 +116,8 @@ export interface PaymentProviderCustomer {
 
 export interface User {
   readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
   readonly name: string
   readonly email: string
   readonly roleIDs: string[]
@@ -132,6 +135,7 @@ export type OptionalUserSubscription = UserSubscription | null
 
 export interface GetUsersArgs {
   readonly cursor: InputCursor
+  readonly skip?: number
   readonly limit: Limit
   readonly filter?: UserFilter
   readonly sort: UserSort
