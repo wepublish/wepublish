@@ -188,7 +188,8 @@
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
-        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
+        "lightStyledWithNoImageError": "Light styled teasers must have an image"
       }
     },
     "authors": {
