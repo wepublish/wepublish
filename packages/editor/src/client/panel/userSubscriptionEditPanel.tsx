@@ -163,10 +163,7 @@ export function UserSubscriptionEditPanel({
                 <HelpBlock>
                   <DescriptionList>
                     <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.pricePerMonthMinimum}{' '}
-                      {memberPlan.pricePerMonthMinimum !== memberPlan.pricePerMonthMaximum
-                        ? `- ${memberPlan.pricePerMonthMaximum}`
-                        : ''}
+                      {memberPlan.amountPerMonthMin}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>

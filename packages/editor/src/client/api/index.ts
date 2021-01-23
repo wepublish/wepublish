@@ -530,8 +530,7 @@ export type MemberPlan = {
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
   active: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
+  amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
 };
 
@@ -553,8 +552,7 @@ export type MemberPlanInput = {
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
   active: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
+  amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
 };
 
@@ -2333,7 +2331,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -3603,8 +3601,7 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
-  pricePerMonthMinimum
-  pricePerMonthMaximum
+  amountPerMonthMin
   availablePaymentMethods {
     paymentMethods {
       ...FullPaymentMethod

@@ -13,8 +13,6 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  RangeSlider,
-  Slider,
   CheckPicker
 } from 'rsuite'
 
@@ -42,8 +40,6 @@ import {RichTextBlockValue} from '../blocks/types'
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
-const MAX_PRICE_PER_MONTH = 100
-
 const ALL_PAYMENT_PERIODICITIES = [
   {id: 'monthly', checked: false},
   {id: 'quarterly', checked: false},
@@ -70,9 +66,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [fixPrice, setFixPrice] = useState<boolean>(false)
-  const [pricePerMonthMinimum, setPricePerMonthMinimum] = useState<number>(0)
-  const [pricePerMonthMaximum, setPricePerMonthMaximum] = useState<number>(0)
+  const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(5)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -113,6 +107,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   useEffect(() => {
     if (data?.memberPlan) {
       setName(data.memberPlan.name)
+      setSlug(data.memberPlan.slug)
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
@@ -126,8 +121,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             }))
           : []
       )
-      setPricePerMonthMinimum(data.memberPlan.pricePerMonthMinimum)
-      setPricePerMonthMaximum(data.memberPlan.pricePerMonthMaximum)
+      setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
     }
   }, [data?.memberPlan])
 
@@ -166,8 +160,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            pricePerMonthMinimum,
-            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
+            amountPerMonthMin
           }
         }
       })
@@ -187,8 +180,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            pricePerMonthMinimum,
-            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
+            amountPerMonthMin
           }
         }
       })
@@ -226,6 +218,20 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
             </FormGroup>
             <FormGroup>
+              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
+              <FormControl
+                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
+                value={amountPerMonthMin}
+                type="number"
+                disabled={isDisabled}
+                min={0}
+                steps={1}
+                onChange={value => {
+                  setAmountPerMonthMin(parseInt(`${value}`))
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
               <RichTextBlock value={description} onChange={value => setDescription(value)} />
             </FormGroup>
@@ -239,45 +245,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => setImage(undefined)}
         />
-
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.fixPrice')}</ControlLabel>
-              <Toggle
-                checked={fixPrice}
-                disabled={isDisabled}
-                onChange={value => setFixPrice(value)}
-              />
-              <HelpBlock>{t('memberPlanList.fixPriceDescription')}</HelpBlock>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.priceRange')}</ControlLabel>
-              {fixPrice ? (
-                <Slider
-                  disabled={isDisabled}
-                  progress
-                  value={pricePerMonthMinimum}
-                  onChange={value => setPricePerMonthMinimum(value)}
-                  min={0}
-                  max={MAX_PRICE_PER_MONTH}
-                />
-              ) : (
-                <RangeSlider
-                  progress
-                  disabled={isDisabled}
-                  value={[pricePerMonthMinimum, pricePerMonthMaximum]}
-                  onChange={value => {
-                    setPricePerMonthMinimum(value[0])
-                    setPricePerMonthMaximum(value[1])
-                  }}
-                  min={0}
-                  max={MAX_PRICE_PER_MONTH}
-                />
-              )}
-            </FormGroup>
-          </Form>
-        </Panel>
 
         <Panel>
           <ListInput

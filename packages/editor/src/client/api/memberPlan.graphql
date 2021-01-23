@@ -10,8 +10,7 @@ fragment MemberPlanRef on MemberPlan {
 
 fragment FullMemberPlan on MemberPlan {
     description
-    pricePerMonthMinimum
-    pricePerMonthMaximum
+    amountPerMonthMin
     availablePaymentMethods {
         paymentMethods {
             ...FullPaymentMethod

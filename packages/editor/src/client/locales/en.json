@@ -610,7 +610,8 @@
       "autoRenewal": "Force Auto Renew",
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "paymentPeriodicities": "Possible Payment Periodicities",
-      "paymentMethods": "Possible Payment Methods"
+      "paymentMethods": "Possible Payment Methods",
+      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)"
     },
     "userSubscriptionEdit": {
       "name": "Name",

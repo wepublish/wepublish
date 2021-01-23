@@ -291,8 +291,7 @@ export interface DBMemberPlan {
   imageID?: string
   description: RichTextNode[]
   active: boolean
-  pricePerMonthMinimum: number
-  pricePerMonthMaximum: number
+  amountPerMonthMin: number
   availablePaymentMethods: AvailablePaymentMethod[]
 }
 
