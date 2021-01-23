@@ -12,7 +12,7 @@ export * from './graphql/richText'
 export * from './graphql/slug'
 
 export * from './graphql/mutation.private'
-export * from './graphql/query'
+export * from './graphql/query.private'
 
 export * from './graphql/schema'
 export * from './graphql/permissions'

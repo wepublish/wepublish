@@ -34,4 +34,6 @@ export interface DBPaymentMethodAdapter {
 
   getPaymentMethods(): Promise<PaymentMethod[]>
   getPaymentMethodsByID(ids: readonly string[]): Promise<OptionalPaymentMethod[]>
+
+  getActivePaymentMethods(): Promise<PaymentMethod[]>
 }

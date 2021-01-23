@@ -287,9 +287,10 @@ export interface DBMemberPlan {
   modifiedAt: Date
 
   name: string
+  slug: string
   imageID?: string
   description: RichTextNode[]
-  isActive: boolean
+  active: boolean
   pricePerMonthMinimum: number
   pricePerMonthMaximum: number
   availablePaymentMethods: AvailablePaymentMethod[]

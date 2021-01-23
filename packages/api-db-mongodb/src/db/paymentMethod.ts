@@ -64,6 +64,14 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
     return paymentMethods.map(({_id: id, ...data}) => ({id, ...data}))
   }
 
+  async getActivePaymentMethods(): Promise<PaymentMethod[]> {
+    const paymentMethods = await this.paymentMethods
+      .find({active: true})
+      .sort({createAd: -1})
+      .toArray()
+    return paymentMethods.map(({_id: id, ...data}) => ({id, ...data}))
+  }
+
   async deletePaymentMethod(id: string): Promise<string | null> {
     const {deletedCount} = await this.paymentMethods.deleteOne({_id: id})
     return deletedCount !== 0 ? id : null

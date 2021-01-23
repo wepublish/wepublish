@@ -1,7 +1,8 @@
 fragment MemberPlanRef on MemberPlan {
     id
     name
-    isActive
+    slug
+    active
     image {
         ...ImageRef
     }

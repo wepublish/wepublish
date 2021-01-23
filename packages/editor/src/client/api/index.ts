@@ -526,9 +526,10 @@ export type MemberPlan = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
+  active: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
   pricePerMonthMaximum: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
@@ -543,13 +544,15 @@ export type MemberPlanConnection = {
 
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
 };
 
 export type MemberPlanInput = {
   name: Scalars['String'];
+  slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
+  active: Scalars['Boolean'];
   pricePerMonthMinimum: Scalars['Int'];
   pricePerMonthMaximum: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
@@ -2321,7 +2324,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'isActive'>
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3590,7 +3593,8 @@ export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
   name
-  isActive
+  slug
+  active
   image {
     ...ImageRef
   }

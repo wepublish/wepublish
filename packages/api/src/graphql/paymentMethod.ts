@@ -40,6 +40,16 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
   }
 })
 
+export const GraphQLPublicPaymentMethod = new GraphQLObjectType<PaymentMethod, Context>({
+  name: 'PaymentMethod',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLNonNull(GraphQLString)},
+    description: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
   name: 'PaymentMethodInput',
   fields: {

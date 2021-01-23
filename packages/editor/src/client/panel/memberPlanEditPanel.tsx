@@ -35,7 +35,7 @@ import {
   useUpdateMemberPlanMutation
 } from '../api'
 
-import {generateID, getOperationNameFromDocument} from '../utility'
+import {generateID, getOperationNameFromDocument, slugify} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
@@ -62,9 +62,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const {t} = useTranslation()
 
   const [name, setName] = useState('')
+  const [slug, setSlug] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
-  const [isActive, setIsActive] = useState<boolean>(false)
+  const [active, setActive] = useState<boolean>(true)
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<
     ListValue<AvailablePaymentMethod>[]
   >([])
@@ -116,7 +117,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
       )
-      setIsActive(data.memberPlan.isActive)
+      setActive(data.memberPlan.active)
       setAvailablePaymentMethods(
         data.memberPlan.availablePaymentMethods
           ? data.memberPlan.availablePaymentMethods.map(availablePaymentMethod => ({
@@ -156,9 +157,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           id,
           input: {
             name,
+            slug,
             imageID: image?.id,
             description,
-            isActive,
+            active,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               paymentPeriodicities: value.paymentPeriodicities,
               forceAutoRenewal: value.forceAutoRenewal,
@@ -176,9 +178,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         variables: {
           input: {
             name,
+            slug,
             imageID: image?.id,
             description,
-            isActive,
+            active,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               paymentPeriodicities: value.paymentPeriodicities,
               forceAutoRenewal: value.forceAutoRenewal,
@@ -211,16 +214,15 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 name={t('memberPlanList.name')}
                 value={name}
                 disabled={isDisabled}
-                onChange={value => setName(value)}
+                onChange={value => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
               />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
-              <Toggle
-                checked={isActive}
-                disabled={isDisabled}
-                onChange={value => setIsActive(value)}
-              />
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
             </FormGroup>
             <FormGroup>
