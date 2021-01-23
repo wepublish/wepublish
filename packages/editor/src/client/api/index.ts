@@ -187,13 +187,13 @@ export type AuthProvider = {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
   paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   forceAutoRenewal: Scalars['Boolean'];
 };
 
@@ -1063,6 +1063,13 @@ export type PaymentMethodInput = {
   active: Scalars['Boolean'];
 };
 
+export enum PaymentPeriodicity {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Biannual = 'BIANNUAL',
+  Yearly = 'YEARLY'
+}
+
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   id: Scalars['ID'];
@@ -1634,7 +1641,7 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription';
   memberPlan: MemberPlan;
-  paymentPeriodicity: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
@@ -1652,7 +1659,7 @@ export type UserSubscriptionFilter = {
 
 export type UserSubscriptionInput = {
   memberPlanID: Scalars['String'];
-  paymentPeriodicity: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];

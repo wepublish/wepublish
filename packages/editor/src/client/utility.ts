@@ -1,6 +1,7 @@
 import nanoid from 'nanoid'
-import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {PaymentPeriodicity} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -127,3 +128,10 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
     return previousValue
   }, {})
 }
+
+export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly
+]

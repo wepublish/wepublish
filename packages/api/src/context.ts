@@ -70,7 +70,9 @@ export interface DataLoaderContext {
   readonly peerAdminSchema: DataLoader<string, GraphQLSchema | null>
 
   readonly memberPlansByID: DataLoader<string, OptionalMemberPlan>
+  readonly activeMemberPlansByID: DataLoader<string, OptionalMemberPlan>
   readonly paymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
+  readonly activePaymentMethodsByID: DataLoader<string, OptionalPaymentMethod>
   readonly invoicesByID: DataLoader<string, OptionalInvoice>
   readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
@@ -268,7 +270,13 @@ export async function contextFromRequest(
       }),
 
       memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
+      activeMemberPlansByID: new DataLoader(ids =>
+        dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+      ),
       paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
+      activePaymentMethodsByID: new DataLoader(ids =>
+        dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+      ),
       invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
       paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
     },

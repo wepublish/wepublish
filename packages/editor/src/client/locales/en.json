@@ -611,7 +611,13 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "paymentPeriodicities": "Possible Payment Periodicities",
       "paymentMethods": "Possible Payment Methods",
-      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)"
+      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
+      "paymentPeriodicity": {
+        "MONTHLY": "Monthly",
+        "QUARTERLY": "Quarterly",
+        "BIANNUAL": "Biannual",
+        "YEARLY": "Yearly"
+      }
     },
     "userSubscriptionEdit": {
       "name": "Name",

@@ -18,7 +18,7 @@ import {
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLMemberPlan} from './memberPlan'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentMethod} from './paymentMethod'
 
 export const GraphQLUserSubscription = new GraphQLObjectType({
@@ -30,7 +30,7 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
         return loaders.memberPlansByID.load(memberPlanID)
       }
     },
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
@@ -162,7 +162,7 @@ export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
   name: 'UserSubscriptionInput',
   fields: {
     memberPlanID: {type: GraphQLNonNull(GraphQLString)},
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},

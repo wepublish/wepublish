@@ -14,7 +14,7 @@ import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {Payment, PaymentSort, PaymentState} from '../db/payment'
 import {GraphQLInvoice} from './invoice'
-import {GraphQLPaymentMethod} from './paymentMethod'
+import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 
 export const GraphQLPaymentState = new GraphQLEnumType({
   name: 'PaymentState',
@@ -26,6 +26,23 @@ export const GraphQLPaymentState = new GraphQLEnumType({
     Payed: {value: PaymentState.Paid},
     Canceled: {value: PaymentState.Canceled},
     Declined: {value: PaymentState.Declined}
+  }
+})
+
+export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
+  name: 'Payment',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    intentSecret: {type: GraphQLString},
+    state: {type: GraphQLNonNull(GraphQLPaymentState)},
+
+    paymentMethod: {
+      type: GraphQLNonNull(GraphQLPublicPaymentMethod),
+      resolve: createProxyingResolver(({paymentMethodID}, {}, {loaders}) => {
+        return loaders.paymentMethodsByID.load(paymentMethodID)
+      })
+    }
   }
 })
 

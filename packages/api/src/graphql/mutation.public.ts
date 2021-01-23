@@ -1,4 +1,4 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
 
 import {Issuer} from 'openid-client'
 
@@ -9,8 +9,12 @@ import {
   InvalidCredentialsError,
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
-  UserNotFoundError
+  UserNotFoundError,
+  NotFound,
+  MonthlyAmountNotEnough
 } from '../error'
+import {GraphQLPublicPayment} from './payment'
+import {GraphQLPaymentPeriodicity} from './memberPlan'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -78,6 +82,50 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
+      }
+    },
+
+    registerMemberAndReceivePayment: {
+      type: GraphQLNonNull(GraphQLPublicPayment),
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        preferredName: {type: GraphQLString},
+        email: {type: GraphQLNonNull(GraphQLString)},
+        memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+        autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(
+        root,
+        {
+          name,
+          preferredName,
+          email,
+          memberPlanID,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID
+        },
+        {dbAdapter, loaders}
+      ) {
+        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+
+        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+        if (paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+
+        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+        // TODO: check if paymentPeriodicity is allowed with PaymentMethod
+
+        // Create User
+
+        // Create Subscription
+
+        // Create Periods, Invoices and Payment
       }
     }
   }

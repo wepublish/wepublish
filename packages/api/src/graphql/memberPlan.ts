@@ -1,4 +1,9 @@
-import {AvailablePaymentMethod, MemberPlan, MemberPlanSort} from '../db/memberPlan'
+import {
+  AvailablePaymentMethod,
+  MemberPlan,
+  MemberPlanSort,
+  PaymentPeriodicity
+} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -19,6 +24,16 @@ import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 
+export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
+  name: 'PaymentPeriodicity',
+  values: {
+    MONTHLY: {value: PaymentPeriodicity.Monthly},
+    QUARTERLY: {value: PaymentPeriodicity.Quarterly},
+    BIANNUAL: {value: PaymentPeriodicity.Biannual},
+    YEARLY: {value: PaymentPeriodicity.Yearly}
+  }
+})
+
 export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaymentMethod, Context>(
   {
     name: 'AvailablePaymentMethod',
@@ -30,7 +45,9 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
           return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
         }
       },
-      paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+      paymentPeriodicities: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+      },
       forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
     }
   }
@@ -49,7 +66,9 @@ export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
         return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
       }
     },
-    paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentPeriodicities: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+    },
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -138,7 +157,9 @@ export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
   fields: {
     paymentMethodIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentPeriodicities: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+    },
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })

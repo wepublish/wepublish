@@ -33,19 +33,17 @@ import {
   useUpdateMemberPlanMutation
 } from '../api'
 
-import {generateID, getOperationNameFromDocument, slugify} from '../utility'
+import {
+  generateID,
+  getOperationNameFromDocument,
+  slugify,
+  ALL_PAYMENT_PERIODICITIES
+} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-
-const ALL_PAYMENT_PERIODICITIES = [
-  {id: 'monthly', checked: false},
-  {id: 'quarterly', checked: false},
-  {id: 'biannual', checked: false},
-  {id: 'yearly', checked: false}
-]
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -270,7 +268,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                   <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
                   <CheckPicker
                     value={value.paymentPeriodicities}
-                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({value: pp.id, label: pp.id}))}
+                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                      value: pp,
+                      label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                    }))}
                     onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
                     block
                   />
