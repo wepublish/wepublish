@@ -270,9 +270,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           filter,
           sort,
           order,
-          skip,
           cursor: InputCursor(after, before),
-          limit: Limit(first, last)
+          limit: Limit(first, last, skip)
         })
       }
     },

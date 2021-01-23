@@ -85,9 +85,9 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLString},
     text: {type: GraphQLString},
-    subscription: {type: GraphQLUserSubscriptionFilter},
-    hasSubscription: {type: GraphQLBoolean},
-    rolesIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    subscription: {type: GraphQLUserSubscriptionFilter}
+    /* hasSubscription: {type: GraphQLBoolean}, // TODO: implement filters
+    rolesIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))} */
   }
 })
 

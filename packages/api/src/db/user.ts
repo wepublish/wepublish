@@ -136,7 +136,6 @@ export type OptionalUserSubscription = UserSubscription | null
 
 export interface GetUsersArgs {
   readonly cursor: InputCursor
-  readonly skip?: number
   readonly limit: Limit
   readonly filter?: UserFilter
   readonly sort: UserSort

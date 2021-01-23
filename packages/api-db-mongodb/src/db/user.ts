@@ -184,7 +184,6 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     sort,
     order,
     cursor,
-    skip,
     limit
   }: GetUsersArgs): Promise<ConnectionResult<User>> {
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
@@ -268,7 +267,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
-        .skip(skip ? skip * limitCount : 0)
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])

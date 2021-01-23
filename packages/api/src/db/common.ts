@@ -56,16 +56,18 @@ export enum LimitType {
 export interface Limit {
   readonly type: LimitType
   readonly count: number
+  readonly skip?: number
 }
 
-export function Limit(first?: number, last?: number): Limit {
+export function Limit(first?: number, last?: number, skip?: number): Limit {
   if ((first == null && last == null) || (first != null && last != null)) {
     throw new UserInputError('You must provide either `first` or `last`.')
   }
-
+  const count = first || last!
   return {
     type: first ? LimitType.First : LimitType.Last,
-    count: first || last!
+    count,
+    skip: skip ? skip * count : 0
   }
 }
 
