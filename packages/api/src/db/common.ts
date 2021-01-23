@@ -74,3 +74,15 @@ export interface MetadataProperty {
   value: string
   public: boolean
 }
+
+export enum DateFilterComparison {
+  GreaterThan = 'gt',
+  GreaterThanOrEqual = 'gte',
+  Equal = 'eq',
+  LowerThan = 'lt',
+  LowerThanOrEqual = 'lte'
+}
+export interface DateFilter {
+  date: Date | null
+  comparison: DateFilterComparison
+}

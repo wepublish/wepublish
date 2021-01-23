@@ -40,6 +40,7 @@ export * from './urlAdapter'
 
 export * from './utility'
 export * from './error'
+export * from './jobs'
 export * from './context'
 export * from './server'
 export * from './payments/paymentProvider'

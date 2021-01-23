@@ -6,8 +6,10 @@ fragment FullUserSubscription on UserSubscription {
     monthlyAmount
     autoRenew
     startsAt
-    payedUntil
-    paymentMethod
+    paidUntil
+    paymentMethod {
+        ...FullPaymentMethod
+    }
     deactivatedAt
 }
 

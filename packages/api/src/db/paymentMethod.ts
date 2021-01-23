@@ -1,11 +1,9 @@
-import {RichTextNode} from '../graphql/richText'
-
 export interface PaymentMethod {
   id: string
   createdAt: Date
   modifiedAt: Date
   name: string
-  description: RichTextNode[]
+  description: string
   paymentProviderID: string
   active: boolean
   // usable(): boolean
@@ -15,7 +13,7 @@ export type OptionalPaymentMethod = PaymentMethod | null
 
 export interface PaymentMethodInput {
   name: string
-  description: RichTextNode[]
+  description: string
   paymentProviderID: string
   active: boolean
 }

@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 import {
-  WepublishServer,
-  URLAdapter,
+  Author,
+  MailgunMailProvider,
+  Oauth2Provider,
+  PayrexxPaymentProvider,
   PublicArticle,
   PublicPage,
-  Author,
-  Oauth2Provider,
-  MailgunMailProvider,
-  // MailchimpMailProvider, // left here intentionally for testing
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  PayrexxPaymentProvider
+  URLAdapter,
+  WepublishServer,
+  JobType
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -19,6 +19,9 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
 import bodyParser from 'body-parser'
+import yargs from 'yargs'
+// @ts-ignore
+import {hideBin} from 'yargs/helpers'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -224,7 +227,77 @@ async function asyncMain() {
     tracing: true
   })
 
-  await server.listen(port, address)
+  // eslint-disable-next-line no-unused-expressions
+  yargs(hideBin(process.argv))
+    .command(
+      ['listen', '$0'],
+      'start the server',
+      () => {
+        /* do nothing */
+      },
+      async argv => {
+        await server.listen(port, address)
+      }
+    )
+    .command(
+      'sendTestMail [recipient]',
+      'send a test mail',
+      yargs => {
+        yargs.positional('recipient', {
+          type: 'string',
+          default: 'dev@wepublish.ch',
+          describe: 'recipient of the test mail'
+        })
+      },
+      async argv => {
+        await server.runJob(JobType.SendTestMail, {
+          subject: 'This is a test mail from a we.publish instance',
+          recipient: argv.recipient,
+          message: 'Hello from the other side',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dmr',
+      'Renew Memberships',
+      () => {
+        /* do nothing */
+      },
+      async argv => {
+        await server.runJob(JobType.DailyMembershipRenewal, {
+          startDate: new Date()
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dir',
+      'Remind open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceReminder, {
+          userPaymentURL: `${websiteURL}/user/invocies`,
+          replyToAddress: 'info@tsri.ch',
+          sendEveryDays: 3
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dic',
+      'charge open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceCharger, {})
+        process.exit(0)
+      }
+    ).argv
 }
 
 asyncMain().catch(err => {

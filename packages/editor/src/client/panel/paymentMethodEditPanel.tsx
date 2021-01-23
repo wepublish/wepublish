@@ -14,9 +14,6 @@ import {
   SelectPicker
 } from 'rsuite'
 
-import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../blocks/types'
-
 import {
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
@@ -39,7 +36,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
   const {t} = useTranslation()
 
   const [name, setName] = useState('')
-  const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
+  const [description, setDescription] = useState('')
   const [isActive, setIsActive] = useState<boolean>(false)
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
@@ -178,7 +175,14 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.description')}</ControlLabel>
-              <RichTextBlock value={description} onChange={value => setDescription(value)} />
+              <FormControl
+                name={t('paymentMethodList.description')}
+                value={description}
+                disabled={isDisabled}
+                onChange={value => {
+                  setDescription(value)
+                }}
+              />
             </FormGroup>
           </Form>
         </Panel>

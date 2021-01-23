@@ -9,27 +9,33 @@ import {
   GraphQLBoolean
 } from 'graphql'
 import {UserSort} from '../db/user'
-import {GraphQLPageInfo} from './common'
+import {GraphQLDateFilter, GraphQLPageInfo} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLMemberPlan} from './memberPlan'
+import {GraphQLPaymentMethod} from './paymentMethod'
 
 export const GraphQLUserSubscription = new GraphQLObjectType({
   name: 'UserSubscription',
   fields: {
     memberPlan: {
       type: GraphQLNonNull(GraphQLMemberPlan),
-      resolve({memberPlanId}, args, {loaders}) {
-        return loaders.memberPlansByID.load(memberPlanId)
+      resolve({memberPlanID}, args, {loaders}) {
+        return loaders.memberPlansByID.load(memberPlanID)
       }
     },
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    payedUntil: {type: GraphQLNonNull(GraphQLDateTime)},
-    paymentMethod: {type: GraphQLNonNull(GraphQLString)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethod: {
+      type: GraphQLNonNull(GraphQLPaymentMethod),
+      resolve({paymentMethodID}, args, {loaders}) {
+        return loaders.paymentMethodsByID.load(paymentMethodID)
+      }
+    },
     deactivatedAt: {type: GraphQLDateTime}
   }
 })
@@ -64,10 +70,21 @@ export const GraphQLPublicUser = new GraphQLObjectType({
   }
 })
 
+export const GraphQLUserSubscriptionFilter = new GraphQLInputObjectType({
+  name: 'UserSubscriptionFilter',
+  fields: {
+    startsAt: {type: GraphQLDateFilter},
+    paidUntil: {type: GraphQLDateFilter},
+    deactivatedAt: {type: GraphQLDateFilter},
+    autoRenew: {type: GraphQLBoolean}
+  }
+})
+
 export const GraphQLUserFilter = new GraphQLInputObjectType({
   name: 'UserFilter',
   fields: {
-    name: {type: GraphQLString}
+    name: {type: GraphQLString},
+    subscription: {type: GraphQLUserSubscriptionFilter}
   }
 })
 
@@ -100,13 +117,13 @@ export const GraphQLUserInput = new GraphQLInputObjectType({
 export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
   name: 'UserSubscriptionInput',
   fields: {
-    memberPlanId: {type: GraphQLNonNull(GraphQLString)},
+    memberPlanID: {type: GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    payedUntil: {type: GraphQLNonNull(GraphQLDateTime)},
-    paymentMethod: {type: GraphQLNonNull(GraphQLString)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
     deactivatedAt: {type: GraphQLDateTime}
   }
 })

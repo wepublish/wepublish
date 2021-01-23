@@ -13,7 +13,6 @@ import {
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLUser} from './user'
 import {createProxyingResolver} from '../utility'
-import {GraphQLRichText} from './richText'
 import {GraphQLPageInfo} from './common'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
@@ -22,7 +21,7 @@ export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
     name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLRichText},
+    description: {type: GraphQLString},
     quantity: {type: GraphQLNonNull(GraphQLInt)},
     amount: {type: GraphQLNonNull(GraphQLInt)},
     total: {
@@ -49,7 +48,7 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
         return userID ? dbAdapter.user.getUserByID(userID) : undefined
       })
     },
-    description: {type: GraphQLRichText},
+    description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
     total: {
@@ -92,7 +91,7 @@ export const GraphQLInvoiceItemInput = new GraphQLInputObjectType({
   name: 'InvoiceItemInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
-    description: {type: GraphQLRichText},
+    description: {type: GraphQLString},
     quantity: {type: GraphQLNonNull(GraphQLInt)},
     amount: {type: GraphQLNonNull(GraphQLInt)}
   }
@@ -103,7 +102,7 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   fields: {
     mail: {type: GraphQLNonNull(GraphQLString)},
     userID: {type: GraphQLID},
-    description: {type: GraphQLRichText},
+    description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }

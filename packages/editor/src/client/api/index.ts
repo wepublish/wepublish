@@ -239,6 +239,19 @@ export type CreatePeerInput = {
   token: Scalars['String'];
 };
 
+export type DateFilter = {
+  date?: Maybe<Scalars['DateTime']>;
+  comparison: DateFilterComparison;
+};
+
+export enum DateFilterComparison {
+  Greater = 'GREATER',
+  GreaterOrEqual = 'GREATER_OR_EQUAL',
+  Equal = 'EQUAL',
+  Lower = 'LOWER',
+  LowerOrEqual = 'LOWER_OR_EQUAL'
+}
+
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
@@ -409,7 +422,7 @@ export type Invoice = {
   modifiedAt: Scalars['DateTime'];
   mail: Scalars['String'];
   user?: Maybe<User>;
-  description?: Maybe<Scalars['RichText']>;
+  description?: Maybe<Scalars['String']>;
   paidAt?: Maybe<Scalars['DateTime']>;
   items: Array<InvoiceItem>;
   total: Scalars['Int'];
@@ -429,7 +442,7 @@ export type InvoiceFilter = {
 export type InvoiceInput = {
   mail: Scalars['String'];
   userID?: Maybe<Scalars['ID']>;
-  description?: Maybe<Scalars['RichText']>;
+  description?: Maybe<Scalars['String']>;
   paidAt?: Maybe<Scalars['DateTime']>;
   items: Array<InvoiceItemInput>;
 };
@@ -439,7 +452,7 @@ export type InvoiceItem = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  description?: Maybe<Scalars['RichText']>;
+  description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
   total: Scalars['Int'];
@@ -447,7 +460,7 @@ export type InvoiceItem = {
 
 export type InvoiceItemInput = {
   name: Scalars['String'];
-  description?: Maybe<Scalars['RichText']>;
+  description?: Maybe<Scalars['String']>;
   quantity: Scalars['Int'];
   amount: Scalars['Int'];
 };
@@ -1037,14 +1050,14 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  description: Scalars['RichText'];
+  description: Scalars['String'];
   paymentProvider: PaymentProvider;
   active: Scalars['Boolean'];
 };
 
 export type PaymentMethodInput = {
   name: Scalars['String'];
-  description: Scalars['RichText'];
+  description: Scalars['String'];
   paymentProviderID: Scalars['String'];
   active: Scalars['Boolean'];
 };
@@ -1548,6 +1561,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>;
+  subscription?: Maybe<UserSubscriptionFilter>;
 };
 
 export type UserInput = {
@@ -1599,19 +1613,26 @@ export type UserSubscription = {
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethod: PaymentMethod;
   deactivatedAt?: Maybe<Scalars['DateTime']>;
 };
 
+export type UserSubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
+  deactivatedAt?: Maybe<DateFilter>;
+  autoRenew?: Maybe<Scalars['Boolean']>;
+};
+
 export type UserSubscriptionInput = {
-  memberPlanId: Scalars['String'];
+  memberPlanID: Scalars['String'];
   paymentPeriodicity: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
-  payedUntil: Scalars['DateTime'];
-  paymentMethod: Scalars['String'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
   deactivatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -2923,10 +2944,13 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'payedUntil' | 'paymentMethod' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
   & { memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
+  ), paymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
   ) }
 );
 
@@ -3597,11 +3621,14 @@ export const FullUserSubscriptionFragmentDoc = gql`
   monthlyAmount
   autoRenew
   startsAt
-  payedUntil
-  paymentMethod
+  paidUntil
+  paymentMethod {
+    ...FullPaymentMethod
+  }
   deactivatedAt
 }
-    ${FullMemberPlanFragmentDoc}`;
+    ${FullMemberPlanFragmentDoc}
+${FullPaymentMethodFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id

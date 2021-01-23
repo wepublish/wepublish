@@ -18,7 +18,9 @@ import {
   OptionalUserSubscription,
   UpdateUserSubscriptionArgs,
   DeleteUserSubscriptionArgs,
-  UpdatePaymentProviderCustomerArgs
+  UpdatePaymentProviderCustomerArgs,
+  CreateUserSubscriptionPeriodArgs,
+  DeleteUserSubscriptionPeriodArgs
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
@@ -27,6 +29,8 @@ import {DBUser, CollectionName} from './schema'
 import {MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
+import nanoid from 'nanoid'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -199,10 +203,40 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       : {}
 
     const textFilter: FilterQuery<any> = {}
-
+    if (filter && JSON.stringify(filter) !== '{}') {
+      textFilter.$and = []
+    }
     // TODO: Rename to search
     if (filter?.name !== undefined) {
-      textFilter.$or = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+    }
+    if (filter?.subscription !== undefined) {
+      textFilter.$and?.push({subscription: {$exists: true}})
+    }
+    if (filter?.subscription?.startsAt !== undefined) {
+      const {comparison, date} = filter.subscription.startsAt
+      textFilter.$and?.push({
+        'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+    if (filter?.subscription?.paidUntil !== undefined) {
+      const {comparison, date} = filter.subscription.paidUntil
+      textFilter.$and?.push({
+        'subscription.paidUntil': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.deactivatedAt !== undefined) {
+      const {comparison, date} = filter.subscription.deactivatedAt
+      textFilter.$and?.push({
+        'subscription.deactivatedAt': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.autoRenew !== undefined) {
+      textFilter.$and?.push({'subscription.autoRenew': {$eq: true}})
     }
 
     const [totalCount, users] = await Promise.all([
@@ -270,10 +304,15 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       monthlyAmount,
       autoRenew,
       startsAt,
-      payedUntil,
-      paymentMethod,
+      paidUntil,
+      paymentMethodID,
       deactivatedAt
     } = input
+
+    const user = await this.getUserByID(userID)
+
+    if (!user) return null
+
     const {value} = await this.users.findOneAndUpdate(
       {_id: userID},
       {
@@ -284,8 +323,9 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           'subscription.monthlyAmount': monthlyAmount,
           'subscription.autoRenew': autoRenew,
           'subscription.startsAt': startsAt,
-          'subscription.payedUntil': payedUntil,
-          'subscription.paymentMethod': paymentMethod,
+          'subscription.periods': user.subscription?.periods ?? [],
+          'subscription.paidUntil': paidUntil,
+          'subscription.paymentMethodID': paymentMethodID,
           'subscription.deactivatedAt': deactivatedAt
         }
       },
@@ -309,6 +349,62 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     )
 
     return value?._id
+  }
+
+  async addUserSubscriptionPeriod({
+    userID,
+    input
+  }: CreateUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    periods.push({
+      id: nanoid(),
+      createdAt: new Date(),
+      amount: input.amount,
+      paymentPeriodicity: input.paymentPeriodicity,
+      startsAt: input.startsAt,
+      endsAt: input.endsAt,
+      invoiceID: input.invoiceID
+    })
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': periods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async deleteUserSubscriptionPeriod({
+    userID,
+    periodID
+  }: DeleteUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    const updatedPeriods = periods.filter(period => period.id !== periodID)
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': updatedPeriods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
   }
 
   async updatePaymentProviderCustomers({
