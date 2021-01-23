@@ -10,7 +10,8 @@ import {
   FormControl,
   FormGroup,
   Modal,
-  Panel
+  Panel,
+  Toggle
 } from 'rsuite'
 
 import {DescriptionListItem, DescriptionList} from '../atoms/descriptionList'
@@ -40,8 +41,10 @@ export interface UserEditPanelProps {
 
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
+  const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
@@ -77,7 +80,9 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   useEffect(() => {
     if (data?.user) {
       setName(data.user.name)
+      setPreferredName(data.user.preferredName ?? undefined)
       setEmail(data.user.email)
+      setActive(data.user.active)
       setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
         // TODO: fix this
@@ -102,31 +107,37 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   }, [loadError, createError, updateError, loadUserRoleError])
 
   async function handleSave() {
-    if (id) {
-      const {data} = await updateUser({
+    if (id && data?.user) {
+      const {data: updateData} = await updateUser({
         variables: {
           id,
           input: {
             name,
+            preferredName,
             email,
+            active,
+            properties: data.user.properties,
             roleIDs: roles.map(role => role.id)
           }
         }
       })
 
-      if (data?.updateUser) onSave?.(data.updateUser)
+      if (updateData?.updateUser) onSave?.(updateData.updateUser)
     } else {
-      const {data} = await createUser({
+      const {data: createData} = await createUser({
         variables: {
           input: {
             name,
+            preferredName,
             email,
+            active,
+            properties: [],
             roleIDs: roles.map(role => role.id)
           },
           password
         }
       })
-      if (data?.createUser) onSave?.(data.createUser)
+      if (createData?.createUser) onSave?.(createData.createUser)
     }
   }
 
@@ -151,6 +162,15 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               />
             </FormGroup>
             <FormGroup>
+              <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.preferredName')}
+                value={preferredName}
+                disabled={isDisabled}
+                onChange={value => setPreferredName(value)}
+              />
+            </FormGroup>
+            <FormGroup>
               <ControlLabel>{t('userList.panels.email')}</ControlLabel>
               <FormControl
                 name={t('userList.panels.email')}
@@ -158,6 +178,10 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
                 disabled={isDisabled}
                 onChange={value => setEmail(value)}
               />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.active')}</ControlLabel>
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
             </FormGroup>
             {!id ? (
               <FormGroup>

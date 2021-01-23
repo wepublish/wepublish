@@ -51,6 +51,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         modifiedAt: new Date(),
         email: input.email,
         name: input.name,
+        preferredName: input.preferredName,
+        address: input.address,
+        active: input.active,
+        lastLogin: null,
+        properties: input.properties,
         roleIDs: input.roleIDs,
         password: passwordHash,
         paymentProviderCustomers: {}
@@ -73,6 +78,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
         roleIDs: user.roleIDs,
         paymentProviderCustomers: user.paymentProviderCustomers
       }
@@ -88,6 +98,10 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         $set: {
           modifiedAt: new Date(),
           name: input.name,
+          preferredName: input.preferredName,
+          address: input.address,
+          active: input.active,
+          properties: input.properties,
           email: input.email,
           roleIDs: input.roleIDs
         }
@@ -131,6 +145,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
@@ -146,6 +165,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers
@@ -162,6 +186,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         id: user._id,
         email: user.email,
         name: user.name,
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
         roleIDs: user.roleIDs,
         subscription: user.subscription,
         paymentProviderCustomers: user.paymentProviderCustomers

@@ -16,6 +16,20 @@ fragment FullUserSubscription on UserSubscription {
 fragment FullUser on User {
     id
     name
+    preferredName
+    address {
+        street
+        zipCode
+        city
+        country
+    }
+    active
+    lastLogin
+    properties {
+        key
+        value
+        public
+    }
     email
     roles {
         ...FullUserRole

@@ -521,6 +521,27 @@ export const Migrations: Migration[] = [
         {$set: {paymentProviderCustomers: {}}}
       )
 
+      await users.updateMany(
+        {
+          active: {$exists: false}
+        },
+        {$set: {active: true}}
+      )
+
+      await users.updateMany(
+        {
+          lastLogin: {$exists: false}
+        },
+        {$set: {lastLogin: null}}
+      )
+
+      await users.updateMany(
+        {
+          properties: {$exists: false}
+        },
+        {$set: {properties: []}}
+      )
+
       const invoices = await db.createCollection(CollectionName.Invoices, {
         strict: true
       })

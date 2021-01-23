@@ -10,7 +10,8 @@ import {
   RichTextNode,
   UserSubscription,
   MailLogState,
-  PaymentState
+  PaymentState,
+  UserAddress
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -91,7 +92,14 @@ export interface DBUser {
 
   email: string
   name: string
+  preferredName?: string
+  address?: UserAddress
   password: string
+
+  active: boolean
+  lastLogin: Date | null
+
+  properties: MetadataProperty[]
 
   roleIDs: string[]
 

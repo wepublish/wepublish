@@ -1,11 +1,12 @@
-import {ConnectionResult, DateFilter, InputCursor, Limit, SortOrder} from './common'
+import {
+  ConnectionResult,
+  DateFilter,
+  InputCursor,
+  Limit,
+  MetadataProperty,
+  SortOrder
+} from './common'
 import {PaymentPeriodicity} from './memberPlan'
-
-export interface UserInput {
-  readonly name: string
-  readonly email: string
-  readonly roleIDs: string[]
-}
 
 export interface CreateUserArgs {
   readonly input: UserInput
@@ -113,13 +114,40 @@ export interface PaymentProviderCustomer {
   readonly createdAt: Date
 }
 
+export interface UserAddress {
+  readonly street: string
+  readonly zipCode: string
+  readonly city: string
+  readonly country: string
+}
+
 export interface User {
   readonly id: string
   readonly name: string
+  readonly preferredName?: string
   readonly email: string
+  readonly address?: UserAddress
+
+  readonly active: boolean
+  readonly lastLogin: Date | null
+
+  readonly properties: MetadataProperty[]
+
   readonly roleIDs: string[]
   readonly subscription?: UserSubscription
   readonly paymentProviderCustomers: Record<string, PaymentProviderCustomer>
+}
+
+export interface UserInput {
+  readonly name: string
+  readonly preferredName?: string
+  readonly email: string
+  readonly address?: UserAddress
+
+  readonly active: boolean
+
+  readonly properties: MetadataProperty[]
+  readonly roleIDs: string[]
 }
 
 export interface UpdatePaymentProviderCustomerArgs {

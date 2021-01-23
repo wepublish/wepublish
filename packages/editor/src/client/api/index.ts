@@ -1549,8 +1549,28 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddress>;
+  active: Scalars['Boolean'];
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
+};
+
+export type UserAddress = {
+  __typename?: 'UserAddress';
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
+};
+
+export type UserAddressInput = {
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
 };
 
 export type UserConnection = {
@@ -1568,6 +1588,10 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddressInput>;
+  active: Scalars['Boolean'];
+  properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -2957,8 +2981,14 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<(
+  & Pick<User, 'id' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & { address?: Maybe<(
+    { __typename?: 'UserAddress' }
+    & Pick<UserAddress, 'street' | 'zipCode' | 'city' | 'country'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
   )>, subscription?: Maybe<(
@@ -3634,6 +3664,20 @@ export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
   name
+  preferredName
+  address {
+    street
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
   email
   roles {
     ...FullUserRole

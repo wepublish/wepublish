@@ -9,7 +9,12 @@ import {
   GraphQLBoolean
 } from 'graphql'
 import {UserSort} from '../db/user'
-import {GraphQLDateFilter, GraphQLPageInfo} from './common'
+import {
+  GraphQLDateFilter,
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLPageInfo
+} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
@@ -40,6 +45,16 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
   }
 })
 
+export const GraphQLUserAddress = new GraphQLObjectType({
+  name: 'UserAddress',
+  fields: {
+    street: {type: GraphQLNonNull(GraphQLString)},
+    zipCode: {type: GraphQLNonNull(GraphQLString)},
+    city: {type: GraphQLNonNull(GraphQLString)},
+    country: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -50,6 +65,15 @@ export const GraphQLUser = new GraphQLObjectType({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddress},
+
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    lastLogin: {type: GraphQLDateTime},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+
     roles: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole))),
       resolve({roleIDs}, args, {loaders}) {
@@ -66,7 +90,9 @@ export const GraphQLPublicUser = new GraphQLObjectType({
     id: {type: GraphQLNonNull(GraphQLString)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
-    email: {type: GraphQLNonNull(GraphQLString)}
+    email: {type: GraphQLNonNull(GraphQLString)},
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddress}
   }
 })
 
@@ -105,11 +131,29 @@ export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
   }
 })
 
+export const GraphQLUserAddressInput = new GraphQLInputObjectType({
+  name: 'UserAddressInput',
+  fields: {
+    street: {type: GraphQLNonNull(GraphQLString)},
+    zipCode: {type: GraphQLNonNull(GraphQLString)},
+    city: {type: GraphQLNonNull(GraphQLString)},
+    country: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddressInput},
+
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
     roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
