@@ -1,4 +1,4 @@
-import express, {Application} from 'express'
+import express, {Application, NextFunction} from 'express'
 
 import {ApolloServer} from 'apollo-server-express'
 
@@ -10,11 +10,20 @@ import {capitalizeFirstLetter} from './utility'
 
 import {methodsToProxy} from './events'
 import {JobType, runJob} from './jobs'
+import pino from 'pino'
+import pinoHttp from 'pino-http'
+
+let serverLogger: pino.Logger
+
+export function logger(moduleName: string): pino.Logger {
+  return serverLogger.child({module: moduleName})
+}
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
   readonly introspection?: boolean
   readonly tracing?: boolean
+  readonly logger?: pino.Logger
 }
 
 export class WepublishServer {
@@ -25,6 +34,8 @@ export class WepublishServer {
     const app = express()
     this.opts = opts
     const {dbAdapter} = opts
+
+    serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
 
     methodsToProxy.forEach(mtp => {
       if (mtp.key in dbAdapter) {
@@ -40,21 +51,22 @@ export class WepublishServer {
                 setImmediate(async () => {
                   // make sure event gets executed in the next event loop
                   try {
+                    logger('server').info('emitting event for %s', methodName)
                     // @ts-ignore
                     mtp.eventEmitter.emit(method, await contextFromRequest(null, opts), result) // execute event emitter
                   } catch (error) {
-                    console.error(`Error during ${mtp.key}-${method} Event`, error)
+                    logger('server').error(error, 'error during emitting event for %s', methodName)
                   }
                 })
                 return result // return actual result "Article, Page, User, ..."
               }
             })
           } else {
-            console.warn(`${methodName} does not exist in dbAdapter[${mtp.key}]`)
+            logger('server').warn('%s does not exist in dbAdapter[%s]', methodName, mtp.key)
           }
         })
       } else {
-        console.warn(`${mtp.key} does not exist in dbAdapter`)
+        logger('server').warn('%s does not exist in dbAdapter', mtp.key)
       }
     })
 
@@ -87,6 +99,13 @@ export class WepublishServer {
       methods: ['POST', 'GET', 'OPTIONS']
     }
 
+    app.use(
+      pinoHttp({
+        logger: serverLogger,
+        useLevel: 'debug'
+      })
+    )
+
     app.use(`/${MAIL_WEBHOOK_PATH_PREFIX}`, setupMailProvider(opts))
     app.use(`/${PAYMENT_WEBHOOK_PATH_PREFIX}`, setupPaymentProvider(opts))
 
@@ -102,6 +121,11 @@ export class WepublishServer {
       cors: corsOptions
     })
 
+    app.use((err: any, req: Express.Request, res: Express.Response, next: NextFunction) => {
+      logger('server').error(err)
+      return next(err)
+    })
+
     this.app = app
   }
 
@@ -114,8 +138,7 @@ export class WepublishServer {
       const context = await contextFromRequest(null, this.opts)
       await runJob(command, context, data)
     } catch (error) {
-      // TODO: error handling
-      console.warn(`Error while running Job: ${command}`, error)
+      logger('server').error(error, 'Error while running job "%s"', command)
     }
   }
 }

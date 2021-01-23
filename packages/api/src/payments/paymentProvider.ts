@@ -1,6 +1,6 @@
 import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
-import {WepublishServerOpts} from '../server'
+import {logger, WepublishServerOpts} from '../server'
 import {Payment, PaymentState} from '../db/payment'
 import {Invoice} from '../db/invoice'
 import {NextHandleFunction} from 'connect'
@@ -122,6 +122,11 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
       .route(`/${paymentProvider.id}`)
       .all(paymentProvider.incomingRequestHandler, async (req, res, next) => {
         await res.status(200).send() // respond immediately with 200 since webhook was received.
+        logger('paymentProvider').info(
+          'Received webhook from %s for paymentProvider %s',
+          req.get('origin'),
+          paymentProvider.id
+        )
         try {
           const paymentStatuses = await paymentProvider.webhookForPaymentIntent({req})
           const context = await contextFromRequest(req, opts)
@@ -158,8 +163,12 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
               })
             }
           }
-        } catch (exception) {
-          console.warn('Exception during payment update from webhook', exception)
+        } catch (error) {
+          logger('paymentProvider').error(
+            error,
+            'Error during webhook update in paymentProvider %s',
+            paymentProvider.id
+          )
         }
       })
   })
