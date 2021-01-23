@@ -122,6 +122,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       intent.id,
       this.id
     )
+
     return {
       intentID: intent.id,
       intentSecret: intent.client_secret ?? '',
