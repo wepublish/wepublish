@@ -46,6 +46,7 @@ export interface UserSubscriptionFilter {
 
 export interface UserFilter {
   readonly name?: string
+  readonly text?: string
   readonly subscription?: UserSubscriptionFilter
 }
 

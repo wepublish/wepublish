@@ -1562,7 +1562,10 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
   subscription?: Maybe<UserSubscriptionFilter>;
+  hasSubscription?: Maybe<Scalars['Boolean']>;
+  rolesIDs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type UserInput = {
@@ -5598,7 +5601,7 @@ export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutatio
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
     query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
-  users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+  users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }

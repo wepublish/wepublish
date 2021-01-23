@@ -219,6 +219,16 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (filter?.name !== undefined) {
       textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
     }
+
+    if (filter?.text !== undefined) {
+      textFilter.$and?.push({
+        $or: [
+          {name: {$regex: filter.text, $options: 'im'}},
+          {email: {$regex: filter.text, $options: 'im'}}
+        ]
+      })
+    }
+
     if (filter?.subscription !== undefined) {
       textFilter.$and?.push({subscription: {$exists: true}})
     }

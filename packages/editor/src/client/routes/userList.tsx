@@ -90,7 +90,7 @@ export function UserList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
-  }, [page, limit, sortOrder, sortField])
+  }, [filter, page, limit, sortOrder, sortField])
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
@@ -111,6 +111,9 @@ export function UserList() {
   useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes)
+      if (data.users.totalCount + 9 < page * limit) {
+        setPage(1)
+      }
     }
   }, [data?.users])
 
@@ -154,18 +157,22 @@ export function UserList() {
           }}>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
-            <Cell dataKey="createdAt" />
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+            </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <Cell dataKey="modifiedAt" />
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+            </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('userList.overview.name')}</HeaderCell>
             <Cell dataKey={'name'}>
               {(rowData: FullUserFragment) => (
                 <Link route={UserEditRoute.create({id: rowData.id})}>
-                  {rowData.name || t('userList.overview.untitled')}
+                  {rowData.name || t('userList.overview.unknown')}
                 </Link>
               )}
             </Cell>
