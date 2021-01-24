@@ -1,34 +1,68 @@
-import {UserSort, UserSubscription} from './db/user'
-import {OptionalInvoice} from './db/invoice'
+import {PaymentProviderCustomer, UserSort, UserSubscription} from './db/user'
+import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
-import {DataLoaderContext} from './context'
-import {ONE_DAY_IN_MILLISECONDS} from './utility'
+import {DataLoaderContext, SendMailFromProviderProps} from './context'
+import {ONE_DAY_IN_MILLISECONDS, ONE_HOUR_IN_MILLISECONDS} from './utility'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
+import {PaymentState} from './db/payment'
+import {PaymentProvider} from './payments/paymentProvider'
+import {MailLog} from './db/mailLog'
 
-export interface renewSubscriptionForUserProps {
+export interface RenewSubscriptionForUserProps {
   userID: string
   userEmail: string
   userName: string
   userSubscription: UserSubscription
 }
 
-export interface renewSubscriptionForUsersProps {
+export interface RenewSubscriptionForUsersProps {
   startDate?: Date // defaults to today
   daysToLookAhead: number
+}
+
+export interface ChargeInvoiceProps {
+  invoice: Invoice
+  paymentMethodID: string
+  customer: PaymentProviderCustomer
+}
+
+export interface SendReminderForInvoiceProps {
+  invoice: Invoice
+  userPaymentURL: string
+  replyToAddress: string
+}
+
+export interface SendReminderForInvoicesProps {
+  userPaymentURL: string
+  replyToAddress: string
+  sendEveryDays?: number // defaults to 3
 }
 
 export interface MemberContext {
   dbAdapter: DBAdapter
   loaders: DataLoaderContext
-  renewSubscriptionForUser(props: renewSubscriptionForUserProps): Promise<OptionalInvoice>
-  renewSubscriptionForUsers(props: renewSubscriptionForUsersProps): Promise<void>
+  paymentProviders: PaymentProvider[]
+
+  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+
+  renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
+  renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
+
+  chargeInvoice(props: ChargeInvoiceProps): Promise<void>
+  chargeOpenInvoices(): Promise<void>
+
+  sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
+  sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
 }
 
 export interface MemberContextProps {
   readonly dbAdapter: DBAdapter
   readonly loaders: DataLoaderContext
+  readonly paymentProviders: PaymentProvider[]
+
+  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
 }
 
 function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -64,10 +98,14 @@ function calculateAmountForPeriodicity(
 export class MemberContext implements MemberContext {
   dbAdapter: DBAdapter
   loaders: DataLoaderContext
+  paymentProviders: PaymentProvider[]
 
   constructor(props: MemberContextProps) {
     this.dbAdapter = props.dbAdapter
     this.loaders = props.loaders
+    this.paymentProviders = props.paymentProviders
+
+    this.sendMailFromProvider = props.sendMailFromProvider
   }
 
   async renewSubscriptionForUser({
@@ -75,7 +113,7 @@ export class MemberContext implements MemberContext {
     userEmail,
     userName,
     userSubscription
-  }: renewSubscriptionForUserProps): Promise<OptionalInvoice> {
+  }: RenewSubscriptionForUserProps): Promise<OptionalInvoice> {
     try {
       const {periods = [], paidUntil} = userSubscription
       periods.sort((periodA, periodB) => {
@@ -142,7 +180,7 @@ export class MemberContext implements MemberContext {
   async renewSubscriptionForUsers({
     startDate = new Date(),
     daysToLookAhead
-  }: renewSubscriptionForUsersProps): Promise<void> {
+  }: RenewSubscriptionForUsersProps): Promise<void> {
     if (daysToLookAhead < 1) {
       throw Error('Days to look ahead must not be lower than 1')
     }
@@ -190,5 +228,247 @@ export class MemberContext implements MemberContext {
         userEmail: user.email
       })
     }
+  }
+
+  private getOffSessionPaymentProviderIDs(): string[] {
+    return this.paymentProviders
+      .filter(provider => provider.offSessionPayments)
+      .map(provider => provider.id)
+  }
+
+  async chargeOpenInvoices(): Promise<void> {
+    const invoices = await this.dbAdapter.invoice.getInvoices({
+      filter: {
+        paidAt: {
+          comparison: DateFilterComparison.Equal,
+          date: null
+        },
+        canceledAt: {
+          comparison: DateFilterComparison.Equal,
+          date: null
+        }
+      },
+      limit: {type: LimitType.First, count: 200},
+      order: SortOrder.Ascending,
+      sort: InvoiceSort.CreatedAt,
+      cursor: InputCursor()
+    })
+
+    const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
+
+    for (const invoice of invoices.nodes) {
+      if (!invoice.userID) {
+        logger('memberContext').warn('invoice %s does not have an user ID', invoice.id)
+        continue
+      }
+
+      const user = await this.dbAdapter.user.getUserByID(invoice.userID)
+      if (!user || !user.subscription) {
+        logger('memberContext').warn('user or subscription %s not found', invoice.userID)
+        continue
+      }
+
+      const paymentMethod = await this.loaders.paymentMethodsByID.load(
+        user.subscription.paymentMethodID
+      )
+      if (!paymentMethod) {
+        logger('memberContext').warn(
+          'paymentMethod %s not found',
+          user.subscription.paymentMethodID
+        )
+        continue
+      }
+
+      const customer = user.paymentProviderCustomers[paymentMethod.paymentProviderID]
+
+      if (!customer) {
+        logger('memberContext').warn(
+          'PaymentCustomer %s on user %s not found',
+          paymentMethod.paymentProviderID,
+          user.id
+        )
+        continue
+      }
+
+      if (offSessionPaymentProvidersID.includes(paymentMethod.paymentProviderID)) {
+        await this.chargeInvoice({
+          invoice,
+          paymentMethodID: paymentMethod.id,
+          customer
+        })
+      }
+    }
+  }
+
+  async chargeInvoice({invoice, paymentMethodID, customer}: ChargeInvoiceProps): Promise<void> {
+    const offSessionPaymentProvidersID = this.getOffSessionPaymentProviderIDs()
+    const paymentMethods = await this.dbAdapter.paymentMethod.getPaymentMethods()
+    const paymentMethodIDs = paymentMethods
+      .filter(method => offSessionPaymentProvidersID.includes(method.paymentProviderID))
+      .map(method => method.id)
+
+    if (!paymentMethodIDs.includes(paymentMethodID)) {
+      logger('memberContext').warn(
+        'PaymentMethod %s does not support off session payments',
+        paymentMethodID
+      )
+      return
+    }
+
+    const payment = await this.dbAdapter.payment.createPayment({
+      input: {
+        paymentMethodID,
+        invoiceID: invoice.id,
+        state: PaymentState.Created
+      }
+    })
+
+    const paymentMethod = paymentMethods.find(method => method.id === paymentMethodID)
+    if (!paymentMethod) {
+      logger('memberContext').error('PaymentMethod %s does not exist', paymentMethodID)
+      return
+    }
+    const paymentProvider = this.paymentProviders.find(
+      provider => provider.id === paymentMethod.paymentProviderID
+    )
+    if (!paymentProvider) {
+      logger('memberContext').error(
+        'PaymentProvider %s does not exist',
+        paymentMethod.paymentProviderID
+      )
+      return
+    }
+
+    const intent = await paymentProvider.createIntent({
+      paymentID: payment.id,
+      invoice,
+      saveCustomer: false,
+      customerID: customer.id
+    })
+
+    await this.dbAdapter.payment.updatePayment({
+      id: payment.id,
+      input: {
+        state: intent.state,
+        intentID: intent.intentID,
+        intentData: intent.intentData,
+        intentSecret: intent.intentSecret,
+        paymentData: intent.paymentData,
+        paymentMethodID: payment.paymentMethodID,
+        invoiceID: payment.invoiceID
+      }
+    })
+  }
+
+  async sendReminderForInvoices({
+    replyToAddress,
+    userPaymentURL,
+    sendEveryDays = 3
+  }: SendReminderForInvoicesProps): Promise<void> {
+    const today = new Date()
+
+    const invoices = await this.dbAdapter.invoice.getInvoices({
+      filter: {
+        paidAt: {
+          comparison: DateFilterComparison.Equal,
+          date: null
+        },
+        canceledAt: {
+          comparison: DateFilterComparison.Equal,
+          date: null
+        }
+      },
+      limit: {type: LimitType.First, count: 200},
+      order: SortOrder.Ascending,
+      sort: InvoiceSort.CreatedAt,
+      cursor: InputCursor()
+    })
+
+    if (invoices.nodes.length === 0) {
+      logger('memberContext').info('No open infos to remind')
+    }
+
+    for (const invoice of invoices.nodes) {
+      if (
+        invoice.sentReminderAt &&
+        new Date(
+          invoice.sentReminderAt.getTime() +
+            sendEveryDays * ONE_DAY_IN_MILLISECONDS -
+            ONE_HOUR_IN_MILLISECONDS
+        ) > today
+      ) {
+        continue // skip reminder if not enough days passed
+      }
+
+      try {
+        await this.sendReminderForInvoice({
+          invoice,
+          replyToAddress,
+          userPaymentURL
+        })
+      } catch (error) {
+        logger('memberContext').error(error, 'Error while sending reminder')
+      }
+    }
+  }
+
+  async sendReminderForInvoice({
+    invoice,
+    replyToAddress,
+    userPaymentURL
+  }: SendReminderForInvoiceProps): Promise<void> {
+    const today = new Date()
+
+    const user = invoice.userID ? await this.dbAdapter.user.getUserByID(invoice.userID) : null
+    const paymentMethod = user?.subscription
+      ? await this.loaders.paymentMethodsByID.load(user.subscription.paymentMethodID)
+      : null
+    const paymentProvider = paymentMethod?.paymentProviderID
+      ? this.paymentProviders.find(provider => provider.id === paymentMethod.paymentProviderID)
+      : null
+    const offSessionPayments = paymentProvider?.offSessionPayments ?? false
+    if (offSessionPayments) {
+      if (invoice.dueAt > today) {
+        await this.sendMailFromProvider({
+          replyToAddress,
+          message: `We will try to bill your cc in ${invoice.dueAt.toISOString()}. 
+            If you want to change the amount, paymentMethod or something else. PLease use the link:
+            ${userPaymentURL}?invoice=${invoice.id}`,
+          recipient: invoice.mail,
+          subject: 'New invoice'
+        })
+      } else {
+        // system will try to bill every night and send error to user.
+      }
+    } else {
+      if (invoice.dueAt > today) {
+        await this.sendMailFromProvider({
+          replyToAddress,
+          message: `You have a new invoice open which is due at  ${invoice.dueAt.toISOString()}. 
+            Click the link to pay:
+            ${userPaymentURL}?invoice=${invoice.id}`,
+          recipient: invoice.mail,
+          subject: 'New invoice'
+        })
+      } else {
+        // Send message => "Your invoice is due since ${days}. Please click link to pay. Your account will be suspended..."
+        await this.sendMailFromProvider({
+          replyToAddress,
+          message: `Your invoice is due since ${invoice.dueAt.toISOString()}. 
+            Please click the link to pay otherwise your account will be suspended:
+            ${userPaymentURL}?invoice=${invoice.id}`,
+          recipient: invoice.mail,
+          subject: 'New invoice'
+        })
+      }
+    }
+
+    await this.dbAdapter.invoice.updateInvoice({
+      id: invoice.id,
+      input: {
+        ...invoice,
+        sentReminderAt: today
+      }
+    })
   }
 }

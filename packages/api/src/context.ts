@@ -290,7 +290,12 @@ export async function contextFromRequest(
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
   }
 
-  const memberContext = new MemberContext({loaders, dbAdapter})
+  const memberContext = new MemberContext({
+    loaders,
+    dbAdapter,
+    paymentProviders,
+    sendMailFromProvider
+  })
 
   return {
     hostURL,
