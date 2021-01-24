@@ -64,7 +64,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(5)
+  const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)

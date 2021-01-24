@@ -36,12 +36,13 @@ import {OptionalPeer} from './db/peer'
 import {OptionalUserRole} from './db/userRole'
 import {OptionalMemberPlan} from './db/memberPlan'
 import {OptionalPaymentMethod} from './db/paymentMethod'
-import {OptionalInvoice} from './db/invoice'
-import {OptionalPayment} from './db/payment'
+import {Invoice, OptionalInvoice} from './db/invoice'
+import {OptionalPayment, Payment, PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {logger} from './server'
+import {MemberContext} from './memberContext'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -84,6 +85,8 @@ export interface Context {
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
+  readonly memberContext: MemberContext
+
   readonly dbAdapter: DBAdapter
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
@@ -99,6 +102,8 @@ export interface Context {
 
   generateJWT(props: GenerateJWTProps): string
   verifyJWT(token: string): string
+
+  createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
 }
 
 export interface Oauth2Provider {
@@ -130,6 +135,14 @@ export interface SendMailFromProviderProps {
   message?: string
   template?: string
   templateData?: Record<string, any>
+}
+
+export interface CreatePaymentWithProvider {
+  paymentMethodID: string
+  invoice: Invoice
+  saveCustomer: boolean
+  successURL?: string
+  failureURL?: string
 }
 
 export interface GenerateJWTProps {
@@ -186,100 +199,106 @@ export async function contextFromRequest(
     return mailLog
   }
 
+  const loaders: DataLoaderContext = {
+    navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
+    navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+
+    authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
+    authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
+
+    images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
+
+    articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
+    publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
+
+    pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
+    publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
+    publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+
+    userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
+
+    mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
+
+    peer: peerDataLoader,
+    peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
+      dbAdapter.peer.getPeersBySlug(slugs)
+    ),
+
+    peerSchema: new DataLoader(async ids => {
+      const peers = await peerDataLoader.loadMany(ids)
+
+      return Promise.all(
+        peers.map(async peer => {
+          try {
+            if (!peer) return null
+
+            if (peer instanceof Error) {
+              console.error(peer)
+              return null
+            }
+
+            const fetcher = createFetcher(peer.hostURL, peer.token)
+
+            return makeRemoteExecutableSchema({
+              schema: await introspectSchema(fetcher),
+              fetcher
+            })
+          } catch (err) {
+            console.error(err)
+            return null
+          }
+        })
+      )
+    }),
+
+    peerAdminSchema: new DataLoader(async ids => {
+      const peers = await peerDataLoader.loadMany(ids)
+
+      return Promise.all(
+        peers.map(async peer => {
+          try {
+            if (!peer) return null
+
+            if (peer instanceof Error) {
+              console.error(peer)
+              return null
+            }
+
+            const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
+
+            return makeRemoteExecutableSchema({
+              schema: await introspectSchema(fetcher),
+              fetcher
+            })
+          } catch (err) {
+            console.error(err)
+            return null
+          }
+        })
+      )
+    }),
+
+    memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
+    activeMemberPlansByID: new DataLoader(ids =>
+      dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
+    ),
+    paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
+    activePaymentMethodsByID: new DataLoader(ids =>
+      dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
+    ),
+    invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
+    paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
+  }
+
+  const memberContext = new MemberContext({loaders, dbAdapter})
+
   return {
     hostURL,
     websiteURL,
     session: isSessionValid ? session : null,
-    loaders: {
-      navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
-      navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
+    loaders,
 
-      authorsByID: new DataLoader(ids => dbAdapter.author.getAuthorsByID(ids)),
-      authorsBySlug: new DataLoader(slugs => dbAdapter.author.getAuthorsBySlug(slugs)),
-
-      images: new DataLoader(ids => dbAdapter.image.getImagesByID(ids)),
-
-      articles: new DataLoader(ids => dbAdapter.article.getArticlesByID(ids)),
-      publicArticles: new DataLoader(ids => dbAdapter.article.getPublishedArticlesByID(ids)),
-
-      pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
-      publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
-      publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
-
-      userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
-
-      mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
-
-      peer: peerDataLoader,
-      peerBySlug: new DataLoader<string, OptionalPeer>(async slugs =>
-        dbAdapter.peer.getPeersBySlug(slugs)
-      ),
-
-      peerSchema: new DataLoader(async ids => {
-        const peers = await peerDataLoader.loadMany(ids)
-
-        return Promise.all(
-          peers.map(async peer => {
-            try {
-              if (!peer) return null
-
-              if (peer instanceof Error) {
-                console.error(peer)
-                return null
-              }
-
-              const fetcher = createFetcher(peer.hostURL, peer.token)
-
-              return makeRemoteExecutableSchema({
-                schema: await introspectSchema(fetcher),
-                fetcher
-              })
-            } catch (err) {
-              console.error(err)
-              return null
-            }
-          })
-        )
-      }),
-
-      peerAdminSchema: new DataLoader(async ids => {
-        const peers = await peerDataLoader.loadMany(ids)
-
-        return Promise.all(
-          peers.map(async peer => {
-            try {
-              if (!peer) return null
-
-              if (peer instanceof Error) {
-                console.error(peer)
-                return null
-              }
-
-              const fetcher = createFetcher(url.resolve(peer.hostURL, 'admin'), peer.token)
-
-              return makeRemoteExecutableSchema({
-                schema: await introspectSchema(fetcher),
-                fetcher
-              })
-            } catch (err) {
-              console.error(err)
-              return null
-            }
-          })
-        )
-      }),
-
-      memberPlansByID: new DataLoader(ids => dbAdapter.memberPlan.getMemberPlansByID(ids)),
-      activeMemberPlansByID: new DataLoader(ids =>
-        dbAdapter.memberPlan.getActiveMemberPlansByID(ids)
-      ),
-      paymentMethodsByID: new DataLoader(ids => dbAdapter.paymentMethod.getPaymentMethodsByID(ids)),
-      activePaymentMethodsByID: new DataLoader(ids =>
-        dbAdapter.paymentMethod.getActivePaymentMethodsByID(ids)
-      ),
-      invoicesByID: new DataLoader(ids => dbAdapter.invoice.getInvoicesByID(ids)),
-      paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
-    },
+    memberContext,
 
     dbAdapter,
     mediaAdapter,
@@ -337,6 +356,56 @@ export async function contextFromRequest(
       if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
       const ver = jwt.verify(token, process.env.JWT_SECRET_KEY)
       return typeof ver === 'object' && 'sub' in ver ? (ver as Record<string, any>).sub : ''
+    },
+
+    async createPaymentWithProvider({
+      paymentMethodID,
+      invoice,
+      saveCustomer,
+      failureURL,
+      successURL
+    }: CreatePaymentWithProvider): Promise<Payment> {
+      const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
+      const paymentProvider = paymentProviders.find(
+        pp => pp.id === paymentMethod?.paymentProviderID
+      )
+
+      if (!paymentProvider) {
+        throw new Error('paymentProvider not found')
+      }
+
+      const payment = await dbAdapter.payment.createPayment({
+        input: {
+          paymentMethodID,
+          invoiceID: invoice.id,
+          state: PaymentState.Created
+        }
+      })
+
+      const intent = await paymentProvider.createIntent({
+        paymentID: payment.id,
+        invoice,
+        saveCustomer,
+        successURL,
+        failureURL
+      })
+
+      const updatedPayment = await dbAdapter.payment.updatePayment({
+        id: payment.id,
+        input: {
+          state: intent.state,
+          intentID: intent.intentID,
+          intentData: intent.intentData,
+          intentSecret: intent.intentSecret,
+          paymentData: intent.paymentData,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
+
+      if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
+
+      return updatedPayment
     }
   }
 }

@@ -11,7 +11,8 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError,
   NotFound,
-  MonthlyAmountNotEnough
+  MonthlyAmountNotEnough,
+  PaymentConfigurationNotAllowed
 } from '../error'
 import {GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -95,7 +96,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
         monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
-        paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
+        paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
       },
       async resolve(
         root,
@@ -107,25 +110,82 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           autoRenew,
           paymentPeriodicity,
           monthlyAmount,
-          paymentMethodID
+          paymentMethodID,
+          successURL,
+          failureURL
         },
-        {dbAdapter, loaders}
+        {dbAdapter, loaders, authenticateUser, memberContext, createPaymentWithProvider}
       ) {
+        /* const userSession = authenticateUser()
+        if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
+        */
+
         const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
         if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
 
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
-        // TODO: check if paymentPeriodicity is allowed with PaymentMethod
+        if (
+          !memberPlan.availablePaymentMethods.some(apm => {
+            if (apm.forceAutoRenewal && !autoRenew) return false
+            return (
+              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+              apm.paymentMethodIDs.includes(paymentMethodID)
+            )
+          })
+        )
+          throw new PaymentConfigurationNotAllowed()
 
-        // Create User
+        const user = await dbAdapter.user.createUser({
+          input: {
+            name,
+            preferredName,
+            email,
+            active: false,
+            properties: [],
+            roleIDs: []
+          },
+          password: 'randomPassword'
+        })
 
-        // Create Subscription
+        if (!user) throw new Error('Could not create user') // TODO: check if this is needed
+
+        const subscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            startsAt: new Date(),
+            paymentMethodID,
+            paymentPeriodicity,
+            paidUntil: null,
+            monthlyAmount,
+            deactivatedAt: null,
+            memberPlanID,
+            autoRenew
+          }
+        })
+
+        if (!subscription) throw new Error('Could not create subscription')
 
         // Create Periods, Invoices and Payment
+        const invoice = await memberContext.renewSubscriptionForUser({
+          userID: user.id,
+          userEmail: user.email,
+          userName: user.name,
+          userSubscription: subscription
+        })
+
+        if (!invoice) throw new Error('Could not create invoice')
+
+        return await createPaymentWithProvider({
+          invoice,
+          saveCustomer: true,
+          paymentMethodID,
+          successURL,
+          failureURL
+        })
       }
     }
   }

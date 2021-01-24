@@ -8,7 +8,8 @@ export enum ErrorCode {
   OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
   NotAuthorised = 'NOT_AUTHORISED',
   NotFound = 'NOT_FOUND',
-  MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH'
+  MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
+  PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -56,5 +57,14 @@ export class NotFound extends ApolloError {
 export class MonthlyAmountNotEnough extends ApolloError {
   constructor() {
     super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
+  }
+}
+
+export class PaymentConfigurationNotAllowed extends ApolloError {
+  constructor() {
+    super(
+      `Payment configuration not allowed. Check method, periodicity and auto renew flag`,
+      ErrorCode.PaymentConfigurationNotAllowed
+    )
   }
 }
