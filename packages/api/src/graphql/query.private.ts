@@ -243,11 +243,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticate, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanGetUsers, roles)
 
-        return dbAdapter.user.getUsers({
+        return await dbAdapter.user.getUsers({
           filter,
           sort,
           order,
