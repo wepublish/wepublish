@@ -1,6 +1,7 @@
 import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
 
 import {Issuer} from 'openid-client'
+import crypto from 'crypto'
 
 import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
@@ -148,7 +149,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             properties: [],
             roleIDs: []
           },
-          password: 'randomPassword'
+          password: crypto.randomBytes(48).toString('hex')
         })
 
         if (!user) throw new Error('Could not create user') // TODO: check if this is needed
