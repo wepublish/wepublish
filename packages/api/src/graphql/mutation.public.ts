@@ -11,9 +11,9 @@ import {
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
   UserNotFoundError,
-  NotFound,
-  MonthlyAmountNotEnough,
-  PaymentConfigurationNotAllowed,
+  NotFoundError,
+  MonthlyAmountNotEnoughError,
+  PaymentConfigurationNotAllowedError,
   NotActiveError
 } from '../error'
 import {GraphQLPublicPayment} from './payment'
@@ -126,12 +126,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         */
 
         const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
-        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+        if (!memberPlan) throw new NotFoundError('MemberPlan', memberPlanID)
 
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
-        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+        if (!paymentMethod) throw new NotFoundError('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnoughError()
 
         if (
           !memberPlan.availablePaymentMethods.some(apm => {
@@ -142,7 +142,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             )
           })
         )
-          throw new PaymentConfigurationNotAllowed()
+          throw new PaymentConfigurationNotAllowedError()
 
         const user = await dbAdapter.user.createUser({
           input: {

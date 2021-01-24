@@ -13,6 +13,7 @@ import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
+  DeleteBecauseLinkedNotAllowedError,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
   NotActiveError,
@@ -962,6 +963,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanDeleteInvoice, roles)
+
+        const payments = await dbAdapter.payment.getPaymentsByInvoiceID(id)
+        payments.map(payment => {
+          if (payment !== null)
+            throw new DeleteBecauseLinkedNotAllowedError('invoice', 'payment', payment.id)
+        })
+
         return await dbAdapter.invoice.deleteInvoice({id})
       }
     }
