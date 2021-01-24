@@ -170,6 +170,7 @@ export class MemberContext implements MemberContext {
           invoiceID: newInvoice.id
         }
       })
+      logger('memberContext').info('Renewed subscription for user %s', userID)
       return newInvoice
     } catch (error) {
       logger('memberContext').error(error, 'Error while renewing subscription for user %s', userID)
