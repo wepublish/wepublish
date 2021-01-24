@@ -10,7 +10,8 @@ export enum ErrorCode {
   UserNotActive = 'USER_NOT_ACTIVE',
   NotFound = 'NOT_FOUND',
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
-  PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED'
+  PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
+  DeleteBecauseLinkedNotAllowed = 'DELETE_BECAUSE_LINKED_NOT_ALLOWED'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -55,23 +56,32 @@ export class NotActiveError extends ApolloError {
   }
 }
 
-export class NotFound extends ApolloError {
+export class NotFoundError extends ApolloError {
   constructor(model: string, id: string) {
     super(`${model} with ID: ${id} not found`, ErrorCode.NotFound)
   }
 }
 
-export class MonthlyAmountNotEnough extends ApolloError {
+export class MonthlyAmountNotEnoughError extends ApolloError {
   constructor() {
     super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
   }
 }
 
-export class PaymentConfigurationNotAllowed extends ApolloError {
+export class PaymentConfigurationNotAllowedError extends ApolloError {
   constructor() {
     super(
       `Payment configuration not allowed. Check method, periodicity and auto renew flag`,
       ErrorCode.PaymentConfigurationNotAllowed
+    )
+  }
+}
+
+export class DeleteBecauseLinkedNotAllowedError extends ApolloError {
+  constructor(model: string, linkedModel: string, linkedId: string) {
+    super(
+      `Delete of ${model} not allowed because it's linked by ${linkedModel} with id ${linkedId}`,
+      ErrorCode.MonthlyAmountNotEnough
     )
   }
 }
