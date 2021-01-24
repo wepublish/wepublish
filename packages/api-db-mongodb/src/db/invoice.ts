@@ -86,6 +86,12 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
     return ids.map(id => invoiceMap[id] ?? null)
   }
 
+  async getInvoicesByUserID(userID: string): Promise<OptionalInvoice[]> {
+    const invoices = await this.invoices.find({userID}).toArray()
+
+    return invoices.map(({_id: id, ...invoice}) => ({id, ...invoice}))
+  }
+
   async getInvoices({
     filter,
     sort,

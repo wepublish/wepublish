@@ -14,10 +14,17 @@ import {
   NotFound,
   MonthlyAmountNotEnough,
   PaymentConfigurationNotAllowed,
-  NotActiveError
+  NotActiveError,
+  EmailAlreadyInUseError
 } from '../error'
-import {GraphQLPublicPayment} from './payment'
+import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
+import {
+  GraphQLPublicUser,
+  GraphQLPublicUserInput,
+  GraphQLPublicUserSubscription,
+  GraphQLPublicUserSubscriptionInput
+} from './user'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -188,6 +195,113 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           invoice,
           saveCustomer: true,
           paymentMethodID,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
+    updateUser: {
+      type: GraphQLPublicUser,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicUserInput)}
+      },
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+
+        const {name, email, preferredName, address} = input
+        // TODO: implement new email check
+
+        const userExists = await dbAdapter.user.getUser(email)
+        if (userExists) throw new EmailAlreadyInUseError()
+
+        const updateUser = await dbAdapter.user.updateUser({
+          id: user.id,
+          input: {
+            name,
+            preferredName,
+            address,
+            ...user
+          }
+        })
+
+        if (!updateUser) throw new Error('Error during updateUser')
+
+        return updateUser
+      }
+    },
+
+    updateUserSubscription: {
+      type: GraphQLPublicUserSubscription,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
+      },
+      async resolve(root, {input}, {authenticateUser, dbAdapter, loaders}) {
+        const {user} = authenticateUser()
+
+        if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
+
+        const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
+
+        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+
+        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+
+        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+        if (
+          !memberPlan.availablePaymentMethods.some(apm => {
+            if (apm.forceAutoRenewal && !autoRenew) return false
+            return (
+              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+              apm.paymentMethodIDs.includes(paymentMethodID)
+            )
+          })
+        )
+          throw new PaymentConfigurationNotAllowed()
+
+        const updateSubscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            memberPlanID,
+            paymentPeriodicity,
+            monthlyAmount,
+            autoRenew,
+            paymentMethodID,
+            ...user.subscription
+          }
+        })
+
+        if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        return updateSubscription
+      }
+    },
+
+    createPaymentFromInvoice: {
+      type: GraphQLPublicPayment,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
+      },
+      async resolve(
+        root,
+        {input},
+        {authenticateUser, createPaymentWithProvider, paymentProviders, dbAdapter}
+      ) {
+        const {user} = authenticateUser()
+        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+
+        const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
+        const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
+
+        if (!invoice) throw new NotFound('Invoice', invoiceID)
+
+        return await createPaymentWithProvider({
+          paymentMethodID,
+          invoice,
+          saveCustomer: false,
           successURL,
           failureURL
         })

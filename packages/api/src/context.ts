@@ -370,7 +370,7 @@ export async function contextFromRequest(
       failureURL,
       successURL
     }: CreatePaymentWithProvider): Promise<Payment> {
-      const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
+      const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
       const paymentProvider = paymentProviders.find(
         pp => pp.id === paymentMethod?.paymentProviderID
       )
