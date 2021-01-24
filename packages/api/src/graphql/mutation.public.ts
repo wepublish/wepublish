@@ -13,7 +13,8 @@ import {
   UserNotFoundError,
   NotFound,
   MonthlyAmountNotEnough,
-  PaymentConfigurationNotAllowed
+  PaymentConfigurationNotAllowed,
+  NotActiveError
 } from '../error'
 import {GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -33,6 +34,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -47,6 +49,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUserByID(userID)
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -74,6 +77,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!userInfo.email) throw new Error('UserInfo did not return an email')
         const user = await dbAdapter.user.getUser(userInfo.email)
         if (!user) throw new UserNotFoundError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },

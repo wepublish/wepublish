@@ -148,7 +148,7 @@ export interface CreatePaymentWithProvider {
 export interface GenerateJWTProps {
   userID: string
   audience?: string
-  experiesInMinutes?: number
+  expiresInMinutes?: number
 }
 
 export async function contextFromRequest(
@@ -352,7 +352,7 @@ export async function contextFromRequest(
         issuer: hostURL,
         audience: props.audience ?? websiteURL,
         algorithm: 'HS256',
-        expiresIn: `${props.experiesInMinutes ?? 5}m`
+        expiresIn: `${props.expiresInMinutes ?? 5}m`
       }
       return jwt.sign({sub: props.userID}, process.env.JWT_SECRET_KEY, jwtOptions)
     },

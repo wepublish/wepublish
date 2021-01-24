@@ -161,13 +161,14 @@ userModelEvents.on('create', (context, model) => {
 })
 
 invoiceModelEvents.on('update', async (context, model) => {
+  // TODO: rethink this logic
   if (model.paidAt !== null && model.userID) {
     const user = await context.dbAdapter.user.getUserByID(model.userID)
     if (!user || !user.subscription) return
     const {periods} = user.subscription
     const period = periods.find(period => period.invoiceID === model.id)
     if (!period) return
-    if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil)
+    if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil) {
       await context.dbAdapter.user.updateUserSubscription({
         userID: user.id,
         input: {
@@ -175,5 +176,35 @@ invoiceModelEvents.on('update', async (context, model) => {
           paidUntil: period.endsAt
         }
       })
+
+      if (!user.active && user.lastLogin === null) {
+        await context.dbAdapter.user.updateUser({
+          id: user.id,
+          input: {
+            ...user,
+            active: true
+          }
+        })
+        // Send FirstTime Hello
+        const token = context.generateJWT({
+          userID: user.id,
+          expiresInMinutes: 60 * 24
+        })
+        const link = `${context.websiteURL}/login/jwt=${token}` // TODO: make this a setting
+        await context.sendMailFromProvider({
+          message: `Welcome Member. Click the link below to login: \n\n${link}`,
+          recipient: user.email,
+          subject: 'Welcome Member',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+      } else {
+        await context.sendMailFromProvider({
+          message: `Subscription has been renewed`,
+          recipient: user.email,
+          subject: 'Subscription is renewed',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+      }
+    }
   }
 })

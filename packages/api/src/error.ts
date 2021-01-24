@@ -7,6 +7,7 @@ export enum ErrorCode {
   InvalidOAuth2Token = 'INVALID_OAUTH_TOKEN',
   OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
   NotAuthorised = 'NOT_AUTHORISED',
+  UserNotActive = 'USER_NOT_ACTIVE',
   NotFound = 'NOT_FOUND',
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED'
@@ -45,6 +46,12 @@ export class OAuth2ProviderNotFoundError extends ApolloError {
 export class NotAuthorisedError extends ApolloError {
   constructor() {
     super('User is not authorised', ErrorCode.NotAuthorised)
+  }
+}
+
+export class NotActiveError extends ApolloError {
+  constructor() {
+    super('User is not active', ErrorCode.UserNotActive)
   }
 }
 
