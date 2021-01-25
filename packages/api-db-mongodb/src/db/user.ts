@@ -21,10 +21,6 @@ import {
   UpdateUserSubscriptionArgs,
   User,
   UserSort
-  DeleteUserSubscriptionArgs,
-  UpdatePaymentProviderCustomerArgs,
-  CreateUserSubscriptionPeriodArgs,
-  DeleteUserSubscriptionPeriodArgs
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
