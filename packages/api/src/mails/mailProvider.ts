@@ -1,4 +1,4 @@
-import {WepublishServerOpts} from '../server'
+import {logger, WepublishServerOpts} from '../server'
 import express, {Router} from 'express'
 import {contextFromRequest} from '../context'
 import {MailLogState} from '../db/mailLog'
@@ -72,6 +72,11 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
       .route(`/${mailProvider.id}`)
       .all(mailProvider.incomingRequestHandler, async (req, res, next) => {
         res.status(200).send() // respond immediately with 200 since webhook was received.
+        logger('mailProvider').info(
+          'Received webhook from %s for mailProvider %s',
+          req.get('origin'),
+          mailProvider.id
+        )
         try {
           const mailLogStatuses = await mailProvider.webhookForSendMail({req})
           const context = await contextFromRequest(req, opts)
@@ -90,8 +95,12 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
               }
             })
           }
-        } catch (exception) {
-          console.warn('Exception during mail update from webhook', exception)
+        } catch (error) {
+          logger('mailProvider').error(
+            error,
+            'Error during webhook update in mailProvider %s',
+            mailProvider.id
+          )
         }
       })
   }

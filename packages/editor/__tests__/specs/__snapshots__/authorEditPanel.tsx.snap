@@ -6887,16 +6887,6 @@ exports[`Author Edit Panel should render 1`] = `
                           </div>
                         </div>
                       </Toolbar>
-                      <div
-                        onClick={[Function]}
-                        style={
-                          Object {
-                            "color": "#cad5e4",
-                          }
-                        }
-                      >
-                        blocks.richText.startWriting
-                      </div>
                       <Editable
                         onBlur={[Function]}
                         renderElement={[Function]}

@@ -11,6 +11,7 @@ import fetch from 'cross-fetch'
 import crypto from 'crypto'
 import {PaymentState} from '../db/payment'
 import qs from 'qs'
+import {logger} from '../server'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -95,6 +96,13 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     })
     if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
     const payrexxResponse = await res.json()
+
+    logger('payrexxPaymentProvider').info(
+      'Created Payrexx intent with ID: %s for paymentProvider %s',
+      payrexxResponse.data?.[0].id,
+      this.id
+    )
+
     return {
       intentID: payrexxResponse.data?.[0].id,
       intentSecret: payrexxResponse.data?.[0].link,

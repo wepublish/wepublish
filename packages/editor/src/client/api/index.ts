@@ -1564,8 +1564,6 @@ export type UserFilter = {
   name?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
   subscription?: Maybe<UserSubscriptionFilter>;
-  hasSubscription?: Maybe<Scalars['Boolean']>;
-  rolesIDs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type UserInput = {

@@ -41,6 +41,7 @@ import {OptionalPayment} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
+import {logger} from './server'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -172,8 +173,13 @@ export async function contextFromRequest(
       }
     })
 
-    // TODO: handle sendMail error
-    if (mailProvider) await mailProvider.sendMail({...props, mailLogID: mailLog.id})
+    if (mailProvider) {
+      try {
+        await mailProvider.sendMail({...props, mailLogID: mailLog.id})
+      } catch (error) {
+        logger('context').error(error, 'Error during sendMail mailLogID: %s', mailLog.id)
+      }
+    }
 
     return mailLog
   }

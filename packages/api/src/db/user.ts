@@ -44,6 +44,13 @@ export interface UserSubscriptionFilter {
   readonly autoRenew?: boolean
 }
 
+export interface UserSubscriptionFilter {
+  readonly startsAt?: DateFilter
+  readonly paidUntil?: DateFilter
+  readonly deactivatedAt?: DateFilter
+  readonly autoRenew?: boolean
+}
+
 export interface UserFilter {
   readonly name?: string
   readonly text?: string
@@ -59,6 +66,15 @@ export interface UserSubscriptionPeriod {
   readonly amount: number
   readonly invoiceID: string
 }
+
+export interface UserSubscriptionPeriodInput {
+  readonly startsAt: Date
+  readonly endsAt: Date
+  readonly paymentPeriodicity: PaymentPeriodicity
+  readonly amount: number
+  readonly invoiceID: string
+}
+
 
 export interface UserSubscriptionPeriodInput {
   readonly startsAt: Date

@@ -28,14 +28,21 @@
     "body-parser": "^1.19.0",
     "cross-fetch": "^3.0.6",
     "graphql": "^14.6.0",
+    "pino": "^6.11.0",
+    "pino-multi-stream": "^5.2.0",
+    "pino-sentry": "^0.6.0",
+    "pino-stackdriver": "^2.1.1",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.6.8",
+    "@types/pino": "^6.3.5",
+    "@types/pino-multi-stream": "^5.1.0",
     "@types/yargs": "^15.0.12",
     "dotenv": "^8.2.0",
     "nodemon": "^1.19.1",
     "npm-run-all": "^4.1.5",
+    "pino-pretty": "^4.3.0",
     "shx": "^0.3.2",
     "typescript": "^3.8.3"
   }

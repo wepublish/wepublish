@@ -4,6 +4,7 @@ import {UserSort} from './db/user'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {InvoiceSort} from './db/invoice'
 import {PaymentState} from './db/payment'
+import {logger} from './server'
 
 const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
@@ -48,6 +49,7 @@ function calculateAmountForPeriodicity(
 }
 
 async function dailyMembershipRenewal(context: Context, data: any): Promise<void> {
+  logger('jobs').info('starting dailyMembershipRenewal')
   const {dbAdapter} = context
 
   const startDate = data?.startDate ? new Date(data?.startDate) : new Date()
@@ -152,6 +154,7 @@ async function dailyMembershipRenewal(context: Context, data: any): Promise<void
       console.warn('Error while creating new periods', error)
     }
   }
+  logger('jobs').info('finishing dailyMembershipRenewal')
 }
 
 async function dailyInvoiceCharger(context: Context): Promise<void> {
