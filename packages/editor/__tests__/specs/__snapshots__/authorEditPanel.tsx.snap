@@ -950,13 +950,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       },
                                     ]
                                   }
-
                                 >
                                   <Toolbar
                                     fadeOut={true}
                                     onMouseDown={[Function]}
                                   >
-
                                     <div
                                       onMouseDown={[Function]}
                                       style={
@@ -973,7 +971,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     >
                                       <div
                                         style={
-
                                           Object {
                                             "backgroundColor": "white",
                                             "borderRadius": 6,
@@ -991,7 +988,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               "opacity": 0.5,
                                               "transitionDuration": "100ms",
                                               "transitionProperty": "opacity",
-
                                             }
                                           }
                                         >
@@ -1003,15 +999,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -1040,15 +1032,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -1077,15 +1065,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -1107,19 +1091,36 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </ForwardRef>
                                           </FormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="unordered-list"
@@ -1135,15 +1136,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1183,15 +1180,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1218,19 +1211,36 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <EditorSubMenuButton
                                             editorHasFocus={false}
@@ -1290,15 +1300,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                       onMouseDown={[Function]}
                                                     >
                                                       <button
+                                                        className="icon-button"
                                                         onMouseDown={[Function]}
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "border": "#00000000 1px solid",
                                                           }
                                                         }
                                                       >
@@ -1368,19 +1374,36 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </ForwardRef>
                                           </EditorSubMenuButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="bold"
@@ -1396,15 +1419,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1444,15 +1463,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1492,15 +1507,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1540,15 +1551,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1588,15 +1595,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1636,15 +1639,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1671,19 +1670,36 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <LinkFormatButton>
                                             <ToolbarIconButton
@@ -1696,15 +1712,11 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1835,16 +1847,12 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   disabled={true}
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -1871,97 +1879,116 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                             </ToolbarIconButton>
                                           </RemoveLinkFormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
-                                          <EditorSubMenuButton
-                                            editorHasFocus={false}
+                                          <ForwardRef
                                             icon="smile-o"
                                           >
-                                            <ForwardRef
-                                              icon="smile-o"
+                                            <withLocale(Whisper)
+                                              placement="top"
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <EmojiPicker
+                                                    setEmoji={[Function]}
+                                                  />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
                                             >
-                                              <withLocale(Whisper)
+                                              <Whisper
+                                                locale={
+                                                  Object {
+                                                    "formatDate": [Function],
+                                                  }
+                                                }
                                                 placement="top"
                                                 speaker={
                                                   <defaultProps(Popover)
                                                     classPrefix="rs-popover"
                                                   >
                                                     <EmojiPicker
-                                                      doWithEmoji={[Function]}
+                                                      setEmoji={[Function]}
                                                     />
                                                   </defaultProps(Popover)>
                                                 }
                                                 trigger="none"
                                               >
-                                                <Whisper
+                                                <OverlayTrigger
+                                                  delayHide={200}
                                                   locale={
                                                     Object {
                                                       "formatDate": [Function],
                                                     }
                                                   }
                                                   placement="top"
+                                                  rootClose={true}
                                                   speaker={
                                                     <defaultProps(Popover)
                                                       classPrefix="rs-popover"
                                                     >
                                                       <EmojiPicker
-                                                        doWithEmoji={[Function]}
+                                                        setEmoji={[Function]}
                                                       />
                                                     </defaultProps(Popover)>
                                                   }
                                                   trigger="none"
                                                 >
-                                                  <OverlayTrigger
-                                                    delayHide={200}
-                                                    locale={
-                                                      Object {
-                                                        "formatDate": [Function],
-                                                      }
-                                                    }
-                                                    placement="top"
-                                                    rootClose={true}
-                                                    speaker={
-                                                      <defaultProps(Popover)
-                                                        classPrefix="rs-popover"
-                                                      >
-                                                        <EmojiPicker
-                                                          doWithEmoji={[Function]}
-                                                        />
-                                                      </defaultProps(Popover)>
-                                                    }
-                                                    trigger="none"
+                                                  <ForwardRef
+                                                    active={false}
+                                                    key="triggerComponent"
+                                                    onMouseDown={[Function]}
                                                   >
-                                                    <ForwardRef
-                                                      active={false}
-                                                      key="triggerComponent"
+                                                    <button
+                                                      className="icon-button"
                                                       onMouseDown={[Function]}
+                                                      style={
+                                                        Object {
+                                                          "border": "#00000000 1px solid",
+                                                        }
+                                                      }
                                                     >
-                                                      <button
-                                                        onMouseDown={[Function]}
+                                                      <defaultProps(Icon)
+                                                        classPrefix="rs-icon"
+                                                        componentClass="i"
+                                                        icon="smile-o"
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "minWidth": "15px",
                                                           }
                                                         }
                                                       >
-                                                        <defaultProps(Icon)
+                                                        <Icon
                                                           classPrefix="rs-icon"
                                                           componentClass="i"
                                                           icon="smile-o"
@@ -1971,61 +1998,48 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                                             }
                                                           }
                                                         >
-                                                          <Icon
-                                                            classPrefix="rs-icon"
-                                                            componentClass="i"
-                                                            icon="smile-o"
+                                                          <i
+                                                            className="rs-icon rs-icon-smile-o"
                                                             style={
                                                               Object {
                                                                 "minWidth": "15px",
                                                               }
                                                             }
-                                                          >
-                                                            <i
-                                                              className="rs-icon rs-icon-smile-o"
-                                                              style={
-                                                                Object {
-                                                                  "minWidth": "15px",
-                                                                }
-                                                              }
-                                                            />
-                                                          </Icon>
-                                                        </defaultProps(Icon)>
-                                                      </button>
-                                                    </ForwardRef>
+                                                          />
+                                                        </Icon>
+                                                      </defaultProps(Icon)>
+                                                    </button>
+                                                  </ForwardRef>
+                                                  <Portal
+                                                    key="portal"
+                                                  >
                                                     <Portal
-                                                      key="portal"
+                                                      containerInfo={<body />}
                                                     >
-                                                      <Portal
-                                                        containerInfo={<body />}
+                                                      <Overlay
+                                                        placement="top"
+                                                        rootClose={true}
+                                                        target={[Function]}
                                                       >
-                                                        <Overlay
+                                                        <BaseOverlay
                                                           placement="top"
                                                           rootClose={true}
-                                                          show={false}
                                                           target={[Function]}
-                                                        >
-                                                          <BaseOverlay
-                                                            placement="top"
-                                                            rootClose={true}
-                                                            show={false}
-                                                            target={[Function]}
-                                                            transition={
-                                                              Object {
-                                                                "$$typeof": Symbol(react.forward_ref),
-                                                                "displayName": "Fade",
-                                                                "render": [Function],
-                                                              }
+                                                          transition={
+                                                            Object {
+                                                              "$$typeof": Symbol(react.forward_ref),
+                                                              "displayName": "Fade",
+                                                              "render": [Function],
                                                             }
-                                                          />
-                                                        </Overlay>
-                                                      </Portal>
+                                                          }
+                                                        />
+                                                      </Overlay>
                                                     </Portal>
-                                                  </OverlayTrigger>
-                                                </Whisper>
-                                              </withLocale(Whisper)>
-                                            </ForwardRef>
-                                          </EditorSubMenuButton>
+                                                  </Portal>
+                                                </OverlayTrigger>
+                                              </Whisper>
+                                            </withLocale(Whisper)>
+                                          </ForwardRef>
                                         </div>
                                       </div>
                                     </div>
@@ -4096,7 +4110,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           "pointerEvents": "none",
                                           "position": "sticky",
                                           "zIndex": 1,
-
                                         }
                                       }
                                     >
@@ -4130,15 +4143,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -4167,15 +4176,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -4204,15 +4209,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -4234,19 +4235,36 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </ForwardRef>
                                           </FormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="unordered-list"
@@ -4262,15 +4280,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4310,15 +4324,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4345,19 +4355,36 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <EditorSubMenuButton
                                             editorHasFocus={false}
@@ -4417,15 +4444,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                       onMouseDown={[Function]}
                                                     >
                                                       <button
+                                                        className="icon-button"
                                                         onMouseDown={[Function]}
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "border": "#00000000 1px solid",
                                                           }
                                                         }
                                                       >
@@ -4495,19 +4518,36 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </ForwardRef>
                                           </EditorSubMenuButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="bold"
@@ -4523,15 +4563,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4571,15 +4607,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4619,15 +4651,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4667,15 +4695,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4715,15 +4739,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4763,15 +4783,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4798,19 +4814,36 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <LinkFormatButton>
                                             <ToolbarIconButton
@@ -4823,15 +4856,11 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4962,16 +4991,12 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   disabled={true}
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -4998,97 +5023,116 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                             </ToolbarIconButton>
                                           </RemoveLinkFormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
-                                          <EditorSubMenuButton
-                                            editorHasFocus={false}
+                                          <ForwardRef
                                             icon="smile-o"
                                           >
-                                            <ForwardRef
-                                              icon="smile-o"
+                                            <withLocale(Whisper)
+                                              placement="top"
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <EmojiPicker
+                                                    setEmoji={[Function]}
+                                                  />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
                                             >
-                                              <withLocale(Whisper)
+                                              <Whisper
+                                                locale={
+                                                  Object {
+                                                    "formatDate": [Function],
+                                                  }
+                                                }
                                                 placement="top"
                                                 speaker={
                                                   <defaultProps(Popover)
                                                     classPrefix="rs-popover"
                                                   >
                                                     <EmojiPicker
-                                                      doWithEmoji={[Function]}
+                                                      setEmoji={[Function]}
                                                     />
                                                   </defaultProps(Popover)>
                                                 }
                                                 trigger="none"
                                               >
-                                                <Whisper
+                                                <OverlayTrigger
+                                                  delayHide={200}
                                                   locale={
                                                     Object {
                                                       "formatDate": [Function],
                                                     }
                                                   }
                                                   placement="top"
+                                                  rootClose={true}
                                                   speaker={
                                                     <defaultProps(Popover)
                                                       classPrefix="rs-popover"
                                                     >
                                                       <EmojiPicker
-                                                        doWithEmoji={[Function]}
+                                                        setEmoji={[Function]}
                                                       />
                                                     </defaultProps(Popover)>
                                                   }
                                                   trigger="none"
                                                 >
-                                                  <OverlayTrigger
-                                                    delayHide={200}
-                                                    locale={
-                                                      Object {
-                                                        "formatDate": [Function],
-                                                      }
-                                                    }
-                                                    placement="top"
-                                                    rootClose={true}
-                                                    speaker={
-                                                      <defaultProps(Popover)
-                                                        classPrefix="rs-popover"
-                                                      >
-                                                        <EmojiPicker
-                                                          doWithEmoji={[Function]}
-                                                        />
-                                                      </defaultProps(Popover)>
-                                                    }
-                                                    trigger="none"
+                                                  <ForwardRef
+                                                    active={false}
+                                                    key="triggerComponent"
+                                                    onMouseDown={[Function]}
                                                   >
-                                                    <ForwardRef
-                                                      active={false}
-                                                      key="triggerComponent"
+                                                    <button
+                                                      className="icon-button"
                                                       onMouseDown={[Function]}
+                                                      style={
+                                                        Object {
+                                                          "border": "#00000000 1px solid",
+                                                        }
+                                                      }
                                                     >
-                                                      <button
-                                                        onMouseDown={[Function]}
+                                                      <defaultProps(Icon)
+                                                        classPrefix="rs-icon"
+                                                        componentClass="i"
+                                                        icon="smile-o"
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "minWidth": "15px",
                                                           }
                                                         }
                                                       >
-                                                        <defaultProps(Icon)
+                                                        <Icon
                                                           classPrefix="rs-icon"
                                                           componentClass="i"
                                                           icon="smile-o"
@@ -5098,61 +5142,48 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                                             }
                                                           }
                                                         >
-                                                          <Icon
-                                                            classPrefix="rs-icon"
-                                                            componentClass="i"
-                                                            icon="smile-o"
+                                                          <i
+                                                            className="rs-icon rs-icon-smile-o"
                                                             style={
                                                               Object {
                                                                 "minWidth": "15px",
                                                               }
                                                             }
-                                                          >
-                                                            <i
-                                                              className="rs-icon rs-icon-smile-o"
-                                                              style={
-                                                                Object {
-                                                                  "minWidth": "15px",
-                                                                }
-                                                              }
-                                                            />
-                                                          </Icon>
-                                                        </defaultProps(Icon)>
-                                                      </button>
-                                                    </ForwardRef>
+                                                          />
+                                                        </Icon>
+                                                      </defaultProps(Icon)>
+                                                    </button>
+                                                  </ForwardRef>
+                                                  <Portal
+                                                    key="portal"
+                                                  >
                                                     <Portal
-                                                      key="portal"
+                                                      containerInfo={<body />}
                                                     >
-                                                      <Portal
-                                                        containerInfo={<body />}
+                                                      <Overlay
+                                                        placement="top"
+                                                        rootClose={true}
+                                                        target={[Function]}
                                                       >
-                                                        <Overlay
+                                                        <BaseOverlay
                                                           placement="top"
                                                           rootClose={true}
-                                                          show={false}
                                                           target={[Function]}
-                                                        >
-                                                          <BaseOverlay
-                                                            placement="top"
-                                                            rootClose={true}
-                                                            show={false}
-                                                            target={[Function]}
-                                                            transition={
-                                                              Object {
-                                                                "$$typeof": Symbol(react.forward_ref),
-                                                                "displayName": "Fade",
-                                                                "render": [Function],
-                                                              }
+                                                          transition={
+                                                            Object {
+                                                              "$$typeof": Symbol(react.forward_ref),
+                                                              "displayName": "Fade",
+                                                              "render": [Function],
                                                             }
-                                                          />
-                                                        </Overlay>
-                                                      </Portal>
+                                                          }
+                                                        />
+                                                      </Overlay>
                                                     </Portal>
-                                                  </OverlayTrigger>
-                                                </Whisper>
-                                              </withLocale(Whisper)>
-                                            </ForwardRef>
-                                          </EditorSubMenuButton>
+                                                  </Portal>
+                                                </OverlayTrigger>
+                                              </Whisper>
+                                            </withLocale(Whisper)>
+                                          </ForwardRef>
                                         </div>
                                       </div>
                                     </div>
@@ -6783,15 +6814,11 @@ exports[`Author Edit Panel should render 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -6820,15 +6847,11 @@ exports[`Author Edit Panel should render 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -6857,15 +6880,11 @@ exports[`Author Edit Panel should render 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -6887,19 +6906,36 @@ exports[`Author Edit Panel should render 1`] = `
                                             </ForwardRef>
                                           </FormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="unordered-list"
@@ -6915,15 +6951,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -6963,15 +6995,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -6998,19 +7026,36 @@ exports[`Author Edit Panel should render 1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <EditorSubMenuButton
                                             editorHasFocus={false}
@@ -7070,15 +7115,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                       onMouseDown={[Function]}
                                                     >
                                                       <button
+                                                        className="icon-button"
                                                         onMouseDown={[Function]}
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "border": "#00000000 1px solid",
                                                           }
                                                         }
                                                       >
@@ -7148,19 +7189,36 @@ exports[`Author Edit Panel should render 1`] = `
                                             </ForwardRef>
                                           </EditorSubMenuButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="bold"
@@ -7176,15 +7234,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7224,15 +7278,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7272,15 +7322,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7320,15 +7366,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7368,15 +7410,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7416,15 +7454,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7451,19 +7485,36 @@ exports[`Author Edit Panel should render 1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <LinkFormatButton>
                                             <ToolbarIconButton
@@ -7476,15 +7527,11 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7615,16 +7662,12 @@ exports[`Author Edit Panel should render 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   disabled={true}
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -7651,97 +7694,116 @@ exports[`Author Edit Panel should render 1`] = `
                                             </ToolbarIconButton>
                                           </RemoveLinkFormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
-                                          <EditorSubMenuButton
-                                            editorHasFocus={false}
+                                          <ForwardRef
                                             icon="smile-o"
                                           >
-                                            <ForwardRef
-                                              icon="smile-o"
+                                            <withLocale(Whisper)
+                                              placement="top"
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <EmojiPicker
+                                                    setEmoji={[Function]}
+                                                  />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
                                             >
-                                              <withLocale(Whisper)
+                                              <Whisper
+                                                locale={
+                                                  Object {
+                                                    "formatDate": [Function],
+                                                  }
+                                                }
                                                 placement="top"
                                                 speaker={
                                                   <defaultProps(Popover)
                                                     classPrefix="rs-popover"
                                                   >
                                                     <EmojiPicker
-                                                      doWithEmoji={[Function]}
+                                                      setEmoji={[Function]}
                                                     />
                                                   </defaultProps(Popover)>
                                                 }
                                                 trigger="none"
                                               >
-                                                <Whisper
+                                                <OverlayTrigger
+                                                  delayHide={200}
                                                   locale={
                                                     Object {
                                                       "formatDate": [Function],
                                                     }
                                                   }
                                                   placement="top"
+                                                  rootClose={true}
                                                   speaker={
                                                     <defaultProps(Popover)
                                                       classPrefix="rs-popover"
                                                     >
                                                       <EmojiPicker
-                                                        doWithEmoji={[Function]}
+                                                        setEmoji={[Function]}
                                                       />
                                                     </defaultProps(Popover)>
                                                   }
                                                   trigger="none"
                                                 >
-                                                  <OverlayTrigger
-                                                    delayHide={200}
-                                                    locale={
-                                                      Object {
-                                                        "formatDate": [Function],
-                                                      }
-                                                    }
-                                                    placement="top"
-                                                    rootClose={true}
-                                                    speaker={
-                                                      <defaultProps(Popover)
-                                                        classPrefix="rs-popover"
-                                                      >
-                                                        <EmojiPicker
-                                                          doWithEmoji={[Function]}
-                                                        />
-                                                      </defaultProps(Popover)>
-                                                    }
-                                                    trigger="none"
+                                                  <ForwardRef
+                                                    active={false}
+                                                    key="triggerComponent"
+                                                    onMouseDown={[Function]}
                                                   >
-                                                    <ForwardRef
-                                                      active={false}
-                                                      key="triggerComponent"
+                                                    <button
+                                                      className="icon-button"
                                                       onMouseDown={[Function]}
+                                                      style={
+                                                        Object {
+                                                          "border": "#00000000 1px solid",
+                                                        }
+                                                      }
                                                     >
-                                                      <button
-                                                        onMouseDown={[Function]}
+                                                      <defaultProps(Icon)
+                                                        classPrefix="rs-icon"
+                                                        componentClass="i"
+                                                        icon="smile-o"
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "minWidth": "15px",
                                                           }
                                                         }
                                                       >
-                                                        <defaultProps(Icon)
+                                                        <Icon
                                                           classPrefix="rs-icon"
                                                           componentClass="i"
                                                           icon="smile-o"
@@ -7751,61 +7813,48 @@ exports[`Author Edit Panel should render 1`] = `
                                                             }
                                                           }
                                                         >
-                                                          <Icon
-                                                            classPrefix="rs-icon"
-                                                            componentClass="i"
-                                                            icon="smile-o"
+                                                          <i
+                                                            className="rs-icon rs-icon-smile-o"
                                                             style={
                                                               Object {
                                                                 "minWidth": "15px",
                                                               }
                                                             }
-                                                          >
-                                                            <i
-                                                              className="rs-icon rs-icon-smile-o"
-                                                              style={
-                                                                Object {
-                                                                  "minWidth": "15px",
-                                                                }
-                                                              }
-                                                            />
-                                                          </Icon>
-                                                        </defaultProps(Icon)>
-                                                      </button>
-                                                    </ForwardRef>
+                                                          />
+                                                        </Icon>
+                                                      </defaultProps(Icon)>
+                                                    </button>
+                                                  </ForwardRef>
+                                                  <Portal
+                                                    key="portal"
+                                                  >
                                                     <Portal
-                                                      key="portal"
+                                                      containerInfo={<body />}
                                                     >
-                                                      <Portal
-                                                        containerInfo={<body />}
+                                                      <Overlay
+                                                        placement="top"
+                                                        rootClose={true}
+                                                        target={[Function]}
                                                       >
-                                                        <Overlay
+                                                        <BaseOverlay
                                                           placement="top"
                                                           rootClose={true}
-                                                          show={false}
                                                           target={[Function]}
-                                                        >
-                                                          <BaseOverlay
-                                                            placement="top"
-                                                            rootClose={true}
-                                                            show={false}
-                                                            target={[Function]}
-                                                            transition={
-                                                              Object {
-                                                                "$$typeof": Symbol(react.forward_ref),
-                                                                "displayName": "Fade",
-                                                                "render": [Function],
-                                                              }
+                                                          transition={
+                                                            Object {
+                                                              "$$typeof": Symbol(react.forward_ref),
+                                                              "displayName": "Fade",
+                                                              "render": [Function],
                                                             }
-                                                          />
-                                                        </Overlay>
-                                                      </Portal>
+                                                          }
+                                                        />
+                                                      </Overlay>
                                                     </Portal>
-                                                  </OverlayTrigger>
-                                                </Whisper>
-                                              </withLocale(Whisper)>
-                                            </ForwardRef>
-                                          </EditorSubMenuButton>
+                                                  </Portal>
+                                                </OverlayTrigger>
+                                              </Whisper>
+                                            </withLocale(Whisper)>
+                                          </ForwardRef>
                                         </div>
                                       </div>
                                     </div>
@@ -9428,15 +9477,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -9465,15 +9510,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -9502,15 +9543,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                               onMouseDown={[Function]}
                                             >
                                               <button
+                                                className="icon-button"
                                                 onMouseDown={[Function]}
                                                 style={
                                                   Object {
-                                                    "backgroundColor": "transparent",
-                                                    "border": "transparent 1px solid",
-                                                    "borderRadius": 3,
-                                                    "cursor": "pointer",
-                                                    "fontSize": 16,
-                                                    "padding": 2,
+                                                    "border": "#00000000 1px solid",
                                                   }
                                                 }
                                               >
@@ -9532,19 +9569,36 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </ForwardRef>
                                           </FormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="unordered-list"
@@ -9560,15 +9614,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -9608,15 +9658,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -9643,19 +9689,36 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <EditorSubMenuButton
                                             editorHasFocus={false}
@@ -9715,15 +9778,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                       onMouseDown={[Function]}
                                                     >
                                                       <button
+                                                        className="icon-button"
                                                         onMouseDown={[Function]}
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "border": "#00000000 1px solid",
                                                           }
                                                         }
                                                       >
@@ -9793,19 +9852,36 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </ForwardRef>
                                           </EditorSubMenuButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <FormatIconButton
                                             format="bold"
@@ -9821,15 +9897,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -9869,15 +9941,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -9917,15 +9985,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -9965,15 +10029,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -10013,15 +10073,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -10061,15 +10117,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -10096,19 +10148,36 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </ToolbarIconButton>
                                           </FormatIconButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
                                           <LinkFormatButton>
                                             <ToolbarIconButton
@@ -10121,15 +10190,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -10260,16 +10325,12 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                 onMouseDown={[Function]}
                                               >
                                                 <button
+                                                  className="icon-button"
                                                   disabled={true}
                                                   onMouseDown={[Function]}
                                                   style={
                                                     Object {
-                                                      "backgroundColor": "transparent",
-                                                      "border": "transparent 1px solid",
-                                                      "borderRadius": 3,
-                                                      "cursor": "pointer",
-                                                      "fontSize": 16,
-                                                      "padding": 2,
+                                                      "border": "#00000000 1px solid",
                                                     }
                                                   }
                                                 >
@@ -10296,97 +10357,116 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                             </ToolbarIconButton>
                                           </RemoveLinkFormatButton>
                                           <ToolbarDivider>
-                                            <div
+                                            <defaultProps(Divider)
+                                              classPrefix="rs-divider"
+                                              componentClass="div"
                                               style={
                                                 Object {
-                                                  "alignSelf": "stretch",
-                                                  "backgroundColor": "gray",
-                                                  "marginBottom": 2,
-                                                  "marginLeft": 20,
-                                                  "marginRight": 20,
-                                                  "marginTop": 2,
-                                                  "width": "1px",
+                                                  "height": "1.5em",
                                                 }
                                               }
-                                            />
+                                              vertical={true}
+                                            >
+                                              <Divider
+                                                classPrefix="rs-divider"
+                                                componentClass="div"
+                                                style={
+                                                  Object {
+                                                    "height": "1.5em",
+                                                  }
+                                                }
+                                                vertical={true}
+                                              >
+                                                <div
+                                                  className="rs-divider rs-divider-vertical"
+                                                  style={
+                                                    Object {
+                                                      "height": "1.5em",
+                                                    }
+                                                  }
+                                                />
+                                              </Divider>
+                                            </defaultProps(Divider)>
                                           </ToolbarDivider>
-                                          <EditorSubMenuButton
-                                            editorHasFocus={false}
+                                          <ForwardRef
                                             icon="smile-o"
                                           >
-                                            <ForwardRef
-                                              icon="smile-o"
+                                            <withLocale(Whisper)
+                                              placement="top"
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <EmojiPicker
+                                                    setEmoji={[Function]}
+                                                  />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
                                             >
-                                              <withLocale(Whisper)
+                                              <Whisper
+                                                locale={
+                                                  Object {
+                                                    "formatDate": [Function],
+                                                  }
+                                                }
                                                 placement="top"
                                                 speaker={
                                                   <defaultProps(Popover)
                                                     classPrefix="rs-popover"
                                                   >
                                                     <EmojiPicker
-                                                      doWithEmoji={[Function]}
+                                                      setEmoji={[Function]}
                                                     />
                                                   </defaultProps(Popover)>
                                                 }
                                                 trigger="none"
                                               >
-                                                <Whisper
+                                                <OverlayTrigger
+                                                  delayHide={200}
                                                   locale={
                                                     Object {
                                                       "formatDate": [Function],
                                                     }
                                                   }
                                                   placement="top"
+                                                  rootClose={true}
                                                   speaker={
                                                     <defaultProps(Popover)
                                                       classPrefix="rs-popover"
                                                     >
                                                       <EmojiPicker
-                                                        doWithEmoji={[Function]}
+                                                        setEmoji={[Function]}
                                                       />
                                                     </defaultProps(Popover)>
                                                   }
                                                   trigger="none"
                                                 >
-                                                  <OverlayTrigger
-                                                    delayHide={200}
-                                                    locale={
-                                                      Object {
-                                                        "formatDate": [Function],
-                                                      }
-                                                    }
-                                                    placement="top"
-                                                    rootClose={true}
-                                                    speaker={
-                                                      <defaultProps(Popover)
-                                                        classPrefix="rs-popover"
-                                                      >
-                                                        <EmojiPicker
-                                                          doWithEmoji={[Function]}
-                                                        />
-                                                      </defaultProps(Popover)>
-                                                    }
-                                                    trigger="none"
+                                                  <ForwardRef
+                                                    active={false}
+                                                    key="triggerComponent"
+                                                    onMouseDown={[Function]}
                                                   >
-                                                    <ForwardRef
-                                                      active={false}
-                                                      key="triggerComponent"
+                                                    <button
+                                                      className="icon-button"
                                                       onMouseDown={[Function]}
+                                                      style={
+                                                        Object {
+                                                          "border": "#00000000 1px solid",
+                                                        }
+                                                      }
                                                     >
-                                                      <button
-                                                        onMouseDown={[Function]}
+                                                      <defaultProps(Icon)
+                                                        classPrefix="rs-icon"
+                                                        componentClass="i"
+                                                        icon="smile-o"
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "transparent",
-                                                            "border": "transparent 1px solid",
-                                                            "borderRadius": 3,
-                                                            "cursor": "pointer",
-                                                            "fontSize": 16,
-                                                            "padding": 2,
+                                                            "minWidth": "15px",
                                                           }
                                                         }
                                                       >
-                                                        <defaultProps(Icon)
+                                                        <Icon
                                                           classPrefix="rs-icon"
                                                           componentClass="i"
                                                           icon="smile-o"
@@ -10396,61 +10476,48 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                                             }
                                                           }
                                                         >
-                                                          <Icon
-                                                            classPrefix="rs-icon"
-                                                            componentClass="i"
-                                                            icon="smile-o"
+                                                          <i
+                                                            className="rs-icon rs-icon-smile-o"
                                                             style={
                                                               Object {
                                                                 "minWidth": "15px",
                                                               }
                                                             }
-                                                          >
-                                                            <i
-                                                              className="rs-icon rs-icon-smile-o"
-                                                              style={
-                                                                Object {
-                                                                  "minWidth": "15px",
-                                                                }
-                                                              }
-                                                            />
-                                                          </Icon>
-                                                        </defaultProps(Icon)>
-                                                      </button>
-                                                    </ForwardRef>
+                                                          />
+                                                        </Icon>
+                                                      </defaultProps(Icon)>
+                                                    </button>
+                                                  </ForwardRef>
+                                                  <Portal
+                                                    key="portal"
+                                                  >
                                                     <Portal
-                                                      key="portal"
+                                                      containerInfo={<body />}
                                                     >
-                                                      <Portal
-                                                        containerInfo={<body />}
+                                                      <Overlay
+                                                        placement="top"
+                                                        rootClose={true}
+                                                        target={[Function]}
                                                       >
-                                                        <Overlay
+                                                        <BaseOverlay
                                                           placement="top"
                                                           rootClose={true}
-                                                          show={false}
                                                           target={[Function]}
-                                                        >
-                                                          <BaseOverlay
-                                                            placement="top"
-                                                            rootClose={true}
-                                                            show={false}
-                                                            target={[Function]}
-                                                            transition={
-                                                              Object {
-                                                                "$$typeof": Symbol(react.forward_ref),
-                                                                "displayName": "Fade",
-                                                                "render": [Function],
-                                                              }
+                                                          transition={
+                                                            Object {
+                                                              "$$typeof": Symbol(react.forward_ref),
+                                                              "displayName": "Fade",
+                                                              "render": [Function],
                                                             }
-                                                          />
-                                                        </Overlay>
-                                                      </Portal>
+                                                          }
+                                                        />
+                                                      </Overlay>
                                                     </Portal>
-                                                  </OverlayTrigger>
-                                                </Whisper>
-                                              </withLocale(Whisper)>
-                                            </ForwardRef>
-                                          </EditorSubMenuButton>
+                                                  </Portal>
+                                                </OverlayTrigger>
+                                              </Whisper>
+                                            </withLocale(Whisper)>
+                                          </ForwardRef>
                                         </div>
                                       </div>
                                     </div>
