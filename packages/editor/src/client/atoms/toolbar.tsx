@@ -9,9 +9,11 @@ import React, {
   ReactEventHandler
 } from 'react'
 
-import {Icon, Popover, PopoverProps, Whisper} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper, Divider} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
+
+import './toolbar.less'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
@@ -69,15 +71,9 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({active, children, ...props}, ref) => {
     return (
       <button
+        className="icon-button"
         style={{
-          border: `${active ? 'blue' : 'transparent'} 1px solid`,
-          fontSize: 16,
-
-          cursor: 'pointer',
-          borderRadius: 3,
-          backgroundColor: 'transparent',
-
-          padding: 2
+          border: `${active ? 'blue' : '#00000000'} 1px solid`
         }}
         ref={ref}
         {...props}>
@@ -166,20 +162,31 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
 )
 
 export function ToolbarDivider() {
+  return <Divider style={{height: '1.5em'}} vertical />
+}
+
+interface ControlsContainerProps {
+  children: ReactNode
+  dividerTop?: boolean
+  dividerBottom?: boolean
+}
+
+export function ControlsContainer({children, dividerTop, dividerBottom}: ControlsContainerProps) {
+  // TODO find rsuite component
   return (
-    <div
-      style={{
-        width: '1px',
-        alignSelf: 'stretch',
-
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 2,
-        marginBottom: 2,
-
-        backgroundColor: 'gray'
-      }}
-    />
+    <div style={{width: '100%'}}>
+      {dividerTop && <Divider />}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          width: '100%'
+        }}>
+        {children}
+      </div>
+      {dividerBottom && <Divider />}
+    </div>
   )
 }
 

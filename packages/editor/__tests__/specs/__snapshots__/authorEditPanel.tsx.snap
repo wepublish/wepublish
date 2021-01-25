@@ -950,11 +950,13 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       },
                                     ]
                                   }
+
                                 >
                                   <Toolbar
                                     fadeOut={true}
                                     onMouseDown={[Function]}
                                   >
+
                                     <div
                                       onMouseDown={[Function]}
                                       style={
@@ -971,6 +973,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                     >
                                       <div
                                         style={
+
                                           Object {
                                             "backgroundColor": "white",
                                             "borderRadius": 6,
@@ -988,6 +991,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                               "opacity": 0.5,
                                               "transitionDuration": "100ms",
                                               "transitionProperty": "opacity",
+
                                             }
                                           }
                                         >
@@ -4092,6 +4096,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                           "pointerEvents": "none",
                                           "position": "sticky",
                                           "zIndex": 1,
+
                                         }
                                       }
                                     >
