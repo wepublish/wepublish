@@ -91,17 +91,18 @@ const comments: Comments[] = [
 ]
 
 const Container = cssRule(() => ({
-  width: '400px',
+  width: '500px',
   margin: '0 auto'
 }))
 
 const CommentBox = cssRule(() => ({
-  marginBottom: '2em'
+  marginTop: '2em'
 }))
 
 const CommentInputField = cssRule(() => ({
   resize: 'none',
-  padding: '0.5em'
+  padding: '0.5em',
+  width: '100%'
 }))
 
 const CommentAuthor = cssRule(() => ({
@@ -134,12 +135,22 @@ const CommentRevisionMeta = cssRule(() => ({
   paddingTop: '1em'
 }))
 
-const editState = cssRule(() => ({
-  cursor: 'Pointer'
-}))
-
 const Flex = cssRule(() => ({
   display: 'flex'
+}))
+
+const Pointer = cssRule(() => ({
+  cursor: 'Pointer',
+  '&:hover': {
+    textDecoration: 'underline'
+  }
+}))
+
+const ReplyButton = cssRule(() => ({
+  margin: 0,
+  fontSize: '0.8em',
+  color: Color.SecondaryDark,
+  fontWeight: 'bold'
 }))
 
 const RightColumn = cssRule(() => ({
@@ -165,7 +176,6 @@ const Hide = cssRule(() => ({
 
 export interface ComposeCommentProps {
   readonly header?: string
-  readonly subheader?: string
   readonly parentCommentAuthor?: string
 }
 
@@ -174,19 +184,20 @@ export function ComposeComment(props: ComposeCommentProps) {
   return (
     <div className={css(Container)}>
       {props.header ? <h3>{props.header}</h3> : ''}
-      {props.parentCommentAuthor ? <p>Reply to {props.parentCommentAuthor}'s comment</p> : ''}
       <form>
         <p>
           <textarea
             maxLength={1000}
             rows={4}
             cols={50}
-            placeholder="Default Input"
+            placeholder="Start writing your comment"
             className={css(CommentInputField)}
           />
         </p>
         <p>
-          <BaseButton css={CommentButton}>Post comment</BaseButton>
+          <BaseButton css={props.parentCommentAuthor ? ReplyButton : CommentButton}>
+            {props.parentCommentAuthor ? 'Reply' : 'Post comment'}
+          </BaseButton>
         </p>
       </form>
     </div>
@@ -197,10 +208,8 @@ function Comment(props: any) {
   const css = useStyle()
 
   const [showRevisions, setShowRevisions] = useState(false)
-  const [showReplyForm, setShowReplyForm] = useState(false)
 
   const toggleRevisions = () => setShowRevisions(!showRevisions)
-  const toggleReplyForm = () => setShowReplyForm(!showReplyForm)
 
   return (
     <>
@@ -216,7 +225,7 @@ function Comment(props: any) {
               {props.comment.modifiedAt.toLocaleString('de-DE')}
             </span>{' '}
             ·{' '}
-            <span className={css(editState)} onClick={toggleRevisions}>
+            <span className={css(Pointer)} onClick={toggleRevisions}>
               {props.comment.revisions.length > 1 ? 'Edited' : ''}
             </span>
           </p>
@@ -224,7 +233,16 @@ function Comment(props: any) {
             {props.comment.revisions.slice(props.comment.revisions.length - 1)[0].text}
           </p>
           <p className={css(SmallFont)}>
-            <span onClick={toggleReplyForm}>Answer</span> | Report
+            <span
+              className={css(Pointer)}
+              onClick={() =>
+                props.handleCurrentComment(
+                  props.comment.id === props.activeComment ? '' : props.comment.id
+                )
+              }>
+              Answer
+            </span>{' '}
+            | Report
           </p>
           {props.comment.revisions
             .slice(0, props.comment.revisions.length - 1)
@@ -243,8 +261,12 @@ function Comment(props: any) {
             ))}
         </div>
       </div>
-      <div className={showReplyForm ? css(Display) : css(Hide)}>
-        <ComposeComment parentCommentAuthor={props.comment.userID} />
+      <div>
+        {props.activeComment === props.comment.id ? (
+          <ComposeComment parentCommentAuthor={props.comment.userID} />
+        ) : (
+          ''
+        )}
       </div>
     </>
   )
@@ -253,11 +275,20 @@ function Comment(props: any) {
 export function CommentList() {
   const css = useStyle()
 
+  const [commentID, setCommentID] = useState('')
+
   return (
     <div className={css(Container, CommentBox)}>
-      <h3>Alle Kommentare</h3>
+      <h3>Show all comments</h3>
       {comments.map(comment => (
-        <Comment comment={comment} key={comment.id} />
+        <Comment
+          comment={comment}
+          key={comment.id}
+          handleCurrentComment={(commentID: React.SetStateAction<string>) =>
+            setCommentID(commentID)
+          }
+          activeComment={commentID}
+        />
       ))}
     </div>
   )
