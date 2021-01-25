@@ -5,7 +5,7 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon} from '../../atoms/toolbar'
+import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
@@ -97,9 +97,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <EditorSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
-          <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
-        </EditorSubMenuButton>
+        <SubMenuButton icon="smile-o">
+          <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+        </SubMenuButton>
       </Toolbar>
       {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
         <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
