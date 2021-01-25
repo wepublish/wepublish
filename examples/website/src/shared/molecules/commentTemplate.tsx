@@ -1,9 +1,7 @@
 import {cssRule, useStyle} from '@karma.run/react'
 import React, {useState} from 'react'
-// import { createPortal } from 'react-dom'
+import {BaseButton} from '../atoms/baseButton'
 import {Image} from '../atoms/image'
-import {PrimaryButton} from '../atoms/primaryButton'
-// import usePortal from '../atoms/usePortal'
 import {Color} from '../style/colors'
 
 interface Comments {
@@ -120,6 +118,15 @@ const CommentBody = cssRule(() => ({
   fontSize: '0.9em'
 }))
 
+const CommentButton = cssRule(() => ({
+  margin: 0,
+  fontSize: '0.9em',
+  color: '#FFFFFF',
+  backgroundColor: '#000000',
+  padding: '0.5em 1em',
+  fontWeight: 'bold'
+}))
+
 const CommentRevisionMeta = cssRule(() => ({
   borderTop: `1px solid ${Color.Neutral}`,
   fontSize: '0.8em',
@@ -140,15 +147,34 @@ const RightColumn = cssRule(() => ({
   width: '100%'
 }))
 
+const SmallFont = cssRule(() => ({
+  fontSize: '0.8em'
+}))
+
 const Timestamp = cssRule(() => ({
   color: Color.Neutral
 }))
 
-export function ComposeComment() {
+const Display = cssRule(() => ({
+  display: 'block'
+}))
+
+const Hide = cssRule(() => ({
+  display: 'none'
+}))
+
+export interface ComposeCommentProps {
+  readonly header?: string
+  readonly subheader?: string
+  readonly parentCommentAuthor?: string
+}
+
+export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
   return (
     <div className={css(Container)}>
-      <h3>Kommentar verfassen</h3>
+      {props.header ? <h3>{props.header}</h3> : ''}
+      {props.parentCommentAuthor ? <p>Reply to {props.parentCommentAuthor}'s comment</p> : ''}
       <form>
         <p>
           <textarea
@@ -160,7 +186,7 @@ export function ComposeComment() {
           />
         </p>
         <p>
-          <PrimaryButton text="Kommentar posten" />
+          <BaseButton css={CommentButton}>Post comment</BaseButton>
         </p>
       </form>
     </div>
@@ -171,42 +197,56 @@ function Comment(props: any) {
   const css = useStyle()
 
   const [showRevisions, setShowRevisions] = useState(false)
+  const [showReplyForm, setShowReplyForm] = useState(false)
 
-  const togglerTrueFalse = () => setShowRevisions(!showRevisions)
+  const toggleRevisions = () => setShowRevisions(!showRevisions)
+  const toggleReplyForm = () => setShowReplyForm(!showReplyForm)
 
   return (
-    <div className={css(Flex, CommentBox)} id={props.comment.id}>
-      <div className="leftColumn" style={{width: 60}}>
-        <Image src={'../../../static/icons/avatar.jpg'} />
+    <>
+      <div className={css(Flex, CommentBox)} id={props.comment.id}>
+        <div className="leftColumn" style={{width: 60}}>
+          <Image src={'../../../static/icons/avatar.jpg'} />
+        </div>
+        <div className={css(RightColumn)}>
+          <h4 className={css(CommentAuthor)}>{props.comment.userID}</h4>
+          <p className={css(CommentMeta)}>
+            <span>{props.comment.authorType}</span> ·{' '}
+            <span className={css(Timestamp)}>
+              {props.comment.modifiedAt.toLocaleString('de-DE')}
+            </span>{' '}
+            ·{' '}
+            <span className={css(editState)} onClick={toggleRevisions}>
+              {props.comment.revisions.length > 1 ? 'Edited' : ''}
+            </span>
+          </p>
+          <p className={css(CommentBody)}>
+            {props.comment.revisions.slice(props.comment.revisions.length - 1)[0].text}
+          </p>
+          <p className={css(SmallFont)}>
+            <span onClick={toggleReplyForm}>Answer</span> | Report
+          </p>
+          {props.comment.revisions
+            .slice(0, props.comment.revisions.length - 1)
+            .reverse()
+            .map((revision: GraphQLCommentRevision, index: number) => (
+              <div
+                className={showRevisions ? css(Display) : css(Hide)}
+                key={`comment${props.comment.id}-revision${index.toString()}`}>
+                <p className={css(CommentRevisionMeta)}>
+                  <span className={css(Timestamp)}>
+                    {revision.createdAt.toLocaleString('de-DE')}
+                  </span>
+                </p>
+                <p className={css(CommentBody)}>{revision.text}</p>
+              </div>
+            ))}
+        </div>
       </div>
-      <div className={css(RightColumn)}>
-        <h4 className={css(CommentAuthor)}>{props.comment.userID}</h4>
-        <p className={css(CommentMeta)}>
-          <span>{props.comment.authorType}</span> ·{' '}
-          <span className={css(Timestamp)}>{props.comment.modifiedAt.toLocaleString('de-DE')}</span>{' '}
-          ·{' '}
-          <span className={css(editState)} onClick={togglerTrueFalse}>
-            {props.comment.revisions.length > 1 ? 'Edited' : ''}
-          </span>
-        </p>
-        <p className={css(CommentBody)}>
-          {props.comment.revisions.slice(props.comment.revisions.length - 1)[0].text}
-        </p>
-        {props.comment.revisions
-          .slice(0, props.comment.revisions.length - 1)
-          .reverse()
-          .map((revision: GraphQLCommentRevision, index: number) => (
-            <div
-              style={{display: showRevisions ? 'block' : 'none'}}
-              key={`comment${props.comment.id}-revision${index.toString()}`}>
-              <p className={css(CommentRevisionMeta)}>
-                <span className={css(Timestamp)}>{revision.createdAt.toLocaleString('de-DE')}</span>
-              </p>
-              <p className={css(CommentBody)}>{revision.text}</p>
-            </div>
-          ))}
+      <div className={showReplyForm ? css(Display) : css(Hide)}>
+        <ComposeComment parentCommentAuthor={props.comment.userID} />
       </div>
-    </div>
+    </>
   )
 }
 
