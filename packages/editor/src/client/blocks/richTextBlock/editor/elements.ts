@@ -10,7 +10,7 @@ export interface TableCell extends SlateElement {
   borderColor: string
 }
 
-export const defaultBorderColor: TableCell['borderColor'] = 'black'
+export const DEFAULT_BORDER_COLOR: TableCell['borderColor'] = '#000000'
 
 export function emptyCellsTable(nrows: number, ncols: number): SlateElement[] {
   return [
@@ -21,7 +21,7 @@ export function emptyCellsTable(nrows: number, ncols: number): SlateElement[] {
         children: Array.from({length: ncols}).map(
           (): TableCell => ({
             type: BlockFormat.TableCell,
-            borderColor: defaultBorderColor,
+            borderColor: DEFAULT_BORDER_COLOR,
             //     // Wrap all content inside cell into paragraph block to enable break lines.
             children: [emptyTextParagraph()]
           })
