@@ -9,6 +9,7 @@ export enum ErrorCode {
   NotAuthorised = 'NOT_AUTHORISED',
   UserNotActive = 'USER_NOT_ACTIVE',
   NotFound = 'NOT_FOUND',
+  EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
   MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED'
 }
@@ -58,6 +59,12 @@ export class NotActiveError extends ApolloError {
 export class NotFound extends ApolloError {
   constructor(model: string, id: string) {
     super(`${model} with ID: ${id} not found`, ErrorCode.NotFound)
+  }
+}
+
+export class EmailAlreadyInUseError extends ApolloError {
+  constructor() {
+    super(`Email already in use`, ErrorCode.EmailAlreadyInUse)
   }
 }
 

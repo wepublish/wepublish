@@ -76,5 +76,7 @@ export interface DBInvoiceAdapter {
   deleteInvoice(args: DeleteInvoiceArgs): Promise<string | null>
 
   getInvoicesByID(ids: readonly string[]): Promise<OptionalInvoice[]>
+  getInvoicesByUserID(userID: string): Promise<OptionalInvoice[]>
+
   getInvoices(args: GetInvoicesArgs): Promise<ConnectionResult<Invoice>>
 }

@@ -62,6 +62,30 @@ export const GraphQLInvoice = new GraphQLObjectType<Invoice, Context>({
   }
 })
 
+export const GraphQLPublicInvoice = new GraphQLObjectType<Invoice, Context>({
+  name: 'Invoice',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+
+    mail: {type: GraphQLNonNull(GraphQLString)},
+
+    description: {type: GraphQLString},
+    paidAt: {type: GraphQLDateTime},
+    items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
+    total: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: createProxyingResolver(({items}) => {
+        return items.reduce((previousValue, currentValue) => {
+          return previousValue + currentValue.quantity * currentValue.amount
+        }, 0)
+      })
+    }
+  }
+})
+
 export const GraphQLinvoiceFilter = new GraphQLInputObjectType({
   name: 'InvoiceFilter',
   fields: {

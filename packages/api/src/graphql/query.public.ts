@@ -1,4 +1,4 @@
-import {GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLObjectType} from 'graphql'
+import {GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType} from 'graphql'
 import {Context} from '../context'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLSlug} from './slug'
@@ -35,6 +35,8 @@ import {
   GraphQLPublicMemberPlanConnection
 } from './memberPlan'
 import {MemberPlanSort} from '../db/memberPlan'
+import {GraphQLPublicUser} from './user'
+import {GraphQLPublicInvoice} from './invoice'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -222,6 +224,25 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // User
+    // ====
+
+    me: {
+      type: GraphQLPublicUser,
+      resolve(root, args, {session}) {
+        return session?.type === SessionType.User ? session.user : null
+      }
+    },
+
+    invoices: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
+      resolve(root, {}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+
+        return dbAdapter.invoice.getInvoicesByUserID(user.id)
       }
     },
 
