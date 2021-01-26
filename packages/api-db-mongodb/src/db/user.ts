@@ -1,31 +1,31 @@
 import bcrypt from 'bcrypt'
 
 import {
-  DBUserAdapter,
-  CreateUserArgs,
-  User,
-  OptionalUser,
-  GetUserForCredentialsArgs,
-  SortOrder,
-  UpdateUserArgs,
-  DeleteUserArgs,
-  ResetUserPasswordArgs,
-  GetUsersArgs,
   ConnectionResult,
-  LimitType,
-  InputCursorType,
-  UserSort,
-  OptionalUserSubscription,
-  UpdateUserSubscriptionArgs,
-  DeleteUserSubscriptionArgs,
-  UpdatePaymentProviderCustomerArgs,
+  CreateUserArgs,
   CreateUserSubscriptionPeriodArgs,
-  DeleteUserSubscriptionPeriodArgs
+  DBUserAdapter,
+  DeleteUserArgs,
+  DeleteUserSubscriptionArgs,
+  DeleteUserSubscriptionPeriodArgs,
+  GetUserForCredentialsArgs,
+  GetUsersArgs,
+  InputCursorType,
+  LimitType,
+  OptionalUser,
+  OptionalUserSubscription,
+  ResetUserPasswordArgs,
+  SortOrder,
+  UpdatePaymentProviderCustomerArgs,
+  UpdateUserArgs,
+  UpdateUserSubscriptionArgs,
+  User,
+  UserSort
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
 
-import {DBUser, CollectionName} from './schema'
+import {CollectionName, DBUser} from './schema'
 import {MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
@@ -76,6 +76,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
         preferredName: user.preferredName,
@@ -143,6 +145,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     return users.map(user => {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
         preferredName: user.preferredName,
@@ -163,6 +167,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user && (await bcrypt.compare(password, user.password))) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
         preferredName: user.preferredName,
@@ -184,6 +190,8 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
         preferredName: user.preferredName,
@@ -239,6 +247,16 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (filter?.name !== undefined) {
       textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
     }
+
+    if (filter?.text !== undefined) {
+      textFilter.$and?.push({
+        $or: [
+          {name: {$regex: filter.text, $options: 'im'}},
+          {email: {$regex: filter.text, $options: 'im'}}
+        ]
+      })
+    }
+
     if (filter?.subscription !== undefined) {
       textFilter.$and?.push({subscription: {$exists: true}})
     }
@@ -278,6 +296,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
@@ -465,6 +484,9 @@ function userSortFieldForSort(sort: UserSort) {
 
     case UserSort.ModifiedAt:
       return 'modifiedAt'
+
+    case UserSort.Name:
+      return 'name'
   }
 }
 
@@ -475,5 +497,8 @@ function userDateForSort(user: DBUser, sort: UserSort): Date {
 
     case UserSort.ModifiedAt:
       return user.modifiedAt
+
+    case UserSort.Name:
+      return user.createdAt
   }
 }

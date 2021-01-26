@@ -1240,6 +1240,7 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserFilter>;
   sort?: Maybe<UserSort>;
   order?: Maybe<SortOrder>;
@@ -1589,6 +1590,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
   subscription?: Maybe<UserSubscriptionFilter>;
 };
 
@@ -1635,7 +1637,8 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type UserSubscription = {
@@ -2988,7 +2991,7 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
     & Pick<UserAddress, 'street' | 'zipCode' | 'city' | 'country'>
@@ -3010,6 +3013,9 @@ export type UserListQueryVariables = Exact<{
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<UserSort>;
 }>;
 
 
@@ -3670,6 +3676,8 @@ ${FullPaymentMethodFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
+  createdAt
+  modifiedAt
   name
   preferredName
   address {
@@ -5642,8 +5650,8 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+  users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }
@@ -5675,6 +5683,9 @@ export const UserListDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

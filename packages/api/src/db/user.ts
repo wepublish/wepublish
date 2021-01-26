@@ -33,8 +33,16 @@ export interface GetUserForCredentialsArgs {
 }
 
 export enum UserSort {
-  CreatedAt = 'modifiedAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
+}
+
+export interface UserSubscriptionFilter {
+  readonly startsAt?: DateFilter
+  readonly paidUntil?: DateFilter
+  readonly deactivatedAt?: DateFilter
+  readonly autoRenew?: boolean
 }
 
 export interface UserSubscriptionFilter {
@@ -46,12 +54,21 @@ export interface UserSubscriptionFilter {
 
 export interface UserFilter {
   readonly name?: string
+  readonly text?: string
   readonly subscription?: UserSubscriptionFilter
 }
 
 export interface UserSubscriptionPeriod {
   readonly id: string
   readonly createdAt: Date
+  readonly startsAt: Date
+  readonly endsAt: Date
+  readonly paymentPeriodicity: PaymentPeriodicity
+  readonly amount: number
+  readonly invoiceID: string
+}
+
+export interface UserSubscriptionPeriodInput {
   readonly startsAt: Date
   readonly endsAt: Date
   readonly paymentPeriodicity: PaymentPeriodicity
@@ -123,6 +140,8 @@ export interface UserAddress {
 
 export interface User {
   readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
   readonly name: string
   readonly preferredName?: string
   readonly email: string

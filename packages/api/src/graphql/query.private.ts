@@ -239,13 +239,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
         filter: {type: GraphQLUserFilter},
         sort: {type: GraphQLUserSort, defaultValue: UserSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       async resolve(
         root,
-        {filter, sort, order, after, before, first, last},
+        {filter, sort, order, after, before, first, skip, last},
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
@@ -256,7 +257,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           sort,
           order,
           cursor: InputCursor(after, before),
-          limit: Limit(first, last)
+          limit: Limit(first, last, skip)
         })
       }
     },

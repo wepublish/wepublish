@@ -135,7 +135,10 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
   name: 'UserFilter',
   fields: {
     name: {type: GraphQLString},
+    text: {type: GraphQLString},
     subscription: {type: GraphQLUserSubscriptionFilter}
+    /* hasSubscription: {type: GraphQLBoolean}, // TODO: implement filters
+    rolesIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))} */
   }
 })
 
@@ -143,7 +146,8 @@ export const GraphQLUserSort = new GraphQLEnumType({
   name: 'UserSort',
   values: {
     CREATED_AT: {value: UserSort.CreatedAt},
-    MODIFIED_AT: {value: UserSort.ModifiedAt}
+    MODIFIED_AT: {value: UserSort.ModifiedAt},
+    NAME: {value: UserSort.Name}
   }
 })
 
