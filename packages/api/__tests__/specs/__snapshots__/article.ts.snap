@@ -12,6 +12,7 @@ Object {
       "id": Any<String>,
       "latest": Object {
         "breaking": true,
+        "hideAuthor": false,
         "lead": "This article will rock your world. Never has there been a better article",
         "preTitle": "Testing GraphQL",
         "properties": Array [
@@ -74,6 +75,7 @@ Object {
       "id": Any<String>,
       "latest": Object {
         "breaking": true,
+        "hideAuthor": false,
         "lead": "This article will rock your world. Never has there been a better article",
         "preTitle": "Testing GraphQL",
         "properties": Array [
@@ -215,11 +217,32 @@ Object {
     "articles": Object {
       "nodes": Array [
         Object {
+          "authors": Array [],
           "id": Any<String>,
           "image": null,
           "lead": "This article will rock your world. Never has there been a better article",
           "preTitle": "Testing GraphQL",
           "publishedAt": "2020-11-25T23:55:35.000Z",
+          "socialMediaAuthors": Array [],
+          "socialMediaDescription": "A social media description",
+          "socialMediaTitle": "A social media title",
+          "tags": Array [
+            "testing",
+            "awesome",
+          ],
+          "title": "This is the best test article",
+          "updatedAt": "2020-11-25T23:55:35.000Z",
+        },
+        Object {
+          "authors": Array [],
+          "id": Any<String>,
+          "image": null,
+          "lead": "This article will rock your world. Never has there been a better article",
+          "preTitle": "Testing GraphQL",
+          "publishedAt": "2020-11-25T23:55:35.000Z",
+          "socialMediaAuthors": Array [],
+          "socialMediaDescription": "A social media description",
+          "socialMediaTitle": "A social media title",
           "tags": Array [
             "testing",
             "awesome",
@@ -234,7 +257,7 @@ Object {
         "hasPreviousPage": false,
         "startCursor": Any<String>,
       },
-      "totalCount": 1,
+      "totalCount": 2,
     },
   },
   "errors": undefined,
@@ -341,6 +364,7 @@ Object {
       "id": Any<String>,
       "latest": Object {
         "breaking": true,
+        "hideAuthor": false,
         "lead": "This article will rock your world. Never has there been a better article",
         "preTitle": "Testing GraphQL",
         "properties": Array [
@@ -392,6 +416,7 @@ Object {
       "id": Any<String>,
       "latest": Object {
         "breaking": true,
+        "hideAuthor": true,
         "lead": "This updated article will rock your world. Never has there been a better article",
         "preTitle": "Testing GraphQL",
         "properties": Array [
@@ -420,6 +445,36 @@ Object {
       "pending": null,
       "published": null,
       "shared": false,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Articles can be created/edited/deleted: can hide authors 1`] = `
+Object {
+  "data": Object {
+    "article": Object {
+      "authors": Array [],
+      "blocks": Array [],
+      "breaking": true,
+      "id": Any<String>,
+      "image": null,
+      "lead": "test lead",
+      "preTitle": null,
+      "properties": Array [],
+      "publishedAt": "2020-11-25T23:55:35.000Z",
+      "slug": "hidden",
+      "tags": Array [],
+      "title": "Hide Authors",
+      "updatedAt": "2020-11-25T23:55:35.000Z",
+      "url": Any<String>,
     },
   },
   "errors": undefined,

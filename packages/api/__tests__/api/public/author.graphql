@@ -36,5 +36,6 @@ query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: I
 query Author($id: ID, $slug: Slug) {
   author(id: $id, slug: $slug) {
     ...FullAuthor
+    url
   }
 }

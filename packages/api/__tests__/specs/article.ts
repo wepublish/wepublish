@@ -9,13 +9,17 @@ import {
   UpdateArticle,
   DeleteArticle,
   PublishArticle,
-  UnpublishArticle
+  UnpublishArticle,
+  AuthorInput,
+  CreateAuthor
 } from '../api/private'
 import {Article as PublicArticle, ArticleList as ArticleListPublic} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
 let dbAdapter: MongoDBAdapter
+
+let authorId: string
 
 beforeAll(async () => {
   try {
@@ -30,6 +34,22 @@ beforeAll(async () => {
 
     throw new Error('Error during test setup')
   }
+
+  //create Author
+  const {mutate} = testClientPrivate
+  const authorInput: AuthorInput = {
+    name: 'Tony Stark',
+    slug: 't-stark',
+    links: [],
+    bio: []
+  }
+  const res = await mutate({
+    mutation: CreateAuthor,
+    variables: {
+      input: authorInput
+    }
+  })
+  authorId = res.data?.createAuthor.id
 })
 
 describe('Articles', () => {
@@ -149,64 +169,6 @@ describe('Articles', () => {
       })
     })
 
-    test('can be read by id - published', async () => {
-      //publish article
-      const {mutate} = testClientPrivate
-      await mutate({
-        mutation: PublishArticle,
-        variables: {
-          id: articleIds[0],
-          publishAt: '2020-11-25T23:55:35.000Z',
-          publishedAt: '2020-11-25T23:55:35.000Z',
-          updatedAt: '2020-11-25T23:55:35.000Z'
-        }
-      })
-      //read published
-      const {query} = testClientPublic
-      const article = await query({
-        query: PublicArticle,
-        variables: {
-          id: articleIds[0]
-        }
-      })
-
-      expect(article).toMatchSnapshot({
-        data: {
-          article: {
-            id: expect.any(String),
-            url: expect.any(String)
-          }
-        }
-      })
-      expect(article.data?.article.id).toBe(articleIds[0])
-      expect(article.data?.article.url).toContain(articleIds[0])
-    })
-
-    test('can be read in list - published', async () => {
-      const {query} = testClientPublic
-      const articles = await query({
-        query: ArticleListPublic,
-        variables: {
-          first: 100
-        }
-      })
-      expect(articles).toMatchSnapshot({
-        data: {
-          articles: {
-            nodes: [
-              {
-                id: expect.any(String)
-              }
-            ],
-            pageInfo: {
-              endCursor: expect.any(String),
-              startCursor: expect.any(String)
-            }
-          }
-        }
-      })
-    })
-
     test('can be updated', async () => {
       const {mutate} = testClientPrivate
       const updatedArticle = await mutate({
@@ -221,12 +183,12 @@ describe('Articles', () => {
             lead:
               'This updated article will rock your world. Never has there been a better article',
             preTitle: 'Testing GraphQL',
-            hideAuthor: false,
+            hideAuthor: true,
             properties: [
               {key: 'testingKey', value: 'testingValue', public: true},
               {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
             ],
-            authorIDs: [],
+            authorIDs: [authorId],
             socialMediaTitle: 'A new social media title',
             socialMediaAuthorIDs: [],
             socialMediaDescription: 'A new social media description',
@@ -280,6 +242,113 @@ describe('Articles', () => {
           }
         }
       })
+    })
+
+    test('can be read by id - published', async () => {
+      //publish article
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishArticle,
+        variables: {
+          id: articleIds[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      //read published
+      const {query} = testClientPublic
+      const article = await query({
+        query: PublicArticle,
+        variables: {
+          id: articleIds[0]
+        }
+      })
+      expect(article).toMatchSnapshot({
+        data: {
+          article: {
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+    })
+
+    test('can be read in list - published', async () => {
+      const {query} = testClientPublic
+      const articles = await query({
+        query: ArticleListPublic,
+        variables: {
+          first: 100
+        }
+      })
+      expect(articles).toMatchSnapshot({
+        data: {
+          articles: {
+            nodes: Array.from({length: 2}, () => ({
+              id: expect.any(String)
+            })),
+            pageInfo: {
+              endCursor: expect.any(String),
+              startCursor: expect.any(String)
+            }
+          }
+        }
+      })
+    })
+
+    test('can hide authors', async () => {
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: UpdateArticle,
+        variables: {
+          input: {
+            title: 'Hide Authors',
+            slug: 'hidden',
+            shared: false,
+            tags: [],
+            breaking: true,
+            lead: 'test lead',
+            hideAuthor: true,
+            properties: [],
+            authorIDs: [authorId],
+            socialMediaTitle: 'A new social media title',
+            socialMediaAuthorIDs: [],
+            socialMediaDescription: 'A new social media description',
+            socialMediaImageID: '',
+            blocks: []
+          },
+          id: articleIds[0]
+        }
+      })
+      //publish
+      await mutate({
+        mutation: PublishArticle,
+        variables: {
+          id: articleIds[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+
+      //read published
+      const {query} = testClientPublic
+      const article = await query({
+        query: PublicArticle,
+        variables: {
+          id: articleIds[0]
+        }
+      })
+      expect(article).toMatchSnapshot({
+        data: {
+          article: {
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+      expect(article.data?.article.authors.length).toBe(0)
     })
 
     test('can be deleted', async () => {

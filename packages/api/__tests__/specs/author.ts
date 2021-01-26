@@ -118,7 +118,9 @@ describe('Authors', () => {
       const res = await query({
         query: AuthorList,
         variables: {
-          first: 100
+          first: 100,
+          sort: 'MODIFIED_AT',
+          order: 'DESCENDING'
         }
       })
       expect(res).toMatchSnapshot({
@@ -226,6 +228,40 @@ describe('Authors', () => {
         }
       })
       expect(res).toMatchSnapshot()
+    })
+
+    test('will reject invalid slug', async () => {
+      const {mutate} = testClientPrivate
+      let res = await mutate({
+        mutation: CreateAuthor,
+        variables: {
+          input: {
+            name: 'John Grisham',
+            slug: 123,
+            links: [],
+            bio: []
+          }
+        }
+      })
+      expect(res).toMatchSnapshot()
+      expect(res.data).toBeUndefined()
+      expect(res?.errors?.[0].message).toBe(
+        'Variable "$input" got invalid value 123 at "input.slug"; Expected type Slug. '
+      )
+
+      res = await mutate({
+        mutation: CreateAuthor,
+        variables: {
+          input: {
+            name: 'John Grisham',
+            links: [],
+            bio: []
+          }
+        }
+      })
+      expect(res?.errors?.[0].message).toBe(
+        'Variable "$input" got invalid value { name: "John Grisham", links: [], bio: [] }; Field slug of required type Slug! was not provided.'
+      )
     })
   })
 })

@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tokens can be created/updated/edited/deleted: can be created 1`] = `
+Object {
+  "data": Object {
+    "createToken": Object {
+      "id": Any<String>,
+      "name": "New Create Token",
+      "token": Any<String>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Tokens can be created/updated/edited/deleted: can be deleted 1`] = `
+Object {
+  "data": Object {
+    "deleteToken": Any<String>,
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Tokens can be created/updated/edited/deleted: can be read in list 1`] = `
+Object {
+  "data": Object {
+    "tokens": Array [
+      Object {
+        "id": Any<String>,
+        "name": "Test Token Name 2",
+      },
+      Object {
+        "id": Any<String>,
+        "name": "New Create Token",
+      },
+      Object {
+        "id": Any<String>,
+        "name": "Test Token Name 0",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

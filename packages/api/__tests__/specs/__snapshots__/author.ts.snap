@@ -147,6 +147,7 @@ Object {
       ],
       "name": "John Grisham",
       "slug": "john-grisham",
+      "url": "https://demo.wepublish.ch/author/john-grisham",
     },
   },
   "errors": undefined,
@@ -337,6 +338,21 @@ Object {
   },
   "errors": Array [
     [GraphQLError: You must provide either \`id\` or \`slug\`.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Authors can be created/edited/deleted: will reject invalid slug 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [GraphQLError: Variable "$input" got invalid value 123 at "input.slug"; Expected type Slug. ],
   ],
   "extensions": undefined,
   "http": Object {

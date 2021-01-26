@@ -1,4 +1,4 @@
-fragment ArticleRef on Article {
+fragment ArticleRefPublic on Article {
     id
     publishedAt
     updatedAt
@@ -6,6 +6,15 @@ fragment ArticleRef on Article {
     preTitle
     title
     lead
+    authors {
+        ...AuthorRef
+    }
+    socialMediaAuthors {
+        id
+        name
+    }
+    socialMediaTitle
+    socialMediaDescription
     image {
         ...ImageRef
     }
@@ -14,7 +23,7 @@ fragment ArticleRef on Article {
 query ArticleList($filter: [String!], $after: ID, $first: Int) {
     articles(first: $first, after: $after, filter: {tags: $filter}) {
         nodes {
-            ...ArticleRef
+            ...ArticleRefPublic
         }
 
         pageInfo {
@@ -53,7 +62,7 @@ query Article($id: ID!) {
         }
         breaking
         blocks {
-            ...FullBlock
+            ...FullBlockPublic
         }
     }
 }
@@ -81,7 +90,7 @@ query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
         }
         breaking
         blocks {
-            ...FullBlock
+            ...FullBlockPublic
         }
     }
 }

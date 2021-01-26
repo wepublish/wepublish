@@ -30,8 +30,8 @@ query NavigationList {
   }
 }
 
-query Navigation($id: ID!) {
-  navigation(id: $id) {
+query Navigation($id: ID, $key: ID) {
+  navigation(id: $id, key: $key) {
     ...FullNavigation
   }
 }

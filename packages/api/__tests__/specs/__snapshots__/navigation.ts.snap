@@ -35,12 +35,12 @@ Object {
 }
 `;
 
-exports[`Navigations can be created/edited/deleted: can be read by id 1`] = `
+exports[`Navigations can be created/edited/deleted: can be read by id - public 1`] = `
 Object {
   "data": Object {
     "navigation": Object {
       "id": Any<String>,
-      "key": "TestKey3",
+      "key": "TestKey6",
       "links": Array [
         Object {
           "__typename": "ExternalNavigationLink",
@@ -58,7 +58,63 @@ Object {
           "page": null,
         },
       ],
-      "name": "Test 3",
+      "name": "Test 6",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be read by id 1`] = `
+Object {
+  "data": Object {
+    "navigation": Object {
+      "id": Any<String>,
+      "key": "TestKey4",
+      "links": Array [
+        Object {
+          "__typename": "ExternalNavigationLink",
+          "label": "External Label",
+          "url": "linkurl.ch/",
+        },
+        Object {
+          "__typename": "ArticleNavigationLink",
+          "article": null,
+          "label": "Article Label",
+        },
+        Object {
+          "__typename": "PageNavigationLink",
+          "label": "Page Label",
+          "page": null,
+        },
+      ],
+      "name": "Test 4",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: can be read by key 1`] = `
+Object {
+  "data": Object {
+    "navigation": Object {
+      "id": Any<String>,
+      "key": "createNavKey321",
+      "links": Any<Array>,
+      "name": "Create Navigation Name",
     },
   },
   "errors": undefined,
@@ -75,6 +131,12 @@ exports[`Navigations can be created/edited/deleted: can be read in list 1`] = `
 Object {
   "data": Object {
     "navigations": Array [
+      Object {
+        "id": Any<String>,
+        "key": "TestKey3",
+        "links": Any<Array>,
+        "name": "Test 3",
+      },
       Object {
         "id": Any<String>,
         "key": "TestKey2",
@@ -132,6 +194,55 @@ Object {
     },
   },
   "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: will reject input without links 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [GraphQLError: Variable "$input" got invalid value { name: "No Link Nav", key: "createNavNoLinkKey321" }; Field links of required type [NavigationLinkInput!]! was not provided.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: will reject request without ID or key 1`] = `
+Object {
+  "data": Object {
+    "navigation": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must provide either \`id\` or \`key\`.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Navigations can be created/edited/deleted: will reject request without ID or key 2`] = `
+Object {
+  "data": Object {
+    "navigation": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must provide either \`id\` or \`key\`.],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

@@ -39,7 +39,7 @@ exports[`Users can be created/updated/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
     "user": Object {
-      "email": "bwayne@mymail3.com",
+      "email": "bwayne@mymail4.com",
       "id": Any<String>,
       "name": "Bruce Wayne",
       "roles": Array [],
@@ -372,9 +372,10 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 1`
 Object {
   "data": Object {
     "createSession": Object {
+      "id": Any<String>,
       "token": Any<String>,
       "user": Object {
-        "email": "bwayne@mymail5.com",
+        "email": "bwayne@mymail6.com",
       },
     },
   },
@@ -392,7 +393,7 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 2`
 Object {
   "data": Object {
     "resetUserPassword": Object {
-      "email": "bwayne@mymail5.com",
+      "email": "bwayne@mymail6.com",
       "id": Any<String>,
       "name": "Bruce Wayne",
       "roles": Array [],
@@ -412,13 +413,29 @@ exports[`Users can be created/updated/edited/deleted: can reset user password 3`
 Object {
   "data": Object {
     "createSession": Object {
+      "id": Any<String>,
       "token": Any<String>,
       "user": Object {
-        "email": "bwayne@mymail5.com",
+        "email": "bwayne@mymail6.com",
       },
     },
   },
   "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Users can be created/updated/edited/deleted: will reject list query without first or last numbers 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: You must provide either \`first\` or \`last\`.],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

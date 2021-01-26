@@ -11,7 +11,7 @@ import {
   UnpublishPage,
   DeletePage
 } from '../api/private'
-import {Page as PublicPage} from '../api/public'
+import {Page as PublicPage, PageList as PublicPageList} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -340,10 +340,13 @@ describe('Pages', () => {
       expect(res).toMatchSnapshot({
         data: {
           page: {
-            id: expect.any(String)
+            id: expect.any(String),
+            url: expect.any(String)
           }
         }
       })
+      expect(res.data?.page.id).toBe(ids[0])
+      expect(res.data?.page.url).toBe(`https://demo.wepublish.ch/page/${ids[0]}/testing-page`)
     })
 
     test('can be read by slug - published', async () => {
@@ -367,7 +370,37 @@ describe('Pages', () => {
       expect(res).toMatchSnapshot({
         data: {
           page: {
-            id: expect.any(String)
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.page.id).toBe(ids[0])
+      expect(res.data?.page.url).toBe(`https://demo.wepublish.ch/page/${ids[0]}/testing-page`)
+    })
+
+    //can be read in list -published
+    test('can be read in list - published', async () => {
+      const {query} = testClientPublic
+
+      const res = await query({
+        query: PublicPageList,
+        variables: {
+          first: 10
+        }
+      })
+
+      expect(res).toMatchSnapshot({
+        data: {
+          pages: {
+            nodes: Array.from({length: 3}, () => ({
+              id: expect.any(String),
+              url: expect.any(String)
+            })),
+            pageInfo: {
+              endCursor: expect.any(String),
+              startCursor: expect.any(String)
+            }
           }
         }
       })

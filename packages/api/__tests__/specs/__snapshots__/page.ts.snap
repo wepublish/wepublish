@@ -231,6 +231,7 @@ Object {
       ],
       "title": "Testing Page",
       "updatedAt": "2020-11-25T23:55:35.000Z",
+      "url": Any<String>,
     },
   },
   "errors": undefined,
@@ -311,6 +312,59 @@ Object {
       ],
       "title": "Testing Page",
       "updatedAt": "2020-11-25T23:55:35.000Z",
+      "url": Any<String>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can be read in list - published 1`] = `
+Object {
+  "data": Object {
+    "pages": Object {
+      "nodes": Array [
+        Object {
+          "description": null,
+          "id": Any<String>,
+          "image": null,
+          "publishedAt": "2020-11-25T23:55:35.000Z",
+          "title": "Testing Page",
+          "updatedAt": "2020-11-25T23:55:35.000Z",
+          "url": Any<String>,
+        },
+        Object {
+          "description": null,
+          "id": Any<String>,
+          "image": null,
+          "publishedAt": "2020-11-25T23:55:35.000Z",
+          "title": "Testing Page",
+          "updatedAt": "2020-11-25T23:55:35.000Z",
+          "url": Any<String>,
+        },
+        Object {
+          "description": null,
+          "id": Any<String>,
+          "image": null,
+          "publishedAt": "2020-11-25T23:55:35.000Z",
+          "title": "Testing Page",
+          "updatedAt": "2020-11-25T23:55:35.000Z",
+          "url": Any<String>,
+        },
+      ],
+      "pageInfo": Object {
+        "endCursor": Any<String>,
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": Any<String>,
+      },
+      "totalCount": 3,
     },
   },
   "errors": undefined,

@@ -1,4 +1,4 @@
-fragment PageRef on Page {
+fragment PageRefPublic on Page {
   id
   publishedAt
   updatedAt
@@ -7,12 +7,13 @@ fragment PageRef on Page {
   image {
     ...ImageRef
   }
+  url
 }
 
 query PageList($filter: [String!], $after: ID, $first: Int) {
   pages(first: $first, after: $after, filter: {tags: $filter}) {
     nodes {
-      ...PageRef
+      ...PageRefPublic
     }
 
     pageInfo {
@@ -29,22 +30,15 @@ query PageList($filter: [String!], $after: ID, $first: Int) {
 
 query Page($id: ID, $slug: Slug) {
   page(id: $id, slug: $slug) {
-    id
-    publishedAt
-    updatedAt
+    ...PageRefPublic
     slug
-    title
-    description
-    image {
-      ...ImageRef
-    }
     tags
     properties {
       key
       value
     }
     blocks {
-      ...FullBlock
+      ...FullBlockPublic
     }
   }
 }

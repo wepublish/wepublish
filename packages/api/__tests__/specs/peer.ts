@@ -197,6 +197,53 @@ describe('Peers', () => {
       expect(res).toMatchSnapshot()
     })
   })
+
+  test('rejects invalid color', async () => {
+    const {mutate} = testClientPrivate
+
+    const input: PeerProfileInput = {
+      name: 'test peer profile',
+      logoID: 'logoID123',
+      themeColor: 'invalidHEXstring',
+      callToActionText: [{text: 'rich text call to action'}],
+      callToActionURL: 'calltoactionurl.ch/'
+    }
+    const res = await mutate({
+      mutation: UpdatePeerProfile,
+      variables: {
+        input: input
+      }
+    })
+
+    expect(res).toMatchSnapshot()
+    expect(res?.data).toBeUndefined()
+    expect(res?.errors?.[0].message).toBe(
+      'Variable "$input" got invalid value "invalidHEXstring" at "input.themeColor"; Expected type Color. Invalid hex color string.'
+    )
+  })
+
+  test('rejects non string input for color', async () => {
+    const {mutate} = testClientPrivate
+
+    const res = await mutate({
+      mutation: UpdatePeerProfile,
+      variables: {
+        input: {
+          name: 'test peer profile',
+          logoID: 'logoID123',
+          themeColor: 100,
+          callToActionText: [{text: 'rich text call to action'}],
+          callToActionURL: 'calltoactionurl.ch/'
+        }
+      }
+    })
+
+    expect(res).toMatchSnapshot()
+    expect(res?.data).toBeUndefined()
+    expect(res?.errors?.[0].message).toBe(
+      'Variable "$input" got invalid value 100 at "input.themeColor"; Expected type Color. '
+    )
+  })
 })
 
 afterAll(async () => {

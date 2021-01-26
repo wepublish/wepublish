@@ -99,6 +99,14 @@ describe('Users', () => {
       expect(res.data?.users?.totalCount).toBe(ids.length + 1)
     })
 
+    test('will reject list query without first or last numbers', async () => {
+      const {query} = testClientPrivate
+      const res = await query({query: UserList})
+      expect(res).toMatchSnapshot()
+      expect(res.data).toBeNull()
+      expect(res?.errors?.[0].message).toBe('You must provide either `first` or `last`.')
+    })
+
     test('can be read by id', async () => {
       const {query} = testClientPrivate
       const res = await query({
@@ -144,13 +152,14 @@ describe('Users', () => {
       const sessionRes = await mutate({
         mutation: CreateSession,
         variables: {
-          email: `bwayne@mymail5.com`,
+          email: `bwayne@mymail6.com`,
           password: 'p@$$w0rd'
         }
       })
       expect(sessionRes).toMatchSnapshot({
         data: {
           createSession: {
+            id: expect.any(String),
             token: expect.any(String)
           }
         }
@@ -160,7 +169,8 @@ describe('Users', () => {
         mutation: ResetUserPassword,
         variables: {
           id: ids[0],
-          password: 'NewUpdatedPassword321'
+          password: 'NewUpdatedPassword321',
+          sendMail: true
         }
       })
       expect(resetPwdRes).toMatchSnapshot({
@@ -174,13 +184,14 @@ describe('Users', () => {
       const updatedPwdSession = await mutate({
         mutation: CreateSession,
         variables: {
-          email: `bwayne@mymail5.com`,
+          email: `bwayne@mymail6.com`,
           password: 'NewUpdatedPassword321'
         }
       })
       expect(updatedPwdSession).toMatchSnapshot({
         data: {
           createSession: {
+            id: expect.any(String),
             token: expect.any(String)
           }
         }
