@@ -145,6 +145,7 @@ export function UserList() {
           marginTop: '20px'
         }}>
         <Table
+          minHeight={600}
           autoHeight={true}
           style={{flex: 1}}
           loading={isLoading}
