@@ -125,7 +125,7 @@ export function ImageTeaser({
   lead,
   route,
   preTitle
-}: LightTeaserProps): JSX.Element {
+}: LightTeaserProps) {
   const css = useStyle({isSingle})
   return (
     <div className={css(ImageTeaserStyle)}>
