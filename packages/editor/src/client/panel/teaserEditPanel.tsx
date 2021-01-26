@@ -37,7 +37,7 @@ export function TeaserEditPanel({
   onClose,
   onConfirm,
   closeLabel = 'Close'
-}: TeaserEditPanelProps): JSX.Element {
+}: TeaserEditPanelProps) {
   const [style, setStyle] = useState(initialTeaser.style)
   const [image, setImage] = useState(initialTeaser.image)
   const [preTitle, setPreTitle] = useState(initialTeaser.preTitle)
