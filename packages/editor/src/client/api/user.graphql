@@ -1,17 +1,51 @@
+fragment FullUserSubscription on UserSubscription {
+    memberPlan {
+        ...FullMemberPlan
+    }
+    paymentPeriodicity
+    monthlyAmount
+    autoRenew
+    startsAt
+    paidUntil
+    paymentMethod {
+        ...FullPaymentMethod
+    }
+    deactivatedAt
+}
+
 fragment FullUser on User {
     id
+    createdAt
+    modifiedAt
     name
+    preferredName
+    address {
+        street
+        zipCode
+        city
+        country
+    }
+    active
+    lastLogin
+    properties {
+        key
+        value
+        public
+    }
     email
     roles {
         ...FullUserRole
+    }
+    subscription {
+        ...FullUserSubscription
     }
 }
 
 
 
 
-query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+    users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
         nodes {
             ...FullUser
         }
@@ -45,6 +79,12 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
     }
 }
 
+mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
+    updateUserSubscription(userID: $userID, input: $input) {
+        ...FullUserSubscription
+    }
+}
+
 mutation ResetUserPassword($id: ID!, $password: String!) {
     resetUserPassword(id: $id, password: $password) {
         ...FullUser
@@ -53,4 +93,8 @@ mutation ResetUserPassword($id: ID!, $password: String!) {
 
 mutation DeleteUser($id: ID!) {
     deleteUser(id: $id)
+}
+
+mutation DeleteUserSubscription($userID: ID!) {
+    deleteUserSubscription(userID: $userID)
 }

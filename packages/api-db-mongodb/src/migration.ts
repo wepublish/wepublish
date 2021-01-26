@@ -493,6 +493,67 @@ export const Migrations: Migration[] = [
       const mailLogs = await db.createCollection(CollectionName.MailLog, {strict: true})
       await mailLogs.createIndex({subject: 1})
     }
+  },
+  {
+    //  Add MemberPlan Collection and PaymentMethod Collection
+    version: 10,
+    async migrate(db, locale) {
+      const memberPlans = await db.createCollection(CollectionName.MemberPlans, {
+        strict: true
+      })
+
+      await memberPlans.createIndex({name: 1})
+      await memberPlans.createIndex({slug: 1}, {unique: true})
+
+      const paymentMethod = await db.createCollection(CollectionName.PaymentMethods, {
+        strict: true
+      })
+
+      await paymentMethod.createIndex({name: 1})
+      await paymentMethod.createIndex({paymentAdapter: 1})
+
+      const users = db.collection(CollectionName.Users)
+      await users.createIndex({'subscription.memberPlanId': 1})
+      await users.updateMany(
+        {
+          paymentProviderCustomers: {$exists: false}
+        },
+        {$set: {paymentProviderCustomers: {}}}
+      )
+
+      await users.updateMany(
+        {
+          active: {$exists: false}
+        },
+        {$set: {active: true}}
+      )
+
+      await users.updateMany(
+        {
+          lastLogin: {$exists: false}
+        },
+        {$set: {lastLogin: null}}
+      )
+
+      await users.updateMany(
+        {
+          properties: {$exists: false}
+        },
+        {$set: {properties: []}}
+      )
+
+      const invoices = await db.createCollection(CollectionName.Invoices, {
+        strict: true
+      })
+
+      await invoices.createIndex({mail: 1})
+
+      const payments = await db.createCollection(CollectionName.Payments, {
+        strict: true
+      })
+
+      await payments.createIndex({intentID: 1})
+    }
   }
 ]
 
