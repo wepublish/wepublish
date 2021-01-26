@@ -2,6 +2,8 @@ import {
   DBCommentAdapter,
   AddPublicCommentArgs,
   UpdatePublicCommentArgs,
+  TakeActionOnCommentArgs,
+  OptionalComment,
   Comment,
   GetCommentsArgs,
   ConnectionResult,
@@ -11,8 +13,7 @@ import {
   CommentSort,
   SortOrder,
   PublicComment,
-  OptionalPublicComment,
-  OptionalComment
+  OptionalPublicComment
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -228,6 +229,34 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     return {
       id: outID,
       ...comment
+    }
+  }
+
+  async takeActionOnComment({
+    id,
+    state,
+    rejectionReason
+  }: TakeActionOnCommentArgs): Promise<OptionalComment> {
+    const {value} = await this.comments.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          state,
+          rejectionReason,
+          modifiedAt: new Date()
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    )
+
+    if (!value) return null
+    const {_id: outID, ...comment} = value
+
+    return {
+      ...comment,
+      id: outID
     }
   }
 }

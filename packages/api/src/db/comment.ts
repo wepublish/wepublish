@@ -61,6 +61,14 @@ export enum CommentSort {
   ModifiedAt = 'modifiedAt'
 }
 
+export interface TakeActionOnCommentArgs {
+  readonly id: string
+
+  readonly state: CommentState
+
+  readonly rejectionReason?: CommentRejectionReason
+}
+
 export interface CommentInput {
   readonly userID: string
 
@@ -108,4 +116,5 @@ export interface DBCommentAdapter {
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
   getPublicCommentsForItemByID(id: string): Promise<PublicComment[]>
   getCommentById(id: string): Promise<OptionalComment>
+  takeActionOnComment(args: TakeActionOnCommentArgs): Promise<OptionalComment>
 }
