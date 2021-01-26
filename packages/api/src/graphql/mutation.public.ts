@@ -18,6 +18,7 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {UserInputError} from 'apollo-server-express'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -118,7 +119,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!comment) return null
 
-        if (user.id === comment?.userID) {
+        if (user.id !== comment?.userID) {
+          throw new NotAuthorizedError()
+        } else if (comment.state !== CommentState.PendingUserChanges) {
+          throw new UserInputError('Comment state must be pending user changes')
+        } else {
           const {id, text} = input
 
           return await dbAdapter.comment.updatePublicComment({
@@ -126,8 +131,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             text,
             state: CommentState.PendingApproval
           })
-        } else {
-          throw new NotAuthorizedError()
         }
       }
     }
