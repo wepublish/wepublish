@@ -127,10 +127,13 @@ export function ImageList() {
       {images.length > 0 ? (
         <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
           {images.map((image, key) => (
-            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px'}} key={key}>
+            <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
               <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
-                <Panel shaded bordered bodyFill>
-                  <img src={image.thumbURL || ''} />
+                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
+                  <img
+                    src={image.mediumURL || ''}
+                    style={{height: '200', display: 'block', margin: '0 auto'}}
+                  />
                   <Overlay bottom={0} width="100%" maxHeight="50%" padding={10}>
                     <Typography variant="subtitle1" color="gray" ellipsize>
                       {`${image.filename || t('images.panels.untitled')}${image.extension}`}

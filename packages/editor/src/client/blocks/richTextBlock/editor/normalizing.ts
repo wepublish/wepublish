@@ -1,6 +1,6 @@
 import {Transforms, Element as SlateElement, Node as SlateNode, Path} from 'slate'
 import {ReactEditor} from 'slate-react'
-import {defaultBorderColor, emptyTextParagraph} from './elements'
+import {DEFAULT_BORDER_COLOR, emptyTextParagraph} from './elements'
 import {BlockFormat} from './formats'
 
 export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
@@ -24,7 +24,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
           // Actually, (IMO) it should not have an effect, as every new or modified node gets checked from it's lowest node upwards
           // (see https://docs.slatejs.org/concepts/10-normalizing#multi-pass-normalizing).
           // TODO find reason or report to slate?
-          if (ensureChildType(BlockFormat.TableCell, {borderColor: defaultBorderColor})) return
+          if (ensureChildType(BlockFormat.TableCell, {borderColor: DEFAULT_BORDER_COLOR})) return
           if (ensureParentType(BlockFormat.Table)) return
           // TODO? mergeAdjacentRows()
           break
@@ -40,7 +40,7 @@ export function withNormalizeNode<T extends ReactEditor>(editor: T): T {
 
     function ensureHasBorderColor() {
       if (!node.borderColor) {
-        Transforms.setNodes(editor, {borderColor: defaultBorderColor}, {at: path})
+        Transforms.setNodes(editor, {borderColor: DEFAULT_BORDER_COLOR}, {at: path})
         return true
       }
       return false

@@ -18,6 +18,7 @@ import {
 } from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
+import {Typography} from '../atoms/typography'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -105,7 +106,7 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
           <>
             <FlexboxGrid justify="space-around">
               {images.map(image => {
-                const {id, thumbURL, title, filename, extension} = image
+                const {id, mediumURL, title, filename, extension} = image
                 return (
                   <FlexboxGrid.Item key={id} colspan={10} style={{marginBottom: 20}}>
                     <Panel
@@ -114,9 +115,25 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                       shaded
                       bordered
                       bodyFill>
-                      <img src={thumbURL || ''} />
-                      <Panel header={`${filename || t('images.panels.untitled')}${extension}`}>
-                        {title || t('images.panels.Untitled')}
+                      <div style={{backgroundColor: '#f7f7fa'}}>
+                        <img
+                          src={mediumURL || ''}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            maxWidth: '240',
+                            maxHeight: '240',
+                            width: '100%'
+                          }}
+                        />
+                      </div>
+                      <Panel>
+                        <Typography variant={'subtitle1'} ellipsize>{`${
+                          filename || t('images.panels.untitled')
+                        }${extension}`}</Typography>
+                        <Typography variant={'body2'}>
+                          {title || t('images.panels.Untitled')}
+                        </Typography>
                       </Panel>
                     </Panel>
                   </FlexboxGrid.Item>

@@ -4,7 +4,7 @@ import {pTest} from '../utils'
 import {
   emptyTextParagraph,
   emptyCellsTable,
-  defaultBorderColor
+  DEFAULT_BORDER_COLOR
 } from '../../src/client/blocks/richTextBlock/editor/elements'
 
 interface EmptyCellsTableTest {
@@ -28,7 +28,7 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: defaultBorderColor,
+                  borderColor: DEFAULT_BORDER_COLOR,
                   children: [emptyTextParagraph()]
                 }
               ]
@@ -50,12 +50,12 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: defaultBorderColor,
+                  borderColor: DEFAULT_BORDER_COLOR,
                   children: [emptyTextParagraph()]
                 },
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: defaultBorderColor,
+                  borderColor: DEFAULT_BORDER_COLOR,
                   children: [emptyTextParagraph()]
                 }
               ]
@@ -65,12 +65,12 @@ pTest(
               children: [
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: defaultBorderColor,
+                  borderColor: DEFAULT_BORDER_COLOR,
                   children: [emptyTextParagraph()]
                 },
                 {
                   type: BlockFormat.TableCell,
-                  borderColor: defaultBorderColor,
+                  borderColor: DEFAULT_BORDER_COLOR,
                   children: [emptyTextParagraph()]
                 }
               ]
