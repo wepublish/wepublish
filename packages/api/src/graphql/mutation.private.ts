@@ -53,7 +53,8 @@ import {
   CanCreateUserRole,
   CanDeleteUserRole,
   CanResetUserPassword,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanTakeActionOnComment
 } from './permissions'
 import {GraphQLUser, GraphQLUserInput} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
@@ -67,6 +68,8 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {CommentState} from '../db/comment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -736,6 +739,58 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    approveComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Approved
+        })
+      }
+    },
+
+    rejectComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Rejected,
+          rejectionReason
+        })
+      }
+    },
+
+    requestChangesOnComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.PendingUserChanges,
+          rejectionReason
+        })
       }
     }
   }
