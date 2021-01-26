@@ -54,6 +54,10 @@ export enum RouteType {
   UserEdit = 'userEdit',
   UserCreate = 'userCreate',
 
+  CommentList = 'commentList',
+  CommentEdit = 'commentEdit',
+  CommentCreate = 'commentCreate',
+
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
   UserRoleCreate = 'userRoleCreate'
@@ -76,6 +80,8 @@ export const ArticleEditRoute = route(
 )
 
 export const ArticleCreateRoute = route(RouteType.ArticleCreate, routePath`/article/create`)
+
+export const CommentListRoute = route(RouteType.CommentList, routePath`/comments`)
 
 export const PageListRoute = route(RouteType.PageList, routePath`/pages`)
 export const PageCreateRoute = route(RouteType.PageCreate, routePath`/page/create`)
@@ -139,6 +145,7 @@ export const routes = [
   ArticleListRoute,
   ArticleCreateRoute,
   ArticleEditRoute,
+  CommentListRoute,
   ImageListRoute,
   ImageUploadRoute,
   ImageEditRoute,

@@ -4,6 +4,7 @@ import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
 import {
   ArticleListRoute,
+  CommentListRoute,
   useRoute,
   RouteType,
   PageListRoute,
@@ -86,6 +87,13 @@ export function Base({children}: BaseProps) {
                   route={ArticleListRoute.create({})}
                   active={current?.type === RouteType.ArticleList}>
                   {t('navbar.articles')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="comment" />}
+                  route={CommentListRoute.create({})}
+                  active={current?.type === RouteType.CommentList}>
+                  {t('navbar.comments')}
                 </NavItemLink>
 
                 <NavItemLink

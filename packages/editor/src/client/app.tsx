@@ -8,6 +8,7 @@ import {useRoute, RouteType, Route} from './route'
 import {Login} from './login'
 import {Base} from './base'
 import {ArticleList} from './routes/articleList'
+import {CommentList} from './routes/commentList'
 
 import {ArticleEditor} from './routes/articleEditor'
 import {ImageList} from './routes/imageList'
@@ -38,6 +39,9 @@ export function contentForRoute(route: Route) {
     case RouteType.Index:
     case RouteType.ArticleList:
       return <ArticleList />
+
+    case RouteType.CommentList:
+      return <CommentList />
 
     case RouteType.PageList:
       return <PageList />

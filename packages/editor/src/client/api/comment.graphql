@@ -1,0 +1,30 @@
+fragment CommentRef on Comment {
+  id
+
+  state
+  rejectionReason
+
+  userID {
+    name
+  }
+
+  createdAt
+  modifiedAt
+}
+
+query CommentList($after: ID, $first: Int) {
+  comments(first: $first, after: $after) {
+    nodes {
+      ...CommentRef
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}

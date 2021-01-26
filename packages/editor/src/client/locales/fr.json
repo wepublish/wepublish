@@ -428,6 +428,7 @@
     },
     "navbar": {
       "articles": "Articles",
+      "comments": "Comments",
       "pages": "Pages",
       "authors": "Autheurs",
       "imageLibrary": "Bibliothèque d'images",

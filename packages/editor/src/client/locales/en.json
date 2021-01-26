@@ -121,6 +121,35 @@
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
       }
     },
+    "comments": {
+      "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "states": "States",
+        "comments": "Comments",
+        "action": "Action",
+        "search": "Search",
+        "loadMore": "Load More",
+        "noCommentsFound": "No Comments found",
+        "untitled": "Untitled",
+        "draft": "Draft",
+        "pending": "Pending",
+        "published": "Published"
+      },
+      "panels": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "title": "Title",
+        "untitled": "Untitled",
+        "lead": "Lead",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "publishedAt": "Published At"
+      }
+    },
     "pages": {
       "overview": {
         "pages": "Pages",
@@ -504,6 +533,7 @@
     },
     "navbar": {
       "articles": "Articles",
+      "comments": "Comments",
       "pages": "Pages",
       "authors": "Authors",
       "navigations": "Navigations",
