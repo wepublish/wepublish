@@ -534,6 +534,9 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  approveComment: Comment;
+  rejectComment: Comment;
+  requestChangesOnComment: Comment;
 };
 
 
@@ -740,6 +743,23 @@ export type MutationPublishPageArgs = {
 
 export type MutationUnpublishPageArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
 };
 
 export type Navigation = {
