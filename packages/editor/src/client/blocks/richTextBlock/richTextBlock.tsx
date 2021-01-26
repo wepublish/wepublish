@@ -5,12 +5,13 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon} from '../../atoms/toolbar'
+import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
+import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
@@ -23,10 +24,12 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange
 }: RichTextBlockProps) {
-  const editor = useMemo(() => withTable(withRichText(withHistory(withReact(createEditor())))), [])
+  const editor = useMemo(
+    () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
+    []
+  )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
-  const [isEmpty, setIsEmpty] = useState(true)
 
   const {t} = useTranslation()
 
@@ -49,7 +52,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         setFocus(ReactEditor.isFocused(editor))
         if (value !== newValue) {
           onChange(newValue)
-          setIsEmpty(false)
         }
       }}>
       <Toolbar
@@ -95,11 +97,11 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <EditorSubMenuButton icon="smile-o" editorHasFocus={hasFocus}>
-          <EmojiPicker doWithEmoji={emoji => editor.insertText(emoji)} />
-        </EditorSubMenuButton>
+        <SubMenuButton icon="smile-o">
+          <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+        </SubMenuButton>
       </Toolbar>
-      {isEmpty && ( // Alternative placeholder
+      {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
         <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
           {t('blocks.richText.startWriting')}
         </div>
@@ -111,7 +113,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
-          setIsEmpty(WepublishEditor.isEmpty(editor))
         }}
       />
     </Slate>
