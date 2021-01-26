@@ -88,13 +88,18 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <ChooseEditImage
-          image={logoImage}
-          disabled={isLoading}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => setLogoImage(undefined)}
-        />
+        <Panel bodyFill header={t('peerList.panels.image')}>
+          <ChooseEditImage
+            image={logoImage}
+            header={''}
+            top={0}
+            left={20}
+            disabled={isLoading}
+            openChooseModalOpen={() => setChooseModalOpen(true)}
+            openEditModalOpen={() => setEditModalOpen(true)}
+            removeImage={() => setLogoImage(undefined)}
+          />
+        </Panel>
         <Panel header={t('peerList.panels.information')}>
           <Form fluid={true}>
             <FormGroup>
