@@ -502,7 +502,8 @@ export const Migrations: Migration[] = [
         strict: true
       })
 
-      await memberPlans.createIndex({label: 1}, {unique: true})
+      await memberPlans.createIndex({name: 1})
+      await memberPlans.createIndex({slug: 1}, {unique: true})
 
       const paymentMethod = await db.createCollection(CollectionName.PaymentMethods, {
         strict: true
@@ -518,6 +519,27 @@ export const Migrations: Migration[] = [
           paymentProviderCustomers: {$exists: false}
         },
         {$set: {paymentProviderCustomers: {}}}
+      )
+
+      await users.updateMany(
+        {
+          active: {$exists: false}
+        },
+        {$set: {active: true}}
+      )
+
+      await users.updateMany(
+        {
+          lastLogin: {$exists: false}
+        },
+        {$set: {lastLogin: null}}
+      )
+
+      await users.updateMany(
+        {
+          properties: {$exists: false}
+        },
+        {$set: {properties: []}}
       )
 
       const invoices = await db.createCollection(CollectionName.Invoices, {

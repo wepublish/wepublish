@@ -1,7 +1,8 @@
 fragment MemberPlanRef on MemberPlan {
     id
     name
-    isActive
+    slug
+    active
     image {
         ...ImageRef
     }
@@ -9,8 +10,7 @@ fragment MemberPlanRef on MemberPlan {
 
 fragment FullMemberPlan on MemberPlan {
     description
-    pricePerMonthMinimum
-    pricePerMonthMaximum
+    amountPerMonthMin
     availablePaymentMethods {
         paymentMethods {
             ...FullPaymentMethod

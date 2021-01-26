@@ -1,30 +1,32 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
+  Alert,
   Button,
   ControlLabel,
+  DatePicker,
   Drawer,
   Form,
   FormControl,
   FormGroup,
-  Panel,
-  Alert,
-  Toggle,
   HelpBlock,
+  Panel,
   SelectPicker,
-  DatePicker
+  Toggle
 } from 'rsuite'
 
 import {
-  useUpdateUserSubscriptionMutation,
-  FullUserSubscriptionFragment,
-  useMemberPlanListQuery,
   FullMemberPlanFragment,
   FullPaymentMethodFragment,
-  usePaymentMethodListQuery
+  FullUserSubscriptionFragment,
+  PaymentPeriodicity,
+  useMemberPlanListQuery,
+  usePaymentMethodListQuery,
+  useUpdateUserSubscriptionMutation
 } from '../api'
 import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {ALL_PAYMENT_PERIODICITIES} from '../utility'
 
 export interface UserSubscriptionEditPanelProps {
   userID: string
@@ -44,9 +46,9 @@ export function UserSubscriptionEditPanel({
 
   const [memberPlan, setMemberPlan] = useState(subscription?.memberPlan)
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
-  const [paymentPeriodicity /* setPaymentPeriodicity */] = useState(
-    subscription?.paymentPeriodicity ?? 'monthly'
-  ) // TODO: find smart default
+  const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
+    subscription?.paymentPeriodicity ?? PaymentPeriodicity.Yearly
+  )
   const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
@@ -163,10 +165,7 @@ export function UserSubscriptionEditPanel({
                 <HelpBlock>
                   <DescriptionList>
                     <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.pricePerMonthMinimum}{' '}
-                      {memberPlan.pricePerMonthMinimum !== memberPlan.pricePerMonthMaximum
-                        ? `- ${memberPlan.pricePerMonthMaximum}`
-                        : ''}
+                      {memberPlan.amountPerMonthMin}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>
@@ -182,6 +181,18 @@ export function UserSubscriptionEditPanel({
                 onChange={value => {
                   setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
                 }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+              <SelectPicker
+                value={paymentPeriodicity}
+                data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                  value: pp,
+                  label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                }))}
+                onChange={value => setPaymentPeriodicity(value)}
+                block
               />
             </FormGroup>
             <FormGroup>

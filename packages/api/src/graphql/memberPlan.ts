@@ -1,4 +1,9 @@
-import {AvailablePaymentMethod, MemberPlan, MemberPlanSort} from '../db/memberPlan'
+import {
+  AvailablePaymentMethod,
+  MemberPlan,
+  MemberPlanSort,
+  PaymentPeriodicity
+} from '../db/memberPlan'
 
 import {GraphQLRichText} from './richText'
 import {GraphQLImage} from './image'
@@ -17,7 +22,17 @@ import {
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {GraphQLPageInfo} from './common'
-import {GraphQLPaymentMethod} from './paymentMethod'
+import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
+
+export const GraphQLPaymentPeriodicity = new GraphQLEnumType({
+  name: 'PaymentPeriodicity',
+  values: {
+    MONTHLY: {value: PaymentPeriodicity.Monthly},
+    QUARTERLY: {value: PaymentPeriodicity.Quarterly},
+    BIANNUAL: {value: PaymentPeriodicity.Biannual},
+    YEARLY: {value: PaymentPeriodicity.Yearly}
+  }
+})
 
 export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaymentMethod, Context>(
   {
@@ -30,11 +45,33 @@ export const GraphQLAvailablePaymentMethod = new GraphQLObjectType<AvailablePaym
           return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
         }
       },
-      paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+      paymentPeriodicities: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+      },
       forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
     }
   }
 )
+
+export const GraphQLPublicAvailablePaymentMethod = new GraphQLObjectType<
+  AvailablePaymentMethod,
+  Context
+>({
+  name: 'AvailablePaymentMethod',
+  fields: {
+    paymentMethods: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPaymentMethod))),
+      async resolve({paymentMethodIDs}, args, {dbAdapter}) {
+        const paymentMethods = await dbAdapter.paymentMethod.getActivePaymentMethods()
+        return paymentMethods.filter(paymentMethod => paymentMethodIDs.includes(paymentMethod.id))
+      }
+    },
+    paymentPeriodicities: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+    },
+    forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
+  }
+})
 
 export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
   name: 'MemberPlan',
@@ -45,6 +82,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
@@ -52,11 +90,31 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
       })
     },
     description: {type: GraphQLRichText},
-    isActive: {type: GraphQLNonNull(GraphQLBoolean)},
-    pricePerMonthMinimum: {type: GraphQLNonNull(GraphQLInt)},
-    pricePerMonthMaximum: {type: GraphQLNonNull(GraphQLInt)},
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethod)))
+    }
+  }
+})
+
+export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
+  name: 'MemberPlan',
+  fields: {
+    id: {type: GraphQLNonNull(GraphQLID)},
+
+    name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    },
+    description: {type: GraphQLRichText},
+    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    availablePaymentMethods: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicAvailablePaymentMethod)))
     }
   }
 })
@@ -64,7 +122,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
 export const GraphQLMemberPlanFilter = new GraphQLInputObjectType({
   name: 'MemberPlanFilter',
   fields: {
-    name: {type: GraphQLString}
+    name: {type: GraphQLString},
+    active: {type: GraphQLBoolean}
   }
 })
 
@@ -85,11 +144,22 @@ export const GraphQLMemberPlanConnection = new GraphQLObjectType<any, Context>({
   }
 })
 
+export const GraphQLPublicMemberPlanConnection = new GraphQLObjectType<any, Context>({
+  name: 'MemberPlanConnection',
+  fields: {
+    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicMemberPlan)))},
+    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
 export const GraphQLAvailablePaymentMethodInput = new GraphQLInputObjectType({
   name: 'AvailablePaymentMethodInput',
   fields: {
     paymentMethodIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
-    paymentPeriodicities: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    paymentPeriodicities: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentPeriodicity)))
+    },
     forceAutoRenewal: {type: GraphQLNonNull(GraphQLBoolean)}
   }
 })
@@ -98,11 +168,11 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
   name: 'MemberPlanInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
+    slug: {type: GraphQLNonNull(GraphQLString)},
     imageID: {type: GraphQLID},
     description: {type: GraphQLRichText},
-    isActive: {type: GraphQLNonNull(GraphQLBoolean)},
-    pricePerMonthMinimum: {type: GraphQLNonNull(GraphQLInt)},
-    pricePerMonthMaximum: {type: GraphQLNonNull(GraphQLInt)},
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethodInput)))
     }

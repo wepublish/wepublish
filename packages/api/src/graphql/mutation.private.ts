@@ -15,6 +15,7 @@ import {Context} from '../context'
 import {
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
+  NotActiveError,
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
@@ -221,6 +222,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -235,6 +237,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUserByID(userID)
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -262,6 +265,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!userInfo.email) throw new Error('UserInfo did not return an email')
         const user = await dbAdapter.user.getUser(userInfo.email)
         if (!user) throw new UserNotFoundError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },

@@ -115,3 +115,6 @@ export async function delegateToPeerSchema(
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
+export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS

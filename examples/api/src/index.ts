@@ -98,6 +98,8 @@ async function asyncMain() {
         input: {
           email: 'dev@wepublish.ch',
           name: 'Dev User',
+          active: true,
+          properties: [],
           roleIDs: [adminUserRoleId]
         },
         password: '123'
@@ -107,6 +109,8 @@ async function asyncMain() {
         input: {
           email: 'editor@wepublish.ch',
           name: 'Editor User',
+          active: true,
+          properties: [],
           roleIDs: [editorUserRoleId]
         },
         password: '123'

@@ -37,7 +37,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [isActive, setIsActive] = useState<boolean>(false)
+  const [active, setActive] = useState<boolean>(true)
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
 
@@ -77,7 +77,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
     if (data?.paymentMethod) {
       setName(data.paymentMethod.name)
       setDescription(data.paymentMethod.description)
-      setIsActive(data.paymentMethod.active)
+      setActive(data.paymentMethod.active)
       setPaymentProvider(data.paymentMethod.paymentProvider)
     }
   }, [data?.paymentMethod])
@@ -109,7 +109,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
           input: {
             name,
             description,
-            active: isActive,
+            active,
             paymentProviderID: paymentProvider.id
           }
         }
@@ -122,7 +122,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
           input: {
             name,
             description,
-            active: isActive,
+            active,
             paymentProviderID: paymentProvider.id
           }
         }
@@ -156,11 +156,7 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('paymentMethodList.active')}</ControlLabel>
-              <Toggle
-                checked={isActive}
-                disabled={isDisabled}
-                onChange={value => setIsActive(value)}
-              />
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('paymentMethodList.activeDescription')}</HelpBlock>
             </FormGroup>
             <FormGroup>

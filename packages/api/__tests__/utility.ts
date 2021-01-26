@@ -52,7 +52,9 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         input: {
           email: 'dev@wepublish.ch',
           name: 'Dev User',
-          roleIDs: [adminUserRoleId]
+          roleIDs: [adminUserRoleId],
+          active: true,
+          properties: []
         },
         password: '123'
       })

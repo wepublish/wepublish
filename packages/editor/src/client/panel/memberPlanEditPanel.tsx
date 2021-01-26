@@ -13,8 +13,6 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  RangeSlider,
-  Slider,
   CheckPicker
 } from 'rsuite'
 
@@ -35,21 +33,17 @@ import {
   useUpdateMemberPlanMutation
 } from '../api'
 
-import {generateID, getOperationNameFromDocument} from '../utility'
+import {
+  generateID,
+  getOperationNameFromDocument,
+  slugify,
+  ALL_PAYMENT_PERIODICITIES
+} from '../utility'
 import {RichTextBlock, createDefaultValue} from '../blocks/richTextBlock/richTextBlock'
 import {RichTextBlockValue} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-
-const MAX_PRICE_PER_MONTH = 100
-
-const ALL_PAYMENT_PERIODICITIES = [
-  {id: 'monthly', checked: false},
-  {id: 'quarterly', checked: false},
-  {id: 'biannual', checked: false},
-  {id: 'yearly', checked: false}
-]
 
 export interface MemberPlanEditPanelProps {
   id?: string
@@ -62,16 +56,15 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   const {t} = useTranslation()
 
   const [name, setName] = useState('')
+  const [slug, setSlug] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
   const [description, setDescription] = useState<RichTextBlockValue>(createDefaultValue())
-  const [isActive, setIsActive] = useState<boolean>(false)
+  const [active, setActive] = useState<boolean>(true)
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [fixPrice, setFixPrice] = useState<boolean>(false)
-  const [pricePerMonthMinimum, setPricePerMonthMinimum] = useState<number>(0)
-  const [pricePerMonthMaximum, setPricePerMonthMaximum] = useState<number>(0)
+  const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -112,11 +105,12 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
   useEffect(() => {
     if (data?.memberPlan) {
       setName(data.memberPlan.name)
+      setSlug(data.memberPlan.slug)
       setImage(data.memberPlan.image)
       setDescription(
         data.memberPlan.description ? data.memberPlan.description : createDefaultValue()
       )
-      setIsActive(data.memberPlan.isActive)
+      setActive(data.memberPlan.active)
       setAvailablePaymentMethods(
         data.memberPlan.availablePaymentMethods
           ? data.memberPlan.availablePaymentMethods.map(availablePaymentMethod => ({
@@ -125,8 +119,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             }))
           : []
       )
-      setPricePerMonthMinimum(data.memberPlan.pricePerMonthMinimum)
-      setPricePerMonthMaximum(data.memberPlan.pricePerMonthMaximum)
+      setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
     }
   }, [data?.memberPlan])
 
@@ -156,16 +149,16 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           id,
           input: {
             name,
+            slug,
             imageID: image?.id,
             description,
-            isActive,
+            active,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               paymentPeriodicities: value.paymentPeriodicities,
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            pricePerMonthMinimum,
-            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
+            amountPerMonthMin
           }
         }
       })
@@ -176,16 +169,16 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
         variables: {
           input: {
             name,
+            slug,
             imageID: image?.id,
             description,
-            isActive,
+            active,
             availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
               paymentPeriodicities: value.paymentPeriodicities,
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            pricePerMonthMinimum,
-            pricePerMonthMaximum: fixPrice ? pricePerMonthMinimum : pricePerMonthMaximum
+            amountPerMonthMin
           }
         }
       })
@@ -211,17 +204,30 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                 name={t('memberPlanList.name')}
                 value={name}
                 disabled={isDisabled}
-                onChange={value => setName(value)}
+                onChange={value => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
               />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
-              <Toggle
-                checked={isActive}
-                disabled={isDisabled}
-                onChange={value => setIsActive(value)}
-              />
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
+              <FormControl
+                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
+                value={amountPerMonthMin}
+                type="number"
+                disabled={isDisabled}
+                min={0}
+                steps={1}
+                onChange={value => {
+                  setAmountPerMonthMin(parseInt(`${value}`))
+                }}
+              />
             </FormGroup>
             <FormGroup>
               <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
@@ -237,45 +243,6 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => setImage(undefined)}
         />
-
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.fixPrice')}</ControlLabel>
-              <Toggle
-                checked={fixPrice}
-                disabled={isDisabled}
-                onChange={value => setFixPrice(value)}
-              />
-              <HelpBlock>{t('memberPlanList.fixPriceDescription')}</HelpBlock>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.priceRange')}</ControlLabel>
-              {fixPrice ? (
-                <Slider
-                  disabled={isDisabled}
-                  progress
-                  value={pricePerMonthMinimum}
-                  onChange={value => setPricePerMonthMinimum(value)}
-                  min={0}
-                  max={MAX_PRICE_PER_MONTH}
-                />
-              ) : (
-                <RangeSlider
-                  progress
-                  disabled={isDisabled}
-                  value={[pricePerMonthMinimum, pricePerMonthMaximum]}
-                  onChange={value => {
-                    setPricePerMonthMinimum(value[0])
-                    setPricePerMonthMaximum(value[1])
-                  }}
-                  min={0}
-                  max={MAX_PRICE_PER_MONTH}
-                />
-              )}
-            </FormGroup>
-          </Form>
-        </Panel>
 
         <Panel>
           <ListInput
@@ -301,7 +268,10 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
                   <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
                   <CheckPicker
                     value={value.paymentPeriodicities}
-                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({value: pp.id, label: pp.id}))}
+                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                      value: pp,
+                      label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                    }))}
                     onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
                     block
                   />

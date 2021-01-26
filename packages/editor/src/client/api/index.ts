@@ -187,13 +187,13 @@ export type AuthProvider = {
 export type AvailablePaymentMethod = {
   __typename?: 'AvailablePaymentMethod';
   paymentMethods: Array<PaymentMethod>;
-  paymentPeriodicities: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   forceAutoRenewal: Scalars['Boolean'];
 };
 
 export type AvailablePaymentMethodInput = {
   paymentMethodIDs: Array<Scalars['String']>;
-  paymentPeriodicities: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
   forceAutoRenewal: Scalars['Boolean'];
 };
 
@@ -526,11 +526,11 @@ export type MemberPlan = {
   createdAt: Scalars['DateTime'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
+  slug: Scalars['String'];
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
+  active: Scalars['Boolean'];
+  amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
 };
 
@@ -543,15 +543,16 @@ export type MemberPlanConnection = {
 
 export type MemberPlanFilter = {
   name?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
 };
 
 export type MemberPlanInput = {
   name: Scalars['String'];
+  slug: Scalars['String'];
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
-  isActive: Scalars['Boolean'];
-  pricePerMonthMinimum: Scalars['Int'];
-  pricePerMonthMaximum: Scalars['Int'];
+  active: Scalars['Boolean'];
+  amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
 };
 
@@ -1062,6 +1063,13 @@ export type PaymentMethodInput = {
   active: Scalars['Boolean'];
 };
 
+export enum PaymentPeriodicity {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Biannual = 'BIANNUAL',
+  Yearly = 'YEARLY'
+}
+
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   id: Scalars['ID'];
@@ -1549,8 +1557,28 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddress>;
+  active: Scalars['Boolean'];
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
   roles: Array<UserRole>;
   subscription?: Maybe<UserSubscription>;
+};
+
+export type UserAddress = {
+  __typename?: 'UserAddress';
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
+};
+
+export type UserAddressInput = {
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
 };
 
 export type UserConnection = {
@@ -1569,6 +1597,10 @@ export type UserFilter = {
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddressInput>;
+  active: Scalars['Boolean'];
+  properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -1612,7 +1644,7 @@ export enum UserSort {
 export type UserSubscription = {
   __typename?: 'UserSubscription';
   memberPlan: MemberPlan;
-  paymentPeriodicity: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
@@ -1630,7 +1662,7 @@ export type UserSubscriptionFilter = {
 
 export type UserSubscriptionInput = {
   memberPlanID: Scalars['String'];
-  paymentPeriodicity: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
   monthlyAmount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
@@ -2324,7 +2356,7 @@ export type DeleteImageMutation = (
 
 export type MemberPlanRefFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'id' | 'name' | 'isActive'>
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2333,7 +2365,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'pricePerMonthMinimum' | 'pricePerMonthMaximum'>
+  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -2959,8 +2991,14 @@ export type FullUserSubscriptionFragment = (
 
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'email'>
-  & { roles: Array<(
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & { address?: Maybe<(
+    { __typename?: 'UserAddress' }
+    & Pick<UserAddress, 'street' | 'zipCode' | 'city' | 'country'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
   )>, subscription?: Maybe<(
@@ -3596,7 +3634,8 @@ export const MemberPlanRefFragmentDoc = gql`
     fragment MemberPlanRef on MemberPlan {
   id
   name
-  isActive
+  slug
+  active
   image {
     ...ImageRef
   }
@@ -3605,8 +3644,7 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
-  pricePerMonthMinimum
-  pricePerMonthMaximum
+  amountPerMonthMin
   availablePaymentMethods {
     paymentMethods {
       ...FullPaymentMethod
@@ -3641,6 +3679,20 @@ export const FullUserFragmentDoc = gql`
   createdAt
   modifiedAt
   name
+  preferredName
+  address {
+    street
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
   email
   roles {
     ...FullUserRole

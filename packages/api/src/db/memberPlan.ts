@@ -27,21 +27,21 @@ export interface MemberPlan {
   readonly createdAt: Date
   readonly modifiedAt: Date
   readonly name: string
+  readonly slug: string
   readonly imageID?: string
   readonly description: RichTextNode[]
-  readonly isActive: boolean
-  readonly pricePerMonthMinimum: number
-  readonly pricePerMonthMaximum: number
+  readonly active: boolean
+  readonly amountPerMonthMin: number
   readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
 export interface MemberPlanInput {
   readonly name: string
+  readonly slug: string
   readonly imageID?: string
   readonly description: RichTextNode[]
-  readonly isActive: boolean
-  readonly pricePerMonthMinimum: number
-  readonly pricePerMonthMaximum: number
+  readonly active: boolean
+  readonly amountPerMonthMin: number
   readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
@@ -67,6 +67,7 @@ export enum MemberPlanSort {
 
 export interface MemberPlanFilter {
   name?: string
+  active?: boolean
 }
 
 export interface GetMemberPlansArgs {
@@ -83,5 +84,9 @@ export interface DBMemberPlanAdapter {
   deleteMemberPlan(args: DeleteMemberPlanArgs): Promise<string | null>
 
   getMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>
+  getActiveMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]>
+  getActiveMemberPlansBySlug(slugs: string[]): Promise<OptionalMemberPlan[]>
+
   getMemberPlans(args: GetMemberPlansArgs): Promise<ConnectionResult<MemberPlan>>
+  getActiveMemberPlans(args: GetMemberPlansArgs): Promise<ConnectionResult<MemberPlan>>
 }

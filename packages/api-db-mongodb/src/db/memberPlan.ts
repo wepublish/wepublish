@@ -31,11 +31,11 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       createdAt: new Date(),
       modifiedAt: new Date(),
       name: input.name,
+      slug: input.slug,
       imageID: input.imageID,
       description: input.description,
-      isActive: input.isActive,
-      pricePerMonthMinimum: input.pricePerMonthMinimum,
-      pricePerMonthMaximum: input.pricePerMonthMaximum,
+      active: input.active,
+      amountPerMonthMin: input.amountPerMonthMin,
       availablePaymentMethods: input.availablePaymentMethods
     })
 
@@ -50,11 +50,11 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
         $set: {
           modifiedAt: new Date(),
           name: input.name,
+          slug: input.slug,
           imageID: input.imageID,
           description: input.description,
-          isActive: input.isActive,
-          pricePerMonthMinimum: input.pricePerMonthMinimum,
-          pricePerMonthMaximum: input.pricePerMonthMaximum,
+          active: input.active,
+          amountPerMonthMin: input.amountPerMonthMin,
           availablePaymentMethods: input.availablePaymentMethods
         }
       },
@@ -113,10 +113,17 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       : {}
 
     const textFilter: FilterQuery<any> = {}
+    if (filter && JSON.stringify(filter) !== '{}') {
+      textFilter.$and = []
+    }
 
     // TODO: Rename to search
     if (filter?.name !== undefined) {
-      textFilter.$or = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+    }
+
+    if (filter?.active !== undefined) {
+      textFilter.$and?.push({active: filter.active})
     }
 
     const [totalCount, memberPlans] = await Promise.all([
@@ -170,6 +177,46 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
         hasPreviousPage
       },
 
+      totalCount
+    }
+  }
+
+  async getActiveMemberPlansByID(ids: readonly string[]): Promise<OptionalMemberPlan[]> {
+    const memberPlans = await this.memberPlans.find({_id: {$in: ids}, active: true}).toArray()
+    const memberPlansMap = Object.fromEntries(
+      memberPlans.map(({_id: id, ...memberPlan}) => [id, {id, ...memberPlan}])
+    )
+
+    return ids.map(id => memberPlansMap[id] ?? null)
+  }
+
+  async getActiveMemberPlansBySlug(slugs: string[]): Promise<OptionalMemberPlan[]> {
+    const memberPlans = await this.memberPlans.find({slug: {$in: slugs}, active: true}).toArray()
+    const memberPlansMap = Object.fromEntries(
+      memberPlans.map(({_id: id, slug, ...memberPlan}) => [slug, {id, slug, ...memberPlan}])
+    )
+
+    return slugs.map(slug => memberPlansMap[slug] ?? null)
+  }
+
+  async getActiveMemberPlans({
+    filter,
+    sort,
+    order,
+    cursor,
+    limit
+  }: GetMemberPlansArgs): Promise<ConnectionResult<MemberPlan>> {
+    const {nodes, pageInfo, totalCount} = await this.getMemberPlans({
+      filter: {...filter, active: true},
+      sort,
+      order,
+      cursor,
+      limit
+    })
+
+    return {
+      nodes,
+      pageInfo,
       totalCount
     }
   }

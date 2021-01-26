@@ -1,7 +1,7 @@
 import nanoid from 'nanoid'
-import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
-import {SortOrder} from './api'
+import {PaymentPeriodicity, SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -158,4 +158,11 @@ export const DEFAULT_TABLE_PAGE_SIZES = [
     value: 100,
     label: 100
   }
+]
+
+export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
+  PaymentPeriodicity.Monthly,
+  PaymentPeriodicity.Quarterly,
+  PaymentPeriodicity.Biannual,
+  PaymentPeriodicity.Yearly
 ]

@@ -8,13 +8,18 @@ import {
   GraphQLString,
   GraphQLBoolean
 } from 'graphql'
-import {UserSort} from '../db/user'
-import {GraphQLDateFilter, GraphQLPageInfo} from './common'
+import {User, UserSort} from '../db/user'
+import {
+  GraphQLDateFilter,
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyInput,
+  GraphQLPageInfo
+} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLMemberPlan} from './memberPlan'
-import {GraphQLPaymentMethod} from './paymentMethod'
+import {GraphQLMemberPlan, GraphQLPaymentPeriodicity, GraphQLPublicMemberPlan} from './memberPlan'
+import {GraphQLPaymentMethod, GraphQLPublicPaymentMethod} from './paymentMethod'
 
 export const GraphQLUserSubscription = new GraphQLObjectType({
   name: 'UserSubscription',
@@ -25,7 +30,7 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
         return loaders.memberPlansByID.load(memberPlanID)
       }
     },
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
@@ -40,6 +45,40 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
   }
 })
 
+export const GraphQLPublicUserSubscription = new GraphQLObjectType({
+  name: 'UserSubscription',
+  fields: {
+    memberPlan: {
+      type: GraphQLNonNull(GraphQLPublicMemberPlan),
+      resolve({memberPlanID}, args, {loaders}) {
+        return loaders.memberPlansByID.load(memberPlanID)
+      }
+    },
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    paidUntil: {type: GraphQLDateTime},
+    paymentMethod: {
+      type: GraphQLNonNull(GraphQLPublicPaymentMethod),
+      resolve({paymentMethodID}, args, {loaders}) {
+        return loaders.paymentMethodsByID.load(paymentMethodID)
+      }
+    },
+    deactivatedAt: {type: GraphQLDateTime}
+  }
+})
+
+export const GraphQLUserAddress = new GraphQLObjectType({
+  name: 'UserAddress',
+  fields: {
+    street: {type: GraphQLNonNull(GraphQLString)},
+    zipCode: {type: GraphQLNonNull(GraphQLString)},
+    city: {type: GraphQLNonNull(GraphQLString)},
+    country: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -50,6 +89,15 @@ export const GraphQLUser = new GraphQLObjectType({
 
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddress},
+
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    lastLogin: {type: GraphQLDateTime},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+
     roles: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole))),
       resolve({roleIDs}, args, {loaders}) {
@@ -60,13 +108,16 @@ export const GraphQLUser = new GraphQLObjectType({
   }
 })
 
-export const GraphQLPublicUser = new GraphQLObjectType({
+export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
   name: 'User',
   fields: {
     id: {type: GraphQLNonNull(GraphQLString)},
 
     name: {type: GraphQLNonNull(GraphQLString)},
-    email: {type: GraphQLNonNull(GraphQLString)}
+    email: {type: GraphQLNonNull(GraphQLString)},
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddress},
+    subscription: {type: GraphQLPublicUserSubscription}
   }
 })
 
@@ -109,11 +160,29 @@ export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
   }
 })
 
+export const GraphQLUserAddressInput = new GraphQLInputObjectType({
+  name: 'UserAddressInput',
+  fields: {
+    street: {type: GraphQLNonNull(GraphQLString)},
+    zipCode: {type: GraphQLNonNull(GraphQLString)},
+    city: {type: GraphQLNonNull(GraphQLString)},
+    country: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
     name: {type: GraphQLNonNull(GraphQLString)},
     email: {type: GraphQLNonNull(GraphQLString)},
+
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddressInput},
+
+    active: {type: GraphQLNonNull(GraphQLBoolean)},
+
+    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+
     roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
   }
 })
@@ -122,12 +191,34 @@ export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
   name: 'UserSubscriptionInput',
   fields: {
     memberPlanID: {type: GraphQLNonNull(GraphQLString)},
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
     deactivatedAt: {type: GraphQLDateTime}
+  }
+})
+
+export const GraphQLPublicUserInput = new GraphQLInputObjectType({
+  name: 'UserInput',
+  fields: {
+    name: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: GraphQLNonNull(GraphQLString)},
+
+    preferredName: {type: GraphQLString},
+    address: {type: GraphQLUserAddressInput}
+  }
+})
+
+export const GraphQLPublicUserSubscriptionInput = new GraphQLInputObjectType({
+  name: 'UserSubscriptionInput',
+  fields: {
+    memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+    paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
   }
 })
