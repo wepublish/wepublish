@@ -183,6 +183,19 @@ export type AuthProvider = {
   url: Scalars['String']
 }
 
+export type AvailablePaymentMethod = {
+  __typename?: 'AvailablePaymentMethod'
+  paymentMethods: Array<PaymentMethod>
+  paymentPeriodicities: Array<PaymentPeriodicity>
+  forceAutoRenewal: Scalars['Boolean']
+}
+
+export type AvailablePaymentMethodInput = {
+  paymentMethodIDs: Array<Scalars['String']>
+  paymentPeriodicities: Array<PaymentPeriodicity>
+  forceAutoRenewal: Scalars['Boolean']
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String']
 }
@@ -238,6 +251,19 @@ export type CreatePeerInput = {
   slug: Scalars['String']
   hostURL: Scalars['String']
   token: Scalars['String']
+}
+
+export type DateFilter = {
+  date?: Maybe<Scalars['DateTime']>
+  comparison: DateFilterComparison
+}
+
+export enum DateFilterComparison {
+  Greater = 'GREATER',
+  GreaterOrEqual = 'GREATER_OR_EQUAL',
+  Equal = 'EQUAL',
+  Lower = 'LOWER',
+  LowerOrEqual = 'LOWER_OR_EQUAL'
 }
 
 export type EmbedBlock = {
@@ -401,6 +427,62 @@ export type InstagramPostBlockInput = {
   postID: Scalars['String']
 }
 
+export type Invoice = {
+  __typename?: 'Invoice'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  mail: Scalars['String']
+  user?: Maybe<User>
+  description?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['DateTime']>
+  items: Array<InvoiceItem>
+  total: Scalars['Int']
+}
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection'
+  nodes: Array<Invoice>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type InvoiceFilter = {
+  mail?: Maybe<Scalars['String']>
+}
+
+export type InvoiceInput = {
+  mail: Scalars['String']
+  userID?: Maybe<Scalars['ID']>
+  description?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['DateTime']>
+  items: Array<InvoiceItemInput>
+}
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem'
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  amount: Scalars['Int']
+  total: Scalars['Int']
+}
+
+export type InvoiceItemInput = {
+  name: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  amount: Scalars['Int']
+}
+
+export enum InvoiceSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PaidAt = 'PAID_AT'
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
@@ -450,6 +532,47 @@ export type ListicleItemInput = {
   richText: Scalars['RichText']
 }
 
+export type MemberPlan = {
+  __typename?: 'MemberPlan'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  slug: Scalars['String']
+  image?: Maybe<Image>
+  description?: Maybe<Scalars['RichText']>
+  active: Scalars['Boolean']
+  amountPerMonthMin: Scalars['Int']
+  availablePaymentMethods: Array<AvailablePaymentMethod>
+}
+
+export type MemberPlanConnection = {
+  __typename?: 'MemberPlanConnection'
+  nodes: Array<MemberPlan>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type MemberPlanFilter = {
+  name?: Maybe<Scalars['String']>
+  active?: Maybe<Scalars['Boolean']>
+}
+
+export type MemberPlanInput = {
+  name: Scalars['String']
+  slug: Scalars['String']
+  imageID?: Maybe<Scalars['ID']>
+  description?: Maybe<Scalars['RichText']>
+  active: Scalars['Boolean']
+  amountPerMonthMin: Scalars['Int']
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>
+}
+
+export enum MemberPlanSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   updatePeerProfile: PeerProfile
@@ -467,8 +590,10 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>
   createUser?: Maybe<User>
   updateUser?: Maybe<User>
+  updateUserSubscription?: Maybe<UserSubscription>
   resetUserPassword?: Maybe<User>
   deleteUser?: Maybe<Scalars['String']>
+  deleteUserSubscription?: Maybe<Scalars['String']>
   createUserRole?: Maybe<UserRole>
   updateUserRole?: Maybe<UserRole>
   deleteUserRole?: Maybe<Scalars['String']>
@@ -491,6 +616,16 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>
   publishPage?: Maybe<Page>
   unpublishPage?: Maybe<Page>
+  createMemberPlan?: Maybe<MemberPlan>
+  updateMemberPlan?: Maybe<MemberPlan>
+  deleteMemberPlan?: Maybe<Scalars['ID']>
+  createPaymentMethod?: Maybe<PaymentMethod>
+  updatePaymentMethod?: Maybe<PaymentMethod>
+  deletePaymentMethod?: Maybe<Scalars['ID']>
+  createInvoice?: Maybe<Invoice>
+  createPaymentFromInvoice?: Maybe<Payment>
+  updateInvoice?: Maybe<Invoice>
+  deleteInvoice?: Maybe<Scalars['ID']>
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -552,6 +687,11 @@ export type MutationUpdateUserArgs = {
   input: UserInput
 }
 
+export type MutationUpdateUserSubscriptionArgs = {
+  userID: Scalars['ID']
+  input: UserSubscriptionInput
+}
+
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID']
   password: Scalars['String']
@@ -560,6 +700,10 @@ export type MutationResetUserPasswordArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']
+}
+
+export type MutationDeleteUserSubscriptionArgs = {
+  userID: Scalars['ID']
 }
 
 export type MutationCreateUserRoleArgs = {
@@ -659,6 +803,49 @@ export type MutationPublishPageArgs = {
 }
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreateMemberPlanArgs = {
+  input: MemberPlanInput
+}
+
+export type MutationUpdateMemberPlanArgs = {
+  id: Scalars['ID']
+  input: MemberPlanInput
+}
+
+export type MutationDeleteMemberPlanArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreatePaymentMethodArgs = {
+  input: PaymentMethodInput
+}
+
+export type MutationUpdatePaymentMethodArgs = {
+  id: Scalars['ID']
+  input: PaymentMethodInput
+}
+
+export type MutationDeletePaymentMethodArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreateInvoiceArgs = {
+  input: InvoiceInput
+}
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput
+}
+
+export type MutationUpdateInvoiceArgs = {
+  id: Scalars['ID']
+  input: InvoiceInput
+}
+
+export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID']
 }
 
@@ -789,6 +976,84 @@ export type PageTeaserInput = {
   pageID: Scalars['ID']
 }
 
+export type Payment = {
+  __typename?: 'Payment'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  intentID?: Maybe<Scalars['String']>
+  intentSecret?: Maybe<Scalars['String']>
+  state: PaymentState
+  invoice: Invoice
+  intentData?: Maybe<Scalars['String']>
+  paymentMethod: PaymentMethod
+  paymentData?: Maybe<Scalars['String']>
+}
+
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection'
+  nodes: Array<Payment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PaymentFilter = {
+  intentID?: Maybe<Scalars['String']>
+}
+
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String']
+  paymentMethodID: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
+}
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  description: Scalars['String']
+  paymentProvider: PaymentProvider
+  active: Scalars['Boolean']
+}
+
+export type PaymentMethodInput = {
+  name: Scalars['String']
+  description: Scalars['String']
+  paymentProviderID: Scalars['String']
+  active: Scalars['Boolean']
+}
+
+export enum PaymentPeriodicity {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Biannual = 'BIANNUAL',
+  Yearly = 'YEARLY'
+}
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider'
+  id: Scalars['ID']
+  name: Scalars['String']
+}
+
+export enum PaymentSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum PaymentState {
+  Created = 'Created',
+  Submitted = 'Submitted',
+  RequiresUserAction = 'RequiresUserAction',
+  Processing = 'Processing',
+  Payed = 'Payed',
+  Canceled = 'Canceled',
+  Declined = 'Declined'
+}
+
 export type Peer = {
   __typename?: 'Peer'
   id: Scalars['ID']
@@ -906,6 +1171,15 @@ export type Query = {
   peerArticles: PeerArticleConnection
   page?: Maybe<Page>
   pages: PageConnection
+  memberPlan?: Maybe<MemberPlan>
+  memberPlans: MemberPlanConnection
+  paymentMethod?: Maybe<PaymentMethod>
+  paymentMethods: Array<PaymentMethod>
+  paymentProviders: Array<PaymentProvider>
+  invoice?: Maybe<Invoice>
+  invoices: InvoiceConnection
+  payment?: Maybe<Payment>
+  payments: PaymentConnection
 }
 
 export type QueryPeerArgs = {
@@ -1016,6 +1290,52 @@ export type QueryPagesArgs = {
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<PageFilter>
   sort?: Maybe<PageSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryMemberPlanArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
+export type QueryMemberPlansArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<MemberPlanFilter>
+  sort?: Maybe<MemberPlanSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryPaymentMethodArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
+export type QueryInvoiceArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
+export type QueryInvoicesArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<InvoiceFilter>
+  sort?: Maybe<InvoiceSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>
+}
+
+export type QueryPaymentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<PaymentFilter>
+  sort?: Maybe<PaymentSort>
   order?: Maybe<SortOrder>
 }
 
@@ -1172,7 +1492,28 @@ export type User = {
   modifiedAt: Scalars['DateTime']
   name: Scalars['String']
   email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddress>
+  active: Scalars['Boolean']
+  lastLogin?: Maybe<Scalars['DateTime']>
+  properties: Array<Properties>
   roles: Array<UserRole>
+  subscription?: Maybe<UserSubscription>
+}
+
+export type UserAddress = {
+  __typename?: 'UserAddress'
+  street: Scalars['String']
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
+}
+
+export type UserAddressInput = {
+  street: Scalars['String']
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
 }
 
 export type UserConnection = {
@@ -1184,11 +1525,16 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
+  subscription?: Maybe<UserSubscriptionFilter>
 }
 
 export type UserInput = {
   name: Scalars['String']
   email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddressInput>
+  active: Scalars['Boolean']
+  properties: Array<PropertiesInput>
   roleIDs?: Maybe<Array<Scalars['String']>>
 }
 
@@ -1226,6 +1572,36 @@ export enum UserRoleSort {
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription'
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  deactivatedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type UserSubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>
+  paidUntil?: Maybe<DateFilter>
+  deactivatedAt?: Maybe<DateFilter>
+  autoRenew?: Maybe<Scalars['Boolean']>
+}
+
+export type UserSubscriptionInput = {
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethodID: Scalars['String']
+  deactivatedAt?: Maybe<Scalars['DateTime']>
 }
 
 export type VimeoVideoBlock = {

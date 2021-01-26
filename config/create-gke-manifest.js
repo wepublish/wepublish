@@ -504,15 +504,33 @@ async function applyApiServer() {
           }
         },
         spec: {
+          volumes: [
+            {
+              name: 'google-cloud-key',
+              secret: {
+                secretName: 'log-the-things'
+              }
+            }
+          ],
           containers: [
             {
               name: appName,
               image: image,
               command: ['node', './examples/api/dist/index.js'],
+              volumeMounts: [
+                {
+                  "name": "google-cloud-key",
+                  "mountPath": "/var/secrets/google"
+                }
+              ],
               env: [
                 {
                   name: 'NODE_ENV',
                   value: `production`
+                },
+                {
+                  name: "GOOGLE_APPLICATION_CREDENTIALS",
+                  value: "/var/secrets/google/key.json"
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
@@ -671,6 +689,60 @@ async function applyApiServer() {
                       key: 'jwt_secret_key'
                     }
                   }
+                },
+                {
+                  name: 'STRIPE_SECRET_KEY',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_secret_key'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'STRIPE_CHECKOUT_WEBHOOK_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'stripe_checkout_webhook_secret'
+                    }
+                  }
+                },
+                {
+                  name: 'PAYREXX_INSTANCE_NAME',
+                  value: 'tsridev'
+                },
+                {
+                  name: 'PAYREXX_API_SECRET',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'payrexx_api_secret'
+                    }
+                  }
+                },{
+                  name: 'SENTRY_DSN',
+                  valueFrom: {
+                    secretKeyRef: {
+                      name: 'wepublish-secrets',
+                      key: 'sentry_dsn'
+                    }
+                  }
+                },{
+                  name: 'SENTRY_ENV',
+                  value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
+                },{
+                  name: 'GOOGLE_PROJECT',
+                  value: PROJECT_ID
                 }
               ],
               ports: [
