@@ -1,6 +1,8 @@
 import {
   DBCommentAdapter,
   AddPublicCommentArgs,
+  TakeActionOnCommentArgs,
+  OptionalComment,
   Comment,
   GetCommentsArgs,
   ConnectionResult,
@@ -179,5 +181,33 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       text: revisions[revisions.length - 1].text,
       ...comment
     }))
+  }
+
+  async takeActionOnComment({
+    id,
+    state,
+    rejectionReason
+  }: TakeActionOnCommentArgs): Promise<OptionalComment> {
+    const {value} = await this.comments.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          state,
+          rejectionReason,
+          modifiedAt: new Date()
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    )
+
+    if (!value) return null
+    const {_id: outID, ...comment} = value
+
+    return {
+      ...comment,
+      id: outID
+    }
   }
 }

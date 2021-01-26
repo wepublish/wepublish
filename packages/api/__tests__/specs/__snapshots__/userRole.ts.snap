@@ -10,6 +10,11 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
+          "description": "Allows to take an action on comment",
+          "id": "CAN_TAKE_COMMENT_ACTION",
+        },
+        Object {
+          "deprecated": false,
           "description": "Allows to create navigation",
           "id": "CAN_CREATE_NAVIGATION",
         },
@@ -322,6 +327,11 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to create navigation",
               "id": "CAN_CREATE_NAVIGATION",
             },
@@ -612,6 +622,11 @@ Object {
           "permissions": Array [
             Object {
               "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
+            Object {
+              "deprecated": false,
               "description": "Allows to create authors",
               "id": "CAN_CREATE_AUTHOR",
             },
@@ -703,6 +718,11 @@ Object {
           "id": Any<String>,
           "name": "Admin",
           "permissions": Array [
+            Object {
+              "deprecated": false,
+              "description": "Allows to take an action on comment",
+              "id": "CAN_TAKE_COMMENT_ACTION",
+            },
             Object {
               "deprecated": false,
               "description": "Allows to create navigation",
@@ -981,13 +1001,13 @@ Object {
       "permissions": Array [
         Object {
           "deprecated": false,
-          "description": "Allows to create navigation",
-          "id": "CAN_CREATE_NAVIGATION",
+          "description": "Allows to take an action on comment",
+          "id": "CAN_TAKE_COMMENT_ACTION",
         },
         Object {
           "deprecated": false,
-          "description": "Allows to delete navigations",
-          "id": "CAN_DELETE_NAVIGATION",
+          "description": "Allows to get all navigations",
+          "id": "CAN_GET_NAVIGATIONS",
         },
       ],
       "systemRole": false,
@@ -1007,6 +1027,11 @@ exports[`User Roles can be created/edited/deleted: can read permission list 1`] 
 Object {
   "data": Object {
     "permissions": Array [
+      Object {
+        "deprecated": false,
+        "description": "Allows to take an action on comment",
+        "id": "CAN_TAKE_COMMENT_ACTION",
+      },
       Object {
         "deprecated": false,
         "description": "Allows to create navigation",
