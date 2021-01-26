@@ -131,7 +131,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
         if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
 
         if (
           !memberPlan.availablePaymentMethods.some(apm => {

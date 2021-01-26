@@ -67,7 +67,7 @@ export class MongoDBPaymentMethodAdapter implements DBPaymentMethodAdapter {
   async getActivePaymentMethods(): Promise<PaymentMethod[]> {
     const paymentMethods = await this.paymentMethods
       .find({active: true})
-      .sort({createAd: -1})
+      .sort({createdAt: -1})
       .toArray()
     return paymentMethods.map(({_id: id, ...data}) => ({id, ...data}))
   }
