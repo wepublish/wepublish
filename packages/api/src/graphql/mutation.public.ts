@@ -9,7 +9,8 @@ import {
   InvalidCredentialsError,
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
-  UserNotFoundError
+  UserNotFoundError,
+  NotAuthorisedError as NotAuthorizedError
 } from '../error'
 import {
   GraphQLPublicCommentInput,
@@ -110,13 +111,24 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
       },
-      async resolve(_, {input}, {dbAdapter}) {
-        const {id, text} = input
-        return await dbAdapter.comment.updatePublicComment({
-          id,
-          text,
-          state: CommentState.PendingApproval
-        })
+      async resolve(_, {input}, {dbAdapter, authenticateUser}) {
+        const {user} = authenticateUser()
+
+        const comment = await dbAdapter.comment.getCommentById(input.id)
+
+        if (!comment) return null
+
+        if (user.id === comment?.userID) {
+          const {id, text} = input
+
+          return await dbAdapter.comment.updatePublicComment({
+            id,
+            text,
+            state: CommentState.PendingApproval
+          })
+        } else {
+          throw new NotAuthorizedError()
+        }
       }
     }
   }

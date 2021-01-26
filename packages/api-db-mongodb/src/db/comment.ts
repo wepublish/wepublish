@@ -11,7 +11,8 @@ import {
   CommentSort,
   SortOrder,
   PublicComment,
-  OptionalPublicComment
+  OptionalPublicComment,
+  OptionalComment
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -215,5 +216,18 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       text: revisions[revisions.length - 1].text,
       ...comment
     }))
+  }
+
+  async getCommentById(id: string): Promise<OptionalComment> {
+    const value = await this.comments.findOne({_id: id})
+
+    if (!value) return null
+
+    const {_id: outID, ...comment} = value
+
+    return {
+      id: outID,
+      ...comment
+    }
   }
 }
