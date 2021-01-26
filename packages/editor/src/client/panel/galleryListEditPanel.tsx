@@ -78,6 +78,8 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           header={''}
           image={image}
           disabled={false}
+          left={5}
+          top={0}
           openChooseModalOpen={() => setChooseModalOpen(true)}
           openEditModalOpen={() => setEditModalOpen(true)}
           removeImage={() => onChange?.({...value, image: null})}
@@ -86,7 +88,7 @@ export function GalleryListItem({value, onChange}: FieldProps<GalleryImageEdge>)
           <FormGroup>
             <ControlLabel>{t('blocks.imageGallery.panels.caption')}</ControlLabel>
             <FormControl
-              rows={5}
+              rows={1}
               componentClass="textarea"
               value={caption}
               onChange={caption => onChange({...value, caption})}
