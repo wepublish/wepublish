@@ -1,36 +1,51 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
-  RouteType,
-  useRoute,
-  useRouteDispatch,
-  UserEditRoute,
-  UserCreateRoute,
-  UserListRoute,
   ButtonLink,
-  Link
+  Link,
+  RouteType,
+  UserCreateRoute,
+  UserEditRoute,
+  UserListRoute,
+  useRoute,
+  useRouteDispatch
 } from '../route'
 
 import {RouteActionType} from '@karma.run/react'
 
-import {useDeleteUserMutation, FullUserFragment, useUserListQuery} from '../api'
+import {FullUserFragment, useDeleteUserMutation, UserSort, useUserListQuery} from '../api'
 import {UserEditPanel} from '../panel/userEditPanel'
 import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 
 import {useTranslation} from 'react-i18next'
 import {
+  Button,
+  Drawer,
   FlexboxGrid,
   Icon,
-  Input,
-  Drawer,
-  InputGroup,
-  Table,
   IconButton,
+  Input,
+  InputGroup,
   Modal,
-  Button
+  Table
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-const {Column, HeaderCell, Cell /*, Pagination */} = Table
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
+
+function mapColumFieldToGraphQLField(columnField: string): UserSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return UserSort.CreatedAt
+    case 'modifiedAt':
+      return UserSort.ModifiedAt
+    case 'name':
+      return UserSort.Name
+    default:
+      return null
+  }
+}
 
 export function UserList() {
   const {current} = useRoute()
@@ -50,15 +65,32 @@ export function UserList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<FullUserFragment>()
 
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [users, setUsers] = useState<FullUserFragment[]>([])
 
   const {data, refetch, loading: isLoading} = useUserListQuery({
     variables: {
       filter: filter || undefined,
-      first: 50 // TODO: Pagination
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     },
     fetchPolicy: 'network-only'
   })
+
+  useEffect(() => {
+    refetch({
+      filter: filter || undefined,
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    })
+  }, [filter, page, limit, sortOrder, sortField])
 
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
@@ -79,24 +111,11 @@ export function UserList() {
   useEffect(() => {
     if (data?.users?.nodes) {
       setUsers(data.users.nodes)
+      if (data.users.totalCount + 9 < page * limit) {
+        setPage(1)
+      }
     }
   }, [data?.users])
-
-  /* function loadMore() {
-    fetchMore({
-      variables: {first: 50, after: data?.users.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          users: {
-            ...fetchMoreResult.users,
-            nodes: [...prev.users.nodes, ...fetchMoreResult?.users.nodes]
-          }
-        }
-      }
-    })
-  } */
 
   return (
     <>
@@ -119,51 +138,90 @@ export function UserList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={users}>
-        <Column width={200} align="left" resizable>
-          <HeaderCell>{t('userList.overview.name')}</HeaderCell>
-          <Cell>
-            {(rowData: FullUserFragment) => (
-              <Link route={UserEditRoute.create({id: rowData.id})}>
-                {rowData.name || t('userList.overview.untitled')}
-              </Link>
-            )}
-          </Cell>
-        </Column>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('description')}</HeaderCell>
-          <Cell dataKey="email" />
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullUserFragment) => (
-              <>
-                <IconButton
-                  icon={<Icon icon="key" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={e => {
-                    setCurrentUser(rowData)
-                    setIsResetUserPasswordOpen(true)
-                  }}
-                />
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentUser(rowData)
-                  }}
-                />
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        <Table
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={users}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
+            <Cell dataKey={'name'}>
+              {(rowData: FullUserFragment) => (
+                <Link route={UserEditRoute.create({id: rowData.id})}>
+                  {rowData.name || t('userList.overview.unknown')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('email')}</HeaderCell>
+            <Cell dataKey="email" />
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: FullUserFragment) => (
+                <>
+                  <IconButton
+                    icon={<Icon icon="key" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={e => {
+                      setCurrentUser(rowData)
+                      setIsResetUserPasswordOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setConfirmationDialogOpen(true)
+                      setCurrentUser(rowData)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          activePage={page}
+          displayLength={limit}
+          total={data?.users.totalCount}
+          onChangePage={page => setPage(page)}
+          onChangeLength={limit => setLimit(limit)}
+        />
+      </div>
 
       <Drawer
         show={isEditModalOpen}

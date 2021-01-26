@@ -1,6 +1,7 @@
 import nanoid from 'nanoid'
 import {useRef, useState, useEffect, useCallback, useMemo} from 'react'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
+import {SortOrder} from './api'
 
 export enum LocalStorageKey {
   SessionToken = 'sessionToken'
@@ -127,3 +128,34 @@ export function transformCssStringToObject(styleCustom: string): Record<string, 
     return previousValue
   }, {})
 }
+
+export type SortType = 'asc' | 'desc' | null
+export function mapTableSortTypeToGraphQLSortOrder(sortType: SortType): SortOrder | null {
+  switch (sortType) {
+    case 'desc':
+      return SortOrder.Descending
+    case 'asc':
+      return SortOrder.Ascending
+    default:
+      return null
+  }
+}
+
+export const DEFAULT_TABLE_PAGE_SIZES = [
+  {
+    value: 10,
+    label: 10
+  },
+  {
+    value: 20,
+    label: 20
+  },
+  {
+    value: 50,
+    label: 50
+  },
+  {
+    value: 100,
+    label: 100
+  }
+]

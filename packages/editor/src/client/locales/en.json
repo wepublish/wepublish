@@ -298,6 +298,8 @@
     "userList": {
       "overview": {
         "name": "Name",
+        "createdAt": "Created",
+        "modifiedAt": "Last modified",
         "unknown": "Unknown",
         "description": "Description",
         "noDescription": "No Description",
