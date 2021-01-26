@@ -146,9 +146,11 @@ export function ImageGalleryBlock({
               style={{
                 padding: 0,
                 position: 'relative',
-                width: '100%',
-                height: '200px',
-                backgroundSize: 'cover',
+                height: '100%',
+                backgroundSize: `${image?.height > 300 ? 'contain' : 'auto'}`,
+                backgroundPositionX: 'center',
+                backgroundPositionY: 'center',
+                backgroundRepeat: 'no-repeat',
                 backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
               }}>
               <Dropdown
