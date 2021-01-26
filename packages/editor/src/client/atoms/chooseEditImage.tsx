@@ -7,6 +7,8 @@ export interface ChooseEditImageProps {
   image: any
   header?: string
   disabled: boolean
+  left?: number
+  top?: number
   openChooseModalOpen?: () => void
   openEditModalOpen?: () => void
   removeImage?: () => void
@@ -16,6 +18,8 @@ export function ChooseEditImage({
   image,
   header,
   disabled,
+  left,
+  top,
   openChooseModalOpen,
   openEditModalOpen,
   removeImage
@@ -23,21 +27,23 @@ export function ChooseEditImage({
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
-    <Panel
-      header={header}
-      style={{
-        height: 300
-      }}>
+    <Panel header={header} bodyFill={true} style={{height: 240, marginBottom: 10}}>
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
             style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              position: 'relative'
             }}>
+            <img
+              style={{maxHeight: '240'}}
+              src={image?.largeURL ?? '/static/placeholder-240x240.png'}
+            />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', zIndex: 1, left: 5, top: 5}}>
+              <div style={{position: 'absolute', left: left, top: top}}>
                 <Dropdown
                   renderTitle={() => {
                     return <IconButton appearance="primary" icon={<Icon icon="wrench" />} circle />
@@ -60,11 +66,6 @@ export function ChooseEditImage({
                 </Dropdown>
               </div>
             )}
-            <img
-              style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
-              src={image?.previewURL ?? '/static/placeholder-240x240.png'}
-              height={200}
-            />
           </div>
         )}
       </PlaceholderInput>

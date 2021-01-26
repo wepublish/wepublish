@@ -400,7 +400,8 @@
         "infoEditError": "Edit Token Error",
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
-        "callToActionURL": "Call To Action URL"
+        "callToActionURL": "Call To Action URL",
+        "image": "Image"
       }
     },
     "tokenList": {
@@ -498,8 +499,8 @@
       "richTextTable": {
         "insertTable": "Insert Table",
         "deleteTable": "Delete Table",
-        "showBorders": "Show Borders",
-        "hideBorders": "Hide Borders",
+        "border": "Border",
+        "addBorders": "Add Borders",
         "rows": "Rows",
         "columns": "Columns",
         "cancel": "Cancel",

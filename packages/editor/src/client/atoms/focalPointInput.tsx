@@ -72,12 +72,16 @@ export function FocalPointInput({
       <div ref={imageContainer}>
         {layouted && (
           <div style={{position: 'relative', width: '100%', height: '100%'}}>
-            <Panel style={{overflow: 'hidden', width: '100%', height: '100%'}}>
-              <img
-                src={imageURL}
-                width={/* imageWidth */ '100%'}
-                height={/* imageHeight  */ '100%'}
-              />
+            <Panel
+              style={{
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+                width: '100%'
+              }}>
+              <img src={imageURL} style={{maxHeight: '300'}} />
             </Panel>
             <div
               style={{
