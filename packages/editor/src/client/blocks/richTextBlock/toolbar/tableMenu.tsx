@@ -1,34 +1,58 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, InputGroup, InputNumber} from 'rsuite'
+import {Button, Icon, InputGroup, InputNumber} from 'rsuite'
 import {Transforms} from 'slate'
 import {useSlate} from 'slate-react'
-import {SubMenuContext} from '../../../atoms/toolbar'
+import {ColorPicker} from '../../../atoms/colorPicker'
+import {ControlsContainer, SubMenuContext} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
-import {defaultBorderColor, emptyCellsTable} from '../editor/elements'
+import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 
 import './tableMenu.less'
 
 export function TableMenu() {
   const editor = useSlate()
+
   const {closeMenu} = useContext(SubMenuContext)
 
   const [nrows, setNrows] = useState(2)
   const [ncols, setNcols] = useState(1)
+  const [borderColor, setBorderColor] = useState<string>()
 
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const {t} = useTranslation()
 
-  const isBorderVisible = () => {
-    const [match] = WepublishEditor.nodes(editor, {
-      match: node => (node.borderColor && node.borderColor !== 'transparent') as boolean,
-      mode: 'all'
+  useEffect(() => {
+    const nodes = WepublishEditor.nodes(editor, {
+      match: node => node.type === BlockFormat.TableCell
     })
+    for (const [node] of nodes) {
+      setBorderColor(node.borderColor as string)
+      return
+    }
+  }, [editor.selection])
 
-    return !!match
-  }
+  useEffect(() => {
+    if (borderColor) {
+      const nodes = WepublishEditor.nodes(editor, {
+        match: node => node.type === BlockFormat.Table
+      })
+      for (const [, path] of nodes) {
+        Transforms.setNodes(
+          editor,
+          {borderColor},
+          {
+            at: path,
+            match: node => node.type === BlockFormat.TableCell
+          }
+        )
+        return
+      }
+    }
+  }, [borderColor])
+
   const tableInsertControls = (
     <>
       {[
@@ -67,36 +91,26 @@ export function TableMenu() {
     })
   }
 
-  const setTableCellBorderColor = (color: string) => {
-    const {selection} = editor
-    if (selection) {
-      const nodes = Array.from(
-        WepublishEditor.nodes(editor, {
-          at: selection,
-          match: node => node.type === BlockFormat.Table
-        })
-      )
-      Transforms.setNodes(
-        editor,
-        {borderColor: color},
-        {at: nodes[0][1], match: node => node.type === BlockFormat.TableCell}
-      )
-    }
-  }
-
   const tableModifyControls = (
     <>
       {!showRemoveConfirm ? (
         <>
-          {isBorderVisible() ? (
-            <Button appearance="subtle" onClick={() => setTableCellBorderColor('transparent')}>
-              {t('blocks.richTextTable.hideBorders')}
-            </Button>
+          {borderColor && borderColor !== '#00000000' ? (
+            <ControlsContainer dividerBottom>
+              <ColorPicker
+                setColor={color => {
+                  setBorderColor(color)
+                }}
+                currentColor={borderColor}
+                label={t('blocks.richTextTable.border')}
+              />
+              <button className="icon-button" onClick={() => setBorderColor('#00000000')}>
+                <Icon icon="ban" style={{color: '#FF0000'}} />
+              </button>
+            </ControlsContainer>
           ) : (
-            <Button
-              appearance="default"
-              onClick={() => setTableCellBorderColor(defaultBorderColor)}>
-              {t('blocks.richTextTable.showBorders')}
+            <Button appearance="default" onClick={() => setBorderColor(DEFAULT_BORDER_COLOR)}>
+              {t('blocks.richTextTable.addBorders')}
             </Button>
           )}
           <Button color="red" appearance="ghost" onClick={() => setShowRemoveConfirm(true)}>
@@ -104,13 +118,7 @@ export function TableMenu() {
           </Button>
         </>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            width: '100%'
-          }}>
+        <ControlsContainer>
           <Button
             color="red"
             appearance="primary"
@@ -124,7 +132,7 @@ export function TableMenu() {
           <Button appearance="default" onClick={() => setShowRemoveConfirm(false)}>
             {t('blocks.richTextTable.cancel')}
           </Button>
-        </div>
+        </ControlsContainer>
       )}
     </>
   )
