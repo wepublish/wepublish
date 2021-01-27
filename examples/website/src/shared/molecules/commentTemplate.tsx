@@ -51,7 +51,7 @@ const comments: Comments[] = [
     authorType: 'VerifiedUser',
     revisions: [
       {
-        text: 'I am angry',
+        text: "I don't like this article",
         createdAt: new Date(Date.now() - 10000)
       }
     ],
@@ -66,7 +66,7 @@ const comments: Comments[] = [
     authorType: 'Team',
     revisions: [
       {
-        text: 'Sauron, please go and eat a Snickers',
+        text: 'Sauron, please...',
         createdAt: new Date(Date.now())
       }
     ],
@@ -89,6 +89,16 @@ const comments: Comments[] = [
     modifiedAt: new Date(Date.now())
   }
 ]
+
+const nestedComments = (comments: Comments[]) => {
+  let childComments = [{}]
+  comments.map(comment => {
+    comment.parentID ?? childComments.push(comment)
+  })
+  console.log(childComments)
+}
+
+// CSS-Rules
 
 const Container = cssRule(() => ({
   width: '500px',
@@ -276,6 +286,8 @@ export function CommentList() {
   const css = useStyle()
 
   const [commentID, setCommentID] = useState('')
+
+  nestedComments(comments)
 
   return (
     <div className={css(Container, CommentBox)}>
