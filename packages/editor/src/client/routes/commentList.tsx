@@ -7,7 +7,8 @@ import {
   useCommentListQuery,
   // CommentListDocument,
   // CommentListQuery,
-  PageRefFragment
+  PageRefFragment,
+  CommentState
 } from '../api'
 
 // import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -18,7 +19,7 @@ import {
   Input,
   InputGroup,
   Icon,
-  // IconButton,
+  IconButton,
   Table
   // Modal, Button
 } from 'rsuite'
@@ -50,6 +51,8 @@ export function CommentList() {
       setComments(data.comments.nodes)
     }
   }, [data?.comments])
+
+  const [unpublishArticle, {loading: isUnpublishing}] = useComment()
 
   // function loadMore() {
   //   fetchMore({
@@ -85,6 +88,10 @@ export function CommentList() {
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={comments}>
         <Column width={100} align="left" resizable>
+          <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
+          <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
+        </Column>
+        <Column width={100} align="left" resizable>
           <HeaderCell>{t('comments.overview.created')}</HeaderCell>
           <Cell dataKey="createdAt" />
         </Column>
@@ -95,14 +102,28 @@ export function CommentList() {
         <Column width={100} align="left" resizable>
           <HeaderCell>{t('comments.overview.states')}</HeaderCell>
           <Cell>
-            {(rowData: PageRefFragment) => {
-              const states = []
+            {(rowData: CommentRefFragment) => {
+              console.log(rowData?.state)
 
-              if (rowData.draft) states.push(t('comments.overview.draft'))
-              if (rowData.pending) states.push(t('comments.overview.pending'))
-              if (rowData.published) states.push(t('comments.overview.published'))
-
-              return <div>{states.join(' / ')}</div>
+              let state: string
+              switch (rowData?.state) {
+                case CommentState.Approved:
+                  state = 'comments.state.pendingApproval'
+                  break
+                case CommentState.PendingApproval:
+                  state = 'comments.state.pendingApproval'
+                  break
+                case CommentState.PendingUserChanges:
+                  state = 'comments.state.pendingUserChanges'
+                  break
+                case CommentState.Rejected:
+                  state = 'comments.state.rejected'
+                  break
+                default:
+                  state = rowData?.state
+                  break
+              }
+              return <div>{t(state)}</div>
             }}
           </Cell>
         </Column>
@@ -111,20 +132,19 @@ export function CommentList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
               <>
-                {JSON.stringify(rowData)}
-                {/* {rowData.published && (
+                {rowData.published && (
                   <IconButton
                     icon={<Icon icon="arrow-circle-o-down" />}
                     circle
                     size="sm"
-                    onClick={e => {
+                    onClick={() => {
                       setCurrentComment(rowData)
                       setConfirmAction(ConfirmAction.Unpublish)
                       setConfirmationDialogOpen(true)
                     }}
                   />
-                )} */}
-                {/* <IconButton
+                )}
+                <IconButton
                   icon={<Icon icon="trash" />}
                   circle
                   size="sm"
@@ -134,7 +154,7 @@ export function CommentList() {
                     setConfirmAction(ConfirmAction.Delete)
                     setConfirmationDialogOpen(true)
                   }}
-                /> */}
+                />
               </>
             )}
           </Cell>

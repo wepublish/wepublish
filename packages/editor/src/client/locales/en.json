@@ -135,7 +135,8 @@
         "untitled": "Untitled",
         "draft": "Draft",
         "pending": "Pending",
-        "published": "Published"
+        "published": "Published",
+        "userName": "User Name"
       },
       "panels": {
         "cancel": "Cancel",
@@ -148,6 +149,12 @@
         "createdAt": "Created At",
         "updatedAt": "Updated At",
         "publishedAt": "Published At"
+      },
+      "state": {
+        "pendingApproval": "Pending Approval",
+        "pendingUserChanges": "Pending User Change",
+        "approved": "Approved",
+        "rejected": "Rejected"
       }
     },
     "pages": {
