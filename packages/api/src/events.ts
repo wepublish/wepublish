@@ -9,6 +9,11 @@ import {Author} from './db/author'
 import {Image} from './db/image'
 import {Navigation} from './db/navigation'
 import {UserRole} from './db/userRole'
+import {Invoice} from './db/invoice'
+import {MailLog} from './db/mailLog'
+import {MemberPlan} from './db/memberPlan'
+import {Payment} from './db/payment'
+import {PaymentMethod} from './db/paymentMethod'
 interface ModelEvents<T> {
   create: (context: Context, model: T) => void
   update: (context: Context, model: T) => void
@@ -28,11 +33,26 @@ export const authorModelEvents = new EventEmitter() as AuthorModelEventsEmitter
 export type ImageModelEventsEmitter = TypedEmitter<ModelEvents<Image>>
 export const imageModelEvents = new EventEmitter() as ImageModelEventsEmitter
 
+export type InvoiceModelEventsEmitter = TypedEmitter<ModelEvents<Invoice>>
+export const invoiceModelEvents = new EventEmitter() as InvoiceModelEventsEmitter
+
+export type MailLogModelEventsEmitter = TypedEmitter<ModelEvents<MailLog>>
+export const mailLogModelEvents = new EventEmitter() as MailLogModelEventsEmitter
+
+export type MemberPlanModelEventsEmitter = TypedEmitter<ModelEvents<MemberPlan>>
+export const memberPlanModelEvents = new EventEmitter() as MemberPlanModelEventsEmitter
+
 export type NavigationModelEventsEmitter = TypedEmitter<ModelEvents<Navigation>>
 export const navigationModelEvents = new EventEmitter() as NavigationModelEventsEmitter
 
 export type PageModelEventEmitter = TypedEmitter<PublishableModelEvents<Page>>
 export const pageModelEvents = new EventEmitter() as PageModelEventEmitter
+
+export type PaymentModelEventEmitter = TypedEmitter<ModelEvents<Payment>>
+export const paymentModelEvents = new EventEmitter() as PaymentModelEventEmitter
+
+export type PaymentMethodModelEventEmitter = TypedEmitter<ModelEvents<PaymentMethod>>
+export const paymentMethodModelEvents = new EventEmitter() as PaymentMethodModelEventEmitter
 
 export type PeerModelEventsEmitter = TypedEmitter<ModelEvents<Peer>>
 export const peerModelEvents = new EventEmitter() as PeerModelEventsEmitter
@@ -47,8 +67,13 @@ export type EventsEmitter =
   | ArticleModelEventEmitter
   | AuthorModelEventsEmitter
   | ImageModelEventsEmitter
+  | InvoiceModelEventsEmitter
+  | MailLogModelEventsEmitter
+  | MemberPlanModelEventsEmitter
   | NavigationModelEventsEmitter
   | PageModelEventEmitter
+  | PaymentModelEventEmitter
+  | PaymentMethodModelEventEmitter
   | PeerModelEventsEmitter
   | UserModelEventsEmitter
   | UserRoleModelEventsEmitter
@@ -79,6 +104,21 @@ export const methodsToProxy: MethodsToProxy[] = [
     eventEmitter: imageModelEvents
   },
   {
+    key: 'invoice',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: invoiceModelEvents
+  },
+  {
+    key: 'mailLog',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: mailLogModelEvents
+  },
+  {
+    key: 'memberPlan',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: memberPlanModelEvents
+  },
+  {
     key: 'navigation',
     methods: ['create', 'update', 'delete'],
     eventEmitter: navigationModelEvents
@@ -87,6 +127,16 @@ export const methodsToProxy: MethodsToProxy[] = [
     key: 'page',
     methods: ['create', 'update', 'delete', 'publish', 'unpublish'],
     eventEmitter: pageModelEvents
+  },
+  {
+    key: 'payment',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: paymentModelEvents
+  },
+  {
+    key: 'paymentMethod',
+    methods: ['create', 'update', 'delete'],
+    eventEmitter: paymentMethodModelEvents
   },
   {
     key: 'peer',
@@ -108,4 +158,53 @@ export const methodsToProxy: MethodsToProxy[] = [
 // this is an example on how to react to events. Not yet sure where that logic should go
 userModelEvents.on('create', (context, model) => {
   console.log(`User ${model.name} created`)
+})
+
+invoiceModelEvents.on('update', async (context, model) => {
+  // TODO: rethink this logic
+  if (model.paidAt !== null && model.userID) {
+    const user = await context.dbAdapter.user.getUserByID(model.userID)
+    if (!user || !user.subscription) return
+    const {periods} = user.subscription
+    const period = periods.find(period => period.invoiceID === model.id)
+    if (!period) return
+    if (user.subscription.paidUntil === null || period.endsAt > user.subscription.paidUntil) {
+      await context.dbAdapter.user.updateUserSubscription({
+        userID: user.id,
+        input: {
+          ...user.subscription,
+          paidUntil: period.endsAt
+        }
+      })
+
+      if (!user.active && user.lastLogin === null) {
+        await context.dbAdapter.user.updateUser({
+          id: user.id,
+          input: {
+            ...user,
+            active: true
+          }
+        })
+        // Send FirstTime Hello
+        const token = context.generateJWT({
+          userID: user.id,
+          expiresInMinutes: 60 * 24
+        })
+        const link = `${context.websiteURL}/login/jwt=${token}` // TODO: make this a setting
+        await context.sendMailFromProvider({
+          message: `Welcome Member. Click the link below to login: \n\n${link}`,
+          recipient: user.email,
+          subject: 'Welcome Member',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+      } else {
+        await context.sendMailFromProvider({
+          message: `Subscription has been renewed`,
+          recipient: user.email,
+          subject: 'Subscription is renewed',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+      }
+    }
+  }
 })

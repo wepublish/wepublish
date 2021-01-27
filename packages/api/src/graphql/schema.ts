@@ -1,6 +1,7 @@
 import {GraphQLSchema} from 'graphql'
 
-import {GraphQLQuery, GraphQLPublicQuery} from './query'
+import {GraphQLQuery} from './query.private'
+import {GraphQLPublicQuery} from './query.public'
 import {GraphQLAdminMutation} from './mutation.private'
 import {GraphQLPublicMutation} from './mutation.public'
 

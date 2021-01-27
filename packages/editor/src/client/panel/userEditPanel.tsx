@@ -9,8 +9,12 @@ import {
   Form,
   FormControl,
   FormGroup,
-  Modal
+  Modal,
+  Panel,
+  Toggle
 } from 'rsuite'
+
+import {DescriptionListItem, DescriptionList} from '../atoms/descriptionList'
 
 import {
   useCreateUserMutation,
@@ -18,12 +22,15 @@ import {
   useUpdateUserMutation,
   useUserQuery,
   useUserRoleListQuery,
-  FullUserRoleFragment
+  FullUserRoleFragment,
+  FullUserSubscriptionFragment
 } from '../api'
 
 import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
+import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
+import {Typography} from '../atoms/typography'
 
 export interface UserEditPanelProps {
   id?: string
@@ -34,12 +41,16 @@ export interface UserEditPanelProps {
 
 export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
+  const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
+  const [subscription, setUserSubscription] = useState<FullUserSubscriptionFragment>()
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
+  const [isUserSubscriptonEditOpen, setIsUserSubscriptonEditOpen] = useState(false)
 
   const {data, loading: isLoading, error: loadError} = useUserQuery({
     variables: {id: id!},
@@ -69,7 +80,10 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   useEffect(() => {
     if (data?.user) {
       setName(data.user.name)
+      setPreferredName(data.user.preferredName ?? undefined)
       setEmail(data.user.email)
+      setActive(data.user.active)
+      setUserSubscription(data.user.subscription ?? undefined)
       if (data.user.roles) {
         // TODO: fix this
         setRoles(data.user.roles as FullUserRoleFragment[])
@@ -93,31 +107,37 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   }, [loadError, createError, updateError, loadUserRoleError])
 
   async function handleSave() {
-    if (id) {
-      const {data} = await updateUser({
+    if (id && data?.user) {
+      const {data: updateData} = await updateUser({
         variables: {
           id,
           input: {
             name,
+            preferredName,
             email,
+            active,
+            properties: data.user.properties,
             roleIDs: roles.map(role => role.id)
           }
         }
       })
 
-      if (data?.updateUser) onSave?.(data.updateUser)
+      if (updateData?.updateUser) onSave?.(updateData.updateUser)
     } else {
-      const {data} = await createUser({
+      const {data: createData} = await createUser({
         variables: {
           input: {
             name,
+            preferredName,
             email,
+            active,
+            properties: [],
             roleIDs: roles.map(role => role.id)
           },
           password
         }
       })
-      if (data?.createUser) onSave?.(data.createUser)
+      if (createData?.createUser) onSave?.(createData.createUser)
     }
   }
 
@@ -130,56 +150,97 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       </Drawer.Header>
 
       <Drawer.Body>
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('userList.panels.name')}</ControlLabel>
-            <FormControl
-              name={t('userList.panels.name')}
-              value={name}
-              disabled={isDisabled}
-              onChange={value => setName(value)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('userList.panels.email')}</ControlLabel>
-            <FormControl
-              name={t('userList.panels.email')}
-              value={email}
-              disabled={isDisabled}
-              onChange={value => setEmail(value)}
-            />
-          </FormGroup>
-          {!id ? (
+        <Panel>
+          <Form fluid={true}>
             <FormGroup>
-              <ControlLabel>{t('userList.panels.password')}</ControlLabel>
+              <ControlLabel>{t('userList.panels.name')}</ControlLabel>
               <FormControl
-                type="password"
-                name={t('userList.panels.password')}
-                value={password}
+                name={t('userList.panels.name')}
+                value={name}
                 disabled={isDisabled}
-                onChange={value => setPassword(value)}
+                onChange={value => setName(value)}
               />
             </FormGroup>
-          ) : (
             <FormGroup>
-              <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-                {t('userList.panels.resetPassword')}
-              </Button>
+              <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.preferredName')}
+                value={preferredName}
+                disabled={isDisabled}
+                onChange={value => setPreferredName(value)}
+              />
             </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.email')}</ControlLabel>
+              <FormControl
+                name={t('userList.panels.email')}
+                value={email}
+                disabled={isDisabled}
+                onChange={value => setEmail(value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.active')}</ControlLabel>
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
+            </FormGroup>
+            {!id ? (
+              <FormGroup>
+                <ControlLabel>{t('userList.panels.password')}</ControlLabel>
+                <FormControl
+                  type="password"
+                  name={t('userList.panels.password')}
+                  value={password}
+                  disabled={isDisabled}
+                  onChange={value => setPassword(value)}
+                />
+              </FormGroup>
+            ) : (
+              <FormGroup>
+                <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
+                  {t('userList.panels.resetPassword')}
+                </Button>
+              </FormGroup>
+            )}
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
+              <CheckPicker
+                name={t('userList.panels.userRoles')}
+                block={true}
+                value={roles.map(role => role.id)}
+                data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
+                onChange={value => {
+                  setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
+                }}
+              />
+            </FormGroup>
+          </Form>
+        </Panel>
+        <Panel header={t('userList.panels.subTitle')}>
+          {subscription && (
+            <DescriptionList>
+              <DescriptionListItem label={t('userList.panels.startedAt')}>
+                {new Date(subscription.startsAt).toLocaleString()}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('userList.panels.payedUntil')}>
+                {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('userList.panels.memberPlan')}>
+                {subscription.memberPlan.name}
+              </DescriptionListItem>
+            </DescriptionList>
           )}
-          <FormGroup>
-            <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
-            <CheckPicker
-              name={t('userList.panels.userRoles')}
-              block={true}
-              value={roles.map(role => role.id)}
-              data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
-              onChange={value => {
-                setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
-              }}
-            />
-          </FormGroup>
-        </Form>
+          <Button
+            disabled={isDisabled || id === undefined}
+            appearance="primary"
+            onClick={() => setIsUserSubscriptonEditOpen(true)}>
+            {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
+          </Button>
+          {id === undefined && (
+            <div>
+              <Typography variant="body1">{t('userList.panels.subDisableDescription')}</Typography>
+            </div>
+          )}
+        </Panel>
       </Drawer.Body>
 
       <Drawer.Footer>
@@ -210,6 +271,23 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {id !== undefined && (
+        <Drawer
+          show={isUserSubscriptonEditOpen}
+          size={'sm'}
+          onHide={() => setIsUserSubscriptonEditOpen(false)}>
+          <UserSubscriptionEditPanel
+            userID={id}
+            subscription={subscription}
+            onClose={() => setIsUserSubscriptonEditOpen(false)}
+            onSave={value => {
+              setIsUserSubscriptonEditOpen(false)
+              setUserSubscription(value)
+            }}
+          />
+        </Drawer>
+      )}
     </>
   )
 }

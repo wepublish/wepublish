@@ -8,6 +8,10 @@ import {DBPageAdapter} from './page'
 import {DBPeerAdapter} from './peer'
 import {DBTokenAdapter} from './token'
 import {DBUserRoleAdapter} from './userRole'
+import {DBMemberPlanAdapter} from './memberPlan'
+import {DBPaymentMethodAdapter} from './paymentMethod'
+import {DBInvoiceAdapter} from './invoice'
+import {DBPaymentAdapter} from './payment'
 import {DBMailLogAdapter} from './mailLog'
 
 export interface DBAdapter {
@@ -21,5 +25,9 @@ export interface DBAdapter {
   readonly image: DBImageAdapter
   readonly article: DBArticleAdapter
   readonly page: DBPageAdapter
+  readonly memberPlan: DBMemberPlanAdapter
+  readonly paymentMethod: DBPaymentMethodAdapter
+  readonly invoice: DBInvoiceAdapter
+  readonly payment: DBPaymentAdapter
   readonly mailLog: DBMailLogAdapter
 }

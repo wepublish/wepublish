@@ -335,7 +335,8 @@
         "infoEditError": "Edit Token Error",
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
-        "callToActionURL": "Call To Action URL"
+        "callToActionURL": "Call To Action URL",
+        "image": "Image"
       }
     },
     "tokenList": {
