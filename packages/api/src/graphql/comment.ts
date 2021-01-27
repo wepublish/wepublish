@@ -105,8 +105,8 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
 
     user: {
       type: GraphQLNonNull(GraphQLUser),
-      resolve: createProxyingResolver((data, _, {dbAdapter}) => {
-        return dbAdapter.user.getUserByID(data.userID)
+      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
+        return dbAdapter.user.getUserByID(userID)
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
