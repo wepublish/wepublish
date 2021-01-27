@@ -16,17 +16,6 @@ interface Comment {
   modifiedAt: Date
 }
 
-interface RestructuredComment {
-  id: string
-  userID: string
-  children?: Comment[]
-  revisions: GraphQLCommentRevision[]
-  state: string
-  rejectionReason?: string
-  createdAt: Date
-  modifiedAt: Date
-}
-
 interface GraphQLCommentRevision {
   text: string
   createdAt: Date
@@ -101,19 +90,21 @@ const comments: Comment[] = [
   }
 ]
 
-const restructuredComments = comments.map(comment => {
-  const restructuredComment: RestructuredComment = {
+const parentComments = comments.filter(comment => comment.parentID === undefined)
+const childComments = comments.filter(comment => comment.parentID !== undefined)
+
+const restructuredComments = parentComments.map(comment => {
+  return {
     id: comment.id,
     userID: comment.userID,
+    authorType: comment.authorType,
     revisions: comment.revisions,
     state: comment.state,
     createdAt: comment.createdAt,
-    modifiedAt: comment.modifiedAt
+    modifiedAt: comment.modifiedAt,
+    children: childComments.filter(child => child.parentID === comment.id)
   }
-  return restructuredComment
 })
-
-// comment.parentID ?? childComments.push(comment)
 
 // CSS-Rules
 
@@ -155,13 +146,6 @@ const CommentButton = cssRule(() => ({
   fontWeight: 'bold'
 }))
 
-const CommentRevisionMeta = cssRule(() => ({
-  borderTop: `1px solid ${Color.Neutral}`,
-  fontSize: '0.8em',
-  margin: '1em 0 1em 0',
-  paddingTop: '1em'
-}))
-
 const Flex = cssRule(() => ({
   display: 'flex'
 }))
@@ -191,14 +175,6 @@ const SmallFont = cssRule(() => ({
 
 const Timestamp = cssRule(() => ({
   color: Color.Neutral
-}))
-
-const Display = cssRule(() => ({
-  display: 'block'
-}))
-
-const Hide = cssRule(() => ({
-  display: 'none'
 }))
 
 export interface ComposeCommentProps {
@@ -233,10 +209,7 @@ export function ComposeComment(props: ComposeCommentProps) {
 
 function Comment(props: any) {
   const css = useStyle()
-
-  const [showRevisions, setShowRevisions] = useState(false)
-
-  const toggleRevisions = () => setShowRevisions(!showRevisions)
+  console.log(props.comment)
 
   return (
     <>
@@ -250,10 +223,6 @@ function Comment(props: any) {
             <span>{props.comment.authorType}</span> ·{' '}
             <span className={css(Timestamp)}>
               {props.comment.modifiedAt.toLocaleString('de-DE')}
-            </span>{' '}
-            ·{' '}
-            <span className={css(Pointer)} onClick={toggleRevisions}>
-              {props.comment.revisions.length > 1 ? 'Edited' : ''}
             </span>
           </p>
           <p className={css(CommentBody)}>
@@ -268,24 +237,9 @@ function Comment(props: any) {
                 )
               }>
               Answer
-            </span>{' '}
-            | Report
+            </span>
+            <span> | Report</span>
           </p>
-          {props.comment.revisions
-            .slice(0, props.comment.revisions.length - 1)
-            .reverse()
-            .map((revision: GraphQLCommentRevision, index: number) => (
-              <div
-                className={showRevisions ? css(Display) : css(Hide)}
-                key={`comment${props.comment.id}-revision${index.toString()}`}>
-                <p className={css(CommentRevisionMeta)}>
-                  <span className={css(Timestamp)}>
-                    {revision.createdAt.toLocaleString('de-DE')}
-                  </span>
-                </p>
-                <p className={css(CommentBody)}>{revision.text}</p>
-              </div>
-            ))}
         </div>
       </div>
       <div>
@@ -294,6 +248,11 @@ function Comment(props: any) {
         ) : (
           ''
         )}
+      </div>
+      <div>
+        {props.comment.children.map((childComment: Comment) => {
+          return childComment.userID
+        })}
       </div>
     </>
   )
@@ -304,15 +263,13 @@ export function CommentList() {
 
   const [commentID, setCommentID] = useState('')
 
-  console.log(restructuredComments)
-
   return (
     <div className={css(Container, CommentBox)}>
       <h3>Show all comments</h3>
-      {comments.map(comment => (
+      {restructuredComments.map(parentComment => (
         <Comment
-          comment={comment}
-          key={comment.id}
+          comment={parentComment}
+          key={parentComment.id}
           handleCurrentComment={(commentID: React.SetStateAction<string>) =>
             setCommentID(commentID)
           }
