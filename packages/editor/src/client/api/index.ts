@@ -213,7 +213,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['ID'];
-  userID: User;
+  user: User;
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
@@ -1951,9 +1951,9 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 export type CommentRefFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
-  & { userID: (
+  & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'name'>
+    & FullUserFragment
   ) }
 );
 
@@ -3002,18 +3002,46 @@ export const FullBlockFragmentDoc = gql`
 }
     ${ImageRefFragmentDoc}
 ${FullTeaserFragmentDoc}`;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on User {
+  id
+  name
+  email
+  roles {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
 export const CommentRefFragmentDoc = gql`
     fragment CommentRef on Comment {
   id
   state
   rejectionReason
-  userID {
-    name
+  user {
+    ...FullUser
   }
   createdAt
   modifiedAt
 }
-    `;
+    ${FullUserFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -3093,34 +3121,6 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
-export const FullPermissionFragmentDoc = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRoleFragmentDoc = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-export const FullUserFragmentDoc = gql`
-    fragment FullUser on User {
-  id
-  name
-  email
-  roles {
-    ...FullUserRole
-  }
-}
-    ${FullUserRoleFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
