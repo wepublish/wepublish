@@ -7,28 +7,23 @@ import {
   useCommentListQuery,
   // CommentListDocument,
   // CommentListQuery,
-  PageRefFragment,
+  // PageRefFragment,
   CommentState
 } from '../api'
 
-// import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {
+  DescriptionList
+  // DescriptionListItem
+} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Input,
-  InputGroup,
-  Icon,
-  IconButton,
-  Table
-  // Modal, Button
-} from 'rsuite'
+import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 const {Column, HeaderCell, Cell} = Table
 
-// enum ConfirmAction {
-//   Delete = 'delete',
-//   Unpublish = 'unpublish'
-// }
+enum ConfirmAction {
+  Approve = 'approve',
+  Reject = 'reject'
+}
 
 const CommentsPerPage = 50
 
@@ -37,8 +32,11 @@ export function CommentList() {
 
   const [comments, setComments] = useState<CommentRefFragment[]>([])
 
+  // const [rejectComment, {loading: isRejecting}] = useDeleteArticleMutation()
+  // const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
+
   const listVariables = {filter: filter || undefined, first: CommentsPerPage}
-  const {data, loading: isLoading} = useCommentListQuery({
+  const {data, fetchMore, loading: isLoading} = useCommentListQuery({
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
@@ -52,23 +50,29 @@ export function CommentList() {
     }
   }, [data?.comments])
 
-  const [unpublishArticle, {loading: isUnpublishing}] = useComment()
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [currentComment, setCurrentComment] = useState<CommentRefFragment>()
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  // function loadMore() {
-  //   fetchMore({
-  //     variables: {...listVariables, after: data?.comments.pageInfo.endCursor},
-  //     updateQuery: (prev, {fetchMoreResult}) => {
-  //       if (!fetchMoreResult) return prev
+  // const [unpublishArticle, {loading: isUnpublishing}] = useComment()
+  console.log('currentComment:', currentComment)
+  console.log('confirmAction:', confirmAction)
 
-  //       return {
-  //         comments: {
-  //           ...fetchMoreResult.comments,
-  //           nodes: [...prev.comments.nodes, ...fetchMoreResult?.comments.nodes]
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
+  function loadMore() {
+    fetchMore({
+      variables: {...listVariables, after: data?.comments.pageInfo.endCursor},
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          comments: {
+            ...fetchMoreResult.comments,
+            nodes: [...prev.comments.nodes, ...fetchMoreResult?.comments.nodes]
+          }
+        }
+      }
+    })
+  }
 
   return (
     <>
@@ -103,8 +107,6 @@ export function CommentList() {
           <HeaderCell>{t('comments.overview.states')}</HeaderCell>
           <Cell>
             {(rowData: CommentRefFragment) => {
-              console.log(rowData?.state)
-
               let state: string
               switch (rowData?.state) {
                 case CommentState.Approved:
@@ -132,7 +134,7 @@ export function CommentList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
               <>
-                {JSON.stringify(rowData)}
+                {/* {JSON.stringify(rowData)} */}
                 {/* {rowData.published && (
                   <IconButton
                     icon={<Icon icon="arrow-circle-o-down" />}
@@ -145,17 +147,28 @@ export function CommentList() {
                     }}
                   />
                 )} */}
-                {/* <IconButton
+                <IconButton
+                  icon={<Icon icon="check" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setCurrentComment(rowData)
+                    setConfirmAction(ConfirmAction.Approve)
+                    setConfirmationDialogOpen(true)
+                  }}
+                />
+                <IconButton
                   icon={<Icon icon="trash" />}
                   circle
                   size="sm"
                   style={{marginLeft: '5px'}}
                   onClick={() => {
                     setCurrentComment(rowData)
-                    setConfirmAction(ConfirmAction.Delete)
+                    setConfirmAction(ConfirmAction.Reject)
                     setConfirmationDialogOpen(true)
                   }}
-                /> */}
+                />
               </>
             )}
           </Cell>
@@ -165,6 +178,75 @@ export function CommentList() {
       {/* {data?.comments.pageInfo.hasNextPage && (
         <Button label={t('comments.overview.loadMore')} onClick={loadMore} />
       )} */}
+      {data?.comments.pageInfo.hasNextPage && (
+        <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
+      )}
+
+      <Modal
+        show={isConfirmationDialogOpen}
+        width={'sm'}
+        onHide={() => setConfirmationDialogOpen(false)}>
+        <Modal.Header>
+          <Modal.Title>
+            {/* {confirmAction === ConfirmAction.Unpublish
+              ? t('articles.panels.unpublishArticle')
+              : t('articles.panels.deleteArticle')} */}
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <DescriptionList>
+            {/* <DescriptionListItem label={t('articles.panels.title')}>
+              {currentComment?.latest.title || t('articles.panels.untitled')}
+            </DescriptionListItem>
+
+            {currentComment?.latest.lead && (
+              <DescriptionListItem label={t('articles.panels.lead')}>
+                {currentComment?.latest.lead}
+              </DescriptionListItem>
+            )}
+
+            <DescriptionListItem label={t('articles.panels.createdAt')}>
+              {currentComment?.createdAt && new Date(currentComment.createdAt).toLocaleString()}
+            </DescriptionListItem>
+
+            <DescriptionListItem label={t('articles.panels.updatedAt')}>
+              {currentComment?.latest.updatedAt &&
+                new Date(currentComment.latest.updatedAt).toLocaleString()}
+            </DescriptionListItem>
+
+            {currentComment?.latest.publishedAt && (
+              <DescriptionListItem label={t('articles.panels.publishedAt')}>
+                {new Date(currentComment.createdAt).toLocaleString()}
+              </DescriptionListItem>
+            )} */}
+          </DescriptionList>
+        </Modal.Body>
+
+        <Modal.Footer>
+          {/* <Button
+            color={'red'}
+            disabled={isUnpublishing || isRejecting}
+            onClick={async () => {
+              if (!currentComment) return
+
+              switch (confirmAction) {
+                case ConfirmAction.Unpublish:
+                  await unpublishArticle({
+                    variables: {id: currentComment.id}
+                  })
+                  break
+              }
+
+              setConfirmationDialogOpen(false)
+            }}>
+            {t('articles.panels.confirm')}
+          </Button> */}
+          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+            {t('articles.panels.cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

@@ -54,13 +54,11 @@ export enum RouteType {
   UserEdit = 'userEdit',
   UserCreate = 'userCreate',
 
-  CommentList = 'commentList',
-  CommentEdit = 'commentEdit',
-  CommentCreate = 'commentCreate',
-
   UserRoleList = 'userRoleList',
   UserRoleEdit = 'userRoleEdit',
-  UserRoleCreate = 'userRoleCreate'
+  UserRoleCreate = 'userRoleCreate',
+
+  CommentList = 'commentList'
 }
 
 export const IndexRoute = route(RouteType.Index, routePath`/`)
