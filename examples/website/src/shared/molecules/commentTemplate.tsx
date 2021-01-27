@@ -4,11 +4,22 @@ import {BaseButton} from '../atoms/baseButton'
 import {Image} from '../atoms/image'
 import {Color} from '../style/colors'
 
-interface Comments {
+interface Comment {
   id: string
   userID: string
   authorType: string
   parentID?: string
+  revisions: GraphQLCommentRevision[]
+  state: string
+  rejectionReason?: string
+  createdAt: Date
+  modifiedAt: Date
+}
+
+interface RestructuredComment {
+  id: string
+  userID: string
+  children?: Comment[]
   revisions: GraphQLCommentRevision[]
   state: string
   rejectionReason?: string
@@ -21,7 +32,7 @@ interface GraphQLCommentRevision {
   createdAt: Date
 }
 
-const comments: Comments[] = [
+const comments: Comment[] = [
   {
     id: '1',
     userID: 'Peter',
@@ -90,13 +101,19 @@ const comments: Comments[] = [
   }
 ]
 
-const nestedComments = (comments: Comments[]) => {
-  let childComments = [{}]
-  comments.map(comment => {
-    comment.parentID ?? childComments.push(comment)
-  })
-  console.log(childComments)
-}
+const restructuredComments = comments.map(comment => {
+  const restructuredComment: RestructuredComment = {
+    id: comment.id,
+    userID: comment.userID,
+    revisions: comment.revisions,
+    state: comment.state,
+    createdAt: comment.createdAt,
+    modifiedAt: comment.modifiedAt
+  }
+  return restructuredComment
+})
+
+// comment.parentID ?? childComments.push(comment)
 
 // CSS-Rules
 
@@ -287,7 +304,7 @@ export function CommentList() {
 
   const [commentID, setCommentID] = useState('')
 
-  nestedComments(comments)
+  console.log(restructuredComments)
 
   return (
     <div className={css(Container, CommentBox)}>
