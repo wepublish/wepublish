@@ -15,7 +15,8 @@ import {
   CommentRejectionReason,
   CommentRevision,
   CommentState,
-  PublicComment
+  PublicComment,
+  Comment
 } from '../db/comment'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
@@ -94,12 +95,20 @@ export const GraphQLPublicCommentInput = new GraphQLInputObjectType({
   }
 })
 
-export const GraphQLComment = new GraphQLObjectType<Comment, Context>({
+export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLObjectType<
+  Comment,
+  Context
+>({
   name: 'Comment',
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    userID: {type: GraphQLNonNull(GraphQLUser)},
+    user: {
+      type: GraphQLNonNull(GraphQLUser),
+      resolve: createProxyingResolver((data, _, {dbAdapter}) => {
+        return dbAdapter.user.getUserByID(data.userID)
+      })
+    },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
 
     itemID: {type: GraphQLNonNull(GraphQLID)},
@@ -129,7 +138,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
-    userID: {
+    user: {
       type: GraphQLNonNull(GraphQLPublicUser),
       resolve: createProxyingResolver((data, _, {dbAdapter}) => {
         return dbAdapter.user.getUserByID(data.userID)
