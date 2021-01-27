@@ -132,7 +132,8 @@ export function CommentList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
               <>
-                {rowData.published && (
+                {JSON.stringify(rowData)}
+                {/* {rowData.published && (
                   <IconButton
                     icon={<Icon icon="arrow-circle-o-down" />}
                     circle
@@ -143,8 +144,8 @@ export function CommentList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
-                )}
-                <IconButton
+                )} */}
+                {/* <IconButton
                   icon={<Icon icon="trash" />}
                   circle
                   size="sm"
@@ -154,7 +155,7 @@ export function CommentList() {
                     setConfirmAction(ConfirmAction.Delete)
                     setConfirmationDialogOpen(true)
                   }}
-                />
+                /> */}
               </>
             )}
           </Cell>
