@@ -140,8 +140,8 @@ export const GraphQLPublicComment: GraphQLObjectType<
 
     userID: {
       type: GraphQLNonNull(GraphQLPublicUser),
-      resolve: createProxyingResolver((data, _, {dbAdapter}) => {
-        return dbAdapter.user.getUserByID(data.userID)
+      resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
+        return dbAdapter.user.getUserByID(userID)
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
