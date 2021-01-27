@@ -103,7 +103,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   fields: {
     id: {type: GraphQLNonNull(GraphQLID)},
 
-    userID: {
+    user: {
       type: GraphQLNonNull(GraphQLUser),
       resolve: createProxyingResolver((data, _, {dbAdapter}) => {
         return dbAdapter.user.getUserByID(data.userID)
@@ -138,7 +138,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
-    userID: {
+    user: {
       type: GraphQLNonNull(GraphQLPublicUser),
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
         return dbAdapter.user.getUserByID(userID)
