@@ -9,10 +9,16 @@ import {
   InvalidCredentialsError,
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
-  UserNotFoundError
+  UserNotFoundError,
+  NotAuthorisedError as NotAuthorizedError
 } from '../error'
-import {GraphQLPublicCommentInput, GraphQLPublicComment} from './comment'
+import {
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput,
+  GraphQLPublicComment
+} from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {UserInputError} from 'apollo-server-express'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -98,6 +104,34 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             state: CommentState.PendingApproval
           }
         })
+      }
+    },
+
+    updateComment: {
+      type: GraphQLNonNull(GraphQLPublicComment),
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
+      },
+      async resolve(_, {input}, {dbAdapter, authenticateUser}) {
+        const {user} = authenticateUser()
+
+        const comment = await dbAdapter.comment.getCommentById(input.id)
+
+        if (!comment) return null
+
+        if (user.id !== comment?.userID) {
+          throw new NotAuthorizedError()
+        } else if (comment.state !== CommentState.PendingUserChanges) {
+          throw new UserInputError('Comment state must be pending user changes')
+        } else {
+          const {id, text} = input
+
+          return await dbAdapter.comment.updatePublicComment({
+            id,
+            text,
+            state: CommentState.PendingApproval
+          })
+        }
       }
     }
   }

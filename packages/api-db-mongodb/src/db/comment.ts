@@ -1,6 +1,7 @@
 import {
   DBCommentAdapter,
   AddPublicCommentArgs,
+  UpdatePublicCommentArgs,
   TakeActionOnCommentArgs,
   OptionalComment,
   Comment,
@@ -11,7 +12,8 @@ import {
   InputCursorType,
   CommentSort,
   SortOrder,
-  PublicComment
+  PublicComment,
+  OptionalPublicComment
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
@@ -68,6 +70,40 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     return {
       ...comment,
       id,
+      text
+    }
+  }
+
+  async updatePublicComment({
+    id,
+    text,
+    state
+  }: UpdatePublicCommentArgs): Promise<OptionalPublicComment> {
+    const {value} = await this.comments.findOneAndUpdate(
+      {_id: id},
+      {
+        $set: {
+          state,
+          modifiedAt: new Date()
+        },
+        $addToSet: {
+          revisions: {
+            text,
+            createdAt: new Date()
+          }
+        }
+      },
+      {
+        returnOriginal: false
+      }
+    )
+
+    if (!value) return null
+
+    const {_id: outID, ...comment} = value
+    return {
+      ...comment,
+      id: outID,
       text
     }
   }
@@ -181,6 +217,19 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       text: revisions[revisions.length - 1].text,
       ...comment
     }))
+  }
+
+  async getCommentById(id: string): Promise<OptionalComment> {
+    const value = await this.comments.findOne({_id: id})
+
+    if (!value) return null
+
+    const {_id: outID, ...comment} = value
+
+    return {
+      id: outID,
+      ...comment
+    }
   }
 
   async takeActionOnComment({
