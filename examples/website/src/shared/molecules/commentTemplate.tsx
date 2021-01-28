@@ -87,6 +87,35 @@ const comments: Comment[] = [
     ],
     createdAt: new Date('2021-01-20'),
     modifiedAt: new Date(Date.now())
+  },
+  {
+    id: '5',
+    userID: 'Tom Bombadil',
+    state: 'Approved',
+    parentID: '1',
+    authorType: 'Team',
+    revisions: [
+      {
+        text: 'How are you?',
+        createdAt: new Date(Date.now())
+      }
+    ],
+    createdAt: new Date('2021-01-20'),
+    modifiedAt: new Date(Date.now())
+  },
+  {
+    id: '6',
+    userID: 'Sepp Blatter',
+    state: 'Approved',
+    authorType: 'VerifiedUser',
+    revisions: [
+      {
+        text: "I'm innocent!",
+        createdAt: new Date(Date.now())
+      }
+    ],
+    createdAt: new Date('2021-01-20'),
+    modifiedAt: new Date(Date.now())
   }
 ]
 
@@ -108,13 +137,18 @@ const restructuredComments = parentComments.map(comment => {
 
 // CSS-Rules
 
+const Actions = cssRule(() => ({
+  width: '100%'
+}))
+
 const Container = cssRule(() => ({
   width: '500px',
   margin: '0 auto'
 }))
 
 const CommentBox = cssRule(() => ({
-  marginTop: '2em'
+  margin: '1em auto',
+  position: 'relative'
 }))
 
 const CommentInputField = cssRule(() => ({
@@ -124,7 +158,13 @@ const CommentInputField = cssRule(() => ({
 }))
 
 const CommentAuthor = cssRule(() => ({
-  margin: 0
+  margin: 0,
+  display: 'inline',
+  textDecoration: 'none',
+  '&:hover': {
+    textDcoration: 'underline',
+    cursor: 'pointer'
+  }
 }))
 
 const CommentMeta = cssRule(() => ({
@@ -133,8 +173,26 @@ const CommentMeta = cssRule(() => ({
 }))
 
 const CommentBody = cssRule(() => ({
-  margin: 0,
-  fontSize: '0.9em'
+  margin: '1em 0 0 0',
+  fontSize: '0.9em',
+  padding: '0 1.2em 0 3.5em'
+}))
+
+const commentBorderLink = cssRule(() => ({
+  display: 'block',
+  position: 'absolute',
+  top: '3.125em',
+  left: 0,
+  width: '.75em',
+  height: 'calc(100% - 4.125em)',
+  borderLeft: '.25em solid transparent',
+  borderRight: '.25em solid transparent',
+  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  backgroundClip: 'padding-box',
+  margin: '1em 0 0 1em',
+  '&:hover': {
+    backgroundColor: Color.Neutral
+  }
 }))
 
 const CommentButton = cssRule(() => ({
@@ -143,34 +201,56 @@ const CommentButton = cssRule(() => ({
   color: '#FFFFFF',
   backgroundColor: '#000000',
   padding: '0.5em 1em',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
+  borderRadius: '.25em'
 }))
 
-const Flex = cssRule(() => ({
-  display: 'flex'
+const CommentHeading = cssRule(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  height: '50px',
+  fontSize: '0.9em'
 }))
 
-const Pointer = cssRule(() => ({
-  cursor: 'Pointer',
-  '&:hover': {
-    textDecoration: 'underline'
-  }
+const ReplyBox = cssRule(() => ({
+  marginLeft: '3.2em'
 }))
 
-const ReplyButton = cssRule(() => ({
-  margin: 0,
-  fontSize: '0.8em',
-  color: Color.SecondaryDark,
-  fontWeight: 'bold'
+const Replies = cssRule(() => ({
+  marginLeft: '3.2em'
 }))
 
 const RightColumn = cssRule(() => ({
-  paddingLeft: '1.2em',
+  padding: '.15em 0 0 .5em',
   width: '100%'
 }))
 
-const SmallFont = cssRule(() => ({
-  fontSize: '0.8em'
+const SmallButton = cssRule(() => ({
+  appearance: 'none',
+  fontSize: '.9em',
+  padding: '4px 8px',
+  marginRight: '0.5em',
+  color: 'rgba(0, 0, 0, 0.85)',
+  backgroundColor: '#fff',
+  border: '1px solid rgba(0, 0, 0, 0.2)',
+  borderRadius: '.25em',
+  '&:hover, active, focus': {
+    cursor: 'pointer',
+    backgroundColor: Color.Neutral
+  }
+}))
+
+const SrOnly = cssRule(() => ({
+  position: 'absolute',
+  left: '-10000px',
+  top: 'auto',
+  width: '1px',
+  height: '1px',
+  overflow: 'hidden'
+}))
+
+const Thread = cssRule(() => ({
+  marginBottom: '3em'
 }))
 
 const Timestamp = cssRule(() => ({
@@ -180,12 +260,15 @@ const Timestamp = cssRule(() => ({
 export interface ComposeCommentProps {
   readonly header?: string
   readonly parentCommentAuthor?: string
+  readonly role?: string
 }
+
+// Functions
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
   return (
-    <div className={css(Container)}>
+    <div className={props.role === 'reply' ? css(ReplyBox) : css(Container)}>
       {props.header ? <h3>{props.header}</h3> : ''}
       <form>
         <p>
@@ -198,8 +281,8 @@ export function ComposeComment(props: ComposeCommentProps) {
           />
         </p>
         <p>
-          <BaseButton css={props.parentCommentAuthor ? ReplyButton : CommentButton}>
-            {props.parentCommentAuthor ? 'Reply' : 'Post comment'}
+          <BaseButton css={props.parentCommentAuthor ? SmallButton : CommentButton}>
+            {props.parentCommentAuthor ? 'Submit' : 'Post comment'}
           </BaseButton>
         </p>
       </form>
@@ -207,54 +290,84 @@ export function ComposeComment(props: ComposeCommentProps) {
   )
 }
 
-function Comment(props: any) {
+function ParentComment(props: any) {
   const css = useStyle()
-  console.log(props.comment)
+
+  const {id, userID, authorType, modifiedAt, revisions, children} = props.comment
+  const {activeComment} = props
 
   return (
-    <>
-      <div className={css(Flex, CommentBox)} id={props.comment.id}>
-        <div className="leftColumn" style={{width: 60}}>
-          <Image src={'../../../static/icons/avatar.jpg'} />
+    <div className={css(Thread)}>
+      <div className={css(CommentBox)} id={id}>
+        <a href={'#' + id} className={css(commentBorderLink)}>
+          <span className={css(SrOnly)}>Jump to comment {id}</span>
+        </a>
+        <div className={css(CommentHeading)}>
+          <div style={{width: 50}}>
+            <Image src={'../../../static/icons/avatar.jpg'} />
+          </div>
+          <div className={css(RightColumn)}>
+            <h4 className={css(CommentAuthor)}>{userID}</h4>
+            <p className={css(CommentMeta)}>
+              <span>{authorType}</span> ·{' '}
+              <span className={css(Timestamp)}>{modifiedAt.toLocaleString('de-DE')}</span>
+            </p>
+          </div>
         </div>
-        <div className={css(RightColumn)}>
-          <h4 className={css(CommentAuthor)}>{props.comment.userID}</h4>
-          <p className={css(CommentMeta)}>
-            <span>{props.comment.authorType}</span> ·{' '}
-            <span className={css(Timestamp)}>
-              {props.comment.modifiedAt.toLocaleString('de-DE')}
-            </span>
-          </p>
-          <p className={css(CommentBody)}>
-            {props.comment.revisions.slice(props.comment.revisions.length - 1)[0].text}
-          </p>
-          <p className={css(SmallFont)}>
-            <span
-              className={css(Pointer)}
-              onClick={() =>
-                props.handleCurrentComment(
-                  props.comment.id === props.activeComment ? '' : props.comment.id
-                )
-              }>
-              Answer
-            </span>
-            <span> | Report</span>
-          </p>
+
+        <div className={css(CommentBody)}>
+          <p>{revisions.slice(revisions.length - 1)[0].text}</p>
+          <div className={css(Actions)}>
+            <button
+              className={css(SmallButton)}
+              onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
+              Reply
+            </button>
+            <button className={css(SmallButton)}>Report</button>
+          </div>
         </div>
-      </div>
-      <div>
-        {props.activeComment === props.comment.id ? (
-          <ComposeComment parentCommentAuthor={props.comment.userID} />
+
+        {props.activeComment === id ? (
+          <ComposeComment parentCommentAuthor={userID} role={'reply'} />
         ) : (
           ''
         )}
+        {children && children.map((child: any) => <ChildComment key={child.id} value={child} />)}
       </div>
-      <div>
-        {props.comment.children.map((childComment: Comment) => {
-          return childComment.userID
-        })}
+    </div>
+  )
+}
+
+function ChildComment(child: any) {
+  const css = useStyle()
+
+  const {id, userID, authorType, modifiedAt, revisions} = child.value
+
+  return (
+    <div className={css(CommentBox, Replies)} id={id}>
+      <a href={'#' + id} className={css(commentBorderLink)}>
+        <span className={css(SrOnly)}>Jump to comment {id}</span>
+      </a>
+      <div className={css(CommentHeading)}>
+        <div style={{width: 50}}>
+          <Image src={'../../../static/icons/avatar.jpg'} />
+        </div>
+        <div className={css(RightColumn)}>
+          <h4 className={css(CommentAuthor)}>{userID}</h4>
+          <p className={css(CommentMeta)}>
+            <span>{authorType}</span> ·{' '}
+            <span className={css(Timestamp)}>{modifiedAt.toLocaleString('de-DE')}</span>
+          </p>
+        </div>
       </div>
-    </>
+
+      <div className={css(CommentBody)}>
+        <p>{revisions.slice(revisions.length - 1)[0].text}</p>
+        <div className={css(Actions)}>
+          <button className={css(SmallButton)}>Report</button>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -267,7 +380,7 @@ export function CommentList() {
     <div className={css(Container, CommentBox)}>
       <h3>Show all comments</h3>
       {restructuredComments.map(parentComment => (
-        <Comment
+        <ParentComment
           comment={parentComment}
           key={parentComment.id}
           handleCurrentComment={(commentID: React.SetStateAction<string>) =>
