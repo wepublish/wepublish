@@ -3,6 +3,7 @@ import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphq
 import {delegateToSchema, IDelegateToSchemaOptions} from 'graphql-tools'
 
 import {Context} from './context'
+import {Invoice} from './db/invoice'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -118,3 +119,10 @@ export function capitalizeFirstLetter(str: string): string {
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
+
+export function calculateTotalForInvoice(invoice: Invoice): number {
+  return invoice.items.reduce(
+    (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
+    0
+  )
+}

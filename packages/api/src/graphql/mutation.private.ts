@@ -60,8 +60,8 @@ import {
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
-  CanUpdatePeerProfile,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanUpdatePeerProfile
 } from './permissions'
 import {
   GraphQLUser,
@@ -85,6 +85,7 @@ import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
+import {SendMailLoginLinkProps, SendMailType} from '../mails/mailContext'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -303,23 +304,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         url: {type: GraphQLNonNull(GraphQLString)},
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(
-        root,
-        {url, email},
-        {authenticate, dbAdapter, generateJWT, sendMailFromProvider}
-      ) {
+      async resolve(root, {url, email}, {authenticate, dbAdapter, generateJWT, mailContext}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new Error('User does not exist') // TODO: make this proper error
         const token = generateJWT({userID: user.id})
-        const link = `${url}?jwt=${token}`
-        await sendMailFromProvider({
-          message: `Click the link to login:\n\n${link}`,
+        await mailContext.sendMail<SendMailLoginLinkProps>({
           recipient: email,
-          subject: 'Login Link',
-          replyToAddress: 'dev@wepublish.ch'
+          type: SendMailType.LoginLink,
+          token
         })
         return email
       }
@@ -400,23 +395,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         password: {type: GraphQLNonNull(GraphQLString)},
         sendMail: {type: GraphQLBoolean}
       },
-      async resolve(
-        root,
-        {id, password, sendMail},
-        {authenticate, sendMailFromProvider, dbAdapter}
-      ) {
+      async resolve(root, {id, password}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanResetUserPassword, roles)
-        const user = await dbAdapter.user.resetUserPassword({id, password})
-        if (sendMail && user) {
-          await sendMailFromProvider({
-            recipient: user.email,
-            subject: 'Your password has been reset',
-            message: `Hello ${user.name}\n\nYour password has been reset. You can login with your new password.`,
-            replyToAddress: 'dev@wepublish.ch'
-          })
-        }
-        return user
+        return await dbAdapter.user.resetUserPassword({id, password})
       }
     },
 

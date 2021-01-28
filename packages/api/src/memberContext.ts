@@ -1,14 +1,23 @@
-import {PaymentProviderCustomer, UserSort, UserSubscription} from './db/user'
+import {PaymentProviderCustomer, User, UserSort, UserSubscription} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
-import {DataLoaderContext, SendMailFromProviderProps} from './context'
-import {ONE_DAY_IN_MILLISECONDS, ONE_HOUR_IN_MILLISECONDS} from './utility'
+import {DataLoaderContext} from './context'
+import {
+  calculateTotalForInvoice,
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_HOUR_IN_MILLISECONDS
+} from './utility'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
-import {MailLog} from './db/mailLog'
+import {
+  MailContext,
+  SendMailInvoiceOffSessionDueAtProps,
+  SendMailInvoiceOnSessionDueAtProps,
+  SendMailType
+} from './mails/mailContext'
 
 export interface RenewSubscriptionForUserProps {
   userID: string
@@ -40,12 +49,16 @@ export interface SendReminderForInvoicesProps {
   sendEveryDays?: number // defaults to 3
 }
 
+export interface SendReminderForNotAutoRenewUserProps {
+  user: User
+}
+
 export interface MemberContext {
   dbAdapter: DBAdapter
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+  mailContext: MailContext
 
   renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
   renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
@@ -55,14 +68,16 @@ export interface MemberContext {
 
   sendReminderForInvoice(props: SendReminderForInvoiceProps): Promise<void>
   sendReminderForInvoices(props: SendReminderForInvoicesProps): Promise<void>
+
+  sendReminderForNotAutoRenewUser(props: SendReminderForNotAutoRenewUserProps): Promise<void>
+  sendReminderForNotAutoRenewUsers(): Promise<void>
 }
 
 export interface MemberContextProps {
   readonly dbAdapter: DBAdapter
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
-
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+  readonly mailContext: MailContext
 }
 
 function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -95,6 +110,11 @@ function calculateAmountForPeriodicity(
   }
 }
 
+function getDaysSubscriptionEnd(subscriptionPaidUntil: Date): number {
+  const delta = subscriptionPaidUntil.getTime() - new Date().getTime()
+  return Math.ceil(delta / ONE_DAY_IN_MILLISECONDS)
+}
+
 export class MemberContext implements MemberContext {
   dbAdapter: DBAdapter
   loaders: DataLoaderContext
@@ -104,8 +124,7 @@ export class MemberContext implements MemberContext {
     this.dbAdapter = props.dbAdapter
     this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
-
-    this.sendMailFromProvider = props.sendMailFromProvider
+    this.mailContext = props.mailContext
   }
 
   async renewSubscriptionForUser({
@@ -430,36 +449,32 @@ export class MemberContext implements MemberContext {
     const offSessionPayments = paymentProvider?.offSessionPayments ?? false
     if (offSessionPayments) {
       if (invoice.dueAt > today) {
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `We will try to bill your cc in ${invoice.dueAt.toISOString()}. 
-            If you want to change the amount, paymentMethod or something else. PLease use the link:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail<SendMailInvoiceOffSessionDueAtProps>({
           recipient: invoice.mail,
-          subject: 'New invoice'
+          invoiceID: invoice.id,
+          dueAt: invoice.dueAt,
+          amount: calculateTotalForInvoice(invoice),
+          type: SendMailType.InvoiceOffSessionDueAt
         })
       } else {
         // system will try to bill every night and send error to user.
       }
     } else {
       if (invoice.dueAt > today) {
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `You have a new invoice open which is due at  ${invoice.dueAt.toISOString()}. 
-            Click the link to pay:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail<SendMailInvoiceOnSessionDueAtProps>({
+          type: SendMailType.InvoiceOnSessionDueAt,
           recipient: invoice.mail,
-          subject: 'New invoice'
+          invoiceID: invoice.id,
+          dueAt: invoice.dueAt,
+          amount: calculateTotalForInvoice(invoice)
         })
       } else {
-        // Send message => "Your invoice is due since ${days}. Please click link to pay. Your account will be suspended..."
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `Your invoice is due since ${invoice.dueAt.toISOString()}. 
-            Please click the link to pay otherwise your account will be suspended:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail<SendMailInvoiceOnSessionDueAtProps>({
+          type: SendMailType.InvoiceOnSessionDueAtPast,
           recipient: invoice.mail,
-          subject: 'New invoice'
+          invoiceID: invoice.id,
+          dueAt: invoice.dueAt,
+          amount: calculateTotalForInvoice(invoice)
         })
       }
     }
@@ -471,5 +486,40 @@ export class MemberContext implements MemberContext {
         sentReminderAt: today
       }
     })
+  }
+
+  async sendReminderForNotAutoRenewUser({
+    user
+  }: SendReminderForNotAutoRenewUserProps): Promise<void> {
+    const {subscription} = user
+    if (!subscription) {
+      logger('memberContext').warn('User %s does not have a subscription', user.id)
+      return
+    }
+
+    if (!subscription.paidUntil) {
+      logger('memberContext').warn('User %s has not an active membership', user.id)
+      return
+    }
+
+    if (subscription.autoRenew) {
+      logger('memberContext').warn('User %s has auto renew active', user.id)
+      return
+    }
+
+    const daysToOrSinceSubscriptionEnd = getDaysSubscriptionEnd(subscription.paidUntil)
+
+    if (daysToOrSinceSubscriptionEnd === 7) {
+      // Subscription will end in a week
+    } else if (daysToOrSinceSubscriptionEnd === 0) {
+      // Subscription ended today
+    } else if (daysToOrSinceSubscriptionEnd === -7) {
+      // subscription ended a week ago
+    } else if (daysToOrSinceSubscriptionEnd === -14) {
+      // subscription ended two weeks ago
+    } else if (daysToOrSinceSubscriptionEnd === -28) {
+      // subscription ended a month ago
+      // TODO: deactivate
+    }
   }
 }
