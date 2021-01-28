@@ -321,6 +321,102 @@ export const CanGetPermissions: Permission = {
   deprecated: false
 }
 
+export const CanCreateMemberPlan: Permission = {
+  id: 'CAN_CREATE_MEMBER_PLAN',
+  description: 'Allows to create a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlan: Permission = {
+  id: 'CAN_GET_MEMBER_PLAN',
+  description: 'Allows to get a member plan',
+  deprecated: false
+}
+
+export const CanGetMemberPlans: Permission = {
+  id: 'CAN_GET_MEMBER_PLANS',
+  description: 'Allows to get all member plans',
+  deprecated: false
+}
+
+export const CanDeleteMemberPlan: Permission = {
+  id: 'CAN_DELETE_MEMBER_PLAN',
+  description: 'Allows to delete member plan',
+  deprecated: false
+}
+
+export const CanCreatePaymentMethod: Permission = {
+  id: 'CAN_CREATE_PAYMENT_METHOD',
+  description: 'Allows to create a payment method',
+  deprecated: false
+}
+
+export const CanGetPaymentMethod: Permission = {
+  id: 'CAN_GET_PAYMENT_METHOD',
+  description: 'Allows to get a payment method',
+  deprecated: false
+}
+
+export const CanGetPaymentMethods: Permission = {
+  id: 'CAN_GET_PAYMENT_METHODS',
+  description: 'Allows to get all payment methods',
+  deprecated: false
+}
+
+export const CanDeletePaymentMethod: Permission = {
+  id: 'CAN_DELETE_PAYMENT_METHOD',
+  description: 'Allows to delete payment method',
+  deprecated: false
+}
+
+export const CanCreateInvoice: Permission = {
+  id: 'CAN_CREATE_INVOICE',
+  description: 'Allows to create an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoice: Permission = {
+  id: 'CAN_GET_INVOICE',
+  description: 'Allows to get an invoice',
+  deprecated: false
+}
+
+export const CanGetInvoices: Permission = {
+  id: 'CAN_GET_INVOICES',
+  description: 'Allows to get all invoices',
+  deprecated: false
+}
+
+export const CanDeleteInvoice: Permission = {
+  id: 'CAN_DELETE_INVOICE',
+  description: 'Allows to delete invoice',
+  deprecated: false
+}
+
+export const CanCreatePayment: Permission = {
+  id: 'CAN_CREATE_PAYMENT',
+  description: 'Allows to create a payment',
+  deprecated: false
+}
+
+export const CanGetPayment: Permission = {
+  id: 'CAN_GET_PAYMENT',
+  description: 'Allows to get an payment',
+  deprecated: false
+}
+
+export const CanGetPayments: Permission = {
+  id: 'CAN_GET_PAYMENTS',
+  description: 'Allows to get all payments',
+  deprecated: false
+}
+
+export const CanGetPaymentProviders: Permission = {
+  id: 'CAN_GET_PAYMENT_PROVIDERS',
+  description: 'Allows to get all payment providers',
+  deprecated: false
+}
+
 export const CanSendJWTLogin: Permission = {
   id: 'CAN_SEND_JWT_LOGIN',
   description: 'Allows to send a JWT Login',
@@ -380,8 +476,23 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
-  CanLoginEditor,
   CanGetComments,
+  CanCreateMemberPlan,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanDeleteMemberPlan,
+  CanCreatePaymentMethod,
+  CanGetPaymentMethod,
+  CanGetPaymentMethods,
+  CanDeletePaymentMethod,
+  CanCreateInvoice,
+  CanGetInvoice,
+  CanGetInvoices,
+  CanDeleteInvoice,
+  CanCreatePayment,
+  CanGetPayment,
+  CanGetPayments,
+  CanGetPaymentProviders,
   CanSendJWTLogin,
   CanLoginEditor
 ]

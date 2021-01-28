@@ -118,7 +118,8 @@
         "hideAuthors": "Hide Authors",
         "socialMediaImage": "Image for Social Media",
         "postImage": "Image for Post",
-        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
+        "lightStyledWithNoImageError": "Light styled teasers must have an image"
       }
     },
     "pages": {
@@ -187,7 +188,8 @@
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
-        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead."
+        "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
+        "lightStyledWithNoImageError": "Light styled teasers must have an image"
       }
     },
     "authors": {
@@ -298,6 +300,8 @@
     "userList": {
       "overview": {
         "name": "Name",
+        "createdAt": "Created",
+        "modifiedAt": "Last modified",
         "unknown": "Unknown",
         "description": "Description",
         "noDescription": "No Description",
@@ -328,7 +332,14 @@
         "addUserRole": "Add User Role",
         "selectUserRole": "Select User Role",
         "createUser": "Create User",
-        "create": "Create"
+        "create": "Create",
+        "subTitle": "Subscription",
+        "startedAt": "Started",
+        "payedUntil": "Payed Until",
+        "memberPlan": "Member Plan",
+        "subEdit": "Edit",
+        "subCreate": "Create",
+        "subDisableDescription": "Subscription can only be added once the user has been created."
       }
     },
     "userRoles": {
@@ -513,6 +524,9 @@
       "peering": "Peering",
       "tokens": "Tokens",
       "logout": "Logout",
+      "memberPlans": "Member Plans",
+      "paymentMethods": "Payment Methods",
+      "usersAndMembers": "Users & Members",
       "languageSwitch": {
         "currentLanguage": "English",
         "close": "Close",
@@ -569,6 +583,70 @@
       "chooseImage": "Choose Image",
       "editImage": "Edit Image",
       "removeImage": "Remove Image"
-    }
+    },
+    "paymentMethodList": {
+      "title": "Payment Methods",
+      "createNew": "New Payment Method",
+      "name": "Name",
+      "description": "Description",
+      "action": "Actions",
+      "deleteModalTitle": "Delete Payment Method",
+      "editTitle": "Edit Payment Method",
+      "createTitle": "Create Payment Method",
+      "active": "Active",
+      "activeDescription": "Makes the method available",
+      "adapter": "Payment Adapter"
+    },
+    "memberPlanList": {
+      "title": "Member Plans",
+      "createNew": "New Member Plan",
+      "name": "Name",
+      "description": "Description",
+      "action": "Actions",
+      "deleteModalTitle": "Delete Member Plan",
+      "editTitle": "Edit Member Plan",
+      "createTitle": "Create Member Plan",
+      "active": "Active",
+      "activeDescription": "Makes the plan available",
+      "adapter": "Payment Adapter",
+      "fixPrice": "Fix price",
+      "fixPriceDescription": "If false the price can be a price range",
+      "priceRange": "Price-(Range) in CHF",
+      "autoRenewal": "Force Auto Renew",
+      "autoRenewalDescription": "Forces auto renewal of subscription",
+      "paymentPeriodicities": "Possible Payment Periodicities",
+      "paymentMethods": "Possible Payment Methods",
+      "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
+      "paymentPeriodicity": {
+        "MONTHLY": "Monthly",
+        "QUARTERLY": "Quarterly",
+        "BIANNUAL": "Biannual",
+        "YEARLY": "Yearly"
+      }
+    },
+    "userSubscriptionEdit": {
+      "name": "Name",
+      "description": "Description",
+      "editTitle": "Edit Subscription",
+      "createTitle": "Create Subscription",
+      "selectMemberPlan": "Choose a Member Plan",
+      "memberPlanMonthlyAmount": "Monthly Amount (CHF)",
+      "monthlyAmount": "Monthly amount",
+      "autoRenew": "Auto Renew",
+      "autoRenewDescription": "Renew the subscription automatically",
+      "startsAt": "Subscription Start",
+      "payedUntil": "Paid Until",
+      "paymentMethod": "Payment Method",
+      "deactivatedAt": "Deactivated",
+      "active": "Active",
+      "activeDescription": "Makes the method available",
+      "adapter": "Payment Adapter"
+    },
+    "untitled": "Untitled",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "close": "Close"
   }
 }
