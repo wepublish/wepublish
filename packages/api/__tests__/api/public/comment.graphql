@@ -1,7 +1,9 @@
 fragment MutationComment on Comment {
   itemID
   itemType
-  userID { id }
+  user {
+    id
+  }
   text
   parentID
 }
