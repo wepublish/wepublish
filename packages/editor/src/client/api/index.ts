@@ -1954,7 +1954,10 @@ export type CommentRefFragment = (
   & { user: (
     { __typename?: 'User' }
     & FullUserFragment
-  ) }
+  ), revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & Pick<CommentRevision, 'text' | 'createdAt'>
+  )> }
 );
 
 export type CommentListQueryVariables = Exact<{
@@ -1975,6 +1978,47 @@ export type CommentListQuery = (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
     ) }
+  ) }
+);
+
+export type ApproveCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ApproveCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { approveComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state'>
+  ) }
+);
+
+export type RejectCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RejectCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { rejectComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
+
+export type RequestChangesOnCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RequestChangesOnCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { requestChangesOnComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state' | 'rejectionReason'>
   ) }
 );
 
@@ -3038,6 +3082,10 @@ export const CommentRefFragmentDoc = gql`
   user {
     ...FullUser
   }
+  revisions {
+    text
+    createdAt
+  }
   createdAt
   modifiedAt
 }
@@ -3820,6 +3868,106 @@ export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
 export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
+export const ApproveCommentDocument = gql`
+    mutation ApproveComment($id: ID!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+    `;
+export type ApproveCommentMutationFn = Apollo.MutationFunction<ApproveCommentMutation, ApproveCommentMutationVariables>;
+
+/**
+ * __useApproveCommentMutation__
+ *
+ * To run a mutation, you first call `useApproveCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApproveCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approveCommentMutation, { data, loading, error }] = useApproveCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useApproveCommentMutation(baseOptions?: Apollo.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
+        return Apollo.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, baseOptions);
+      }
+export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveCommentMutation>;
+export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
+export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
+export const RejectCommentDocument = gql`
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RejectCommentMutationFn = Apollo.MutationFunction<RejectCommentMutation, RejectCommentMutationVariables>;
+
+/**
+ * __useRejectCommentMutation__
+ *
+ * To run a mutation, you first call `useRejectCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectCommentMutation, { data, loading, error }] = useRejectCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRejectCommentMutation(baseOptions?: Apollo.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
+        return Apollo.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, baseOptions);
+      }
+export type RejectCommentMutationHookResult = ReturnType<typeof useRejectCommentMutation>;
+export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
+export type RejectCommentMutationOptions = Apollo.BaseMutationOptions<RejectCommentMutation, RejectCommentMutationVariables>;
+export const RequestChangesOnCommentDocument = gql`
+    mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RequestChangesOnCommentMutationFn = Apollo.MutationFunction<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+
+/**
+ * __useRequestChangesOnCommentMutation__
+ *
+ * To run a mutation, you first call `useRequestChangesOnCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestChangesOnCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestChangesOnCommentMutation, { data, loading, error }] = useRequestChangesOnCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
+        return Apollo.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, baseOptions);
+      }
+export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {

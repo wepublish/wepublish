@@ -8,6 +8,11 @@ fragment CommentRef on Comment {
     ...FullUser
   }
 
+  revisions {
+    text
+    createdAt
+  }
+
   createdAt
   modifiedAt
 }
@@ -26,5 +31,25 @@ query CommentList($after: ID, $first: Int) {
     }
 
     totalCount
+  }
+}
+
+mutation ApproveComment($id: ID!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+
+mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+
+mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
   }
 }

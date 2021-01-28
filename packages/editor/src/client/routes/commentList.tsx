@@ -5,16 +5,17 @@ import React, {useEffect, useState} from 'react'
 import {
   CommentRefFragment,
   useCommentListQuery,
+  useApproveCommentMutation,
+  useRequestChangesOnCommentMutation,
   // CommentListDocument,
   // CommentListQuery,
   // PageRefFragment,
-  CommentState
+  CommentState,
+  Comment
 } from '../api'
 
-import {
-  DescriptionList
-  // DescriptionListItem
-} from '../atoms/descriptionList'
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
@@ -22,6 +23,7 @@ const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Approve = 'approve',
+  RequestChanges = 'requestChanges',
   Reject = 'reject'
 }
 
@@ -32,14 +34,15 @@ export function CommentList() {
 
   const [comments, setComments] = useState<CommentRefFragment[]>([])
 
-  // const [rejectComment, {loading: isRejecting}] = useDeleteArticleMutation()
-  // const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
+  const [rejectComment, {loading: isApproving}] = useApproveCommentMutation()
+  const [requestChanges, {loading: isRequestingChanges}] = useRequestChangesOnCommentMutation()
 
   const listVariables = {filter: filter || undefined, first: CommentsPerPage}
   const {data, fetchMore, loading: isLoading} = useCommentListQuery({
     variables: listVariables,
     fetchPolicy: 'network-only'
   })
+
   const {t} = useTranslation()
 
   console.log('Data:', data)
@@ -51,12 +54,11 @@ export function CommentList() {
   }, [data?.comments])
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-  const [currentComment, setCurrentComment] = useState<CommentRefFragment>()
+  const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
-  // const [unpublishArticle, {loading: isUnpublishing}] = useComment()
   console.log('currentComment:', currentComment)
-  console.log('confirmAction:', confirmAction)
+  console.log('confirmAction: ', confirmAction)
 
   function loadMore() {
     fetchMore({
@@ -95,9 +97,25 @@ export function CommentList() {
           <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
           <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column width={400} align="left" resizable>
           <HeaderCell>{t('comments.overview.created')}</HeaderCell>
-          <Cell dataKey="createdAt" />
+          <Cell dataKey="createdAt">
+            {(rowData: CommentRefFragment) => (
+              <>
+                {rowData?.revisions?.length
+                  ? rowData?.revisions?.map(({text}, i) => (
+                      <RichTextBlock
+                        key={i}
+                        disabled
+                        // TODO: remove this
+                        onChange={console.log}
+                        value={text}
+                      />
+                    ))
+                  : null}
+              </>
+            )}
+          </Cell>
         </Column>
         <Column width={100} align="left" resizable>
           <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
@@ -159,6 +177,17 @@ export function CommentList() {
                   }}
                 />
                 <IconButton
+                  icon={<Icon icon="edit" />}
+                  circle
+                  size="sm"
+                  style={{marginLeft: '5px'}}
+                  onClick={() => {
+                    setCurrentComment(rowData)
+                    setConfirmAction(ConfirmAction.RequestChanges)
+                    setConfirmationDialogOpen(true)
+                  }}
+                />
+                <IconButton
                   icon={<Icon icon="trash" />}
                   circle
                   size="sm"
@@ -188,52 +217,41 @@ export function CommentList() {
         onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>
-            {/* {confirmAction === ConfirmAction.Unpublish
-              ? t('articles.panels.unpublishArticle')
-              : t('articles.panels.deleteArticle')} */}
+            {confirmAction === ConfirmAction.Approve
+              ? t('comments.panels.approveComment')
+              : t('articles.panels.deleteArticle')}
           </Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
           <DescriptionList>
-            {/* <DescriptionListItem label={t('articles.panels.title')}>
-              {currentComment?.latest.title || t('articles.panels.untitled')}
+            <DescriptionListItem label={t('comments.panels.title')}>
+              {currentComment?.id || t('comments.panels.untitled')}
             </DescriptionListItem>
-
-            {currentComment?.latest.lead && (
-              <DescriptionListItem label={t('articles.panels.lead')}>
-                {currentComment?.latest.lead}
-              </DescriptionListItem>
-            )}
-
-            <DescriptionListItem label={t('articles.panels.createdAt')}>
-              {currentComment?.createdAt && new Date(currentComment.createdAt).toLocaleString()}
-            </DescriptionListItem>
-
-            <DescriptionListItem label={t('articles.panels.updatedAt')}>
-              {currentComment?.latest.updatedAt &&
-                new Date(currentComment.latest.updatedAt).toLocaleString()}
-            </DescriptionListItem>
-
-            {currentComment?.latest.publishedAt && (
-              <DescriptionListItem label={t('articles.panels.publishedAt')}>
-                {new Date(currentComment.createdAt).toLocaleString()}
-              </DescriptionListItem>
-            )} */}
+            {currentComment?.revisions?.length
+              ? currentComment?.revisions?.map(({text}, i) => (
+                  <DescriptionListItem key={i} label={t('comments.panels.revisions')}>
+                    <RichTextBlock
+                      disabled
+                      // TODO: remove this
+                      onChange={console.log}
+                      value={text}
+                    />
+                  </DescriptionListItem>
+                ))
+              : null}
           </DescriptionList>
         </Modal.Body>
-
         <Modal.Footer>
-          {/* <Button
+          <Button
             color={'red'}
-            disabled={isUnpublishing || isRejecting}
+            disabled={isApproving}
             onClick={async () => {
               if (!currentComment) return
 
               switch (confirmAction) {
-                case ConfirmAction.Unpublish:
-                  await unpublishArticle({
-                    variables: {id: currentComment.id}
+                case ConfirmAction.RequestChanges:
+                  await requestChanges({
+                    variables: {id: currentComment.id, rejectionReason}
                   })
                   break
               }
@@ -241,7 +259,7 @@ export function CommentList() {
               setConfirmationDialogOpen(false)
             }}>
             {t('articles.panels.confirm')}
-          </Button> */}
+          </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
             {t('articles.panels.cancel')}
           </Button>
