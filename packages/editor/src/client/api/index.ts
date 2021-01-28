@@ -223,6 +223,61 @@ export type BlockInput = {
 };
 
 
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['ID'];
+  user: User;
+  authorType: CommentAuthorType;
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
+  revisions: Array<CommentRevision>;
+  state: CommentState;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+};
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentFilter = {
+  state?: Maybe<CommentState>;
+};
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  text: Scalars['RichText'];
+  createdAt: Scalars['DateTime'];
+};
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -604,16 +659,9 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
-  createMemberPlan?: Maybe<MemberPlan>;
-  updateMemberPlan?: Maybe<MemberPlan>;
-  deleteMemberPlan?: Maybe<Scalars['ID']>;
-  createPaymentMethod?: Maybe<PaymentMethod>;
-  updatePaymentMethod?: Maybe<PaymentMethod>;
-  deletePaymentMethod?: Maybe<Scalars['ID']>;
-  createInvoice?: Maybe<Invoice>;
-  createPaymentFromInvoice?: Maybe<Payment>;
-  updateInvoice?: Maybe<Invoice>;
-  deleteInvoice?: Maybe<Scalars['ID']>;
+  approveComment: Comment;
+  rejectComment: Comment;
+  requestChangesOnComment: Comment;
 };
 
 
@@ -834,56 +882,20 @@ export type MutationUnpublishPageArgs = {
 };
 
 
-export type MutationCreateMemberPlanArgs = {
-  input: MemberPlanInput;
-};
-
-
-export type MutationUpdateMemberPlanArgs = {
-  id: Scalars['ID'];
-  input: MemberPlanInput;
-};
-
-
-export type MutationDeleteMemberPlanArgs = {
+export type MutationApproveCommentArgs = {
   id: Scalars['ID'];
 };
 
 
-export type MutationCreatePaymentMethodArgs = {
-  input: PaymentMethodInput;
-};
-
-
-export type MutationUpdatePaymentMethodArgs = {
+export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
-  input: PaymentMethodInput;
+  rejectionReason: CommentRejectionReason;
 };
 
 
-export type MutationDeletePaymentMethodArgs = {
+export type MutationRequestChangesOnCommentArgs = {
   id: Scalars['ID'];
-};
-
-
-export type MutationCreateInvoiceArgs = {
-  input: InvoiceInput;
-};
-
-
-export type MutationCreatePaymentFromInvoiceArgs = {
-  input: PaymentFromInvoiceInput;
-};
-
-
-export type MutationUpdateInvoiceArgs = {
-  id: Scalars['ID'];
-  input: InvoiceInput;
-};
-
-
-export type MutationDeleteInvoiceArgs = {
-  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
 };
 
 export type Navigation = {
@@ -1202,6 +1214,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -1297,6 +1310,17 @@ export type QueryImagesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
+  sort?: Maybe<ImageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
 };
@@ -2258,6 +2282,36 @@ type FullBlock_TeaserGridBlock_Fragment = (
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+
+export type CommentRefFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & FullUserFragment
+  ) }
+);
+
+export type CommentListQueryVariables = Exact<{
+  after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type CommentListQuery = (
+  { __typename?: 'Query' }
+  & { comments: (
+    { __typename?: 'CommentConnection' }
+    & Pick<CommentConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Comment' }
+      & CommentRefFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -3514,6 +3568,46 @@ export const FullBlockFragmentDoc = gql`
 }
     ${ImageRefFragmentDoc}
 ${FullTeaserFragmentDoc}`;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on User {
+  id
+  name
+  email
+  roles {
+    ...FullUserRole
+  }
+}
+    ${FullUserRoleFragmentDoc}`;
+export const CommentRefFragmentDoc = gql`
+    fragment CommentRef on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUserFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -3593,116 +3687,6 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
-export const FullPermissionFragmentDoc = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRoleFragmentDoc = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-export const FullPaymentProviderFragmentDoc = gql`
-    fragment FullPaymentProvider on PaymentProvider {
-  id
-  name
-}
-    `;
-export const FullPaymentMethodFragmentDoc = gql`
-    fragment FullPaymentMethod on PaymentMethod {
-  id
-  name
-  createdAt
-  modifiedAt
-  paymentProvider {
-    ...FullPaymentProvider
-  }
-  description
-  active
-}
-    ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullMemberPlanFragmentDoc = gql`
-    fragment FullMemberPlan on MemberPlan {
-  description
-  amountPerMonthMin
-  availablePaymentMethods {
-    paymentMethods {
-      ...FullPaymentMethod
-    }
-    paymentPeriodicities
-    forceAutoRenewal
-  }
-  ...MemberPlanRef
-}
-    ${FullPaymentMethodFragmentDoc}
-${MemberPlanRefFragmentDoc}`;
-export const FullUserSubscriptionFragmentDoc = gql`
-    fragment FullUserSubscription on UserSubscription {
-  memberPlan {
-    ...FullMemberPlan
-  }
-  paymentPeriodicity
-  monthlyAmount
-  autoRenew
-  startsAt
-  paidUntil
-  paymentMethod {
-    ...FullPaymentMethod
-  }
-  deactivatedAt
-}
-    ${FullMemberPlanFragmentDoc}
-${FullPaymentMethodFragmentDoc}`;
-export const FullUserFragmentDoc = gql`
-    fragment FullUser on User {
-  id
-  createdAt
-  modifiedAt
-  name
-  preferredName
-  address {
-    street
-    zipCode
-    city
-    country
-  }
-  active
-  lastLogin
-  properties {
-    key
-    value
-    public
-  }
-  email
-  roles {
-    ...FullUserRole
-  }
-  subscription {
-    ...FullUserSubscription
-  }
-}
-    ${FullUserRoleFragmentDoc}
-${FullUserSubscriptionFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
@@ -4359,6 +4343,49 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+export const CommentListDocument = gql`
+    query CommentList($after: ID, $first: Int) {
+  comments(first: $first, after: $after) {
+    nodes {
+      ...CommentRef
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${CommentRefFragmentDoc}`;
+
+/**
+ * __useCommentListQuery__
+ *
+ * To run a query within a React component, call `useCommentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentListQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function useCommentListQuery(baseOptions?: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+        return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, baseOptions);
+      }
+export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+          return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, baseOptions);
+        }
+export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
+export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
+export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - f/log-all-the-things
 
 jobs:
   release:

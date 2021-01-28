@@ -60,8 +60,8 @@ import {
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
-  CanUpdatePeerProfile,
-  CanSendJWTLogin
+  CanSendJWTLogin,
+  CanTakeActionOnComment
 } from './permissions'
 import {
   GraphQLUser,
@@ -80,11 +80,8 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
-import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
-import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
-import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
-import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
-import {PaymentState} from '../db/payment'
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {CommentState} from '../db/comment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -786,183 +783,55 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
-    // MemberPlan
-    // ======
-
-    createMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateMemberPlan, roles)
-
-        if (input.minimumDuration < 0) {
-          throw new Error('Input.minimumDuration can not be < 0')
-        } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
-          throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
-        }
-
-        return dbAdapter.memberPlan.createMemberPlan({input})
-      }
-    },
-
-    updateMemberPlan: {
-      type: GraphQLMemberPlan,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
-      },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateMemberPlan, roles)
-        return dbAdapter.memberPlan.updateMemberPlan({id, input})
-      }
-    },
-
-    deleteMemberPlan: {
-      type: GraphQLID,
+    approveComment: {
+      type: GraphQLNonNull(GraphQLComment),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)}
       },
       async resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanDeleteMemberPlan, roles)
-        await dbAdapter.memberPlan.deleteMemberPlan({id})
-        return id
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Approved
+        })
       }
     },
 
-    // PaymentMethod
-    // ======
-
-    createPaymentMethod: {
-      type: GraphQLPaymentMethod,
-      args: {
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
-      },
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePaymentMethod, roles)
-
-        // TODO: check if payment method exists and is active
-
-        return dbAdapter.paymentMethod.createPaymentMethod({input})
-      }
-    },
-
-    updatePaymentMethod: {
-      type: GraphQLPaymentMethod,
+    rejectComment: {
+      type: GraphQLNonNull(GraphQLComment),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanCreatePaymentMethod, roles)
+        authorise(CanTakeActionOnComment, roles)
 
-        // TODO: check if payment method exists and is active
-
-        return dbAdapter.paymentMethod.updatePaymentMethod({id, input})
-      }
-    },
-
-    deletePaymentMethod: {
-      type: GraphQLID,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeletePaymentMethod, roles)
-        await dbAdapter.paymentMethod.deletePaymentMethod(id)
-        return id
-      }
-    },
-
-    // Invoice
-    // ======
-
-    createInvoice: {
-      type: GraphQLInvoice,
-      args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
-      resolve(root, {input}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreateInvoice, roles)
-        return dbAdapter.invoice.createInvoice({input})
-      }
-    },
-
-    createPaymentFromInvoice: {
-      type: GraphQLPayment,
-      args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
-      async resolve(root, {input}, {authenticate, loaders, paymentProviders, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanCreatePayment, roles)
-        const {invoiceID, paymentMethodID, successURL, failureURL} = input
-        const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
-        const paymentProvider = paymentProviders.find(
-          pp => pp.id === paymentMethod?.paymentProviderID
-        )
-
-        const invoice = await loaders.invoicesByID.load(invoiceID)
-
-        if (!invoice || !paymentProvider) {
-          throw new Error('Invalid data') // TODO: better error handling
-        }
-
-        const payment = await dbAdapter.payment.createPayment({
-          input: {
-            paymentMethodID,
-            invoiceID,
-            state: PaymentState.Created
-          }
-        })
-
-        const intent = await paymentProvider.createIntent({
-          paymentID: payment.id,
-          invoice,
-          saveCustomer: true,
-          successURL,
-          failureURL
-        })
-
-        return await dbAdapter.payment.updatePayment({
-          id: payment.id,
-          input: {
-            state: intent.state,
-            intentID: intent.intentID,
-            intentData: intent.intentData,
-            intentSecret: intent.intentSecret,
-            paymentData: intent.paymentData,
-            paymentMethodID: payment.paymentMethodID,
-            invoiceID: payment.invoiceID
-          }
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Rejected,
+          rejectionReason
         })
       }
     },
 
-    updateInvoice: {
-      type: GraphQLInvoice,
+    requestChangesOnComment: {
+      type: GraphQLNonNull(GraphQLComment),
       args: {
         id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
-      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
-        authorise(CanCreateInvoice, roles)
-        return dbAdapter.invoice.updateInvoice({id, input})
-      }
-    },
+        authorise(CanTakeActionOnComment, roles)
 
-    deleteInvoice: {
-      type: GraphQLID,
-      args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
-      },
-      async resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanDeleteInvoice, roles)
-        return await dbAdapter.invoice.deleteInvoice({id})
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.PendingUserChanges,
+          rejectionReason
+        })
       }
     }
 

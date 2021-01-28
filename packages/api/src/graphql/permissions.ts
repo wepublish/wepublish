@@ -159,6 +159,18 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanTakeActionOnComment: Permission = {
+  id: 'CAN_TAKE_COMMENT_ACTION',
+  description: 'Allows to take an action on comment',
+  deprecated: false
+}
+
+export const CanGetComments: Permission = {
+  id: 'CAN_GET_COMMENTS',
+  description: 'Allows to get all comments',
+  deprecated: false
+}
+
 export const CanCreatePage: Permission = {
   id: 'CAN_CREATE_PAGE',
   description: 'Allows to create Pages',
@@ -418,6 +430,7 @@ export const CanLoginEditor: Permission = {
 }
 
 export const AllPermissions: Permission[] = [
+  CanTakeActionOnComment,
   CanCreateNavigation,
   CanGetNavigation,
   CanGetNavigations,
@@ -463,27 +476,14 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
-  CanCreateMemberPlan,
-  CanGetMemberPlan,
-  CanGetMemberPlans,
-  CanDeleteMemberPlan,
-  CanCreatePaymentMethod,
-  CanGetPaymentMethod,
-  CanGetPaymentMethods,
-  CanDeletePaymentMethod,
-  CanCreateInvoice,
-  CanGetInvoice,
-  CanGetInvoices,
-  CanDeleteInvoice,
-  CanCreatePayment,
-  CanGetPayment,
-  CanGetPayments,
-  CanGetPaymentProviders,
+  CanLoginEditor,
+  CanGetComments,
   CanSendJWTLogin,
   CanLoginEditor
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanTakeActionOnComment,
   CanCreateAuthor,
   CanGetAuthor,
   CanGetAuthors,

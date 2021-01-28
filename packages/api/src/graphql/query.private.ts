@@ -79,15 +79,7 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
-  CanGetMemberPlan,
-  CanGetMemberPlans,
-  CanGetPaymentMethods,
-  CanGetPaymentMethod,
-  CanGetInvoice,
-  CanGetInvoices,
-  CanGetPayment,
-  CanGetPayments,
-  CanGetPaymentProviders
+  CanGetComments
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -100,28 +92,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
-import {
-  GraphQLMemberPlan,
-  GraphQLMemberPlanConnection,
-  GraphQLMemberPlanFilter,
-  GraphQLMemberPlanSort
-} from './memberPlan'
-import {MemberPlanSort} from '../db/memberPlan'
-import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
-import {
-  GraphQLInvoice,
-  GraphQLInvoiceConnection,
-  GraphQLinvoiceFilter,
-  GraphQLInvoiceSort
-} from './invoice'
-import {InvoiceSort} from '../db/invoice'
-import {
-  GraphQLPayment,
-  GraphQLPaymentConnection,
-  GraphQLPaymentFilter,
-  GraphQLPaymentSort
-} from './payment'
-import {PaymentSort} from '../db/payment'
+import {GraphQLCommentConnection, GraphQLCommentFilter} from './comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -435,6 +406,42 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        filter: {type: GraphQLCommentFilter},
+        sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return await dbAdapter.comment.getComments({
+            filter,
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 

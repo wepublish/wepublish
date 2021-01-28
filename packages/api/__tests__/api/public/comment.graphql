@@ -1,0 +1,13 @@
+fragment MutationComment on Comment {
+  itemID
+  itemType
+  userID { id }
+  text
+  parentID
+}
+
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    ...MutationComment
+  }
+}
