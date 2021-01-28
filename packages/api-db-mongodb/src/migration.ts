@@ -557,7 +557,7 @@ export const Migrations: Migration[] = [
   },
   {
     // Add Commenting Table.
-    version: 10,
+    version: 11,
     async migrate(db) {
       const comments = await db.createCollection(CollectionName.Comments, {
         strict: true
