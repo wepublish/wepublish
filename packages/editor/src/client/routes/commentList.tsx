@@ -12,15 +12,28 @@ import {
   // PageRefFragment,
   CommentState,
   CommentRejectionReason,
-  Comment
+  Comment,
+  useRejectCommentMutation
 } from '../api'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
-const {Column, HeaderCell, Cell} = Table
+import {
+  FlexboxGrid,
+  Input,
+  InputGroup,
+  Icon,
+  IconButton,
+  Table,
+  Modal,
+  Button,
+  Dropdown
+} from 'rsuite'
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Approve = 'approve',
@@ -28,54 +41,63 @@ enum ConfirmAction {
   Reject = 'reject'
 }
 
-const CommentsPerPage = 50
+function mapColumFieldToGraphQLField(columnField: string): any | null {
+  switch (columnField) {
+    case 'createdAt':
+      return 'CREATED_AT'
+    default:
+      return null
+  }
+}
 
 export function CommentList() {
+  const {t} = useTranslation()
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+
   const [filter, setFilter] = useState('')
 
   const [comments, setComments] = useState<CommentRefFragment[]>([])
 
-  const [rejectComment, {loading: isApproving}] = useApproveCommentMutation()
+  const [approveComment, {loading: isApproving}] = useApproveCommentMutation()
   const [requestChanges, {loading: isRequestingChanges}] = useRequestChangesOnCommentMutation()
+  const [rejectComment, {loading: isRejecting}] = useRejectCommentMutation()
 
-  const listVariables = {filter: filter || undefined, first: CommentsPerPage}
-  const {data, fetchMore, loading: isLoading} = useCommentListQuery({
-    variables: listVariables,
+  const {data, refetch, loading: isLoading} = useCommentListQuery({
+    variables: {
+      filter: filter || undefined,
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    },
     fetchPolicy: 'network-only'
   })
 
-  const {t} = useTranslation()
-
-  console.log('Data:', data, rejectComment, isRequestingChanges)
+  useEffect(() => {
+    refetch({
+      filter: filter || undefined,
+      first: limit,
+      skip: page - 1,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    })
+  }, [filter, page, limit, sortOrder, sortField])
 
   useEffect(() => {
-    if (data?.comments.nodes) {
+    if (data?.comments?.nodes) {
       setComments(data.comments.nodes)
+      if (data.comments.totalCount + 9 < page * limit) {
+        setPage(1)
+      }
     }
   }, [data?.comments])
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
-
-  console.log('currentComment:', currentComment)
-  console.log('confirmAction: ', confirmAction)
-
-  function loadMore() {
-    fetchMore({
-      variables: {...listVariables, after: data?.comments.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          comments: {
-            ...fetchMoreResult.comments,
-            nodes: [...prev.comments.nodes, ...fetchMoreResult?.comments.nodes]
-          }
-        }
-      }
-    })
-  }
 
   return (
     <>
@@ -93,13 +115,22 @@ export function CommentList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={comments}>
+      <Table
+        autoHeight={true}
+        style={{marginTop: '20px'}}
+        loading={isLoading}
+        data={comments}
+        sortType={sortOrder}
+        onSortColumn={(sortColumn, sortType) => {
+          setSortOrder(sortType)
+          setSortField(sortColumn)
+        }}>
         <Column width={100} align="left" resizable>
           <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
           <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
         <Column width={400} align="left" resizable>
-          <HeaderCell>{t('comments.overview.created')}</HeaderCell>
+          <HeaderCell>{t('comments.overview.text')}</HeaderCell>
           <Cell dataKey="createdAt">
             {(rowData: CommentRefFragment) => (
               <>
@@ -129,7 +160,7 @@ export function CommentList() {
               let state: string
               switch (rowData?.state) {
                 case CommentState.Approved:
-                  state = 'comments.state.pendingApproval'
+                  state = 'comments.state.approved'
                   break
                 case CommentState.PendingApproval:
                   state = 'comments.state.pendingApproval'
@@ -153,19 +184,6 @@ export function CommentList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
               <>
-                {/* {JSON.stringify(rowData)} */}
-                {/* {rowData.published && (
-                  <IconButton
-                    icon={<Icon icon="arrow-circle-o-down" />}
-                    circle
-                    size="sm"
-                    onClick={() => {
-                      setCurrentComment(rowData)
-                      setConfirmAction(ConfirmAction.Unpublish)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                )} */}
                 <IconButton
                   icon={<Icon icon="check" />}
                   circle
@@ -205,16 +223,19 @@ export function CommentList() {
         </Column>
       </Table>
 
-      {/* {data?.comments.pageInfo.hasNextPage && (
-        <Button label={t('comments.overview.loadMore')} onClick={loadMore} />
-      )} */}
-      {data?.comments.pageInfo.hasNextPage && (
-        <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
-      )}
-
+      <Pagination
+        style={{height: '50px'}}
+        lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+        activePage={page}
+        displayLength={limit}
+        total={data?.comments.totalCount}
+        onChangePage={page => setPage(page)}
+        onChangeLength={limit => setLimit(limit)}
+      />
       <Modal
         show={isConfirmationDialogOpen}
-        width={'sm'}
+        width="sm"
+        overflow
         onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>
@@ -240,16 +261,28 @@ export function CommentList() {
                   </DescriptionListItem>
                 ))
               : null}
+            <DescriptionListItem label={t('comments.panels.revisions')}>
+              <Dropdown title={t('comments.panels.rejectionReason')}>
+                <Dropdown.Item>{CommentRejectionReason.Spam}</Dropdown.Item>
+                <Dropdown.Item>{CommentRejectionReason.Misconduct}</Dropdown.Item>
+              </Dropdown>
+            </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
         <Modal.Footer>
           <Button
             color={'red'}
-            disabled={isApproving}
+            disabled={isApproving || isRequestingChanges || isRejecting}
             onClick={async () => {
               if (!currentComment) return
-
               switch (confirmAction) {
+                case ConfirmAction.Approve:
+                  await approveComment({
+                    variables: {
+                      id: currentComment.id
+                    }
+                  })
+                  break
                 case ConfirmAction.RequestChanges:
                   await requestChanges({
                     variables: {
@@ -258,8 +291,15 @@ export function CommentList() {
                     }
                   })
                   break
+                case ConfirmAction.Reject:
+                  await rejectComment({
+                    variables: {
+                      id: currentComment.id,
+                      rejectionReason: CommentRejectionReason.Misconduct
+                    }
+                  })
+                  break
               }
-
               setConfirmationDialogOpen(false)
             }}>
             {t('articles.panels.confirm')}
