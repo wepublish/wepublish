@@ -1,0 +1,61 @@
+fragment MemberPlanRef on MemberPlan {
+    id
+    name
+    slug
+    active
+    image {
+        ...ImageRef
+    }
+}
+
+fragment FullMemberPlan on MemberPlan {
+    description
+    amountPerMonthMin
+    availablePaymentMethods {
+        paymentMethods {
+            ...FullPaymentMethod
+        }
+        paymentPeriodicities
+        forceAutoRenewal
+    }
+    ...MemberPlanRef
+}
+
+query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+    memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+        nodes {
+            ...FullMemberPlan
+        }
+
+        pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+        }
+
+        totalCount
+    }
+}
+
+query MemberPlan($id: ID!) {
+    memberPlan(id: $id) {
+        ...FullMemberPlan
+    }
+}
+
+mutation CreateMemberPlan($input: MemberPlanInput!) {
+    createMemberPlan(input: $input) {
+        ...FullMemberPlan
+    }
+}
+
+mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
+    updateMemberPlan(id: $id, input: $input) {
+        ...FullMemberPlan
+    }
+}
+
+mutation DeleteMemberPlan($id: ID!) {
+    deleteMemberPlan(id: $id)
+}

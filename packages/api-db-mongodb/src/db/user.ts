@@ -1,28 +1,36 @@
 import bcrypt from 'bcrypt'
 
 import {
-  DBUserAdapter,
-  CreateUserArgs,
-  User,
-  OptionalUser,
-  GetUserForCredentialsArgs,
-  SortOrder,
-  UpdateUserArgs,
-  DeleteUserArgs,
-  ResetUserPasswordArgs,
-  GetUsersArgs,
   ConnectionResult,
-  LimitType,
+  CreateUserArgs,
+  CreateUserSubscriptionPeriodArgs,
+  DBUserAdapter,
+  DeleteUserArgs,
+  DeleteUserSubscriptionArgs,
+  DeleteUserSubscriptionPeriodArgs,
+  GetUserForCredentialsArgs,
+  GetUsersArgs,
   InputCursorType,
+  LimitType,
+  OptionalUser,
+  OptionalUserSubscription,
+  ResetUserPasswordArgs,
+  SortOrder,
+  UpdatePaymentProviderCustomerArgs,
+  UpdateUserArgs,
+  UpdateUserSubscriptionArgs,
+  User,
   UserSort
 } from '@wepublish/api'
 
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
 
-import {DBUser, CollectionName} from './schema'
+import {CollectionName, DBUser} from './schema'
 import {MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
+import nanoid from 'nanoid'
 
 export class MongoDBUserAdapter implements DBUserAdapter {
   private users: Collection<DBUser>
@@ -43,8 +51,14 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         modifiedAt: new Date(),
         email: input.email,
         name: input.name,
+        preferredName: input.preferredName,
+        address: input.address,
+        active: input.active,
+        lastLogin: null,
+        properties: input.properties,
         roleIDs: input.roleIDs,
-        password: passwordHash
+        password: passwordHash,
+        paymentProviderCustomers: {}
       })
 
       return this.getUserByID(id)
@@ -62,9 +76,17 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
       return null
@@ -78,6 +100,10 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         $set: {
           modifiedAt: new Date(),
           name: input.name,
+          preferredName: input.preferredName,
+          address: input.address,
+          active: input.active,
+          properties: input.properties,
           email: input.email,
           roleIDs: input.roleIDs
         }
@@ -119,9 +145,18 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     return users.map(user => {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     })
   }
@@ -132,9 +167,18 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user && (await bcrypt.compare(password, user.password))) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     }
 
@@ -146,9 +190,18 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     if (user) {
       return {
         id: user._id,
+        createdAt: user.createdAt,
+        modifiedAt: user.modifiedAt,
         email: user.email,
         name: user.name,
-        roleIDs: user.roleIDs
+        preferredName: user.preferredName,
+        address: user.address,
+        active: user.active,
+        lastLogin: user.lastLogin,
+        properties: user.properties,
+        roleIDs: user.roleIDs,
+        subscription: user.subscription,
+        paymentProviderCustomers: user.paymentProviderCustomers
       }
     } else {
       return null
@@ -186,11 +239,51 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         }
       : {}
 
-    let textFilter: FilterQuery<any> = {}
-
+    const textFilter: FilterQuery<any> = {}
+    if (filter && JSON.stringify(filter) !== '{}') {
+      textFilter.$and = []
+    }
     // TODO: Rename to search
-    if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+    if (filter?.name !== undefined) {
+      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+    }
+
+    if (filter?.text !== undefined) {
+      textFilter.$and?.push({
+        $or: [
+          {name: {$regex: filter.text, $options: 'im'}},
+          {email: {$regex: filter.text, $options: 'im'}}
+        ]
+      })
+    }
+
+    if (filter?.subscription !== undefined) {
+      textFilter.$and?.push({subscription: {$exists: true}})
+    }
+    if (filter?.subscription?.startsAt !== undefined) {
+      const {comparison, date} = filter.subscription.startsAt
+      textFilter.$and?.push({
+        'subscription.startsAt': {[mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date}
+      })
+    }
+    if (filter?.subscription?.paidUntil !== undefined) {
+      const {comparison, date} = filter.subscription.paidUntil
+      textFilter.$and?.push({
+        'subscription.paidUntil': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.deactivatedAt !== undefined) {
+      const {comparison, date} = filter.subscription.deactivatedAt
+      textFilter.$and?.push({
+        'subscription.deactivatedAt': {
+          [mapDateFilterComparisonToMongoQueryOperatior(comparison)]: date
+        }
+      })
+    }
+    if (filter?.subscription?.autoRenew !== undefined) {
+      textFilter.$and?.push({'subscription.autoRenew': {$eq: true}})
     }
 
     const [totalCount, users] = await Promise.all([
@@ -203,6 +296,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
@@ -217,15 +311,11 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       limit.type === LimitType.First
         ? users.length > limitCount
         : cursor.type === InputCursorType.Before
-        ? true
-        : false
 
     const hasPreviousPage =
       limit.type === LimitType.Last
         ? users.length > limitCount
         : cursor.type === InputCursorType.After
-        ? true
-        : false
 
     const firstUser = nodes[0]
     const lastUser = nodes[nodes.length - 1]
@@ -251,6 +341,140 @@ export class MongoDBUserAdapter implements DBUserAdapter {
       totalCount
     }
   }
+
+  async updateUserSubscription({
+    userID,
+    input
+  }: UpdateUserSubscriptionArgs): Promise<OptionalUserSubscription> {
+    const {
+      memberPlanID,
+      paymentPeriodicity,
+      monthlyAmount,
+      autoRenew,
+      startsAt,
+      paidUntil,
+      paymentMethodID,
+      deactivatedAt
+    } = input
+
+    const user = await this.getUserByID(userID)
+
+    if (!user) return null
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.memberPlanID': memberPlanID,
+          'subscription.paymentPeriodicity': paymentPeriodicity,
+          'subscription.monthlyAmount': monthlyAmount,
+          'subscription.autoRenew': autoRenew,
+          'subscription.startsAt': startsAt,
+          'subscription.periods': user.subscription?.periods ?? [],
+          'subscription.paidUntil': paidUntil,
+          'subscription.paymentMethodID': paymentMethodID,
+          'subscription.deactivatedAt': deactivatedAt
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async deleteUserSubscription({userID}: DeleteUserSubscriptionArgs): Promise<string | null> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date()
+        },
+        $unset: {
+          subscription: ''
+        }
+      }
+    )
+
+    return value?._id
+  }
+
+  async addUserSubscriptionPeriod({
+    userID,
+    input
+  }: CreateUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    periods.push({
+      id: nanoid(),
+      createdAt: new Date(),
+      amount: input.amount,
+      paymentPeriodicity: input.paymentPeriodicity,
+      startsAt: input.startsAt,
+      endsAt: input.endsAt,
+      invoiceID: input.invoiceID
+    })
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': periods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async deleteUserSubscriptionPeriod({
+    userID,
+    periodID
+  }: DeleteUserSubscriptionPeriodArgs): Promise<OptionalUserSubscription> {
+    const user = await this.users.findOne({_id: userID})
+    if (!user?.subscription) return null
+    const {periods = []} = user.subscription
+
+    const updatedPeriods = periods.filter(period => period.id !== periodID)
+
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          'subscription.periods': updatedPeriods
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    return value?.subscription ? value.subscription : null
+  }
+
+  async updatePaymentProviderCustomers({
+    userID,
+    paymentProviderCustomers
+  }: UpdatePaymentProviderCustomerArgs): Promise<OptionalUser> {
+    const {value} = await this.users.findOneAndUpdate(
+      {_id: userID},
+      {
+        $set: {
+          modifiedAt: new Date(),
+          paymentProviderCustomers: paymentProviderCustomers
+        }
+      },
+      {returnOriginal: false}
+    )
+
+    if (!value) return null
+
+    const {_id: outID} = value
+    return this.getUserByID(outID)
+  }
 }
 
 function userSortFieldForSort(sort: UserSort) {
@@ -260,6 +484,9 @@ function userSortFieldForSort(sort: UserSort) {
 
     case UserSort.ModifiedAt:
       return 'modifiedAt'
+
+    case UserSort.Name:
+      return 'name'
   }
 }
 
@@ -270,5 +497,8 @@ function userDateForSort(user: DBUser, sort: UserSort): Date {
 
     case UserSort.ModifiedAt:
       return user.modifiedAt
+
+    case UserSort.Name:
+      return user.createdAt
   }
 }

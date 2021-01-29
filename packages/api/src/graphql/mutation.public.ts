@@ -1,6 +1,7 @@
-import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean} from 'graphql'
+import {GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean, GraphQLInt} from 'graphql'
 
 import {Issuer} from 'openid-client'
+import crypto from 'crypto'
 
 import {GraphQLPublicSessionWithToken} from './session'
 import {Context} from '../context'
@@ -10,8 +11,21 @@ import {
   OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
   UserNotFoundError,
+  NotFound,
+  MonthlyAmountNotEnough,
+  PaymentConfigurationNotAllowed,
+  NotActiveError,
+  EmailAlreadyInUseError,
   NotAuthorisedError as NotAuthorizedError
 } from '../error'
+import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
+import {GraphQLPaymentPeriodicity} from './memberPlan'
+import {
+  GraphQLPublicUser,
+  GraphQLPublicUserInput,
+  GraphQLPublicUserSubscription,
+  GraphQLPublicUserSubscriptionInput
+} from './user'
 import {
   GraphQLPublicCommentInput,
   GraphQLPublicCommentUpdateInput,
@@ -35,6 +49,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -49,6 +64,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUserByID(userID)
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -76,6 +92,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!userInfo.email) throw new Error('UserInfo did not return an email')
         const user = await dbAdapter.user.getUser(userInfo.email)
         if (!user) throw new UserNotFoundError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -132,6 +149,216 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             state: CommentState.PendingApproval
           })
         }
+      }
+    },
+
+    registerMemberAndReceivePayment: {
+      type: GraphQLNonNull(GraphQLPublicPayment),
+      args: {
+        name: {type: GraphQLNonNull(GraphQLString)},
+        preferredName: {type: GraphQLString},
+        email: {type: GraphQLNonNull(GraphQLString)},
+        memberPlanID: {type: GraphQLNonNull(GraphQLString)},
+        autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
+        paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
+        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
+      },
+      async resolve(
+        root,
+        {
+          name,
+          preferredName,
+          email,
+          memberPlanID,
+          autoRenew,
+          paymentPeriodicity,
+          monthlyAmount,
+          paymentMethodID,
+          successURL,
+          failureURL
+        },
+        {dbAdapter, loaders, authenticateUser, memberContext, createPaymentWithProvider}
+      ) {
+        /* const userSession = authenticateUser()
+        if(userSession.user) throw new Error('Can not register authenticated user') // TODO: check this again
+        */
+
+        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+
+        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+
+        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+        if (
+          !memberPlan.availablePaymentMethods.some(apm => {
+            if (apm.forceAutoRenewal && !autoRenew) return false
+            return (
+              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+              apm.paymentMethodIDs.includes(paymentMethodID)
+            )
+          })
+        )
+          throw new PaymentConfigurationNotAllowed()
+
+        const user = await dbAdapter.user.createUser({
+          input: {
+            name,
+            preferredName,
+            email,
+            active: false,
+            properties: [],
+            roleIDs: []
+          },
+          password: crypto.randomBytes(48).toString('hex')
+        })
+
+        if (!user) throw new Error('Could not create user') // TODO: check if this is needed
+
+        const subscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            startsAt: new Date(),
+            paymentMethodID,
+            paymentPeriodicity,
+            paidUntil: null,
+            monthlyAmount,
+            deactivatedAt: null,
+            memberPlanID,
+            autoRenew
+          }
+        })
+
+        if (!subscription) throw new Error('Could not create subscription')
+
+        // Create Periods, Invoices and Payment
+        const invoice = await memberContext.renewSubscriptionForUser({
+          userID: user.id,
+          userEmail: user.email,
+          userName: user.name,
+          userSubscription: subscription
+        })
+
+        if (!invoice) throw new Error('Could not create invoice')
+
+        return await createPaymentWithProvider({
+          invoice,
+          saveCustomer: true,
+          paymentMethodID,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
+    updateUser: {
+      type: GraphQLPublicUser,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicUserInput)}
+      },
+      async resolve(root, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+
+        const {name, email, preferredName, address} = input
+        // TODO: implement new email check
+
+        const userExists = await dbAdapter.user.getUser(email)
+        if (userExists) throw new EmailAlreadyInUseError()
+
+        const updateUser = await dbAdapter.user.updateUser({
+          id: user.id,
+          input: {
+            name,
+            preferredName,
+            address,
+            ...user
+          }
+        })
+
+        if (!updateUser) throw new Error('Error during updateUser')
+
+        return updateUser
+      }
+    },
+
+    updateUserSubscription: {
+      type: GraphQLPublicUserSubscription,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
+      },
+      async resolve(root, {input}, {authenticateUser, dbAdapter, loaders}) {
+        const {user} = authenticateUser()
+
+        if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
+
+        const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
+
+        const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
+        if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
+
+        const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
+        if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
+
+        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+
+        if (
+          !memberPlan.availablePaymentMethods.some(apm => {
+            if (apm.forceAutoRenewal && !autoRenew) return false
+            return (
+              apm.paymentPeriodicities.includes(paymentPeriodicity) &&
+              apm.paymentMethodIDs.includes(paymentMethodID)
+            )
+          })
+        )
+          throw new PaymentConfigurationNotAllowed()
+
+        const updateSubscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            memberPlanID,
+            paymentPeriodicity,
+            monthlyAmount,
+            autoRenew,
+            paymentMethodID,
+            ...user.subscription
+          }
+        })
+
+        if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        return updateSubscription
+      }
+    },
+
+    createPaymentFromInvoice: {
+      type: GraphQLPublicPayment,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
+      },
+      async resolve(
+        root,
+        {input},
+        {authenticateUser, createPaymentWithProvider, paymentProviders, dbAdapter}
+      ) {
+        const {user} = authenticateUser()
+        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+
+        const userInvoices = await dbAdapter.invoice.getInvoicesByUserID(user.id)
+        const invoice = userInvoices.find(invoice => invoice !== null && invoice.id === invoiceID)
+
+        if (!invoice) throw new NotFound('Invoice', invoiceID)
+
+        return await createPaymentWithProvider({
+          paymentMethodID,
+          invoice,
+          saveCustomer: false,
+          successURL,
+          failureURL
+        })
       }
     }
   }

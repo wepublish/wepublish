@@ -19,6 +19,8 @@ import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
 import {CommentList} from './routes/commentList'
 import {UserRoleList} from './routes/userRoleList'
+import {MemberPlanList} from './routes/memberPlanList'
+import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
 export function contentForRoute(route: Route) {
@@ -65,6 +67,16 @@ export function contentForRoute(route: Route) {
     case RouteType.UserRoleCreate:
     case RouteType.UserRoleEdit:
       return <UserRoleList />
+
+    case RouteType.MemberPlanList:
+    case RouteType.MemberPlanCreate:
+    case RouteType.MemberPlanEdit:
+      return <MemberPlanList />
+
+    case RouteType.PaymentMethodList:
+    case RouteType.PaymentMethodCreate:
+    case RouteType.PaymentMethodEdit:
+      return <PaymentMethodList />
 
     case RouteType.NavigationList:
     case RouteType.NavigationCreate:

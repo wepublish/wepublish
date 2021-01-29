@@ -184,6 +184,19 @@ export type AuthProvider = {
   url: Scalars['String'];
 };
 
+export type AvailablePaymentMethod = {
+  __typename?: 'AvailablePaymentMethod';
+  paymentMethods: Array<PaymentMethod>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+  forceAutoRenewal: Scalars['Boolean'];
+};
+
+export type AvailablePaymentMethodInput = {
+  paymentMethodIDs: Array<Scalars['String']>;
+  paymentPeriodicities: Array<PaymentPeriodicity>;
+  forceAutoRenewal: Scalars['Boolean'];
+};
+
 export type BaseNavigationLink = {
   label: Scalars['String'];
 };
@@ -280,6 +293,19 @@ export type CreatePeerInput = {
   hostURL: Scalars['String'];
   token: Scalars['String'];
 };
+
+export type DateFilter = {
+  date?: Maybe<Scalars['DateTime']>;
+  comparison: DateFilterComparison;
+};
+
+export enum DateFilterComparison {
+  Greater = 'GREATER',
+  GreaterOrEqual = 'GREATER_OR_EQUAL',
+  Equal = 'EQUAL',
+  Lower = 'LOWER',
+  LowerOrEqual = 'LOWER_OR_EQUAL'
+}
 
 
 export type EmbedBlock = {
@@ -444,6 +470,62 @@ export type InstagramPostBlockInput = {
   postID: Scalars['String'];
 };
 
+export type Invoice = {
+  __typename?: 'Invoice';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  mail: Scalars['String'];
+  user?: Maybe<User>;
+  description?: Maybe<Scalars['String']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
+  items: Array<InvoiceItem>;
+  total: Scalars['Int'];
+};
+
+export type InvoiceConnection = {
+  __typename?: 'InvoiceConnection';
+  nodes: Array<Invoice>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type InvoiceFilter = {
+  mail?: Maybe<Scalars['String']>;
+};
+
+export type InvoiceInput = {
+  mail: Scalars['String'];
+  userID?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['String']>;
+  paidAt?: Maybe<Scalars['DateTime']>;
+  items: Array<InvoiceItemInput>;
+};
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem';
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  quantity: Scalars['Int'];
+  amount: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type InvoiceItemInput = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  quantity: Scalars['Int'];
+  amount: Scalars['Int'];
+};
+
+export enum InvoiceSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  PaidAt = 'PAID_AT'
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   text?: Maybe<Scalars['String']>;
@@ -493,6 +575,47 @@ export type ListicleItemInput = {
   richText: Scalars['RichText'];
 };
 
+export type MemberPlan = {
+  __typename?: 'MemberPlan';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  image?: Maybe<Image>;
+  description?: Maybe<Scalars['RichText']>;
+  active: Scalars['Boolean'];
+  amountPerMonthMin: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethod>;
+};
+
+export type MemberPlanConnection = {
+  __typename?: 'MemberPlanConnection';
+  nodes: Array<MemberPlan>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type MemberPlanFilter = {
+  name?: Maybe<Scalars['String']>;
+  active?: Maybe<Scalars['Boolean']>;
+};
+
+export type MemberPlanInput = {
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  imageID?: Maybe<Scalars['ID']>;
+  description?: Maybe<Scalars['RichText']>;
+  active: Scalars['Boolean'];
+  amountPerMonthMin: Scalars['Int'];
+  availablePaymentMethods: Array<AvailablePaymentMethodInput>;
+};
+
+export enum MemberPlanSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   updatePeerProfile: PeerProfile;
@@ -510,8 +633,10 @@ export type Mutation = {
   deleteToken?: Maybe<Scalars['String']>;
   createUser?: Maybe<User>;
   updateUser?: Maybe<User>;
+  updateUserSubscription?: Maybe<UserSubscription>;
   resetUserPassword?: Maybe<User>;
   deleteUser?: Maybe<Scalars['String']>;
+  deleteUserSubscription?: Maybe<Scalars['String']>;
   createUserRole?: Maybe<UserRole>;
   updateUserRole?: Maybe<UserRole>;
   deleteUserRole?: Maybe<Scalars['String']>;
@@ -534,6 +659,16 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  createMemberPlan?: Maybe<MemberPlan>;
+  updateMemberPlan?: Maybe<MemberPlan>;
+  deleteMemberPlan?: Maybe<Scalars['ID']>;
+  createPaymentMethod?: Maybe<PaymentMethod>;
+  updatePaymentMethod?: Maybe<PaymentMethod>;
+  deletePaymentMethod?: Maybe<Scalars['ID']>;
+  createInvoice?: Maybe<Invoice>;
+  createPaymentFromInvoice?: Maybe<Payment>;
+  updateInvoice?: Maybe<Invoice>;
+  deleteInvoice?: Maybe<Scalars['ID']>;
   approveComment: Comment;
   rejectComment: Comment;
   requestChangesOnComment: Comment;
@@ -612,6 +747,12 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationUpdateUserSubscriptionArgs = {
+  userID: Scalars['ID'];
+  input: UserSubscriptionInput;
+};
+
+
 export type MutationResetUserPasswordArgs = {
   id: Scalars['ID'];
   password: Scalars['String'];
@@ -621,6 +762,11 @@ export type MutationResetUserPasswordArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserSubscriptionArgs = {
+  userID: Scalars['ID'];
 };
 
 
@@ -742,6 +888,59 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateMemberPlanArgs = {
+  input: MemberPlanInput;
+};
+
+
+export type MutationUpdateMemberPlanArgs = {
+  id: Scalars['ID'];
+  input: MemberPlanInput;
+};
+
+
+export type MutationDeleteMemberPlanArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreatePaymentMethodArgs = {
+  input: PaymentMethodInput;
+};
+
+
+export type MutationUpdatePaymentMethodArgs = {
+  id: Scalars['ID'];
+  input: PaymentMethodInput;
+};
+
+
+export type MutationDeletePaymentMethodArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  input: InvoiceInput;
+};
+
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput;
+};
+
+
+export type MutationUpdateInvoiceArgs = {
+  id: Scalars['ID'];
+  input: InvoiceInput;
+};
+
+
+export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID'];
 };
 
@@ -889,6 +1088,84 @@ export type PageTeaserInput = {
   pageID: Scalars['ID'];
 };
 
+export type Payment = {
+  __typename?: 'Payment';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  intentID?: Maybe<Scalars['String']>;
+  intentSecret?: Maybe<Scalars['String']>;
+  state: PaymentState;
+  invoice: Invoice;
+  intentData?: Maybe<Scalars['String']>;
+  paymentMethod: PaymentMethod;
+  paymentData?: Maybe<Scalars['String']>;
+};
+
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection';
+  nodes: Array<Payment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PaymentFilter = {
+  intentID?: Maybe<Scalars['String']>;
+};
+
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String'];
+  paymentMethodID: Scalars['String'];
+  successURL?: Maybe<Scalars['String']>;
+  failureURL?: Maybe<Scalars['String']>;
+};
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  paymentProvider: PaymentProvider;
+  active: Scalars['Boolean'];
+};
+
+export type PaymentMethodInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  paymentProviderID: Scalars['String'];
+  active: Scalars['Boolean'];
+};
+
+export enum PaymentPeriodicity {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Biannual = 'BIANNUAL',
+  Yearly = 'YEARLY'
+}
+
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
+export enum PaymentSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export enum PaymentState {
+  Created = 'Created',
+  Submitted = 'Submitted',
+  RequiresUserAction = 'RequiresUserAction',
+  Processing = 'Processing',
+  Payed = 'Payed',
+  Canceled = 'Canceled',
+  Declined = 'Declined'
+}
+
 export type Peer = {
   __typename?: 'Peer';
   id: Scalars['ID'];
@@ -1007,6 +1284,15 @@ export type Query = {
   peerArticles: PeerArticleConnection;
   page?: Maybe<Page>;
   pages: PageConnection;
+  memberPlan?: Maybe<MemberPlan>;
+  memberPlans: MemberPlanConnection;
+  paymentMethod?: Maybe<PaymentMethod>;
+  paymentMethods: Array<PaymentMethod>;
+  paymentProviders: Array<PaymentProvider>;
+  invoice?: Maybe<Invoice>;
+  invoices: InvoiceConnection;
+  payment?: Maybe<Payment>;
+  payments: PaymentConnection;
 };
 
 
@@ -1030,6 +1316,7 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<UserFilter>;
   sort?: Maybe<UserSort>;
   order?: Maybe<SortOrder>;
@@ -1145,6 +1432,59 @@ export type QueryPagesArgs = {
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<PageFilter>;
   sort?: Maybe<PageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryMemberPlanArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryMemberPlansArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<MemberPlanFilter>;
+  sort?: Maybe<MemberPlanSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPaymentMethodArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryInvoiceArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryInvoicesArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<InvoiceFilter>;
+  sort?: Maybe<InvoiceSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<PaymentFilter>;
+  sort?: Maybe<PaymentSort>;
   order?: Maybe<SortOrder>;
 };
 
@@ -1304,7 +1644,28 @@ export type User = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddress>;
+  active: Scalars['Boolean'];
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  properties: Array<Properties>;
   roles: Array<UserRole>;
+  subscription?: Maybe<UserSubscription>;
+};
+
+export type UserAddress = {
+  __typename?: 'UserAddress';
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
+};
+
+export type UserAddressInput = {
+  street: Scalars['String'];
+  zipCode: Scalars['String'];
+  city: Scalars['String'];
+  country: Scalars['String'];
 };
 
 export type UserConnection = {
@@ -1316,11 +1677,17 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  subscription?: Maybe<UserSubscriptionFilter>;
 };
 
 export type UserInput = {
   name: Scalars['String'];
   email: Scalars['String'];
+  preferredName?: Maybe<Scalars['String']>;
+  address?: Maybe<UserAddressInput>;
+  active: Scalars['Boolean'];
+  properties: Array<PropertiesInput>;
   roleIDs?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -1357,8 +1724,39 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  memberPlan: MemberPlan;
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethod: PaymentMethod;
+  deactivatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type UserSubscriptionFilter = {
+  startsAt?: Maybe<DateFilter>;
+  paidUntil?: Maybe<DateFilter>;
+  deactivatedAt?: Maybe<DateFilter>;
+  autoRenew?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserSubscriptionInput = {
+  memberPlanID: Scalars['String'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  autoRenew: Scalars['Boolean'];
+  startsAt: Scalars['DateTime'];
+  paidUntil?: Maybe<Scalars['DateTime']>;
+  paymentMethodID: Scalars['String'];
+  deactivatedAt?: Maybe<Scalars['DateTime']>;
+};
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
@@ -2117,6 +2515,103 @@ export type DeleteImageMutation = (
   & Pick<Mutation, 'deleteImage'>
 );
 
+export type MemberPlanRefFragment = (
+  { __typename?: 'MemberPlan' }
+  & Pick<MemberPlan, 'id' | 'name' | 'slug' | 'active'>
+  & { image?: Maybe<(
+    { __typename?: 'Image' }
+    & ImageRefFragment
+  )> }
+);
+
+export type FullMemberPlanFragment = (
+  { __typename?: 'MemberPlan' }
+  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
+  & { availablePaymentMethods: Array<(
+    { __typename?: 'AvailablePaymentMethod' }
+    & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
+    & { paymentMethods: Array<(
+      { __typename?: 'PaymentMethod' }
+      & FullPaymentMethodFragment
+    )> }
+  )> }
+  & MemberPlanRefFragment
+);
+
+export type MemberPlanListQueryVariables = Exact<{
+  filter?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type MemberPlanListQuery = (
+  { __typename?: 'Query' }
+  & { memberPlans: (
+    { __typename?: 'MemberPlanConnection' }
+    & Pick<MemberPlanConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'MemberPlan' }
+      & FullMemberPlanFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
+
+export type MemberPlanQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type MemberPlanQuery = (
+  { __typename?: 'Query' }
+  & { memberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type CreateMemberPlanMutationVariables = Exact<{
+  input: MemberPlanInput;
+}>;
+
+
+export type CreateMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & { createMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type UpdateMemberPlanMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: MemberPlanInput;
+}>;
+
+
+export type UpdateMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & { updateMemberPlan?: Maybe<(
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  )> }
+);
+
+export type DeleteMemberPlanMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteMemberPlanMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMemberPlan'>
+);
+
 export type FullNavigationFragment = (
   { __typename?: 'Navigation' }
   & Pick<Navigation, 'id' | 'key' | 'name'>
@@ -2410,6 +2905,92 @@ export type PageQuery = (
   )> }
 );
 
+export type FullPaymentProviderFragment = (
+  { __typename?: 'PaymentProvider' }
+  & Pick<PaymentProvider, 'id' | 'name'>
+);
+
+export type FullPaymentMethodFragment = (
+  { __typename?: 'PaymentMethod' }
+  & Pick<PaymentMethod, 'id' | 'name' | 'createdAt' | 'modifiedAt' | 'description' | 'active'>
+  & { paymentProvider: (
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  ) }
+);
+
+export type PaymentProviderListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentProviderListQuery = (
+  { __typename?: 'Query' }
+  & { paymentProviders: Array<(
+    { __typename?: 'PaymentProvider' }
+    & FullPaymentProviderFragment
+  )> }
+);
+
+export type PaymentMethodListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentMethodListQuery = (
+  { __typename?: 'Query' }
+  & { paymentMethods: Array<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type PaymentMethodQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type PaymentMethodQuery = (
+  { __typename?: 'Query' }
+  & { paymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type CreatePaymentMethodMutationVariables = Exact<{
+  input: PaymentMethodInput;
+}>;
+
+
+export type CreatePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & { createPaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type UpdatePaymentMethodMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: PaymentMethodInput;
+}>;
+
+
+export type UpdatePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePaymentMethod?: Maybe<(
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  )> }
+);
+
+export type DeletePaymentMethodMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePaymentMethodMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePaymentMethod'>
+);
+
 export type FullPeerProfileFragment = (
   { __typename?: 'PeerProfile' }
   & Pick<PeerProfile, 'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'>
@@ -2557,12 +3138,33 @@ export type DeleteTokenMutation = (
   & Pick<Mutation, 'deleteToken'>
 );
 
+export type FullUserSubscriptionFragment = (
+  { __typename?: 'UserSubscription' }
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
+  & { memberPlan: (
+    { __typename?: 'MemberPlan' }
+    & FullMemberPlanFragment
+  ), paymentMethod: (
+    { __typename?: 'PaymentMethod' }
+    & FullPaymentMethodFragment
+  ) }
+);
+
 export type FullUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'email'>
-  & { roles: Array<(
+  & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
+  & { address?: Maybe<(
+    { __typename?: 'UserAddress' }
+    & Pick<UserAddress, 'street' | 'zipCode' | 'city' | 'country'>
+  )>, properties: Array<(
+    { __typename?: 'Properties' }
+    & Pick<Properties, 'key' | 'value' | 'public'>
+  )>, roles: Array<(
     { __typename?: 'UserRole' }
     & FullUserRoleFragment
+  )>, subscription?: Maybe<(
+    { __typename?: 'UserSubscription' }
+    & FullUserSubscriptionFragment
   )> }
 );
 
@@ -2572,6 +3174,9 @@ export type UserListQueryVariables = Exact<{
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<UserSort>;
 }>;
 
 
@@ -2631,6 +3236,20 @@ export type UpdateUserMutation = (
   )> }
 );
 
+export type UpdateUserSubscriptionMutationVariables = Exact<{
+  userID: Scalars['ID'];
+  input: UserSubscriptionInput;
+}>;
+
+
+export type UpdateUserSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserSubscription?: Maybe<(
+    { __typename?: 'UserSubscription' }
+    & FullUserSubscriptionFragment
+  )> }
+);
+
 export type ResetUserPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
   password: Scalars['String'];
@@ -2653,6 +3272,16 @@ export type DeleteUserMutationVariables = Exact<{
 export type DeleteUserMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteUser'>
+);
+
+export type DeleteUserSubscriptionMutationVariables = Exact<{
+  userID: Scalars['ID'];
+}>;
+
+
+export type DeleteUserSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteUserSubscription'>
 );
 
 export type FullPermissionFragment = (
@@ -3169,6 +3798,116 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
+export const FullPermissionFragmentDoc = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRoleFragmentDoc = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermissionFragmentDoc}`;
+export const FullPaymentProviderFragmentDoc = gql`
+    fragment FullPaymentProvider on PaymentProvider {
+  id
+  name
+}
+    `;
+export const FullPaymentMethodFragmentDoc = gql`
+    fragment FullPaymentMethod on PaymentMethod {
+  id
+  name
+  createdAt
+  modifiedAt
+  paymentProvider {
+    ...FullPaymentProvider
+  }
+  description
+  active
+}
+    ${FullPaymentProviderFragmentDoc}`;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  slug
+  active
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullMemberPlanFragmentDoc = gql`
+    fragment FullMemberPlan on MemberPlan {
+  description
+  amountPerMonthMin
+  availablePaymentMethods {
+    paymentMethods {
+      ...FullPaymentMethod
+    }
+    paymentPeriodicities
+    forceAutoRenewal
+  }
+  ...MemberPlanRef
+}
+    ${FullPaymentMethodFragmentDoc}
+${MemberPlanRefFragmentDoc}`;
+export const FullUserSubscriptionFragmentDoc = gql`
+    fragment FullUserSubscription on UserSubscription {
+  memberPlan {
+    ...FullMemberPlan
+  }
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+  deactivatedAt
+}
+    ${FullMemberPlanFragmentDoc}
+${FullPaymentMethodFragmentDoc}`;
+export const FullUserFragmentDoc = gql`
+    fragment FullUser on User {
+  id
+  createdAt
+  modifiedAt
+  name
+  preferredName
+  address {
+    street
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
+  email
+  roles {
+    ...FullUserRole
+  }
+  subscription {
+    ...FullUserSubscription
+  }
+}
+    ${FullUserRoleFragmentDoc}
+${FullUserSubscriptionFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
@@ -4141,6 +4880,180 @@ export function useDeleteImageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteImageMutationHookResult = ReturnType<typeof useDeleteImageMutation>;
 export type DeleteImageMutationResult = Apollo.MutationResult<DeleteImageMutation>;
 export type DeleteImageMutationOptions = Apollo.BaseMutationOptions<DeleteImageMutation, DeleteImageMutationVariables>;
+export const MemberPlanListDocument = gql`
+    query MemberPlanList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
+  memberPlans(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    nodes {
+      ...FullMemberPlan
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanListQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *   },
+ * });
+ */
+export function useMemberPlanListQuery(baseOptions?: Apollo.QueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+        return Apollo.useQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, baseOptions);
+      }
+export function useMemberPlanListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanListQuery, MemberPlanListQueryVariables>) {
+          return Apollo.useLazyQuery<MemberPlanListQuery, MemberPlanListQueryVariables>(MemberPlanListDocument, baseOptions);
+        }
+export type MemberPlanListQueryHookResult = ReturnType<typeof useMemberPlanListQuery>;
+export type MemberPlanListLazyQueryHookResult = ReturnType<typeof useMemberPlanListLazyQuery>;
+export type MemberPlanListQueryResult = Apollo.QueryResult<MemberPlanListQuery, MemberPlanListQueryVariables>;
+export const MemberPlanDocument = gql`
+    query MemberPlan($id: ID!) {
+  memberPlan(id: $id) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+
+/**
+ * __useMemberPlanQuery__
+ *
+ * To run a query within a React component, call `useMemberPlanQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMemberPlanQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMemberPlanQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMemberPlanQuery(baseOptions?: Apollo.QueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+        return Apollo.useQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, baseOptions);
+      }
+export function useMemberPlanLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MemberPlanQuery, MemberPlanQueryVariables>) {
+          return Apollo.useLazyQuery<MemberPlanQuery, MemberPlanQueryVariables>(MemberPlanDocument, baseOptions);
+        }
+export type MemberPlanQueryHookResult = ReturnType<typeof useMemberPlanQuery>;
+export type MemberPlanLazyQueryHookResult = ReturnType<typeof useMemberPlanLazyQuery>;
+export type MemberPlanQueryResult = Apollo.QueryResult<MemberPlanQuery, MemberPlanQueryVariables>;
+export const CreateMemberPlanDocument = gql`
+    mutation CreateMemberPlan($input: MemberPlanInput!) {
+  createMemberPlan(input: $input) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type CreateMemberPlanMutationFn = Apollo.MutationFunction<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+
+/**
+ * __useCreateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useCreateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMemberPlanMutation, { data, loading, error }] = useCreateMemberPlanMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>) {
+        return Apollo.useMutation<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>(CreateMemberPlanDocument, baseOptions);
+      }
+export type CreateMemberPlanMutationHookResult = ReturnType<typeof useCreateMemberPlanMutation>;
+export type CreateMemberPlanMutationResult = Apollo.MutationResult<CreateMemberPlanMutation>;
+export type CreateMemberPlanMutationOptions = Apollo.BaseMutationOptions<CreateMemberPlanMutation, CreateMemberPlanMutationVariables>;
+export const UpdateMemberPlanDocument = gql`
+    mutation UpdateMemberPlan($id: ID!, $input: MemberPlanInput!) {
+  updateMemberPlan(id: $id, input: $input) {
+    ...FullMemberPlan
+  }
+}
+    ${FullMemberPlanFragmentDoc}`;
+export type UpdateMemberPlanMutationFn = Apollo.MutationFunction<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+
+/**
+ * __useUpdateMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useUpdateMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMemberPlanMutation, { data, loading, error }] = useUpdateMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>) {
+        return Apollo.useMutation<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>(UpdateMemberPlanDocument, baseOptions);
+      }
+export type UpdateMemberPlanMutationHookResult = ReturnType<typeof useUpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationResult = Apollo.MutationResult<UpdateMemberPlanMutation>;
+export type UpdateMemberPlanMutationOptions = Apollo.BaseMutationOptions<UpdateMemberPlanMutation, UpdateMemberPlanMutationVariables>;
+export const DeleteMemberPlanDocument = gql`
+    mutation DeleteMemberPlan($id: ID!) {
+  deleteMemberPlan(id: $id)
+}
+    `;
+export type DeleteMemberPlanMutationFn = Apollo.MutationFunction<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
+
+/**
+ * __useDeleteMemberPlanMutation__
+ *
+ * To run a mutation, you first call `useDeleteMemberPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMemberPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMemberPlanMutation, { data, loading, error }] = useDeleteMemberPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMemberPlanMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>) {
+        return Apollo.useMutation<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>(DeleteMemberPlanDocument, baseOptions);
+      }
+export type DeleteMemberPlanMutationHookResult = ReturnType<typeof useDeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationResult = Apollo.MutationResult<DeleteMemberPlanMutation>;
+export type DeleteMemberPlanMutationOptions = Apollo.BaseMutationOptions<DeleteMemberPlanMutation, DeleteMemberPlanMutationVariables>;
 export const NavigationListDocument = gql`
     query NavigationList {
   navigations {
@@ -4572,6 +5485,198 @@ export function usePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageQ
 export type PageQueryHookResult = ReturnType<typeof usePageQuery>;
 export type PageLazyQueryHookResult = ReturnType<typeof usePageLazyQuery>;
 export type PageQueryResult = Apollo.QueryResult<PageQuery, PageQueryVariables>;
+export const PaymentProviderListDocument = gql`
+    query PaymentProviderList {
+  paymentProviders {
+    ...FullPaymentProvider
+  }
+}
+    ${FullPaymentProviderFragmentDoc}`;
+
+/**
+ * __usePaymentProviderListQuery__
+ *
+ * To run a query within a React component, call `usePaymentProviderListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentProviderListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentProviderListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePaymentProviderListQuery(baseOptions?: Apollo.QueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+        return Apollo.useQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, baseOptions);
+      }
+export function usePaymentProviderListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentProviderListQuery, PaymentProviderListQueryVariables>) {
+          return Apollo.useLazyQuery<PaymentProviderListQuery, PaymentProviderListQueryVariables>(PaymentProviderListDocument, baseOptions);
+        }
+export type PaymentProviderListQueryHookResult = ReturnType<typeof usePaymentProviderListQuery>;
+export type PaymentProviderListLazyQueryHookResult = ReturnType<typeof usePaymentProviderListLazyQuery>;
+export type PaymentProviderListQueryResult = Apollo.QueryResult<PaymentProviderListQuery, PaymentProviderListQueryVariables>;
+export const PaymentMethodListDocument = gql`
+    query PaymentMethodList {
+  paymentMethods {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+
+/**
+ * __usePaymentMethodListQuery__
+ *
+ * To run a query within a React component, call `usePaymentMethodListQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentMethodListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentMethodListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePaymentMethodListQuery(baseOptions?: Apollo.QueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+        return Apollo.useQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, baseOptions);
+      }
+export function usePaymentMethodListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentMethodListQuery, PaymentMethodListQueryVariables>) {
+          return Apollo.useLazyQuery<PaymentMethodListQuery, PaymentMethodListQueryVariables>(PaymentMethodListDocument, baseOptions);
+        }
+export type PaymentMethodListQueryHookResult = ReturnType<typeof usePaymentMethodListQuery>;
+export type PaymentMethodListLazyQueryHookResult = ReturnType<typeof usePaymentMethodListLazyQuery>;
+export type PaymentMethodListQueryResult = Apollo.QueryResult<PaymentMethodListQuery, PaymentMethodListQueryVariables>;
+export const PaymentMethodDocument = gql`
+    query PaymentMethod($id: ID!) {
+  paymentMethod(id: $id) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+
+/**
+ * __usePaymentMethodQuery__
+ *
+ * To run a query within a React component, call `usePaymentMethodQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaymentMethodQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaymentMethodQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePaymentMethodQuery(baseOptions?: Apollo.QueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+        return Apollo.useQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, baseOptions);
+      }
+export function usePaymentMethodLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaymentMethodQuery, PaymentMethodQueryVariables>) {
+          return Apollo.useLazyQuery<PaymentMethodQuery, PaymentMethodQueryVariables>(PaymentMethodDocument, baseOptions);
+        }
+export type PaymentMethodQueryHookResult = ReturnType<typeof usePaymentMethodQuery>;
+export type PaymentMethodLazyQueryHookResult = ReturnType<typeof usePaymentMethodLazyQuery>;
+export type PaymentMethodQueryResult = Apollo.QueryResult<PaymentMethodQuery, PaymentMethodQueryVariables>;
+export const CreatePaymentMethodDocument = gql`
+    mutation CreatePaymentMethod($input: PaymentMethodInput!) {
+  createPaymentMethod(input: $input) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+export type CreatePaymentMethodMutationFn = Apollo.MutationFunction<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
+
+/**
+ * __useCreatePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentMethodMutation, { data, loading, error }] = useCreatePaymentMethodMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>) {
+        return Apollo.useMutation<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>(CreatePaymentMethodDocument, baseOptions);
+      }
+export type CreatePaymentMethodMutationHookResult = ReturnType<typeof useCreatePaymentMethodMutation>;
+export type CreatePaymentMethodMutationResult = Apollo.MutationResult<CreatePaymentMethodMutation>;
+export type CreatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<CreatePaymentMethodMutation, CreatePaymentMethodMutationVariables>;
+export const UpdatePaymentMethodDocument = gql`
+    mutation UpdatePaymentMethod($id: ID!, $input: PaymentMethodInput!) {
+  updatePaymentMethod(id: $id, input: $input) {
+    ...FullPaymentMethod
+  }
+}
+    ${FullPaymentMethodFragmentDoc}`;
+export type UpdatePaymentMethodMutationFn = Apollo.MutationFunction<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
+
+/**
+ * __useUpdatePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentMethodMutation, { data, loading, error }] = useUpdatePaymentMethodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>) {
+        return Apollo.useMutation<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>(UpdatePaymentMethodDocument, baseOptions);
+      }
+export type UpdatePaymentMethodMutationHookResult = ReturnType<typeof useUpdatePaymentMethodMutation>;
+export type UpdatePaymentMethodMutationResult = Apollo.MutationResult<UpdatePaymentMethodMutation>;
+export type UpdatePaymentMethodMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentMethodMutation, UpdatePaymentMethodMutationVariables>;
+export const DeletePaymentMethodDocument = gql`
+    mutation DeletePaymentMethod($id: ID!) {
+  deletePaymentMethod(id: $id)
+}
+    `;
+export type DeletePaymentMethodMutationFn = Apollo.MutationFunction<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
+
+/**
+ * __useDeletePaymentMethodMutation__
+ *
+ * To run a mutation, you first call `useDeletePaymentMethodMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePaymentMethodMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePaymentMethodMutation, { data, loading, error }] = useDeletePaymentMethodMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePaymentMethodMutation(baseOptions?: Apollo.MutationHookOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>) {
+        return Apollo.useMutation<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>(DeletePaymentMethodDocument, baseOptions);
+      }
+export type DeletePaymentMethodMutationHookResult = ReturnType<typeof useDeletePaymentMethodMutation>;
+export type DeletePaymentMethodMutationResult = Apollo.MutationResult<DeletePaymentMethodMutation>;
+export type DeletePaymentMethodMutationOptions = Apollo.BaseMutationOptions<DeletePaymentMethodMutation, DeletePaymentMethodMutationVariables>;
 export const PeerProfileDocument = gql`
     query PeerProfile {
   peerProfile {
@@ -4893,8 +5998,8 @@ export type DeleteTokenMutationHookResult = ReturnType<typeof useDeleteTokenMuta
 export type DeleteTokenMutationResult = Apollo.MutationResult<DeleteTokenMutation>;
 export type DeleteTokenMutationOptions = Apollo.BaseMutationOptions<DeleteTokenMutation, DeleteTokenMutationVariables>;
 export const UserListDocument = gql`
-    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: UserSort) {
+  users(filter: {text: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullUser
     }
@@ -4926,6 +6031,9 @@ export const UserListDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
@@ -5037,6 +6145,39 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserSubscriptionDocument = gql`
+    mutation UpdateUserSubscription($userID: ID!, $input: UserSubscriptionInput!) {
+  updateUserSubscription(userID: $userID, input: $input) {
+    ...FullUserSubscription
+  }
+}
+    ${FullUserSubscriptionFragmentDoc}`;
+export type UpdateUserSubscriptionMutationFn = Apollo.MutationFunction<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>;
+
+/**
+ * __useUpdateUserSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSubscriptionMutation, { data, loading, error }] = useUpdateUserSubscriptionMutation({
+ *   variables: {
+ *      userID: // value for 'userID'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>) {
+        return Apollo.useMutation<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>(UpdateUserSubscriptionDocument, baseOptions);
+      }
+export type UpdateUserSubscriptionMutationHookResult = ReturnType<typeof useUpdateUserSubscriptionMutation>;
+export type UpdateUserSubscriptionMutationResult = Apollo.MutationResult<UpdateUserSubscriptionMutation>;
+export type UpdateUserSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateUserSubscriptionMutation, UpdateUserSubscriptionMutationVariables>;
 export const ResetUserPasswordDocument = gql`
     mutation ResetUserPassword($id: ID!, $password: String!) {
   resetUserPassword(id: $id, password: $password) {
@@ -5100,6 +6241,36 @@ export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const DeleteUserSubscriptionDocument = gql`
+    mutation DeleteUserSubscription($userID: ID!) {
+  deleteUserSubscription(userID: $userID)
+}
+    `;
+export type DeleteUserSubscriptionMutationFn = Apollo.MutationFunction<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
+
+/**
+ * __useDeleteUserSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserSubscriptionMutation, { data, loading, error }] = useDeleteUserSubscriptionMutation({
+ *   variables: {
+ *      userID: // value for 'userID'
+ *   },
+ * });
+ */
+export function useDeleteUserSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>) {
+        return Apollo.useMutation<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>(DeleteUserSubscriptionDocument, baseOptions);
+      }
+export type DeleteUserSubscriptionMutationHookResult = ReturnType<typeof useDeleteUserSubscriptionMutation>;
+export type DeleteUserSubscriptionMutationResult = Apollo.MutationResult<DeleteUserSubscriptionMutation>;
+export type DeleteUserSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteUserSubscriptionMutation, DeleteUserSubscriptionMutationVariables>;
 export const UserRoleListDocument = gql`
     query UserRoleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   userRoles(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
