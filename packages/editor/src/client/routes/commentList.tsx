@@ -11,6 +11,7 @@ import {
   // CommentListQuery,
   // PageRefFragment,
   CommentState,
+  CommentRejectionReason,
   Comment
 } from '../api'
 
@@ -45,7 +46,7 @@ export function CommentList() {
 
   const {t} = useTranslation()
 
-  console.log('Data:', data)
+  console.log('Data:', data, rejectComment, isRequestingChanges)
 
   useEffect(() => {
     if (data?.comments.nodes) {
@@ -251,7 +252,10 @@ export function CommentList() {
               switch (confirmAction) {
                 case ConfirmAction.RequestChanges:
                   await requestChanges({
-                    variables: {id: currentComment.id, rejectionReason}
+                    variables: {
+                      id: currentComment.id,
+                      rejectionReason: CommentRejectionReason.Misconduct
+                    }
                   })
                   break
               }

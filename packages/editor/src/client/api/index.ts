@@ -3693,16 +3693,98 @@ export const FullUserRoleFragmentDoc = gql`
   }
 }
     ${FullPermissionFragmentDoc}`;
+export const FullPaymentProviderFragmentDoc = gql`
+    fragment FullPaymentProvider on PaymentProvider {
+  id
+  name
+}
+    `;
+export const FullPaymentMethodFragmentDoc = gql`
+    fragment FullPaymentMethod on PaymentMethod {
+  id
+  name
+  createdAt
+  modifiedAt
+  paymentProvider {
+    ...FullPaymentProvider
+  }
+  description
+  active
+}
+    ${FullPaymentProviderFragmentDoc}`;
+export const MemberPlanRefFragmentDoc = gql`
+    fragment MemberPlanRef on MemberPlan {
+  id
+  name
+  slug
+  active
+  image {
+    ...ImageRef
+  }
+}
+    ${ImageRefFragmentDoc}`;
+export const FullMemberPlanFragmentDoc = gql`
+    fragment FullMemberPlan on MemberPlan {
+  description
+  amountPerMonthMin
+  availablePaymentMethods {
+    paymentMethods {
+      ...FullPaymentMethod
+    }
+    paymentPeriodicities
+    forceAutoRenewal
+  }
+  ...MemberPlanRef
+}
+    ${FullPaymentMethodFragmentDoc}
+${MemberPlanRefFragmentDoc}`;
+export const FullUserSubscriptionFragmentDoc = gql`
+    fragment FullUserSubscription on UserSubscription {
+  memberPlan {
+    ...FullMemberPlan
+  }
+  paymentPeriodicity
+  monthlyAmount
+  autoRenew
+  startsAt
+  paidUntil
+  paymentMethod {
+    ...FullPaymentMethod
+  }
+  deactivatedAt
+}
+    ${FullMemberPlanFragmentDoc}
+${FullPaymentMethodFragmentDoc}`;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
+  createdAt
+  modifiedAt
   name
+  preferredName
+  address {
+    street
+    zipCode
+    city
+    country
+  }
+  active
+  lastLogin
+  properties {
+    key
+    value
+    public
+  }
   email
   roles {
     ...FullUserRole
   }
+  subscription {
+    ...FullUserSubscription
+  }
 }
-    ${FullUserRoleFragmentDoc}`;
+    ${FullUserRoleFragmentDoc}
+${FullUserSubscriptionFragmentDoc}`;
 export const CommentRefFragmentDoc = gql`
     fragment CommentRef on Comment {
   id
@@ -3798,116 +3880,6 @@ export const TokenRefFragmentDoc = gql`
   name
 }
     `;
-export const FullPermissionFragmentDoc = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRoleFragmentDoc = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermissionFragmentDoc}`;
-export const FullPaymentProviderFragmentDoc = gql`
-    fragment FullPaymentProvider on PaymentProvider {
-  id
-  name
-}
-    `;
-export const FullPaymentMethodFragmentDoc = gql`
-    fragment FullPaymentMethod on PaymentMethod {
-  id
-  name
-  createdAt
-  modifiedAt
-  paymentProvider {
-    ...FullPaymentProvider
-  }
-  description
-  active
-}
-    ${FullPaymentProviderFragmentDoc}`;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlan {
-  id
-  name
-  slug
-  active
-  image {
-    ...ImageRef
-  }
-}
-    ${ImageRefFragmentDoc}`;
-export const FullMemberPlanFragmentDoc = gql`
-    fragment FullMemberPlan on MemberPlan {
-  description
-  amountPerMonthMin
-  availablePaymentMethods {
-    paymentMethods {
-      ...FullPaymentMethod
-    }
-    paymentPeriodicities
-    forceAutoRenewal
-  }
-  ...MemberPlanRef
-}
-    ${FullPaymentMethodFragmentDoc}
-${MemberPlanRefFragmentDoc}`;
-export const FullUserSubscriptionFragmentDoc = gql`
-    fragment FullUserSubscription on UserSubscription {
-  memberPlan {
-    ...FullMemberPlan
-  }
-  paymentPeriodicity
-  monthlyAmount
-  autoRenew
-  startsAt
-  paidUntil
-  paymentMethod {
-    ...FullPaymentMethod
-  }
-  deactivatedAt
-}
-    ${FullMemberPlanFragmentDoc}
-${FullPaymentMethodFragmentDoc}`;
-export const FullUserFragmentDoc = gql`
-    fragment FullUser on User {
-  id
-  createdAt
-  modifiedAt
-  name
-  preferredName
-  address {
-    street
-    zipCode
-    city
-    country
-  }
-  active
-  lastLogin
-  properties {
-    key
-    value
-    public
-  }
-  email
-  roles {
-    ...FullUserRole
-  }
-  subscription {
-    ...FullUserSubscription
-  }
-}
-    ${FullUserRoleFragmentDoc}
-${FullUserSubscriptionFragmentDoc}`;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $first: Int) {
   articles(first: $first, after: $after, filter: {title: $filter}) {
