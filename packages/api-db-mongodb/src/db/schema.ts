@@ -4,6 +4,7 @@ import {
   CommentAuthorType,
   CommentRejectionReason,
   CommentState,
+  AvailablePaymentMethod,
   FocalPoint,
   InvoiceItem,
   MetadataProperty,
@@ -11,8 +12,11 @@ import {
   PageBlock,
   PaymentProviderCustomer,
   RichTextNode,
+  CommentRevision,
+  UserSubscription,
   MailLogState,
-  CommentRevision
+  PaymentState,
+  UserAddress
 } from '@wepublish/api'
 
 export enum CollectionName {

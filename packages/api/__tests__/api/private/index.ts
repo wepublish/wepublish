@@ -240,7 +240,7 @@ export type BlockInput = {
 export type Comment = {
   __typename?: 'Comment'
   id: Scalars['ID']
-  userID: User
+  user: User
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
@@ -250,11 +250,6 @@ export type Comment = {
   rejectionReason?: Maybe<CommentRejectionReason>
   createdAt: Scalars['DateTime']
   modifiedAt: Scalars['DateTime']
-}
-
-export type CommentActionInput = {
-  state: CommentState
-  rejectionReason?: Maybe<CommentRejectionReason>
 }
 
 export enum CommentAuthorType {
@@ -676,7 +671,19 @@ export type Mutation = {
   deletePage?: Maybe<Scalars['Boolean']>
   publishPage?: Maybe<Page>
   unpublishPage?: Maybe<Page>
-  takeActionOnComment: Comment
+  createMemberPlan?: Maybe<MemberPlan>
+  updateMemberPlan?: Maybe<MemberPlan>
+  deleteMemberPlan?: Maybe<Scalars['ID']>
+  createPaymentMethod?: Maybe<PaymentMethod>
+  updatePaymentMethod?: Maybe<PaymentMethod>
+  deletePaymentMethod?: Maybe<Scalars['ID']>
+  createInvoice?: Maybe<Invoice>
+  createPaymentFromInvoice?: Maybe<Payment>
+  updateInvoice?: Maybe<Invoice>
+  deleteInvoice?: Maybe<Scalars['ID']>
+  approveComment: Comment
+  rejectComment: Comment
+  requestChangesOnComment: Comment
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -857,9 +864,61 @@ export type MutationUnpublishPageArgs = {
   id: Scalars['ID']
 }
 
-export type MutationTakeActionOnCommentArgs = {
+export type MutationCreateMemberPlanArgs = {
+  input: MemberPlanInput
+}
+
+export type MutationUpdateMemberPlanArgs = {
   id: Scalars['ID']
-  input: CommentActionInput
+  input: MemberPlanInput
+}
+
+export type MutationDeleteMemberPlanArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreatePaymentMethodArgs = {
+  input: PaymentMethodInput
+}
+
+export type MutationUpdatePaymentMethodArgs = {
+  id: Scalars['ID']
+  input: PaymentMethodInput
+}
+
+export type MutationDeletePaymentMethodArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationCreateInvoiceArgs = {
+  input: InvoiceInput
+}
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput
+}
+
+export type MutationUpdateInvoiceArgs = {
+  id: Scalars['ID']
+  input: InvoiceInput
+}
+
+export type MutationDeleteInvoiceArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
+}
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
 }
 
 export type Navigation = {
@@ -1213,6 +1272,7 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
   order?: Maybe<SortOrder>
@@ -1549,6 +1609,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
   subscription?: Maybe<UserSubscriptionFilter>
 }
 
@@ -1595,7 +1656,8 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type UserSubscription = {

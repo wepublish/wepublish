@@ -79,7 +79,16 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
-  CanGetComments
+  CanGetComments,
+  CanGetMemberPlan,
+  CanGetMemberPlans,
+  CanGetPaymentMethods,
+  CanGetPaymentMethod,
+  CanGetInvoice,
+  CanGetInvoices,
+  CanGetPayment,
+  CanGetPayments,
+  CanGetPaymentProviders
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -93,6 +102,28 @@ import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter} from './comment'
+import {
+  GraphQLMemberPlan,
+  GraphQLMemberPlanConnection,
+  GraphQLMemberPlanFilter,
+  GraphQLMemberPlanSort
+} from './memberPlan'
+import {MemberPlanSort} from '../db/memberPlan'
+import {GraphQLPaymentMethod, GraphQLPaymentProvider} from './paymentMethod'
+import {
+  GraphQLInvoice,
+  GraphQLInvoiceConnection,
+  GraphQLinvoiceFilter,
+  GraphQLInvoiceSort
+} from './invoice'
+import {InvoiceSort} from '../db/invoice'
+import {
+  GraphQLPayment,
+  GraphQLPaymentConnection,
+  GraphQLPaymentFilter,
+  GraphQLPaymentSort
+} from './payment'
+import {PaymentSort} from '../db/payment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',

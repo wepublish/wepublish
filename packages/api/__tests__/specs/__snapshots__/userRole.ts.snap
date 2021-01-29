@@ -240,13 +240,88 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to login editor",
-          "id": "CAN_LOGIN_EDITOR",
+          "description": "Allows to get all comments",
+          "id": "CAN_GET_COMMENTS",
         },
         Object {
           "deprecated": false,
-          "description": "Allows to get all comments",
-          "id": "CAN_GET_COMMENTS",
+          "description": "Allows to create a member plan",
+          "id": "CAN_CREATE_MEMBER_PLAN",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get a member plan",
+          "id": "CAN_GET_MEMBER_PLAN",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all member plans",
+          "id": "CAN_GET_MEMBER_PLANS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete member plan",
+          "id": "CAN_DELETE_MEMBER_PLAN",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a payment method",
+          "id": "CAN_CREATE_PAYMENT_METHOD",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get a payment method",
+          "id": "CAN_GET_PAYMENT_METHOD",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all payment methods",
+          "id": "CAN_GET_PAYMENT_METHODS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete payment method",
+          "id": "CAN_DELETE_PAYMENT_METHOD",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create an invoice",
+          "id": "CAN_CREATE_INVOICE",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get an invoice",
+          "id": "CAN_GET_INVOICE",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all invoices",
+          "id": "CAN_GET_INVOICES",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to delete invoice",
+          "id": "CAN_DELETE_INVOICE",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to create a payment",
+          "id": "CAN_CREATE_PAYMENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get an payment",
+          "id": "CAN_GET_PAYMENT",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all payments",
+          "id": "CAN_GET_PAYMENTS",
+        },
+        Object {
+          "deprecated": false,
+          "description": "Allows to get all payment providers",
+          "id": "CAN_GET_PAYMENT_PROVIDERS",
         },
         Object {
           "deprecated": false,
@@ -557,13 +632,88 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to login editor",
-              "id": "CAN_LOGIN_EDITOR",
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
             },
             Object {
               "deprecated": false,
-              "description": "Allows to get all comments",
-              "id": "CAN_GET_COMMENTS",
+              "description": "Allows to create a member plan",
+              "id": "CAN_CREATE_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get a member plan",
+              "id": "CAN_GET_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all member plans",
+              "id": "CAN_GET_MEMBER_PLANS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete member plan",
+              "id": "CAN_DELETE_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create a payment method",
+              "id": "CAN_CREATE_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get a payment method",
+              "id": "CAN_GET_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payment methods",
+              "id": "CAN_GET_PAYMENT_METHODS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete payment method",
+              "id": "CAN_DELETE_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create an invoice",
+              "id": "CAN_CREATE_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get an invoice",
+              "id": "CAN_GET_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all invoices",
+              "id": "CAN_GET_INVOICES",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete invoice",
+              "id": "CAN_DELETE_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create a payment",
+              "id": "CAN_CREATE_PAYMENT",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get an payment",
+              "id": "CAN_GET_PAYMENT",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payments",
+              "id": "CAN_GET_PAYMENTS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payment providers",
+              "id": "CAN_GET_PAYMENT_PROVIDERS",
             },
             Object {
               "deprecated": false,
@@ -950,13 +1100,88 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to login editor",
-              "id": "CAN_LOGIN_EDITOR",
+              "description": "Allows to get all comments",
+              "id": "CAN_GET_COMMENTS",
             },
             Object {
               "deprecated": false,
-              "description": "Allows to get all comments",
-              "id": "CAN_GET_COMMENTS",
+              "description": "Allows to create a member plan",
+              "id": "CAN_CREATE_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get a member plan",
+              "id": "CAN_GET_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all member plans",
+              "id": "CAN_GET_MEMBER_PLANS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete member plan",
+              "id": "CAN_DELETE_MEMBER_PLAN",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create a payment method",
+              "id": "CAN_CREATE_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get a payment method",
+              "id": "CAN_GET_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payment methods",
+              "id": "CAN_GET_PAYMENT_METHODS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete payment method",
+              "id": "CAN_DELETE_PAYMENT_METHOD",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create an invoice",
+              "id": "CAN_CREATE_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get an invoice",
+              "id": "CAN_GET_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all invoices",
+              "id": "CAN_GET_INVOICES",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to delete invoice",
+              "id": "CAN_DELETE_INVOICE",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to create a payment",
+              "id": "CAN_CREATE_PAYMENT",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get an payment",
+              "id": "CAN_GET_PAYMENT",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payments",
+              "id": "CAN_GET_PAYMENTS",
+            },
+            Object {
+              "deprecated": false,
+              "description": "Allows to get all payment providers",
+              "id": "CAN_GET_PAYMENT_PROVIDERS",
             },
             Object {
               "deprecated": false,
@@ -1259,13 +1484,88 @@ Object {
       },
       Object {
         "deprecated": false,
-        "description": "Allows to login editor",
-        "id": "CAN_LOGIN_EDITOR",
+        "description": "Allows to get all comments",
+        "id": "CAN_GET_COMMENTS",
       },
       Object {
         "deprecated": false,
-        "description": "Allows to get all comments",
-        "id": "CAN_GET_COMMENTS",
+        "description": "Allows to create a member plan",
+        "id": "CAN_CREATE_MEMBER_PLAN",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get a member plan",
+        "id": "CAN_GET_MEMBER_PLAN",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all member plans",
+        "id": "CAN_GET_MEMBER_PLANS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete member plan",
+        "id": "CAN_DELETE_MEMBER_PLAN",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a payment method",
+        "id": "CAN_CREATE_PAYMENT_METHOD",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get a payment method",
+        "id": "CAN_GET_PAYMENT_METHOD",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all payment methods",
+        "id": "CAN_GET_PAYMENT_METHODS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete payment method",
+        "id": "CAN_DELETE_PAYMENT_METHOD",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create an invoice",
+        "id": "CAN_CREATE_INVOICE",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get an invoice",
+        "id": "CAN_GET_INVOICE",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all invoices",
+        "id": "CAN_GET_INVOICES",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to delete invoice",
+        "id": "CAN_DELETE_INVOICE",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to create a payment",
+        "id": "CAN_CREATE_PAYMENT",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get an payment",
+        "id": "CAN_GET_PAYMENT",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all payments",
+        "id": "CAN_GET_PAYMENTS",
+      },
+      Object {
+        "deprecated": false,
+        "description": "Allows to get all payment providers",
+        "id": "CAN_GET_PAYMENT_PROVIDERS",
       },
       Object {
         "deprecated": false,

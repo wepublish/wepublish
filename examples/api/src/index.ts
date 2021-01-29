@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 import {
-  WepublishServer,
-  URLAdapter,
-  PublicComment,
-  PublicArticle,
-  PublicPage,
   Author,
+  PublicComment,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
