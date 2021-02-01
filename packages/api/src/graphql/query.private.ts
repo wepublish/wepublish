@@ -101,7 +101,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
-import {GraphQLCommentConnection, GraphQLCommentFilter} from './comment'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
   GraphQLMemberPlanConnection,
@@ -124,6 +124,7 @@ import {
   GraphQLPaymentSort
 } from './payment'
 import {PaymentSort} from '../db/payment'
+import {CommentSort} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -449,13 +450,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
         filter: {type: GraphQLCommentFilter},
-        sort: {type: GraphQLImageSort, defaultValue: ImageSort.ModifiedAt},
+        sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
       async resolve(
         root,
-        {filter, sort, order, after, before, first, last},
+        {filter, sort, order, after, before, first, last, skip},
         {authenticate, dbAdapter}
       ) {
         const {roles} = authenticate()
@@ -468,7 +470,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             sort,
             order,
             cursor: InputCursor(after, before),
-            limit: Limit(first, last)
+            limit: Limit(first, last, skip)
           })
         } else {
           throw new NotAuthorisedError()
