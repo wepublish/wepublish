@@ -129,11 +129,7 @@ export function CommentList() {
           setSortOrder(sortType)
           setSortField(sortColumn)
         }}>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
-          <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
-        </Column>
-        <Column width={200} align="left" resizable>
+        <Column width={400} align="left" resizable>
           <HeaderCell>{t('comments.overview.text')}</HeaderCell>
           <Cell dataKey="createdAt">
             {(rowData: CommentRefFragment) => (
@@ -153,11 +149,11 @@ export function CommentList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable sortable>
-          <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
-          <Cell dataKey="modifiedAt" />
+        <Column width={150} align="left" resizable>
+          <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
+          <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column width={150} align="left" resizable>
           <HeaderCell>{t('comments.overview.states')}</HeaderCell>
           <Cell dataKey="state">
             {(rowData: CommentRefFragment) => {
@@ -182,6 +178,10 @@ export function CommentList() {
               return <div>{t(state)}</div>
             }}
           </Cell>
+        </Column>
+        <Column width={100} align="left" resizable sortable>
+          <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
+          <Cell dataKey="modifiedAt" />
         </Column>
         <Column width={100} align="center" fixed="right">
           <HeaderCell>{t('comments.overview.action')}</HeaderCell>
@@ -250,8 +250,8 @@ export function CommentList() {
         </Modal.Header>
         <Modal.Body>
           <DescriptionList>
-            <DescriptionListItem label={t('comments.panels.title')}>
-              {currentComment?.id || t('comments.panels.untitled')}
+            <DescriptionListItem label={t('comments.panels.userName')}>
+              {currentComment?.user.name || t('comments.panels.untitled')}
             </DescriptionListItem>
             {currentComment?.revisions?.length
               ? currentComment?.revisions?.map(({text}, i) => (
@@ -265,17 +265,20 @@ export function CommentList() {
                   </DescriptionListItem>
                 ))
               : null}
-            <DescriptionListItem label={t('comments.panels.revisions')}>
-              <Dropdown title={t('comments.panels.rejectionReason')}>
-                <Dropdown.Item>{CommentRejectionReason.Spam}</Dropdown.Item>
-                <Dropdown.Item>{CommentRejectionReason.Misconduct}</Dropdown.Item>
-              </Dropdown>
-            </DescriptionListItem>
+            {confirmAction === ConfirmAction.Reject ||
+            confirmAction === ConfirmAction.RequestChanges ? (
+              <DescriptionListItem label={t('comments.panels.rejectionReason')}>
+                <Dropdown title={t('comments.panels.rejectionReason')}>
+                  <Dropdown.Item>{CommentRejectionReason.Spam}</Dropdown.Item>
+                  <Dropdown.Item>{CommentRejectionReason.Misconduct}</Dropdown.Item>
+                </Dropdown>
+              </DescriptionListItem>
+            ) : null}
           </DescriptionList>
         </Modal.Body>
         <Modal.Footer>
           <Button
-            color={'red'}
+            color={confirmAction === ConfirmAction.Approve ? 'green' : 'red'}
             disabled={isApproving || isRequestingChanges || isRejecting}
             onClick={async () => {
               if (!currentComment) return

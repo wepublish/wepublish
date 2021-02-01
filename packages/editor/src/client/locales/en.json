@@ -153,7 +153,8 @@
         "publishedAt": "Published At",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
-        "rejectionReason": "Rejection Reason"
+        "rejectionReason": "Rejection Reason",
+        "userName": "User Name"
       },
       "state": {
         "pendingApproval": "Pending Approval",

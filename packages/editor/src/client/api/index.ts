@@ -271,6 +271,11 @@ export type CommentRevision = {
   createdAt: Scalars['DateTime'];
 };
 
+export enum CommentSort {
+  ModifiedAt = 'ModifiedAt',
+  CreatedAt = 'CreatedAt'
+}
+
 export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
@@ -1383,8 +1388,9 @@ export type QueryCommentsArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<CommentFilter>;
-  sort?: Maybe<ImageSort>;
+  sort?: Maybe<CommentSort>;
   order?: Maybe<SortOrder>;
 };
 
@@ -2360,7 +2366,12 @@ export type CommentRefFragment = (
 
 export type CommentListQueryVariables = Exact<{
   after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<CommentSort>;
 }>;
 
 
@@ -4537,8 +4548,8 @@ export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMu
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const CommentListDocument = gql`
-    query CommentList($after: ID, $first: Int) {
-  comments(first: $first, after: $after) {
+    query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+  comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...CommentRef
     }
@@ -4566,7 +4577,12 @@ export const CommentListDocument = gql`
  * const { data, loading, error } = useCommentListQuery({
  *   variables: {
  *      after: // value for 'after'
+ *      before: // value for 'before'
  *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
