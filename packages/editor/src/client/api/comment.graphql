@@ -17,8 +17,24 @@ fragment CommentRef on Comment {
   modifiedAt
 }
 
-query CommentList($after: ID, $first: Int) {
-  comments(first: $first, after: $after) {
+query CommentList(
+  $after: ID
+  $before: ID
+  $first: Int
+  $last: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: CommentSort
+) {
+  comments(
+    after: $after
+    before: $before
+    first: $first
+    last: $last
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
     nodes {
       ...CommentRef
     }

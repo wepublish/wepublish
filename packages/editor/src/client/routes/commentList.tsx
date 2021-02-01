@@ -13,7 +13,8 @@ import {
   CommentState,
   CommentRejectionReason,
   Comment,
-  useRejectCommentMutation
+  useRejectCommentMutation,
+  CommentSort
 } from '../api'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -41,10 +42,12 @@ enum ConfirmAction {
   Reject = 'reject'
 }
 
-function mapColumFieldToGraphQLField(columnField: string): any | null {
+function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   switch (columnField) {
     case 'createdAt':
-      return 'CREATED_AT'
+      return CommentSort.CreatedAt
+    case 'modifiedAt':
+      return CommentSort.ModifiedAt
     default:
       return null
   }
@@ -120,6 +123,7 @@ export function CommentList() {
         style={{marginTop: '20px'}}
         loading={isLoading}
         data={comments}
+        sortColumn={sortField}
         sortType={sortOrder}
         onSortColumn={(sortColumn, sortType) => {
           setSortOrder(sortType)
@@ -129,7 +133,7 @@ export function CommentList() {
           <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
           <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
-        <Column width={400} align="left" resizable>
+        <Column width={200} align="left" resizable>
           <HeaderCell>{t('comments.overview.text')}</HeaderCell>
           <Cell dataKey="createdAt">
             {(rowData: CommentRefFragment) => (
@@ -149,13 +153,13 @@ export function CommentList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column width={100} align="left" resizable sortable>
           <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
           <Cell dataKey="modifiedAt" />
         </Column>
         <Column width={100} align="left" resizable>
           <HeaderCell>{t('comments.overview.states')}</HeaderCell>
-          <Cell>
+          <Cell dataKey="state">
             {(rowData: CommentRefFragment) => {
               let state: string
               switch (rowData?.state) {
