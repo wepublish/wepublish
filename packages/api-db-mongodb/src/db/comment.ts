@@ -155,6 +155,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
         .match(metaFilters.length ? {$and: metaFilters} : {})
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])

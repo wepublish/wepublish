@@ -16,7 +16,8 @@ import {
   CommentRevision,
   CommentState,
   PublicComment,
-  Comment
+  Comment,
+  CommentSort
 } from '../db/comment'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
@@ -55,6 +56,14 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   values: {
     Article: {value: CommentItemType.Article},
     Page: {value: CommentItemType.Page}
+  }
+})
+
+export const GraphQLCommentSort = new GraphQLEnumType({
+  name: 'CommentSort',
+  values: {
+    ModifiedAt: {value: CommentSort.ModifiedAt},
+    CreatedAt: {value: CommentSort.CreatedAt}
   }
 })
 
