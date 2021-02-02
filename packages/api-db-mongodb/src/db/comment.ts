@@ -233,8 +233,8 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async getPublicCommentRepliesByParentId(id: string): Promise<PublicComment[]> {
-    const [replies] = await Promise.all([
+  async getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]> {
+    const [childrenComments] = await Promise.all([
       this.comments
         .aggregate([{$sort: {modifiedAt: -1}}], {
           collation: {locale: this.locale, strength: 2}
@@ -245,7 +245,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
         .toArray()
     ])
 
-    return replies.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
+    return childrenComments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
       id,
       text: revisions[revisions.length - 1].text,
       ...comment

@@ -197,10 +197,10 @@ export const GraphQLPublicComment: GraphQLObjectType<
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
 
-    replies: {
+    children: {
       type: GraphQLList(GraphQLPublicCommentReply),
       resolve: createProxyingResolver(({id}, _, {dbAdapter}) => {
-        return dbAdapter.comment.getPublicCommentRepliesByParentId(id)
+        return dbAdapter.comment.getPublicChildrenCommentsByParentId(id)
       })
     },
 
