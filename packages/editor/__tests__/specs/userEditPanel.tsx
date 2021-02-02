@@ -144,6 +144,8 @@ describe('User Edit Panel', () => {
     const user = {
       name: 'Testing Müller',
       email: 'testing@mueller.com',
+      active: true,
+      properties: [],
       roleIDs: [],
       password: 'superSecret'
     }
@@ -155,7 +157,10 @@ describe('User Edit Panel', () => {
           variables: {
             input: {
               name: user.name,
+              preferredName: undefined,
               email: user.email,
+              active: user.active,
+              properties: user.properties,
               roleIDs: user.roleIDs
             },
             password: user.password
@@ -168,7 +173,9 @@ describe('User Edit Panel', () => {
               id: 'fakeId4',
               name: user.name,
               email: user.email,
-              roles: user.roleIDs
+              roles: user.roleIDs,
+              active: user.active,
+              properties: user.properties
             }
           }
         })

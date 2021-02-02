@@ -108,6 +108,13 @@ export enum AuthorSort {
   ModifiedAt = 'MODIFIED_AT'
 }
 
+export type AvailablePaymentMethod = {
+  __typename?: 'AvailablePaymentMethod'
+  paymentMethods: Array<PaymentMethod>
+  paymentPeriodicities: Array<PaymentPeriodicity>
+  forceAutoRenewal: Scalars['Boolean']
+}
+
 export type BaseNavigationLink = {
   label: Scalars['String']
 }
@@ -247,12 +254,41 @@ export type ListicleItem = {
   richText: Scalars['RichText']
 }
 
+export type MemberPlan = {
+  __typename?: 'MemberPlan'
+  id: Scalars['ID']
+  name: Scalars['String']
+  slug: Scalars['String']
+  image?: Maybe<Image>
+  description?: Maybe<Scalars['RichText']>
+  amountPerMonthMin: Scalars['Int']
+  availablePaymentMethods: Array<AvailablePaymentMethod>
+}
+
+export type MemberPlanConnection = {
+  __typename?: 'MemberPlanConnection'
+  nodes: Array<MemberPlan>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type MemberPlanFilter = {
+  name?: Maybe<Scalars['String']>
+  active?: Maybe<Scalars['Boolean']>
+}
+
+export enum MemberPlanSort {
+  CreatedAt = 'CREATED_AT',
+  ModifiedAt = 'MODIFIED_AT'
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   createSession: SessionWithToken
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
+  registerMemberAndReceivePayment: Payment
 }
 
 export type MutationCreateSessionArgs = {
@@ -268,6 +304,19 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   name: Scalars['String']
   code: Scalars['String']
   redirectUri: Scalars['String']
+}
+
+export type MutationRegisterMemberAndReceivePaymentArgs = {
+  name: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  email: Scalars['String']
+  memberPlanID: Scalars['String']
+  autoRenew: Scalars['Boolean']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  paymentMethodID: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
 }
 
 export type Navigation = {
@@ -327,6 +376,39 @@ export type PageTeaser = {
   title?: Maybe<Scalars['String']>
   lead?: Maybe<Scalars['String']>
   page?: Maybe<Page>
+}
+
+export type Payment = {
+  __typename?: 'Payment'
+  id: Scalars['ID']
+  intentSecret?: Maybe<Scalars['String']>
+  state: PaymentState
+  paymentMethod: PaymentMethod
+}
+
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod'
+  id: Scalars['ID']
+  paymentProviderID: Scalars['String']
+  name: Scalars['String']
+  description: Scalars['String']
+}
+
+export enum PaymentPeriodicity {
+  Monthly = 'MONTHLY',
+  Quarterly = 'QUARTERLY',
+  Biannual = 'BIANNUAL',
+  Yearly = 'YEARLY'
+}
+
+export enum PaymentState {
+  Created = 'Created',
+  Submitted = 'Submitted',
+  RequiresUserAction = 'RequiresUserAction',
+  Processing = 'Processing',
+  Payed = 'Payed',
+  Canceled = 'Canceled',
+  Declined = 'Declined'
 }
 
 export type Peer = {
@@ -396,6 +478,7 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  memberPlans: MemberPlanConnection
 }
 
 export type QueryPeerArgs = {
@@ -455,6 +538,16 @@ export type QueryPagesArgs = {
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
+  order?: Maybe<SortOrder>
+}
+
+export type QueryMemberPlansArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  filter?: Maybe<MemberPlanFilter>
+  sort?: Maybe<MemberPlanSort>
   order?: Maybe<SortOrder>
 }
 
@@ -518,6 +611,16 @@ export type User = {
   id: Scalars['String']
   name: Scalars['String']
   email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddress>
+}
+
+export type UserAddress = {
+  __typename?: 'UserAddress'
+  street: Scalars['String']
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
 }
 
 export type VimeoVideoBlock = {

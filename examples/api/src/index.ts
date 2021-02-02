@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 import {
-  WepublishServer,
-  URLAdapter,
+  Author,
+  MailgunMailProvider,
+  Oauth2Provider,
+  PayrexxPaymentProvider,
   PublicArticle,
   PublicPage,
-  Author,
-  Oauth2Provider,
-  MailgunMailProvider
+  StripeCheckoutPaymentProvider,
+  StripePaymentProvider,
+  URLAdapter,
+  WepublishServer,
+  JobType
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -14,6 +18,13 @@ import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {URL} from 'url'
 import {SlackMailProvider} from './SlackMailProvider'
+import bodyParser from 'body-parser'
+import pinoMultiStream from 'pino-multi-stream'
+import pinoStackdriver from 'pino-stackdriver'
+import {createWriteStream} from 'pino-sentry'
+import yargs from 'yargs'
+// @ts-ignore
+import {hideBin} from 'yargs/helpers'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -75,6 +86,8 @@ async function asyncMain() {
         input: {
           email: 'dev@wepublish.ch',
           name: 'Dev User',
+          active: true,
+          properties: [],
           roleIDs: [adminUserRoleId]
         },
         password: '123'
@@ -84,6 +97,8 @@ async function asyncMain() {
         input: {
           email: 'editor@wepublish.ch',
           name: 'Editor User',
+          active: true,
+          properties: [],
           roleIDs: [editorUserRoleId]
         },
         password: '123'
@@ -96,24 +111,38 @@ async function asyncMain() {
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
 
-  const oauth2Providers: Oauth2Provider[] = [
-    {
+  const oauth2Providers: Oauth2Provider[] = []
+  if (
+    process.env.OAUTH_GOOGLE_DISCOVERY_URL &&
+    process.env.OAUTH_GOOGLE_CLIENT_ID &&
+    process.env.OAUTH_GOOGLE_CLIENT_KEY &&
+    process.env.OAUTH_GOOGLE_REDIRECT_URL
+  ) {
+    oauth2Providers.push({
       name: 'google',
-      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL ?? '',
-      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID ?? '',
-      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY ?? '',
-      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL ?? ''],
+      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL,
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
+      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY,
+      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL],
       scopes: ['openid profile email']
-    },
-    {
+    })
+  }
+
+  if (
+    process.env.OAUTH_WEPUBLISH_DISCOVERY_URL &&
+    process.env.OAUTH_WEPUBLISH_CLIENT_ID &&
+    process.env.OAUTH_WEPUBLISH_CLIENT_KEY &&
+    process.env.OAUTH_WEPUBLISH_REDIRECT_URL
+  ) {
+    oauth2Providers.push({
       name: 'wepublish',
       discoverUrl: process.env.OAUTH_WEPUBLISH_DISCOVERY_URL ?? '',
       clientId: process.env.OAUTH_WEPUBLISH_CLIENT_ID ?? '',
       clientKey: process.env.OAUTH_WEPUBLISH_CLIENT_KEY ?? '',
       redirectUri: [process.env.OAUTH_WEPUBLISH_REDIRECT_URL ?? ''],
       scopes: ['openid profile email']
-    }
-  ]
+    })
+  }
 
   let mailProvider
   if (
@@ -129,9 +158,22 @@ async function asyncMain() {
       webhookEndpointSecret: process.env.MAILGUN_WEBHOOK_SECRET,
       baseDomain: process.env.MAILGUN_BASE_DOMAIN,
       mailDomain: process.env.MAILGUN_MAIL_DOMAIN,
-      apiKey: process.env.MAILGUN_API_KEY
+      apiKey: process.env.MAILGUN_API_KEY,
+      incomingRequestHandler: bodyParser.json()
     })
   }
+  // left here intentionally for testing
+  /* if (process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_WEBHOOK_SECRET) {
+    mailProvider = new MailchimpMailProvider({
+      id: 'mailchimp',
+      name: 'Mailchimp',
+      fromAddress: 'dev@wepublish.ch',
+      webhookEndpointSecret: process.env.MAILCHIMP_WEBHOOK_SECRET,
+      apiKey: process.env.MAILCHIMP_API_KEY,
+      baseURL: '',
+      incomingRequestHandler: bodyParser.urlencoded({extended: true})
+    })
+  } */
 
   if (process.env.SLACK_DEV_MAIL_WEBHOOK_URL) {
     mailProvider = new SlackMailProvider({
@@ -142,6 +184,85 @@ async function asyncMain() {
     })
   }
 
+  const paymentProviders = []
+
+  if (
+    process.env.STRIPE_SECRET_KEY &&
+    process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&
+    process.env.STRIPE_WEBHOOK_SECRET
+  ) {
+    paymentProviders.push(
+      new StripeCheckoutPaymentProvider({
+        id: 'stripe_checkout',
+        name: 'Stripe Checkout',
+        offSessionPayments: false,
+        secretKey: process.env.STRIPE_SECRET_KEY,
+        webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
+        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+      }),
+      new StripePaymentProvider({
+        id: 'stripe',
+        name: 'Stripe',
+        offSessionPayments: true,
+        secretKey: process.env.STRIPE_SECRET_KEY,
+        webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
+        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+      })
+    )
+  }
+
+  if (process.env.PAYREXX_INSTANCE_NAME && process.env.PAYREXX_API_SECRET) {
+    paymentProviders.push(
+      new PayrexxPaymentProvider({
+        id: 'payrexx',
+        name: 'Payrexx',
+        offSessionPayments: false,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        psp: [0, 15, 17, 2, 3, 36],
+        pm: [
+          'postfinance_card',
+          'postfinance_efinance',
+          // "mastercard",
+          // "visa",
+          'twint',
+          // "invoice",
+          'paypal'
+        ],
+        vatRate: 7.7,
+        incomingRequestHandler: bodyParser.json()
+      })
+    )
+  }
+
+  const prettyStream = pinoMultiStream.prettyStream()
+  const streams: pinoMultiStream.Streams = [{stream: prettyStream}]
+
+  if (process.env.GOOGLE_PROJECT) {
+    streams.push({
+      level: 'info',
+      stream: pinoStackdriver.createWriteStream({
+        projectId: process.env.GOOGLE_PROJECT,
+        logName: 'wepublish_api'
+      })
+    })
+  }
+
+  if (process.env.SENTRY_DSN) {
+    streams.push({
+      level: 'error',
+      stream: createWriteStream({
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.SENTRY_ENV ?? 'dev'
+      })
+    })
+  }
+
+  const logger = pinoMultiStream({
+    streams,
+    level: 'debug'
+  })
+
   const server = new WepublishServer({
     hostURL,
     websiteURL,
@@ -149,13 +270,85 @@ async function asyncMain() {
     dbAdapter,
     oauth2Providers,
     mailProvider,
+    paymentProviders,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
     introspection: true,
-    tracing: true
+    tracing: true,
+    logger
   })
 
-  await server.listen(port, address)
+  // eslint-disable-next-line no-unused-expressions
+  yargs(hideBin(process.argv))
+    .command(
+      ['listen', '$0'],
+      'start the server',
+      () => {
+        /* do nothing */
+      },
+      async argv => {
+        await server.listen(port, address)
+      }
+    )
+    .command(
+      'sendTestMail [recipient]',
+      'send a test mail',
+      yargs => {
+        yargs.positional('recipient', {
+          type: 'string',
+          default: 'dev@wepublish.ch',
+          describe: 'recipient of the test mail'
+        })
+      },
+      async argv => {
+        await server.runJob(JobType.SendTestMail, {
+          subject: 'This is a test mail from a we.publish instance',
+          recipient: argv.recipient,
+          message: 'Hello from the other side',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dmr',
+      'Renew Memberships',
+      () => {
+        /* do nothing */
+      },
+      async argv => {
+        await server.runJob(JobType.DailyMembershipRenewal, {
+          startDate: new Date()
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dir',
+      'Remind open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceReminder, {
+          userPaymentURL: `${websiteURL}/user/invocies`,
+          replyToAddress: 'info@tsri.ch',
+          sendEveryDays: 3
+        })
+        process.exit(0)
+      }
+    )
+    .command(
+      'dic',
+      'charge open invoices',
+      () => {
+        /* do nothing */
+      },
+      async () => {
+        await server.runJob(JobType.DailyInvoiceCharger, {})
+        process.exit(0)
+      }
+    ).argv
 }
 
 asyncMain().catch(err => {

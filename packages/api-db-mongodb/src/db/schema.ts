@@ -1,11 +1,17 @@
 import {
   ArticleBlock,
+  AvailablePaymentMethod,
   FocalPoint,
+  InvoiceItem,
   MetadataProperty,
   NavigationLink,
   PageBlock,
+  PaymentProviderCustomer,
   RichTextNode,
-  MailLogState
+  UserSubscription,
+  MailLogState,
+  PaymentState,
+  UserAddress
 } from '@wepublish/api'
 
 export enum CollectionName {
@@ -28,6 +34,11 @@ export enum CollectionName {
 
   Pages = 'pages',
   PagesHistory = 'pages.history',
+
+  MemberPlans = 'member.plans',
+  PaymentMethods = 'payment.methods',
+  Invoices = 'invoices',
+  Payments = 'payments',
 
   MailLog = 'mail.log'
 }
@@ -81,9 +92,19 @@ export interface DBUser {
 
   email: string
   name: string
+  preferredName?: string
+  address?: UserAddress
   password: string
 
+  active: boolean
+  lastLogin: Date | null
+
+  properties: MetadataProperty[]
+
   roleIDs: string[]
+
+  subscription?: UserSubscription
+  paymentProviderCustomers: Record<string, PaymentProviderCustomer>
 }
 
 export interface DBUserRole {
@@ -265,6 +286,67 @@ export interface DBPageRevision {
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBMemberPlan {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  slug: string
+  imageID?: string
+  description: RichTextNode[]
+  active: boolean
+  amountPerMonthMin: number
+  availablePaymentMethods: AvailablePaymentMethod[]
+}
+
+export interface DBPaymentMethod {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  name: string
+  description: string
+  paymentProviderID: string
+  active: boolean
+}
+
+export interface DBInvoice {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  mail: string
+  dueAt: Date
+
+  userID?: string
+  description?: string
+  paidAt: Date | null
+  canceledAt: Date | null
+  sentReminderAt?: Date
+  items: InvoiceItem[]
+}
+
+export interface DBPayment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  invoiceID: string
+  state: PaymentState
+  paymentMethodID: string
+
+  intentID?: string
+  intentSecret?: string
+  intentData?: string
+
+  paymentData?: string
 }
 
 export interface DBMailLog {

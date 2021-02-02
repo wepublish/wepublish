@@ -1,10 +1,10 @@
 import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
   GraphQLBoolean,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
 } from 'graphql'
 
 import {Issuer} from 'openid-client'
@@ -14,15 +14,16 @@ import {Context} from '../context'
 
 import {
   InvalidCredentialsError,
-  OAuth2ProviderNotFoundError,
   InvalidOAuth2TokenError,
+  NotActiveError,
+  OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
 
-import {GraphQLArticleInput, GraphQLArticle} from './article'
-import {BlockMap, Block, BlockType} from '../db/block'
+import {GraphQLArticle, GraphQLArticleInput} from './article'
+import {Block, BlockMap, BlockType} from '../db/block'
 import {GraphQLDateTime} from 'graphql-iso-date'
-import {GraphQLImage, GraphQLUploadImageInput, GraphQLUpdateImageInput} from './image'
+import {GraphQLImage, GraphQLUpdateImageInput, GraphQLUploadImageInput} from './image'
 import {GraphQLAuthor, GraphQLAuthorInput} from './author'
 import {GraphQLPage, GraphQLPageInput} from './page'
 
@@ -30,43 +31,60 @@ import {GraphQLNavigation, GraphQLNavigationInput, GraphQLNavigationLinkInput} f
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 
 import {
+  authorise,
   CanCreateArticle,
   CanCreateAuthor,
   CanCreateImage,
+  CanCreateInvoice,
+  CanCreateMemberPlan,
+  CanCreateNavigation,
   CanCreatePage,
+  CanCreatePayment,
+  CanCreatePaymentMethod,
+  CanCreatePeer,
+  CanCreateToken,
+  CanCreateUser,
+  CanCreateUserRole,
   CanDeleteArticle,
   CanDeleteAuthor,
   CanDeleteImage,
+  CanDeleteInvoice,
+  CanDeleteMemberPlan,
+  CanDeleteNavigation,
   CanDeletePage,
+  CanDeletePaymentMethod,
+  CanDeletePeer,
+  CanDeleteToken,
+  CanDeleteUser,
+  CanDeleteUserRole,
   CanPublishArticle,
   CanPublishPage,
-  authorise,
-  CanCreatePeer,
-  CanUpdatePeerProfile,
-  CanDeletePeer,
-  CanCreateToken,
-  CanDeleteToken,
-  CanCreateNavigation,
-  CanDeleteNavigation,
-  CanCreateUser,
-  CanDeleteUser,
-  CanCreateUserRole,
-  CanDeleteUserRole,
   CanResetUserPassword,
+  CanUpdatePeerProfile,
   CanSendJWTLogin
 } from './permissions'
-import {GraphQLUser, GraphQLUserInput} from './user'
+import {
+  GraphQLUser,
+  GraphQLUserInput,
+  GraphQLUserSubscription,
+  GraphQLUserSubscriptionInput
+} from './user'
 import {GraphQLUserRole, GraphQLUserRoleInput} from './userRole'
 
 import {
+  GraphQLCreatePeerInput,
   GraphQLPeer,
   GraphQLPeerProfile,
   GraphQLPeerProfileInput,
-  GraphQLCreatePeerInput,
   GraphQLUpdatePeerInput
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
+import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
+import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
+import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
+import {PaymentState} from '../db/payment'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -204,6 +222,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -218,6 +237,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUserByID(userID)
         if (!user) throw new InvalidCredentialsError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -245,6 +265,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         if (!userInfo.email) throw new Error('UserInfo did not return an email')
         const user = await dbAdapter.user.getUser(userInfo.email)
         if (!user) throw new UserNotFoundError()
+        if (!user.active) throw new NotActiveError()
         return await dbAdapter.session.createUserSession(user)
       }
     },
@@ -359,6 +380,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    updateUserSubscription: {
+      type: GraphQLUserSubscription,
+      args: {
+        userID: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLUserSubscriptionInput)}
+      },
+      resolve(root, {userID, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateUser, roles)
+        return dbAdapter.user.updateUserSubscription({userID, input})
+      }
+    },
+
     resetUserPassword: {
       type: GraphQLUser,
       args: {
@@ -396,6 +430,19 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanDeleteUser, roles)
         await dbAdapter.user.deleteUser({id})
         return id
+      }
+    },
+
+    deleteUserSubscription: {
+      type: GraphQLString,
+      args: {
+        userID: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {userID}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteUser, roles)
+        await dbAdapter.user.deleteUserSubscription({userID})
+        return userID
       }
     },
 
@@ -737,6 +784,189 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
       }
+    },
+
+    // MemberPlan
+    // ======
+
+    createMemberPlan: {
+      type: GraphQLMemberPlan,
+      args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateMemberPlan, roles)
+
+        if (input.minimumDuration < 0) {
+          throw new Error('Input.minimumDuration can not be < 0')
+        } else if (input.pricePerMonthMinimum > input.pricePerMonthMaximum) {
+          throw new Error('Input.pricePerMonthMinimum can not be > pricePerMonthMaximum')
+        }
+
+        return dbAdapter.memberPlan.createMemberPlan({input})
+      }
+    },
+
+    updateMemberPlan: {
+      type: GraphQLMemberPlan,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateMemberPlan, roles)
+        return dbAdapter.memberPlan.updateMemberPlan({id, input})
+      }
+    },
+
+    deleteMemberPlan: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteMemberPlan, roles)
+        await dbAdapter.memberPlan.deleteMemberPlan({id})
+        return id
+      }
+    },
+
+    // PaymentMethod
+    // ======
+
+    createPaymentMethod: {
+      type: GraphQLPaymentMethod,
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+      },
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePaymentMethod, roles)
+
+        // TODO: check if payment method exists and is active
+
+        return dbAdapter.paymentMethod.createPaymentMethod({input})
+      }
+    },
+
+    updatePaymentMethod: {
+      type: GraphQLPaymentMethod,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePaymentMethod, roles)
+
+        // TODO: check if payment method exists and is active
+
+        return dbAdapter.paymentMethod.updatePaymentMethod({id, input})
+      }
+    },
+
+    deletePaymentMethod: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeletePaymentMethod, roles)
+        await dbAdapter.paymentMethod.deletePaymentMethod(id)
+        return id
+      }
+    },
+
+    // Invoice
+    // ======
+
+    createInvoice: {
+      type: GraphQLInvoice,
+      args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
+      resolve(root, {input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateInvoice, roles)
+        return dbAdapter.invoice.createInvoice({input})
+      }
+    },
+
+    createPaymentFromInvoice: {
+      type: GraphQLPayment,
+      args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
+      async resolve(root, {input}, {authenticate, loaders, paymentProviders, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreatePayment, roles)
+        const {invoiceID, paymentMethodID, successURL, failureURL} = input
+        const paymentMethod = await loaders.paymentMethodsByID.load(paymentMethodID)
+        const paymentProvider = paymentProviders.find(
+          pp => pp.id === paymentMethod?.paymentProviderID
+        )
+
+        const invoice = await loaders.invoicesByID.load(invoiceID)
+
+        if (!invoice || !paymentProvider) {
+          throw new Error('Invalid data') // TODO: better error handling
+        }
+
+        const payment = await dbAdapter.payment.createPayment({
+          input: {
+            paymentMethodID,
+            invoiceID,
+            state: PaymentState.Created
+          }
+        })
+
+        const intent = await paymentProvider.createIntent({
+          paymentID: payment.id,
+          invoice,
+          saveCustomer: true,
+          successURL,
+          failureURL
+        })
+
+        return await dbAdapter.payment.updatePayment({
+          id: payment.id,
+          input: {
+            state: intent.state,
+            intentID: intent.intentID,
+            intentData: intent.intentData,
+            intentSecret: intent.intentSecret,
+            paymentData: intent.paymentData,
+            paymentMethodID: payment.paymentMethodID,
+            invoiceID: payment.invoiceID
+          }
+        })
+      }
+    },
+
+    updateInvoice: {
+      type: GraphQLInvoice,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
+      },
+      resolve(root, {id, input}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanCreateInvoice, roles)
+        return dbAdapter.invoice.updateInvoice({id, input})
+      }
+    },
+
+    deleteInvoice: {
+      type: GraphQLID,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanDeleteInvoice, roles)
+        return await dbAdapter.invoice.deleteInvoice({id})
+      }
     }
+
+    // Image
+    // =====
   }
 })

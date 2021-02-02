@@ -38,6 +38,8 @@ describe('Users', () => {
       const input: UserInput = {
         name: 'Bruce Wayne',
         email: `bwayne@mymail${ids.length}.com`,
+        properties: [],
+        active: true,
         roleIDs: []
       }
       const res = await mutate({
@@ -55,6 +57,8 @@ describe('Users', () => {
       const input: UserInput = {
         name: 'Robin Wayne',
         email: `rwayne@mymail${ids.length}.com`,
+        properties: [],
+        active: true,
         roleIDs: []
       }
       const res = await mutate({
@@ -132,6 +136,8 @@ describe('Users', () => {
           input: {
             name: 'Dark Knight',
             email: 'batman@email.com',
+            properties: [],
+            active: true,
             roleIDs: []
           },
           id: ids[0]
