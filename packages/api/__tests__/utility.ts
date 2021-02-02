@@ -52,7 +52,9 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         input: {
           email: 'dev@wepublish.ch',
           name: 'Dev User',
-          roleIDs: [adminUserRoleId]
+          roleIDs: [adminUserRoleId],
+          active: true,
+          properties: []
         },
         password: '123'
       })
@@ -98,7 +100,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         dbAdapter,
         mediaAdapter,
         urlAdapter: new ExampleURLAdapter(),
-        oauth2Providers: []
+        oauth2Providers: [],
+        paymentProviders: []
       })
   })
 
@@ -114,7 +117,8 @@ export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> 
         dbAdapter,
         mediaAdapter,
         urlAdapter: new ExampleURLAdapter(),
-        oauth2Providers: []
+        oauth2Providers: [],
+        paymentProviders: []
       })
   })
 

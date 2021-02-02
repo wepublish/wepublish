@@ -6,7 +6,14 @@ export enum ErrorCode {
   UserNotFound = 'USER_NOT_FOUND',
   InvalidOAuth2Token = 'INVALID_OAUTH_TOKEN',
   OAuth2ProviderNotFound = 'OAUTH2_PROVIDER_NOT_FOUND',
-  NotAuthorised = 'NOT_AUTHORISED'
+  NotAuthenticated = 'NOT_AUTHENTICATED',
+  NotAuthorised = 'NOT_AUTHORISED',
+  UserNotActive = 'USER_NOT_ACTIVE',
+  NotFound = 'NOT_FOUND',
+  EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
+  MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
+  PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
+  UserInputError = 'USER_INPUT_ERROR'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -42,5 +49,50 @@ export class OAuth2ProviderNotFoundError extends ApolloError {
 export class NotAuthorisedError extends ApolloError {
   constructor() {
     super('User is not authorised', ErrorCode.NotAuthorised)
+  }
+}
+
+export class NotAuthenticatedError extends ApolloError {
+  constructor() {
+    super('User is not authenticated', ErrorCode.NotAuthenticated)
+  }
+}
+
+export class NotActiveError extends ApolloError {
+  constructor() {
+    super('User is not active', ErrorCode.UserNotActive)
+  }
+}
+
+export class NotFound extends ApolloError {
+  constructor(model: string, id: string) {
+    super(`${model} with ID: ${id} not found`, ErrorCode.NotFound)
+  }
+}
+
+export class EmailAlreadyInUseError extends ApolloError {
+  constructor() {
+    super(`Email already in use`, ErrorCode.EmailAlreadyInUse)
+  }
+}
+
+export class MonthlyAmountNotEnough extends ApolloError {
+  constructor() {
+    super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
+  }
+}
+
+export class PaymentConfigurationNotAllowed extends ApolloError {
+  constructor() {
+    super(
+      `Payment configuration not allowed. Check method, periodicity and auto renew flag`,
+      ErrorCode.PaymentConfigurationNotAllowed
+    )
+  }
+}
+
+export class UserInputError extends ApolloError {
+  constructor(actualError: string) {
+    super(`User Input Error: \n${actualError}`, ErrorCode.UserInputError)
   }
 }
