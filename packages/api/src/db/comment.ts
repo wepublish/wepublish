@@ -108,7 +108,7 @@ export interface GetCommentsArgs {
 
 export interface GetPublicCommentsArgs {
   readonly id: string
-  readonly userID: string
+  readonly userID?: string
 }
 
 export type OptionalPublicComment = PublicComment | null
