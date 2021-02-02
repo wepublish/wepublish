@@ -118,6 +118,8 @@ describe('Sessions', () => {
     test('rejects session with undefined JWT env secret key', async () => {
       const {mutate} = testClientPrivate
 
+      process.env.JWT_SECRET_KEY = undefined
+
       const res = await mutate({
         mutation: CreateSessionWithJwt,
         variables: {
@@ -197,6 +199,8 @@ describe('Sessions', () => {
 
     test('rejects session with undefined JWT env secret key', async () => {
       const {mutate} = testClientPublic
+
+      process.env.JWT_SECRET_KEY = undefined
 
       const res = await mutate({
         mutation: CreateSessionWithJwtPublic,
