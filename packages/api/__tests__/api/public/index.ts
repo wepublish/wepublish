@@ -145,7 +145,10 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
+  children?: Maybe<Array<Maybe<Comment>>>
   text: Scalars['RichText']
+  state: Scalars['String']
+  rejectionReason?: Maybe<Scalars['String']>
   modifiedAt: Scalars['DateTime']
 }
 
@@ -350,7 +353,9 @@ export type Mutation = {
   addComment: Comment
   updateComment: Comment
   registerMemberAndReceivePayment: Payment
+  resetPassword: Scalars['String']
   updateUser?: Maybe<User>
+  updatePassword?: Maybe<User>
   updateUserSubscription?: Maybe<UserSubscription>
   createPaymentFromInvoice?: Maybe<Payment>
 }
@@ -391,8 +396,17 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   failureURL?: Maybe<Scalars['String']>
 }
 
+export type MutationResetPasswordArgs = {
+  email: Scalars['String']
+}
+
 export type MutationUpdateUserArgs = {
   input: UserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  password: Scalars['String']
+  passwordRepeated: Scalars['String']
 }
 
 export type MutationUpdateUserSubscriptionArgs = {
