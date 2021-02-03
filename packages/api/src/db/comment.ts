@@ -106,6 +106,11 @@ export interface GetCommentsArgs {
   readonly order: SortOrder
 }
 
+export interface GetPublicCommentsArgs {
+  readonly id: string
+  readonly userID?: string
+}
+
 export type OptionalPublicComment = PublicComment | null
 
 export type OptionalComment = Comment | null
@@ -114,7 +119,7 @@ export interface DBCommentAdapter {
   addPublicComment(args: AddPublicCommentArgs): Promise<PublicComment>
   updatePublicComment(args: UpdatePublicCommentArgs): Promise<OptionalPublicComment>
   getComments(args: GetCommentsArgs): Promise<ConnectionResult<Comment>>
-  getPublicCommentsForItemByID(id: string): Promise<PublicComment[]>
+  getPublicCommentsForItemByID(args: GetPublicCommentsArgs): Promise<PublicComment[]>
   getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]>
   getCommentById(id: string): Promise<OptionalComment>
   takeActionOnComment(args: TakeActionOnCommentArgs): Promise<OptionalComment>

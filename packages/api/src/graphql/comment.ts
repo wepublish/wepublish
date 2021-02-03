@@ -5,7 +5,8 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLList,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
@@ -178,6 +179,10 @@ export const GraphQLPublicComment: GraphQLObjectType<
     },
 
     text: {type: GraphQLNonNull(GraphQLRichText)},
+
+    state: {type: GraphQLNonNull(GraphQLString)},
+
+    rejectionReason: {type: GraphQLString},
 
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
   })
