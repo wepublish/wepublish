@@ -74,8 +74,8 @@ function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps
 }
 
 const LogoutMutation = gql`
-  mutation Logout($token: String!) {
-    revokeSession(token: $token)
+  mutation Logout {
+    revokeActiveSession
   }
 `
 
@@ -110,7 +110,7 @@ function contentForRoute(activeRoute: Route | null) {
       const {session} = useContext(AuthContext)
       const authDispatch = useContext(AuthDispatchContext)
       if (session) {
-        logout({variables: {token: session.sessionToken}})
+        logout()
         localStorage.removeItem(LocalStorageKey.SessionToken)
         authDispatch({type: AuthDispatchActionType.Logout})
       }

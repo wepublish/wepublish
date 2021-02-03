@@ -36,7 +36,6 @@ export function Login() {
   }, [loading, error])
 
   async function login(e: FormEvent) {
-    debugger
     e.preventDefault()
 
     const response = await authenticate({variables: {email, password}})

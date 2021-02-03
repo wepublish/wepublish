@@ -15,9 +15,14 @@ import {FacebookProvider} from '../shared/atoms/facebookEmbed'
 import {InstagramProvider} from '../shared/atoms/instagramEmbed'
 import {TwitterProvider} from '../shared/atoms/twitterEmbed'
 import {matchRoute, RouteProvider} from '../shared/route/routeContext'
-import {createStyleRenderer, fetchIntrospectionQueryResultData} from '../shared/utility'
+import {
+  createStyleRenderer,
+  fetchIntrospectionQueryResultData,
+  LocalStorageKey
+} from '../shared/utility'
 import {AuthProvider} from '../shared/authContext'
 import {fetch} from 'cross-fetch'
+import {setContext} from '@apollo/client/link/context'
 
 export const HotApp = hot(App)
 
@@ -34,8 +39,20 @@ export async function hydrateApp(): Promise<void> {
         document.getElementById(ElementID.RenderedPaths)!.textContent!
       )
 
+      const authLink = setContext((_, {headers}) => {
+        // get the authentication token from local storage if it exists
+        const token = localStorage.getItem(LocalStorageKey.SessionToken)
+        // return the headers to the context so httpLink can read them
+        return {
+          headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : ''
+          }
+        }
+      })
+
       const client = new ApolloClient({
-        link: createHttpLink({uri: apiURL, fetch}),
+        link: authLink.concat(createHttpLink({uri: apiURL, fetch})),
         cache: new InMemoryCache({
           possibleTypes: await fetchIntrospectionQueryResultData(apiURL)
         })
