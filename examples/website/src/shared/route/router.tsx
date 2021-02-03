@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import {useRoute, RouteType, Route} from './routeContext'
 
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
@@ -7,6 +7,10 @@ import {BaseTemplateContainer, BaseTemplateContainerProps} from './baseTemplateC
 import {PageTemplateContainer} from './pageTemplateContainer'
 import {AuthorTemplateContainer} from './authorTemplateContainer'
 import {TagTemplateContainer} from './tagTemplateContainer'
+import {LocalStorageKey} from '../utility'
+import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '../authContext'
+import {gql, useMutation} from '@apollo/client'
+import {Login} from './login'
 
 export function Router() {
   const {current} = useRoute()
@@ -68,6 +72,13 @@ function containerPropsForRoute(route: Route | null): BaseTemplateContainerProps
       }
   }
 }
+
+const LogoutMutation = gql`
+  mutation Logout($token: String!) {
+    revokeSession(token: $token)
+  }
+`
+
 function contentForRoute(activeRoute: Route | null) {
   switch (activeRoute?.type) {
     case RouteType.Page:
@@ -90,6 +101,20 @@ function contentForRoute(activeRoute: Route | null) {
 
     case RouteType.Tag:
       return <TagTemplateContainer tag={activeRoute.params.tag} />
+
+    case RouteType.Login:
+      return <Login />
+
+    case RouteType.Logout:
+      const [logout] = useMutation(LogoutMutation)
+      const {session} = useContext(AuthContext)
+      const authDispatch = useContext(AuthDispatchContext)
+      if (session) {
+        logout({variables: {token: session.sessionToken}})
+        localStorage.removeItem(LocalStorageKey.SessionToken)
+        authDispatch({type: AuthDispatchActionType.Logout})
+      }
+      return <PageTemplateContainer slug={''} />
 
     default:
       return <NotFoundTemplate />
