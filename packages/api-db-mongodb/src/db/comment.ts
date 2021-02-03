@@ -203,18 +203,19 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
   async getPublicCommentsForItemByID(args: GetPublicCommentsArgs): Promise<PublicComment[]> {
     const {id, userID} = args
 
-    const [comments, userUnapprovedComments] = await Promise.all([
-      // TODO: add count
-      // TODO: add sort revisions' array by createdAt
-      this.comments
-        .aggregate([{$sort: {modifiedAt: -1}}], {
-          collation: {locale: this.locale, strength: 2}
-        })
-        .match({
-          $and: [{itemID: id}, {state: CommentState.Approved, parentID: null}]
-        })
-        .toArray(),
-      this.comments
+    let userUnapprovedComments: DBComment[] = []
+
+    const comments = await this.comments
+      .aggregate([{$sort: {modifiedAt: -1}}], {
+        collation: {locale: this.locale, strength: 2}
+      })
+      .match({
+        $and: [{itemID: id}, {state: CommentState.Approved, parentID: null}]
+      })
+      .toArray()
+
+    if (userID) {
+      userUnapprovedComments = await this.comments
         .aggregate([{$sort: {'modifiedAt.date': -1}}], {
           collation: {locale: this.locale, strength: 2}
         })
@@ -222,7 +223,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
           $and: [{itemID: id}, {userID}, {state: {$ne: CommentState.Approved}}]
         })
         .toArray()
-    ])
+    }
 
     return [...userUnapprovedComments, ...comments].map<PublicComment>(
       ({_id: id, revisions, ...comment}) => ({

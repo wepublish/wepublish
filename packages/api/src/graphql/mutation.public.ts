@@ -16,7 +16,9 @@ import {
   PaymentConfigurationNotAllowed,
   NotActiveError,
   EmailAlreadyInUseError,
-  NotAuthorisedError as NotAuthorizedError
+  NotAuthorisedError as NotAuthorizedError,
+  NotAuthenticatedError,
+  UserInputError
 } from '../error'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
@@ -32,7 +34,6 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
-import {UserInputError} from 'apollo-server-express'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -255,6 +256,28 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    resetPassword: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        email: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {email}, {dbAdapter, generateJWT, sendMailFromProvider}) {
+        const user = await dbAdapter.user.getUser(email)
+        if (!user) return email // TODO: implement check to avoid bots
+
+        const token = generateJWT({userID: user.id})
+        const link = `${process.env.WEBSITE_URL}/login?jwt=${token}`
+        await sendMailFromProvider({
+          message: `Click the link to login:\n\n${link}`,
+          recipient: email,
+          subject: 'Login Link',
+          replyToAddress: 'dev@wepublish.ch'
+        })
+
+        return email
+      }
+    },
+
     updateUser: {
       type: GraphQLPublicUser,
       args: {
@@ -282,6 +305,26 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!updateUser) throw new Error('Error during updateUser')
 
         return updateUser
+      }
+    },
+
+    updatePassword: {
+      type: GraphQLPublicUser,
+      args: {
+        password: {type: GraphQLNonNull(GraphQLString)},
+        passwordRepeated: {type: GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(root, {password, passwordRepeated}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        if (!user) throw new NotAuthenticatedError()
+
+        if (password !== passwordRepeated)
+          throw new UserInputError('password and passwordRepeat are not equal')
+
+        return await dbAdapter.user.resetUserPassword({
+          id: user.id,
+          password
+        })
       }
     },
 
