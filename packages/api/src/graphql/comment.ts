@@ -154,7 +154,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
   Context
 > = new GraphQLObjectType<PublicComment, Context>({
   name: 'Comment',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
@@ -171,6 +171,13 @@ export const GraphQLPublicComment: GraphQLObjectType<
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
 
+    children: {
+      type: GraphQLList(GraphQLPublicComment),
+      resolve: createProxyingResolver(({id}, _, {dbAdapter}) => {
+        return dbAdapter.comment.getPublicChildrenCommentsByParentId(id)
+      })
+    },
+
     text: {type: GraphQLNonNull(GraphQLRichText)},
 
     state: {type: GraphQLNonNull(GraphQLString)},
@@ -178,7 +185,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
     rejectionReason: {type: GraphQLString},
 
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
-  }
+  })
 })
 
 export const GraphQLCommentConnection = new GraphQLObjectType({

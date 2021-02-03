@@ -207,11 +207,11 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       // TODO: add count
       // TODO: add sort revisions' array by createdAt
       this.comments
-        .aggregate([{$sort: {'createdAt.date': -1}}], {
+        .aggregate([{$sort: {modifiedAt: -1}}], {
           collation: {locale: this.locale, strength: 2}
         })
         .match({
-          $and: [{itemID: id}, {state: CommentState.Approved}]
+          $and: [{itemID: id}, {state: CommentState.Approved, parentID: null}]
         })
         .toArray(),
       this.comments
@@ -244,6 +244,25 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       id: outID,
       ...comment
     }
+  }
+
+  async getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]> {
+    const [childrenComments] = await Promise.all([
+      this.comments
+        .aggregate([{$sort: {modifiedAt: -1}}], {
+          collation: {locale: this.locale, strength: 2}
+        })
+        .match({
+          $and: [{parentID: id}, {state: CommentState.Approved}]
+        })
+        .toArray()
+    ])
+
+    return childrenComments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
+      id,
+      text: revisions[revisions.length - 1].text,
+      ...comment
+    }))
   }
 
   async takeActionOnComment({
