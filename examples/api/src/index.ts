@@ -59,18 +59,6 @@ async function asyncMain() {
   if (!process.env.MONGO_URL) throw new Error('No MONGO_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
 
-  if (!process.env.STRIPE_SECRET_KEY)
-    throw new Error('No STRIPE_SECRET_KEY defined in environment.')
-  if (!process.env.STRIPE_WEBHOOK_SECRET)
-    throw new Error('No STRIPE_WEBHOOK_SECRET defined in environment')
-  if (!process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET)
-    throw new Error('No STRIPE_CHECKOUT_WEBHOOK_SECRET defined in environment')
-
-  if (!process.env.PAYREXX_INSTANCE_NAME)
-    throw new Error('No PAYREXX_INSTANCE_NAME defined in environment')
-  if (!process.env.PAYREXX_API_SECRET)
-    throw new Error('No PAYREXX_API_SECRET defined in environment')
-
   const hostURL = process.env.HOST_URL
   const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
@@ -128,24 +116,38 @@ async function asyncMain() {
     locale: process.env.MONGO_LOCALE ?? 'en'
   })
 
-  const oauth2Providers: Oauth2Provider[] = [
-    {
+  const oauth2Providers: Oauth2Provider[] = []
+  if (
+    process.env.OAUTH_GOOGLE_DISCOVERY_URL &&
+    process.env.OAUTH_GOOGLE_CLIENT_ID &&
+    process.env.OAUTH_GOOGLE_CLIENT_KEY &&
+    process.env.OAUTH_GOOGLE_REDIRECT_URL
+  ) {
+    oauth2Providers.push({
       name: 'google',
-      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL ?? '',
-      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID ?? '',
-      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY ?? '',
-      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL ?? ''],
+      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL,
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
+      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY,
+      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL],
       scopes: ['openid profile email']
-    },
-    {
+    })
+  }
+
+  if (
+    process.env.OAUTH_WEPUBLISH_DISCOVERY_URL &&
+    process.env.OAUTH_WEPUBLISH_CLIENT_ID &&
+    process.env.OAUTH_WEPUBLISH_CLIENT_KEY &&
+    process.env.OAUTH_WEPUBLISH_REDIRECT_URL
+  ) {
+    oauth2Providers.push({
       name: 'wepublish',
       discoverUrl: process.env.OAUTH_WEPUBLISH_DISCOVERY_URL ?? '',
       clientId: process.env.OAUTH_WEPUBLISH_CLIENT_ID ?? '',
       clientKey: process.env.OAUTH_WEPUBLISH_CLIENT_KEY ?? '',
       redirectUri: [process.env.OAUTH_WEPUBLISH_REDIRECT_URL ?? ''],
       scopes: ['openid profile email']
-    }
-  ]
+    })
+  }
 
   let mailProvider
   if (
@@ -187,43 +189,56 @@ async function asyncMain() {
     })
   }
 
-  const paymentProviders = [
-    new StripeCheckoutPaymentProvider({
-      id: 'stripe_checkout',
-      name: 'Stripe Checkout',
-      offSessionPayments: false,
-      secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
-      incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-    }),
-    new StripePaymentProvider({
-      id: 'stripe',
-      name: 'Stripe',
-      offSessionPayments: true,
-      secretKey: process.env.STRIPE_SECRET_KEY,
-      webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
-      incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-    }),
-    new PayrexxPaymentProvider({
-      id: 'payrexx',
-      name: 'Payrexx',
-      offSessionPayments: false,
-      instanceName: process.env.PAYREXX_INSTANCE_NAME,
-      instanceAPISecret: process.env.PAYREXX_API_SECRET,
-      psp: [0, 15, 17, 2, 3, 36],
-      pm: [
-        'postfinance_card',
-        'postfinance_efinance',
-        // "mastercard",
-        // "visa",
-        'twint',
-        // "invoice",
-        'paypal'
-      ],
-      vatRate: 7.7,
-      incomingRequestHandler: bodyParser.json()
-    })
-  ]
+  const paymentProviders = []
+
+  if (
+    process.env.STRIPE_SECRET_KEY &&
+    process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET &&
+    process.env.STRIPE_WEBHOOK_SECRET
+  ) {
+    paymentProviders.push(
+      new StripeCheckoutPaymentProvider({
+        id: 'stripe_checkout',
+        name: 'Stripe Checkout',
+        offSessionPayments: false,
+        secretKey: process.env.STRIPE_SECRET_KEY,
+        webhookEndpointSecret: process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET,
+        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+      }),
+      new StripePaymentProvider({
+        id: 'stripe',
+        name: 'Stripe',
+        offSessionPayments: true,
+        secretKey: process.env.STRIPE_SECRET_KEY,
+        webhookEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
+        incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+      })
+    )
+  }
+
+  if (process.env.PAYREXX_INSTANCE_NAME && process.env.PAYREXX_API_SECRET) {
+    paymentProviders.push(
+      new PayrexxPaymentProvider({
+        id: 'payrexx',
+        name: 'Payrexx',
+        offSessionPayments: false,
+        instanceName: process.env.PAYREXX_INSTANCE_NAME,
+        instanceAPISecret: process.env.PAYREXX_API_SECRET,
+        psp: [0, 15, 17, 2, 3, 36],
+        pm: [
+          'postfinance_card',
+          'postfinance_efinance',
+          // "mastercard",
+          // "visa",
+          'twint',
+          // "invoice",
+          'paypal'
+        ],
+        vatRate: 7.7,
+        incomingRequestHandler: bodyParser.json()
+      })
+    )
+  }
 
   const prettyStream = pinoMultiStream.prettyStream()
   const streams: pinoMultiStream.Streams = [{stream: prettyStream}]
