@@ -15,14 +15,20 @@ import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
+import {Alert} from 'rsuite'
 
-export type RichTextBlockProps = BlockProps<RichTextBlockValue>
+export type RichTextBlockProps = BlockProps<RichTextBlockValue> & {
+  maxCharsLimit?: number
+  getCharsLength?: any
+}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value,
   autofocus,
   disabled,
-  onChange
+  onChange,
+  maxCharsLimit,
+  getCharsLength
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -30,6 +36,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
+
+  const [charsLength, setCharsLength] = useState(0)
 
   const {t} = useTranslation()
 
@@ -42,6 +50,24 @@ export const RichTextBlock = memo(function RichTextBlock({
   const focusAtPreviousLocation = (location: Location) => {
     Transforms.select(editor, location)
     ReactEditor.focus(editor)
+  }
+
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const input = e.target as HTMLElement
+
+    if (input.textContent?.length) {
+      if (maxCharsLimit && maxCharsLimit < input.textContent.length) {
+        Alert.error(t('blocks.richText.reachedMaxCharsCount'), 0)
+      }
+
+      if (WepublishEditor.isEmpty(editor)) {
+        setCharsLength(0)
+        if (getCharsLength) getCharsLength(0)
+      } else {
+        setCharsLength(input.textContent.length)
+        if (getCharsLength) getCharsLength(input.textContent.length)
+      }
+    }
   }
 
   return (
@@ -107,6 +133,7 @@ export const RichTextBlock = memo(function RichTextBlock({
         </div>
       )}
       <Editable
+        onKeyUp={handleOnKeyDown}
         readOnly={disabled}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
@@ -115,6 +142,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
       />
+      <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charsLength}`}</p>
     </Slate>
   )
 })

@@ -496,7 +496,9 @@
         "link": "Link",
         "title": "Title",
         "apply": "Apply",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "reachedMaxCharsCount": "Sorry, Maximum characters count reached",
+        "charsCount": "Characters count"
       },
       "richTextTable": {
         "insertTable": "Insert Table",
