@@ -1,15 +1,10 @@
 import React, {useEffect, useState} from 'react'
 
-// import {Link, ButtonLink} from '../route'
-
 import {
   CommentRefFragment,
   useCommentListQuery,
   useApproveCommentMutation,
   useRequestChangesOnCommentMutation,
-  // CommentListDocument,
-  // CommentListQuery,
-  // PageRefFragment,
   CommentState,
   CommentRejectionReason,
   Comment,
@@ -202,7 +197,7 @@ export function CommentList() {
           <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
           <Cell dataKey="modifiedAt" />
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={120} align="center" fixed="right">
           <HeaderCell>{t('comments.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
@@ -230,7 +225,7 @@ export function CommentList() {
                   }}
                 />
                 <IconButton
-                  icon={<Icon icon="trash" />}
+                  icon={<Icon icon="close" />}
                   circle
                   size="sm"
                   style={{marginLeft: '5px'}}
