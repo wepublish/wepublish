@@ -16,7 +16,7 @@ export default (mode: string) =>
       publicPath: mode === 'production' ? '/assets' : 'http://localhost:5001/'
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
+      extensions: ['.mjs', '.ts', '.tsx', '.js'],
       alias: {
         'react-dom': '@hot-loader/react-dom'
       }
@@ -26,7 +26,25 @@ export default (mode: string) =>
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-react',
+              '@babel/preset-typescript',
+              ['@babel/preset-env', {modules: false}]
+            ],
+            plugins: [
+              '@babel/plugin-syntax-dynamic-import',
+              '@babel/plugin-proposal-optional-chaining',
+              '@babel/plugin-proposal-nullish-coalescing-operator',
+              ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
+            ]
+          }
+        },
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
         }
       ]
     },
