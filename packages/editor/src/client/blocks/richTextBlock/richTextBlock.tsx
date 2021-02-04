@@ -15,7 +15,6 @@ import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
-import {Alert} from 'rsuite'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue> & {
   maxCharsLimit?: number
@@ -54,24 +53,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   const focusAtPreviousLocation = (location: Location) => {
     Transforms.select(editor, location)
     ReactEditor.focus(editor)
-  }
-
-  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const input = e.target as HTMLElement
-
-    if (input.textContent?.length) {
-      if (maxCharsLimit && maxCharsLimit < input.textContent.length) {
-        Alert.error(t('blocks.richText.reachedMaxCharsCount'), 0)
-      }
-
-      if (WepublishEditor.isEmpty(editor)) {
-        setCharsLength(0)
-        if (getCharsLength) getCharsLength(0)
-      } else {
-        setCharsLength(input.textContent.length)
-        if (getCharsLength) getCharsLength(input.textContent.length)
-      }
-    }
   }
 
   return (
@@ -139,7 +120,6 @@ export const RichTextBlock = memo(function RichTextBlock({
         </div>
       )}
       <Editable
-        onKeyUp={handleOnKeyDown}
         readOnly={disabled}
         style={
           isOneLine
