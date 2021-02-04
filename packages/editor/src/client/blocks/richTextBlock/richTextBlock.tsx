@@ -16,13 +16,16 @@ import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 
-export type RichTextBlockProps = BlockProps<RichTextBlockValue>
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
+  displayOnly: boolean
+}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value,
   autofocus,
   disabled,
-  onChange
+  onChange,
+  displayOnly
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -54,60 +57,62 @@ export const RichTextBlock = memo(function RichTextBlock({
           onChange(newValue)
         }
       }}>
-      <Toolbar
-        fadeOut={!hasFocus}
-        onMouseDown={e => {
-          e.preventDefault()
-          if (!hasFocus && location) focusAtPreviousLocation(location)
-        }}>
-        <FormatButton format={BlockFormat.H1}>
-          <H1Icon />
-        </FormatButton>
-        <FormatButton format={BlockFormat.H2}>
-          <H2Icon />
-        </FormatButton>
-        <FormatButton format={BlockFormat.H3}>
-          <H3Icon />
-        </FormatButton>
+      {!displayOnly && (
+        <Toolbar
+          fadeOut={!hasFocus}
+          onMouseDown={e => {
+            e.preventDefault()
+            if (!hasFocus && location) focusAtPreviousLocation(location)
+          }}>
+          <FormatButton format={BlockFormat.H1}>
+            <H1Icon />
+          </FormatButton>
+          <FormatButton format={BlockFormat.H2}>
+            <H2Icon />
+          </FormatButton>
+          <FormatButton format={BlockFormat.H3}>
+            <H3Icon />
+          </FormatButton>
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
-        <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
+          <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
+          <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
-          <TableMenu />
-        </EditorSubMenuButton>
+          <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
+            <TableMenu />
+          </EditorSubMenuButton>
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <FormatIconButton icon="bold" format={TextFormat.Bold} />
-        <FormatIconButton icon="italic" format={TextFormat.Italic} />
-        <FormatIconButton icon="underline" format={TextFormat.Underline} />
-        <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
-        <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
-        <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+          <FormatIconButton icon="bold" format={TextFormat.Bold} />
+          <FormatIconButton icon="italic" format={TextFormat.Italic} />
+          <FormatIconButton icon="underline" format={TextFormat.Underline} />
+          <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
+          <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
+          <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <LinkFormatButton />
-        <RemoveLinkFormatButton />
+          <LinkFormatButton />
+          <RemoveLinkFormatButton />
 
-        <ToolbarDivider />
+          <ToolbarDivider />
 
-        <SubMenuButton icon="smile-o">
-          <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
-        </SubMenuButton>
-      </Toolbar>
+          <SubMenuButton icon="smile-o">
+            <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+          </SubMenuButton>
+        </Toolbar>
+      )}
       {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
         <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
           {t('blocks.richText.startWriting')}
         </div>
       )}
       <Editable
-        readOnly={disabled}
+        readOnly={disabled || displayOnly}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
