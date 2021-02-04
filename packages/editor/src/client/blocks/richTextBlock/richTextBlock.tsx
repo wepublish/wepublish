@@ -21,6 +21,7 @@ export type RichTextBlockProps = BlockProps<RichTextBlockValue> & {
   maxCharsLimit?: number
   getCharsLength?: any
   showCharsCount?: boolean
+  isOneLine?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -30,7 +31,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   onChange,
   maxCharsLimit,
   getCharsLength,
-  showCharsCount
+  showCharsCount,
+  isOneLine
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -139,6 +141,15 @@ export const RichTextBlock = memo(function RichTextBlock({
       <Editable
         onKeyUp={handleOnKeyDown}
         readOnly={disabled}
+        style={
+          isOneLine
+            ? {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }
+            : undefined
+        }
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
