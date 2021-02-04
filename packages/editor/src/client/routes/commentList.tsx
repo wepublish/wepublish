@@ -70,7 +70,6 @@ export function CommentList() {
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
     variables: {
-      filter: filter || undefined,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
@@ -81,7 +80,6 @@ export function CommentList() {
 
   useEffect(() => {
     refetch({
-      filter: filter || undefined,
       first: limit,
       skip: page - 1,
       sort: mapColumFieldToGraphQLField(sortField),
