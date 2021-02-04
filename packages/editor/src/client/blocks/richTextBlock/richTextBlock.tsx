@@ -17,7 +17,7 @@ import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
-  displayOnly: boolean
+  displayOnly?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
