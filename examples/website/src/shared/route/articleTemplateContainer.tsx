@@ -116,7 +116,8 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage,
-    socialMediaAuthors
+    socialMediaAuthors,
+    comments
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
@@ -157,7 +158,13 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         isArticle={true}
         blocks={blocks}
       />
-      <ArticleFooterContainer tags={tags} authors={authors} publishDate={publishedAt} id={id} />
+      <ArticleFooterContainer
+        tags={tags}
+        authors={authors}
+        publishDate={publishedAt}
+        id={id}
+        comments={comments}
+      />
     </>
   )
 }

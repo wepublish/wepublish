@@ -1,4 +1,5 @@
 import {Node} from 'slate'
+import {CommentAuthorType, RichTextTextNode, User} from '../../../../packages/api/lib'
 import {Route} from './route/routeContext'
 
 export enum VersionState {
@@ -31,6 +32,16 @@ export interface Author {
   image: ImageData
 }
 
+export interface Comment {
+  id: string
+  text: RichTextTextNode[]
+  modifiedAt: Date
+  parentID?: string
+  authorType: CommentAuthorType
+  user: User
+  userName: string
+}
+
 export interface NavigationItem {
   title: string
   route?: Route
@@ -60,6 +71,8 @@ export interface ArticleMeta {
   socialMediaDescription?: string
   socialMediaAuthors: Author[]
   socialMediaImage?: any
+
+  comments?: Comment[]
 
   teaserType?: TeaserType
   teaserStyle?: TeaserStyle

@@ -2,7 +2,7 @@ import React from 'react'
 
 import {ArticleFooter} from '../navigation/articleFooter'
 import {relatedArticlesAdapter} from './articleAdapter'
-import {Author, Peer, ArticleMeta} from '../types'
+import {Author, Peer, ArticleMeta, Comment} from '../types'
 import {useListArticlesQuery} from '../query'
 
 export interface ArticleFooterContainerProps {
@@ -11,12 +11,14 @@ export interface ArticleFooterContainerProps {
   readonly peer?: Peer
   readonly publishDate: Date
   readonly id: string
+  readonly comments?: Comment[]
   isPeerArticle?: boolean
 }
 
 export function ArticleFooterContainer({
   tags,
   authors,
+  comments,
   peer,
   publishDate,
   id,
@@ -37,7 +39,7 @@ export function ArticleFooterContainer({
     .filter(article => article.id != id)
 
   if (loading || fallbackLoading) {
-    return <ArticleFooter relatedArticles={[]} tags={tags} authors={authors} />
+    return <ArticleFooter relatedArticles={[]} tags={tags} authors={authors} comments={comments} />
   }
 
   if (!tagArticles) return null
@@ -54,6 +56,7 @@ export function ArticleFooterContainer({
       tags={tags}
       authors={authors}
       isPeerArticle={isPeerArticle}
+      comments={comments}
     />
   )
 }

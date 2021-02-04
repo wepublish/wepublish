@@ -6,6 +6,7 @@ import {ArticleReference, PageInfo, ImageRefData} from './types'
 // TODO: Don't use slate Node type, export client side friendly types from @wepublish/api/types package.
 // TODO: Remove slate from dependencies.
 import {Node} from 'slate'
+import {CommentAuthorType, User} from '../../../../packages/api/lib'
 
 export interface ListArticlesData {
   articles: {
@@ -102,4 +103,14 @@ const AuthorQuery = gql`
 
 export function useAuthorQuery(opts?: QueryHookOptions<AuthorQueryData, AuthorQueryVariables>) {
   return useQuery(AuthorQuery, opts)
+}
+
+// Comments
+export interface Comment {
+  id: string
+  text: string
+  modifiedAt: Date
+  parentID?: string
+  authorType: CommentAuthorType
+  user: User
 }

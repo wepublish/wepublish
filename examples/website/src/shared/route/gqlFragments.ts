@@ -88,6 +88,18 @@ export const articleMetaDataFragment = gql`
     socialMediaImage {
       ...SimpleImageData
     }
+    comments {
+      id
+      text
+      modifiedAt
+      parentID
+      authorType
+      user {
+        id
+        name
+        preferredName
+      }
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}

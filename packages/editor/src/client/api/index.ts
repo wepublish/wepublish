@@ -936,6 +936,7 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 
 export type MutationUpdateInvoiceArgs = {
   id: Scalars['ID'];
+  input: InvoiceInput;
 };
 
 
