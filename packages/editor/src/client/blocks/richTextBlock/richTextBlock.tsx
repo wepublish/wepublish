@@ -20,6 +20,7 @@ import {Alert} from 'rsuite'
 export type RichTextBlockProps = BlockProps<RichTextBlockValue> & {
   maxCharsLimit?: number
   getCharsLength?: any
+  showCharsCount?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -28,7 +29,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange,
   maxCharsLimit,
-  getCharsLength
+  getCharsLength,
+  showCharsCount
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -144,7 +146,9 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
       />
-      <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charsLength}`}</p>
+      {showCharsCount && (
+        <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charsLength}`}</p>
+      )}
     </Slate>
   )
 })
