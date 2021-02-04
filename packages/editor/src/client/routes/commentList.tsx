@@ -30,7 +30,8 @@ import {
   Table,
   Modal,
   Button,
-  Dropdown
+  Dropdown,
+  Alert
 } from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
@@ -99,6 +100,7 @@ export function CommentList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
+  const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
 
   const mapModalTitle = () => {
     let title: string
@@ -295,8 +297,18 @@ export function CommentList() {
             confirmAction === ConfirmAction.RequestChanges ? (
               <DescriptionListItem label={t('comments.panels.rejectionReason')}>
                 <Dropdown title={t('comments.panels.rejectionReason')}>
-                  <Dropdown.Item>{CommentRejectionReason.Spam}</Dropdown.Item>
-                  <Dropdown.Item>{CommentRejectionReason.Misconduct}</Dropdown.Item>
+                  <Dropdown.Item
+                    key={CommentRejectionReason.Spam}
+                    active={CommentRejectionReason.Spam === rejectionReason}
+                    onSelect={() => setRejectionReason(CommentRejectionReason.Spam)}>
+                    {CommentRejectionReason.Spam}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    key={CommentRejectionReason.Misconduct}
+                    active={CommentRejectionReason.Misconduct === rejectionReason}
+                    onSelect={() => setRejectionReason(CommentRejectionReason.Misconduct)}>
+                    {CommentRejectionReason.Misconduct}
+                  </Dropdown.Item>
                 </Dropdown>
               </DescriptionListItem>
             ) : null}
@@ -315,25 +327,35 @@ export function CommentList() {
                       id: currentComment.id
                     }
                   })
+                  setConfirmationDialogOpen(false)
                   break
                 case ConfirmAction.RequestChanges:
-                  await requestChanges({
-                    variables: {
-                      id: currentComment.id,
-                      rejectionReason: CommentRejectionReason.Misconduct
-                    }
-                  })
+                  if (!rejectionReason) {
+                    Alert.error('Please choose a rejection reason', 0)
+                  } else {
+                    await requestChanges({
+                      variables: {
+                        id: currentComment.id,
+                        rejectionReason
+                      }
+                    })
+                    setConfirmationDialogOpen(false)
+                  }
                   break
                 case ConfirmAction.Reject:
-                  await rejectComment({
-                    variables: {
-                      id: currentComment.id,
-                      rejectionReason: CommentRejectionReason.Misconduct
-                    }
-                  })
+                  if (!rejectionReason) {
+                    Alert.error('Please choose a rejection reason', 0)
+                  } else {
+                    await rejectComment({
+                      variables: {
+                        id: currentComment.id,
+                        rejectionReason
+                      }
+                    })
+                    setConfirmationDialogOpen(false)
+                  }
                   break
               }
-              setConfirmationDialogOpen(false)
             }}>
             {t('articles.panels.confirm')}
           </Button>
