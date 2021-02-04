@@ -153,8 +153,11 @@
         "publishedAt": "Published At",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
+        "requestChangesOnComment": "Request Changes On Comment",
+        "rejectComment": "Reject Comment",
         "rejectionReason": "Rejection Reason",
-        "userName": "User Name"
+        "userName": "User Name",
+        "revisionCreatedAt": "Revision created at"
       },
       "state": {
         "pendingApproval": "Pending Approval",

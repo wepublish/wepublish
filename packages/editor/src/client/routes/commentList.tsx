@@ -100,6 +100,25 @@ export function CommentList() {
   const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
+  const mapModalTitle = () => {
+    let title: string
+    switch (confirmAction) {
+      case ConfirmAction.Approve:
+        title = t('comments.panels.approveComment')
+        break
+      case ConfirmAction.Reject:
+        title = t('comments.panels.rejectComment')
+        break
+      case ConfirmAction.RequestChanges:
+        title = t('comments.panels.requestChangesOnComment')
+        break
+      default:
+        title = ''
+        break
+    }
+    return title
+  }
+
   return (
     <>
       <FlexboxGrid>
@@ -241,9 +260,7 @@ export function CommentList() {
         onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>
-            {confirmAction === ConfirmAction.Approve
-              ? t('comments.panels.approveComment')
-              : t('articles.panels.deleteArticle')}
+            <div>{t(mapModalTitle())}</div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -251,16 +268,27 @@ export function CommentList() {
             <DescriptionListItem label={t('comments.panels.userName')}>
               {currentComment?.user.name || t('comments.panels.untitled')}
             </DescriptionListItem>
+            <DescriptionListItem label={t('comments.panels.createdAt')}>
+              {currentComment?.createdAt && new Date(currentComment.createdAt).toLocaleString()}
+            </DescriptionListItem>
+            <DescriptionListItem label={t('comments.panels.updatedAt')}>
+              {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toLocaleString()}
+            </DescriptionListItem>
             {currentComment?.revisions?.length
-              ? currentComment?.revisions?.map(({text}, i) => (
-                  <DescriptionListItem key={i} label={t('comments.panels.revisions')}>
-                    <RichTextBlock
-                      disabled
-                      // TODO: remove this
-                      onChange={console.log}
-                      value={text}
-                    />
-                  </DescriptionListItem>
+              ? currentComment?.revisions?.map(({text, createdAt}, i) => (
+                  <>
+                    <DescriptionListItem key={i} label={t('comments.panels.revisions')}>
+                      <RichTextBlock
+                        disabled
+                        // TODO: remove this
+                        onChange={console.log}
+                        value={text}
+                      />
+                    </DescriptionListItem>
+                    <DescriptionListItem label={t('comments.panels.revisionCreatedAt')}>
+                      {createdAt && new Date(createdAt).toLocaleString()}
+                    </DescriptionListItem>
+                  </>
                 ))
               : null}
             {confirmAction === ConfirmAction.Reject ||
