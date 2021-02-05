@@ -2,13 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/server'
 import {HelmetProvider, FilledContext} from 'react-helmet-async'
 
-import {ApolloClient} from 'apollo-client'
-import {getDataFromTree, ApolloProvider} from 'react-apollo'
-import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory'
-import {HttpLink} from 'apollo-link-http'
-
+// Add this import to the top of the file
+import {getDataFromTree} from '@apollo/client/react/ssr'
+import {ApolloProvider, ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client'
 import {fetch} from 'cross-fetch'
-
 import {LazyCapture, StyleProvider, renderStylesToComponents} from '@karma.run/react'
 
 import {RouteProvider, Route} from '../shared/route/routeContext'
@@ -20,7 +17,8 @@ import {ElementID} from '../shared/elementID'
 import {App} from '../shared/app'
 import {AppContextProvider} from '../shared/appContext'
 
-import {createStyleRenderer} from '../shared/utility'
+import {createStyleRenderer, fetchIntrospectionQueryResultData} from '../shared/utility'
+import {AuthProvider} from '../shared/authContext'
 
 export interface RenderOptions {
   apiURL: string
@@ -39,11 +37,10 @@ export async function renderApp({
   introspectionQueryResultData
 }: RenderOptions) {
   const client = new ApolloClient({
-    link: new HttpLink({uri: apiURL, fetch}),
+    link: createHttpLink({uri: apiURL, fetch}),
     cache: new InMemoryCache({
-      fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
-    }),
-    ssrMode: true
+      possibleTypes: await fetchIntrospectionQueryResultData(apiURL)
+    })
   })
 
   const styleRenderer = createStyleRenderer()
@@ -54,19 +51,21 @@ export async function renderApp({
     <LazyCapture rendered={renderedLazyPaths}>
       <AppContextProvider canonicalHost={canonicalHost}>
         <ApolloProvider client={client}>
-          <HelmetProvider context={helmetContext}>
-            <StyleProvider renderer={styleRenderer}>
-              <FacebookProvider sdkLanguage={'de_DE'}>
-                <InstagramProvider>
-                  <TwitterProvider>
-                    <RouteProvider initialRoute={initialRoute}>
-                      <App />
-                    </RouteProvider>
-                  </TwitterProvider>
-                </InstagramProvider>
-              </FacebookProvider>
-            </StyleProvider>
-          </HelmetProvider>
+          <AuthProvider>
+            <HelmetProvider context={helmetContext}>
+              <StyleProvider renderer={styleRenderer}>
+                <FacebookProvider sdkLanguage={'de_DE'}>
+                  <InstagramProvider>
+                    <TwitterProvider>
+                      <RouteProvider initialRoute={initialRoute}>
+                        <App />
+                      </RouteProvider>
+                    </TwitterProvider>
+                  </InstagramProvider>
+                </FacebookProvider>
+              </StyleProvider>
+            </HelmetProvider>
+          </AuthProvider>
         </ApolloProvider>
       </AppContextProvider>
     </LazyCapture>
