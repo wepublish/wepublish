@@ -11,12 +11,8 @@ import {
   useRejectCommentMutation,
   CommentSort
 } from '../api'
-
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-
-import {useTranslation} from 'react-i18next'
 import {
+  Timeline,
   FlexboxGrid,
   Input,
   InputGroup,
@@ -28,6 +24,12 @@ import {
   Dropdown,
   Alert
 } from 'rsuite'
+
+import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+
+import {useTranslation} from 'react-i18next'
+
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -193,17 +195,20 @@ export function CommentList() {
             }}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable sortable>
+        <Column width={150} align="left" resizable sortable>
           <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
-          <Cell dataKey="modifiedAt" />
+          <Cell dataKey="modifiedAt">
+            {({modifiedAt}: Comment) => new Date(modifiedAt).toDateString()}
+          </Cell>
         </Column>
-        <Column width={120} align="center" fixed="right">
+        <Column width={150} align="center" fixed="right">
           <HeaderCell>{t('comments.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Comment) => (
               <>
                 <IconButton
                   icon={<Icon icon="check" />}
+                  color="green"
                   circle
                   size="sm"
                   style={{marginLeft: '5px'}}
@@ -215,6 +220,7 @@ export function CommentList() {
                 />
                 <IconButton
                   icon={<Icon icon="edit" />}
+                  color="yellow"
                   circle
                   size="sm"
                   style={{marginLeft: '5px'}}
@@ -226,6 +232,7 @@ export function CommentList() {
                 />
                 <IconButton
                   icon={<Icon icon="close" />}
+                  color="red"
                   circle
                   size="sm"
                   style={{marginLeft: '5px'}}
@@ -266,32 +273,32 @@ export function CommentList() {
               {currentComment?.user.name || t('comments.panels.untitled')}
             </DescriptionListItem>
             <DescriptionListItem label={t('comments.panels.createdAt')}>
-              {currentComment?.createdAt && new Date(currentComment.createdAt).toLocaleString()}
+              {currentComment?.createdAt && new Date(currentComment.createdAt).toDateString()}
             </DescriptionListItem>
             <DescriptionListItem label={t('comments.panels.updatedAt')}>
-              {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toLocaleString()}
+              {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
             </DescriptionListItem>
-            {currentComment?.revisions?.length
-              ? currentComment?.revisions?.map(({text, createdAt}, i) => (
-                  <>
-                    <DescriptionListItem key={i} label={t('comments.panels.revisions')}>
-                      <RichTextBlock
-                        disabled
-                        // TODO: remove this
-                        onChange={console.log}
-                        value={text}
-                      />
-                    </DescriptionListItem>
-                    <DescriptionListItem label={t('comments.panels.revisionCreatedAt')}>
-                      {createdAt && new Date(createdAt).toLocaleString()}
-                    </DescriptionListItem>
-                  </>
-                ))
-              : null}
+            <DescriptionListItem label={t('comments.panels.revisions')}>
+              <Timeline align="left">
+                {currentComment?.revisions?.length
+                  ? currentComment?.revisions?.map(({text, createdAt}, i) => (
+                      <Timeline.Item key={i}>
+                        <div>{new Date(createdAt).toLocaleString()}</div>
+                        <RichTextBlock
+                          disabled
+                          // TODO: remove this
+                          onChange={console.log}
+                          value={text}
+                        />
+                      </Timeline.Item>
+                    ))
+                  : null}
+              </Timeline>
+            </DescriptionListItem>
             {confirmAction === ConfirmAction.Reject ||
             confirmAction === ConfirmAction.RequestChanges ? (
               <DescriptionListItem label={t('comments.panels.rejectionReason')}>
-                <Dropdown title={t('comments.panels.rejectionReason')}>
+                <Dropdown title={t('comments.panels.rejectionReason')} placement="topStart">
                   <Dropdown.Item
                     key={CommentRejectionReason.Spam}
                     active={CommentRejectionReason.Spam === rejectionReason}
