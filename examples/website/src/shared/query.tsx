@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import {articleMetaDataFragment, simpleImageDataFragment} from './route/gqlFragments'
-import {QueryHookOptions, useQuery} from 'react-apollo'
+import {QueryHookOptions, useQuery} from '@apollo/client'
 import {ArticleReference, PageInfo, ImageRefData} from './types'
 
 // TODO: Don't use slate Node type, export client side friendly types from @wepublish/api/types package.
