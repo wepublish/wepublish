@@ -17,7 +17,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  TeaserFlexGrid = 'teaserFlexGrid'
 }
 
 export interface RichTextBlock {
@@ -179,6 +180,13 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+export interface TeaserFlexGridBlock {
+  type: BlockType.TeaserFlexGrid
+  teasers: Teaser[]
+  numColumns: number
+  numRows: number
+}
+
 export type ArticleBlock =
   | RichTextBlock
   | ImageBlock
@@ -194,6 +202,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | TeaserGridBlock
+  | TeaserFlexGridBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock
