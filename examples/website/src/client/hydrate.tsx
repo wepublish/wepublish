@@ -10,23 +10,25 @@ import {StyleProvider, preloadLazyComponents, RouteActionType} from '@karma.run/
 import {ElementID} from '../shared/elementID'
 import {App} from '../shared/app'
 import {AppContextProvider} from '../shared/appContext'
-import ApolloClient from 'apollo-client'
-import {HttpLink} from 'apollo-link-http'
-import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory'
-import {ApolloProvider} from 'react-apollo'
+import {ApolloProvider, ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client'
 import {FacebookProvider} from '../shared/atoms/facebookEmbed'
 import {InstagramProvider} from '../shared/atoms/instagramEmbed'
 import {TwitterProvider} from '../shared/atoms/twitterEmbed'
 import {matchRoute, RouteProvider} from '../shared/route/routeContext'
-import {createStyleRenderer} from '../shared/utility'
+import {
+  createStyleRenderer,
+  fetchIntrospectionQueryResultData,
+  LocalStorageKey
+} from '../shared/utility'
+import {AuthProvider} from '../shared/authContext'
+import {fetch} from 'cross-fetch'
+import {setContext} from '@apollo/client/link/context'
 
 export const HotApp = hot(App)
 
 export async function hydrateApp(): Promise<void> {
   return new Promise(resolve => {
     async function onDOMContentLoaded() {
-      const initialState = JSON.parse(document.getElementById(ElementID.InitialState)!.textContent!)
-
       const canonicalHost = JSON.parse(
         document.getElementById(ElementID.CanonicalHost)!.textContent!
       )
@@ -37,15 +39,23 @@ export async function hydrateApp(): Promise<void> {
         document.getElementById(ElementID.RenderedPaths)!.textContent!
       )
 
-      const introspectionQueryResultData = JSON.parse(
-        document.getElementById(ElementID.IntrospectionResult)!.textContent!
-      )
+      const authLink = setContext((_, {headers}) => {
+        // get the authentication token from local storage if it exists
+        const token = localStorage.getItem(LocalStorageKey.SessionToken)
+        // return the headers to the context so httpLink can read them
+        return {
+          headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : ''
+          }
+        }
+      })
 
       const client = new ApolloClient({
-        link: new HttpLink({uri: apiURL, fetch}),
+        link: authLink.concat(createHttpLink({uri: apiURL, fetch})),
         cache: new InMemoryCache({
-          fragmentMatcher: new IntrospectionFragmentMatcher({introspectionQueryResultData})
-        }).restore(initialState)
+          possibleTypes: await fetchIntrospectionQueryResultData(apiURL)
+        })
       })
 
       const styleRenderer = createStyleRenderer()
@@ -56,24 +66,26 @@ export async function hydrateApp(): Promise<void> {
       ReactDOM.hydrate(
         <AppContextProvider canonicalHost={canonicalHost}>
           <ApolloProvider client={client}>
-            <HelmetProvider>
-              <StyleProvider renderer={styleRenderer}>
-                <FacebookProvider sdkLanguage={'de_DE'}>
-                  <InstagramProvider>
-                    <TwitterProvider>
-                      <RouteProvider
-                        initialRoute={matchRoute(location.href)}
-                        handleNextRoute={(route, dispatch) => {
-                          dispatch({type: RouteActionType.SetCurrentRoute, route})
-                          return () => {}
-                        }}>
-                        <HotApp />
-                      </RouteProvider>
-                    </TwitterProvider>
-                  </InstagramProvider>
-                </FacebookProvider>
-              </StyleProvider>
-            </HelmetProvider>
+            <AuthProvider>
+              <HelmetProvider>
+                <StyleProvider renderer={styleRenderer}>
+                  <FacebookProvider sdkLanguage={'de_DE'}>
+                    <InstagramProvider>
+                      <TwitterProvider>
+                        <RouteProvider
+                          initialRoute={matchRoute(location.href)}
+                          handleNextRoute={(route, dispatch) => {
+                            dispatch({type: RouteActionType.SetCurrentRoute, route})
+                            return () => {}
+                          }}>
+                          <HotApp />
+                        </RouteProvider>
+                      </TwitterProvider>
+                    </InstagramProvider>
+                  </FacebookProvider>
+                </StyleProvider>
+              </HelmetProvider>
+            </AuthProvider>
           </ApolloProvider>
         </AppContextProvider>,
 

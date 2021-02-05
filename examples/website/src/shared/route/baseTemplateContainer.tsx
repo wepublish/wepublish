@@ -1,7 +1,6 @@
 import React, {ReactNode} from 'react'
 
-import gql from 'graphql-tag'
-import {useQuery} from 'react-apollo'
+import {gql, useQuery} from '@apollo/client'
 import {BaseTemplate} from '../templates/baseTemplate'
 import {NavigationItem} from '../types'
 import {ArticleRoute, PageRoute} from './routeContext'
