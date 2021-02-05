@@ -25,7 +25,8 @@ export enum BlockType {
   Embed = 'embed',
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid1 = 'teaserGrid1',
-  TeaserGrid6 = 'teaserGrid6'
+  TeaserGrid6 = 'teaserGrid6',
+  TeaserFlexGrid = 'teaserFlexGrid'
 }
 
 export type RichTextBlockValue = Node[]
