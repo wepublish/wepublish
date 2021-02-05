@@ -18,6 +18,7 @@ import {WepublishEditor} from './editor/wepublishEditor'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
+  showCharCount?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -25,7 +26,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   autofocus,
   disabled,
   onChange,
-  displayOnly = false
+  displayOnly = false,
+  showCharCount = true
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -34,7 +36,11 @@ export const RichTextBlock = memo(function RichTextBlock({
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
 
-  const [charsLength, setCharsLength] = useState(0)
+  const [charCount, setCharCount] = useState(0)
+
+  useEffect(() => {
+    setCharCount(WepublishEditor.calculateEditorCharLength(editor))
+  }, [editor.children])
 
   const {t} = useTranslation()
 
@@ -124,8 +130,8 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
       />
-      {showCharsCount && (
-        <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charsLength}`}</p>
+      {showCharCount && (
+        <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charCount}`}</p>
       )}
     </Slate>
   )

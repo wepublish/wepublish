@@ -1,4 +1,4 @@
-import {Editor, Transforms} from 'slate'
+import {Editor, Transforms, Node} from 'slate'
 import {RichTextBlockValue} from '../../types'
 import {emptyTextParagraph} from './elements'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
@@ -58,5 +58,12 @@ export const WepublishEditor = {
 
   isEmpty(editor: Editor) {
     return JSON.stringify(editor.children) === JSON.stringify(this.createDefaultValue())
+  },
+
+  calculateEditorCharLength(editor: Editor) {
+    return [...Node.texts(editor)].reduce((total, nodePair) => {
+      const [textNode] = nodePair
+      return total + textNode.text.length
+    }, 0)
   }
 }
