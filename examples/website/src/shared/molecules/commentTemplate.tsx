@@ -6,7 +6,8 @@ import {Image} from '../atoms/image'
 import {RichText} from '../atoms/richText'
 import {Color} from '../style/colors'
 import {Comment} from '../types'
-import {useCommentMutation} from '../mutation'
+import gql from 'graphql-tag'
+import {useMutation} from '@apollo/react-hooks'
 // import { useMutation } from 'react-apollo'
 
 /*
@@ -202,8 +203,6 @@ export interface RestructuredComments {
   readonly children?: Comment[]
 }
 
-export type RichTextBlockValue = Node[]
-
 // Helpers
 function redressCommentInput(value: string) {
   return {
@@ -212,33 +211,47 @@ function redressCommentInput(value: string) {
   }
 }
 
+const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      itemID
+      itemType
+      user {
+        id
+      }
+      text
+      parentID
+    }
+  }
+`
+
+/* enum CommentItemType {
+  Article = 'article',
+  Page = 'page'
+} */
+
 // Components
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
 
-  /* const mockComment = {
-    itemID: 'AnXUklbXyptpVQlW',
-    itemType: 'article',
-    text: [{"type": "paragraph","children": [{"text": "New mocking Comment!"}]} ]
-  } */
+  const [commentInput, setCommentInput] = useState({children: [{text: ''}]})
 
-  const [commentInput, setCommentInput] = useState({type: 'paragraph', children: [{text: 'test'}]})
-
-  const [addComment, {loading, error}] = useCommentMutation()
+  const [addComment, {loading, error}] = useMutation(AddComment)
 
   return (
     <div className={props.role === 'reply' ? css(ReplyBox) : css(Container)}>
-      {console.log(commentInput)}
       {props.header ? <h3>{props.header}</h3> : ''}
       <form
         onSubmit={e => {
           e.preventDefault()
           addComment({
             variables: {
-              itemID: 'AnXUklbXyptpVQlW',
-              itemType: 'article',
-              text: [{type: 'paragraph', children: [{text: 'New mocking Comment!'}]}]
+              input: {
+                itemID: 'AnXUklbXyptpVQlW',
+                itemType: 'Article',
+                text: [{type: 'paragraph', children: [{text: 'New mocking Comment!'}]}]
+              }
             }
           })
         }}>

@@ -1,12 +1,12 @@
 import gql from 'graphql-tag'
 import {useMutation} from 'react-apollo'
-import {CommentItemType} from '../../../../packages/api/lib'
+import {CommentItemType, RichTextNode} from '../../../../packages/api/lib'
 
 export type CommentInput = {
   parentID?: string
   itemID: string
   itemType: CommentItemType
-  text: string
+  text: RichTextNode[]
 }
 
 export type MutationAddCommentArgs = {
@@ -35,5 +35,8 @@ export const AddComment = gql`
 `
 
 export function useCommentMutation() {
-  return useMutation(AddComment)
+  return useMutation(AddComment, {
+    onCompleted: data => console.log('Data from mutation', data),
+    onError: error => console.error('Error creating a post', error)
+  })
 }
