@@ -191,7 +191,7 @@ export function ImageList() {
       </Drawer>
       <Drawer
         show={isEditModalOpen}
-        size={'sm'}
+        size={'sms'}
         onHide={() => {
           setEditModalOpen(false)
           dispatch({
