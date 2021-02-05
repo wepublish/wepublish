@@ -6,6 +6,7 @@ import {
   OptionalComment,
   Comment,
   GetCommentsArgs,
+  GetPublicCommentsArgs,
   ConnectionResult,
   CommentState,
   LimitType,
@@ -155,6 +156,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
         .match(metaFilters.length ? {$and: metaFilters} : {})
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
@@ -198,25 +200,38 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
   }
 
-  async getPublicCommentsForItemByID(id: string): Promise<PublicComment[]> {
-    const [comments] = await Promise.all([
-      // TODO: add count
-      // TODO: add sort revisions' array by createdAt
-      this.comments
-        .aggregate([{$sort: {'createdAt.date': -1}}], {
+  async getPublicCommentsForItemByID(args: GetPublicCommentsArgs): Promise<PublicComment[]> {
+    const {id, userID} = args
+
+    let userUnapprovedComments: DBComment[] = []
+
+    const comments = await this.comments
+      .aggregate([{$sort: {modifiedAt: -1}}], {
+        collation: {locale: this.locale, strength: 2}
+      })
+      .match({
+        $and: [{itemID: id}, {state: CommentState.Approved, parentID: null}]
+      })
+      .toArray()
+
+    if (userID) {
+      userUnapprovedComments = await this.comments
+        .aggregate([{$sort: {'modifiedAt.date': -1}}], {
           collation: {locale: this.locale, strength: 2}
         })
         .match({
-          $and: [{itemID: id}, {state: CommentState.Approved}]
+          $and: [{itemID: id}, {userID}, {state: {$ne: CommentState.Approved}}]
         })
         .toArray()
-    ])
+    }
 
-    return comments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
-      id,
-      text: revisions[revisions.length - 1].text,
-      ...comment
-    }))
+    return [...userUnapprovedComments, ...comments].map<PublicComment>(
+      ({_id: id, revisions, ...comment}) => ({
+        id,
+        text: revisions[revisions.length - 1].text,
+        ...comment
+      })
+    )
   }
 
   async getCommentById(id: string): Promise<OptionalComment> {
@@ -230,6 +245,25 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       id: outID,
       ...comment
     }
+  }
+
+  async getPublicChildrenCommentsByParentId(id: string): Promise<PublicComment[]> {
+    const [childrenComments] = await Promise.all([
+      this.comments
+        .aggregate([{$sort: {modifiedAt: -1}}], {
+          collation: {locale: this.locale, strength: 2}
+        })
+        .match({
+          $and: [{parentID: id}, {state: CommentState.Approved}]
+        })
+        .toArray()
+    ])
+
+    return childrenComments.map<PublicComment>(({_id: id, revisions, ...comment}) => ({
+      id,
+      text: revisions[revisions.length - 1].text,
+      ...comment
+    }))
   }
 
   async takeActionOnComment({

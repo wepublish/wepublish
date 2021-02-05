@@ -5,7 +5,8 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLList,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {Context} from '../context'
@@ -16,7 +17,8 @@ import {
   CommentRevision,
   CommentState,
   PublicComment,
-  Comment
+  Comment,
+  CommentSort
 } from '../db/comment'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
@@ -55,6 +57,14 @@ export const GraphQLCommentItemType = new GraphQLEnumType({
   values: {
     Article: {value: CommentItemType.Article},
     Page: {value: CommentItemType.Page}
+  }
+})
+
+export const GraphQLCommentSort = new GraphQLEnumType({
+  name: 'CommentSort',
+  values: {
+    ModifiedAt: {value: CommentSort.ModifiedAt},
+    CreatedAt: {value: CommentSort.CreatedAt}
   }
 })
 
@@ -144,7 +154,7 @@ export const GraphQLPublicComment: GraphQLObjectType<
   Context
 > = new GraphQLObjectType<PublicComment, Context>({
   name: 'Comment',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
     parentID: {type: GraphQLID},
 
@@ -161,10 +171,21 @@ export const GraphQLPublicComment: GraphQLObjectType<
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
 
+    children: {
+      type: GraphQLList(GraphQLPublicComment),
+      resolve: createProxyingResolver(({id}, _, {dbAdapter}) => {
+        return dbAdapter.comment.getPublicChildrenCommentsByParentId(id)
+      })
+    },
+
     text: {type: GraphQLNonNull(GraphQLRichText)},
 
+    state: {type: GraphQLNonNull(GraphQLString)},
+
+    rejectionReason: {type: GraphQLString},
+
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
-  }
+  })
 })
 
 export const GraphQLCommentConnection = new GraphQLObjectType({

@@ -1,7 +1,6 @@
 import React from 'react'
 
-import gql from 'graphql-tag'
-import {useQuery} from 'react-apollo'
+import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
 
 import {

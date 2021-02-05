@@ -285,6 +285,11 @@ export type CommentRevision = {
   createdAt: Scalars['DateTime']
 }
 
+export enum CommentSort {
+  ModifiedAt = 'ModifiedAt',
+  CreatedAt = 'CreatedAt'
+}
+
 export enum CommentState {
   Approved = 'Approved',
   PendingApproval = 'PendingApproval',
@@ -1331,8 +1336,9 @@ export type QueryCommentsArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<CommentFilter>
-  sort?: Maybe<ImageSort>
+  sort?: Maybe<CommentSort>
   order?: Maybe<SortOrder>
 }
 
