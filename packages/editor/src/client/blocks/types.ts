@@ -1,9 +1,11 @@
-import {BlockListValue} from '../atoms/blockList'
+import {BlockList, BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
 
 import {Node} from 'slate'
 
 import nanoid from 'nanoid'
+
+import {Layout} from 'react-grid-layout'
 
 import {
   FullBlockFragment,
@@ -194,6 +196,11 @@ export interface TeaserGridBlockValue {
   teasers: Array<[string, Teaser | null]>
   numColumns: number
 }
+export interface TeaserFlexGridBlockValue {
+  teasers: Array<[Layout, Teaser | null]>
+  numColumns: number
+  numRows: number
+}
 
 export type RichTextBlockListValue = BlockListValue<BlockType.RichText, RichTextBlockValue>
 export type ImageBlockListValue = BlockListValue<BlockType.Image, ImageBlockValue>
@@ -214,6 +221,11 @@ export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, Te
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
 
+export type TeaserFlexGridBlockListValue = BlockListValue<
+  BlockType.TeaserFlexGrid,
+  TeaserFlexGridBlockValue
+>
+
 export type BlockValue =
   | TitleBlockListValue
   | RichTextBlockListValue
@@ -225,6 +237,7 @@ export type BlockValue =
   | LinkPageBreakBlockListValue
   | TeaserGridBlock1ListValue
   | TeaserGridBlock6ListValue
+  | TeaserFlexGridBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -405,6 +418,61 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     lead: value.lead || undefined,
                     pageID: value.page.id
                   }
+                }
+
+              default:
+                return null
+            }
+          }),
+          numColumns: block.value.numColumns
+        }
+      }
+
+    case BlockType.TeaserFlexGrid:
+      // TODO more DRY
+      // numRows?
+      return {
+        teaserGrid: {
+          teasers: block.value.teasers.map(([layout, value]) => {
+            switch (value?.type) {
+              case TeaserType.Article:
+                return {
+                  article: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    articleID: value.article.id
+                  },
+                  layout
+                }
+
+              case TeaserType.PeerArticle:
+                return {
+                  peerArticle: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    peerID: value.peer.id,
+                    articleID: value.articleID
+                  },
+                  layout
+                }
+
+              case TeaserType.Page:
+                return {
+                  page: {
+                    style: value.style,
+                    imageID: value.image?.id,
+                    preTitle: value.preTitle || undefined,
+                    title: value.title || undefined,
+                    lead: value.lead || undefined,
+                    pageID: value.page.id
+                  },
+                  layout
                 }
 
               default:
@@ -610,6 +678,8 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           })
         }
       }
+
+    // TODO case 'TeaserFlexGridBlock':
 
     case 'LinkPageBreakBlock':
       return {
