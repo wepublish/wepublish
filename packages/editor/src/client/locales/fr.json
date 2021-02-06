@@ -459,7 +459,7 @@
         "title": "Title",
         "created": "Created",
         "updated": "Modified",
-        "states": "States",
+        "state": "State",
         "comments": "Comments",
         "action": "Action",
         "search": "Search",

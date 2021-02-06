@@ -196,7 +196,7 @@ export function CommentList() {
           <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
         <Column width={150} align="left" resizable>
-          <HeaderCell>{t('comments.overview.states')}</HeaderCell>
+          <HeaderCell>{t('comments.overview.state')}</HeaderCell>
           <Cell dataKey="state">
             {(rowData: CommentRefFragment) => {
               let state: string
@@ -224,7 +224,7 @@ export function CommentList() {
         <Column width={150} align="left" resizable sortable>
           <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
           <Cell dataKey="modifiedAt">
-            {({modifiedAt}: Comment) => new Date(modifiedAt).toDateString()}
+            {({modifiedAt}: Comment) => new Date(modifiedAt).toLocaleString()}
           </Cell>
         </Column>
         <Column width={150} align="center" fixed="right">
