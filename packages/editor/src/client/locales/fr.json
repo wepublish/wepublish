@@ -422,7 +422,6 @@
         "optionalDescription": "Optional description for the link",
         "link": "Link",
         "title": "Title",
-        "reachedMaxCharsCount": "Sorry, Maximum characters count reached",
         "charsCount": "Characters count"
       },
       "title": {
