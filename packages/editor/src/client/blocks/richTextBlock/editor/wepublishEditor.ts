@@ -60,7 +60,7 @@ export const WepublishEditor = {
     return JSON.stringify(editor.children) === JSON.stringify(this.createDefaultValue())
   },
 
-  calculateEditorCharLength(editor: Editor) {
+  calculateEditorCharCount(editor: Editor) {
     return [...Node.texts(editor)].reduce((total, nodePair) => {
       const [textNode] = nodePair
       return total + textNode.text.length

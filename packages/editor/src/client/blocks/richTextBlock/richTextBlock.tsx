@@ -39,7 +39,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   const [charCount, setCharCount] = useState(0)
 
   useEffect(() => {
-    setCharCount(WepublishEditor.calculateEditorCharLength(editor))
+    setCharCount(WepublishEditor.calculateEditorCharCount(editor))
   }, [editor.children])
 
   const {t} = useTranslation()
