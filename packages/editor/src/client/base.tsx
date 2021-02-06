@@ -92,13 +92,6 @@ export function Base({children}: BaseProps) {
                 </NavItemLink>
 
                 <NavItemLink
-                  icon={<Icon icon="comment" />}
-                  route={CommentListRoute.create({})}
-                  active={current?.type === RouteType.CommentList}>
-                  {t('navbar.comments')}
-                </NavItemLink>
-
-                <NavItemLink
                   icon={<Icon icon="file" />}
                   route={PageListRoute.create({})}
                   active={current?.type === RouteType.PageList}>
@@ -110,6 +103,13 @@ export function Base({children}: BaseProps) {
                   route={AuthorListRoute.create({})}
                   active={current?.type === RouteType.AuthorList}>
                   {t('navbar.authors')}
+                </NavItemLink>
+
+                <NavItemLink
+                  icon={<Icon icon="comment" />}
+                  route={CommentListRoute.create({})}
+                  active={current?.type === RouteType.CommentList}>
+                  {t('navbar.comments')}
                 </NavItemLink>
 
                 <NavItemLink
