@@ -40,6 +40,32 @@ enum ConfirmAction {
   Reject = 'reject'
 }
 
+function mapCommentActionToColor(currentAction?: ConfirmAction) {
+  switch (currentAction) {
+    case ConfirmAction.Approve:
+      return 'green'
+    case ConfirmAction.RequestChanges:
+      return 'yellow'
+    case ConfirmAction.Reject:
+      return 'red'
+    default:
+      return 'green'
+  }
+}
+
+function mapCommentActionToTitle(currentAction?: ConfirmAction) {
+  switch (currentAction) {
+    case ConfirmAction.Approve:
+      return 'comments.panels.approve'
+    case ConfirmAction.RequestChanges:
+      return 'comments.panels.requestChanges'
+    case ConfirmAction.Reject:
+      return 'comments.panels.reject'
+    default:
+      return 'comments.panels.approve'
+  }
+}
+
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   switch (columnField) {
     case 'createdAt':
@@ -297,8 +323,19 @@ export function CommentList() {
             </DescriptionListItem>
             {confirmAction === ConfirmAction.Reject ||
             confirmAction === ConfirmAction.RequestChanges ? (
-              <DescriptionListItem label={t('comments.panels.rejectionReason')}>
-                <Dropdown title={t('comments.panels.rejectionReason')} placement="topStart">
+              <DescriptionListItem
+                label={t(
+                  confirmAction === ConfirmAction.Reject
+                    ? 'comments.panels.rejectionReason'
+                    : 'comments.panels.requestChangesReason'
+                )}>
+                <Dropdown
+                  title={t(
+                    confirmAction === ConfirmAction.Reject
+                      ? 'comments.panels.rejectionReason'
+                      : 'comments.panels.requestChangesReason'
+                  )}
+                  placement="topStart">
                   <Dropdown.Item
                     key={CommentRejectionReason.Spam}
                     active={CommentRejectionReason.Spam === rejectionReason}
@@ -318,7 +355,7 @@ export function CommentList() {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            color={confirmAction === ConfirmAction.Approve ? 'green' : 'red'}
+            color={mapCommentActionToColor(confirmAction)}
             disabled={isApproving || isRequestingChanges || isRejecting}
             onClick={async () => {
               if (!currentComment) return
@@ -359,10 +396,10 @@ export function CommentList() {
                   break
               }
             }}>
-            {t('articles.panels.confirm')}
+            {t(mapCommentActionToTitle(confirmAction))}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('articles.panels.cancel')}
+            {t('comments.panels.cancel')}
           </Button>
         </Modal.Footer>
       </Modal>

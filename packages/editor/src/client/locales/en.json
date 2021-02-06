@@ -157,7 +157,11 @@
         "rejectComment": "Reject Comment",
         "rejectionReason": "Rejection Reason",
         "userName": "User Name",
-        "revisionCreatedAt": "Revision created at"
+        "revisionCreatedAt": "Revision created at",
+        "approve": "Approve",
+        "requestChanges": "Request Changes",
+        "requestChangesReason": "Reason",
+        "reject": "Reject"
       },
       "state": {
         "pendingApproval": "Pending Approval",
