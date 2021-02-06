@@ -11,6 +11,7 @@ import {QuoteBlock} from './quoteBlock'
 import {LinkPageBreakBlock} from './linkPageBreakBlock'
 import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
+import {TeaserFlexGridBlock} from './teaserFlexGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
 
@@ -115,5 +116,20 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     },
     label: '6 Cols',
     icon: 'ellipsis-h'
+  },
+
+  [BlockType.TeaserFlexGrid]: {
+    field: props => <TeaserFlexGridBlock {...props} />,
+    defaultValue: {
+      numColumns: 3,
+      numRows: 3,
+      teasers: [
+        [{i: nanoid(), x: 0, y: 0, w: 1, h: 2}, null],
+        [{i: nanoid(), x: 1, y: 0, w: 3, h: 2}, null],
+        [{i: nanoid(), x: 4, y: 0, w: 1, h: 2}, null]
+      ]
+    },
+    label: 'Flex Grid',
+    icon: 'squares'
   }
 }

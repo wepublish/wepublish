@@ -1,5 +1,5 @@
 import React, {useState, ReactNode} from 'react'
-import GridLayout from 'react-grid-layout'
+import GridLayout, {Layout} from 'react-grid-layout'
 
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {PlaceholderImage} from '../atoms/placeholderImage'
@@ -12,7 +12,7 @@ import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
 import './teaserFlexGridBlock.less'
 import nanoid from 'nanoid'
 
-import {TeaserFlexGridBlockValue, TeaserFlex, TeaserType} from './types'
+import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
 
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
@@ -26,7 +26,7 @@ interface GridProps {
 }
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
-  const [editTeaser, setEditTeaser] = useState<TeaserFlex | null>(null) // TODO undefined instead null
+  const [editTeaser, setEditTeaser] = useState<Teaser | null>(null) // TODO undefined instead null
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -49,34 +49,44 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   // document.body.style.pointerEvents = ''
   // disabled={teasers.length === 1}
 
+  const handleLayoutChange = (layout: Layout[]) => {
+    // TODO when to sort teasers according rule (eg. y value?)
+    console.log(layout)
+  }
+
   return (
     <>
-      <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+      <GridLayout
+        className="layout"
+        cols={12}
+        rowHeight={30}
+        width={1200}
+        onLayoutChange={handleLayoutChange}>
         {teasers.map(([{i, ...layout}, teaser]) => (
-          <TeaserBlock
-            key={i}
-            data-grid={layout}
-            teaser={teaser}
-            numColumns={numColumns}
-            showGrabCursor={teasers.length !== 1}
-            onEdit={() => {
-              setEditTeaser(teaser)
-              setEditModalOpen(true)
-            }}
-            onChoose={() => {
-              setEditTeaser(teaser)
-              setChooseModalOpen(true)
-            }}
-            onRemove={() => {
-              // handleTeaserLinkChange(teaser, null)
-            }}
-          />
+          <div key={i} data-grid={layout}>
+            <TeaserBlock
+              teaser={teaser}
+              numColumns={numColumns}
+              showGrabCursor={false /* TODO teasers.length !== 1 */}
+              // disabled={teasers.length === 1}
+              onEdit={() => {
+                setEditTeaser(teaser)
+                setEditModalOpen(true)
+              }}
+              onChoose={() => {
+                setEditTeaser(teaser)
+                setChooseModalOpen(true)
+              }}
+              onRemove={() => {
+                // handleTeaserLinkChange(index, null) // TODO
+              }}
+            />
+          </div>
         ))}
       </GridLayout>
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
           initialTeaser={editTeaser!}
-          // initialTeaser={editTeaser[1]!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)
@@ -98,7 +108,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 }
 
 export interface TeaserBlockProps {
-  teaser: TeaserFlex | null
+  teaser: Teaser | null
   showGrabCursor: boolean
   numColumns: number
   onEdit: () => void
@@ -116,11 +126,10 @@ export function TeaserBlock({
 }: TeaserBlockProps) {
   return (
     <Panel
-      data-grid={1}
       bodyFill={true}
       style={{
-        cursor: showGrabCursor ? 'grab' : '',
-        height: 300,
+        // cursor: showGrabCursor ? 'grab' : '',
+        height: 'inherit',
         overflow: 'hidden',
         zIndex: 1
       }}>
@@ -170,7 +179,7 @@ export function TeaserBlock({
   )
 }
 
-export function contentForTeaser(teaser: TeaserFlex, numColumns: number) {
+export function contentForTeaser(teaser: Teaser, numColumns: number) {
   const {t} = useTranslation()
   switch (teaser.type) {
     case TeaserType.Article: {
