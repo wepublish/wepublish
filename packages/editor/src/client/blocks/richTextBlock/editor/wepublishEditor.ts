@@ -61,9 +61,14 @@ export const WepublishEditor = {
   },
 
   calculateEditorCharCount(editor: Editor) {
-    return [...Node.texts(editor)].reduce((total, nodePair) => {
+    return this.getTextString(editor).length
+  },
+
+  getTextString(editor: Editor) {
+    return [...Node.texts(editor)].reduce((string, nodePair, index) => {
       const [textNode] = nodePair
-      return total + textNode.text.length
-    }, 0)
+      if (index === 0) return `${textNode.text}`
+      return `${string} ${textNode.text}`
+    }, '')
   }
 }
