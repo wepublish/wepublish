@@ -197,9 +197,8 @@ export interface TeaserGridBlockValue {
   numColumns: number
 }
 
-export type TeaserFlexItem = [Layout, Teaser | null]
 export interface TeaserFlexGridBlockValue {
-  teasers: Array<TeaserFlexItem>
+  teasers: Array<[Layout, Teaser | null]>
   numColumns: number
   numRows: number
 }

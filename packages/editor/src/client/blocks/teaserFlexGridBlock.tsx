@@ -12,7 +12,7 @@ import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
 import './teaserFlexGridBlock.less'
 import nanoid from 'nanoid'
 
-import {TeaserFlexGridBlockValue, TeaserFlexItem, Teaser, TeaserType} from './types'
+import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
 
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
