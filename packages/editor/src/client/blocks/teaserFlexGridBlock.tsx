@@ -82,6 +82,15 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     cursor: 'pointer'
   }
 
+  // TODO for numColumns/Rows
+  //      <InputGroup
+  //          style={{width: '150px'}}
+  //          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
+  //          key={i}>
+  //          <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
+  //          <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
+  //        </InputGroup>
+
   return (
     <>
       <Toolbar>
