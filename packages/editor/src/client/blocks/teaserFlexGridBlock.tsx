@@ -1,24 +1,19 @@
 import React, {useState, ReactNode, useEffect} from 'react'
+import {IconButton, Drawer, Panel, Icon, Avatar, Button, InputGroup, InputNumber} from 'rsuite'
+import nanoid from 'nanoid'
 import GridLayout, {Layout} from 'react-grid-layout'
-
+import './teaserFlexGridBlock.less'
+import {useTranslation} from 'react-i18next'
+import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
+import {TeaserEditPanel} from '../panel/teaserEditPanel'
+import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
+import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {PlaceholderImage} from '../atoms/placeholderImage'
 import {BlockProps} from '../atoms/blockList'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
-
-import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
-
-import './teaserFlexGridBlock.less'
-import nanoid from 'nanoid'
-
-import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
-
-import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
-
-import {useTranslation} from 'react-i18next'
+import {Toolbar} from '../atoms/toolbar'
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
   const [editIndex, setEditIndex] = useState(0)
@@ -26,7 +21,11 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
+  const [addItems, setAddItems] = useState(1)
+
   const {teasers, numColumns, numRows} = value
+
+  const {t} = useTranslation()
 
   function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
     onChange({
@@ -46,9 +45,29 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     })
   }
 
-  const handleItemRemove = (index: number) => {
+  const handleRemoveItem = (index: number) => {
     // triggers a double render: remove item > render > correct layout > render, but should not be a problem
     teasers.splice(index, 1)
+    onChange({
+      ...value,
+      teasers: [...teasers]
+    })
+  }
+
+  const handleAddItems = () => {
+    for (let i = 0; i < addItems; i++) {
+      const newTeaser: [Layout, null] = [
+        {
+          i: nanoid(),
+          x: (teasers.length * 2) % numColumns,
+          y: Infinity, // puts it at the bottom
+          w: 2,
+          h: 2
+        },
+        null
+      ]
+      teasers.push(newTeaser)
+    }
     onChange({
       ...value,
       teasers: [...teasers]
@@ -63,12 +82,28 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   return (
     <>
+      <Toolbar>
+        <InputGroup style={{width: '180px'}}>
+          <InputGroup.Button onClick={handleAddItems}>
+            {
+              // t('blocks.teaserFlexGrid.addTeasers') TODO broken
+              (() => 'add Teasers')()
+            }
+          </InputGroup.Button>
+          <InputNumber
+            value={addItems}
+            onChange={val => setAddItems(val as number)}
+            min={1}
+            max={100}
+          />
+        </InputGroup>
+      </Toolbar>
       <p>{JSON.stringify(teasers.map(([l]) => l))}</p>
       <GridLayout
         className="layout"
         cols={numColumns}
         rowHeight={30}
-        width={1200}
+        width={700}
         onLayoutChange={handleLayoutChange}>
         {teasers.map(([{i, ...LayoutRest}, teaser], index) => (
           <div key={i} data-grid={LayoutRest}>
@@ -76,7 +111,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               icon="close"
               style={{...ItemTopBarStyle, right: '2px'}}
               onClick={() => {
-                handleItemRemove(index)
+                handleRemoveItem(index)
               }}
             />
             <Icon icon="thumb-tack" style={{...ItemTopBarStyle, left: '2px'}} />
