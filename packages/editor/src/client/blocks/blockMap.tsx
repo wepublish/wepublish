@@ -124,9 +124,9 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       numColumns: 12,
       numRows: 3,
       teasers: [
-        [{i: nanoid(), x: 0, y: 0, w: 1, h: 2}, null],
-        [{i: nanoid(), x: 1, y: 0, w: 3, h: 2}, null],
-        [{i: nanoid(), x: 4, y: 0, w: 1, h: 2}, null]
+        [{i: nanoid(), x: 0, y: 0, w: 12, h: 5}, null],
+        [{i: nanoid(), x: 0, y: Infinity, w: 5, h: 6}, null],
+        [{i: nanoid(), x: 6, y: Infinity, w: 5, h: 4}, null]
       ]
     },
     label: 'Flex Grid',
