@@ -1,5 +1,5 @@
-import React, {useState, ReactNode, useEffect} from 'react'
-import {IconButton, Drawer, Panel, Icon, Avatar, Button, InputGroup, InputNumber} from 'rsuite'
+import React, {useState} from 'react'
+import {IconButton, Drawer, Panel, Icon, Avatar, InputGroup, InputNumber} from 'rsuite'
 import nanoid from 'nanoid'
 import GridLayout, {Layout} from 'react-grid-layout'
 import './teaserFlexGridBlock.less'
@@ -25,9 +25,9 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   // NOTE: grid Items as the teaser containers. As RGL work directly with the
   // grid div keys, it is not possible to pack the grid divs into named components.
 
-  const {teasers, numColumns, numRows} = value
+  const {teasers, numColumns} = value
 
-  const {t} = useTranslation()
+  // const {t} = useTranslation()
 
   function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
     onChange({

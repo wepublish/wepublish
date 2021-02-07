@@ -304,6 +304,14 @@ export type FacebookVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
+export type FlexGridItemLayout = {
+  __typename?: 'FlexGridItemLayout';
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+};
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
@@ -1459,7 +1467,7 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock';
-  teasers: Array<Maybe<Teaser>>;
+  teasers: Array<Maybe<TeaserFlexItem>>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
 };
@@ -1468,6 +1476,12 @@ export type TeaserFlexGridBlockInput = {
   teasers: Array<Maybe<TeaserInput>>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
+};
+
+export type TeaserFlexItem = {
+  __typename?: 'TeaserFlexItem';
+  teaser?: Maybe<Teaser>;
+  layout: FlexGridItemLayout;
 };
 
 export type TeaserGridBlock = {

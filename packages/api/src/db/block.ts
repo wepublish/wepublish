@@ -1,5 +1,6 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
+import {Layout} from 'react-grid-layout'
 
 export enum BlockType {
   Title = 'title',
@@ -180,10 +181,17 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+export type FlexItemLayout = Omit<Layout, 'i'> // don't save component key
+
+export interface TeaserFlexItem {
+  teaser: Teaser
+  layout: FlexItemLayout
+}
+
 export interface TeaserFlexGridBlock {
   type: BlockType.TeaserFlexGrid
-  teasers: Teaser[]
-  numColumns: number
+  teasers: TeaserFlexItem[]
+  numColumns: number // TODO rather interface from GridLayout
   numRows: number
 }
 

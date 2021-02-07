@@ -41,7 +41,9 @@ import {
   PageTeaser,
   TeaserType,
   RichTextBlock,
-  FacebookVideoBlock
+  FacebookVideoBlock,
+  FlexItemLayout,
+  TeaserFlexItem
 } from '../db/block'
 
 import {GraphQLArticle, GraphQLPublicArticle} from './article'
@@ -175,10 +177,28 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
   })
 })
 
+export const GraphQLFlexGridItemLayout = new GraphQLObjectType<FlexItemLayout>({
+  name: 'FlexGridItemLayout',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLTeaserFlexItem = new GraphQLObjectType<TeaserFlexItem>({
+  name: 'TeaserFlexItem',
+  fields: {
+    teaser: {type: GraphQLTeaser},
+    layout: {type: GraphQLNonNull(GraphQLFlexGridItemLayout)}
+  }
+})
+
 export const GraphQLTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>({
   name: 'TeaserFlexGridBlock',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaser))},
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserFlexItem))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)},
     numRows: {type: GraphQLNonNull(GraphQLInt)}
   },
@@ -299,11 +319,19 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
   })
 })
 
+export const GraphQLPublicTeaserFlexItem = new GraphQLObjectType<TeaserFlexItem>({
+  name: 'TeaserFlexItem',
+  fields: {
+    teaser: {type: GraphQLPublicTeaser},
+    layout: {type: GraphQLNonNull(GraphQLFlexGridItemLayout)}
+  }
+})
+
 export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>(
   {
     name: 'TeaserFlexGridBlock',
     fields: {
-      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaser))},
+      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaserFlexItem))},
       numColumns: {type: GraphQLNonNull(GraphQLInt)},
       numRows: {type: GraphQLNonNull(GraphQLInt)}
     },
@@ -709,10 +737,28 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLFlexGridItemLayoutInput = new GraphQLInputObjectType({
+  name: 'FlexGridItemLayoutInput',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLTeaserFlexItemInput = new GraphQLInputObjectType({
+  name: 'TeaserFlexItemInput',
+  fields: {
+    teaser: {type: GraphQLTeaserInput},
+    layout: {type: GraphQLNonNull(GraphQLFlexGridItemLayoutInput)}
+  }
+})
+
 export const GraphQLTeaserFlexGridBlockInput = new GraphQLInputObjectType({
   name: 'TeaserFlexGridBlockInput',
   fields: {
-    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserInput))},
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserFlexItemInput))},
     numColumns: {type: GraphQLNonNull(GraphQLInt)},
     numRows: {type: GraphQLNonNull(GraphQLInt)}
   }

@@ -1,4 +1,4 @@
-import {BlockList, BlockListValue} from '../atoms/blockList'
+import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
 
 import {Node} from 'slate'
@@ -433,7 +433,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       // TODO more DRY
       // numRows?
       return {
-        teaserGrid: {
+        teaserFlexGrid: {
           teasers: block.value.teasers.map(([layout, value]) => {
             switch (value?.type) {
               case TeaserType.Article:
@@ -480,7 +480,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                 return null
             }
           }),
-          numColumns: block.value.numColumns
+          numColumns: block.value.numColumns,
+          numRows: block.value.numColumns
         }
       }
   }
@@ -680,7 +681,73 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    // TODO case 'TeaserFlexGridBlock':
+    // case 'TeaserFlexGridBlock':
+    //  // TODO more DRY
+    //  // numRows?
+    //  return {
+    //    key,
+    //    type: BlockType.TeaserFlexGrid,
+    //    value: {
+    //      numColumns: block.numColumns,
+    //      numRows: block.numRows,
+    //      teasers: block.teasers.map(([layout, teaser]) => {
+    //        switch (teaser?.__typename) {
+    //          case 'ArticleTeaser':
+    //            return [
+    //              nanoid(),
+    //              teaser.article
+    //                ? {
+    //                    type: TeaserType.Article,
+    //                    style: teaser.style,
+    //                    image: teaser.image ?? undefined,
+    //                    preTitle: teaser.preTitle ?? undefined,
+    //                    title: teaser.title ?? undefined,
+    //                    lead: teaser.lead ?? undefined,
+    //                    article: teaser.article
+    //                  }
+    //                : null
+    //            ]
+
+    //          case 'PeerArticleTeaser':
+    //            return [
+    //              nanoid(),
+    //              teaser.peer
+    //                ? {
+    //                    type: TeaserType.PeerArticle,
+    //                    style: teaser.style,
+    //                    image: teaser.image ?? undefined,
+    //                    preTitle: teaser.preTitle ?? undefined,
+    //                    title: teaser.title ?? undefined,
+    //                    lead: teaser.lead ?? undefined,
+    //                    peer: teaser.peer,
+    //                    articleID: teaser.articleID,
+    //                    article: teaser.article ?? undefined
+    //                  }
+    //                : null
+    //            ]
+
+    //          case 'PageTeaser':
+    //            return [
+    //              nanoid(),
+    //              teaser.page
+    //                ? {
+    //                    type: TeaserType.Page,
+    //                    style: teaser.style,
+    //                    image: teaser.image ?? undefined,
+    //                    preTitle: teaser.preTitle ?? undefined,
+    //                    title: teaser.title ?? undefined,
+    //                    lead: teaser.lead ?? undefined,
+    //                    page: teaser.page
+    //                  }
+    //                : null
+    //            ]
+
+    //          default:
+    //            throw new Error('Invalid Block')
+    //        }
+    //      })
+    //    }
+    //  }
 
     case 'LinkPageBreakBlock':
       return {
