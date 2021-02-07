@@ -22,6 +22,8 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
   const [addItems, setAddItems] = useState(1)
+  // NOTE: grid Items as the teaser containers. As RGL work directly with the
+  // grid div keys, it is not possible to pack the grid divs into named components.
 
   const {teasers, numColumns, numRows} = value
 
