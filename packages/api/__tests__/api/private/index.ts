@@ -869,19 +869,6 @@ export type MutationUnpublishPageArgs = {
   id: Scalars['ID']
 }
 
-export type MutationApproveCommentArgs = {
-  id: Scalars['ID']
-}
-
-export type MutationRejectCommentArgs = {
-  id: Scalars['ID']
-  rejectionReason: CommentRejectionReason
-}
-
-export type MutationRequestChangesOnCommentArgs = {
-  id: Scalars['ID']
-}
-
 export type MutationCreateMemberPlanArgs = {
   input: MemberPlanInput
 }
