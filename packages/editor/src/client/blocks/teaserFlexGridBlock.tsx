@@ -30,8 +30,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
     onChange({
-      numRows,
-      numColumns,
+      ...value,
       teasers: Object.assign([], teasers, {
         [index]: [teasers[index][0], teaserLink || null]
       })
@@ -42,9 +41,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     // TODO when to sort teasers rule (eg. y value?) for passing to API according
     // FIXME / OPTIMIZE? sometime invoked twice, maybe add some debouncing, ie timeout before state update?
     onChange({
-      numColumns,
-      numRows,
+      ...value,
       teasers: teasers.map(([, teaser], i) => [layout[i], teaser])
+    })
+  }
+
+  const handleItemRemove = (index: number) => {
+    // triggers a double render: remove item > render > correct layout > render, but should not be a problem
+    teasers.splice(index, 1)
+    onChange({
+      ...value,
+      teasers: [...teasers]
     })
   }
 
@@ -69,7 +76,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               icon="close"
               style={{...ItemTopBarStyle, right: '2px'}}
               onClick={() => {
-                console.log('dfsa')
+                handleItemRemove(index)
               }}
             />
             <Icon icon="thumb-tack" style={{...ItemTopBarStyle, left: '2px'}} />
