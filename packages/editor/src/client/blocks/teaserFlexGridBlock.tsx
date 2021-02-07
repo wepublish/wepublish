@@ -1,4 +1,4 @@
-import React, {useState, ReactNode} from 'react'
+import React, {useState, ReactNode, useEffect} from 'react'
 import GridLayout, {Layout} from 'react-grid-layout'
 
 import {PlaceholderInput} from '../atoms/placeholderInput'
@@ -12,7 +12,7 @@ import {IconButton, Drawer, Panel, Icon, Avatar} from 'rsuite'
 import './teaserFlexGridBlock.less'
 import nanoid from 'nanoid'
 
-import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
+import {TeaserFlexGridBlockValue, TeaserFlexItem, Teaser, TeaserType} from './types'
 
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
@@ -20,65 +20,72 @@ import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
 
 import {useTranslation} from 'react-i18next'
 
-interface GridProps {
-  numColumns: number
-  children?: ReactNode
-}
-
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
-  const [editTeaser, setEditTeaser] = useState<Teaser | null>(null) // TODO undefined instead null
+  const [editIndex, setEditIndex] = useState(0)
 
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
   const {teasers, numColumns, numRows} = value
 
-  // function handleTeaserLinkChange(index: number, teaserLink: TeaserFlex | null) {
-  //   onChange({
-  //     numColumns,
-  //     numRows,
-  //     teasers: Object.assign([], teasers, {
-  //       [index]: [nanoid(), teaserLink || null]
-  //     })
-  //   })
-  // }
-
-  // document.documentElement.style.cursor = 'grabbing'
-  // document.documentElement.style.cursor = ''
-  // document.body.style.pointerEvents = 'none'
-  // document.body.style.pointerEvents = ''
-  // disabled={teasers.length === 1}
+  function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
+    onChange({
+      numRows,
+      numColumns,
+      teasers: Object.assign([], teasers, {
+        [index]: [teasers[index][0], teaserLink || null]
+      })
+    })
+  }
 
   const handleLayoutChange = (layout: Layout[]) => {
-    // TODO when to sort teasers according rule (eg. y value?)
-    console.log(layout)
+    // TODO when to sort teasers rule (eg. y value?) for passing to API according
+    // FIXME / OPTIMIZE? sometime invoked twice, maybe add some debouncing, ie timeout before state update?
+    onChange({
+      numColumns,
+      numRows,
+      teasers: teasers.map(([, teaser], i) => [layout[i], teaser])
+    })
+  }
+
+  const ItemTopBarStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '2px',
+    cursor: 'pointer'
   }
 
   return (
     <>
+      <p>{JSON.stringify(teasers.map(([l]) => l))}</p>
       <GridLayout
         className="layout"
-        cols={12}
+        cols={numColumns}
         rowHeight={30}
         width={1200}
         onLayoutChange={handleLayoutChange}>
-        {teasers.map(([{i, ...layout}, teaser]) => (
-          <div key={i} data-grid={layout}>
+        {teasers.map(([{i, ...LayoutRest}, teaser], index) => (
+          <div key={i} data-grid={LayoutRest}>
+            <Icon
+              icon="close"
+              style={{...ItemTopBarStyle, right: '2px'}}
+              onClick={() => {
+                console.log('dfsa')
+              }}
+            />
+            <Icon icon="thumb-tack" style={{...ItemTopBarStyle, left: '2px'}} />
             <TeaserBlock
               teaser={teaser}
               numColumns={numColumns}
-              showGrabCursor={false /* TODO teasers.length !== 1 */}
-              // disabled={teasers.length === 1}
               onEdit={() => {
-                setEditTeaser(teaser)
+                setEditIndex(index)
                 setEditModalOpen(true)
               }}
               onChoose={() => {
-                setEditTeaser(teaser)
+                setEditIndex(index)
                 setChooseModalOpen(true)
               }}
               onRemove={() => {
-                // handleTeaserLinkChange(index, null) // TODO
+                handleTeaserLinkChange(index, null)
               }}
             />
           </div>
@@ -86,11 +93,11 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </GridLayout>
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
-          initialTeaser={editTeaser!}
+          initialTeaser={teasers[editIndex][1]!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)
-            // handleTeaserLinkChange(editIndex, teaser) TODO (maybe just extend type)
+            handleTeaserLinkChange(editIndex, teaser)
           }}
         />
       </Drawer>
@@ -99,7 +106,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           onClose={() => setChooseModalOpen(false)}
           onSelect={teaser => {
             setChooseModalOpen(false)
-            // handleTeaserLinkChange(editIndex, teaser) TODO (maybe just extend type)
+            handleTeaserLinkChange(editIndex, teaser)
           }}
         />
       </Drawer>
@@ -107,28 +114,31 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   )
 }
 
+// NICE to have
+// TODO curso grab (probably onDragStart={.../ End={...
+// function handleSortStart() {
+//   document.documentElement.style.cursor = 'grabbing'
+//   document.body.style.pointerEvents = 'none'
+// }
+
+// function handleSortEnd({oldIndex, newIndex}: SortEnd) {
+//   document.documentElement.style.cursor = ''
+//   document.body.style.pointerEvents = ''
+
 export interface TeaserBlockProps {
   teaser: Teaser | null
-  showGrabCursor: boolean
+  // showGrabCursor: boolean
   numColumns: number
   onEdit: () => void
   onChoose: () => void
   onRemove: () => void
 }
 
-export function TeaserBlock({
-  teaser,
-  numColumns,
-  showGrabCursor,
-  onEdit,
-  onChoose,
-  onRemove
-}: TeaserBlockProps) {
+export function TeaserBlock({teaser, numColumns, onEdit, onChoose, onRemove}: TeaserBlockProps) {
   return (
     <Panel
       bodyFill={true}
       style={{
-        // cursor: showGrabCursor ? 'grab' : '',
         height: 'inherit',
         overflow: 'hidden',
         zIndex: 1

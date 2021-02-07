@@ -196,8 +196,10 @@ export interface TeaserGridBlockValue {
   teasers: Array<[string, Teaser | null]>
   numColumns: number
 }
+
+export type TeaserFlexItem = [Layout, Teaser | null]
 export interface TeaserFlexGridBlockValue {
-  teasers: Array<[Layout, Teaser | null]>
+  teasers: Array<TeaserFlexItem>
   numColumns: number
   numRows: number
 }

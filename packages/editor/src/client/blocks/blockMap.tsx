@@ -121,7 +121,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.TeaserFlexGrid]: {
     field: props => <TeaserFlexGridBlock {...props} />,
     defaultValue: {
-      numColumns: 3,
+      numColumns: 12,
       numRows: 3,
       teasers: [
         [{i: nanoid(), x: 0, y: 0, w: 1, h: 2}, null],
