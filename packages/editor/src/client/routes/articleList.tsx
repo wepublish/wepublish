@@ -9,21 +9,34 @@ import {
   useDeleteArticleMutation,
   ArticleListDocument,
   ArticleListQuery,
-  PageRefFragment
+  PageRefFragment,
+  ArticleSort
 } from '../api'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
-const {Column, HeaderCell, Cell} = Table
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish'
 }
 
-const ArticlesPerPage = 50
+function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return ArticleSort.CreatedAt
+    case 'modifiedAt':
+      return ArticleSort.ModifiedAt
+    case 'publishAt':
+      return ArticleSort.PublishAt
+    default:
+      return null
+  }
+}
 
 export function ArticleList() {
   const [filter, setFilter] = useState('')
@@ -32,16 +45,32 @@ export function ArticleList() {
   const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
 
-  const listVariables = {filter: filter || undefined, first: ArticlesPerPage}
-  const {data, fetchMore, loading: isLoading} = useArticleListQuery({
-    variables: listVariables,
+  const articleListVariables = {
+    filter: filter || undefined,
+    first: limit,
+    skip: page - 1,
+    sort: mapColumFieldToGraphQLField(sortField),
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+  }
+
+  const {data, refetch, loading: isLoading} = useArticleListQuery({
+    variables: articleListVariables,
     fetchPolicy: 'network-only'
   })
+
+  useEffect(() => {
+    refetch(articleListVariables)
+  }, [filter, page, limit, sortOrder, sortField])
+
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -49,22 +78,6 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
-
-  function loadMore() {
-    fetchMore({
-      variables: {...listVariables, after: data?.articles.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          articles: {
-            ...fetchMoreResult.articles,
-            nodes: [...prev.articles.nodes, ...fetchMoreResult?.articles.nodes]
-          }
-        }
-      }
-    })
-  }
 
   return (
     <>
@@ -90,76 +103,113 @@ export function ArticleList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={articles}>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('articles.overview.title')}</HeaderCell>
-          <Cell>
-            {(rowData: PageRefFragment) => (
-              <Link route={ArticleEditRoute.create({id: rowData.id})}>
-                {rowData.latest.title || t('articles.overview.untitled')}
-              </Link>
-            )}
-          </Cell>
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('articles.overview.created')}</HeaderCell>
-          <Cell dataKey="createdAt" />
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
-          <Cell dataKey="modifiedAt" />
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('articles.overview.states')}</HeaderCell>
-          <Cell>
-            {(rowData: PageRefFragment) => {
-              const states = []
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        <Table
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={articles}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.created')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: ArticleRefFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: ArticleRefFragment) => new Date(modifiedAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('articles.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: ArticleRefFragment) => (
+                <Link route={ArticleEditRoute.create({id: rowData.id})}>
+                  {rowData.latest.title || t('articles.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
+            <Cell>
+              {(rowData: ArticleRefFragment) => {
+                return rowData.latest.authors.reduce((allAuthors, author, index) => {
+                  return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                }, '')
+              }}
+            </Cell>
+          </Column>
+          <Column width={100} align="left" resizable>
+            <HeaderCell>{t('articles.overview.states')}</HeaderCell>
+            <Cell>
+              {(rowData: PageRefFragment) => {
+                const states = []
 
-              if (rowData.draft) states.push(t('articles.overview.draft'))
-              if (rowData.pending) states.push(t('articles.overview.pending'))
-              if (rowData.published) states.push(t('articles.overview.published'))
+                if (rowData.draft) states.push(t('articles.overview.draft'))
+                if (rowData.pending) states.push(t('articles.overview.pending'))
+                if (rowData.published) states.push(t('articles.overview.published'))
 
-              return <div>{states.join(' / ')}</div>
-            }}
-          </Cell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('articles.overview.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
-            {(rowData: ArticleRefFragment) => (
-              <>
-                {rowData.published && (
+                return <div>{states.join(' / ')}</div>
+              }}
+            </Cell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('articles.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: ArticleRefFragment) => (
+                <>
+                  {rowData.published && (
+                    <IconButton
+                      icon={<Icon icon="arrow-circle-o-down" />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        setCurrentArticle(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  )}
                   <IconButton
-                    icon={<Icon icon="arrow-circle-o-down" />}
+                    icon={<Icon icon="trash" />}
                     circle
                     size="sm"
-                    onClick={e => {
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
                       setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Unpublish)
+                      setConfirmAction(ConfirmAction.Delete)
                       setConfirmationDialogOpen(true)
                     }}
                   />
-                )}
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setCurrentArticle(rowData)
-                    setConfirmAction(ConfirmAction.Delete)
-                    setConfirmationDialogOpen(true)
-                  }}
-                />
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
-      {data?.articles.pageInfo.hasNextPage && (
-        <Button label={t('articles.overview.loadMore')} onClick={loadMore} />
-      )}
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          activePage={page}
+          displayLength={limit}
+          total={data?.articles.totalCount}
+          onChangePage={page => setPage(page)}
+          onChangeLength={limit => setLimit(limit)}
+        />
+      </div>
 
       <Modal
         show={isConfirmationDialogOpen}
@@ -216,7 +266,7 @@ export function ArticleList() {
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({
                         query: ArticleListDocument,
-                        variables: listVariables
+                        variables: articleListVariables
                       })
 
                       if (!query) return
@@ -231,7 +281,7 @@ export function ArticleList() {
                             )
                           }
                         },
-                        variables: listVariables
+                        variables: articleListVariables
                       })
                     }
                   })

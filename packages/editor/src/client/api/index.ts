@@ -1312,6 +1312,7 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
@@ -1722,7 +1723,10 @@ export type ArticleRefFragment = (
   )>, latest: (
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'preTitle' | 'title' | 'lead'>
-    & { image?: Maybe<(
+    & { authors: Array<Maybe<(
+      { __typename?: 'Author' }
+      & Pick<Author, 'name'>
+    )>>, image?: Maybe<(
       { __typename?: 'Image' }
       & ImageRefFragment
     )> }
@@ -1732,7 +1736,12 @@ export type ArticleRefFragment = (
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<ArticleSort>;
 }>;
 
 
@@ -3313,6 +3322,9 @@ export const ArticleRefFragmentDoc = gql`
     preTitle
     title
     lead
+    authors {
+      name
+    }
     image {
       ...ImageRef
     }
@@ -3704,8 +3716,8 @@ export const FullUserFragmentDoc = gql`
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
 export const ArticleListDocument = gql`
-    query ArticleList($filter: String, $after: ID, $first: Int) {
-  articles(first: $first, after: $after, filter: {title: $filter}) {
+    query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
+  articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -3734,7 +3746,12 @@ export const ArticleListDocument = gql`
  *   variables: {
  *      filter: // value for 'filter'
  *      after: // value for 'after'
+ *      before: // value for 'before'
  *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */
