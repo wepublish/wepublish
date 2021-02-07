@@ -681,73 +681,74 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         }
       }
 
-    // case 'TeaserFlexGridBlock':
-    //  // TODO more DRY
-    //  // numRows?
-    //  return {
-    //    key,
-    //    type: BlockType.TeaserFlexGrid,
-    //    value: {
-    //      numColumns: block.numColumns,
-    //      numRows: block.numRows,
-    //      teasers: block.teasers.map(([layout, teaser]) => {
-    //        switch (teaser?.__typename) {
-    //          case 'ArticleTeaser':
-    //            return [
-    //              nanoid(),
-    //              teaser.article
-    //                ? {
-    //                    type: TeaserType.Article,
-    //                    style: teaser.style,
-    //                    image: teaser.image ?? undefined,
-    //                    preTitle: teaser.preTitle ?? undefined,
-    //                    title: teaser.title ?? undefined,
-    //                    lead: teaser.lead ?? undefined,
-    //                    article: teaser.article
-    //                  }
-    //                : null
-    //            ]
+    case 'TeaserFlexGridBlock':
+      // TODO more DRY
+      // numRows?
+      return {
+        key,
+        type: BlockType.TeaserFlexGrid,
+        value: {
+          numColumns: block.numColumns,
+          numRows: block.numRows,
+          teasers: block.teasers.map(({layout, teaser}) => {
+            layout = {i: nanoid(), ...layout} // maybe use map instead of nanoid() ?
+            switch (teaser?.__typename) {
+              case 'ArticleTeaser':
+                return [
+                  layout,
+                  teaser.article
+                    ? {
+                        type: TeaserType.Article,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        article: teaser.article
+                      }
+                    : null
+                ]
 
-    //          case 'PeerArticleTeaser':
-    //            return [
-    //              nanoid(),
-    //              teaser.peer
-    //                ? {
-    //                    type: TeaserType.PeerArticle,
-    //                    style: teaser.style,
-    //                    image: teaser.image ?? undefined,
-    //                    preTitle: teaser.preTitle ?? undefined,
-    //                    title: teaser.title ?? undefined,
-    //                    lead: teaser.lead ?? undefined,
-    //                    peer: teaser.peer,
-    //                    articleID: teaser.articleID,
-    //                    article: teaser.article ?? undefined
-    //                  }
-    //                : null
-    //            ]
+              case 'PeerArticleTeaser':
+                return [
+                  layout,
+                  teaser.peer
+                    ? {
+                        type: TeaserType.PeerArticle,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        peer: teaser.peer,
+                        articleID: teaser.articleID,
+                        article: teaser.article ?? undefined
+                      }
+                    : null
+                ]
 
-    //          case 'PageTeaser':
-    //            return [
-    //              nanoid(),
-    //              teaser.page
-    //                ? {
-    //                    type: TeaserType.Page,
-    //                    style: teaser.style,
-    //                    image: teaser.image ?? undefined,
-    //                    preTitle: teaser.preTitle ?? undefined,
-    //                    title: teaser.title ?? undefined,
-    //                    lead: teaser.lead ?? undefined,
-    //                    page: teaser.page
-    //                  }
-    //                : null
-    //            ]
+              case 'PageTeaser':
+                return [
+                  layout,
+                  teaser.page
+                    ? {
+                        type: TeaserType.Page,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        page: teaser.page
+                      }
+                    : null
+                ]
 
-    //          default:
-    //            throw new Error('Invalid Block')
-    //        }
-    //      })
-    //    }
-    //  }
+              default:
+                return [layout, null]
+            }
+          })
+        }
+      }
 
     case 'LinkPageBreakBlock':
       return {
