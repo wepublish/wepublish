@@ -2270,15 +2270,6 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       </Children>
                                     </div>
                                   </Editable>
-                                  <p
-                                    style={
-                                      Object {
-                                        "textAlign": "right",
-                                      }
-                                    }
-                                  >
-                                    blocks.richText.charsCount: 0
-                                  </p>
                                 </Slate>
                               </Memo(RichTextBlock)>
                             </div>
@@ -5424,15 +5415,6 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       </Children>
                                     </div>
                                   </Editable>
-                                  <p
-                                    style={
-                                      Object {
-                                        "textAlign": "right",
-                                      }
-                                    }
-                                  >
-                                    blocks.richText.charsCount: 0
-                                  </p>
                                 </Slate>
                               </Memo(RichTextBlock)>
                             </div>
@@ -8095,15 +8077,6 @@ exports[`Author Edit Panel should render 1`] = `
                                       </Children>
                                     </div>
                                   </Editable>
-                                  <p
-                                    style={
-                                      Object {
-                                        "textAlign": "right",
-                                      }
-                                    }
-                                  >
-                                    blocks.richText.charsCount: 0
-                                  </p>
                                 </Slate>
                               </Memo(RichTextBlock)>
                             </div>
@@ -10778,15 +10751,6 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       </Children>
                                     </div>
                                   </Editable>
-                                  <p
-                                    style={
-                                      Object {
-                                        "textAlign": "right",
-                                      }
-                                    }
-                                  >
-                                    blocks.richText.charsCount: 0
-                                  </p>
                                 </Slate>
                               </Memo(RichTextBlock)>
                             </div>

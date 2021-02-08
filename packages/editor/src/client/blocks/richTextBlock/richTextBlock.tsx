@@ -19,7 +19,6 @@ import {WepublishEditor} from './editor/wepublishEditor'
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
-  getStringText?: (text: string) => void
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -28,8 +27,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange,
   displayOnly = false,
-  showCharCount = true,
-  getStringText
+  showCharCount = false
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -41,7 +39,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   const [charCount, setCharCount] = useState(0)
 
   useEffect(() => {
-    if (getStringText) getStringText(WepublishEditor.getTextString(editor))
     setCharCount(WepublishEditor.calculateEditorCharCount(editor))
   }, [editor.children])
 
