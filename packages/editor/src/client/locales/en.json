@@ -497,7 +497,7 @@
         "title": "Title",
         "apply": "Apply",
         "cancel": "Cancel",
-        "charsCount": "Characters count"
+        "charsCount": "Characters count {{charCount}}"
       },
       "richTextTable": {
         "insertTable": "Insert Table",

@@ -131,7 +131,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         }}
       />
       {showCharCount && (
-        <p style={{textAlign: 'right'}}>{`${t('blocks.richText.charsCount')}: ${charCount}`}</p>
+        <p style={{textAlign: 'right'}}>
+          {t('blocks.richText.charsCount', {charsCount: charCount})}
+        </p>
       )}
     </Slate>
   )
