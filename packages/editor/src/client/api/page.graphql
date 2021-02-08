@@ -57,8 +57,8 @@ fragment PageRef on Page {
   }
 }
 
-query PageList($filter: String, $after: ID, $first: Int) {
-  pages(first: $first, after: $after, filter: {title: $filter}) {
+query PageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: PageSort) {
+  pages(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...PageRef
     }
