@@ -1,7 +1,7 @@
 import React from 'react'
 import {Peer, ArticleMeta} from '../types'
 import {RelatedArticle} from '../molecules/relatedArticle'
-import {ComposeComment, CommentList} from '../molecules/commentTemplate'
+import {ComposeComment, DisplayComments} from '../molecules/commentTemplate'
 import {Tag} from '../atoms/tag'
 import {Link, AuthorRoute, ArticleRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
@@ -66,6 +66,7 @@ const TitleStyle = cssRule<{showBackground: boolean}>(({showBackground}) => ({
 
 export interface ArticleFooterProps {
   readonly relatedArticles: ArticleMeta[]
+  readonly itemID: string
   readonly tags: string[]
   readonly authors?: Author[]
   readonly comments?: Comment[]
@@ -116,8 +117,8 @@ export function ArticleFooter(props: ArticleFooterProps) {
           })}
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
-      <ComposeComment />
-      <CommentList comments={props.comments} />
+      <ComposeComment itemID={props.itemID} itemType={'Article'} />
+      <DisplayComments comments={props.comments} />
     </div>
   )
 }

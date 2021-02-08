@@ -189,14 +189,18 @@ export interface ComposeCommentProps {
   readonly header?: string
   readonly parentCommentAuthor?: string
   readonly role?: string
+  readonly parentID?: string
+  readonly itemID: string
+  readonly itemType: string
 }
 
-export interface CommentListProps {
+export interface DisplayCommentsProps {
   readonly comments?: Comment[]
 }
 
 export interface RestructuredComments {
-  readonly id: string
+  readonly id?: string
+  readonly itemID: string
   readonly userName: string
   readonly authorType: CommentAuthorType
   readonly modifiedAt: Date
@@ -217,8 +221,6 @@ function redressCommentInput(value: string) {
 const AddComment = gql`
   mutation AddComment($input: CommentInput!) {
     addComment(input: $input) {
-      itemID
-      itemType
       user {
         id
       }
@@ -236,6 +238,8 @@ export function ComposeComment(props: ComposeCommentProps) {
   const [commentInput, setCommentInput] = useState({children: [{text: ''}]})
   const [commentState, setCommentState] = useState('')
 
+  const {header, role, itemID, itemType, parentID} = props
+  console.log('itemID', itemID)
   const [addComment, {loading}] = useMutation(AddComment, {
     onCompleted() {
       setCommentState('Your comment has been submitted and is awaiting approval')
@@ -247,17 +251,18 @@ export function ComposeComment(props: ComposeCommentProps) {
   })
 
   return (
-    <div className={props.role === 'reply' ? css(ReplyBox) : css(Container)}>
-      {props.header ? <h3>{props.header}</h3> : ''}
+    <div className={role === 'reply' ? css(ReplyBox) : css(Container)}>
+      {header ? <h3>{header}</h3> : ''}
       <form
         onSubmit={e => {
           e.preventDefault()
           addComment({
             variables: {
               input: {
-                itemID: 'AnXUklbXyptpVQlW',
-                itemType: 'Article',
-                text: [commentInput]
+                parentID,
+                text: [commentInput],
+                itemID,
+                itemType
               }
             }
           })
@@ -324,7 +329,7 @@ function ParentComment(props: any) {
         </div>
 
         {props.activeComment === id ? (
-          <ComposeComment parentCommentAuthor={userName} role={'reply'} />
+          <ComposeComment parentCommentAuthor={userName} role={'reply'} parentID={id} />
         ) : (
           ''
         )}
@@ -367,7 +372,7 @@ function ChildComment(child: any) {
   )
 }
 
-export function CommentList(props: CommentListProps) {
+export function DisplayComments(props: DisplayCommentsProps) {
   const css = useStyle()
 
   const [commentID, setCommentID] = useState('')

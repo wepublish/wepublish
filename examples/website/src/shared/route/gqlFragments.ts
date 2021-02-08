@@ -90,6 +90,7 @@ export const articleMetaDataFragment = gql`
     }
     comments {
       id
+      itemID
       text
       modifiedAt
       parentID

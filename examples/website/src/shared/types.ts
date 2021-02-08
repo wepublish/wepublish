@@ -34,6 +34,7 @@ export interface Author {
 
 export interface Comment {
   id: string
+  itemID: string
   text: RichTextTextNode[]
   modifiedAt: Date
   parentID?: string

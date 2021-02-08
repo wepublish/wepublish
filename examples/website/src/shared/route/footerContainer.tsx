@@ -39,7 +39,15 @@ export function ArticleFooterContainer({
     .filter(article => article.id != id)
 
   if (loading || fallbackLoading) {
-    return <ArticleFooter relatedArticles={[]} tags={tags} authors={authors} comments={comments} />
+    return (
+      <ArticleFooter
+        relatedArticles={[]}
+        tags={tags}
+        authors={authors}
+        itemID={id}
+        comments={comments}
+      />
+    )
   }
 
   if (!tagArticles) return null
@@ -57,6 +65,7 @@ export function ArticleFooterContainer({
       authors={authors}
       isPeerArticle={isPeerArticle}
       comments={comments}
+      itemID={id}
     />
   )
 }
