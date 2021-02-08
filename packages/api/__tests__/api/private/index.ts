@@ -1199,7 +1199,6 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
-  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
   order?: Maybe<SortOrder>
@@ -1526,7 +1525,6 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
-  text?: Maybe<Scalars['String']>
   subscription?: Maybe<UserSubscriptionFilter>
 }
 
@@ -1573,8 +1571,7 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT',
-  Name = 'NAME'
+  ModifiedAt = 'MODIFIED_AT'
 }
 
 export type UserSubscription = {
