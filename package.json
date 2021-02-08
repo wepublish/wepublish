@@ -2,7 +2,6 @@
   "name": "wepublish",
   "private": true,
   "engines": {
-    "node": "^12.0.0",
     "yarn": "^1.16.0"
   },
   "scripts": {
@@ -133,5 +132,9 @@
       "coverage",
       "assets"
     ]
+  },
+  "version": "0.0.0",
+  "dependencies": {
+    "nvm": "0.0.4"
   }
 }
