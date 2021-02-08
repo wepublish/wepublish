@@ -66,6 +66,18 @@ function mapCommentActionToTitle(currentAction?: ConfirmAction) {
   }
 }
 
+function mapModalTitle(confirmAction?: ConfirmAction): string {
+  if (!confirmAction) return ''
+  switch (confirmAction) {
+    case ConfirmAction.Approve:
+      return 'comments.panels.approveComment'
+    case ConfirmAction.Reject:
+      return 'comments.panels.rejectComment'
+    case ConfirmAction.RequestChanges:
+      return 'comments.panels.requestChangesOnComment'
+  }
+}
+
 function mapColumFieldToGraphQLField(columnField: string): CommentSort | null {
   switch (columnField) {
     case 'createdAt':
@@ -83,6 +95,7 @@ export function CommentList() {
   const [limit, setLimit] = useState(10)
   const [sortField, setSortField] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [shouldRefetch, setShouldRefetch] = useState(false)
 
   const [filter, setFilter] = useState('')
 
@@ -109,7 +122,8 @@ export function CommentList() {
       sort: mapColumFieldToGraphQLField(sortField),
       order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
-  }, [filter, page, limit, sortOrder, sortField])
+    setShouldRefetch(false)
+  }, [filter, page, limit, sortOrder, sortField, shouldRefetch])
 
   useEffect(() => {
     if (data?.comments?.nodes) {
@@ -125,23 +139,10 @@ export function CommentList() {
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
 
-  const mapModalTitle = () => {
-    let title: string
-    switch (confirmAction) {
-      case ConfirmAction.Approve:
-        title = t('comments.panels.approveComment')
-        break
-      case ConfirmAction.Reject:
-        title = t('comments.panels.rejectComment')
-        break
-      case ConfirmAction.RequestChanges:
-        title = t('comments.panels.requestChangesOnComment')
-        break
-      default:
-        title = ''
-        break
-    }
-    return title
+  const resetCurrentCommentState = () => {
+    setRejectionReason(undefined)
+    setCurrentComment(undefined)
+    setConfirmAction(undefined)
   }
 
   return (
@@ -176,18 +177,15 @@ export function CommentList() {
           <Cell dataKey="createdAt">
             {(rowData: CommentRefFragment) => (
               <>
-                {rowData?.revisions?.length
-                  ? rowData?.revisions?.map(({text}, i) => (
-                      <RichTextBlock
-                        key={i}
-                        displayOnly
-                        disabled
-                        // TODO: remove this
-                        onChange={console.log}
-                        value={text}
-                      />
-                    ))
-                  : null}
+                {rowData?.revisions?.length ? (
+                  <RichTextBlock
+                    displayOnly
+                    disabled
+                    // TODO: remove this
+                    onChange={console.log}
+                    value={rowData?.revisions[rowData?.revisions?.length - 1].text}
+                  />
+                ) : null}
               </>
             )}
           </Cell>
@@ -288,10 +286,13 @@ export function CommentList() {
         show={isConfirmationDialogOpen}
         width="sm"
         overflow
-        onHide={() => setConfirmationDialogOpen(false)}>
+        onHide={() => {
+          setConfirmationDialogOpen(false)
+          resetCurrentCommentState()
+        }}>
         <Modal.Header>
           <Modal.Title>
-            <div>{t(mapModalTitle())}</div>
+            <div>{t(mapModalTitle(confirmAction))}</div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -370,6 +371,8 @@ export function CommentList() {
                     }
                   })
                   setConfirmationDialogOpen(false)
+                  setShouldRefetch(true)
+                  resetCurrentCommentState()
                   break
                 case ConfirmAction.RequestChanges:
                   if (!rejectionReason) {
@@ -382,6 +385,8 @@ export function CommentList() {
                       }
                     })
                     setConfirmationDialogOpen(false)
+                    setShouldRefetch(true)
+                    resetCurrentCommentState()
                   }
                   break
                 case ConfirmAction.Reject:
@@ -395,13 +400,20 @@ export function CommentList() {
                       }
                     })
                     setConfirmationDialogOpen(false)
+                    setShouldRefetch(true)
+                    resetCurrentCommentState()
                   }
                   break
               }
             }}>
             {t(mapCommentActionToTitle(confirmAction))}
           </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
+          <Button
+            onClick={() => {
+              setConfirmationDialogOpen(false)
+              resetCurrentCommentState()
+            }}
+            appearance="subtle">
             {t('comments.panels.cancel')}
           </Button>
         </Modal.Footer>
