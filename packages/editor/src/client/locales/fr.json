@@ -422,7 +422,7 @@
         "optionalDescription": "Optional description for the link",
         "link": "Link",
         "title": "Title",
-        "charsCount": "Characters count {{charCount}}"
+        "charCount": "Characters count {{charCount}}"
       },
       "title": {
         "title": "Title",
