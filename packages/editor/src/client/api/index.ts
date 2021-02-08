@@ -1312,6 +1312,7 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
@@ -1344,6 +1345,7 @@ export type QueryPagesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<PageFilter>;
+  skip?: Maybe<Scalars['Int']>;
   sort?: Maybe<PageSort>;
   order?: Maybe<SortOrder>;
 };
