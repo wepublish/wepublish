@@ -198,16 +198,6 @@ export interface DisplayCommentsProps {
   readonly comments?: Comment[]
 }
 
-export interface RestructuredComments {
-  readonly id?: string
-  readonly itemID: string
-  readonly userName: string
-  readonly authorType: CommentAuthorType
-  readonly modifiedAt: Date
-  readonly text: Node[]
-  readonly children?: Comment[]
-}
-
 // Helpers
 
 // This emulates a RichTextNode for as long as we haven't implemented it
@@ -239,7 +229,7 @@ export function ComposeComment(props: ComposeCommentProps) {
   const [commentState, setCommentState] = useState('')
 
   const {header, role, itemID, itemType, parentID} = props
-  console.log('itemID', itemID)
+
   const [addComment, {loading}] = useMutation(AddComment, {
     onCompleted() {
       setCommentState('Your comment has been submitted and is awaiting approval')
@@ -291,10 +281,38 @@ export function ComposeComment(props: ComposeCommentProps) {
   )
 }
 
+export function DisplayComments(props: DisplayCommentsProps) {
+  const css = useStyle()
+
+  const [commentID, setCommentID] = useState('')
+  const {comments} = props
+
+  return (
+    <div className={css(Container, CommentBox)}>
+      <LoginForComments />
+      <h3>Show all comments</h3>
+      {comments?.map(parentComment => (
+        <ParentComment
+          comment={parentComment}
+          key={parentComment.id}
+          handleCurrentComment={(commentID: React.SetStateAction<string>) =>
+            setCommentID(commentID)
+          }
+          activeComment={commentID}
+        />
+      ))}
+    </div>
+  )
+}
+
 function ParentComment(props: any) {
   const css = useStyle()
 
-  const {id, userName, authorType, modifiedAt, text, children} = props.comment
+  const {id, userName, authorType, modifiedAt, children, text, itemID, itemType} = props.comment
+
+  // This allows to display the children in a chronological order for the sake of a better UX
+  let childrenReversed = [...children].reverse()
+
   const {activeComment} = props
 
   return (
@@ -329,20 +347,21 @@ function ParentComment(props: any) {
         </div>
 
         {props.activeComment === id ? (
-          <ComposeComment parentCommentAuthor={userName} role={'reply'} parentID={id} />
+          <ComposeComment itemID={itemID} itemType={itemType} role={'reply'} parentID={id} />
         ) : (
           ''
         )}
-        {children && children.map((child: any) => <ChildComment key={child.id} value={child} />)}
+        {childrenReversed &&
+          childrenReversed.map((child: any) => <ChildComment key={child.id} value={child} />)}
       </div>
     </div>
   )
 }
 
-function ChildComment(child: any) {
+function ChildComment(value: any) {
   const css = useStyle()
 
-  const {id, userName, authorType, modifiedAt, text} = child.value
+  const {id, user, authorType, modifiedAt, text} = value.value
 
   return (
     <div className={css(CommentBox, Replies)} id={id}>
@@ -354,7 +373,7 @@ function ChildComment(child: any) {
           <Image src={'../../../static/icons/avatar.jpg'} />
         </div>
         <div className={css(RightColumn)}>
-          <h4 className={css(CommentAuthor)}>{userName}</h4>
+          <h4 className={css(CommentAuthor)}>{user.name}</h4>
           <p className={css(CommentMeta)}>
             <span>{authorType}</span> ·{' '}
             <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
@@ -368,43 +387,6 @@ function ChildComment(child: any) {
           <button className={css(SmallButton)}>Report</button>
         </div>
       </div>
-    </div>
-  )
-}
-
-export function DisplayComments(props: DisplayCommentsProps) {
-  const css = useStyle()
-
-  const [commentID, setCommentID] = useState('')
-
-  const parentComments = props.comments?.filter(comment => comment.parentID === null)
-  const childComments = props.comments?.filter(comment => comment.parentID !== undefined)
-
-  const restructuredComments = parentComments?.map(comment => {
-    return {
-      id: comment.id,
-      userName: comment.userName,
-      authorType: comment.authorType,
-      modifiedAt: comment.modifiedAt,
-      text: comment.text,
-      children: childComments?.filter(child => child.parentID === comment.id)
-    }
-  })
-
-  return (
-    <div className={css(Container, CommentBox)}>
-      <LoginForComments />
-      <h3>Show all comments</h3>
-      {restructuredComments?.map(parentComment => (
-        <ParentComment
-          comment={parentComment}
-          key={parentComment.id}
-          handleCurrentComment={(commentID: React.SetStateAction<string>) =>
-            setCommentID(commentID)
-          }
-          activeComment={commentID}
-        />
-      ))}
     </div>
   )
 }

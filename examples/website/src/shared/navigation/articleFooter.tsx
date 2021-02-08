@@ -117,6 +117,7 @@ export function ArticleFooter(props: ArticleFooterProps) {
           })}
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
+
       <ComposeComment itemID={props.itemID} itemType={'Article'} />
       <DisplayComments comments={props.comments} />
     </div>

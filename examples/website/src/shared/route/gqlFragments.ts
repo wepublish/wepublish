@@ -58,6 +58,37 @@ export const imageEdgeDataFragment = gql`
   ${simpleImageDataFragment}
 `
 
+export const commentsDataFragment = gql`
+  fragment CommentsData on Comment {
+    id
+    itemID
+    itemType
+    text
+    modifiedAt
+    parentID
+    authorType
+    user {
+      id
+      name
+      preferredName
+    }
+    children {
+      id
+      itemID
+      itemType
+      text
+      modifiedAt
+      parentID
+      authorType
+      user {
+        id
+        name
+        preferredName
+      }
+    }
+  }
+`
+
 export const articleMetaDataFragment = gql`
   fragment ArticleMetaData on Article {
     __typename
@@ -89,21 +120,12 @@ export const articleMetaDataFragment = gql`
       ...SimpleImageData
     }
     comments {
-      id
-      itemID
-      text
-      modifiedAt
-      parentID
-      authorType
-      user {
-        id
-        name
-        preferredName
-      }
+      ...CommentsData
     }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}
+  ${commentsDataFragment}
 `
 
 export const pageMetaDataFragment = gql`

@@ -32,10 +32,13 @@ export function commentsAdapter(comments: any): Comment[] {
     return {
       id: comment.id,
       text: comment.text,
+      itemType: comment.itemType,
+      itemID: comment.itemID,
       modifiedAt: comment.modifiedAt,
       parentID: comment.parentID,
       authorType: comment.authorType,
-      userName: comment.user.name
+      userName: comment.user.name,
+      children: comment.children
     }
   })
 }
