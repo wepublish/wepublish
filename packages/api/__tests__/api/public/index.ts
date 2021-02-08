@@ -228,6 +228,29 @@ export type InstagramPostBlock = {
   postID: Scalars['String']
 }
 
+export type Invoice = {
+  __typename?: 'Invoice'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  mail: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['DateTime']>
+  items: Array<InvoiceItem>
+  total: Scalars['Int']
+}
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem'
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  amount: Scalars['Int']
+  total: Scalars['Int']
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
@@ -289,6 +312,11 @@ export type Mutation = {
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
   registerMemberAndReceivePayment: Payment
+  resetPassword: Scalars['String']
+  updateUser?: Maybe<User>
+  updatePassword?: Maybe<User>
+  updateUserSubscription?: Maybe<UserSubscription>
+  createPaymentFromInvoice?: Maybe<Payment>
 }
 
 export type MutationCreateSessionArgs = {
@@ -317,6 +345,27 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentMethodID: Scalars['String']
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
+}
+
+export type MutationResetPasswordArgs = {
+  email: Scalars['String']
+}
+
+export type MutationUpdateUserArgs = {
+  input: UserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  password: Scalars['String']
+  passwordRepeated: Scalars['String']
+}
+
+export type MutationUpdateUserSubscriptionArgs = {
+  input: UserSubscriptionInput
+}
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput
 }
 
 export type Navigation = {
@@ -384,6 +433,13 @@ export type Payment = {
   intentSecret?: Maybe<Scalars['String']>
   state: PaymentState
   paymentMethod: PaymentMethod
+}
+
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String']
+  paymentMethodID: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
 }
 
 export type PaymentMethod = {
@@ -478,6 +534,8 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  me?: Maybe<User>
+  invoices: Array<Invoice>
   memberPlans: MemberPlanConnection
 }
 
@@ -613,6 +671,7 @@ export type User = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
+  subscription?: Maybe<UserSubscription>
 }
 
 export type UserAddress = {
@@ -621,6 +680,40 @@ export type UserAddress = {
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
+}
+
+export type UserAddressInput = {
+  street: Scalars['String']
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
+}
+
+export type UserInput = {
+  name: Scalars['String']
+  email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddressInput>
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription'
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  deactivatedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type UserSubscriptionInput = {
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  paymentMethodID: Scalars['String']
 }
 
 export type VimeoVideoBlock = {
