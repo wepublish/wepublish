@@ -180,6 +180,7 @@ export function CommentList() {
                   ? rowData?.revisions?.map(({text}, i) => (
                       <RichTextBlock
                         key={i}
+                        displayOnly
                         disabled
                         // TODO: remove this
                         onChange={console.log}
@@ -312,6 +313,7 @@ export function CommentList() {
                         <div>{new Date(createdAt).toLocaleString()}</div>
                         <RichTextBlock
                           disabled
+                          displayOnly
                           // TODO: remove this
                           onChange={console.log}
                           value={text}
@@ -331,7 +333,7 @@ export function CommentList() {
                 )}>
                 <Dropdown
                   title={t(
-                    confirmAction === ConfirmAction.Reject
+                    rejectionReason || confirmAction === ConfirmAction.Reject
                       ? 'comments.panels.rejectionReason'
                       : 'comments.panels.requestChangesReason'
                   )}
