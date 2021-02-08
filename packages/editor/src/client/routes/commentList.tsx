@@ -333,9 +333,10 @@ export function CommentList() {
                 )}>
                 <Dropdown
                   title={t(
-                    rejectionReason || confirmAction === ConfirmAction.Reject
-                      ? 'comments.panels.rejectionReason'
-                      : 'comments.panels.requestChangesReason'
+                    rejectionReason ||
+                      (confirmAction === ConfirmAction.Reject
+                        ? 'comments.panels.rejectionReason'
+                        : 'comments.panels.requestChangesReason')
                   )}
                   placement="topStart">
                   <Dropdown.Item
