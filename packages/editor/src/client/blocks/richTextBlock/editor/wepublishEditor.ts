@@ -65,6 +65,7 @@ export const WepublishEditor = {
   },
 
   getTextString(editor: Editor) {
+    // get all text nodes and append them to each other in one string
     return [...Node.texts(editor)].reduce((string, nodePair, index) => {
       const [textNode] = nodePair
       if (index === 0) return `${textNode.text}`
