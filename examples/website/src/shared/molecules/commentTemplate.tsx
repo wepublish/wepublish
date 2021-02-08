@@ -1,5 +1,5 @@
 import {cssRule, useStyle} from '@karma.run/react'
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {CommentAuthorType} from '../../../../../packages/api/lib'
 import {BaseButton} from '../atoms/baseButton'
 import {Image} from '../atoms/image'
@@ -8,7 +8,8 @@ import {Color} from '../style/colors'
 import {Comment} from '../types'
 import gql from 'graphql-tag'
 import {useMutation} from '@apollo/react-hooks'
-// import { useMutation } from 'react-apollo'
+import {AuthContext} from '../authContext'
+import {Link, LogoutRoute} from '../route/routeContext'
 
 /*
 const comments: Comment[] = [
@@ -204,6 +205,8 @@ export interface RestructuredComments {
 }
 
 // Helpers
+
+// This emulates a RichTextNode for as long as we haven't implemented it
 function redressCommentInput(value: string) {
   return {
     type: 'paragraph',
@@ -225,19 +228,23 @@ const AddComment = gql`
   }
 `
 
-/* enum CommentItemType {
-  Article = 'article',
-  Page = 'page'
-} */
-
 // Components
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
 
   const [commentInput, setCommentInput] = useState({children: [{text: ''}]})
+  const [commentState, setCommentState] = useState('')
 
-  const [addComment, {loading, error}] = useMutation(AddComment)
+  const [addComment, {loading}] = useMutation(AddComment, {
+    onCompleted() {
+      setCommentState('Your comment has been submitted and is awaiting approval')
+    },
+    onError: error => {
+      console.error('Error creating a post', error)
+      setCommentState("Something went wrong, your comment couldn't be saved")
+    }
+  })
 
   return (
     <div className={props.role === 'reply' ? css(ReplyBox) : css(Container)}>
@@ -250,7 +257,7 @@ export function ComposeComment(props: ComposeCommentProps) {
               input: {
                 itemID: 'AnXUklbXyptpVQlW',
                 itemType: 'Article',
-                text: [{type: 'paragraph', children: [{text: 'New mocking Comment!'}]}]
+                text: [commentInput]
               }
             }
           })
@@ -273,7 +280,7 @@ export function ComposeComment(props: ComposeCommentProps) {
             {props.parentCommentAuthor ? 'Submit' : 'Post comment'}
           </BaseButton>
         </p>
-        {error && <p>{error.message}</p>}
+        {commentState && <p>{commentState}</p>}
       </form>
     </div>
   )
@@ -299,7 +306,7 @@ function ParentComment(props: any) {
             <h4 className={css(CommentAuthor)}>{userName}</h4>
             <p className={css(CommentMeta)}>
               <span>{authorType}</span> ·{' '}
-              <span className={css(Timestamp)}>{modifiedAt.toLocaleString('de-DE')}</span>
+              <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
             </p>
           </div>
         </div>
@@ -345,7 +352,7 @@ function ChildComment(child: any) {
           <h4 className={css(CommentAuthor)}>{userName}</h4>
           <p className={css(CommentMeta)}>
             <span>{authorType}</span> ·{' '}
-            <span className={css(Timestamp)}>{modifiedAt.toLocaleString('de-DE')}</span>
+            <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
           </p>
         </div>
       </div>
@@ -381,6 +388,7 @@ export function CommentList(props: CommentListProps) {
 
   return (
     <div className={css(Container, CommentBox)}>
+      <LoginForComments />
       <h3>Show all comments</h3>
       {restructuredComments?.map(parentComment => (
         <ParentComment
@@ -393,5 +401,20 @@ export function CommentList(props: CommentListProps) {
         />
       ))}
     </div>
+  )
+}
+
+export function LoginForComments() {
+  const {session} = useContext(AuthContext)
+
+  return (
+    <>
+      {session && (
+        <p>
+          Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
+        </p>
+      )}
+      {!session && <p>Not logged in. Login to comment</p>}
+    </>
   )
 }
