@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
 import {
-  CommentRefFragment,
+  FullCommentFragment,
   useCommentListQuery,
   useApproveCommentMutation,
   useRequestChangesOnCommentMutation,
@@ -94,7 +94,7 @@ export function CommentList() {
 
   const [filter, setFilter] = useState('')
 
-  const [comments, setComments] = useState<CommentRefFragment[]>([])
+  const [comments, setComments] = useState<FullCommentFragment[]>([])
 
   const [approveComment, {loading: isApproving, error: errorApprove}] = useApproveCommentMutation()
   const [
@@ -181,7 +181,7 @@ export function CommentList() {
         <Column width={350} align="left" resizable>
           <HeaderCell>{t('comments.overview.text')}</HeaderCell>
           <Cell dataKey="createdAt">
-            {(rowData: CommentRefFragment) => (
+            {(rowData: FullCommentFragment) => (
               <>
                 {rowData?.revisions?.length ? (
                   <RichTextBlock
@@ -198,12 +198,12 @@ export function CommentList() {
         </Column>
         <Column width={150} align="left" resizable>
           <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
-          <Cell>{(rowData: CommentRefFragment) => <>{rowData.user?.name}</>}</Cell>
+          <Cell>{(rowData: FullCommentFragment) => <>{rowData.user?.name}</>}</Cell>
         </Column>
         <Column width={150} align="left" resizable>
           <HeaderCell>{t('comments.overview.state')}</HeaderCell>
           <Cell dataKey="state">
-            {(rowData: CommentRefFragment) => {
+            {(rowData: FullCommentFragment) => {
               let state: string
               switch (rowData?.state) {
                 case CommentState.Approved:

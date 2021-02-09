@@ -2362,7 +2362,7 @@ type FullBlock_TeaserGridBlock_Fragment = (
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
-export type CommentRefFragment = (
+export type FullCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
   & { user: (
@@ -2392,7 +2392,7 @@ export type CommentListQuery = (
     & Pick<CommentConnection, 'totalCount'>
     & { nodes: Array<(
       { __typename?: 'Comment' }
-      & CommentRefFragment
+      & FullCommentFragment
     )>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
@@ -3814,8 +3814,8 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
-export const CommentRefFragmentDoc = gql`
-    fragment CommentRef on Comment {
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
   id
   state
   rejectionReason
@@ -4574,7 +4574,7 @@ export const CommentListDocument = gql`
     query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
-      ...CommentRef
+      ...FullComment
     }
     pageInfo {
       startCursor
@@ -4585,7 +4585,7 @@ export const CommentListDocument = gql`
     totalCount
   }
 }
-    ${CommentRefFragmentDoc}`;
+    ${FullCommentFragmentDoc}`;
 
 /**
  * __useCommentListQuery__

@@ -1,4 +1,4 @@
-fragment CommentRef on Comment {
+fragment FullComment on Comment {
   id
 
   state
@@ -36,7 +36,7 @@ query CommentList(
     sort: $sort
   ) {
     nodes {
-      ...CommentRef
+      ...FullComment
     }
 
     pageInfo {
