@@ -747,7 +747,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                 }
 
               default:
-                return {layout: {x: Infinity, y: Infinity, w: 0, h: 0}, teaser: null}
+                return {layout: {x: Infinity, y: Infinity, w: 1, h: 1}, teaser: null}
             }
           })
         }
