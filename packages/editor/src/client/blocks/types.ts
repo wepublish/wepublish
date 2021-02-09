@@ -197,8 +197,14 @@ export interface TeaserGridBlockValue {
   numColumns: number
 }
 
+export type FlexItemLayout = Omit<Layout, 'i'>
+
+export interface TeaserFlexItem {
+  layout: FlexItemLayout
+  teaser: Teaser | null
+}
 export interface TeaserFlexGridBlockValue {
-  teasers: Array<[Layout, Teaser | null]>
+  teasers: TeaserFlexItem[]
   numColumns: number
   numRows: number
 }
@@ -433,17 +439,17 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       // TODO more DRY ?
       return {
         teaserFlexGrid: {
-          teasers: block.value.teasers.map(([layout, value]) => {
-            switch (value?.type) {
+          teasers: block.value.teasers.map(({layout, teaser}) => {
+            switch (teaser?.type) {
               case TeaserType.Article:
                 return {
                   article: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    articleID: value.article.id
+                    style: teaser.style,
+                    imageID: teaser.image?.id,
+                    preTitle: teaser.preTitle || undefined,
+                    title: teaser.title || undefined,
+                    lead: teaser.lead || undefined,
+                    articleID: teaser.article.id
                   },
                   layout
                 }
@@ -451,13 +457,13 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               case TeaserType.PeerArticle:
                 return {
                   peerArticle: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    peerID: value.peer.id,
-                    articleID: value.articleID
+                    style: teaser.style,
+                    imageID: teaser.image?.id,
+                    preTitle: teaser.preTitle || undefined,
+                    title: teaser.title || undefined,
+                    lead: teaser.lead || undefined,
+                    peerID: teaser.peer.id,
+                    articleID: teaser.articleID
                   },
                   layout
                 }
@@ -465,18 +471,18 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               case TeaserType.Page:
                 return {
                   page: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    pageID: value.page.id
+                    style: teaser.style,
+                    imageID: teaser.image?.id,
+                    preTitle: teaser.preTitle || undefined,
+                    title: teaser.title || undefined,
+                    lead: teaser.lead || undefined,
+                    pageID: teaser.page.id
                   },
                   layout
                 }
 
               default:
-                return null
+                return {layout, teaser: null}
             }
           }),
           numColumns: block.value.numColumns,
@@ -691,9 +697,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           teasers: block.teasers.map(t => {
             switch (t?.teaser?.__typename) {
               case 'ArticleTeaser':
-                return [
-                  {i: nanoid(), ...t.layout}, // TODO: maybe use map instead of nanoid() ?
-                  t.teaser.article
+                return {
+                  layout: t.layout,
+                  teaser: t.teaser.article
                     ? {
                         type: TeaserType.Article,
                         style: t.teaser.style,
@@ -704,12 +710,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         article: t.teaser.article
                       }
                     : null
-                ]
+                }
 
               case 'PeerArticleTeaser':
-                return [
-                  {i: nanoid(), ...t.layout},
-                  t.teaser.peer
+                return {
+                  layout: t.layout,
+                  teaser: t.teaser.peer
                     ? {
                         type: TeaserType.PeerArticle,
                         style: t.teaser.style,
@@ -722,12 +728,12 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         article: t.teaser.article ?? undefined
                       }
                     : null
-                ]
+                }
 
               case 'PageTeaser':
-                return [
-                  {i: nanoid(), ...t.layout},
-                  t.teaser.page
+                return {
+                  layout: t.layout,
+                  teaser: t.teaser.page
                     ? {
                         type: TeaserType.Page,
                         style: t.teaser.style,
@@ -738,10 +744,10 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
                         page: t.teaser.page
                       }
                     : null
-                ]
+                }
 
               default:
-                return [{i: nanoid(), x: Infinity, y: Infinity, w: 0, h: 0}, null]
+                return {layout: {x: Infinity, y: Infinity, w: 0, h: 0}, teaser: null}
             }
           })
         }

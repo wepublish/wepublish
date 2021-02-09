@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
-import {TeaserFlexGridBlockValue, Teaser, TeaserType} from './types'
+import {TeaserFlexGridBlockValue, FlexItemLayout, TeaserFlexItem, Teaser, TeaserType} from './types'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {PlaceholderImage} from '../atoms/placeholderImage'
 import {BlockProps} from '../atoms/blockList'
@@ -33,17 +33,20 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     onChange({
       ...value,
       teasers: Object.assign([], teasers, {
-        [index]: [teasers[index][0], teaserLink || null]
+        [index]: [teasers[index].layout, teaserLink || null]
       })
     })
   }
 
-  const handleLayoutChange = (layout: Layout[]) => {
+  const handleLayoutChange = (gridLayout: Layout[]) => {
     // TODO when to sort teasers rule (eg. y value?) for passing to API according
     // FIXME / OPTIMIZE? sometime invoked twice, maybe add some debouncing, ie timeout before state update?
     onChange({
       ...value,
-      teasers: teasers.map(([, teaser], i) => [layout[i], teaser])
+      teasers: teasers.map(({teaser}, i) => {
+        const {x, y, w, h} = gridLayout[i]
+        return {layout: {x, y, w, h}, teaser}
+      })
     })
   }
 
@@ -58,16 +61,15 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
 
   const handleAddItems = () => {
     for (let i = 0; i < addItems; i++) {
-      const newTeaser: [Layout, null] = [
-        {
-          i: nanoid(),
+      const newTeaser: TeaserFlexItem = {
+        layout: {
           x: (teasers.length * 2) % numColumns,
           y: Infinity, // puts it at the bottom
           w: 2,
           h: 2
         },
-        null
-      ]
+        teaser: null
+      }
       teasers.push(newTeaser)
     }
     onChange({
@@ -109,20 +111,20 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           />
         </InputGroup>
       </Toolbar>
-      <p>{JSON.stringify(teasers.map(([l]) => l))}</p>
+      <p>{JSON.stringify(teasers.map(({layout}) => layout))}</p>
       <GridLayout
         className="layout"
         cols={numColumns}
         rowHeight={30}
         width={700}
         onLayoutChange={handleLayoutChange}>
-        {teasers.map(([{i, ...LayoutRest}, teaser], index) => (
-          <div key={i} data-grid={LayoutRest}>
+        {teasers.map(({layout, teaser}, i) => (
+          <div key={i} data-grid={layout}>
             <Icon
               icon="close"
               style={{...ItemTopBarStyle, right: '2px'}}
               onClick={() => {
-                handleRemoveItem(index)
+                handleRemoveItem(i)
               }}
             />
             <Icon icon="thumb-tack" style={{...ItemTopBarStyle, left: '2px'}} />
@@ -130,15 +132,15 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
               teaser={teaser}
               numColumns={numColumns}
               onEdit={() => {
-                setEditIndex(index)
+                setEditIndex(i)
                 setEditModalOpen(true)
               }}
               onChoose={() => {
-                setEditIndex(index)
+                setEditIndex(i)
                 setChooseModalOpen(true)
               }}
               onRemove={() => {
-                handleTeaserLinkChange(index, null)
+                handleTeaserLinkChange(i, null)
               }}
             />
           </div>
@@ -146,7 +148,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
       </GridLayout>
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
-          initialTeaser={teasers[editIndex][1]!}
+          initialTeaser={teasers[editIndex].teaser!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)
