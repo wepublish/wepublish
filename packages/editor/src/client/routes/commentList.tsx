@@ -96,9 +96,18 @@ export function CommentList() {
 
   const [comments, setComments] = useState<CommentRefFragment[]>([])
 
-  const [approveComment, {loading: isApproving}] = useApproveCommentMutation()
-  const [requestChanges, {loading: isRequestingChanges}] = useRequestChangesOnCommentMutation()
-  const [rejectComment, {loading: isRejecting}] = useRejectCommentMutation()
+  const [approveComment, {loading: isApproving, error: errorApprove}] = useApproveCommentMutation()
+  const [
+    requestChanges,
+    {loading: isRequestingChanges, error: errorRequestingChanges}
+  ] = useRequestChangesOnCommentMutation()
+  const [rejectComment, {loading: isRejecting, error: errorRejecting}] = useRejectCommentMutation()
+
+  useEffect(() => {
+    const error =
+      errorApprove?.message ?? errorRequestingChanges?.message ?? errorRejecting?.message
+    if (error) Alert.error(error, 0)
+  }, [errorApprove, errorRequestingChanges, errorRejecting])
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
     variables: {
