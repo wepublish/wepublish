@@ -430,8 +430,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       }
 
     case BlockType.TeaserFlexGrid:
-      // TODO more DRY
-      // numRows?
+      // TODO more DRY ?
       return {
         teaserFlexGrid: {
           teasers: block.value.teasers.map(([layout, value]) => {
@@ -682,69 +681,67 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
       }
 
     case 'TeaserFlexGridBlock':
-      // TODO more DRY
-      // numRows?
+      // TODO more DRY ?
       return {
         key,
         type: BlockType.TeaserFlexGrid,
         value: {
           numColumns: block.numColumns,
           numRows: block.numRows,
-          teasers: block.teasers.map(({layout, teaser}) => {
-            layout = {i: nanoid(), ...layout} // maybe use map instead of nanoid() ?
-            switch (teaser?.__typename) {
+          teasers: block.teasers.map(t => {
+            switch (t?.teaser?.__typename) {
               case 'ArticleTeaser':
                 return [
-                  layout,
-                  teaser.article
+                  {i: nanoid(), ...t.layout}, // TODO: maybe use map instead of nanoid() ?
+                  t.teaser.article
                     ? {
                         type: TeaserType.Article,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        article: teaser.article
+                        style: t.teaser.style,
+                        image: t.teaser.image ?? undefined,
+                        preTitle: t.teaser.preTitle ?? undefined,
+                        title: t.teaser.title ?? undefined,
+                        lead: t.teaser.lead ?? undefined,
+                        article: t.teaser.article
                       }
                     : null
                 ]
 
               case 'PeerArticleTeaser':
                 return [
-                  layout,
-                  teaser.peer
+                  {i: nanoid(), ...t.layout},
+                  t.teaser.peer
                     ? {
                         type: TeaserType.PeerArticle,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        peer: teaser.peer,
-                        articleID: teaser.articleID,
-                        article: teaser.article ?? undefined
+                        style: t.teaser.style,
+                        image: t.teaser.image ?? undefined,
+                        preTitle: t.teaser.preTitle ?? undefined,
+                        title: t.teaser.title ?? undefined,
+                        lead: t.teaser.lead ?? undefined,
+                        peer: t.teaser.peer,
+                        articleID: t.teaser.articleID,
+                        article: t.teaser.article ?? undefined
                       }
                     : null
                 ]
 
               case 'PageTeaser':
                 return [
-                  layout,
-                  teaser.page
+                  {i: nanoid(), ...t.layout},
+                  t.teaser.page
                     ? {
                         type: TeaserType.Page,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        page: teaser.page
+                        style: t.teaser.style,
+                        image: t.teaser.image ?? undefined,
+                        preTitle: t.teaser.preTitle ?? undefined,
+                        title: t.teaser.title ?? undefined,
+                        lead: t.teaser.lead ?? undefined,
+                        page: t.teaser.page
                       }
                     : null
                 ]
 
               default:
-                return [layout, null]
+                return [{i: nanoid(), x: Infinity, y: Infinity, w: 0, h: 0}, null]
             }
           })
         }

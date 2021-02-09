@@ -312,6 +312,13 @@ export type FlexGridItemLayout = {
   h: Scalars['Int'];
 };
 
+export type FlexGridItemLayoutInput = {
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+};
+
 export type GalleryImageEdge = {
   __typename?: 'GalleryImageEdge';
   caption?: Maybe<Scalars['String']>;
@@ -1475,7 +1482,7 @@ export type TeaserFlexGridBlock = {
 };
 
 export type TeaserFlexGridBlockInput = {
-  teasers: Array<Maybe<TeaserInput>>;
+  teasers: Array<Maybe<TeaserFlexItemInput>>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
 };
@@ -1484,6 +1491,11 @@ export type TeaserFlexItem = {
   __typename?: 'TeaserFlexItem';
   teaser?: Maybe<Teaser>;
   layout: FlexGridItemLayout;
+};
+
+export type TeaserFlexItemInput = {
+  teaser?: Maybe<TeaserInput>;
+  layout: FlexGridItemLayoutInput;
 };
 
 export type TeaserGridBlock = {
@@ -2298,7 +2310,26 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-type FullBlock_TeaserFlexGridBlock_Fragment = { __typename: 'TeaserFlexGridBlock' };
+type FullBlock_TeaserFlexGridBlock_Fragment = (
+  { __typename: 'TeaserFlexGridBlock' }
+  & Pick<TeaserFlexGridBlock, 'numColumns' | 'numRows'>
+  & { teasers: Array<Maybe<(
+    { __typename?: 'TeaserFlexItem' }
+    & { teaser?: Maybe<(
+      { __typename?: 'ArticleTeaser' }
+      & FullTeaser_ArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PeerArticleTeaser' }
+      & FullTeaser_PeerArticleTeaser_Fragment
+    ) | (
+      { __typename?: 'PageTeaser' }
+      & FullTeaser_PageTeaser_Fragment
+    )>, layout: (
+      { __typename?: 'FlexGridItemLayout' }
+      & Pick<FlexGridItemLayout, 'x' | 'y' | 'w' | 'h'>
+    ) }
+  )>> }
+);
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserFlexGridBlock_Fragment;
 
@@ -3564,6 +3595,21 @@ export const FullBlockFragmentDoc = gql`
       ...FullTeaser
     }
     numColumns
+  }
+  ... on TeaserFlexGridBlock {
+    teasers {
+      teaser {
+        ...FullTeaser
+      }
+      layout {
+        x
+        y
+        w
+        h
+      }
+    }
+    numColumns
+    numRows
   }
 }
     ${ImageRefFragmentDoc}

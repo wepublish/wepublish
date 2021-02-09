@@ -162,7 +162,12 @@ fragment FullBlock on Block {
       teaser {
         ...FullTeaser
       }
-      layout
+      layout {
+        x
+        y
+        w
+        h
+      }
     }
     numColumns
     numRows
