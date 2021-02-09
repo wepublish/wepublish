@@ -1,7 +1,7 @@
 import React from 'react'
 import {Peer, ArticleMeta} from '../types'
 import {RelatedArticle} from '../molecules/relatedArticle'
-import {ComposeComment, DisplayComments} from '../molecules/commentTemplate'
+import {DisplayComments, LoginToComment} from '../molecules/commentTemplate'
 import {Tag} from '../atoms/tag'
 import {Link, AuthorRoute, ArticleRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
@@ -117,8 +117,8 @@ export function ArticleFooter(props: ArticleFooterProps) {
           })}
       </div>
       {hasRelatedArticles ? <RelatedArticleList articles={props.relatedArticles} /> : ''}
+      <LoginToComment itemID={props.itemID} itemType={'Article'} />
 
-      <ComposeComment itemID={props.itemID} itemType={'Article'} />
       <DisplayComments comments={props.comments} />
     </div>
   )

@@ -1,6 +1,5 @@
 import {cssRule, useStyle} from '@karma.run/react'
 import React, {useContext, useState} from 'react'
-import {CommentAuthorType} from '../../../../../packages/api/lib'
 import {BaseButton} from '../atoms/baseButton'
 import {Image} from '../atoms/image'
 import {RichText} from '../atoms/richText'
@@ -11,57 +10,8 @@ import {useMutation} from '@apollo/react-hooks'
 import {AuthContext} from '../authContext'
 import {Link, LogoutRoute} from '../route/routeContext'
 
-/*
-const comments: Comment[] = [
-  {
-    id: '1',
-    user: {id: '1', name: 'Peter', email: 'peter@peter.ch'},
-    text: [{text: 'hoi'}],
-    authorType: CommentAuthorType.VerifiedUser,
-    modifiedAt: new Date(Date.now())
-  },
-  {
-    id: '2',
-    userID: 'Sauron',
-    text: [{text: 'I am angry'}],
-    authorType: CommentAuthorType.VerifiedUser,
-    modifiedAt: new Date(Date.now() - 10000)
-  },
-  {
-    id: '3',
-    userID: 'Tom Bombadil',
-    parentID: '2',
-    text: [{text: 'Sauron, please...'}],
-    authorType: CommentAuthorType.Team,
-    modifiedAt: new Date(Date.now())
-  },
-  {
-    id: '4',
-    userID: 'Tom Bombadil',
-    parentID: '1',
-    text: [{text: 'I am angry'}],
-    authorType: CommentAuthorType.Team,
-    modifiedAt: new Date(Date.now())
-  },
-  {
-    id: '5',
-    userID: 'Tom Bombadil',
-    parentID: '1',
-    text: [{text: 'Hi Peter'}],
-    authorType: CommentAuthorType.Team,
-    modifiedAt: new Date(Date.now())
-  },
-  {
-    id: '6',
-    userID: 'Sepp Blatter',
-    authorType: CommentAuthorType.VerifiedUser,
-    text: [{text: 'I\'m innocent'}],
-    modifiedAt: new Date(Date.now())
-  }
-]
-*/
-
 // CSS-Rules
+// =========
 
 const Actions = cssRule(() => ({
   width: '100%'
@@ -184,7 +134,7 @@ const Timestamp = cssRule(() => ({
 }))
 
 // Interfaces
-
+// ==========
 export interface ComposeCommentProps {
   readonly header?: string
   readonly parentCommentAuthor?: string
@@ -198,15 +148,13 @@ export interface DisplayCommentsProps {
   readonly comments?: Comment[]
 }
 
-// Helpers
-
-// This emulates a RichTextNode for as long as we haven't implemented it
-function redressCommentInput(value: string) {
-  return {
-    type: 'paragraph',
-    children: [{text: value}]
-  }
+export interface LoginToComment {
+  readonly itemType: string
+  readonly itemID: string
 }
+
+// Queries
+// =======
 
 const AddComment = gql`
   mutation AddComment($input: CommentInput!) {
@@ -220,7 +168,19 @@ const AddComment = gql`
   }
 `
 
+// Helpers
+// =======
+
+// This emulates a RichTextNode for as long as we haven't implemented it
+function redressCommentInput(value: string) {
+  return {
+    type: 'paragraph',
+    children: [{text: value}]
+  }
+}
+
 // Components
+// ==========
 
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
@@ -289,7 +249,6 @@ export function DisplayComments(props: DisplayCommentsProps) {
 
   return (
     <div className={css(Container, CommentBox)}>
-      <LoginForComments />
       <h3>Show all comments</h3>
       {comments?.map(parentComment => (
         <ParentComment
@@ -342,7 +301,7 @@ function ParentComment(props: any) {
               onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
               Reply
             </button>
-            <button className={css(SmallButton)}>Report</button>
+            <button className={css(SmallButton)}>Edit</button>
           </div>
         </div>
 
@@ -384,22 +343,26 @@ function ChildComment(value: any) {
       <div className={css(CommentBody)}>
         <RichText value={text} />
         <div className={css(Actions)}>
-          <button className={css(SmallButton)}>Report</button>
+          <button className={css(SmallButton)}>Edit</button>
         </div>
       </div>
     </div>
   )
 }
 
-export function LoginForComments() {
+export function LoginToComment(props: LoginToComment) {
   const {session} = useContext(AuthContext)
+  const css = useStyle()
 
   return (
     <>
       {session && (
-        <p>
-          Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
-        </p>
+        <>
+          <ComposeComment itemID={props.itemID} itemType={props.itemType} />
+          <p className={css(Container)}>
+            Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
+          </p>
+        </>
       )}
       {!session && <p>Not logged in. Login to comment</p>}
     </>
