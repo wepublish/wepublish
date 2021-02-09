@@ -142,13 +142,11 @@ export function CommentList() {
   const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
-  const [rejectionReasonError, setRejectionReasonError] = useState<string>('')
 
   const resetCurrentCommentState = () => {
     setRejectionReason(undefined)
     setCurrentComment(undefined)
     setConfirmAction(undefined)
-    setRejectionReasonError('')
   }
 
   return (
@@ -356,10 +354,7 @@ export function CommentList() {
                     <Dropdown.Item
                       key={CommentRejectionReason.Spam}
                       active={CommentRejectionReason.Spam === rejectionReason}
-                      onSelect={() => {
-                        setRejectionReason(CommentRejectionReason.Spam)
-                        setRejectionReasonError('')
-                      }}>
+                      onSelect={() => setRejectionReason(CommentRejectionReason.Spam)}>
                       {CommentRejectionReason.Spam}
                     </Dropdown.Item>
                     <Dropdown.Item
@@ -367,13 +362,12 @@ export function CommentList() {
                       active={CommentRejectionReason.Misconduct === rejectionReason}
                       onSelect={() => {
                         setRejectionReason(CommentRejectionReason.Misconduct)
-                        setRejectionReasonError('')
                       }}>
                       {CommentRejectionReason.Misconduct}
                     </Dropdown.Item>
                   </Dropdown>
-                  {rejectionReasonError && (
-                    <div style={{color: 'red'}}>{t(rejectionReasonError)}</div>
+                  {!rejectionReason && (
+                    <div style={{color: 'red'}}>{t('comments.panels.chooseRejectionReason')}</div>
                   )}
                 </DescriptionListItem>
               ) : null}
@@ -382,7 +376,12 @@ export function CommentList() {
           <Modal.Footer>
             <Button
               color={mapCommentActionToColor(confirmAction)}
-              disabled={isApproving || isRequestingChanges || isRejecting}
+              disabled={
+                isApproving ||
+                isRequestingChanges ||
+                isRejecting ||
+                (!rejectionReason && confirmAction !== ConfirmAction.Approve)
+              }
               onClick={async () => {
                 if (!currentComment) return
                 switch (confirmAction) {
@@ -397,34 +396,28 @@ export function CommentList() {
                     resetCurrentCommentState()
                     break
                   case ConfirmAction.RequestChanges:
-                    if (!rejectionReason) {
-                      setRejectionReasonError('comments.panels.chooseRejectionReason')
-                    } else {
-                      await requestChanges({
-                        variables: {
-                          id: currentComment.id,
-                          rejectionReason
-                        }
-                      })
-                      setConfirmationDialogOpen(false)
-                      setShouldRefetch(true)
-                      resetCurrentCommentState()
-                    }
+                    if (!rejectionReason) return
+                    await requestChanges({
+                      variables: {
+                        id: currentComment.id,
+                        rejectionReason
+                      }
+                    })
+                    setConfirmationDialogOpen(false)
+                    setShouldRefetch(true)
+                    resetCurrentCommentState()
                     break
                   case ConfirmAction.Reject:
-                    if (!rejectionReason) {
-                      setRejectionReasonError('comments.panels.chooseRejectionReason')
-                    } else {
-                      await rejectComment({
-                        variables: {
-                          id: currentComment.id,
-                          rejectionReason
-                        }
-                      })
-                      setConfirmationDialogOpen(false)
-                      setShouldRefetch(true)
-                      resetCurrentCommentState()
-                    }
+                    if (!rejectionReason) return
+                    await rejectComment({
+                      variables: {
+                        id: currentComment.id,
+                        rejectionReason
+                      }
+                    })
+                    setConfirmationDialogOpen(false)
+                    setShouldRefetch(true)
+                    resetCurrentCommentState()
                     break
                 }
               }}>
