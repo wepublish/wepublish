@@ -33,7 +33,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     onChange({
       ...value,
       teasers: Object.assign([], teasers, {
-        [index]: [teasers[index].layout, teaserLink || null]
+        [index]: {layout: teasers[index].layout, teaser: teaserLink || null}
       })
     })
   }
