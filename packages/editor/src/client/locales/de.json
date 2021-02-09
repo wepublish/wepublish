@@ -469,6 +469,7 @@
         "text": "Text"
       },
       "panels": {
+        "id": "Id",
         "cancel": "Cancel",
         "close": "Close",
         "delete": "Delete",
@@ -486,7 +487,8 @@
         "approve": "Approve",
         "requestChanges": "Request Changes",
         "requestChangesReason": "Reason",
-        "reject": "Reject"
+        "reject": "Reject",
+        "chooseRejectionReason": "Please choose a rejection reason"
       },
       "state": {
         "pendingApproval": "Pending Approval",

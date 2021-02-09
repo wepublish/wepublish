@@ -48,12 +48,10 @@ function mapCommentActionToColor(currentAction?: ConfirmAction) {
       return 'yellow'
     case ConfirmAction.Reject:
       return 'red'
-    default:
-      return 'green'
   }
 }
 
-function mapCommentActionToTitle(currentAction?: ConfirmAction) {
+function mapCommentActionToTitle(currentAction: ConfirmAction) {
   switch (currentAction) {
     case ConfirmAction.Approve:
       return 'comments.panels.approve'
@@ -61,13 +59,10 @@ function mapCommentActionToTitle(currentAction?: ConfirmAction) {
       return 'comments.panels.requestChanges'
     case ConfirmAction.Reject:
       return 'comments.panels.reject'
-    default:
-      return 'comments.panels.approve'
   }
 }
 
-function mapModalTitle(confirmAction?: ConfirmAction): string {
-  if (!confirmAction) return ''
+function mapModalTitle(confirmAction: ConfirmAction): string {
   switch (confirmAction) {
     case ConfirmAction.Approve:
       return 'comments.panels.approveComment'
@@ -138,11 +133,13 @@ export function CommentList() {
   const [currentComment, setCurrentComment] = useState<Comment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
+  const [rejectionReasonError, setRejectionReasonError] = useState<string>('')
 
   const resetCurrentCommentState = () => {
     setRejectionReason(undefined)
     setCurrentComment(undefined)
     setConfirmAction(undefined)
+    setRejectionReasonError('')
   }
 
   return (
@@ -172,7 +169,7 @@ export function CommentList() {
           setSortOrder(sortType)
           setSortField(sortColumn)
         }}>
-        <Column width={400} align="left" resizable>
+        <Column width={350} align="left" resizable>
           <HeaderCell>{t('comments.overview.text')}</HeaderCell>
           <Cell dataKey="createdAt">
             {(rowData: CommentRefFragment) => (
@@ -211,9 +208,6 @@ export function CommentList() {
                   break
                 case CommentState.Rejected:
                   state = 'comments.state.rejected'
-                  break
-                default:
-                  state = rowData?.state
                   break
               }
               return <div>{t(state)}</div>
@@ -282,142 +276,156 @@ export function CommentList() {
         onChangePage={page => setPage(page)}
         onChangeLength={limit => setLimit(limit)}
       />
-      <Modal
-        show={isConfirmationDialogOpen}
-        width="sm"
-        overflow
-        onHide={() => {
-          setConfirmationDialogOpen(false)
-          resetCurrentCommentState()
-        }}>
-        <Modal.Header>
-          <Modal.Title>
-            <div>{t(mapModalTitle(confirmAction))}</div>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('comments.panels.userName')}>
-              {currentComment?.user.name || t('comments.panels.untitled')}
-            </DescriptionListItem>
-            <DescriptionListItem label={t('comments.panels.createdAt')}>
-              {currentComment?.createdAt && new Date(currentComment.createdAt).toDateString()}
-            </DescriptionListItem>
-            <DescriptionListItem label={t('comments.panels.updatedAt')}>
-              {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
-            </DescriptionListItem>
-            <DescriptionListItem label={t('comments.panels.revisions')}>
-              <Timeline align="left">
-                {currentComment?.revisions?.length
-                  ? currentComment?.revisions?.map(({text, createdAt}, i) => (
-                      <Timeline.Item key={i}>
-                        <div>{new Date(createdAt).toLocaleString()}</div>
-                        <RichTextBlock
-                          disabled
-                          displayOnly
-                          // TODO: remove this
-                          onChange={console.log}
-                          value={text}
-                        />
-                      </Timeline.Item>
-                    ))
-                  : null}
-              </Timeline>
-            </DescriptionListItem>
-            {confirmAction === ConfirmAction.Reject ||
-            confirmAction === ConfirmAction.RequestChanges ? (
-              <DescriptionListItem
-                label={t(
-                  confirmAction === ConfirmAction.Reject
-                    ? 'comments.panels.rejectionReason'
-                    : 'comments.panels.requestChangesReason'
-                )}>
-                <Dropdown
-                  title={t(
-                    rejectionReason ||
-                      (confirmAction === ConfirmAction.Reject
-                        ? 'comments.panels.rejectionReason'
-                        : 'comments.panels.requestChangesReason')
-                  )}
-                  placement="topStart">
-                  <Dropdown.Item
-                    key={CommentRejectionReason.Spam}
-                    active={CommentRejectionReason.Spam === rejectionReason}
-                    onSelect={() => setRejectionReason(CommentRejectionReason.Spam)}>
-                    {CommentRejectionReason.Spam}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    key={CommentRejectionReason.Misconduct}
-                    active={CommentRejectionReason.Misconduct === rejectionReason}
-                    onSelect={() => setRejectionReason(CommentRejectionReason.Misconduct)}>
-                    {CommentRejectionReason.Misconduct}
-                  </Dropdown.Item>
-                </Dropdown>
+      {confirmAction && (
+        <Modal
+          show={isConfirmationDialogOpen}
+          width="sm"
+          overflow
+          onHide={() => {
+            setConfirmationDialogOpen(false)
+            resetCurrentCommentState()
+          }}>
+          <Modal.Header>
+            <Modal.Title>
+              <div>{t(mapModalTitle(confirmAction))}</div>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <DescriptionList>
+              <DescriptionListItem label={t('comments.panels.id')}>
+                {currentComment?.id}
               </DescriptionListItem>
-            ) : null}
-          </DescriptionList>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            color={mapCommentActionToColor(confirmAction)}
-            disabled={isApproving || isRequestingChanges || isRejecting}
-            onClick={async () => {
-              if (!currentComment) return
-              switch (confirmAction) {
-                case ConfirmAction.Approve:
-                  await approveComment({
-                    variables: {
-                      id: currentComment.id
+              <DescriptionListItem label={t('comments.panels.userName')}>
+                {currentComment?.user.name || t('comments.panels.untitled')}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('comments.panels.createdAt')}>
+                {currentComment?.createdAt && new Date(currentComment.createdAt).toDateString()}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('comments.panels.updatedAt')}>
+                {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
+              </DescriptionListItem>
+              <DescriptionListItem label={t('comments.panels.revisions')}>
+                <Timeline align="left">
+                  {currentComment?.revisions?.length
+                    ? currentComment?.revisions?.map(({text, createdAt}, i) => (
+                        <Timeline.Item key={i}>
+                          <div>{new Date(createdAt).toLocaleString()}</div>
+                          <RichTextBlock
+                            disabled
+                            displayOnly
+                            // TODO: remove this
+                            onChange={console.log}
+                            value={text}
+                          />
+                        </Timeline.Item>
+                      ))
+                    : null}
+                </Timeline>
+              </DescriptionListItem>
+              {confirmAction === ConfirmAction.Reject ||
+              confirmAction === ConfirmAction.RequestChanges ? (
+                <DescriptionListItem
+                  label={t(
+                    confirmAction === ConfirmAction.Reject
+                      ? 'comments.panels.rejectionReason'
+                      : 'comments.panels.requestChangesReason'
+                  )}>
+                  <Dropdown
+                    title={t(
+                      rejectionReason ||
+                        (confirmAction === ConfirmAction.Reject
+                          ? 'comments.panels.rejectionReason'
+                          : 'comments.panels.requestChangesReason')
+                    )}
+                    placement="topEnd">
+                    <Dropdown.Item
+                      key={CommentRejectionReason.Spam}
+                      active={CommentRejectionReason.Spam === rejectionReason}
+                      onSelect={() => {
+                        setRejectionReason(CommentRejectionReason.Spam)
+                        setRejectionReasonError('')
+                      }}>
+                      {CommentRejectionReason.Spam}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      key={CommentRejectionReason.Misconduct}
+                      active={CommentRejectionReason.Misconduct === rejectionReason}
+                      onSelect={() => {
+                        setRejectionReason(CommentRejectionReason.Misconduct)
+                        setRejectionReasonError('')
+                      }}>
+                      {CommentRejectionReason.Misconduct}
+                    </Dropdown.Item>
+                  </Dropdown>
+                  {rejectionReasonError && (
+                    <div style={{color: 'red'}}>{t(rejectionReasonError)}</div>
+                  )}
+                </DescriptionListItem>
+              ) : null}
+            </DescriptionList>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              color={mapCommentActionToColor(confirmAction)}
+              disabled={isApproving || isRequestingChanges || isRejecting}
+              onClick={async () => {
+                if (!currentComment) return
+                switch (confirmAction) {
+                  case ConfirmAction.Approve:
+                    await approveComment({
+                      variables: {
+                        id: currentComment.id
+                      }
+                    })
+                    setConfirmationDialogOpen(false)
+                    setShouldRefetch(true)
+                    resetCurrentCommentState()
+                    break
+                  case ConfirmAction.RequestChanges:
+                    if (!rejectionReason) {
+                      setRejectionReasonError('comments.panels.chooseRejectionReason')
+                    } else {
+                      await requestChanges({
+                        variables: {
+                          id: currentComment.id,
+                          rejectionReason
+                        }
+                      })
+                      setConfirmationDialogOpen(false)
+                      setShouldRefetch(true)
+                      resetCurrentCommentState()
                     }
-                  })
-                  setConfirmationDialogOpen(false)
-                  setShouldRefetch(true)
-                  resetCurrentCommentState()
-                  break
-                case ConfirmAction.RequestChanges:
-                  if (!rejectionReason) {
-                    Alert.error('Please choose a rejection reason', 0)
-                  } else {
-                    await requestChanges({
-                      variables: {
-                        id: currentComment.id,
-                        rejectionReason
-                      }
-                    })
-                    setConfirmationDialogOpen(false)
-                    setShouldRefetch(true)
-                    resetCurrentCommentState()
-                  }
-                  break
-                case ConfirmAction.Reject:
-                  if (!rejectionReason) {
-                    Alert.error('Please choose a rejection reason', 0)
-                  } else {
-                    await rejectComment({
-                      variables: {
-                        id: currentComment.id,
-                        rejectionReason
-                      }
-                    })
-                    setConfirmationDialogOpen(false)
-                    setShouldRefetch(true)
-                    resetCurrentCommentState()
-                  }
-                  break
-              }
-            }}>
-            {t(mapCommentActionToTitle(confirmAction))}
-          </Button>
-          <Button
-            onClick={() => {
-              setConfirmationDialogOpen(false)
-              resetCurrentCommentState()
-            }}
-            appearance="subtle">
-            {t('comments.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                    break
+                  case ConfirmAction.Reject:
+                    if (!rejectionReason) {
+                      setRejectionReasonError('comments.panels.chooseRejectionReason')
+                    } else {
+                      await rejectComment({
+                        variables: {
+                          id: currentComment.id,
+                          rejectionReason
+                        }
+                      })
+                      setConfirmationDialogOpen(false)
+                      setShouldRefetch(true)
+                      resetCurrentCommentState()
+                    }
+                    break
+                }
+              }}>
+              {t(mapCommentActionToTitle(confirmAction))}
+            </Button>
+            <Button
+              onClick={() => {
+                setConfirmationDialogOpen(false)
+                resetCurrentCommentState()
+              }}
+              appearance="subtle">
+              {t('comments.panels.cancel')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   )
 }
