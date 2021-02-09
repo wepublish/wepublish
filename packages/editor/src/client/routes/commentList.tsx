@@ -33,7 +33,6 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {useTranslation} from 'react-i18next'
 
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
-import {ApolloCache, Cache} from '@apollo/client'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
