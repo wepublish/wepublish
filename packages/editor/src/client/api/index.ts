@@ -1482,20 +1482,22 @@ export type TeaserFlexGridBlock = {
 };
 
 export type TeaserFlexGridBlockInput = {
-  teasers: Array<Maybe<TeaserFlexItemInput>>;
+  teasers: Array<Maybe<TeaserFlexInput>>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
+};
+
+export type TeaserFlexInput = {
+  article?: Maybe<ArticleTeaserInput>;
+  peerArticle?: Maybe<PeerArticleTeaserInput>;
+  page?: Maybe<PageTeaserInput>;
+  layout: FlexGridItemLayoutInput;
 };
 
 export type TeaserFlexItem = {
   __typename?: 'TeaserFlexItem';
   teaser?: Maybe<Teaser>;
   layout: FlexGridItemLayout;
-};
-
-export type TeaserFlexItemInput = {
-  teaser?: Maybe<TeaserInput>;
-  layout: FlexGridItemLayoutInput;
 };
 
 export type TeaserGridBlock = {
