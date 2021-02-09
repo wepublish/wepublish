@@ -40,7 +40,7 @@ enum ConfirmAction {
   Reject = 'reject'
 }
 
-function mapCommentActionToColor(currentAction?: ConfirmAction) {
+function mapCommentActionToColor(currentAction: ConfirmAction) {
   switch (currentAction) {
     case ConfirmAction.Approve:
       return 'green'
