@@ -289,16 +289,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const {name, email, preferredName, address} = input
         // TODO: implement new email check
 
-        const userExists = await dbAdapter.user.getUser(email)
-        if (userExists) throw new EmailAlreadyInUseError()
+        if (user.email !== email) {
+          const userExists = await dbAdapter.user.getUser(email)
+          if (userExists) throw new EmailAlreadyInUseError()
+        }
 
         const updateUser = await dbAdapter.user.updateUser({
           id: user.id,
           input: {
+            ...user,
             name,
             preferredName,
-            address,
-            ...user
+            address
           }
         })
 
@@ -362,12 +364,12 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const updateSubscription = await dbAdapter.user.updateUserSubscription({
           userID: user.id,
           input: {
+            ...user.subscription,
             memberPlanID,
             paymentPeriodicity,
             monthlyAmount,
             autoRenew,
-            paymentMethodID,
-            ...user.subscription
+            paymentMethodID
           }
         })
 

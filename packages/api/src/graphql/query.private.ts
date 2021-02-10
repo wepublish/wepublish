@@ -511,11 +511,16 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         before: {type: GraphQLID},
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
         filter: {type: GraphQLArticleFilter},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, skip, last},
+        {authenticate, dbAdapter}
+      ) {
         const {roles} = authenticate()
 
         const canGetArticles = isAuthorised(CanGetArticles, roles)
@@ -527,7 +532,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             sort,
             order,
             cursor: InputCursor(after, before),
-            limit: Limit(first, last)
+            limit: Limit(first, last, skip)
           })
         } else {
           throw new NotAuthorisedError()
@@ -758,10 +763,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         first: {type: GraphQLInt},
         last: {type: GraphQLInt},
         filter: {type: GraphQLPageFilter},
+        skip: {type: GraphQLInt},
         sort: {type: GraphQLPageSort, defaultValue: PageSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve(root, {filter, sort, order, after, before, first, last}, {authenticate, dbAdapter}) {
+      resolve(
+        root,
+        {filter, sort, order, after, before, first, last, skip},
+        {authenticate, dbAdapter}
+      ) {
         const {roles} = authenticate()
         authorise(CanGetPages, roles)
 
@@ -770,7 +780,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           sort,
           order,
           cursor: InputCursor(after, before),
-          limit: Limit(first, last)
+          limit: Limit(first, last, skip)
         })
       }
     },
