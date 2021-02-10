@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, Form, FormControl, FormGroup} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-import {ToolbarIconButton, SubMenuButton} from '../../../atoms/toolbar'
+import {ToolbarIconButton} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 

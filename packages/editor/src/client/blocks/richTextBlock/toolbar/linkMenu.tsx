@@ -1,11 +1,12 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-import {SubMenuContext, ToolbarIconButton} from '../../../atoms/toolbar'
+//import {SubMenuContext, ToolbarIconButton} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
+import axios, {AxiosError} from 'axios'
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -15,12 +16,12 @@ export function LinkMenu() {
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
 
-  const [selection, setSelection] = useState<Range | null>(null)
+  //const [selection, setSelection] = useState<Range | null>(null)
 
   const validatedURL = validateURL(url)
   const isDisabled = !validatedURL
 
-  const {openMenu} = useContext(SubMenuContext)
+  // const {openMenu} = useContext(SubMenuContext)
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export function LinkMenu() {
     } */
   }, [editor.selection])
 
-  setSelection(editor.selection)
+  // setSelection(editor.selection)
 
   return (
     <>
@@ -69,7 +70,7 @@ export function LinkMenu() {
             disabled={isDisabled}
             onClick={e => {
               e.preventDefault()
-              insertLink(editor, editor.selection, validatedURL!, title || undefined)
+              insertLink(editor, editor.selection, url, title || undefined)
             }}>
             {t('blocks.richText.insert')}
           </Button>
@@ -80,8 +81,7 @@ export function LinkMenu() {
   )
 }
 
-function validateURL(url: string): string | null {
-  return url
+async function validateURL(url: string): Promise<boolean> {
   //return boolean
   // TODO: Implement better URL validation with for support relative links.
   // try {
@@ -93,6 +93,22 @@ function validateURL(url: string): string | null {
   //     return null
   //   }
   // }
+  await axios
+    .post(
+      url,
+      {
+        baseURL: `https://${url}`
+      },
+      {timeout: 2}
+    )
+    .then(function (response) {
+      console.log(response)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+
+  return true
 }
 
 export function RemoveLinkFormatButton() {
