@@ -11,7 +11,10 @@ import {
   Comment,
   useRejectCommentMutation,
   CommentSort,
-  CommentListDocument
+  CommentListDocument,
+  ApproveCommentMutation,
+  RequestChangesOnCommentMutation,
+  RejectCommentMutation
 } from '../api'
 import {
   Timeline,
@@ -33,6 +36,7 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {useTranslation} from 'react-i18next'
 
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {ApolloCache} from '@apollo/client'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -149,6 +153,30 @@ export function CommentList() {
     setRejectionReason(undefined)
     setCurrentComment(undefined)
     setConfirmAction(undefined)
+  }
+
+  const refetchListAfterAction = (
+    cache: ApolloCache<
+      ApproveCommentMutation | RequestChangesOnCommentMutation | RejectCommentMutation
+    >
+  ) => {
+    const query = cache.readQuery<CommentListQuery>({
+      query: CommentListDocument,
+      variables: commentListVariables
+    })
+
+    if (!query) return
+
+    cache.writeQuery<CommentListQuery>({
+      query: CommentListDocument,
+      data: {
+        comments: {
+          ...query.comments,
+          nodes: query.comments.nodes.filter(comment => comment.id !== currentComment?.id)
+        }
+      },
+      variables: commentListVariables
+    })
   }
 
   return (
@@ -392,27 +420,7 @@ export function CommentList() {
                       variables: {
                         id: currentComment.id
                       },
-                      update: cache => {
-                        const query = cache.readQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          variables: commentListVariables
-                        })
-
-                        if (!query) return
-
-                        cache.writeQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          data: {
-                            comments: {
-                              ...query.comments,
-                              nodes: query.comments.nodes.filter(
-                                comment => comment.id !== currentComment.id
-                              )
-                            }
-                          },
-                          variables: commentListVariables
-                        })
-                      }
+                      update: refetchListAfterAction
                     })
                     setConfirmationDialogOpen(false)
                     resetCurrentCommentState()
@@ -424,27 +432,7 @@ export function CommentList() {
                         id: currentComment.id,
                         rejectionReason
                       },
-                      update: cache => {
-                        const query = cache.readQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          variables: commentListVariables
-                        })
-
-                        if (!query) return
-
-                        cache.writeQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          data: {
-                            comments: {
-                              ...query.comments,
-                              nodes: query.comments.nodes.filter(
-                                comment => comment.id !== currentComment.id
-                              )
-                            }
-                          },
-                          variables: commentListVariables
-                        })
-                      }
+                      update: refetchListAfterAction
                     })
                     setConfirmationDialogOpen(false)
                     resetCurrentCommentState()
@@ -456,27 +444,7 @@ export function CommentList() {
                         id: currentComment.id,
                         rejectionReason
                       },
-                      update: cache => {
-                        const query = cache.readQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          variables: commentListVariables
-                        })
-
-                        if (!query) return
-
-                        cache.writeQuery<CommentListQuery>({
-                          query: CommentListDocument,
-                          data: {
-                            comments: {
-                              ...query.comments,
-                              nodes: query.comments.nodes.filter(
-                                comment => comment.id !== currentComment.id
-                              )
-                            }
-                          },
-                          variables: commentListVariables
-                        })
-                      }
+                      update: refetchListAfterAction
                     })
                     setConfirmationDialogOpen(false)
                     resetCurrentCommentState()
