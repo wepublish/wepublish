@@ -215,6 +215,7 @@
         "save": "Save",
         "create": "Create",
         "name": "Name",
+        "jobTitle": "Job Title",
         "image": "Image",
         "chooseImage": "Choose Image",
         "editImage": "Remove Image",

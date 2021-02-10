@@ -140,6 +140,7 @@ export type Author = {
   url: Scalars['String'];
   links?: Maybe<Array<AuthorLink>>;
   bio?: Maybe<Scalars['RichText']>;
+  jobTitle?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
 };
 
@@ -159,6 +160,7 @@ export type AuthorInput = {
   slug: Scalars['Slug'];
   links?: Maybe<Array<AuthorLinkInput>>;
   bio?: Maybe<Scalars['RichText']>;
+  jobTitle?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
 };
 
@@ -2023,7 +2025,7 @@ export type CreateSessionWithJwtMutation = (
 
 export type AuthorRefFragment = (
   { __typename?: 'Author' }
-  & Pick<Author, 'id' | 'name'>
+  & Pick<Author, 'id' | 'name' | 'jobTitle'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3289,6 +3291,7 @@ export const AuthorRefFragmentDoc = gql`
     fragment AuthorRef on Author {
   id
   name
+  jobTitle
   image {
     ...ImageRef
   }
