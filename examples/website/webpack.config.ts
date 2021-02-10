@@ -45,6 +45,21 @@ export default (mode: string) =>
           test: /\.mjs$/,
           include: /node_modules/,
           type: 'javascript/auto'
+        },
+        {
+          test: /\.(css|less)$/i,
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true
+                }
+              }
+            }
+          ]
         }
       ]
     },

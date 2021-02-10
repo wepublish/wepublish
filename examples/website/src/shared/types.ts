@@ -123,9 +123,6 @@ export interface Peer {
 }
 
 export enum BlockType {
-  Foo = 'foo',
-  Bar = 'bar',
-
   // Content
   TitleImage = 'titleImage',
   Title = 'title',
@@ -141,6 +138,8 @@ export enum BlockType {
   // Layout
   Grid = 'grid'
 }
+
+export type RichTextBlockValue = Node[]
 
 export interface BaseBlock<T extends BlockType, V> {
   type: T

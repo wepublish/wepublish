@@ -9,6 +9,7 @@ import gql from 'graphql-tag'
 import {useMutation} from '@apollo/react-hooks'
 import {AuthContext} from '../authContext'
 import {Link, LogoutRoute} from '../route/routeContext'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 // CSS-Rules
 // =========
@@ -135,6 +136,7 @@ const Timestamp = cssRule(() => ({
 
 // Interfaces
 // ==========
+
 export interface ComposeCommentProps {
   readonly header?: string
   readonly parentCommentAuthor?: string
@@ -227,6 +229,9 @@ export function ComposeComment(props: ComposeCommentProps) {
             value={commentInput.children.map(child => child.text)}
             onChange={e => setCommentInput(redressCommentInput(e.target.value))}
           />
+        </p>
+        <p>
+          <RichTextBlock displayOnly />
         </p>
         <p>
           <BaseButton
