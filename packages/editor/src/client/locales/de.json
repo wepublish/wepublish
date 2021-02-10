@@ -430,6 +430,7 @@
     },
     "navbar": {
       "articles": "Artikel",
+      "comments": "Bemerkungen",
       "pages": "Seiten",
       "authors": "Autoren",
       "imageLibrary": "Image Library",
@@ -452,6 +453,49 @@
       "alternativeLogin": "Or login with: ",
       "O2Auth": "Authenticating against OAuth2: ",
       "unauthorized": "User is not authorized for login"
+    },
+    "comments": {
+      "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "state": "State",
+        "comments": "Comments",
+        "action": "Action",
+        "search": "Search",
+        "loadMore": "Load More",
+        "untitled": "Untitled",
+        "userName": "User Name",
+        "text": "Text"
+      },
+      "panels": {
+        "id": "Id",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "untitled": "Untitled",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "revisions": "Revisions",
+        "approveComment": "Approve Comment",
+        "requestChangesOnComment": "Request Changes On Comment",
+        "rejectComment": "Reject Comment",
+        "rejectionReason": "Rejection Reason",
+        "userName": "User Name",
+        "revisionCreatedAt": "Revision created at",
+        "approve": "Approve",
+        "requestChanges": "Request Changes",
+        "requestChangesReason": "Reason",
+        "reject": "Reject",
+        "chooseRejectionReason": "Please choose a rejection reason"
+      },
+      "state": {
+        "pendingApproval": "Pending Approval",
+        "pendingUserChanges": "Pending User Change",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
     }
   }
 }
