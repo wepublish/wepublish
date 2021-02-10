@@ -48,8 +48,8 @@ export interface Comment extends CommentData {
 }
 
 export interface CommentRevision {
-  text: RichTextNode[]
-  createdAt: Date
+  readonly text: RichTextNode[]
+  readonly createdAt: Date
 }
 
 export interface PublicComment extends CommentData {
@@ -86,6 +86,7 @@ export interface CommentInput {
 export interface AddPublicCommentArgs {
   readonly input: CommentInput
 }
+
 export interface UpdatePublicCommentArgs {
   readonly id: string
 

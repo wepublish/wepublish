@@ -498,6 +498,7 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetComments,
   CanTakeActionOnComment,
   CanCreateAuthor,
   CanGetAuthor,
