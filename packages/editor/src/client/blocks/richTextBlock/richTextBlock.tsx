@@ -15,6 +15,7 @@ import {withNormalizeNode} from './editor/normalizing'
 import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
+import {LinkMenu} from './toolbar/linkMenu'
 
 export type RichTextBlockProps = BlockProps<RichTextBlockValue>
 
@@ -56,10 +57,15 @@ export const RichTextBlock = memo(function RichTextBlock({
       }}>
       <Toolbar
         fadeOut={!hasFocus}
-        onMouseDown={e => {
-          e.preventDefault()
-          if (!hasFocus && location) focusAtPreviousLocation(location)
-        }}>
+
+        //TODO: Allow cursor to save location on blur-refocus. Should be applied to full richtext unit.
+        //(Currently it is preventing the toolbar forms from gaining focus.)
+
+        // onMouseDown={e => {
+        //   e.preventDefault()
+        //   if (!hasFocus && location) focusAtPreviousLocation(location)
+        // }}
+      >
         <FormatButton format={BlockFormat.H1}>
           <H1Icon />
         </FormatButton>
@@ -92,8 +98,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
         <ToolbarDivider />
 
-        <LinkFormatButton />
-        <RemoveLinkFormatButton />
+        <SubMenuButton icon="link">
+          <LinkMenu />
+        </SubMenuButton>
 
         <ToolbarDivider />
 

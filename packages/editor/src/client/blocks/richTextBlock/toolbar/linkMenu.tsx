@@ -1,22 +1,26 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, Form, FormControl, FormGroup} from 'rsuite'
+import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-import {ToolbarIconButton, SubMenuButton} from '../../../atoms/toolbar'
+import {SubMenuContext, ToolbarIconButton} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 
-export function LinkFormatButton() {
+export function LinkMenu() {
   const editor = useSlate()
-  const [selection, setSelection] = useState<Range | null>(null)
+
+  //const {closeMenu} = useContext(SubMenuContext)
 
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
 
+  const [selection, setSelection] = useState<Range | null>(null)
+
   const validatedURL = validateURL(url)
   const isDisabled = !validatedURL
 
+  const {openMenu} = useContext(SubMenuContext)
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -27,43 +31,50 @@ export function LinkFormatButton() {
       })
     )
     const tuple = nodes[0]
-
-    console.log('tuple: ', tuple)
     if (tuple) {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
       setURL((node.url as string) ?? '')
-    } else {
+    } /*else {
       setTitle('')
       setURL('')
-    }
+    } */
+  }, [editor.selection])
 
-    setSelection(editor.selection)
-  })
+  setSelection(editor.selection)
 
   return (
     <>
-      <Form>
+      <Form fluid>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
           <FormControl
             errorMessage={url && !validatedURL ? 'Invalid Link' : undefined}
             value={url}
             onChange={url => setURL(url)}
-            //or highlighted text
           />
         </FormGroup>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
-          <FormControl value={title} onChange={title => setTitle(title)} />
+          <FormControl
+            value={title ? title : window.getSelection()?.toString()}
+            //TODO change title
+            onChange={title => {
+              setTitle(title)
+            }}
+          />
         </FormGroup>
-        <Button
-          disabled={isDisabled}
-          onClick={() => {
-            insertLink(editor, selection, validatedURL!, title || undefined)
-          }}>
-          {t('blocks.richText.insert')}
-        </Button>
+        <ButtonToolbar>
+          <Button
+            disabled={isDisabled}
+            onClick={e => {
+              e.preventDefault()
+              insertLink(editor, editor.selection, validatedURL!, title || undefined)
+            }}>
+            {t('blocks.richText.insert')}
+          </Button>
+          <RemoveLinkFormatButton />
+        </ButtonToolbar>
       </Form>
     </>
   )
@@ -71,7 +82,7 @@ export function LinkFormatButton() {
 
 function validateURL(url: string): string | null {
   return url
-
+  //return boolean
   // TODO: Implement better URL validation with for support relative links.
   // try {
   //   return new URL(url).toString()
@@ -86,17 +97,19 @@ function validateURL(url: string): string | null {
 
 export function RemoveLinkFormatButton() {
   const editor = useSlate()
+  const {t} = useTranslation()
 
   return (
-    <ToolbarIconButton
+    <Button
       icon="unlink"
       active={WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
       disabled={!WepublishEditor.isFormatActive(editor, InlineFormat.Link)}
-      onMouseDown={e => {
-        e.preventDefault()
+      onMouseDown={() => {
+        //e.preventDefault()
         removeLink(editor)
-      }}
-    />
+      }}>
+      {t('blocks.richText.remove')}
+    </Button>
   )
 }
 
@@ -109,7 +122,6 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
           match: node => node.type === InlineFormat.Link
         })
       )
-      console.log('selection', selection)
       const tuple = nodes[0]
 
       if (tuple) {

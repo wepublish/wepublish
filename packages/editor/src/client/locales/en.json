@@ -495,7 +495,9 @@
         "optionalDescription": "Optional description for the link",
         "link": "Link",
         "title": "Title",
-        "apply": "Apply",
+        "text": "Text",
+        "insert": "Insert",
+        "remove": "Remove",
         "cancel": "Cancel"
       },
       "richTextTable": {
