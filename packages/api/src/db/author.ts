@@ -12,6 +12,7 @@ export interface Author {
   modifiedAt: Date
   name: string
   slug: string
+  jobTitle?: string
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]
@@ -20,6 +21,7 @@ export interface Author {
 export interface AuthorInput {
   name: string
   slug: string
+  jobTitle?: string
   imageID?: string
   links: AuthorLink[]
   bio: RichTextNode[]

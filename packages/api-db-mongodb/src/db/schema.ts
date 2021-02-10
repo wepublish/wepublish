@@ -156,6 +156,7 @@ export interface DBAuthor {
 
   slug: string
   name: string
+  jobTitle?: string
   imageID?: string
 
   links: Array<{title: string; url: string}>
