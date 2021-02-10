@@ -10,6 +10,7 @@ import {
 import Stripe from 'stripe'
 import {PaymentState} from '../db/payment'
 import {logger} from '../server'
+import {calculateTotalForInvoice} from '../utility'
 
 export interface StripePaymentProviderProps extends PaymentProviderProps {
   secretKey: string
@@ -94,10 +95,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
     }
 
     const intent = await this.stripe.paymentIntents.create({
-      amount: props.invoice.items.reduce(
-        (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-        0
-      ),
+      amount: calculateTotalForInvoice(props.invoice),
       ...(props.customerID
         ? {
             confirm: true,
