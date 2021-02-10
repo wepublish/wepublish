@@ -633,10 +633,22 @@ export type YouTubeVideoBlock = {
   videoID: Scalars['String']
 }
 
-export type ArticleRefFragment = {__typename?: 'Article'} & Pick<
+export type ArticleRefPublicFragment = {__typename?: 'Article'} & Pick<
   Article,
-  'id' | 'publishedAt' | 'updatedAt' | 'tags' | 'preTitle' | 'title' | 'lead'
-> & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+  | 'id'
+  | 'publishedAt'
+  | 'updatedAt'
+  | 'tags'
+  | 'preTitle'
+  | 'title'
+  | 'lead'
+  | 'socialMediaTitle'
+  | 'socialMediaDescription'
+> & {
+    authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
+    socialMediaAuthors: Array<{__typename?: 'Author'} & Pick<Author, 'name'>>
+    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type ArticleListQueryVariables = Exact<{
   filter?: Maybe<Array<Scalars['String']>>
@@ -646,7 +658,7 @@ export type ArticleListQueryVariables = Exact<{
 
 export type ArticleListQuery = {__typename?: 'Query'} & {
   articles: {__typename?: 'ArticleConnection'} & Pick<ArticleConnection, 'totalCount'> & {
-      nodes: Array<{__typename?: 'Article'} & ArticleRefFragment>
+      nodes: Array<{__typename?: 'Article'} & ArticleRefPublicFragment>
       pageInfo: {__typename?: 'PageInfo'} & Pick<
         PageInfo,
         'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
@@ -679,21 +691,21 @@ export type ArticleQuery = {__typename?: 'Query'} & {
         image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
         authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
         blocks: Array<
-          | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
-          | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
-          | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
-          | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
-          | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
-          | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
-          | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
-          | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
-          | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
-          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
-          | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
-          | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
-          | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
-          | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
-          | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'RichTextBlock'} & FullBlockPublic_RichTextBlock_Fragment)
+          | ({__typename?: 'ImageBlock'} & FullBlockPublic_ImageBlock_Fragment)
+          | ({__typename?: 'ImageGalleryBlock'} & FullBlockPublic_ImageGalleryBlock_Fragment)
+          | ({__typename?: 'ListicleBlock'} & FullBlockPublic_ListicleBlock_Fragment)
+          | ({__typename?: 'FacebookPostBlock'} & FullBlockPublic_FacebookPostBlock_Fragment)
+          | ({__typename?: 'InstagramPostBlock'} & FullBlockPublic_InstagramPostBlock_Fragment)
+          | ({__typename?: 'TwitterTweetBlock'} & FullBlockPublic_TwitterTweetBlock_Fragment)
+          | ({__typename?: 'VimeoVideoBlock'} & FullBlockPublic_VimeoVideoBlock_Fragment)
+          | ({__typename?: 'YouTubeVideoBlock'} & FullBlockPublic_YouTubeVideoBlock_Fragment)
+          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlockPublic_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'EmbedBlock'} & FullBlockPublic_EmbedBlock_Fragment)
+          | ({__typename?: 'LinkPageBreakBlock'} & FullBlockPublic_LinkPageBreakBlock_Fragment)
+          | ({__typename?: 'TitleBlock'} & FullBlockPublic_TitleBlock_Fragment)
+          | ({__typename?: 'QuoteBlock'} & FullBlockPublic_QuoteBlock_Fragment)
+          | ({__typename?: 'TeaserGridBlock'} & FullBlockPublic_TeaserGridBlock_Fragment)
         >
       }
   >
@@ -726,21 +738,21 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
         image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
         authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
         blocks: Array<
-          | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
-          | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
-          | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
-          | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
-          | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
-          | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
-          | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
-          | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
-          | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
-          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
-          | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
-          | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
-          | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
-          | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
-          | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'RichTextBlock'} & FullBlockPublic_RichTextBlock_Fragment)
+          | ({__typename?: 'ImageBlock'} & FullBlockPublic_ImageBlock_Fragment)
+          | ({__typename?: 'ImageGalleryBlock'} & FullBlockPublic_ImageGalleryBlock_Fragment)
+          | ({__typename?: 'ListicleBlock'} & FullBlockPublic_ListicleBlock_Fragment)
+          | ({__typename?: 'FacebookPostBlock'} & FullBlockPublic_FacebookPostBlock_Fragment)
+          | ({__typename?: 'InstagramPostBlock'} & FullBlockPublic_InstagramPostBlock_Fragment)
+          | ({__typename?: 'TwitterTweetBlock'} & FullBlockPublic_TwitterTweetBlock_Fragment)
+          | ({__typename?: 'VimeoVideoBlock'} & FullBlockPublic_VimeoVideoBlock_Fragment)
+          | ({__typename?: 'YouTubeVideoBlock'} & FullBlockPublic_YouTubeVideoBlock_Fragment)
+          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlockPublic_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'EmbedBlock'} & FullBlockPublic_EmbedBlock_Fragment)
+          | ({__typename?: 'LinkPageBreakBlock'} & FullBlockPublic_LinkPageBreakBlock_Fragment)
+          | ({__typename?: 'TitleBlock'} & FullBlockPublic_TitleBlock_Fragment)
+          | ({__typename?: 'QuoteBlock'} & FullBlockPublic_QuoteBlock_Fragment)
+          | ({__typename?: 'TeaserGridBlock'} & FullBlockPublic_TeaserGridBlock_Fragment)
         >
       }
   >
@@ -773,53 +785,55 @@ export type AuthorListQuery = {__typename?: 'Query'} & {
 }
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type AuthorQuery = {__typename?: 'Query'} & {
-  author?: Maybe<{__typename?: 'Author'} & FullAuthorFragment>
+  author?: Maybe<{__typename?: 'Author'} & Pick<Author, 'url'> & FullAuthorFragment>
 }
 
-type FullTeaser_ArticleTeaser_Fragment = {__typename?: 'ArticleTeaser'} & Pick<
+type FullTeaserPublic_ArticleTeaser_Fragment = {__typename?: 'ArticleTeaser'} & Pick<
   ArticleTeaser,
   'style' | 'preTitle' | 'title' | 'lead'
 > & {
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-    article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
+    article?: Maybe<{__typename?: 'Article'} & ArticleRefPublicFragment>
   }
 
-type FullTeaser_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'} & Pick<
+type FullTeaserPublic_PeerArticleTeaser_Fragment = {__typename?: 'PeerArticleTeaser'} & Pick<
   PeerArticleTeaser,
   'style' | 'preTitle' | 'title' | 'lead' | 'articleID'
 > & {
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-    peer?: Maybe<{__typename?: 'Peer'} & PeerWithProfileFragment>
-    article?: Maybe<{__typename?: 'Article'} & ArticleRefFragment>
+    peer?: Maybe<{__typename?: 'Peer'} & PeerWithProfilePublicFragment>
+    article?: Maybe<{__typename?: 'Article'} & ArticleRefPublicFragment>
   }
 
-type FullTeaser_PageTeaser_Fragment = {__typename?: 'PageTeaser'} & Pick<
+type FullTeaserPublic_PageTeaser_Fragment = {__typename?: 'PageTeaser'} & Pick<
   PageTeaser,
   'style' | 'preTitle' | 'title' | 'lead'
 > & {
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-    page?: Maybe<{__typename?: 'Page'} & PageRefFragment>
+    page?: Maybe<{__typename?: 'Page'} & PageRefPublicFragment>
   }
 
-export type FullTeaserFragment =
-  | FullTeaser_ArticleTeaser_Fragment
-  | FullTeaser_PeerArticleTeaser_Fragment
-  | FullTeaser_PageTeaser_Fragment
+export type FullTeaserPublicFragment =
+  | FullTeaserPublic_ArticleTeaser_Fragment
+  | FullTeaserPublic_PeerArticleTeaser_Fragment
+  | FullTeaserPublic_PageTeaser_Fragment
 
-type FullBlock_RichTextBlock_Fragment = {__typename: 'RichTextBlock'} & Pick<
+type FullBlockPublic_RichTextBlock_Fragment = {__typename: 'RichTextBlock'} & Pick<
   RichTextBlock,
   'richText'
 >
 
-type FullBlock_ImageBlock_Fragment = {__typename: 'ImageBlock'} & Pick<ImageBlock, 'caption'> & {
-    image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
-  }
+type FullBlockPublic_ImageBlock_Fragment = {__typename: 'ImageBlock'} & Pick<
+  ImageBlock,
+  'caption'
+> & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
-type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'} & {
+type FullBlockPublic_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'} & {
   images: Array<
     {__typename?: 'GalleryImageEdge'} & Pick<GalleryImageEdge, 'caption'> & {
         image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
@@ -827,7 +841,7 @@ type FullBlock_ImageGalleryBlock_Fragment = {__typename: 'ImageGalleryBlock'} & 
   >
 }
 
-type FullBlock_ListicleBlock_Fragment = {__typename: 'ListicleBlock'} & {
+type FullBlockPublic_ListicleBlock_Fragment = {__typename: 'ListicleBlock'} & {
   items: Array<
     {__typename?: 'ListicleItem'} & Pick<ListicleItem, 'title' | 'richText'> & {
         image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
@@ -835,82 +849,85 @@ type FullBlock_ListicleBlock_Fragment = {__typename: 'ListicleBlock'} & {
   >
 }
 
-type FullBlock_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'} & Pick<
+type FullBlockPublic_FacebookPostBlock_Fragment = {__typename: 'FacebookPostBlock'} & Pick<
   FacebookPostBlock,
   'userID' | 'postID'
 >
 
-type FullBlock_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'} & Pick<
+type FullBlockPublic_InstagramPostBlock_Fragment = {__typename: 'InstagramPostBlock'} & Pick<
   InstagramPostBlock,
   'postID'
 >
 
-type FullBlock_TwitterTweetBlock_Fragment = {__typename: 'TwitterTweetBlock'} & Pick<
+type FullBlockPublic_TwitterTweetBlock_Fragment = {__typename: 'TwitterTweetBlock'} & Pick<
   TwitterTweetBlock,
   'userID' | 'tweetID'
 >
 
-type FullBlock_VimeoVideoBlock_Fragment = {__typename: 'VimeoVideoBlock'} & Pick<
+type FullBlockPublic_VimeoVideoBlock_Fragment = {__typename: 'VimeoVideoBlock'} & Pick<
   VimeoVideoBlock,
   'videoID'
 >
 
-type FullBlock_YouTubeVideoBlock_Fragment = {__typename: 'YouTubeVideoBlock'} & Pick<
+type FullBlockPublic_YouTubeVideoBlock_Fragment = {__typename: 'YouTubeVideoBlock'} & Pick<
   YouTubeVideoBlock,
   'videoID'
 >
 
-type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'} & Pick<
+type FullBlockPublic_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBlock'} & Pick<
   SoundCloudTrackBlock,
   'trackID'
 >
 
-type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
+type FullBlockPublic_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
 >
 
-type FullBlock_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
+type FullBlockPublic_LinkPageBreakBlock_Fragment = {__typename: 'LinkPageBreakBlock'} & Pick<
   LinkPageBreakBlock,
   'text' | 'linkText' | 'linkURL'
 >
 
-type FullBlock_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<TitleBlock, 'title' | 'lead'>
+type FullBlockPublic_TitleBlock_Fragment = {__typename: 'TitleBlock'} & Pick<
+  TitleBlock,
+  'title' | 'lead'
+>
 
-type FullBlock_QuoteBlock_Fragment = {__typename: 'QuoteBlock'} & Pick<
+type FullBlockPublic_QuoteBlock_Fragment = {__typename: 'QuoteBlock'} & Pick<
   QuoteBlock,
   'quote' | 'author'
 >
 
-type FullBlock_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick<
+type FullBlockPublic_TeaserGridBlock_Fragment = {__typename: 'TeaserGridBlock'} & Pick<
   TeaserGridBlock,
   'numColumns'
 > & {
     teasers: Array<
       Maybe<
-        | ({__typename?: 'ArticleTeaser'} & FullTeaser_ArticleTeaser_Fragment)
-        | ({__typename?: 'PeerArticleTeaser'} & FullTeaser_PeerArticleTeaser_Fragment)
-        | ({__typename?: 'PageTeaser'} & FullTeaser_PageTeaser_Fragment)
+        | ({__typename?: 'ArticleTeaser'} & FullTeaserPublic_ArticleTeaser_Fragment)
+        | ({__typename?: 'PeerArticleTeaser'} & FullTeaserPublic_PeerArticleTeaser_Fragment)
+        | ({__typename?: 'PageTeaser'} & FullTeaserPublic_PageTeaser_Fragment)
       >
     >
   }
 
-export type FullBlockFragment =
-  | FullBlock_RichTextBlock_Fragment
-  | FullBlock_ImageBlock_Fragment
-  | FullBlock_ImageGalleryBlock_Fragment
-  | FullBlock_ListicleBlock_Fragment
-  | FullBlock_FacebookPostBlock_Fragment
-  | FullBlock_InstagramPostBlock_Fragment
-  | FullBlock_TwitterTweetBlock_Fragment
-  | FullBlock_VimeoVideoBlock_Fragment
-  | FullBlock_YouTubeVideoBlock_Fragment
-  | FullBlock_SoundCloudTrackBlock_Fragment
-  | FullBlock_EmbedBlock_Fragment
-  | FullBlock_LinkPageBreakBlock_Fragment
-  | FullBlock_TitleBlock_Fragment
-  | FullBlock_QuoteBlock_Fragment
-  | FullBlock_TeaserGridBlock_Fragment
+export type FullBlockPublicFragment =
+  | FullBlockPublic_RichTextBlock_Fragment
+  | FullBlockPublic_ImageBlock_Fragment
+  | FullBlockPublic_ImageGalleryBlock_Fragment
+  | FullBlockPublic_ListicleBlock_Fragment
+  | FullBlockPublic_FacebookPostBlock_Fragment
+  | FullBlockPublic_InstagramPostBlock_Fragment
+  | FullBlockPublic_TwitterTweetBlock_Fragment
+  | FullBlockPublic_VimeoVideoBlock_Fragment
+  | FullBlockPublic_YouTubeVideoBlock_Fragment
+  | FullBlockPublic_SoundCloudTrackBlock_Fragment
+  | FullBlockPublic_EmbedBlock_Fragment
+  | FullBlockPublic_LinkPageBreakBlock_Fragment
+  | FullBlockPublic_TitleBlock_Fragment
+  | FullBlockPublic_QuoteBlock_Fragment
+  | FullBlockPublic_TeaserGridBlock_Fragment
 
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
@@ -945,9 +962,33 @@ export type FullImageFragment = {__typename?: 'Image'} & Pick<
   | 'license'
 > & {focalPoint?: Maybe<{__typename?: 'Point'} & Pick<Point, 'x' | 'y'>>} & ImageRefFragment
 
-export type PageRefFragment = {__typename?: 'Page'} & Pick<
+export type FullNavigationPublicFragment = {__typename?: 'Navigation'} & Pick<
+  Navigation,
+  'id' | 'key' | 'name'
+> & {
+    links: Array<
+      | ({__typename: 'PageNavigationLink'} & Pick<PageNavigationLink, 'label'> & {
+            page?: Maybe<{__typename?: 'Page'} & PageRefPublicFragment>
+          })
+      | ({__typename: 'ArticleNavigationLink'} & Pick<ArticleNavigationLink, 'label'> & {
+            article?: Maybe<{__typename?: 'Article'} & ArticleRefPublicFragment>
+          })
+      | ({__typename: 'ExternalNavigationLink'} & Pick<ExternalNavigationLink, 'label' | 'url'>)
+    >
+  }
+
+export type NavigationQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>
+  key?: Maybe<Scalars['ID']>
+}>
+
+export type NavigationQuery = {__typename?: 'Query'} & {
+  navigation?: Maybe<{__typename?: 'Navigation'} & FullNavigationPublicFragment>
+}
+
+export type PageRefPublicFragment = {__typename?: 'Page'} & Pick<
   Page,
-  'id' | 'publishedAt' | 'updatedAt' | 'title' | 'description'
+  'id' | 'publishedAt' | 'updatedAt' | 'title' | 'description' | 'url'
 > & {image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PageListQueryVariables = Exact<{
@@ -958,7 +999,7 @@ export type PageListQueryVariables = Exact<{
 
 export type PageListQuery = {__typename?: 'Query'} & {
   pages: {__typename?: 'PageConnection'} & Pick<PageConnection, 'totalCount'> & {
-      nodes: Array<{__typename?: 'Page'} & PageRefFragment>
+      nodes: Array<{__typename?: 'Page'} & PageRefPublicFragment>
       pageInfo: {__typename?: 'PageInfo'} & Pick<
         PageInfo,
         'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'
@@ -967,55 +1008,52 @@ export type PageListQuery = {__typename?: 'Query'} & {
 }
 
 export type PageQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type PageQuery = {__typename?: 'Query'} & {
   page?: Maybe<
-    {__typename?: 'Page'} & Pick<
-      Page,
-      'id' | 'publishedAt' | 'updatedAt' | 'slug' | 'title' | 'description' | 'tags'
-    > & {
-        image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    {__typename?: 'Page'} & Pick<Page, 'slug' | 'tags'> & {
         properties: Array<
           {__typename?: 'PublicProperties'} & Pick<PublicProperties, 'key' | 'value'>
         >
         blocks: Array<
-          | ({__typename?: 'RichTextBlock'} & FullBlock_RichTextBlock_Fragment)
-          | ({__typename?: 'ImageBlock'} & FullBlock_ImageBlock_Fragment)
-          | ({__typename?: 'ImageGalleryBlock'} & FullBlock_ImageGalleryBlock_Fragment)
-          | ({__typename?: 'ListicleBlock'} & FullBlock_ListicleBlock_Fragment)
-          | ({__typename?: 'FacebookPostBlock'} & FullBlock_FacebookPostBlock_Fragment)
-          | ({__typename?: 'InstagramPostBlock'} & FullBlock_InstagramPostBlock_Fragment)
-          | ({__typename?: 'TwitterTweetBlock'} & FullBlock_TwitterTweetBlock_Fragment)
-          | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
-          | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
-          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
-          | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
-          | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
-          | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
-          | ({__typename?: 'QuoteBlock'} & FullBlock_QuoteBlock_Fragment)
-          | ({__typename?: 'TeaserGridBlock'} & FullBlock_TeaserGridBlock_Fragment)
+          | ({__typename?: 'RichTextBlock'} & FullBlockPublic_RichTextBlock_Fragment)
+          | ({__typename?: 'ImageBlock'} & FullBlockPublic_ImageBlock_Fragment)
+          | ({__typename?: 'ImageGalleryBlock'} & FullBlockPublic_ImageGalleryBlock_Fragment)
+          | ({__typename?: 'ListicleBlock'} & FullBlockPublic_ListicleBlock_Fragment)
+          | ({__typename?: 'FacebookPostBlock'} & FullBlockPublic_FacebookPostBlock_Fragment)
+          | ({__typename?: 'InstagramPostBlock'} & FullBlockPublic_InstagramPostBlock_Fragment)
+          | ({__typename?: 'TwitterTweetBlock'} & FullBlockPublic_TwitterTweetBlock_Fragment)
+          | ({__typename?: 'VimeoVideoBlock'} & FullBlockPublic_VimeoVideoBlock_Fragment)
+          | ({__typename?: 'YouTubeVideoBlock'} & FullBlockPublic_YouTubeVideoBlock_Fragment)
+          | ({__typename?: 'SoundCloudTrackBlock'} & FullBlockPublic_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'EmbedBlock'} & FullBlockPublic_EmbedBlock_Fragment)
+          | ({__typename?: 'LinkPageBreakBlock'} & FullBlockPublic_LinkPageBreakBlock_Fragment)
+          | ({__typename?: 'TitleBlock'} & FullBlockPublic_TitleBlock_Fragment)
+          | ({__typename?: 'QuoteBlock'} & FullBlockPublic_QuoteBlock_Fragment)
+          | ({__typename?: 'TeaserGridBlock'} & FullBlockPublic_TeaserGridBlock_Fragment)
         >
-      }
+      } & PageRefPublicFragment
   >
 }
 
-export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
+export type FullPeerProfilePublicFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
   'name' | 'hostURL' | 'themeColor'
 > & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
-export type PeerWithProfileFragment = {__typename?: 'Peer'} & {
-  profile?: Maybe<{__typename?: 'PeerProfile'} & FullPeerProfileFragment>
+export type PeerWithProfilePublicFragment = {__typename?: 'Peer'} & {
+  profile?: Maybe<{__typename?: 'PeerProfile'} & FullPeerProfilePublicFragment>
 } & PeerRefFragment
 
 export type PeerProfileQueryVariables = Exact<{[key: string]: never}>
 
 export type PeerProfileQuery = {__typename?: 'Query'} & {
-  peerProfile: {__typename?: 'PeerProfile'} & FullPeerProfileFragment
+  peerProfile: {__typename?: 'PeerProfile'} & FullPeerProfilePublicFragment
 }
 
 export type PeerQueryVariables = Exact<{
@@ -1026,7 +1064,7 @@ export type PeerQuery = {__typename?: 'Query'} & {
   peer?: Maybe<{__typename?: 'Peer'} & PeerRefFragment>
 }
 
-export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'name' | 'email'>
+export type FullUserPublicFragment = {__typename?: 'User'} & Pick<User, 'name' | 'email'>
 
 export type CreateSessionMutationVariables = Exact<{
   email: Scalars['String']
@@ -1048,6 +1086,13 @@ export type CreateSessionWithJwtMutation = {__typename?: 'Mutation'} & {
       user: {__typename?: 'User'} & Pick<User, 'email'>
     }
 }
+
+export type RevokeActiveSessionMutationVariables = Exact<{[key: string]: never}>
+
+export type RevokeActiveSessionMutation = {__typename?: 'Mutation'} & Pick<
+  Mutation,
+  'revokeActiveSession'
+>
 
 export const ImageUrLs = gql`
   fragment ImageURLs on Image {
@@ -1096,8 +1141,8 @@ export const FullAuthor = gql`
   }
   ${AuthorRef}
 `
-export const ArticleRef = gql`
-  fragment ArticleRef on Article {
+export const ArticleRefPublic = gql`
+  fragment ArticleRefPublic on Article {
     id
     publishedAt
     updatedAt
@@ -1105,10 +1150,19 @@ export const ArticleRef = gql`
     preTitle
     title
     lead
+    authors {
+      ...AuthorRef
+    }
+    socialMediaAuthors {
+      name
+    }
+    socialMediaTitle
+    socialMediaDescription
     image {
       ...ImageRef
     }
   }
+  ${AuthorRef}
   ${ImageRef}
 `
 export const PeerRef = gql`
@@ -1119,8 +1173,8 @@ export const PeerRef = gql`
     hostURL
   }
 `
-export const FullPeerProfile = gql`
-  fragment FullPeerProfile on PeerProfile {
+export const FullPeerProfilePublic = gql`
+  fragment FullPeerProfilePublic on PeerProfile {
     name
     hostURL
     themeColor
@@ -1130,18 +1184,18 @@ export const FullPeerProfile = gql`
   }
   ${ImageRef}
 `
-export const PeerWithProfile = gql`
-  fragment PeerWithProfile on Peer {
+export const PeerWithProfilePublic = gql`
+  fragment PeerWithProfilePublic on Peer {
     ...PeerRef
     profile {
-      ...FullPeerProfile
+      ...FullPeerProfilePublic
     }
   }
   ${PeerRef}
-  ${FullPeerProfile}
+  ${FullPeerProfilePublic}
 `
-export const PageRef = gql`
-  fragment PageRef on Page {
+export const PageRefPublic = gql`
+  fragment PageRefPublic on Page {
     id
     publishedAt
     updatedAt
@@ -1150,11 +1204,12 @@ export const PageRef = gql`
     image {
       ...ImageRef
     }
+    url
   }
   ${ImageRef}
 `
-export const FullTeaser = gql`
-  fragment FullTeaser on Teaser {
+export const FullTeaserPublic = gql`
+  fragment FullTeaserPublic on Teaser {
     ... on ArticleTeaser {
       style
       image {
@@ -1164,7 +1219,7 @@ export const FullTeaser = gql`
       title
       lead
       article {
-        ...ArticleRef
+        ...ArticleRefPublic
       }
     }
     ... on PeerArticleTeaser {
@@ -1176,11 +1231,11 @@ export const FullTeaser = gql`
       title
       lead
       peer {
-        ...PeerWithProfile
+        ...PeerWithProfilePublic
       }
       articleID
       article {
-        ...ArticleRef
+        ...ArticleRefPublic
       }
     }
     ... on PageTeaser {
@@ -1192,17 +1247,17 @@ export const FullTeaser = gql`
       title
       lead
       page {
-        ...PageRef
+        ...PageRefPublic
       }
     }
   }
   ${ImageRef}
-  ${ArticleRef}
-  ${PeerWithProfile}
-  ${PageRef}
+  ${ArticleRefPublic}
+  ${PeerWithProfilePublic}
+  ${PageRefPublic}
 `
-export const FullBlock = gql`
-  fragment FullBlock on Block {
+export const FullBlockPublic = gql`
+  fragment FullBlockPublic on Block {
     __typename
     ... on TitleBlock {
       title
@@ -1272,13 +1327,13 @@ export const FullBlock = gql`
     }
     ... on TeaserGridBlock {
       teasers {
-        ...FullTeaser
+        ...FullTeaserPublic
       }
       numColumns
     }
   }
   ${ImageRef}
-  ${FullTeaser}
+  ${FullTeaserPublic}
 `
 export const FullImage = gql`
   fragment FullImage on Image {
@@ -1303,8 +1358,36 @@ export const FullImage = gql`
   }
   ${ImageRef}
 `
-export const FullUser = gql`
-  fragment FullUser on User {
+export const FullNavigationPublic = gql`
+  fragment FullNavigationPublic on Navigation {
+    id
+    key
+    name
+    links {
+      __typename
+      ... on PageNavigationLink {
+        label
+        page {
+          ...PageRefPublic
+        }
+      }
+      ... on ArticleNavigationLink {
+        label
+        article {
+          ...ArticleRefPublic
+        }
+      }
+      ... on ExternalNavigationLink {
+        label
+        url
+      }
+    }
+  }
+  ${PageRefPublic}
+  ${ArticleRefPublic}
+`
+export const FullUserPublic = gql`
+  fragment FullUserPublic on User {
     name
     email
   }
@@ -1313,7 +1396,7 @@ export const ArticleList = gql`
   query ArticleList($filter: [String!], $after: ID, $first: Int) {
     articles(first: $first, after: $after, filter: {tags: $filter}) {
       nodes {
-        ...ArticleRef
+        ...ArticleRefPublic
       }
       pageInfo {
         startCursor
@@ -1324,7 +1407,7 @@ export const ArticleList = gql`
       totalCount
     }
   }
-  ${ArticleRef}
+  ${ArticleRefPublic}
 `
 export const Article = gql`
   query Article($id: ID!) {
@@ -1350,13 +1433,13 @@ export const Article = gql`
       }
       breaking
       blocks {
-        ...FullBlock
+        ...FullBlockPublic
       }
     }
   }
   ${ImageRef}
   ${AuthorRef}
-  ${FullBlock}
+  ${FullBlockPublic}
 `
 export const PeerArticle = gql`
   query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
@@ -1382,13 +1465,13 @@ export const PeerArticle = gql`
       }
       breaking
       blocks {
-        ...FullBlock
+        ...FullBlockPublic
       }
     }
   }
   ${ImageRef}
   ${AuthorRef}
-  ${FullBlock}
+  ${FullBlockPublic}
 `
 export const AuthorList = gql`
   query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
@@ -1408,18 +1491,27 @@ export const AuthorList = gql`
   ${FullAuthor}
 `
 export const Author = gql`
-  query Author($id: ID!) {
-    author(id: $id) {
+  query Author($id: ID, $slug: Slug) {
+    author(id: $id, slug: $slug) {
       ...FullAuthor
+      url
     }
   }
   ${FullAuthor}
+`
+export const Navigation = gql`
+  query Navigation($id: ID, $key: ID) {
+    navigation(id: $id, key: $key) {
+      ...FullNavigationPublic
+    }
+  }
+  ${FullNavigationPublic}
 `
 export const PageList = gql`
   query PageList($filter: [String!], $after: ID, $first: Int) {
     pages(first: $first, after: $after, filter: {tags: $filter}) {
       nodes {
-        ...PageRef
+        ...PageRefPublic
       }
       pageInfo {
         startCursor
@@ -1430,40 +1522,33 @@ export const PageList = gql`
       totalCount
     }
   }
-  ${PageRef}
+  ${PageRefPublic}
 `
 export const Page = gql`
-  query Page($id: ID!) {
-    page(id: $id) {
-      id
-      publishedAt
-      updatedAt
+  query Page($id: ID, $slug: Slug) {
+    page(id: $id, slug: $slug) {
+      ...PageRefPublic
       slug
-      title
-      description
-      image {
-        ...ImageRef
-      }
       tags
       properties {
         key
         value
       }
       blocks {
-        ...FullBlock
+        ...FullBlockPublic
       }
     }
   }
-  ${ImageRef}
-  ${FullBlock}
+  ${PageRefPublic}
+  ${FullBlockPublic}
 `
 export const PeerProfile = gql`
   query PeerProfile {
     peerProfile {
-      ...FullPeerProfile
+      ...FullPeerProfilePublic
     }
   }
-  ${FullPeerProfile}
+  ${FullPeerProfilePublic}
 `
 export const Peer = gql`
   query Peer($id: ID!) {
@@ -1491,5 +1576,10 @@ export const CreateSessionWithJwt = gql`
       }
       token
     }
+  }
+`
+export const RevokeActiveSession = gql`
+  mutation RevokeActiveSession {
+    revokeActiveSession
   }
 `

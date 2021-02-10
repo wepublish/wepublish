@@ -35,6 +35,26 @@ Object {
 }
 `;
 
+exports[`Peers can be created/edited/deleted: can be read by id - public 1`] = `
+Object {
+  "data": Object {
+    "peer": Object {
+      "hostURL": "https://host-url.ch/",
+      "id": Any<String>,
+      "name": "Peer Test 4",
+      "slug": "test-peer4",
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
 exports[`Peers can be created/edited/deleted: can be read by id 1`] = `
 Object {
   "data": Object {
@@ -148,6 +168,36 @@ Object {
     },
   },
   "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers rejects invalid color 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [GraphQLError: Variable "$input" got invalid value "invalidHEXstring" at "input.themeColor"; Expected type Color. Invalid hex color string.],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
+
+exports[`Peers rejects non string input for color 1`] = `
+Object {
+  "data": undefined,
+  "errors": Array [
+    [GraphQLError: Variable "$input" got invalid value 100 at "input.themeColor"; Expected type Color. ],
+  ],
   "extensions": undefined,
   "http": Object {
     "headers": Headers {

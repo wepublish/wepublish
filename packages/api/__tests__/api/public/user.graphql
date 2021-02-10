@@ -1,4 +1,4 @@
-fragment FullUser on User {
+fragment FullUserPublic on User {
     name
     email
 }
@@ -20,4 +20,8 @@ mutation CreateSessionWithJWT($jwt: String!) {
         }
         token
     }
+}
+
+mutation RevokeActiveSession {
+    revokeActiveSession
 }

@@ -1,4 +1,4 @@
-fragment FullTeaser on Teaser {
+fragment FullTeaserPublic on Teaser {
   ... on ArticleTeaser {
     style
 
@@ -11,7 +11,7 @@ fragment FullTeaser on Teaser {
     lead
 
     article {
-      ...ArticleRef
+      ...ArticleRefPublic
     }
   }
 
@@ -27,12 +27,12 @@ fragment FullTeaser on Teaser {
     lead
 
     peer {
-      ...PeerWithProfile
+      ...PeerWithProfilePublic
     }
 
     articleID
     article {
-      ...ArticleRef
+      ...ArticleRefPublic
     }
   }
 
@@ -48,12 +48,12 @@ fragment FullTeaser on Teaser {
     lead
 
     page {
-      ...PageRef
+      ...PageRefPublic
     }
   }
 }
 
-fragment FullBlock on Block {
+fragment FullBlockPublic on Block {
   __typename
 
   ... on TitleBlock {
@@ -138,7 +138,7 @@ fragment FullBlock on Block {
 
   ... on TeaserGridBlock {
     teasers {
-      ...FullTeaser
+      ...FullTeaserPublic
     }
     numColumns
   }

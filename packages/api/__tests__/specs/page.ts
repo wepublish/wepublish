@@ -11,6 +11,7 @@ import {
   UnpublishPage,
   DeletePage
 } from '../api/private'
+import {Page as PublicPage, PageList as PublicPageList} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -316,6 +317,93 @@ describe('Pages', () => {
       })
       expect(res).toMatchSnapshot()
       ids.shift()
+    })
+
+    test('can be read by id - published', async () => {
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: ids[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPage,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          page: {
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.page.id).toBe(ids[0])
+      expect(res.data?.page.url).toBe(`https://demo.wepublish.ch/page/${ids[0]}/testing-page`)
+    })
+
+    test('can be read by slug - published', async () => {
+      const {mutate} = testClientPrivate
+      await mutate({
+        mutation: PublishPage,
+        variables: {
+          id: ids[0],
+          publishAt: '2020-11-25T23:55:35.000Z',
+          publishedAt: '2020-11-25T23:55:35.000Z',
+          updatedAt: '2020-11-25T23:55:35.000Z'
+        }
+      })
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPage,
+        variables: {
+          slug: 'testing-page'
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          page: {
+            id: expect.any(String),
+            url: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.page.id).toBe(ids[0])
+      expect(res.data?.page.url).toBe(`https://demo.wepublish.ch/page/${ids[0]}/testing-page`)
+    })
+
+    //can be read in list -published
+    test('can be read in list - published', async () => {
+      const {query} = testClientPublic
+
+      const res = await query({
+        query: PublicPageList,
+        variables: {
+          first: 10
+        }
+      })
+
+      expect(res).toMatchSnapshot({
+        data: {
+          pages: {
+            nodes: Array.from({length: 3}, () => ({
+              id: expect.any(String),
+              url: expect.any(String)
+            })),
+            pageInfo: {
+              endCursor: expect.any(String),
+              startCursor: expect.any(String)
+            }
+          }
+        }
+      })
     })
   })
 })

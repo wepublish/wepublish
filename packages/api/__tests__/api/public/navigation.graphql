@@ -1,0 +1,31 @@
+fragment FullNavigationPublic on Navigation {
+  id
+  key
+  name
+  links {
+    __typename
+
+    ... on PageNavigationLink {
+      label
+      page {
+        ...PageRefPublic
+      }
+    }
+    ... on ArticleNavigationLink {
+      label
+      article {
+        ...ArticleRefPublic
+      }
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
+}
+
+query Navigation($id: ID, $key: ID) {
+  navigation(id: $id, key: $key) {
+    ...FullNavigationPublic
+  }
+}

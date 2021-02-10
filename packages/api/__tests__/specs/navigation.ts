@@ -13,6 +13,7 @@ import {
   UpdateNavigation,
   DeleteNavigation
 } from '../api/private'
+import {Navigation as NavigationPublic} from '../api/public'
 
 let testClientPublic: ApolloServerTestClient
 let testClientPrivate: ApolloServerTestClient
@@ -135,6 +136,24 @@ describe('Navigations', () => {
       ids.unshift(res.data?.createNavigation?.id)
     })
 
+    test('will reject input without links', async () => {
+      const {mutate} = testClientPrivate
+
+      const res = await mutate({
+        mutation: CreateNavigation,
+        variables: {
+          input: {
+            name: 'No Link Nav',
+            key: 'createNavNoLinkKey321'
+          }
+        }
+      })
+      expect(res).toMatchSnapshot()
+      expect(res?.errors?.[0].message).toBe(
+        'Variable "$input" got invalid value { name: "No Link Nav", key: "createNavNoLinkKey321" }; Field links of required type [NavigationLinkInput!]! was not provided.'
+      )
+    })
+
     test('can be read in list', async () => {
       const {query} = testClientPrivate
       const res = await query({
@@ -167,6 +186,62 @@ describe('Navigations', () => {
         }
       })
       expect(res.data?.navigation.id).toBe(ids[0])
+    })
+
+    test('can be read by key', async () => {
+      const {query} = testClientPrivate
+      const res = await query({
+        query: Navigation,
+        variables: {
+          key: 'createNavKey321'
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          navigation: {
+            id: expect.any(String),
+            links: expect.any(Array)
+          }
+        }
+      })
+      expect(res.data?.navigation.name).toBe('Create Navigation Name')
+    })
+
+    test('can be read by id - public', async () => {
+      const {query} = testClientPublic
+      const res = await query({
+        query: NavigationPublic,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          navigation: {
+            id: expect.any(String)
+          }
+        }
+      })
+      expect(res.data?.navigation.id).toBe(ids[0])
+    })
+
+    test('will reject request without ID or key', async () => {
+      const {query} = testClientPrivate
+      let res = await query({query: Navigation})
+      expect(res).toMatchSnapshot()
+      expect(res.data?.navigation).toBeNull()
+      expect(res?.errors?.[0].message).toBe('You must provide either `id` or `key`.')
+
+      res = await query({
+        query: Navigation,
+        variables: {
+          id: ids[0],
+          key: 'createNavKey321'
+        }
+      })
+      expect(res).toMatchSnapshot()
+      expect(res.data?.navigation).toBeNull()
+      expect(res?.errors?.[0].message).toBe('You must provide either `id` or `key`.')
     })
 
     test('can be updated', async () => {

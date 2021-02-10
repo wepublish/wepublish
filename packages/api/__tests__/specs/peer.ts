@@ -11,6 +11,7 @@ import {
   DeletePeer,
   UpdatePeerProfile
 } from '../api/private'
+import {Peer as PublicPeer} from '../api/public'
 import {FetchMock} from 'jest-fetch-mock'
 import fetch from 'node-fetch'
 import fakePeerAdminSchema from '../fakePeerAdminSchema.json'
@@ -114,6 +115,23 @@ describe('Peers', () => {
       })
     })
 
+    test('can be read by id - public', async () => {
+      const {query} = testClientPublic
+      const res = await query({
+        query: PublicPeer,
+        variables: {
+          id: ids[0]
+        }
+      })
+      expect(res).toMatchSnapshot({
+        data: {
+          peer: {
+            id: expect.any(String)
+          }
+        }
+      })
+    })
+
     test('can be updated', async () => {
       const {mutate} = testClientPrivate
       const res = await mutate({
@@ -178,6 +196,53 @@ describe('Peers', () => {
       })
       expect(res).toMatchSnapshot()
     })
+  })
+
+  test('rejects invalid color', async () => {
+    const {mutate} = testClientPrivate
+
+    const input: PeerProfileInput = {
+      name: 'test peer profile',
+      logoID: 'logoID123',
+      themeColor: 'invalidHEXstring',
+      callToActionText: [{text: 'rich text call to action'}],
+      callToActionURL: 'calltoactionurl.ch/'
+    }
+    const res = await mutate({
+      mutation: UpdatePeerProfile,
+      variables: {
+        input: input
+      }
+    })
+
+    expect(res).toMatchSnapshot()
+    expect(res?.data).toBeUndefined()
+    expect(res?.errors?.[0].message).toBe(
+      'Variable "$input" got invalid value "invalidHEXstring" at "input.themeColor"; Expected type Color. Invalid hex color string.'
+    )
+  })
+
+  test('rejects non string input for color', async () => {
+    const {mutate} = testClientPrivate
+
+    const res = await mutate({
+      mutation: UpdatePeerProfile,
+      variables: {
+        input: {
+          name: 'test peer profile',
+          logoID: 'logoID123',
+          themeColor: 100,
+          callToActionText: [{text: 'rich text call to action'}],
+          callToActionURL: 'calltoactionurl.ch/'
+        }
+      }
+    })
+
+    expect(res).toMatchSnapshot()
+    expect(res?.data).toBeUndefined()
+    expect(res?.errors?.[0].message).toBe(
+      'Variable "$input" got invalid value 100 at "input.themeColor"; Expected type Color. '
+    )
   })
 })
 

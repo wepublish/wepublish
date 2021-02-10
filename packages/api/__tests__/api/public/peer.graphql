@@ -1,4 +1,4 @@
-fragment FullPeerProfile on PeerProfile {
+fragment FullPeerProfilePublic on PeerProfile {
   name
   hostURL
   themeColor
@@ -14,16 +14,16 @@ fragment PeerRef on Peer {
   hostURL
 }
 
-fragment PeerWithProfile on Peer {
+fragment PeerWithProfilePublic on Peer {
   ...PeerRef
   profile {
-    ...FullPeerProfile
+    ...FullPeerProfilePublic
   }
 }
 
 query PeerProfile {
   peerProfile {
-    ...FullPeerProfile
+    ...FullPeerProfilePublic
   }
 }
 

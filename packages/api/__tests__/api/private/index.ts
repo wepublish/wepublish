@@ -1640,6 +1640,7 @@ export type MutationArticleFragment = {__typename?: 'Article'} & Pick<Article, '
     >
     latest: {__typename?: 'ArticleRevision'} & Pick<
       ArticleRevision,
+      | 'hideAuthor'
       | 'publishedAt'
       | 'updatedAt'
       | 'revision'
@@ -1826,6 +1827,8 @@ export type AuthorListQueryVariables = Exact<{
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  sort?: Maybe<AuthorSort>
+  order?: Maybe<SortOrder>
 }>
 
 export type AuthorListQuery = {__typename?: 'Query'} & {
@@ -1839,7 +1842,8 @@ export type AuthorListQuery = {__typename?: 'Query'} & {
 }
 
 export type AuthorQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
 }>
 
 export type AuthorQuery = {__typename?: 'Query'} & {
@@ -2111,7 +2115,8 @@ export type NavigationListQuery = {__typename?: 'Query'} & {
 }
 
 export type NavigationQueryVariables = Exact<{
-  id: Scalars['ID']
+  id?: Maybe<Scalars['ID']>
+  key?: Maybe<Scalars['ID']>
 }>
 
 export type NavigationQuery = {__typename?: 'Query'} & {
@@ -2358,6 +2363,28 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deletePeer'>
 
+export type TokenRefFragment = {__typename?: 'Token'} & Pick<Token, 'id' | 'name'>
+
+export type TokenListQueryVariables = Exact<{[key: string]: never}>
+
+export type TokenListQuery = {__typename?: 'Query'} & {
+  tokens: Array<{__typename?: 'Token'} & TokenRefFragment>
+}
+
+export type CreateTokenMutationVariables = Exact<{
+  input: TokenInput
+}>
+
+export type CreateTokenMutation = {__typename?: 'Mutation'} & {
+  createToken: {__typename?: 'CreatedToken'} & Pick<CreatedToken, 'id' | 'name' | 'token'>
+}
+
+export type DeleteTokenMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type DeleteTokenMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'deleteToken'>
+
 export type FullUserFragment = {__typename?: 'User'} & Pick<User, 'id' | 'name' | 'email'> & {
     roles: Array<{__typename?: 'UserRole'} & FullUserRoleFragment>
   }
@@ -2433,10 +2460,23 @@ export type CreateSessionMutationVariables = Exact<{
 }>
 
 export type CreateSessionMutation = {__typename?: 'Mutation'} & {
-  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token'> & {
+  createSession: {__typename?: 'SessionWithToken'} & Pick<SessionWithToken, 'token' | 'id'> & {
       user: {__typename?: 'User'} & Pick<User, 'email'>
     }
 }
+
+export type RevokeActiveSessionMutationVariables = Exact<{[key: string]: never}>
+
+export type RevokeActiveSessionMutation = {__typename?: 'Mutation'} & Pick<
+  Mutation,
+  'revokeActiveSession'
+>
+
+export type RevokeSessionMutationVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type RevokeSessionMutation = {__typename?: 'Mutation'} & Pick<Mutation, 'revokeSession'>
 
 export type CreateSessionWithJwtMutationVariables = Exact<{
   jwt: Scalars['String']
@@ -2532,6 +2572,7 @@ export const MutationArticle = gql`
       revision
     }
     latest {
+      hideAuthor
       publishedAt
       updatedAt
       revision
@@ -2908,6 +2949,12 @@ export const MutationPage = gql`
   ${ImageRef}
   ${FullBlock}
 `
+export const TokenRef = gql`
+  fragment TokenRef on Token {
+    id
+    name
+  }
+`
 export const FullPermission = gql`
   fragment FullPermission on Permission {
     id
@@ -3076,8 +3123,24 @@ export const Article = gql`
   ${FullBlock}
 `
 export const AuthorList = gql`
-  query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-    authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+  query AuthorList(
+    $filter: String
+    $after: ID
+    $before: ID
+    $first: Int
+    $last: Int
+    $sort: AuthorSort
+    $order: SortOrder
+  ) {
+    authors(
+      filter: {name: $filter}
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      sort: $sort
+      order: $order
+    ) {
       nodes {
         ...FullAuthor
       }
@@ -3093,8 +3156,8 @@ export const AuthorList = gql`
   ${FullAuthor}
 `
 export const Author = gql`
-  query Author($id: ID!) {
-    author(id: $id) {
+  query Author($id: ID, $slug: Slug) {
+    author(id: $id, slug: $slug) {
       ...FullAuthor
     }
   }
@@ -3175,8 +3238,8 @@ export const NavigationList = gql`
   ${FullNavigation}
 `
 export const Navigation = gql`
-  query Navigation($id: ID!) {
-    navigation(id: $id) {
+  query Navigation($id: ID, $key: ID) {
+    navigation(id: $id, key: $key) {
       ...FullNavigation
     }
   }
@@ -3350,6 +3413,28 @@ export const DeletePeer = gql`
     deletePeer(id: $id)
   }
 `
+export const TokenList = gql`
+  query TokenList {
+    tokens {
+      ...TokenRef
+    }
+  }
+  ${TokenRef}
+`
+export const CreateToken = gql`
+  mutation CreateToken($input: TokenInput!) {
+    createToken(input: $input) {
+      id
+      name
+      token
+    }
+  }
+`
+export const DeleteToken = gql`
+  mutation DeleteToken($id: ID!) {
+    deleteToken(id: $id)
+  }
+`
 export const UserList = gql`
   query UserList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
     users(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
@@ -3419,7 +3504,18 @@ export const CreateSession = gql`
         email
       }
       token
+      id
     }
+  }
+`
+export const RevokeActiveSession = gql`
+  mutation RevokeActiveSession {
+    revokeActiveSession
+  }
+`
+export const RevokeSession = gql`
+  mutation RevokeSession($id: ID!) {
+    revokeSession(id: $id)
   }
 `
 export const CreateSessionWithJwt = gql`
