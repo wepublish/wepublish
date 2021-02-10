@@ -498,7 +498,8 @@
         "link": "Link",
         "title": "Title",
         "apply": "Apply",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {
         "insertTable": "Insert Table",
