@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - f/WEP-153-comments-listing-route
 
 jobs:
   release:
