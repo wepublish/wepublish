@@ -60,9 +60,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         //TODO: Allow cursor to save location on blur-refocus. Should be applied to full richtext unit.
         //(Currently it is preventing the toolbar forms from gaining focus.)
 
-        //  onMouseDown={e => {
-        //   e.preventDefault()
-        //   if (!hasFocus && location) focusAtPreviousLocation(location)
+        //    onMouseDown={e => {
+        //     e.preventDefault()
+        //     if (!hasFocus && location) focusAtPreviousLocation(location)
         // }}
       >
         <FormatButton format={BlockFormat.H1}>
