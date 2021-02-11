@@ -14,8 +14,10 @@ import {
   BlockInput,
   PeerRefFragment,
   PageRefFragment,
-  TeaserStyle
+  TeaserStyle,
+  TeaserInput
 } from '../api'
+import bodyParser from 'body-parser'
 
 export enum BlockType {
   RichText = 'richText',
@@ -199,12 +201,11 @@ export interface TeaserGridBlockValue {
 
 export type FlexItemLayout = Omit<Layout, 'i'>
 
-export interface TeaserFlexItem {
-  layout: FlexItemLayout
-  teaser: Teaser | null
-}
 export interface TeaserFlexGridBlockValue {
-  teasers: TeaserFlexItem[]
+  // REMARK: intentionally not extending TeaserGridBLockValue, don't know what
+  // the string is good for where lateron nanoid() is inserted ...
+  teasers: (Teaser | null)[]
+  layout: FlexItemLayout[]
   numColumns: number
   numRows: number
 }
@@ -247,7 +248,70 @@ export type BlockValue =
   | TeaserFlexGridBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
+  const getTeaserForType = (value: Teaser | null): TeaserInput | null => {
+    switch (value?.type) {
+      case TeaserType.Article:
+        return {
+          article: {
+            style: value.style,
+            imageID: value.image?.id,
+            preTitle: value.preTitle || undefined,
+            title: value.title || undefined,
+            lead: value.lead || undefined,
+            articleID: value.article.id
+          }
+        }
+
+      case TeaserType.PeerArticle:
+        return {
+          peerArticle: {
+            style: value.style,
+            imageID: value.image?.id,
+            preTitle: value.preTitle || undefined,
+            title: value.title || undefined,
+            lead: value.lead || undefined,
+            peerID: value.peer.id,
+            articleID: value.articleID
+          }
+        }
+
+      case TeaserType.Page:
+        return {
+          page: {
+            style: value.style,
+            imageID: value.image?.id,
+            preTitle: value.preTitle || undefined,
+            title: value.title || undefined,
+            lead: value.lead || undefined,
+            pageID: value.page.id
+          }
+        }
+
+      default:
+        return null
+    }
+  }
+
   switch (block.type) {
+    case BlockType.TeaserGrid1:
+    case BlockType.TeaserGrid6:
+      return {
+        teaserGrid: {
+          teasers: block.value.teasers.map(([, value]) => getTeaserForType(value)),
+          numColumns: block.value.numColumns
+        }
+      }
+
+    case BlockType.TeaserFlexGrid:
+      return {
+        teaserFlexGrid: {
+          teasers: block.value.teasers.map(value => getTeaserForType(value)),
+          layout: block.value.layout,
+          numColumns: block.value.numColumns,
+          numRows: block.value.numRows
+        }
+      }
+
     case BlockType.Image:
       return {
         image: {
@@ -381,114 +445,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             }
           }
       }
-      break
     }
-
-    case BlockType.TeaserGrid1:
-    case BlockType.TeaserGrid6:
-      return {
-        teaserGrid: {
-          teasers: block.value.teasers.map(([, value]) => {
-            switch (value?.type) {
-              case TeaserType.Article:
-                return {
-                  article: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    articleID: value.article.id
-                  }
-                }
-
-              case TeaserType.PeerArticle:
-                return {
-                  peerArticle: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    peerID: value.peer.id,
-                    articleID: value.articleID
-                  }
-                }
-
-              case TeaserType.Page:
-                return {
-                  page: {
-                    style: value.style,
-                    imageID: value.image?.id,
-                    preTitle: value.preTitle || undefined,
-                    title: value.title || undefined,
-                    lead: value.lead || undefined,
-                    pageID: value.page.id
-                  }
-                }
-
-              default:
-                return null
-            }
-          }),
-          numColumns: block.value.numColumns
-        }
-      }
-
-    case BlockType.TeaserFlexGrid:
-      // TODO more DRY ?
-      return {
-        teaserFlexGrid: {
-          teasers: block.value.teasers.map(({layout, teaser}) => {
-            switch (teaser?.type) {
-              case TeaserType.Article:
-                return {
-                  article: {
-                    style: teaser.style,
-                    imageID: teaser.image?.id,
-                    preTitle: teaser.preTitle || undefined,
-                    title: teaser.title || undefined,
-                    lead: teaser.lead || undefined,
-                    articleID: teaser.article.id
-                  },
-                  layout
-                }
-
-              case TeaserType.PeerArticle:
-                return {
-                  peerArticle: {
-                    style: teaser.style,
-                    imageID: teaser.image?.id,
-                    preTitle: teaser.preTitle || undefined,
-                    title: teaser.title || undefined,
-                    lead: teaser.lead || undefined,
-                    peerID: teaser.peer.id,
-                    articleID: teaser.articleID
-                  },
-                  layout
-                }
-
-              case TeaserType.Page:
-                return {
-                  page: {
-                    style: teaser.style,
-                    imageID: teaser.image?.id,
-                    preTitle: teaser.preTitle || undefined,
-                    title: teaser.title || undefined,
-                    lead: teaser.lead || undefined,
-                    pageID: teaser.page.id
-                  },
-                  layout
-                }
-
-              default:
-                return {layout, teaser: null}
-            }
-          }),
-          numColumns: block.value.numColumns,
-          numRows: block.value.numColumns
-        }
-      }
   }
 }
 
@@ -496,6 +453,129 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
   const key: string = nanoid()
 
   switch (block?.__typename) {
+    case 'TeaserGridBlock':
+      return {
+        key,
+        type: block.numColumns === 1 ? BlockType.TeaserGrid1 : BlockType.TeaserGrid6,
+        value: {
+          numColumns: block.numColumns,
+          teasers: block.teasers.map(teaser => {
+            switch (teaser?.__typename) {
+              case 'ArticleTeaser':
+                return [
+                  nanoid(), // REMARK: [string, teaser] seems unnecessary complicated - might remove.
+                  teaser.article
+                    ? {
+                        type: TeaserType.Article,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        article: teaser.article
+                      }
+                    : null
+                ]
+
+              case 'PeerArticleTeaser':
+                return [
+                  nanoid(),
+                  teaser.peer
+                    ? {
+                        type: TeaserType.PeerArticle,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        peer: teaser.peer,
+                        articleID: teaser.articleID,
+                        article: teaser.article ?? undefined
+                      }
+                    : null
+                ]
+
+              case 'PageTeaser':
+                return [
+                  nanoid(),
+                  teaser.page
+                    ? {
+                        type: TeaserType.Page,
+                        style: teaser.style,
+                        image: teaser.image ?? undefined,
+                        preTitle: teaser.preTitle ?? undefined,
+                        title: teaser.title ?? undefined,
+                        lead: teaser.lead ?? undefined,
+                        page: teaser.page
+                      }
+                    : null
+                ]
+
+              default:
+                return [nanoid(), null]
+            }
+          })
+        }
+      }
+
+    case 'TeaserFlexGridBlock':
+      return {
+        key,
+        type: BlockType.TeaserFlexGrid,
+        value: {
+          numColumns: block.numColumns,
+          numRows: block.numRows,
+          layout: block.layout,
+          teasers: block.teasers.map(teaser => {
+            switch (teaser?.__typename) {
+              case 'ArticleTeaser':
+                return teaser.article
+                  ? {
+                      type: TeaserType.Article,
+                      style: teaser.style,
+                      image: teaser.image ?? undefined,
+                      preTitle: teaser.preTitle ?? undefined,
+                      title: teaser.title ?? undefined,
+                      lead: teaser.lead ?? undefined,
+                      article: teaser.article
+                    }
+                  : null
+
+              case 'PeerArticleTeaser':
+                return teaser.peer
+                  ? {
+                      type: TeaserType.PeerArticle,
+                      style: teaser.style,
+                      image: teaser.image ?? undefined,
+                      preTitle: teaser.preTitle ?? undefined,
+                      title: teaser.title ?? undefined,
+                      lead: teaser.lead ?? undefined,
+                      peer: teaser.peer,
+                      articleID: teaser.articleID,
+                      article: teaser.article ?? undefined
+                    }
+                  : null
+
+              case 'PageTeaser':
+                return teaser.page
+                  ? {
+                      type: TeaserType.Page,
+                      style: teaser.style,
+                      image: teaser.image ?? undefined,
+                      preTitle: teaser.preTitle ?? undefined,
+                      title: teaser.title ?? undefined,
+                      lead: teaser.lead ?? undefined,
+                      page: teaser.page
+                    }
+                  : null
+
+              default:
+                return null
+            }
+          })
+        }
+      }
+
     case 'ImageBlock':
       return {
         key,
@@ -618,138 +698,6 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
           width: block.width ?? undefined,
           height: block.height ?? undefined,
           styleCustom: block.styleCustom ?? undefined
-        }
-      }
-
-    case 'TeaserGridBlock':
-      return {
-        key,
-        type: block.numColumns === 1 ? BlockType.TeaserGrid1 : BlockType.TeaserGrid6,
-        value: {
-          numColumns: block.numColumns,
-          teasers: block.teasers.map(teaser => {
-            switch (teaser?.__typename) {
-              case 'ArticleTeaser':
-                return [
-                  nanoid(),
-                  teaser.article
-                    ? {
-                        type: TeaserType.Article,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        article: teaser.article
-                      }
-                    : null
-                ]
-
-              case 'PeerArticleTeaser':
-                return [
-                  nanoid(),
-                  teaser.peer
-                    ? {
-                        type: TeaserType.PeerArticle,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        peer: teaser.peer,
-                        articleID: teaser.articleID,
-                        article: teaser.article ?? undefined
-                      }
-                    : null
-                ]
-
-              case 'PageTeaser':
-                return [
-                  nanoid(),
-                  teaser.page
-                    ? {
-                        type: TeaserType.Page,
-                        style: teaser.style,
-                        image: teaser.image ?? undefined,
-                        preTitle: teaser.preTitle ?? undefined,
-                        title: teaser.title ?? undefined,
-                        lead: teaser.lead ?? undefined,
-                        page: teaser.page
-                      }
-                    : null
-                ]
-
-              default:
-                return [nanoid(), null]
-            }
-          })
-        }
-      }
-
-    case 'TeaserFlexGridBlock':
-      // TODO more DRY ?
-      return {
-        key,
-        type: BlockType.TeaserFlexGrid,
-        value: {
-          numColumns: block.numColumns,
-          numRows: block.numRows,
-          teasers: block.teasers.map(t => {
-            switch (t?.teaser?.__typename) {
-              case 'ArticleTeaser':
-                return {
-                  layout: t.layout,
-                  teaser: t.teaser.article
-                    ? {
-                        type: TeaserType.Article,
-                        style: t.teaser.style,
-                        image: t.teaser.image ?? undefined,
-                        preTitle: t.teaser.preTitle ?? undefined,
-                        title: t.teaser.title ?? undefined,
-                        lead: t.teaser.lead ?? undefined,
-                        article: t.teaser.article
-                      }
-                    : null
-                }
-
-              case 'PeerArticleTeaser':
-                return {
-                  layout: t.layout,
-                  teaser: t.teaser.peer
-                    ? {
-                        type: TeaserType.PeerArticle,
-                        style: t.teaser.style,
-                        image: t.teaser.image ?? undefined,
-                        preTitle: t.teaser.preTitle ?? undefined,
-                        title: t.teaser.title ?? undefined,
-                        lead: t.teaser.lead ?? undefined,
-                        peer: t.teaser.peer,
-                        articleID: t.teaser.articleID,
-                        article: t.teaser.article ?? undefined
-                      }
-                    : null
-                }
-
-              case 'PageTeaser':
-                return {
-                  layout: t.layout,
-                  teaser: t.teaser.page
-                    ? {
-                        type: TeaserType.Page,
-                        style: t.teaser.style,
-                        image: t.teaser.image ?? undefined,
-                        preTitle: t.teaser.preTitle ?? undefined,
-                        title: t.teaser.title ?? undefined,
-                        lead: t.teaser.lead ?? undefined,
-                        page: t.teaser.page
-                      }
-                    : null
-                }
-
-              default:
-                return {layout: {x: Infinity, y: Infinity, w: 1, h: 1}, teaser: null}
-            }
-          })
         }
       }
 

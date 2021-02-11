@@ -304,15 +304,15 @@ export type FacebookVideoBlockInput = {
   videoID: Scalars['String'];
 };
 
-export type FlexGridItemLayout = {
-  __typename?: 'FlexGridItemLayout';
+export type FlexGridItemLayoutInput = {
   x: Scalars['Int'];
   y: Scalars['Int'];
   w: Scalars['Int'];
   h: Scalars['Int'];
 };
 
-export type FlexGridItemLayoutInput = {
+export type FlexItemLayout = {
+  __typename?: 'FlexItemLayout';
   x: Scalars['Int'];
   y: Scalars['Int'];
   w: Scalars['Int'];
@@ -1476,28 +1476,17 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser;
 
 export type TeaserFlexGridBlock = {
   __typename?: 'TeaserFlexGridBlock';
-  teasers: Array<Maybe<TeaserFlexItem>>;
+  teasers: Array<Maybe<Teaser>>;
+  layout: Array<FlexItemLayout>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
 };
 
 export type TeaserFlexGridBlockInput = {
-  teasers: Array<Maybe<TeaserFlexInput>>;
+  layout: Array<FlexGridItemLayoutInput>;
+  teasers: Array<Maybe<TeaserInput>>;
   numColumns: Scalars['Int'];
   numRows: Scalars['Int'];
-};
-
-export type TeaserFlexInput = {
-  article?: Maybe<ArticleTeaserInput>;
-  peerArticle?: Maybe<PeerArticleTeaserInput>;
-  page?: Maybe<PageTeaserInput>;
-  layout: FlexGridItemLayoutInput;
-};
-
-export type TeaserFlexItem = {
-  __typename?: 'TeaserFlexItem';
-  teaser?: Maybe<Teaser>;
-  layout: FlexGridItemLayout;
 };
 
 export type TeaserGridBlock = {
@@ -2316,21 +2305,18 @@ type FullBlock_TeaserFlexGridBlock_Fragment = (
   { __typename: 'TeaserFlexGridBlock' }
   & Pick<TeaserFlexGridBlock, 'numColumns' | 'numRows'>
   & { teasers: Array<Maybe<(
-    { __typename?: 'TeaserFlexItem' }
-    & { teaser?: Maybe<(
-      { __typename?: 'ArticleTeaser' }
-      & FullTeaser_ArticleTeaser_Fragment
-    ) | (
-      { __typename?: 'PeerArticleTeaser' }
-      & FullTeaser_PeerArticleTeaser_Fragment
-    ) | (
-      { __typename?: 'PageTeaser' }
-      & FullTeaser_PageTeaser_Fragment
-    )>, layout: (
-      { __typename?: 'FlexGridItemLayout' }
-      & Pick<FlexGridItemLayout, 'x' | 'y' | 'w' | 'h'>
-    ) }
-  )>> }
+    { __typename?: 'ArticleTeaser' }
+    & FullTeaser_ArticleTeaser_Fragment
+  ) | (
+    { __typename?: 'PeerArticleTeaser' }
+    & FullTeaser_PeerArticleTeaser_Fragment
+  ) | (
+    { __typename?: 'PageTeaser' }
+    & FullTeaser_PageTeaser_Fragment
+  )>>, layout: Array<(
+    { __typename?: 'FlexItemLayout' }
+    & Pick<FlexItemLayout, 'x' | 'y' | 'w' | 'h'>
+  )> }
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserFlexGridBlock_Fragment;
@@ -3600,15 +3586,13 @@ export const FullBlockFragmentDoc = gql`
   }
   ... on TeaserFlexGridBlock {
     teasers {
-      teaser {
-        ...FullTeaser
-      }
-      layout {
-        x
-        y
-        w
-        h
-      }
+      ...FullTeaser
+    }
+    layout {
+      x
+      y
+      w
+      h
     }
     numColumns
     numRows
