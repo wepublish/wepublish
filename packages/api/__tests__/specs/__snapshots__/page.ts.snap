@@ -436,3 +436,20 @@ Object {
   },
 }
 `;
+
+exports[`Pages can be created/edited/published/unpublished/deleted: can not be published with the same slug 1`] = `
+Object {
+  "data": Object {
+    "publishPage": null,
+  },
+  "errors": Array [
+    [GraphQLError: Page with ID SbMakd04JFNBjtOG already uses the slug "testing-page"],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;
