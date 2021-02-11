@@ -1,54 +1,25 @@
 import React, {useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, Schema} from 'rsuite'
+import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
-//import {SubMenuContext, ToolbarIconButton} from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 import axios from 'axios'
+
 export function LinkMenu() {
   const editor = useSlate()
-  //const {closeMenu} = useContext(SubMenuContext)
+
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
-  //const [selection, setSelection] = useState<Range | null>(null)
-  // const {openMenu} = useContext(SubMenuContext)
+
   const {t} = useTranslation()
   const [isValidURL, setIsValidURL] = useState(false)
   const isDisabled = !isValidURL
 
   useEffect(() => {
-    if (!url) return
-    ;() =>
-      async function validateURL(url: string) {
-        const pattern = new RegExp(
-          '^(https?:\\/\\/)?' + // protocol
-          '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-          '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-          '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-          '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-            '(\\#[-a-z\\d_]*)?$',
-          'i'
-        )
-
-        if (!pattern.test(url)) return false
-        await axios
-          .get(url, {timeout: 5000})
-          .then(function (response) {
-            setIsValidURL(true)
-          })
-          .catch(function (error) {
-            if (error.response?.status) {
-              // exists with error
-              setIsValidURL(true)
-            } else {
-              // invalid
-              setIsValidURL(false)
-            }
-          })
-      }
-  }, [])
+    validateURL(url).then(value => setIsValidURL(value))
+  }, [url])
 
   useEffect(() => {
     const nodes = Array.from(
@@ -62,13 +33,9 @@ export function LinkMenu() {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
       setURL((node.url as string) ?? '')
-    } /*else {
-      setTitle('')
-      setURL('')
-    } */
+    }
   }, [editor.selection])
-  // setSelection(editor.selection)
-  console.log('validated url check: ', isValidURL)
+
   return (
     <>
       <Form fluid>
@@ -79,15 +46,13 @@ export function LinkMenu() {
             value={url}
             onChange={url => {
               setURL(url)
-              console.log(isValidURL)
             }}
           />
         </FormGroup>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
           <FormControl
-            value={title ? title : window.getSelection()?.toString()}
-            //TODO change title
+            value={title}
             onChange={title => {
               setTitle(title)
             }}
@@ -108,13 +73,32 @@ export function LinkMenu() {
     </>
   )
 }
-// const {StringType, NumberType} = Schema.Types
-// const model = Schema.Model({
-//   name: StringType().isRequired('This field is required.'),
-//   email: StringType()
-//     .isEmail('Please enter a valid email address.')
-//     .isRequired('This field is required.')
-// })
+
+async function validateURL(url: string) {
+  if (url) {
+    const pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    )
+    if (!pattern.test(url)) return false
+    return await axios
+      .get(url, {timeout: 5000})
+      .then(function () {
+        return true
+      })
+      .catch(function (error: any) {
+        if (error.response?.status) return true
+        return false
+      })
+  }
+  return false
+}
+
 export function RemoveLinkFormatButton() {
   const editor = useSlate()
   const {t} = useTranslation()
@@ -131,6 +115,7 @@ export function RemoveLinkFormatButton() {
     </Button>
   )
 }
+
 function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
   if (selection) {
     if (Range.isCollapsed(selection)) {
