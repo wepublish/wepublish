@@ -28,6 +28,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
+import {title} from 'process'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -137,7 +138,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setMetadata({
         slug,
         preTitle: preTitle ?? '',
-        title,
+        title: title ?? '',
         lead: lead ?? '',
         tags,
         properties: properties.map(property => ({
@@ -190,6 +191,24 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
       socialMediaImageID: metadata.socialMediaImage?.id || undefined
     }
+  }
+
+  // Reads title and lead from the first block and saves them in variables
+  function syncBlocksWithMeta() {
+    const titleBlock = blocks.map(block => {
+      if (block.type === 'title') {
+        return block.value
+      } else {
+        return false
+      }
+    })
+
+    const syncedTitle = titleBlock[0] ? titleBlock[0].title : ''
+    const syncedLead = titleBlock[0] ? titleBlock[0].lead : ''
+    const title = metadata.title !== '' ? metadata.title : syncedTitle
+    const lead = metadata.lead !== '' ? metadata.lead : syncedLead
+
+    setMetadata({...metadata, title, lead})
   }
 
   async function handleSave() {
@@ -280,7 +299,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   icon={<Icon icon="newspaper-o" />}
                   size={'lg'}
                   disabled={isDisabled}
-                  onClick={() => setMetaDrawerOpen(true)}>
+                  onClick={() => {
+                    syncBlocksWithMeta()
+                    setMetaDrawerOpen(true)
+                  }}>
                   {t('articleEditor.overview.metadata')}
                 </IconButton>
 
