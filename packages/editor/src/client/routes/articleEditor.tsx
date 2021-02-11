@@ -93,6 +93,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     variables: {id: articleID!}
   })
 
+  const noSlug = metadata.slug === ''
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
@@ -220,7 +221,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date) {
+  async function handlePublish(publishDate: Date, updateDate: Date, noSlug: boolean) {
+    if (noSlug) {
+      Notification.error({
+        title: t('articleEditor.overview.noSlug'),
+        duration: 5000
+      })
+      return
+    }
+
     if (articleID) {
       const {data} = await updateArticle({
         variables: {id: articleID, input: createInput()}
@@ -344,7 +353,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishDate, updateDate) => {
-            handlePublish(publishDate, updateDate)
+            handlePublish(publishDate, updateDate, noSlug)
             setPublishDialogOpen(false)
           }}
         />

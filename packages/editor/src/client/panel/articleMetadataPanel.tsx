@@ -14,7 +14,11 @@ import {
   Nav,
   Icon,
   Panel,
-  Message
+  Message,
+  InputGroup,
+  IconButton,
+  Tooltip,
+  Whisper
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -62,6 +66,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     preTitle,
     title,
     lead,
+    slug,
     tags,
     authors,
     shared,
@@ -75,6 +80,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
+  // const [slug, setSlug] = useState(value.slug)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -106,6 +112,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     variables: authorsVariables,
     fetchPolicy: 'network-only'
   })
+
+  const slugTooltip = <Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>
 
   function currentContent() {
     switch (activeKey) {
@@ -187,6 +195,22 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={title}
                   onChange={title => onChange?.({...value, title, slug: slugify(title)})}
                 />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
+                <InputGroup style={{width: '100%'}}>
+                  <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
+                  <Whisper placement="top" trigger="hover" speaker={slugTooltip}>
+                    <IconButton
+                      icon={<Icon icon="magic" />}
+                      value={title}
+                      onClick={() => {
+                        const slugified = slugify(title)
+                        onChange?.({...value, title, slug: slugified})
+                      }}
+                    />
+                  </Whisper>
+                </InputGroup>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
