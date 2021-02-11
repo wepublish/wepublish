@@ -13,7 +13,7 @@ import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
-  DuplicatePageSlug,
+  DuplicatePageSlugError,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
   NotActiveError,
@@ -783,7 +783,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const publishedPage = await loaders.publicPagesBySlug.load(page.draft.slug)
         if (publishedPage && publishedPage.id !== id)
-          throw new DuplicatePageSlug(publishedPage.id, publishedPage.slug)
+          throw new DuplicatePageSlugError(publishedPage.id, publishedPage.slug)
 
         return dbAdapter.page.publishPage({
           id,

@@ -98,7 +98,7 @@ export class UserInputError extends ApolloError {
   }
 }
 
-export class DuplicatePageSlug extends ApolloError {
+export class DuplicatePageSlugError extends ApolloError {
   constructor(publishedPageID: string, slug: string) {
     super(
       `Page with ID ${publishedPageID} already uses the slug "${slug}"`,
