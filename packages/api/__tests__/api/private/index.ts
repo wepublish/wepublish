@@ -139,6 +139,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -158,6 +159,7 @@ export type AuthorInput = {
   slug: Scalars['Slug']
   links?: Maybe<Array<AuthorLinkInput>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
 }
 
@@ -235,6 +237,66 @@ export type BlockInput = {
   embed?: Maybe<EmbedBlockInput>
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>
   teaserGrid?: Maybe<TeaserGridBlockInput>
+}
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  user: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  parentID?: Maybe<Scalars['ID']>
+  revisions: Array<CommentRevision>
+  state: CommentState
+  rejectionReason?: Maybe<CommentRejectionReason>
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  nodes: Array<Comment>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentFilter = {
+  state?: Maybe<CommentState>
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision'
+  text: Scalars['RichText']
+  createdAt: Scalars['DateTime']
+}
+
+export enum CommentSort {
+  ModifiedAt = 'ModifiedAt',
+  CreatedAt = 'CreatedAt'
+}
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
 }
 
 export type CreatedToken = {
@@ -626,6 +688,9 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>
   updateInvoice?: Maybe<Invoice>
   deleteInvoice?: Maybe<Scalars['ID']>
+  approveComment: Comment
+  rejectComment: Comment
+  requestChangesOnComment: Comment
 }
 
 export type MutationUpdatePeerProfileArgs = {
@@ -847,6 +912,20 @@ export type MutationUpdateInvoiceArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID']
+}
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
+}
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID']
+  rejectionReason: CommentRejectionReason
 }
 
 export type Navigation = {
@@ -1165,6 +1244,7 @@ export type Query = {
   authors: AuthorConnection
   image?: Maybe<Image>
   images: ImageConnection
+  comments: CommentConnection
   article?: Maybe<Article>
   articles: ArticleConnection
   peerArticle?: Maybe<Article>
@@ -1199,6 +1279,7 @@ export type QueryUsersArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<UserFilter>
   sort?: Maybe<UserSort>
   order?: Maybe<SortOrder>
@@ -1252,6 +1333,17 @@ export type QueryImagesArgs = {
   order?: Maybe<SortOrder>
 }
 
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
+  filter?: Maybe<CommentFilter>
+  sort?: Maybe<CommentSort>
+  order?: Maybe<SortOrder>
+}
+
 export type QueryArticleArgs = {
   id: Scalars['ID']
 }
@@ -1261,6 +1353,7 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
@@ -1289,6 +1382,7 @@ export type QueryPagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<PageFilter>
+  skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
 }
@@ -1525,6 +1619,7 @@ export type UserConnection = {
 
 export type UserFilter = {
   name?: Maybe<Scalars['String']>
+  text?: Maybe<Scalars['String']>
   subscription?: Maybe<UserSubscriptionFilter>
 }
 
@@ -1571,7 +1666,8 @@ export enum UserRoleSort {
 
 export enum UserSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type UserSubscription = {

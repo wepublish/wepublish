@@ -38,6 +38,7 @@ export type Article = {
   socialMediaAuthors: Array<Author>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<Comment>
 }
 
 export type ArticleConnection = {
@@ -83,6 +84,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -135,6 +137,44 @@ export type Block =
   | TitleBlock
   | QuoteBlock
   | TeaserGridBlock
+
+export type Comment = {
+  __typename?: 'Comment'
+  id: Scalars['ID']
+  parentID?: Maybe<Scalars['ID']>
+  user: User
+  authorType: CommentAuthorType
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  children?: Maybe<Array<Maybe<Comment>>>
+  text: Scalars['RichText']
+  state: Scalars['String']
+  rejectionReason?: Maybe<Scalars['String']>
+  modifiedAt: Scalars['DateTime']
+}
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentInput = {
+  parentID?: Maybe<Scalars['ID']>
+  itemID: Scalars['ID']
+  itemType: CommentItemType
+  text: Scalars['RichText']
+}
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export type CommentUpdateInput = {
+  id: Scalars['ID']
+  text: Scalars['RichText']
+}
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock'
@@ -228,6 +268,29 @@ export type InstagramPostBlock = {
   postID: Scalars['String']
 }
 
+export type Invoice = {
+  __typename?: 'Invoice'
+  id: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  mail: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  paidAt?: Maybe<Scalars['DateTime']>
+  items: Array<InvoiceItem>
+  total: Scalars['Int']
+}
+
+export type InvoiceItem = {
+  __typename?: 'InvoiceItem'
+  createdAt: Scalars['DateTime']
+  modifiedAt: Scalars['DateTime']
+  name: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  quantity: Scalars['Int']
+  amount: Scalars['Int']
+  total: Scalars['Int']
+}
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock'
   text?: Maybe<Scalars['String']>
@@ -288,7 +351,14 @@ export type Mutation = {
   createSessionWithJWT: SessionWithToken
   createSessionWithOAuth2Code: SessionWithToken
   revokeActiveSession: Scalars['Boolean']
+  addComment: Comment
+  updateComment: Comment
   registerMemberAndReceivePayment: Payment
+  resetPassword: Scalars['String']
+  updateUser?: Maybe<User>
+  updatePassword?: Maybe<User>
+  updateUserSubscription?: Maybe<UserSubscription>
+  createPaymentFromInvoice?: Maybe<Payment>
 }
 
 export type MutationCreateSessionArgs = {
@@ -306,6 +376,14 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
   redirectUri: Scalars['String']
 }
 
+export type MutationAddCommentArgs = {
+  input: CommentInput
+}
+
+export type MutationUpdateCommentArgs = {
+  input: CommentUpdateInput
+}
+
 export type MutationRegisterMemberAndReceivePaymentArgs = {
   name: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
@@ -317,6 +395,27 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   paymentMethodID: Scalars['String']
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
+}
+
+export type MutationResetPasswordArgs = {
+  email: Scalars['String']
+}
+
+export type MutationUpdateUserArgs = {
+  input: UserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  password: Scalars['String']
+  passwordRepeated: Scalars['String']
+}
+
+export type MutationUpdateUserSubscriptionArgs = {
+  input: UserSubscriptionInput
+}
+
+export type MutationCreatePaymentFromInvoiceArgs = {
+  input: PaymentFromInvoiceInput
 }
 
 export type Navigation = {
@@ -384,6 +483,13 @@ export type Payment = {
   intentSecret?: Maybe<Scalars['String']>
   state: PaymentState
   paymentMethod: PaymentMethod
+}
+
+export type PaymentFromInvoiceInput = {
+  invoiceID: Scalars['String']
+  paymentMethodID: Scalars['String']
+  successURL?: Maybe<Scalars['String']>
+  failureURL?: Maybe<Scalars['String']>
 }
 
 export type PaymentMethod = {
@@ -478,6 +584,8 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  me?: Maybe<User>
+  invoices: Array<Invoice>
   memberPlans: MemberPlanConnection
 }
 
@@ -613,6 +721,7 @@ export type User = {
   email: Scalars['String']
   preferredName?: Maybe<Scalars['String']>
   address?: Maybe<UserAddress>
+  subscription?: Maybe<UserSubscription>
 }
 
 export type UserAddress = {
@@ -621,6 +730,40 @@ export type UserAddress = {
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
+}
+
+export type UserAddressInput = {
+  street: Scalars['String']
+  zipCode: Scalars['String']
+  city: Scalars['String']
+  country: Scalars['String']
+}
+
+export type UserInput = {
+  name: Scalars['String']
+  email: Scalars['String']
+  preferredName?: Maybe<Scalars['String']>
+  address?: Maybe<UserAddressInput>
+}
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription'
+  memberPlan: MemberPlan
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  startsAt: Scalars['DateTime']
+  paidUntil?: Maybe<Scalars['DateTime']>
+  paymentMethod: PaymentMethod
+  deactivatedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type UserSubscriptionInput = {
+  memberPlanID: Scalars['String']
+  paymentPeriodicity: PaymentPeriodicity
+  monthlyAmount: Scalars['Int']
+  autoRenew: Scalars['Boolean']
+  paymentMethodID: Scalars['String']
 }
 
 export type VimeoVideoBlock = {
@@ -646,7 +789,7 @@ export type ArticleRefPublicFragment = {__typename?: 'Article'} & Pick<
   | 'socialMediaDescription'
 > & {
     authors: Array<Maybe<{__typename?: 'Author'} & AuthorRefFragment>>
-    socialMediaAuthors: Array<{__typename?: 'Author'} & Pick<Author, 'name'>>
+    socialMediaAuthors: Array<{__typename?: 'Author'} & Pick<Author, 'id' | 'name'>>
     image?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
   }
 
@@ -929,6 +1072,19 @@ export type FullBlockPublicFragment =
   | FullBlockPublic_QuoteBlock_Fragment
   | FullBlockPublic_TeaserGridBlock_Fragment
 
+export type MutationCommentFragment = {__typename?: 'Comment'} & Pick<
+  Comment,
+  'itemID' | 'itemType' | 'text' | 'parentID'
+> & {user: {__typename?: 'User'} & Pick<User, 'id'>}
+
+export type AddCommentMutationVariables = Exact<{
+  input: CommentInput
+}>
+
+export type AddCommentMutation = {__typename?: 'Mutation'} & {
+  addComment: {__typename?: 'Comment'} & MutationCommentFragment
+}
+
 export type ImageUrLsFragment = {__typename?: 'Image'} & Pick<Image, 'url'> & {
     largeURL: Image['transformURL']
     mediumURL: Image['transformURL']
@@ -1154,6 +1310,7 @@ export const ArticleRefPublic = gql`
       ...AuthorRef
     }
     socialMediaAuthors {
+      id
       name
     }
     socialMediaTitle
@@ -1335,6 +1492,17 @@ export const FullBlockPublic = gql`
   ${ImageRef}
   ${FullTeaserPublic}
 `
+export const MutationComment = gql`
+  fragment MutationComment on Comment {
+    itemID
+    itemType
+    user {
+      id
+    }
+    text
+    parentID
+  }
+`
 export const FullImage = gql`
   fragment FullImage on Image {
     id
@@ -1498,6 +1666,14 @@ export const Author = gql`
     }
   }
   ${FullAuthor}
+`
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      ...MutationComment
+    }
+  }
+  ${MutationComment}
 `
 export const Navigation = gql`
   query Navigation($id: ID, $key: ID) {

@@ -1,7 +1,8 @@
-import {Editor, Transforms} from 'slate'
+import {Editor, Transforms, Node} from 'slate'
 import {RichTextBlockValue} from '../../types'
 import {emptyTextParagraph} from './elements'
 import {Format, TextFormats, BlockFormats, InlineFormats, ListFormats, BlockFormat} from './formats'
+import {toArray} from 'lodash'
 
 export const WepublishEditor = {
   // Extending the Editor according docs: https://docs.slatejs.org/concepts/07-plugins#helper-functions
@@ -58,5 +59,19 @@ export const WepublishEditor = {
 
   isEmpty(editor: Editor) {
     return JSON.stringify(editor.children) === JSON.stringify(this.createDefaultValue())
+  },
+
+  calculateEditorCharCount(editor: Editor) {
+    // using lodash toArray to get correct length for characters like emojis
+    return toArray(this.getTextString(editor)).length
+  },
+
+  getTextString(editor: Editor) {
+    // get all text nodes and append them to each other in one string
+    return [...Node.texts(editor)].reduce((string, nodePair, index) => {
+      const [textNode] = nodePair
+      if (index === 0) return `${textNode.text}`
+      return `${string} ${textNode.text}`
+    }, '')
   }
 }

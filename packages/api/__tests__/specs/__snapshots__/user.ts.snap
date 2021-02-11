@@ -90,6 +90,11 @@ Object {
               "permissions": Array [
                 Object {
                   "deprecated": false,
+                  "description": "Allows to take an action on comment",
+                  "id": "CAN_TAKE_COMMENT_ACTION",
+                },
+                Object {
+                  "deprecated": false,
                   "description": "Allows to create navigation",
                   "id": "CAN_CREATE_NAVIGATION",
                 },
@@ -312,6 +317,11 @@ Object {
                   "deprecated": false,
                   "description": "Allows to get all permissions",
                   "id": "CAN_GET_PERMISSIONS",
+                },
+                Object {
+                  "deprecated": false,
+                  "description": "Allows to get all comments",
+                  "id": "CAN_GET_COMMENTS",
                 },
                 Object {
                   "deprecated": false,

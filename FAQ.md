@@ -37,3 +37,10 @@ A: Basically this error means that you have a conflict in your database caused b
 You can solve this issue by stopping everything, running `docker-compose down` followed by `yarn clean && yarn build`. These commands will delete the current database and remove any residuals. 
 
 Now if you start your database up and run `yarn watch` you'll get a fresh new database. and everything should be running again. 
+
+## Windows Specific Problem 
+#### Q: What do I do if I'm using Windows and 'examples/media' doesn't run and I receive the error `Error: Cannot find module '../build/Release/magic'` in the terminal and I receive an error when trying to install this module?
+A: If you are using Windows then run this command after checking that you can reach the “MSBuild.exe” file. 
+`npm config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"`
+
+Now you can go in the terminal to examples/media and run `yarn` and the magic module should be installed successfully.

@@ -16,13 +16,18 @@ import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
 
-export type RichTextBlockProps = BlockProps<RichTextBlockValue>
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
+  displayOnly?: boolean
+  showCharCount?: boolean
+}
 
 export const RichTextBlock = memo(function RichTextBlock({
   value,
   autofocus,
   disabled,
-  onChange
+  onChange,
+  displayOnly = false,
+  showCharCount = false
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -30,6 +35,12 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   //const [location, setLocation] = useState<Location | null>(null)
+
+  const [charCount, setCharCount] = useState(0)
+
+  useEffect(() => {
+    setCharCount(WepublishEditor.calculateEditorCharCount(editor))
+  }, [editor.children])
 
   const {t} = useTranslation()
 
@@ -54,66 +65,69 @@ export const RichTextBlock = memo(function RichTextBlock({
           onChange(newValue)
         }
       }}>
-      <Toolbar
-        fadeOut={!hasFocus}
+      {!displayOnly && (
+        <>
+          <Toolbar
+            fadeOut={!hasFocus}
+            //TODO: Allow cursor to save location on blur-refocus (editor.selection). Should be applied to full richtext unit.
+            //(Currently it is preventing the toolbar forms from gaining focus.)
 
-        //TODO: Allow cursor to save location on blur-refocus (editor.selection). Should be applied to full richtext unit.
-        //(Currently it is preventing the toolbar forms from gaining focus.)
+            //    onMouseDown={e => {
+            //     e.preventDefault()
+            //     if (!hasFocus && location) focusAtPreviousLocation(location)
+            // }}
+          >
+            <FormatButton format={BlockFormat.H1}>
+              <H1Icon />
+            </FormatButton>
+            <FormatButton format={BlockFormat.H2}>
+              <H2Icon />
+            </FormatButton>
+            <FormatButton format={BlockFormat.H3}>
+              <H3Icon />
+            </FormatButton>
 
-        //    onMouseDown={e => {
-        //     e.preventDefault()
-        //     if (!hasFocus && location) focusAtPreviousLocation(location)
-        // }}
-      >
-        <FormatButton format={BlockFormat.H1}>
-          <H1Icon />
-        </FormatButton>
-        <FormatButton format={BlockFormat.H2}>
-          <H2Icon />
-        </FormatButton>
-        <FormatButton format={BlockFormat.H3}>
-          <H3Icon />
-        </FormatButton>
+            <ToolbarDivider />
 
-        <ToolbarDivider />
+            <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
+            <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
 
-        <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
-        <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
+            <ToolbarDivider />
 
-        <ToolbarDivider />
+            <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
+              <TableMenu />
+            </EditorSubMenuButton>
 
-        <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
-          <TableMenu />
-        </EditorSubMenuButton>
+            <ToolbarDivider />
 
-        <ToolbarDivider />
+            <FormatIconButton icon="bold" format={TextFormat.Bold} />
+            <FormatIconButton icon="italic" format={TextFormat.Italic} />
+            <FormatIconButton icon="underline" format={TextFormat.Underline} />
+            <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
+            <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
+            <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
 
-        <FormatIconButton icon="bold" format={TextFormat.Bold} />
-        <FormatIconButton icon="italic" format={TextFormat.Italic} />
-        <FormatIconButton icon="underline" format={TextFormat.Underline} />
-        <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
-        <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
-        <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+            <ToolbarDivider />
 
-        <ToolbarDivider />
+            <SubMenuButton icon="link">
+              <LinkMenu />
+            </SubMenuButton>
 
-        <SubMenuButton icon="link">
-          <LinkMenu />
-        </SubMenuButton>
+            <ToolbarDivider />
 
-        <ToolbarDivider />
-
-        <SubMenuButton icon="smile-o">
-          <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
-        </SubMenuButton>
-      </Toolbar>
-      {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
-        <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
-          {t('blocks.richText.startWriting')}
-        </div>
+            <SubMenuButton icon="smile-o">
+              <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+            </SubMenuButton>
+          </Toolbar>
+          {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
+            <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>
+              {t('blocks.richText.startWriting')}
+            </div>
+          )}
+        </>
       )}
       <Editable
-        readOnly={disabled}
+        readOnly={disabled || displayOnly}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
         renderLeaf={renderLeaf}
@@ -121,6 +135,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         //setLocation(editor.selection)
         //}}
       />
+      {showCharCount && (
+        <p style={{textAlign: 'right'}}>{t('blocks.richText.charCount', {charCount: charCount})}</p>
+      )}
     </Slate>
   )
 })

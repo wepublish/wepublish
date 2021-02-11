@@ -17,6 +17,7 @@ import {AuthorList} from './routes/authorList'
 import {PeerList} from './routes/peerList'
 import {TokenList} from './routes/tokenList'
 import {UserList} from './routes/userList'
+import {CommentList} from './routes/commentList'
 import {UserRoleList} from './routes/userRoleList'
 import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
@@ -40,6 +41,9 @@ export function contentForRoute(route: Route) {
     case RouteType.Index:
     case RouteType.ArticleList:
       return <ArticleList />
+
+    case RouteType.CommentList:
+      return <CommentList />
 
     case RouteType.PageList:
       return <PageList />

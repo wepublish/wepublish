@@ -91,7 +91,7 @@ export class MailchimpMailProvider extends BaseMailProvider {
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
-    const res = await this.mandrill.messages.send({
+    await this.mandrill.messages.send({
       message: {
         html: `<p>${props.message}</p>`,
         text: props.message,
@@ -108,6 +108,5 @@ export class MailchimpMailProvider extends BaseMailProvider {
         }
       }
     })
-    console.log('Response', res)
   }
 }

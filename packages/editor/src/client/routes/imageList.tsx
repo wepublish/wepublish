@@ -250,6 +250,7 @@ export function ImageList() {
                   })
                 }
               })
+              setConfirmationDialogOpen(false)
             }}
             color="red">
             {t('images.panels.confirm')}

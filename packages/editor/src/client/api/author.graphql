@@ -1,6 +1,7 @@
 fragment AuthorRef on Author {
   id
   name
+  jobTitle
   image {
     ...ImageRef
   }

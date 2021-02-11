@@ -6,6 +6,7 @@
         "created": "Created",
         "updated": "Modified",
         "states": "States",
+        "authors": "Authors",
         "articles": "Articles",
         "action": "Action",
         "newArticle": "New Article",
@@ -122,6 +123,49 @@
         "lightStyledWithNoImageError": "Light styled teasers must have an image"
       }
     },
+    "comments": {
+      "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "state": "State",
+        "comments": "Comments",
+        "action": "Action",
+        "search": "Search",
+        "loadMore": "Load More",
+        "untitled": "Untitled",
+        "userName": "User Name",
+        "text": "Text"
+      },
+      "panels": {
+        "id": "Id",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "untitled": "Untitled",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "revisions": "Revisions",
+        "approveComment": "Approve Comment",
+        "requestChangesOnComment": "Request Changes On Comment",
+        "rejectComment": "Reject Comment",
+        "rejectionReason": "Rejection Reason",
+        "userName": "User Name",
+        "revisionCreatedAt": "Revision created at",
+        "approve": "Approve",
+        "requestChanges": "Request Changes",
+        "requestChangesReason": "Reason",
+        "reject": "Reject",
+        "chooseRejectionReason": "Please choose a rejection reason"
+      },
+      "state": {
+        "pendingApproval": "Pending Approval",
+        "pendingUserChanges": "Pending User Change",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
     "pages": {
       "overview": {
         "pages": "Pages",
@@ -214,6 +258,7 @@
         "save": "Save",
         "create": "Create",
         "name": "Name",
+        "jobTitle": "Job Title",
         "image": "Image",
         "chooseImage": "Choose Image",
         "editImage": "Remove Image",
@@ -498,7 +543,9 @@
         "text": "Text",
         "insert": "Insert",
         "remove": "Remove",
-        "cancel": "Cancel"
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {
         "insertTable": "Insert Table",
@@ -517,6 +564,7 @@
     },
     "navbar": {
       "articles": "Articles",
+      "comments": "Comments",
       "pages": "Pages",
       "authors": "Authors",
       "navigations": "Navigations",

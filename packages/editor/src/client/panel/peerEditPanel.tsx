@@ -205,6 +205,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
                 {!!profile?.callToActionText && (
                   <RichTextBlock
                     disabled
+                    displayOnly
                     // TODO: remove this
                     onChange={console.log}
                     value={profile?.callToActionText}
