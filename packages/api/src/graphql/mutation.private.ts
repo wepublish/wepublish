@@ -13,9 +13,11 @@ import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
+  DuplicatePageSlug,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
   NotActiveError,
+  NotFound,
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
@@ -766,9 +768,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {id, publishAt, updatedAt, publishedAt},
+        {authenticate, dbAdapter, loaders}
+      ) {
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
+
+        const page = await loaders.pages.load(id)
+
+        if (!page) throw new NotFound('page', id)
+        if (!page.draft) return null
+
+        const publishedPage = await loaders.publicPagesBySlug.load(page.draft.slug)
+        if (publishedPage && publishedPage.id !== id)
+          throw new DuplicatePageSlug(publishedPage.id, publishedPage.slug)
 
         return dbAdapter.page.publishPage({
           id,
