@@ -36,7 +36,7 @@ import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
-import {RichText} from '../atoms/richText'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
   query Article($id: ID!) {
@@ -396,7 +396,7 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
       <div className={css(PeerProfileCallToActionURL)}>
         {peer?.callToActionText?.length && (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
-            <RichText value={peer?.callToActionText} />
+            <RichTextBlock value={peer?.callToActionText} disabled onChange={console.log} />
           </a>
         )}
       </div>

@@ -5,7 +5,7 @@ import {GalleryBlock} from './galleryBlock'
 import {GridBlock} from './gridBlock'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
-import {RichTextBlock} from './richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
@@ -57,7 +57,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
   switch (block.type) {
     case BlockType.RichText:
-      return <RichTextBlock value={block.value} />
+      return <RichTextBlock value={block.value} onChange={console.log} />
 
     case BlockType.Gallery:
       return <GalleryBlock media={block.value.media} />

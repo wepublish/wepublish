@@ -2,14 +2,13 @@ import {cssRule, useStyle} from '@karma.run/react'
 import React, {useContext, useState} from 'react'
 import {BaseButton} from '../atoms/baseButton'
 import {Image} from '../atoms/image'
-import {RichText} from '../atoms/richText'
 import {Color} from '../style/colors'
-import {Comment} from '../types'
+import {Comment, RichTextBlockValue} from '../types'
 import gql from 'graphql-tag'
-import {useMutation} from '@apollo/react-hooks'
+import {useMutation} from '@apollo/client'
 import {AuthContext} from '../authContext'
 import {Link, LogoutRoute} from '../route/routeContext'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 // CSS-Rules
 // =========
@@ -28,11 +27,11 @@ const CommentBox = cssRule(() => ({
   position: 'relative'
 }))
 
-const CommentInputField = cssRule(() => ({
+/* const CommentInputField = cssRule(() => ({
   resize: 'none',
   padding: '0.5em',
   width: '100%'
-}))
+})) */
 
 const CommentAuthor = cssRule(() => ({
   margin: 0,
@@ -174,12 +173,12 @@ const AddComment = gql`
 // =======
 
 // This emulates a RichTextNode for as long as we haven't implemented it
-function redressCommentInput(value: string) {
+/* function redressCommentInput(value: string) {
   return {
     type: 'paragraph',
     children: [{text: value}]
   }
-}
+} */
 
 // Components
 // ==========
@@ -187,7 +186,7 @@ function redressCommentInput(value: string) {
 export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
 
-  const [commentInput, setCommentInput] = useState({children: [{text: ''}]})
+  const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
   const [commentState, setCommentState] = useState('')
 
   const {header, role, itemID, itemType, parentID} = props
@@ -220,7 +219,7 @@ export function ComposeComment(props: ComposeCommentProps) {
           })
         }}>
         <p>
-          <textarea
+          {/*<textarea
             maxLength={1000}
             rows={4}
             cols={50}
@@ -228,10 +227,10 @@ export function ComposeComment(props: ComposeCommentProps) {
             className={css(CommentInputField)}
             value={commentInput.children.map(child => child.text)}
             onChange={e => setCommentInput(redressCommentInput(e.target.value))}
-          />
+          />*/}
         </p>
         <p>
-          <RichTextBlock displayOnly />
+          <RichTextBlock value={commentInput} onChange={input => setCommentInput(input)} />
         </p>
         <p>
           <BaseButton
@@ -299,7 +298,7 @@ function ParentComment(props: any) {
         </div>
 
         <div className={css(CommentBody)}>
-          <RichText value={text} />
+          <RichTextBlock disabled value={text} onChange={value => value} />
           <div className={css(Actions)}>
             <button
               className={css(SmallButton)}
@@ -346,7 +345,7 @@ function ChildComment(value: any) {
       </div>
 
       <div className={css(CommentBody)}>
-        <RichText value={text} />
+        <RichTextBlock disabled value={text} onChange={value => value} />
         <div className={css(Actions)}>
           <button className={css(SmallButton)}>Edit</button>
         </div>
