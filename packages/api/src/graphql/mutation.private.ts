@@ -60,6 +60,7 @@ import {
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
+  CanTakeActionOnComment,
   CanUpdatePeerProfile,
   CanSendJWTLogin
 } from './permissions'
@@ -80,6 +81,8 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {CommentState} from '../db/comment'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
@@ -964,8 +967,59 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanDeleteInvoice, roles)
         return await dbAdapter.invoice.deleteInvoice({id})
       }
-    }
+    },
 
+    approveComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Approved
+        })
+      }
+    },
+
+    rejectComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Rejected,
+          rejectionReason
+        })
+      }
+    },
+
+    requestChangesOnComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.PendingUserChanges,
+          rejectionReason
+        })
+      }
+    }
     // Image
     // =====
   }

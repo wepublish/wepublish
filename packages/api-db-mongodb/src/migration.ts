@@ -554,6 +554,17 @@ export const Migrations: Migration[] = [
 
       await payments.createIndex({intentID: 1})
     }
+  },
+  {
+    // Add Commenting Table.
+    version: 11,
+    async migrate(db) {
+      const comments = await db.createCollection(CollectionName.Comments, {
+        strict: true
+      })
+      await comments.createIndex({createdAt: -1})
+      await comments.createIndex({'revisions.createdAt': -1})
+    }
   }
 ]
 
