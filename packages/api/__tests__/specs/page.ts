@@ -315,7 +315,9 @@ describe('Pages', () => {
           updatedAt: '2020-11-25T23:55:35.000Z'
         }
       })
-      expect(res).toMatchSnapshot()
+      expect(res).toMatchSnapshot({
+        errors: expect.any(Array)
+      })
     })
 
     test('can be unpublished', async () => {
