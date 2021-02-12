@@ -29,7 +29,6 @@ import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import e from 'express'
 
 export interface ArticleMetadataProperty {
   readonly key: string
