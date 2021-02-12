@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
+import {Drawer, Modal, Notification, Icon, IconButton, Alert} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -93,7 +93,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     variables: {id: articleID!}
   })
 
-  const noSlug = metadata.slug === ''
   const isNotFound = articleData && !articleData.article
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const pendingPublishDate = publishData?.publishArticle?.pending?.publishAt
@@ -221,12 +220,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
-  async function handlePublish(publishDate: Date, updateDate: Date, noSlug: boolean) {
+  async function handlePublish(publishDate: Date, updateDate: Date) {
+    const noSlug = metadata.slug === ''
     if (noSlug) {
-      Notification.error({
-        title: t('articleEditor.overview.noSlug'),
-        duration: 5000
-      })
+      Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
     }
 
@@ -353,7 +350,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           metadata={metadata}
           onClose={() => setPublishDialogOpen(false)}
           onConfirm={(publishDate, updateDate) => {
-            handlePublish(publishDate, updateDate, noSlug)
+            handlePublish(publishDate, updateDate)
             setPublishDialogOpen(false)
           }}
         />

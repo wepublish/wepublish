@@ -29,6 +29,7 @@ import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import e from 'express'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -80,7 +81,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
-  // const [slug, setSlug] = useState(value.slug)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -112,8 +112,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     variables: authorsVariables,
     fetchPolicy: 'network-only'
   })
-
-  const slugTooltip = <Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>
 
   function currentContent() {
     switch (activeKey) {
@@ -191,23 +189,25 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-                <FormControl
-                  value={title}
-                  onChange={title => onChange?.({...value, title, slug: slugify(title)})}
-                />
+                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
                 <InputGroup style={{width: '100%'}}>
-                  <FormControl value={slug} onChange={slug => onChange?.({...value, slug})} />
-                  <Whisper placement="top" trigger="hover" speaker={slugTooltip}>
+                  <FormControl
+                    value={slug}
+                    onChange={slug => onChange?.({...value, slug})}
+                    onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  />
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>}>
                     <IconButton
                       icon={<Icon icon="magic" />}
-                      value={title}
                       onClick={() => {
-                        const slugified = slugify(title)
-                        onChange?.({...value, title, slug: slugified})
+                        onChange?.({...value, title, slug: slugify(title)})
                       }}
                     />
                   </Whisper>
