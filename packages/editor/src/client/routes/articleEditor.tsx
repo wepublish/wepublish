@@ -22,7 +22,14 @@ import {
   AuthorRefFragment
 } from '../api'
 
-import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {
+  BlockType,
+  blockForQueryBlock,
+  unionMapForBlock,
+  BlockValue,
+  TitleBlockValue,
+  RichTextBlockListValue
+} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
@@ -193,21 +200,23 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   // Reads title and lead from the first block and saves them in variables
-  function syncBlocksWithMeta() {
-    const titleBlock = blocks.map(block => {
-      if (block.type === 'title') {
-        return block.value
-      } else {
-        return false
-      }
-    })
+  function syncFirstTitleBlockWithMetadata() {
+    interface blockToSync {
+      title: string
+      lead: string
+    }
 
-    const syncedTitle = titleBlock[0] ? titleBlock[0].title : ''
-    const syncedLead = titleBlock[0] ? titleBlock[0].lead : ''
-    const title = metadata.title !== '' ? metadata.title : syncedTitle
-    const lead = metadata.lead !== '' ? metadata.lead : syncedLead
+    if (metadata.title || metadata.lead === '') {
+      const titleBlock: BlockValue[] = blocks.filter(block => block.type === BlockType.Title)
+      const titleBlockValue = titleBlock[0].value as blockToSync
 
-    setMetadata({...metadata, title, lead})
+      const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
+      const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
+      const title = metadata.title !== '' ? metadata.title : syncedTitle
+      const lead = metadata.lead !== '' ? metadata.lead : syncedLead
+
+      setMetadata({...metadata, title, lead})
+    }
   }
 
   async function handleSave() {
@@ -299,7 +308,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   size={'lg'}
                   disabled={isDisabled}
                   onClick={() => {
-                    syncBlocksWithMeta()
+                    syncFirstTitleBlockWithMetadata()
                     setMetaDrawerOpen(true)
                   }}>
                   {t('articleEditor.overview.metadata')}
