@@ -22,14 +22,7 @@ import {
   AuthorRefFragment
 } from '../api'
 
-import {
-  BlockType,
-  blockForQueryBlock,
-  unionMapForBlock,
-  BlockValue,
-  TitleBlockValue,
-  RichTextBlockListValue
-} from '../blocks/types'
+import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
@@ -201,21 +194,23 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   // Reads title and lead from the first block and saves them in variables
   function syncFirstTitleBlockWithMetadata() {
-    interface blockToSync {
+    interface titleBlockToSync {
       title: string
       lead: string
     }
 
-    if (metadata.title || metadata.lead === '') {
-      const titleBlock: BlockValue[] = blocks.filter(block => block.type === BlockType.Title)
-      const titleBlockValue = titleBlock[0].value as blockToSync
+    if ((metadata.title === '' || metadata.lead === '') && blocks.length > 0) {
+      const titleBlock = blocks.find(block => block.type === BlockType.Title)
 
-      const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
-      const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
-      const title = metadata.title !== '' ? metadata.title : syncedTitle
-      const lead = metadata.lead !== '' ? metadata.lead : syncedLead
+      if (titleBlock?.value) {
+        const titleBlockValue = titleBlock.value as titleBlockToSync
+        const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
+        const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
+        const title = metadata.title !== '' ? metadata.title : syncedTitle
+        const lead = metadata.lead !== '' ? metadata.lead : syncedLead
 
-      setMetadata({...metadata, title, lead})
+        setMetadata({...metadata, title, lead})
+      }
     }
   }
 
