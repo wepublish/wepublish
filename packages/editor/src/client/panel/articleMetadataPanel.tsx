@@ -187,6 +187,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={title}
                   onChange={title => onChange?.({...value, title, slug: slugify(title)})}
                 />
+                <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
@@ -196,6 +197,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={lead}
                   onChange={lead => onChange?.({...value, lead})}
                 />
+                <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
