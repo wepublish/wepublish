@@ -17,7 +17,6 @@ import {
   TeaserStyle,
   TeaserInput
 } from '../api'
-import bodyParser from 'body-parser'
 
 export enum BlockType {
   RichText = 'richText',

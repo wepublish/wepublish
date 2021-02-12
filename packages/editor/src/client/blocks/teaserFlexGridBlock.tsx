@@ -1,18 +1,20 @@
 import React, {useState} from 'react'
 import {IconButton, Drawer, Panel, Icon, Avatar, InputGroup, InputNumber} from 'rsuite'
-import GridLayout, {Layout} from 'react-grid-layout'
+import GridLayout, {Layout /* ,WidthProvider, Responsive */} from 'react-grid-layout'
 import './teaserFlexGridBlock.less'
 import {useTranslation} from 'react-i18next'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
-import {TeaserFlexGridBlockValue, TeaserFlexItem, Teaser, TeaserType} from './types'
+import {TeaserFlexGridBlockValue, Teaser, TeaserType, FlexItemLayout} from './types'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {PlaceholderImage} from '../atoms/placeholderImage'
 import {BlockProps} from '../atoms/blockList'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
 import {Toolbar} from '../atoms/toolbar'
+
+// const ResponsiveGridLayout = WidthProvider(Responsive); TODO
 
 export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGridBlockValue>) {
   const [editIndex, setEditIndex] = useState(0)
@@ -21,59 +23,67 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
 
   const [addItems, setAddItems] = useState(1)
-  // NOTE: grid Items as the teaser containers. As RGL work directly with the
-  // grid div keys, it is not possible to pack the grid divs into named components.
 
-  const {teasers, numColumns} = value
+  const {teasers, layout, numColumns, numRows} = value
 
   // const {t} = useTranslation()
 
-  function handleTeaserLinkChange(index: number, teaserLink: Teaser | null) {
+  function handleTeaserLinkChange(i: number, teaserLink: Teaser | null) {
     onChange({
       ...value,
       teasers: Object.assign([], teasers, {
-        [index]: {layout: teasers[index].layout, teaser: teaserLink || null}
+        [i]: teaserLink || null
       })
     })
   }
 
-  const handleLayoutChange = (gridLayout: Layout[]) => {
-    // TODO when to sort teasers rule (eg. y value?) for passing to API according
-    // FIXME / OPTIMIZE? sometime invoked twice, maybe add some debouncing, ie timeout before state update?
+  const handleLayoutChange = (layout: Layout[]) => {
     onChange({
       ...value,
-      teasers: teasers.map(({teaser}, i) => {
-        const {x, y, w, h} = gridLayout[i]
-        return {layout: {x, y, w, h}, teaser}
-      })
+      layout: layout.map(({x, y, w, h}) => ({x, y, w, h}))
     })
   }
 
-  const handleRemoveItem = (index: number) => {
-    // triggers a double render: remove item > render > correct layout > render, but should not be a problem
-    teasers.splice(index, 1)
+  const handleRemoveItem = (i: number) => {
+    teasers.splice(i, 1)
+    layout.splice(i, 1)
     onChange({
       ...value,
-      teasers: [...teasers]
+      teasers: [...teasers],
+      layout: [...layout]
     })
   }
 
   const handleAddItems = () => {
     for (let i = 0; i < addItems; i++) {
-      const newTeaser: TeaserFlexItem = {
-        layout: {
-          x: (teasers.length * 2) % numColumns,
-          y: Infinity, // puts it at the bottom
-          w: 2,
-          h: 2
-        },
-        teaser: null
+      const itemLayout: FlexItemLayout = {
+        x: (layout.length * 2) % numColumns,
+        y: Infinity, // puts it at the bottom
+        w: 2,
+        h: 2
       }
-      teasers.push(newTeaser)
+      layout.push(itemLayout)
+      teasers.push(null)
     }
+
     onChange({
       ...value,
-      teasers: [...teasers]
+      teasers: [...teasers],
+      layout: [...layout]
+    })
+  }
+
+  const setRowHeight = (val: number) => {
+    onChange({
+      ...value,
+      numRows: val
+    })
+  }
+
+  const setNumColumns = (val: number) => {
+    onChange({
+      ...value,
+      numColumns: val
     })
   }
 
@@ -83,22 +93,43 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
     cursor: 'pointer'
   }
 
-  // TODO for numColumns/Rows
-  //      <InputGroup
-  //          style={{width: '150px'}}
-  //          disabled={WepublishEditor.isFormatActive(editor, BlockFormat.Table)}
-  //          key={i}>
-  //          <InputGroup.Addon style={{width: '80px'}}>{label}</InputGroup.Addon>
-  //          <InputNumber value={num} onChange={val => setNumber(val as number)} min={1} max={100} />
-  //        </InputGroup>
-
   return (
     <>
       <Toolbar>
-        <InputGroup style={{width: '180px'}}>
-          <InputGroup.Button onClick={handleAddItems}>
+        <InputGroup style={{width: '180px', margin: '0 10'}}>
+          <InputGroup.Addon style={{width: '100px'}}>
             {
-              // t('blocks.teaserFlexGrid.addTeasers') TODO broken
+              (() => 'Num columns')()
+              // t('blocks.teaserFlexGrid.addTeasers') TODO
+            }
+          </InputGroup.Addon>
+          <InputNumber
+            value={numColumns}
+            onChange={val => setNumColumns(Number(val))}
+            min={Math.max(...layout.map(({x, w}) => x + w))}
+            max={30}
+          />
+        </InputGroup>
+
+        <InputGroup style={{width: '180px', margin: '0 10'}}>
+          <InputGroup.Addon style={{width: '100px'}}>
+            {
+              (() => 'Row height')()
+              // t('blocks.teaserFlexGrid.addTeasers') TODO
+            }
+          </InputGroup.Addon>
+          <InputNumber
+            value={numRows}
+            onChange={val => setRowHeight(Number(val))}
+            min={1}
+            max={500}
+          />
+        </InputGroup>
+
+        <InputGroup style={{width: '180px', margin: '0 10'}}>
+          <InputGroup.Button onClick={handleAddItems} color={'green'}>
+            {
+              // t('blocks.teaserFlexGrid.addTeasers') TODO
               (() => 'add Teasers')()
             }
           </InputGroup.Button>
@@ -110,15 +141,17 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           />
         </InputGroup>
       </Toolbar>
-      <p>{JSON.stringify(teasers.map(({layout}) => layout))}</p>
+
+      <p>{JSON.stringify(layout)}</p>
       <GridLayout
         className="layout"
         cols={numColumns}
-        rowHeight={30}
+        rowHeight={numRows}
         width={700}
+        layout={layout.map((layout, i) => ({i: String(i), ...layout}))}
         onLayoutChange={handleLayoutChange}>
-        {teasers.map(({layout, teaser}, i) => (
-          <div key={i} data-grid={layout}>
+        {teasers.map((teaser, i) => (
+          <div key={String(i)}>
             <Icon
               icon="close"
               style={{...ItemTopBarStyle, right: '2px'}}
@@ -145,9 +178,10 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
           </div>
         ))}
       </GridLayout>
+
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <TeaserEditPanel
-          initialTeaser={teasers[editIndex].teaser!}
+          initialTeaser={teasers[editIndex]!}
           onClose={() => setEditModalOpen(false)}
           onConfirm={teaser => {
             setEditModalOpen(false)
@@ -168,7 +202,7 @@ export function TeaserFlexGridBlock({value, onChange}: BlockProps<TeaserFlexGrid
   )
 }
 
-// NICE to have
+// TODO: Nice to have
 // TODO curso grab (probably onDragStart={.../ End={...
 // function handleSortStart() {
 //   document.documentElement.style.cursor = 'grabbing'
