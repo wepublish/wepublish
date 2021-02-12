@@ -79,6 +79,7 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
+  CanGetComments,
   CanGetMemberPlan,
   CanGetMemberPlans,
   CanGetPaymentMethods,
@@ -100,6 +101,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError} from '../error'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
   GraphQLMemberPlanConnection,
@@ -122,6 +124,7 @@ import {
   GraphQLPaymentSort
 } from './payment'
 import {PaymentSort} from '../db/payment'
+import {CommentSort} from '../db/comment'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -435,6 +438,43 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
         })
+      }
+    },
+
+    // Comments
+    // =======
+    comments: {
+      type: GraphQLNonNull(GraphQLCommentConnection),
+      args: {
+        after: {type: GraphQLID},
+        before: {type: GraphQLID},
+        first: {type: GraphQLInt},
+        last: {type: GraphQLInt},
+        skip: {type: GraphQLInt},
+        filter: {type: GraphQLCommentFilter},
+        sort: {type: GraphQLCommentSort, defaultValue: CommentSort.ModifiedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
+      },
+      async resolve(
+        root,
+        {filter, sort, order, after, before, first, last, skip},
+        {authenticate, dbAdapter}
+      ) {
+        const {roles} = authenticate()
+
+        const canGetComments = isAuthorised(CanGetComments, roles)
+
+        if (canGetComments) {
+          return await dbAdapter.comment.getComments({
+            filter,
+            sort,
+            order,
+            cursor: InputCursor(after, before),
+            limit: Limit(first, last, skip)
+          })
+        } else {
+          throw new NotAuthorisedError()
+        }
       }
     },
 
