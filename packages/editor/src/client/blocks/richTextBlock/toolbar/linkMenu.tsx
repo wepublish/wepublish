@@ -87,7 +87,7 @@ async function validateURL(url: string) {
     )
     if (!pattern.test(url)) return false
     return await axios
-      .get(url, {timeout: 100})
+      .get(url, {timeout: 5000})
       .then(function () {
         return true
       })
