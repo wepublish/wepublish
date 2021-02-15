@@ -51,11 +51,11 @@
         "untitled": "Untitled",
         "close": "Close",
         "preTitle": "Pre-title",
-        "title": "Title",
+        "title": "SEO Title",
         "authors": "Authors",
         "tags": "Tags",
         "slug": "Slug",
-        "lead": "Lead",
+        "lead": "SEO Lead",
         "addTag": "Press enter to add tag",
         "breakingNews": "Breaking News",
         "image": "Image",
@@ -112,7 +112,9 @@
         "socialMediaImage": "Image for Social Media",
         "postImage": "Image for Post",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image"
+        "lightStyledWithNoImageError": "Light styled teasers must have an image",
+        "titleHelpBlock": "Please use an SEO-optimised title",
+        "leadHelpBlock": "Please use an SEO-optimised lead"
       }
     },
     "pages": {
@@ -147,9 +149,9 @@
       "overview": {},
       "panels": {
         "metadata": "Metadata",
-        "title": "Title",
+        "title": "SEO Title",
         "slug": "Slug",
-        "description": "Description",
+        "description": "SEO Description",
         "tags": "Tags",
         "addTag": "Press enter to add tag",
         "image": "Image",
@@ -167,7 +169,9 @@
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image"
+        "lightStyledWithNoImageError": "Light styled teasers must have an image",
+        "titleHelpBlock": "Please use an SEO-optimised title",
+        "descriptionHelpBlock": "Please use an SEO-optimised description"
       }
     },
     "authors": {
@@ -421,7 +425,8 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title"
+        "title": "Title",
+        "charCount": "Characters count {{charCount}}"
       },
       "title": {
         "title": "Title",
@@ -430,6 +435,7 @@
     },
     "navbar": {
       "articles": "Articles",
+      "comments": "Comments",
       "pages": "Pages",
       "authors": "Autheurs",
       "imageLibrary": "Bibliothèque d'images",
@@ -452,6 +458,49 @@
       "alternativeLogin": "Or login with: ",
       "O2Auth": "Authenticating against OAuth2: ",
       "unauthorized": "User is not authorized for login"
+    },
+    "comments": {
+      "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "state": "State",
+        "comments": "Comments",
+        "action": "Action",
+        "search": "Search",
+        "loadMore": "Load More",
+        "untitled": "Untitled",
+        "userName": "User Name",
+        "text": "Text"
+      },
+      "panels": {
+        "id": "Id",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "untitled": "Untitled",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "revisions": "Revisions",
+        "approveComment": "Approve Comment",
+        "requestChangesOnComment": "Request Changes On Comment",
+        "rejectComment": "Reject Comment",
+        "rejectionReason": "Rejection Reason",
+        "userName": "User Name",
+        "revisionCreatedAt": "Revision created at",
+        "approve": "Approve",
+        "requestChanges": "Request Changes",
+        "requestChangesReason": "Reason",
+        "reject": "Reject",
+        "chooseRejectionReason": "Please choose a rejection reason"
+      },
+      "state": {
+        "pendingApproval": "Pending Approval",
+        "pendingUserChanges": "Pending User Change",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
     }
   }
 }

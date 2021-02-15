@@ -34,6 +34,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
       modifiedAt: new Date(),
       name: input.name,
       slug: input.slug,
+      jobTitle: input.jobTitle,
       imageID: input.imageID,
       links: input.links,
       bio: input.bio
@@ -51,6 +52,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
           modifiedAt: new Date(),
           name: input.name,
           slug: input.slug,
+          jobTitle: input.jobTitle,
           imageID: input.imageID,
           links: input.links,
           bio: input.bio

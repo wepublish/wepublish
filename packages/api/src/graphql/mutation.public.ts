@@ -16,6 +16,7 @@ import {
   PaymentConfigurationNotAllowed,
   NotActiveError,
   EmailAlreadyInUseError,
+  NotAuthorisedError as NotAuthorizedError,
   NotAuthenticatedError,
   UserInputError
 } from '../error'
@@ -27,6 +28,12 @@ import {
   GraphQLPublicUserSubscription,
   GraphQLPublicUserSubscriptionInput
 } from './user'
+import {
+  GraphQLPublicCommentInput,
+  GraphQLPublicCommentUpdateInput,
+  GraphQLPublicComment
+} from './comment'
+import {CommentAuthorType, CommentState} from '../db/comment'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -97,6 +104,52 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
+      }
+    },
+
+    // Comment
+    // =======
+    addComment: {
+      type: GraphQLNonNull(GraphQLPublicComment),
+      args: {input: {type: GraphQLNonNull(GraphQLPublicCommentInput)}},
+      async resolve(_, {input}, {authenticateUser, dbAdapter}) {
+        const {user} = authenticateUser()
+        return await dbAdapter.comment.addPublicComment({
+          input: {
+            ...input,
+            userID: user.id,
+            authorType: CommentAuthorType.VerifiedUser,
+            state: CommentState.PendingApproval
+          }
+        })
+      }
+    },
+
+    updateComment: {
+      type: GraphQLNonNull(GraphQLPublicComment),
+      args: {
+        input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
+      },
+      async resolve(_, {input}, {dbAdapter, authenticateUser}) {
+        const {user} = authenticateUser()
+
+        const comment = await dbAdapter.comment.getCommentById(input.id)
+
+        if (!comment) return null
+
+        if (user.id !== comment?.userID) {
+          throw new NotAuthorizedError()
+        } else if (comment.state !== CommentState.PendingUserChanges) {
+          throw new UserInputError('Comment state must be pending user changes')
+        } else {
+          const {id, text} = input
+
+          return await dbAdapter.comment.updatePublicComment({
+            id,
+            text,
+            state: CommentState.PendingApproval
+          })
+        }
       }
     },
 
