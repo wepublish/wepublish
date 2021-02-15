@@ -425,7 +425,9 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
+        "insert": "Insert",
+        "remove": "Remove",
         "charCount": "Characters count {{charCount}}"
       },
       "title": {

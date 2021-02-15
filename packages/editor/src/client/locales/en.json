@@ -543,9 +543,11 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
         "apply": "Apply",
         "cancel": "Cancel",
+        "insert": "Insert",
+        "remove": "Remove",
         "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {

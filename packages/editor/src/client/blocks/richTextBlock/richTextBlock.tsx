@@ -5,16 +5,24 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
+import {
+  Toolbar,
+  ToolbarDivider,
+  H1Icon,
+  H2Icon,
+  H3Icon,
+  SubMenuButton,
+  SubMenuContext
+} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
-import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
+import {LinkMenu} from './toolbar/linkMenu'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
@@ -70,7 +78,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           <Toolbar
             fadeOut={!hasFocus}
             onMouseDown={e => {
-              e.preventDefault()
+              //e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
             <FormatButton format={BlockFormat.H1}>
@@ -105,8 +113,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <LinkFormatButton />
-            <RemoveLinkFormatButton />
+            <SubMenuButton icon="link">
+              <LinkMenu />
+            </SubMenuButton>
 
             <ToolbarDivider />
 
