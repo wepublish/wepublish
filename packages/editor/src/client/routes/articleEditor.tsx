@@ -22,7 +22,13 @@ import {
   AuthorRefFragment
 } from '../api'
 
-import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {
+  BlockType,
+  blockForQueryBlock,
+  unionMapForBlock,
+  BlockValue,
+  TitleBlockValue
+} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
@@ -194,20 +200,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   // Reads title and lead from the first block and saves them in variables
   function syncFirstTitleBlockWithMetadata() {
-    interface titleBlockToSync {
-      title: string
-      lead: string
-    }
-
-    if ((metadata.title === '' || metadata.lead === '') && blocks.length > 0) {
+    if (metadata.title === '' && metadata.lead === '' && blocks.length > 0) {
       const titleBlock = blocks.find(block => block.type === BlockType.Title)
 
       if (titleBlock?.value) {
-        const titleBlockValue = titleBlock.value as titleBlockToSync
+        const titleBlockValue = titleBlock.value as TitleBlockValue
         const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
         const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
-        const title = metadata.title !== '' ? metadata.title : syncedTitle
-        const lead = metadata.lead !== '' ? metadata.lead : syncedLead
+        const title = syncedTitle
+        const lead = syncedLead
 
         setMetadata({...metadata, title, lead})
       }
