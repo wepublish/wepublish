@@ -16,6 +16,7 @@ import {
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
   NotActiveError,
+  NotFound,
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
@@ -85,6 +86,7 @@ import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
+//import { Article, CreateArticleArgs } from '../db/article'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -712,6 +714,23 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    duplicateArticle: {
+      type: GraphQLNonNull(GraphQLArticle),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const article = await loaders.articles.load(id)
+
+        if(!article) throw new NotFound('article', id)
+
+        const articleRevision = Object.assign(article.published ?? article.draft, {publishedAt:''}, { slug: ''})
+        const output = await dbAdapter.article.createArticle({ input: {shared: article.shared, ...articleRevision}})
+
+        return output
+      }
+    },
+
     // Page
     // =======
 
@@ -783,6 +802,23 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    duplicatePage: {
+      type: GraphQLNonNull(GraphQLPage),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const page = await loaders.pages.load(id)
+
+        if(!page) throw new NotFound('page', id)
+
+        const pageRevision = Object.assign(page.published ?? page.draft, {publishedAt:''}, { slug: ''})
+        const output = await dbAdapter.page.createPage({ input: {...pageRevision}})
+
+        return output
       }
     },
 

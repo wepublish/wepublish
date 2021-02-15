@@ -7,6 +7,7 @@ import {
   ArticleRefFragment,
   useUnpublishArticleMutation,
   useDeleteArticleMutation,
+  //useDuplicateArticleMutation,
   ArticleListDocument,
   ArticleListQuery,
   PageRefFragment,
@@ -22,7 +23,8 @@ const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
-  Unpublish = 'unpublish'
+  Unpublish = 'unpublish',
+  Duplicate = 'duplicate'
 }
 
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
@@ -53,6 +55,7 @@ export function ArticleList() {
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
+  //const [duplicateArticle, {loading: isDubplicating}] = useDuplicateArticleMutation()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -195,6 +198,17 @@ export function ArticleList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                 </>
               )}
             </Cell>
@@ -219,8 +233,9 @@ export function ArticleList() {
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
-              ? t('articles.panels.unpublishArticle')
-              : t('articles.panels.deleteArticle')}
+              ? t('articles.panels.unpublishArticle') : 
+              ConfirmAction.Delete ? t('articles.panels.deleteArticle') : 
+              t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
 
@@ -256,7 +271,7 @@ export function ArticleList() {
         <Modal.Footer>
           <Button
             color={'red'}
-            disabled={isUnpublishing || isDeleting}
+            disabled={isUnpublishing || isDeleting }
             onClick={async () => {
               if (!currentArticle) return
 
@@ -293,6 +308,13 @@ export function ArticleList() {
                     variables: {id: currentArticle.id}
                   })
                   break
+
+                // case ConfirmAction.Duplicate:
+                //   await duplicateArticle({
+                //     variables: {id: currentArticle.id}
+                //   })
+                //   console.log("duplicateeeeeeeeee")
+                //   break
               }
 
               setConfirmationDialogOpen(false)

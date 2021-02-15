@@ -599,11 +599,13 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
+  duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
   deleteMemberPlan?: Maybe<Scalars['ID']>;
@@ -805,6 +807,11 @@ export type MutationUnpublishArticleArgs = {
 };
 
 
+export type MutationDuplicateArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationCreatePageArgs = {
   input: PageInput;
 };
@@ -830,6 +837,11 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDuplicatePageArgs = {
   id: Scalars['ID'];
 };
 
