@@ -90,7 +90,6 @@ import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
-//import { Article, CreateArticleArgs } from '../db/article'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
