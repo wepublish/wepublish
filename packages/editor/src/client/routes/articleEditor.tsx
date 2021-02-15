@@ -221,8 +221,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
-    const noSlug = metadata.slug === ''
-    if (noSlug) {
+    if (!metadata.slug) {
       Alert.error(t('articleEditor.overview.noSlug'), 0)
       return
     }
