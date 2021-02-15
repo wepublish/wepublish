@@ -9,7 +9,7 @@ import {WepublishEditor} from '../editor/wepublishEditor'
 import {BlockFormat} from '../editor/formats'
 import {DEFAULT_BORDER_COLOR, emptyCellsTable} from '../editor/elements'
 
-import './tableMenu.less'
+// import './tableMenu.less'
 
 export function TableMenu() {
   const editor = useSlate()

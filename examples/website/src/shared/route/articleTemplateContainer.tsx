@@ -95,7 +95,9 @@ const mapAuthors = (metaData: any[] | undefined) => {
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading} = useQuery(ArticleQuery, {variables: {id}})
+  const {data, loading, error} = useQuery(ArticleQuery, {variables: {id}})
+
+  if (error) return <NotFoundTemplate statusCode={500} />
 
   if (loading) return <Loader text="Loading" />
 

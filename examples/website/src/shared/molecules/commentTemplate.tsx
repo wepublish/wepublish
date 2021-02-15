@@ -27,12 +27,6 @@ const CommentBox = cssRule(() => ({
   position: 'relative'
 }))
 
-/* const CommentInputField = cssRule(() => ({
-  resize: 'none',
-  padding: '0.5em',
-  width: '100%'
-})) */
-
 const CommentAuthor = cssRule(() => ({
   margin: 0,
   display: 'inline',
@@ -88,6 +82,14 @@ const CommentHeading = cssRule(() => ({
   fontSize: '0.9em'
 }))
 
+const CommentInput = cssRule(() => ({
+  borderRadius: '.25em',
+  border: '1px solid rgba(0, 0, 0, 0.2)',
+  fontSize: '0.9em',
+  padding: '0.5em 1em',
+  marginTop: '1em'
+}))
+
 const ReplyBox = cssRule(() => ({
   marginLeft: '3.2em'
 }))
@@ -125,8 +127,12 @@ const SrOnly = cssRule(() => ({
   overflow: 'hidden'
 }))
 
+const StateMessage = cssRule(() => ({
+  fontSize: '0.9em'
+}))
+
 const Thread = cssRule(() => ({
-  marginBottom: '3em'
+  marginBottom: '2.5em'
 }))
 
 const Timestamp = cssRule(() => ({
@@ -211,15 +217,16 @@ export function ComposeComment(props: ComposeCommentProps) {
             variables: {
               input: {
                 parentID,
-                text: [commentInput],
+                text: commentInput,
                 itemID,
                 itemType
               }
             }
           })
         }}>
-        <p>
-          {/*<textarea
+        {/* <p>
+          Fallback if RichTextBlock doesn't work
+          <textarea
             maxLength={1000}
             rows={4}
             cols={50}
@@ -227,11 +234,17 @@ export function ComposeComment(props: ComposeCommentProps) {
             className={css(CommentInputField)}
             value={commentInput.children.map(child => child.text)}
             onChange={e => setCommentInput(redressCommentInput(e.target.value))}
-          />*/}
-        </p>
-        <p>
-          <RichTextBlock value={commentInput} onChange={input => setCommentInput(input)} />
-        </p>
+          />
+        </p> */}
+        {commentState && <p className={css(StateMessage)}>{commentState}</p>}
+        <div className={css(CommentInput)}>
+          <RichTextBlock
+            value={commentInput}
+            onChange={input => {
+              setCommentInput(input)
+            }}
+          />
+        </div>
         <p>
           <BaseButton
             css={props.parentCommentAuthor ? SmallButton : CommentButton}
@@ -239,7 +252,6 @@ export function ComposeComment(props: ComposeCommentProps) {
             {props.parentCommentAuthor ? 'Submit' : 'Post comment'}
           </BaseButton>
         </p>
-        {commentState && <p>{commentState}</p>}
       </form>
     </div>
   )
@@ -253,7 +265,7 @@ export function DisplayComments(props: DisplayCommentsProps) {
 
   return (
     <div className={css(Container, CommentBox)}>
-      <h3>Show all comments</h3>
+      <h3 style={{marginTop: '2em'}}>Showing all comments</h3>
       {comments?.map(parentComment => (
         <ParentComment
           comment={parentComment}
@@ -305,7 +317,11 @@ function ParentComment(props: any) {
               onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
               Reply
             </button>
-            <button className={css(SmallButton)}>Edit</button>
+            <button
+              className={css(SmallButton)}
+              onClick={() => alert('This function is not yet working')}>
+              Edit
+            </button>
           </div>
         </div>
 
@@ -347,7 +363,11 @@ function ChildComment(value: any) {
       <div className={css(CommentBody)}>
         <RichTextBlock disabled value={text} onChange={value => value} />
         <div className={css(Actions)}>
-          <button className={css(SmallButton)}>Edit</button>
+          <button
+            className={css(SmallButton)}
+            onClick={() => alert('This function is not yet working')}>
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -362,13 +382,17 @@ export function LoginToComment(props: LoginToComment) {
     <>
       {session && (
         <>
-          <ComposeComment itemID={props.itemID} itemType={props.itemType} />
-          <p className={css(Container)}>
+          <ComposeComment
+            itemID={props.itemID}
+            itemType={props.itemType}
+            header={'Compose a new comment'}
+          />
+          <p className={css(Container, StateMessage)}>
             Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
           </p>
         </>
       )}
-      {!session && <p>Not logged in. Login to comment</p>}
+      {!session && <p className={css(Container, StateMessage)}>Not logged in. Login to comment</p>}
     </>
   )
 }
