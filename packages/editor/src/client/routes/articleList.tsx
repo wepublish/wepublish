@@ -7,7 +7,7 @@ import {
   ArticleRefFragment,
   useUnpublishArticleMutation,
   useDeleteArticleMutation,
-  //useDuplicateArticleMutation,
+  useDuplicateArticleMutation,
   ArticleListDocument,
   ArticleListQuery,
   PageRefFragment,
@@ -55,7 +55,7 @@ export function ArticleList() {
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
-  //const [duplicateArticle, {loading: isDubplicating}] = useDuplicateArticleMutation()
+  const [duplicateArticle, {loading: isDubplicating}] = useDuplicateArticleMutation()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -234,7 +234,7 @@ export function ArticleList() {
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
               ? t('articles.panels.unpublishArticle') : 
-              ConfirmAction.Delete ? t('articles.panels.deleteArticle') : 
+              confirmAction === ConfirmAction.Delete ? t('articles.panels.deleteArticle') : 
               t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
@@ -271,7 +271,7 @@ export function ArticleList() {
         <Modal.Footer>
           <Button
             color={'red'}
-            disabled={isUnpublishing || isDeleting }
+            disabled={isUnpublishing || isDeleting || isDubplicating}
             onClick={async () => {
               if (!currentArticle) return
 
@@ -309,12 +309,11 @@ export function ArticleList() {
                   })
                   break
 
-                // case ConfirmAction.Duplicate:
-                //   await duplicateArticle({
-                //     variables: {id: currentArticle.id}
-                //   })
-                //   console.log("duplicateeeeeeeeee")
-                //   break
+                case ConfirmAction.Duplicate:
+                  await duplicateArticle({
+                    variables: {id: currentArticle.id}
+                  })
+                  break
               }
 
               setConfirmationDialogOpen(false)
