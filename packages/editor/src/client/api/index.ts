@@ -661,11 +661,13 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
+  duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
   deleteMemberPlan?: Maybe<Scalars['ID']>;
@@ -870,6 +872,11 @@ export type MutationUnpublishArticleArgs = {
 };
 
 
+export type MutationDuplicateArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationCreatePageArgs = {
   input: PageInput;
 };
@@ -895,6 +902,11 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDuplicatePageArgs = {
   id: Scalars['ID'];
 };
 
@@ -1950,6 +1962,19 @@ export type DeleteArticleMutation = (
   & Pick<Mutation, 'deleteArticle'>
 );
 
+export type DuplicateArticleMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DuplicateArticleMutation = (
+  { __typename?: 'Mutation' }
+  & { duplicateArticle: (
+    { __typename?: 'Article' }
+    & MutationArticleFragment
+  ) }
+);
+
 export type ArticleQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2850,6 +2875,19 @@ export type DeletePageMutationVariables = Exact<{
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deletePage'>
+);
+
+export type DuplicatePageMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DuplicatePageMutation = (
+  { __typename?: 'Mutation' }
+  & { duplicatePage: (
+    { __typename?: 'Page' }
+    & MutationPageFragment
+  ) }
 );
 
 export type PageQueryVariables = Exact<{
@@ -4171,6 +4209,38 @@ export function useDeleteArticleMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteArticleMutationHookResult = ReturnType<typeof useDeleteArticleMutation>;
 export type DeleteArticleMutationResult = Apollo.MutationResult<DeleteArticleMutation>;
 export type DeleteArticleMutationOptions = Apollo.BaseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables>;
+export const DuplicateArticleDocument = gql`
+    mutation DuplicateArticle($id: ID!) {
+  duplicateArticle(id: $id) {
+    ...MutationArticle
+  }
+}
+    ${MutationArticleFragmentDoc}`;
+export type DuplicateArticleMutationFn = Apollo.MutationFunction<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
+
+/**
+ * __useDuplicateArticleMutation__
+ *
+ * To run a mutation, you first call `useDuplicateArticleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDuplicateArticleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [duplicateArticleMutation, { data, loading, error }] = useDuplicateArticleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDuplicateArticleMutation(baseOptions?: Apollo.MutationHookOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>) {
+        return Apollo.useMutation<DuplicateArticleMutation, DuplicateArticleMutationVariables>(DuplicateArticleDocument, baseOptions);
+      }
+export type DuplicateArticleMutationHookResult = ReturnType<typeof useDuplicateArticleMutation>;
+export type DuplicateArticleMutationResult = Apollo.MutationResult<DuplicateArticleMutation>;
+export type DuplicateArticleMutationOptions = Apollo.BaseMutationOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
 export const ArticleDocument = gql`
     query Article($id: ID!) {
   article(id: $id) {
@@ -5439,6 +5509,38 @@ export function useDeletePageMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePageMutationHookResult = ReturnType<typeof useDeletePageMutation>;
 export type DeletePageMutationResult = Apollo.MutationResult<DeletePageMutation>;
 export type DeletePageMutationOptions = Apollo.BaseMutationOptions<DeletePageMutation, DeletePageMutationVariables>;
+export const DuplicatePageDocument = gql`
+    mutation DuplicatePage($id: ID!) {
+  duplicatePage(id: $id) {
+    ...MutationPage
+  }
+}
+    ${MutationPageFragmentDoc}`;
+export type DuplicatePageMutationFn = Apollo.MutationFunction<DuplicatePageMutation, DuplicatePageMutationVariables>;
+
+/**
+ * __useDuplicatePageMutation__
+ *
+ * To run a mutation, you first call `useDuplicatePageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDuplicatePageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [duplicatePageMutation, { data, loading, error }] = useDuplicatePageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOptions<DuplicatePageMutation, DuplicatePageMutationVariables>) {
+        return Apollo.useMutation<DuplicatePageMutation, DuplicatePageMutationVariables>(DuplicatePageDocument, baseOptions);
+      }
+export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
+export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
+export type DuplicatePageMutationOptions = Apollo.BaseMutationOptions<DuplicatePageMutation, DuplicatePageMutationVariables>;
 export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {

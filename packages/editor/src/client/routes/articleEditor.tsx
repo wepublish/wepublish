@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
+import {Drawer, Modal, Notification, Icon, IconButton, Alert} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -22,7 +22,13 @@ import {
   AuthorRefFragment
 } from '../api'
 
-import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {
+  BlockType,
+  blockForQueryBlock,
+  unionMapForBlock,
+  BlockValue,
+  TitleBlockValue
+} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
@@ -137,7 +143,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setMetadata({
         slug,
         preTitle: preTitle ?? '',
-        title,
+        title: title ?? '',
         lead: lead ?? '',
         tags,
         properties: properties.map(property => ({
@@ -192,6 +198,23 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }
 
+  // Reads title and lead from the first block and saves them in variables
+  function syncFirstTitleBlockWithMetadata() {
+    if (metadata.title === '' && metadata.lead === '' && blocks.length > 0) {
+      const titleBlock = blocks.find(block => block.type === BlockType.Title)
+
+      if (titleBlock?.value) {
+        const titleBlockValue = titleBlock.value as TitleBlockValue
+        const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
+        const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
+        const title = syncedTitle
+        const lead = syncedLead
+
+        setMetadata({...metadata, title, lead})
+      }
+    }
+  }
+
   async function handleSave() {
     const input = createInput()
 
@@ -221,6 +244,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
+    if (!metadata.slug) {
+      Alert.error(t('articleEditor.overview.noSlug'), 0)
+      return
+    }
+
     if (articleID) {
       const {data} = await updateArticle({
         variables: {id: articleID, input: createInput()}
@@ -280,7 +308,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   icon={<Icon icon="newspaper-o" />}
                   size={'lg'}
                   disabled={isDisabled}
-                  onClick={() => setMetaDrawerOpen(true)}>
+                  onClick={() => {
+                    syncFirstTitleBlockWithMetadata()
+                    setMetaDrawerOpen(true)
+                  }}>
                   {t('articleEditor.overview.metadata')}
                 </IconButton>
 

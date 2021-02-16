@@ -102,6 +102,12 @@ mutation DeletePage($id: ID!) {
   deletePage(id: $id)
 }
 
+mutation DuplicatePage($id: ID!) {
+  duplicatePage(id: $id) {
+   ...MutationPage
+  }
+}
+
 query Page($id: ID!) {
   page(id: $id) {
     id
