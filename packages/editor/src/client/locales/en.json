@@ -548,6 +548,7 @@
         "cancel": "Cancel",
         "insert": "Insert",
         "remove": "Remove",
+        "invalidLink": "Invalid Link",
         "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {

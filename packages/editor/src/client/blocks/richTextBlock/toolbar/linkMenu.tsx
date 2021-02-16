@@ -53,7 +53,7 @@ export function LinkMenu() {
         <FormGroup>
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
           <FormControl
-            errorMessage={url && !isValidURL ? 'Invalid Link' : undefined}
+            errorMessage={url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}
             value={url}
             onChange={url => setURL(url)}
           />

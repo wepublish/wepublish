@@ -428,6 +428,7 @@
         "text": "Text",
         "insert": "Insert",
         "remove": "Remove",
+        "invalidLink": "Invalid Link",
         "charCount": "Characters count {{charCount}}"
       },
       "title": {
