@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react'
 
-import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
+import {Drawer, Modal, Notification, Icon, IconButton, Alert} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -244,6 +244,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
+    if (!metadata.slug) {
+      Alert.error(t('articleEditor.overview.noSlug'), 0)
+      return
+    }
+
     if (articleID) {
       const {data} = await updateArticle({
         variables: {id: articleID, input: createInput()}
