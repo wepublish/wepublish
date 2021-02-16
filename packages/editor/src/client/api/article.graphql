@@ -132,6 +132,12 @@ mutation DeleteArticle($id: ID!) {
   deleteArticle(id: $id)
 }
 
+mutation DuplicateArticle($id: ID!) {
+  duplicateArticle(id: $id) {
+   ...MutationArticle
+  }
+}
+
 query Article($id: ID!) {
   article(id: $id) {
     id
