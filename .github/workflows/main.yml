@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - f/display-one-line-rich-text
 
 jobs:
   release:
