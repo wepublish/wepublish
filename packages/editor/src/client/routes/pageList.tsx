@@ -7,22 +7,37 @@ import {
   usePageListQuery,
   useDeletePageMutation,
   useUnpublishPageMutation,
+  useDuplicatePageMutation,
   PageListDocument,
-  PageListQuery
+  PageListQuery,
+  PageSort
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-const {Column, HeaderCell, Cell} = Table
+import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
-  Unpublish = 'unpublish'
+  Unpublish = 'unpublish',
+  Duplicate = 'duplicate'
 }
 
-const PagesPerPage = 50
+function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
+  switch (columnField) {
+    case 'createdAt':
+      return PageSort.CreatedAt
+    case 'modifiedAt':
+      return PageSort.ModifiedAt
+    case 'publishAt':
+      return PageSort.PublishAt
+    default:
+      return null
+  }
+}
 
 export function PageList() {
   const {t} = useTranslation()
@@ -33,38 +48,38 @@ export function PageList() {
   const [currentPage, setCurrentPage] = useState<PageRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortField, setSortField] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pages, setPages] = useState<PageRefFragment[]>([])
 
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
+  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
 
-  const listVariables = {filter: filter || undefined, first: PagesPerPage}
-  const {data, fetchMore, loading: isLoading} = usePageListQuery({
-    variables: {filter: filter || undefined, first: 50},
+  const pageListVariables = {
+    filter: filter || undefined,
+    first: limit,
+    skip: page - 1,
+    sort: mapColumFieldToGraphQLField(sortField),
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+  }
+
+  const {data, refetch, loading: isLoading} = usePageListQuery({
+    variables: pageListVariables,
     fetchPolicy: 'network-only'
   })
+
+  useEffect(() => {
+    refetch(pageListVariables)
+  }, [filter, page, limit, sortOrder, sortField])
 
   useEffect(() => {
     if (data?.pages?.nodes) {
       setPages(data.pages.nodes)
     }
   }, [data?.pages])
-
-  function loadMore() {
-    fetchMore({
-      variables: {first: 50, after: data?.pages.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          pages: {
-            ...fetchMoreResult.pages,
-            nodes: [...prev.pages.nodes, ...fetchMoreResult?.pages.nodes]
-          }
-        }
-      }
-    })
-  }
 
   return (
     <>
@@ -87,76 +102,115 @@ export function PageList() {
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={pages}>
-        <Column width={400} align="left" resizable>
-          <HeaderCell>{t('pages.overview.title')}</HeaderCell>
-          <Cell>
-            {(rowData: PageRefFragment) => (
-              <Link route={PageEditRoute.create({id: rowData.id})}>
-                {rowData.latest.title || t('pages.overview.untitled')}
-              </Link>
-            )}
-          </Cell>
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('pages.overview.created')}</HeaderCell>
-          <Cell dataKey="createdAt" />
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
-          <Cell dataKey="modifiedAt" />
-        </Column>
-        <Column width={100} align="left" resizable>
-          <HeaderCell>{t('pages.overview.states')}</HeaderCell>
-          <Cell>
-            {(rowData: PageRefFragment) => {
-              const states = []
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px'
+        }}>
+        <Table
+          minHeight={600}
+          autoHeight={true}
+          style={{flex: 1}}
+          loading={isLoading}
+          data={pages}
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.created')}</HeaderCell>
+            <Cell dataKey="createdAt">
+              {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={200} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: PageRefFragment) => new Date(modifiedAt).toDateString()}
+            </Cell>
+          </Column>
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: PageRefFragment) => (
+                <Link route={PageEditRoute.create({id: rowData.id})}>
+                  {rowData.latest.title || t('pages.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+          <Column width={100} align="left" resizable>
+            <HeaderCell>{t('pages.overview.states')}</HeaderCell>
+            <Cell>
+              {(rowData: PageRefFragment) => {
+                const states = []
 
-              if (rowData.draft) states.push(t('pages.overview.draft'))
-              if (rowData.pending) states.push(t('pages.overview.pending'))
-              if (rowData.published) states.push(t('pages.overview.published'))
+                if (rowData.draft) states.push(t('pages.overview.draft'))
+                if (rowData.pending) states.push(t('pages.overview.pending'))
+                if (rowData.published) states.push(t('pages.overview.published'))
 
-              return <div>{states.join(' / ')}</div>
-            }}
-          </Cell>
-        </Column>
-        <Column width={100} align="center" fixed="right">
-          <HeaderCell>{t('pages.overview.action')}</HeaderCell>
-          <Cell style={{padding: '6px 0'}}>
-            {(rowData: PageRefFragment) => (
-              <>
-                {rowData.published && (
+                return <div>{states.join(' / ')}</div>
+              }}
+            </Cell>
+          </Column>
+          <Column width={100} align="center" fixed="right">
+            <HeaderCell>{t('pages.overview.action')}</HeaderCell>
+            <Cell style={{padding: '6px 0'}}>
+              {(rowData: PageRefFragment) => (
+                <>
+                  {rowData.published && (
+                    <IconButton
+                      icon={<Icon icon="arrow-circle-o-down" />}
+                      circle
+                      size="sm"
+                      onClick={e => {
+                        setCurrentPage(rowData)
+                        setConfirmAction(ConfirmAction.Unpublish)
+                        setConfirmationDialogOpen(true)
+                      }}
+                    />
+                  )}
                   <IconButton
-                    icon={<Icon icon="arrow-circle-o-down" />}
+                    icon={<Icon icon="trash" />}
                     circle
                     size="sm"
-                    onClick={e => {
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
                       setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Unpublish)
+                      setConfirmAction(ConfirmAction.Delete)
                       setConfirmationDialogOpen(true)
                     }}
                   />
-                )}
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setCurrentPage(rowData)
-                    setConfirmAction(ConfirmAction.Delete)
-                    setConfirmationDialogOpen(true)
-                  }}
-                />
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
 
-      {data?.pages.pageInfo.hasNextPage && (
-        <Button onClick={loadMore}>{t('pages.overview.loadMore')}</Button>
-      )}
+        <Pagination
+          style={{height: '50px'}}
+          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+          activePage={page}
+          displayLength={limit}
+          total={data?.pages.totalCount}
+          onChangePage={page => setPage(page)}
+          onChangeLength={limit => setLimit(limit)}
+        />
+      </div>
 
       <Modal
         show={isConfirmationDialogOpen}
@@ -165,8 +219,9 @@ export function PageList() {
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
-              ? t('pages.panels.unpublishPage')
-              : t('pages.panels.deletePage')}
+              ? t('pages.panels.unpublishPage') : 
+              confirmAction === ConfirmAction.Delete ? t('pages.panels.deletePage') : 
+              t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 
@@ -202,7 +257,7 @@ export function PageList() {
 
         <Modal.Footer>
           <Button
-            disabled={isUnpublishing || isDeleting}
+            disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentPage) return
 
@@ -213,7 +268,7 @@ export function PageList() {
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
                         query: PageListDocument,
-                        variables: listVariables
+                        variables: pageListVariables
                       })
 
                       if (!query) return
@@ -226,7 +281,7 @@ export function PageList() {
                             nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
                           }
                         },
-                        variables: listVariables
+                        variables: pageListVariables
                       })
                     }
                   })
@@ -234,6 +289,12 @@ export function PageList() {
 
                 case ConfirmAction.Unpublish:
                   await unpublishPage({
+                    variables: {id: currentPage.id}
+                  })
+                  break
+                
+                case ConfirmAction.Duplicate:
+                  await duplicatePage({
                     variables: {id: currentPage.id}
                   })
                   break

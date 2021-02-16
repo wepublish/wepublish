@@ -7,6 +7,7 @@ import {
   Form,
   FormControl,
   FormGroup,
+  HelpBlock,
   Icon,
   Message,
   Nav,
@@ -140,6 +141,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.title')}</ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
+                <HelpBlock>{t('pageEditor.panels.titleHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.description')}</ControlLabel>
@@ -148,6 +150,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                   value={description}
                   onChange={description => onChange?.({...value, description})}
                 />
+                <HelpBlock>{t('pageEditor.panels.descriptionHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('pageEditor.panels.tags')}</ControlLabel>
