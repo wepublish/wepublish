@@ -14,7 +14,11 @@ import {
   Nav,
   Icon,
   Panel,
-  Message
+  Message,
+  InputGroup,
+  IconButton,
+  Tooltip,
+  Whisper
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -62,6 +66,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     preTitle,
     title,
     lead,
+    slug,
     tags,
     authors,
     shared,
@@ -183,11 +188,29 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-                <FormControl
-                  value={title}
-                  onChange={title => onChange?.({...value, title, slug: slugify(title)})}
-                />
+                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
+                <InputGroup style={{width: '100%'}}>
+                  <FormControl
+                    value={slug}
+                    onChange={slug => onChange?.({...value, slug})}
+                    onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  />
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>}>
+                    <IconButton
+                      icon={<Icon icon="magic" />}
+                      onClick={() => {
+                        onChange?.({...value, title, slug: slugify(title)})
+                      }}
+                    />
+                  </Whisper>
+                </InputGroup>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>

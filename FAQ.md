@@ -44,3 +44,4 @@ A: If you are using Windows then run this command after checking that you can re
 `npm config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"`
 
 Now you can go in the terminal to examples/media and run `yarn` and the magic module should be installed successfully. 
+
