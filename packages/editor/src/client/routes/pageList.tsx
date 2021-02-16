@@ -7,6 +7,7 @@ import {
   usePageListQuery,
   useDeletePageMutation,
   useUnpublishPageMutation,
+  useDuplicatePageMutation,
   PageListDocument,
   PageListQuery,
   PageSort
@@ -21,7 +22,8 @@ const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
-  Unpublish = 'unpublish'
+  Unpublish = 'unpublish',
+  Duplicate = 'duplicate'
 }
 
 function mapColumFieldToGraphQLField(columnField: string): PageSort | null {
@@ -54,6 +56,7 @@ export function PageList() {
 
   const [deletePage, {loading: isDeleting}] = useDeletePageMutation()
   const [unpublishPage, {loading: isUnpublishing}] = useUnpublishPageMutation()
+  const [duplicatePage, {loading: isDuplicating}] = useDuplicatePageMutation()
 
   const pageListVariables = {
     filter: filter || undefined,
@@ -181,6 +184,17 @@ export function PageList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                 </>
               )}
             </Cell>
@@ -205,8 +219,9 @@ export function PageList() {
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
-              ? t('pages.panels.unpublishPage')
-              : t('pages.panels.deletePage')}
+              ? t('pages.panels.unpublishPage') : 
+              confirmAction === ConfirmAction.Delete ? t('pages.panels.deletePage') : 
+              t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 
@@ -242,7 +257,7 @@ export function PageList() {
 
         <Modal.Footer>
           <Button
-            disabled={isUnpublishing || isDeleting}
+            disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentPage) return
 
@@ -274,6 +289,12 @@ export function PageList() {
 
                 case ConfirmAction.Unpublish:
                   await unpublishPage({
+                    variables: {id: currentPage.id}
+                  })
+                  break
+                
+                case ConfirmAction.Duplicate:
+                  await duplicatePage({
                     variables: {id: currentPage.id}
                   })
                   break
