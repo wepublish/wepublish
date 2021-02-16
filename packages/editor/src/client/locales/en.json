@@ -45,7 +45,8 @@
         "metadata": "Metadata",
         "create": "Create",
         "save": "Save",
-        "publish": "Publish"
+        "publish": "Publish",
+        "noSlug": "Article Not Published. Please add a slug."
       },
       "panels": {
         "metadata": "Metadata",
@@ -62,6 +63,7 @@
         "authors": "Authors",
         "tags": "Tags",
         "slug": "Slug",
+        "slugifyTitle": "Click to slugify title",
         "lead": "SEO Lead",
         "addTag": "Press enter to add tag",
         "breakingNews": "Breaking News",
