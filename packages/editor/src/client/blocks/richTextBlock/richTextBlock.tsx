@@ -77,8 +77,8 @@ export const RichTextBlock = memo(function RichTextBlock({
         <>
           <Toolbar
             fadeOut={!hasFocus}
-            onMouseDown={e => {
-              //e.preventDefault()
+            onMouseDown={() => {
+              // e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
             <FormatButton format={BlockFormat.H1}>
