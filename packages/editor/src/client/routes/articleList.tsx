@@ -55,7 +55,7 @@ export function ArticleList() {
 
   const [deleteArticle, {loading: isDeleting}] = useDeleteArticleMutation()
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
-  const [duplicateArticle, {loading: isDubplicating}] = useDuplicateArticleMutation()
+  const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
   const articleListVariables = {
     filter: filter || undefined,
@@ -271,7 +271,7 @@ export function ArticleList() {
         <Modal.Footer>
           <Button
             color={'red'}
-            disabled={isUnpublishing || isDeleting || isDubplicating}
+            disabled={isUnpublishing || isDeleting || isDuplicating}
             onClick={async () => {
               if (!currentArticle) return
 
