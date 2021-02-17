@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - f/WEP-153-comments-listing-route
+      - F/WPC-56/WPC-91-link-button/url-validation
 
 jobs:
   release:
