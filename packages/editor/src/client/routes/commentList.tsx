@@ -219,6 +219,7 @@ export function CommentList() {
                   {rowData?.revisions?.length ? (
                     <RichTextBlock
                       displayOnly
+                      displayOneLine
                       disabled
                       // TODO: remove this
                       onChange={console.log}

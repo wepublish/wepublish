@@ -717,6 +717,23 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    duplicateArticle: {
+      type: GraphQLNonNull(GraphQLArticle),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const article = await loaders.articles.load(id)
+
+        if(!article) throw new NotFound('article', id)
+
+        const articleRevision = Object.assign(article.published ?? article.draft, { slug: ''}, { publishedAt: undefined }, { updatedAt: undefined })
+        const output = await dbAdapter.article.createArticle({ input: {shared: article.shared, ...articleRevision}})
+
+        return output
+      }
+    },
+
     // Page
     // =======
 
@@ -801,6 +818,23 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    duplicatePage: {
+      type: GraphQLNonNull(GraphQLPage),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const page = await loaders.pages.load(id)
+
+        if(!page) throw new NotFound('page', id)
+
+        const pageRevision = Object.assign(page.published ?? page.draft, { slug: ''}, { publishedAt: undefined }, { updatedAt: undefined })
+        const output = await dbAdapter.page.createPage({ input: {...pageRevision}})
+
+        return output
       }
     },
 
