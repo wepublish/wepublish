@@ -7,7 +7,7 @@ import {
   PaymentProviderProps,
   WebhookForPaymentIntentProps
 } from './paymentProvider'
-import fetch from 'cross-fetch'
+import fetch from 'node-fetch'
 import crypto from 'crypto'
 import {PaymentState} from '../db/payment'
 import qs from 'qs'

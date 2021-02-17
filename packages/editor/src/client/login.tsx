@@ -194,7 +194,7 @@ export function Login() {
                 onChange={password => setPassword(password)}
               />
             </FormGroup>
-            <Button appearance="primary" disabled={loading} onClick={login}>
+            <Button appearance="primary" type="submit" disabled={loading} onClick={login}>
               {t('login.login')}
             </Button>
           </Form>

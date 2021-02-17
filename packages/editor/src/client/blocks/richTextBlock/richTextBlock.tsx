@@ -19,6 +19,7 @@ import {WepublishEditor} from './editor/wepublishEditor'
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
+  displayOneLine?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -27,7 +28,8 @@ export const RichTextBlock = memo(function RichTextBlock({
   disabled,
   onChange,
   displayOnly = false,
-  showCharCount = false
+  showCharCount = false,
+  displayOneLine = false
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -122,6 +124,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         </>
       )}
       <Editable
+        style={
+          displayOneLine
+            ? {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }
+            : undefined
+        }
         readOnly={disabled || displayOnly}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
