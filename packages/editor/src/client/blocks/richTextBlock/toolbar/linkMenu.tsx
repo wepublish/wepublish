@@ -6,7 +6,6 @@ import {useSlate} from 'slate-react'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 import {SubMenuContext} from '../../../atoms/toolbar'
-import axios from 'axios'
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -96,8 +95,8 @@ async function validateURL(url: string) {
       'i'
     )
     if (!pattern.test(url)) return false
-    return await axios
-      .get(url, {timeout: 500, headers: {'Access-Control-Allow-Origin': '*'}})
+
+    return await fetch(url, {mode: 'no-cors'})
       .then(function () {
         return true
       })
