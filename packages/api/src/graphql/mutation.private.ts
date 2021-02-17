@@ -727,7 +727,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if(!article) throw new NotFound('article', id)
 
-        const articleRevision = Object.assign(article.published ?? article.draft, { slug: ''}, { publishedAt: undefined }, { updatedAt: undefined })
+        const articleRevision = Object.assign(article.published ?? article.draft, { slug: '', publishedAt: undefined, updatedAt: undefined })
         const output = await dbAdapter.article.createArticle({ input: {shared: article.shared, ...articleRevision}})
 
         return output
@@ -831,7 +831,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if(!page) throw new NotFound('page', id)
 
-        const pageRevision = Object.assign(page.published ?? page.draft, { slug: ''}, { publishedAt: undefined }, { updatedAt: undefined })
+        const pageRevision = Object.assign(page.published ?? page.draft, { slug: '', publishedAt: undefined, updatedAt: undefined })
         const output = await dbAdapter.page.createPage({ input: {...pageRevision}})
 
         return output
