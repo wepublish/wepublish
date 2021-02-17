@@ -160,6 +160,7 @@ query Article($id: ID!) {
       preTitle
       title
       lead
+      seoTitle
       image {
         ...ImageRef
       }

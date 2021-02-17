@@ -251,6 +251,7 @@ export interface DBArticleRevision {
   preTitle?: string
   title: string
   lead?: string
+  seoTitle?: string
   tags: string[]
 
   properties: MetadataProperty[]
