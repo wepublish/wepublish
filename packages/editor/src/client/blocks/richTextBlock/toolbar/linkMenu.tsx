@@ -97,7 +97,7 @@ async function validateURL(url: string) {
     )
     if (!pattern.test(url)) return false
     return await axios
-      .get(url, {timeout: 500})
+      .get(url, {timeout: 500, headers: {'Access-Control-Allow-Origin': '*'}})
       .then(function () {
         return true
       })
