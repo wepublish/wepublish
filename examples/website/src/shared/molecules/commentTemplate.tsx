@@ -184,17 +184,6 @@ const AddComment = gql`
   }
 `
 
-// Helpers
-// =======
-
-// This emulates a RichTextNode for as long as we haven't implemented it
-/* function redressCommentInput(value: string) {
-  return {
-    type: 'paragraph',
-    children: [{text: value}]
-  }
-} */
-
 // Components
 // ==========
 
@@ -233,18 +222,6 @@ export function ComposeComment(props: ComposeCommentProps) {
             }
           })
         }}>
-        {/* <p>
-          Fallback if RichTextBlock doesn't work
-          <textarea
-            maxLength={1000}
-            rows={4}
-            cols={50}
-            placeholder="Start writing your comment"
-            className={css(CommentInputField)}
-            value={commentInput.children.map(child => child.text)}
-            onChange={e => setCommentInput(redressCommentInput(e.target.value))}
-          />
-        </p> */}
         {commentState && <p className={css(StateMessage)}>{commentState}</p>}
         <div className={css(CommentInput)}>
           <RichTextBlock

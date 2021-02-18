@@ -123,7 +123,6 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
 
   const path = ArticleRoute.reverse({id, slug})
   const canonicalURL = canonicalHost + path
-  console.log(comments)
   return (
     <>
       <Helmet>
