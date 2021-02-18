@@ -53,7 +53,6 @@ export type ArticleInput = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
-  seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
   imageID?: Maybe<Scalars['ID']>
@@ -90,7 +89,6 @@ export type ArticleRevision = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
-  seoTitle?: Maybe<Scalars['String']>
   slug: Scalars['Slug']
   tags: Array<Scalars['String']>
   properties: Array<Properties>
@@ -141,7 +139,6 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
-  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -161,7 +158,6 @@ export type AuthorInput = {
   slug: Scalars['Slug']
   links?: Maybe<Array<AuthorLinkInput>>
   bio?: Maybe<Scalars['RichText']>
-  jobTitle?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
 }
 
@@ -675,13 +671,11 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']>
   publishArticle?: Maybe<Article>
   unpublishArticle?: Maybe<Article>
-  duplicateArticle: Article
   createPage: Page
   updatePage?: Maybe<Page>
   deletePage?: Maybe<Scalars['Boolean']>
   publishPage?: Maybe<Page>
   unpublishPage?: Maybe<Page>
-  duplicatePage: Page
   createMemberPlan?: Maybe<MemberPlan>
   updateMemberPlan?: Maybe<MemberPlan>
   deleteMemberPlan?: Maybe<Scalars['ID']>
@@ -851,10 +845,6 @@ export type MutationUnpublishArticleArgs = {
   id: Scalars['ID']
 }
 
-export type MutationDuplicateArticleArgs = {
-  id: Scalars['ID']
-}
-
 export type MutationCreatePageArgs = {
   input: PageInput
 }
@@ -876,10 +866,6 @@ export type MutationPublishPageArgs = {
 }
 
 export type MutationUnpublishPageArgs = {
-  id: Scalars['ID']
-}
-
-export type MutationDuplicatePageArgs = {
   id: Scalars['ID']
 }
 
@@ -1365,7 +1351,6 @@ export type QueryArticlesArgs = {
   before?: Maybe<Scalars['ID']>
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
-  skip?: Maybe<Scalars['Int']>
   filter?: Maybe<ArticleFilter>
   sort?: Maybe<ArticleSort>
   order?: Maybe<SortOrder>
@@ -1394,7 +1379,6 @@ export type QueryPagesArgs = {
   first?: Maybe<Scalars['Int']>
   last?: Maybe<Scalars['Int']>
   filter?: Maybe<PageFilter>
-  skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
 }
