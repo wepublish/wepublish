@@ -28,6 +28,7 @@ export type Article = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
@@ -84,6 +85,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -443,6 +445,7 @@ export type Page = {
   socialMediaDescription?: Maybe<Scalars['String']>
   socialMediaImage?: Maybe<Image>
   blocks: Array<Block>
+  comments: Array<Comment>
 }
 
 export type PageConnection = {
