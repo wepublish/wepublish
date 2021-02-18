@@ -590,9 +590,12 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
         "apply": "Apply",
         "cancel": "Cancel",
+        "insert": "Insert",
+        "remove": "Remove",
+        "invalidLink": "Link input is invalid. Please check URL and try again.",
         "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {
