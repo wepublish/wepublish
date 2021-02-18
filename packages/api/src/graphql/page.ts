@@ -26,6 +26,7 @@ import {
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
+import {GraphQLPublicComment} from './comment'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -204,7 +205,20 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+    comments: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+      resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
+        // if session exists, should get user's un-approved comments as well
+        // if not we should get approved ones
+        const userSession = session ? authenticateUser() : null
+        const articleComments = await dbAdapter.comment.getPublicCommentsForItemByID({
+          id,
+          userID: userSession?.user?.id
+        })
+        return articleComments
+      })
+    }
   })
 })
 
