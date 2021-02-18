@@ -7,7 +7,7 @@ import {Comment, RichTextBlockValue} from '../types'
 import gql from 'graphql-tag'
 import {useMutation} from '@apollo/client'
 import {AuthContext} from '../authContext'
-import {Link, LogoutRoute} from '../route/routeContext'
+import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 // CSS-Rules
@@ -90,6 +90,13 @@ const CommentInput = cssRule(() => ({
   marginTop: '1em'
 }))
 
+const PendingApproval = cssRule(() => ({
+  fontSize: '.9em',
+  padding: '4px 8px',
+  marginLeft: '-0.5em',
+  color: Color.Highlight
+}))
+
 const ReplyBox = cssRule(() => ({
   marginLeft: '3.2em'
 }))
@@ -147,7 +154,8 @@ export interface ComposeCommentProps {
   readonly parentCommentAuthor?: string
   readonly role?: string
   readonly parentID?: string
-  readonly itemID: string
+  readonly itemID?: string
+  readonly slug?: string
   readonly itemType: string
 }
 
@@ -157,7 +165,8 @@ export interface DisplayCommentsProps {
 
 export interface LoginToComment {
   readonly itemType: string
-  readonly itemID: string
+  readonly itemID?: string
+  readonly slug?: string
 }
 
 // Queries
@@ -283,7 +292,18 @@ export function DisplayComments(props: DisplayCommentsProps) {
 function ParentComment(props: any) {
   const css = useStyle()
 
-  const {id, userName, authorType, modifiedAt, children, text, itemID, itemType} = props.comment
+  const {
+    id,
+    state,
+    rejectionReason,
+    userName,
+    authorType,
+    modifiedAt,
+    children,
+    text,
+    itemID,
+    itemType
+  } = props.comment
 
   // This allows to display the children in a chronological order for the sake of a better UX
   let childrenReversed = [...children].reverse()
@@ -322,6 +342,16 @@ function ParentComment(props: any) {
               onClick={() => alert('This function is not yet working')}>
               Edit
             </button>
+            {state === 'pendingApproval' ? (
+              <span className={css(PendingApproval)}>Comment is awaiting approval</span>
+            ) : state === 'pendingUserChanges' ? (
+              <span className={css(PendingApproval)}>
+                Your comment has been rejected because of {rejectionReason}. Please edit your
+                comment.
+              </span>
+            ) : (
+              ''
+            )}
           </div>
         </div>
 
@@ -340,7 +370,7 @@ function ParentComment(props: any) {
 function ChildComment(value: any) {
   const css = useStyle()
 
-  const {id, user, authorType, modifiedAt, text} = value.value
+  const {id, rejectionReason, state, user, authorType, modifiedAt, text} = value.value
 
   return (
     <div className={css(CommentBox, Replies)} id={id}>
@@ -368,6 +398,15 @@ function ChildComment(value: any) {
             onClick={() => alert('This function is not yet working')}>
             Edit
           </button>
+          {state === 'pendingApproval' ? (
+            <span className={css(PendingApproval)}>Comment is awaiting approval</span>
+          ) : state === 'pendingUserChanges' ? (
+            <span className={css(PendingApproval)}>
+              Your comment has been rejected because of {rejectionReason}. Please edit your comment.
+            </span>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>
@@ -392,7 +431,11 @@ export function LoginToComment(props: LoginToComment) {
           </p>
         </>
       )}
-      {!session && <p className={css(Container, StateMessage)}>Not logged in. Login to comment</p>}
+      {!session && (
+        <p className={css(Container, StateMessage)}>
+          Not logged in. <Link route={LoginRoute.create({})}>Login</Link> to comment
+        </p>
+      )}
     </>
   )
 }

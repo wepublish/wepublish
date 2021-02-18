@@ -7,7 +7,8 @@ import {
   TitleBlockValue,
   HeaderType,
   TeaserStyle,
-  TeaserType
+  TeaserType,
+  PageMeta
 } from '../types'
 import {BlockTypes} from './gqlFragments'
 import {authorsAdapter, peerAdapter} from './articleAdapter'
@@ -21,7 +22,11 @@ export function getArticleBlocks(blocks: any, articleMeta: ArticleMeta) {
   return getBlocks(blocks, articleMeta)
 }
 
-function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
+export function getPageBlocks(blocks: any, pageMeta: PageMeta) {
+  return getBlocks(blocks, undefined, pageMeta)
+}
+
+function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta): Block[] {
   let hasTitleImage = false
 
   return blocks.map((block: any, index: number) => {
@@ -129,6 +134,10 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
           value.date = new Date(articleMeta.publishedAt)
           value.isHeader = true
         }
+        if (pageMeta && (index == 0 || (hasTitleImage && index == 1))) {
+          value.date = new Date(pageMeta.publishedAt)
+          value.isHeader = true
+        }
         return {
           type: BlockType.Title,
           key: index,
@@ -217,6 +226,9 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
     }
   })
 }
+
+// Other
+// =====
 
 export function imageAdapter(image: any): ImageData {
   return image

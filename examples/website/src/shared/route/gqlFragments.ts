@@ -61,6 +61,8 @@ export const imageEdgeDataFragment = gql`
 export const commentsDataFragment = gql`
   fragment CommentsData on Comment {
     id
+    state
+    rejectionReason
     itemID
     itemType
     text
@@ -72,19 +74,13 @@ export const commentsDataFragment = gql`
       name
       preferredName
     }
+  }
+`
+
+export const recursiveCommentsDataFragment = gql`
+  fragment RecursiveCommentsData on Comment {
     children {
-      id
-      itemID
-      itemType
-      text
-      modifiedAt
-      parentID
-      authorType
-      user {
-        id
-        name
-        preferredName
-      }
+      ...CommentsData
     }
   }
 `
@@ -121,11 +117,13 @@ export const articleMetaDataFragment = gql`
     }
     comments {
       ...CommentsData
+      ...RecursiveCommentsData
     }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}
   ${commentsDataFragment}
+  ${recursiveCommentsDataFragment}
 `
 
 export const pageMetaDataFragment = gql`
@@ -145,6 +143,11 @@ export const pageMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    # Not yet needed in MVP
+    # comments {
+    #  ...CommentsData
+    #  ...RecursiveCommentsData
+    #}
   }
   ${simpleImageDataFragment}
 `

@@ -17,7 +17,7 @@ import {
   listicleBlockDataFragment,
   quoteBlockDataFragment,
   titleBlockDataFragment,
-  articleMetaDataFragment,
+  pageMetaDataFragment,
   gridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
@@ -30,6 +30,7 @@ import {useAppContext} from '../appContext'
 
 import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
+// import { PageFooterContainer } from './footerContainer'
 
 const PageQuery = gql`
   query Page($id: ID, $slug: Slug) {
@@ -69,7 +70,7 @@ const PageQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${pageMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
@@ -109,6 +110,9 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage
+    // tags,
+    // publishedAt,
+    // comments
   } = data.page
 
   const path = PageRoute.reverse({slug: pageSlug || undefined})
@@ -137,6 +141,14 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
           publishedAt={new Date(data.page.publishedAt)}
           updatedAt={new Date(data.page.updatedAt)}
         />
+        {/* Uncommented, since we don't need it for MVP
+        <PageFooterContainer
+          tags={tags}
+          publishDate={publishedAt}
+          id={id}
+          comments={comments}
+        />
+        */}
       </PageTemplate>
     </>
   )

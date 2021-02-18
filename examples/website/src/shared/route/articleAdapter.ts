@@ -31,6 +31,8 @@ export function commentsAdapter(comments: any): Comment[] {
   return comments?.map((comment: Comment) => {
     return {
       id: comment.id,
+      state: comment.state,
+      rejectionReason: comment.rejectionReason,
       text: comment.text,
       itemType: comment.itemType,
       itemID: comment.itemID,

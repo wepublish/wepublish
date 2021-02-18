@@ -39,6 +39,8 @@ export interface Author {
 
 export interface Comment {
   id: string
+  state: string
+  rejectionReason: string
   itemID: string
   itemType: CommentItemType
   text: RichTextTextNode[]
@@ -87,6 +89,35 @@ export interface ArticleMeta {
 }
 
 export type PublishedArticle = ArticleMeta & {
+  blocks: Block[]
+}
+
+// PageMeta
+export interface PageMeta {
+  id: string
+  url: string
+
+  tags: string[]
+
+  publishedAt: Date
+  updatedAt: Date
+
+  title: string
+  description: string
+  image: any
+  slug?: string
+
+  socialMediaTitle?: string
+  socialMediaDescription?: string
+  socialMediaImage?: any
+
+  comments?: Comment[]
+
+  teaserType?: TeaserType
+  teaserStyle?: TeaserStyle
+}
+
+export type PublishedPage = PageMeta & {
   blocks: Block[]
 }
 
