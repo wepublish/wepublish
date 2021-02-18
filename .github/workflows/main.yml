@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - F/WPC-56/WPC-91-link-button/url-validation
 
 jobs:
   release:
