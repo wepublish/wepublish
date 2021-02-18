@@ -90,6 +90,7 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
             'draft.title': data.title,
             'draft.preTitle': data.preTitle,
             'draft.lead': data.lead,
+            'draft.seoTitle': data.seoTitle,
 
             'draft.slug': data.slug,
             'draft.imageID': data.imageID,
