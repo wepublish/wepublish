@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar} from 'rsuite'
+import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, HelpBlock} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
 import {WepublishEditor} from '../editor/wepublishEditor'
@@ -18,7 +18,7 @@ export function LinkMenu() {
   const [selection, setSelection] = useState<Range | null>(null)
 
   const [isValidURL, setIsValidURL] = useState(false)
-  const isDisabled = !isValidURL
+  const isDisabled = !url || !title
 
   const {t} = useTranslation()
 
@@ -51,11 +51,8 @@ export function LinkMenu() {
       <Form fluid>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
-          <FormControl
-            errorMessage={url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}
-            value={url}
-            onChange={url => setURL(url)}
-          />
+          <FormControl value={url} onChange={url => setURL(url)} />
+          <HelpBlock>{url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}</HelpBlock>
         </FormGroup>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
@@ -94,16 +91,7 @@ async function validateURL(url: string) {
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )
-    if (!pattern.test(url)) return false
-
-    return await fetch(url, {mode: 'no-cors'})
-      .then(function () {
-        return true
-      })
-      .catch(function (error: any) {
-        if (error.response?.status) return true
-        return false
-      })
+    return pattern.test(url) ? true : false
   }
   return false
 }

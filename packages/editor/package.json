@@ -54,7 +54,6 @@
     "@karma.run/webpack": "^0.0.3",
     "apollo-upload-client": "^14.1.2",
     "array-move": "^2.2.1",
-    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "core-js": "^3.4.8",
     "emoji-mart": "^3.0.0",
