@@ -43,5 +43,5 @@ Now if you start your database up and run `yarn watch` you'll get a fresh new da
 A: If you are using Windows then run this command after checking that you can reach the “MSBuild.exe” file. 
 `npm config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"`
 
-Now you can go in the terminal to examples/media and run `yarn` and the magic module should be installed successfully. 
+Now you can go in the terminal to examples/media and run `yarn` and the magic module should be installed successfully.
 
