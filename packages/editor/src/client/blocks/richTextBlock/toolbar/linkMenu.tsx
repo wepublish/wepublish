@@ -91,7 +91,7 @@ async function validateURL(url: string) {
         '(\\#[-a-z\\d_]*)?$',
       'i'
     )
-    return pattern.test(url) ? true : false
+    return pattern.test(url)
   }
   return false
 }
