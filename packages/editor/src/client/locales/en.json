@@ -59,12 +59,13 @@
         "untitled": "Untitled",
         "close": "Close",
         "preTitle": "Pre-title",
-        "title": "SEO Title",
+        "title": "Title",
+        "seoTitle": "SEO Title",
         "authors": "Authors",
         "tags": "Tags",
         "slug": "Slug",
-        "slugifyTitle": "Click to slugify title",
-        "lead": "SEO Lead",
+        "slugifySeoTitle": "Slugify SEO Title",
+        "lead": "Lead",
         "addTag": "Press enter to add tag",
         "breakingNews": "Breaking News",
         "image": "Image",
@@ -124,8 +125,7 @@
         "postImage": "Image for Post",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
         "lightStyledWithNoImageError": "Light styled teasers must have an image",
-        "titleHelpBlock": "Please use an SEO-optimised title",
-        "leadHelpBlock": "Please use an SEO-optimised lead"
+        "seoTitleHelpBlock": "Please use an SEO-optimised title"
       }
     },
     "comments": {

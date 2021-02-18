@@ -54,6 +54,7 @@ export type ArticleInput = {
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
@@ -90,6 +91,7 @@ export type ArticleRevision = {
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
@@ -1993,7 +1995,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -4261,6 +4263,7 @@ export const ArticleDocument = gql`
       preTitle
       title
       lead
+      seoTitle
       image {
         ...ImageRef
       }
