@@ -1,19 +1,12 @@
 import React, {memo, useMemo, useEffect} from 'react'
-// import {useTranslation} from 'react-i18next'
-import {createEditor, /*Location*/ Node as SlateNode /*Transforms*/} from 'slate'
+import {createEditor, Node as SlateNode} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
-// import {EmojiPicker} from '../../atoms/emojiPicker' - Currently inactive due to issues with server-side rendering
-// import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../../types'
-// import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
-// import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
-// import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
-// import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
