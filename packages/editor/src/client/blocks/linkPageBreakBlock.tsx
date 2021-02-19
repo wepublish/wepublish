@@ -74,7 +74,7 @@ export function LinkPageBreakBlock({
             onChange={text => onChange({...value, text})}
           />
 
-          <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} />
+          <RichTextBlock value={richText || createDefaultValue()} onChange={handleRichTextChange} showCharCount={true} />
         </div>
       </div>
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>

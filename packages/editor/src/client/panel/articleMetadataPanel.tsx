@@ -112,11 +112,13 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     fetchPolicy: 'network-only'
   })
 
-  const preTitleMax = 50;
-  const titleMax = 50;
-  const leadMax = 50;
-  const socialMediaTitleMax = 50;
-  const socialMediaDescriptionMax = 50;
+  const preTitleMax = 30;
+  const seoTitleMax = 70;
+  const leadMax = 350;
+  const socialMediaTitleMax = 100;
+  const socialMediaDescriptionMax = 140;
+
+  var totalCharCount= 0;
 
   function currentContent() {
     switch (activeKey) {
@@ -187,6 +189,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 />
               </FormGroup>
             </Form>
+            <div style={{textAlign: 'right', padding: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${totalCharCount}`} </div>
           </Panel>
         )
       case MetaDataType.General:
@@ -209,8 +212,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
                 <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.title.length}`} </div>
-                { value.title.length > titleMax && (
-                <div style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${titleMax}`}</div>
+                { value.title.length > seoTitleMax && (
+                <div style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${seoTitleMax}`}</div>
                  ) }
               </FormGroup>
               <FormGroup>

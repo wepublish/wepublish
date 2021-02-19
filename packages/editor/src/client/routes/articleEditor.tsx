@@ -116,6 +116,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setChanged(true)
   }, [])
 
+  const totalCharCount = 500;
+
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
@@ -380,6 +382,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           }}
         />
       </Modal>
+      <div style={{textAlign: 'right', padding: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${totalCharCount}`} </div>
     </>
   )
 }
