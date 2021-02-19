@@ -86,6 +86,7 @@ export interface CommentInput {
 export interface AddPublicCommentArgs {
   readonly input: CommentInput
 }
+
 export interface UpdatePublicCommentArgs {
   readonly id: string
 

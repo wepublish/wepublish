@@ -3,7 +3,7 @@
   "include": ["./**/*"],
   "exclude": ["./dist"],
   "compilerOptions": {
-    "types": ["@types/node", "@types/webpack-dev-server", "@types/emoji-mart"],
-    "lib": ["ES2017", "ES2018", "ES2019"]
+    "types": ["@types/node", "@types/webpack-dev-server"],
+    "lib": ["es2017"]
   }
 }
