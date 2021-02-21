@@ -90,6 +90,14 @@ const CommentInput = cssRule(() => ({
   marginTop: '1em'
 }))
 
+const EditCommentInput = cssRule(() => ({
+  borderRadius: '.25em',
+  border: '1px solid rgba(0, 0, 0, 0.2)',
+  fontSize: '0.9em',
+  padding: '0.5em',
+  marginTop: '1em'
+}))
+
 const PendingApproval = cssRule(() => ({
   fontSize: '.9em',
   padding: '4px 8px',
@@ -113,8 +121,9 @@ const RightColumn = cssRule(() => ({
 const SmallButton = cssRule(() => ({
   appearance: 'none',
   fontSize: '.9em',
-  padding: '4px 8px',
+  padding: '0.25em 0.5em',
   marginRight: '0.5em',
+  marginTop: '0.5em',
   color: 'rgba(0, 0, 0, 0.85)',
   backgroundColor: '#fff',
   border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -180,6 +189,15 @@ const AddComment = gql`
       }
       text
       parentID
+    }
+  }
+`
+
+const UpdateComment = gql`
+  mutation UpdateComment($input: CommentUpdateInput!) {
+    updateComment(input: $input) {
+      id
+      text
     }
   }
 `
@@ -277,7 +295,6 @@ function ParentComment(props: any) {
     authorType,
     modifiedAt,
     children,
-    text,
     itemID,
     itemType
   } = props.comment
@@ -286,6 +303,19 @@ function ParentComment(props: any) {
   let childrenReversed = [...children].reverse()
 
   const {activeComment} = props
+  const [editMode, setEditMode] = useState(false)
+  const [commentInput, setCommentInput] = useState(props.comment.text)
+  const [commentState, setCommentState] = useState('')
+
+  const [updateComment, {loading}] = useMutation(UpdateComment, {
+    onCompleted() {
+      setCommentState('Your comment has been submitted and is awaiting approval')
+    },
+    onError: error => {
+      console.error('Error creating a post', error)
+      setCommentState("Something went wrong, your comment couldn't be saved")
+    }
+  })
 
   return (
     <div className={css(Thread)}>
@@ -307,7 +337,13 @@ function ParentComment(props: any) {
         </div>
 
         <div className={css(CommentBody)}>
-          <RichTextBlock disabled value={text} onChange={value => value} />
+          {editMode ? (
+            <div className={css(EditCommentInput)}>
+              <RichTextBlock value={commentInput} onChange={value => setCommentInput(value)} />
+            </div>
+          ) : (
+            <RichTextBlock disabled value={commentInput} onChange={value => value} />
+          )}
           <div className={css(Actions)}>
             <button
               className={css(SmallButton)}
@@ -316,8 +352,23 @@ function ParentComment(props: any) {
             </button>
             <button
               className={css(SmallButton)}
-              onClick={() => alert('This function is not yet working')}>
-              Edit
+              disabled={loading}
+              onClick={() => {
+                if (editMode === true) {
+                  updateComment({
+                    variables: {
+                      input: {
+                        id,
+                        text: commentInput
+                      }
+                    }
+                  })
+
+                  console.log(commentState)
+                }
+                setEditMode(!editMode)
+              }}>
+              {editMode ? 'Save' : 'Edit'}
             </button>
             {state === 'pendingApproval' ? (
               <span className={css(PendingApproval)}>Comment is awaiting approval</span>
@@ -394,25 +445,28 @@ export function LoginToComment(props: LoginToComment) {
   const {session} = useContext(AuthContext)
   const css = useStyle()
 
-  return (
-    <>
-      {session && (
-        <>
-          <ComposeComment
-            itemID={props.itemID}
-            itemType={props.itemType}
-            header={'Compose a new comment'}
-          />
-          <p className={css(Container, StateMessage)}>
-            Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
-          </p>
-        </>
-      )}
-      {!session && (
+  const LoggedIn = () => {
+    return (
+      <>
+        <ComposeComment
+          itemID={props.itemID}
+          itemType={props.itemType}
+          header={'Compose a new comment'}
+        />
         <p className={css(Container, StateMessage)}>
-          Not logged in. <Link route={LoginRoute.create({})}>Login</Link> to comment
+          Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>
         </p>
-      )}
-    </>
-  )
+      </>
+    )
+  }
+
+  const LoggedOut = () => {
+    return (
+      <p className={css(Container, StateMessage)}>
+        Not logged in. <Link route={LoginRoute.create({})}>Login</Link> to comment
+      </p>
+    )
+  }
+
+  return session ? <LoggedIn /> : <LoggedOut />
 }
