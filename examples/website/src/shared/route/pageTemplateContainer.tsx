@@ -110,9 +110,6 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage
-    // tags,
-    // publishedAt,
-    // comments
   } = data.page
 
   const path = PageRoute.reverse({slug: pageSlug || undefined})
@@ -141,14 +138,6 @@ export function PageTemplateContainer({slug, id}: PageTemplateContainerProps) {
           publishedAt={new Date(data.page.publishedAt)}
           updatedAt={new Date(data.page.updatedAt)}
         />
-        {/* Uncommented, since we don't need it for MVP
-        <PageFooterContainer
-          tags={tags}
-          publishDate={publishedAt}
-          id={id}
-          comments={comments}
-        />
-        */}
       </PageTemplate>
     </>
   )
