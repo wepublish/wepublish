@@ -2,10 +2,8 @@ import React from 'react'
 
 import {ArticleFooter} from '../navigation/articleFooter'
 import {relatedArticlesAdapter} from './articleAdapter'
-import {Author, Peer, ArticleMeta, PageMeta, Comment} from '../types'
-import {useListArticlesQuery, useListPagesQuery} from '../query'
-import {PageFooter} from '../navigation/pageFooter'
-import {relatedPagesAdapter} from './pageAdapter'
+import {Author, Peer, ArticleMeta, Comment} from '../types'
+import {useListArticlesQuery} from '../query'
 
 export interface ArticleFooterContainerProps {
   readonly tags: string[]
@@ -66,62 +64,6 @@ export function ArticleFooterContainer({
       tags={tags}
       authors={authors}
       isPeerArticle={isPeerArticle}
-      comments={comments}
-      itemID={id}
-    />
-  )
-}
-
-// For Pages
-// =========
-
-export interface PageFooterContainerProps {
-  readonly tags: string[]
-  readonly authors?: Author[]
-  readonly peer?: Peer
-  readonly id?: string
-  readonly publishDate: Date
-  readonly comments?: Comment[]
-}
-
-export function PageFooterContainer({
-  tags,
-  authors,
-  comments,
-  id,
-  publishDate
-}: PageFooterContainerProps) {
-  const first = 4
-
-  const {data, loading} = useListPagesQuery({
-    variables: {filter: tags.length >= 1 ? tags : undefined, first: first}
-  })
-
-  const {data: fallbackData, loading: fallbackLoading} = useListPagesQuery({
-    variables: {first: first}
-  })
-
-  const tagPages = data?.pages.nodes
-    .concat(fallbackData?.pages.nodes ?? [])
-    .filter(page => page.id != id)
-
-  if (loading || fallbackLoading) {
-    return (
-      <PageFooter relatedPages={[]} tags={tags} authors={authors} itemID={id} comments={comments} />
-    )
-  }
-
-  if (!tagPages) return null
-
-  let pages = relatedPagesAdapter(tagPages).filter(page => page != null) as PageMeta[]
-
-  pages = pages.slice(0, 3)
-
-  return (
-    <PageFooter
-      relatedPages={pages}
-      tags={tags}
-      authors={authors}
       comments={comments}
       itemID={id}
     />

@@ -7,8 +7,7 @@ import {
   TitleBlockValue,
   HeaderType,
   TeaserStyle,
-  TeaserType,
-  PageMeta
+  TeaserType
 } from '../types'
 import {BlockTypes} from './gqlFragments'
 import {authorsAdapter, peerAdapter} from './articleAdapter'
@@ -22,11 +21,7 @@ export function getArticleBlocks(blocks: any, articleMeta: ArticleMeta) {
   return getBlocks(blocks, articleMeta)
 }
 
-export function getPageBlocks(blocks: any, pageMeta: PageMeta) {
-  return getBlocks(blocks, undefined, pageMeta)
-}
-
-function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta): Block[] {
+function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
   let hasTitleImage = false
 
   return blocks.map((block: any, index: number) => {
@@ -132,10 +127,6 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
           value.type = HeaderType.Breaking
           value.preTitle = articleMeta.preTitle
           value.date = new Date(articleMeta.publishedAt)
-          value.isHeader = true
-        }
-        if (pageMeta && (index == 0 || (hasTitleImage && index == 1))) {
-          value.date = new Date(pageMeta.publishedAt)
           value.isHeader = true
         }
         return {

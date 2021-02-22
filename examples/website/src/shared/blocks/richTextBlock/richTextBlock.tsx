@@ -2,12 +2,18 @@ import React, {memo, useMemo, useEffect} from 'react'
 import {createEditor, Node as SlateNode} from 'slate'
 import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
-import {BlockProps} from '../../atoms/blockList'
 import {RichTextBlockValue} from '../../types'
 import {renderElement, renderLeaf} from './editor/render'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
 import {WepublishEditor} from './editor/wepublishEditor'
+
+export interface BlockProps<V = any> {
+  value: V
+  onChange: React.Dispatch<React.SetStateAction<V>>
+  autofocus?: boolean
+  disabled?: boolean
+}
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean

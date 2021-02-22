@@ -309,23 +309,29 @@ function ParentComment(props: any) {
         <div className={css(CommentBody)}>
           <RichTextBlock disabled value={text} onChange={value => value} />
           <div className={css(Actions)}>
-            <button
-              className={css(SmallButton)}
-              onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
-              Reply
-            </button>
-            <button
-              className={css(SmallButton)}
-              onClick={() => alert('This function is not yet working')}>
-              Edit
-            </button>
+            {state === 'approved' ? (
+              <button
+                className={css(SmallButton)}
+                onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
+                Reply
+              </button>
+            ) : (
+              ''
+            )}
             {state === 'pendingApproval' ? (
               <span className={css(PendingApproval)}>Comment is awaiting approval</span>
             ) : state === 'pendingUserChanges' ? (
-              <span className={css(PendingApproval)}>
-                Your comment has been rejected because of {rejectionReason}. Please edit your
-                comment.
-              </span>
+              <>
+                <button
+                  className={css(SmallButton)}
+                  onClick={() => alert('This function is not yet working')}>
+                  Edit
+                </button>
+                <span className={css(PendingApproval)}>
+                  Your comment has been rejected because of {rejectionReason}. Please edit your
+                  comment.
+                </span>
+              </>
             ) : (
               ''
             )}
@@ -370,17 +376,20 @@ function ChildComment(value: any) {
       <div className={css(CommentBody)}>
         <RichTextBlock disabled value={text} onChange={value => value} />
         <div className={css(Actions)}>
-          <button
-            className={css(SmallButton)}
-            onClick={() => alert('This function is not yet working')}>
-            Edit
-          </button>
           {state === 'pendingApproval' ? (
             <span className={css(PendingApproval)}>Comment is awaiting approval</span>
           ) : state === 'pendingUserChanges' ? (
-            <span className={css(PendingApproval)}>
-              Your comment has been rejected because of {rejectionReason}. Please edit your comment.
-            </span>
+            <>
+              <button
+                className={css(SmallButton)}
+                onClick={() => alert('This function is not yet working')}>
+                Edit
+              </button>
+              <span className={css(PendingApproval)}>
+                Your comment has been rejected because of {rejectionReason}. Please edit your
+                comment.
+              </span>
+            </>
           ) : (
             ''
           )}
