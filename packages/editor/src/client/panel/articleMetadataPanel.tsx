@@ -29,7 +29,6 @@ import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 import {useTranslation} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {ArticleEditor} from '../routes/articleEditor'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -310,7 +309,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               }}
               removeImage={() => onChange?.({...value, image: undefined})}
             />
-            <div style={{textAlign: 'right', padding: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${totalCharCount}`} </div>
           </Panel>
         )
       default:
