@@ -48,7 +48,6 @@ export function QuoteBlock({value, onChange, autofocus, disabled}: QuoteBlockPro
           onChange={e => onChange({...value, author: e.target.value})}
         />
       </div>
-      <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.quote.length}`} </div>
     </>
   )
 }

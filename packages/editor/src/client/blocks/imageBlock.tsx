@@ -78,7 +78,6 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           onChange({...value, caption: e.target.value})
         }}
       />
-      <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.caption.length}`} </div>
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}

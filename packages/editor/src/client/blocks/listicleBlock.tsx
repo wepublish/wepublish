@@ -84,7 +84,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
             }}
           />
 
-          <RichTextBlock value={richText} onChange={handleRichTextChange} showCharCount={true} />
+          <RichTextBlock value={richText} onChange={handleRichTextChange}/>
         </div>
       </div>
 

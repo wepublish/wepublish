@@ -46,7 +46,6 @@ export function TitleBlock({value, onChange, autofocus, disabled}: TitleBlockPro
         disabled={disabled}
         onChange={e => onChange({...value, lead: e.target.value})}
       />
-      <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.title.length + value.lead.length}`} </div>
     </>
   )
 }

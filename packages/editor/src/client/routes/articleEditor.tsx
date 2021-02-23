@@ -116,8 +116,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setChanged(true)
   }, [])
 
-  const totalCharCount = 500;
-
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
@@ -178,6 +176,33 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       })
     }
   }, [createError, updateError, publishError])
+
+  function countRichTextBlocksChars(blocks: any) {
+    console.log(blocks);
+    return blocks
+      .filter((value: any) => value.type === BlockType.RichText)
+      .reduce((blocksCount: any, block: any) => {
+        return (
+          blocksCount +
+          block.value.reduce(
+            (total: any, {children}: any) =>
+              total +
+              children.reduce((string: any, nodePair: any, index: any) => {
+                const {text} = nodePair
+                if (index === 0) return `${text}`
+                console.log(children);
+                if (children){
+                  console.log("hiii")
+                  //console.log(countRichTextBlocksChars(children))
+                  return countRichTextBlocksChars(children);
+                }
+                return `${string} ${text}`
+              }, '').length,
+            0
+          )
+        )
+      }, 0)
+  }
 
   function createInput(): ArticleInput {
     return {
@@ -287,6 +312,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       })
     }
   }, [isNotFound])
+
+  var totalCharCount = countRichTextBlocksChars(blocks);
 
   return (
     <>
