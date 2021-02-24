@@ -225,6 +225,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                     onChange?.({...value, lead})
                   }}
                 />
+                <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
+                <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.lead.length}`} </div>
+                { value.lead.length > leadMax && (
+                <div style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${leadMax}`}</div>
+                 ) }
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.seoTitle')}</ControlLabel>
@@ -255,20 +260,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   </Whisper>
                 </InputGroup>
               </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-                <FormControl
-                  rows={5}
-                  componentClass="textarea"
-                  value={lead}
-                  onChange={lead => onChange?.({...value, lead})}
-                />
-                <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
-                <div style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.lead.length}`} </div>
-                { value.lead.length > leadMax && (
-                <div style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${leadMax}`}</div>
-                 ) }
-              </FormGroup>
+
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
                 <CheckPicker
