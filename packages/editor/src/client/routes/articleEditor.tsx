@@ -319,7 +319,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
-  var totalCharCount = countRichTextBlocksChars(blocks);
+  let totalCharCount = countRichTextBlocksChars(blocks);
 
   return (
     <>
