@@ -41,7 +41,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   const [charCount, setCharCount] = useState(0)
 
   useEffect(() => {
-    //if (getCharCount) getCharCount(WepublishEditor.getTextString(editor))
     setCharCount(WepublishEditor.calculateEditorCharCount(editor))
   }, [editor.children])
 
