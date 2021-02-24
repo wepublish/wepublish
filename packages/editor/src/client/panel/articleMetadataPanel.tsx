@@ -260,7 +260,6 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   </Whisper>
                 </InputGroup>
               </FormGroup>
-
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
                 <CheckPicker
