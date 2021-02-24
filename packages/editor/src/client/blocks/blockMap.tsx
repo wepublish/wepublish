@@ -23,7 +23,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [BlockType.RichText]: {
-    field: props => <RichTextBlock {...props}/>,
+    field: props => <RichTextBlock {...props} />,
     defaultValue: createDefaultValue,
     label: 'Rich Text',
     icon: 'file-text'
