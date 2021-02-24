@@ -432,7 +432,10 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
+        "insert": "Insert",
+        "remove": "Remove",
+        "invalidLink": "Link input is invalid. Please check URL and try again.",
         "charCount": "Characters count {{charCount}}"
       },
       "title": {

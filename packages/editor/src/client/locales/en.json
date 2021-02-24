@@ -59,12 +59,13 @@
         "untitled": "Untitled",
         "close": "Close",
         "preTitle": "Pre-title",
-        "title": "SEO Title",
+        "title": "Title",
+        "seoTitle": "SEO Title",
         "authors": "Authors",
         "tags": "Tags",
         "slug": "Slug",
-        "slugifyTitle": "Click to slugify title",
-        "lead": "SEO Lead",
+        "slugifySeoTitle": "Slugify SEO Title",
+        "lead": "Lead",
         "addTag": "Press enter to add tag",
         "breakingNews": "Breaking News",
         "image": "Image",
@@ -128,7 +129,9 @@
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "charCount": "Characters count {{charCount}}",
         "charCountWarning": "The maximum number of characters should be",
-        "totalCharCount": "Total characters count {{charCount}}"
+        "totalCharCount": "Total characters count {{charCount}}",
+        "seoTitleHelpBlock": "Please use an SEO-optimised title"
+
       }
     },
     "comments": {
@@ -550,9 +553,12 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
         "apply": "Apply",
         "cancel": "Cancel",
+        "insert": "Insert",
+        "remove": "Remove",
+        "invalidLink": "Link input is invalid. Please check URL and try again.",
         "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {

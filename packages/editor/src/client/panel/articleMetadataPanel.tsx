@@ -41,6 +41,7 @@ export interface ArticleMetadata {
   readonly preTitle: string
   readonly title: string
   readonly lead: string
+  readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
   readonly properties: ArticleMetadataProperty[]
@@ -66,6 +67,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     preTitle,
     title,
     lead,
+    seoTitle,
     slug,
     tags,
     authors,
@@ -214,6 +216,25 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                  ) }
               </FormGroup>
               <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={lead}
+                  onChange={lead => {
+                    onChange?.({...value, lead})
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.seoTitle')}</ControlLabel>
+                <FormControl
+                  value={seoTitle}
+                  onChange={seoTitle => onChange?.({...value, seoTitle})}
+                />
+                <HelpBlock>{t('articleEditor.panels.seoTitleHelpBlock')}</HelpBlock>
+              </FormGroup>
+              <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
                 <InputGroup style={{width: '100%'}}>
                   <FormControl
@@ -224,11 +245,11 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   <Whisper
                     placement="top"
                     trigger="hover"
-                    speaker={<Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>}>
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
                     <IconButton
                       icon={<Icon icon="magic" />}
                       onClick={() => {
-                        onChange?.({...value, title, slug: slugify(title)})
+                        onChange?.({...value, title, slug: slugify(seoTitle)})
                       }}
                     />
                   </Whisper>

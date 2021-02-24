@@ -12,9 +12,9 @@ import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
-import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
+import {LinkMenu} from './toolbar/linkMenu'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
@@ -107,8 +107,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <LinkFormatButton />
-            <RemoveLinkFormatButton />
+            <SubMenuButton icon="link">
+              <LinkMenu />
+            </SubMenuButton>
 
             <ToolbarDivider />
 

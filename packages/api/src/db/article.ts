@@ -5,6 +5,7 @@ export interface ArticleData {
   readonly preTitle?: string
   readonly title: string
   readonly lead?: string
+  readonly seoTitle?: string
   readonly slug: string
   readonly tags: string[]
 
