@@ -29,7 +29,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   onChange,
   displayOnly = false,
   showCharCount = false,
-  displayOneLine = false,
+  displayOneLine = false
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
