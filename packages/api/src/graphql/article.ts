@@ -77,6 +77,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
@@ -116,6 +117,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
@@ -237,6 +239,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {
@@ -289,11 +292,13 @@ export const GraphQLPublicArticle: GraphQLObjectType<
 
     comments: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
-      resolve: createProxyingResolver(async ({id}, _, {authenticateUser, dbAdapter}) => {
-        const {user} = authenticateUser()
+      resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
+        // if session exists, should get user's un-approved comments as well
+        // if not we should get approved ones
+        const userSession = session ? authenticateUser() : null
         const articleComments = await dbAdapter.comment.getPublicCommentsForItemByID({
           id,
-          userID: user?.id
+          userID: userSession?.user?.id
         })
         return articleComments
       })

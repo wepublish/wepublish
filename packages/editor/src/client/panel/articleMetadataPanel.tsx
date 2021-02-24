@@ -41,6 +41,7 @@ export interface ArticleMetadata {
   readonly preTitle: string
   readonly title: string
   readonly lead: string
+  readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
   readonly properties: ArticleMetadataProperty[]
@@ -66,6 +67,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     preTitle,
     title,
     lead,
+    seoTitle,
     slug,
     tags,
     authors,
@@ -189,7 +191,25 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
-                <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+                <FormControl
+                  rows={5}
+                  componentClass="textarea"
+                  value={lead}
+                  onChange={lead => {
+                    onChange?.({...value, lead})
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.seoTitle')}</ControlLabel>
+                <FormControl
+                  value={seoTitle}
+                  onChange={seoTitle => onChange?.({...value, seoTitle})}
+                />
+                <HelpBlock>{t('articleEditor.panels.seoTitleHelpBlock')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
@@ -202,26 +222,17 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   <Whisper
                     placement="top"
                     trigger="hover"
-                    speaker={<Tooltip>{t('articleEditor.panels.slugifyTitle')}</Tooltip>}>
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
                     <IconButton
                       icon={<Icon icon="magic" />}
                       onClick={() => {
-                        onChange?.({...value, title, slug: slugify(title)})
+                        onChange?.({...value, title, slug: slugify(seoTitle)})
                       }}
                     />
                   </Whisper>
                 </InputGroup>
               </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
-                <FormControl
-                  rows={5}
-                  componentClass="textarea"
-                  value={lead}
-                  onChange={lead => onChange?.({...value, lead})}
-                />
-                <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
-              </FormGroup>
+
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
                 <CheckPicker
