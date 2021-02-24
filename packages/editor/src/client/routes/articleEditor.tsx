@@ -178,7 +178,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [createError, updateError, publishError])
 
   function countRichTextBlocksChars(blocks: any) {
-    console.log(blocks);
     return blocks
       .filter((value: any) => value.type === BlockType.RichText)
       .reduce((blocksCount: any, block: any) => {
@@ -191,11 +190,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 const {text} = nodePair
                 if (index === 0) return `${text}`
                 console.log(children);
-                if (children){
-                  console.log("hiii")
-                  //console.log(countRichTextBlocksChars(children))
-                  return countRichTextBlocksChars(children);
-                }
+                // if (children){
+                //   return countRichTextBlocksChars(children);
+                // }
                 return `${string} ${text}`
               }, '').length,
             0
