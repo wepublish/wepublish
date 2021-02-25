@@ -231,6 +231,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                     />
                   </Whisper>
                 </InputGroup>
+                <HelpBlock>{t('articleEditor.panels.dontChangeSlug')}</HelpBlock>
               </FormGroup>
 
               <FormGroup>
