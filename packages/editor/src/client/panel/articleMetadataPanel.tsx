@@ -55,14 +55,19 @@ export interface ArticleMetadata {
   readonly socialMediaImage?: ImageRefFragment
 }
 
+export interface InfoData {
+  readonly charCount: number
+}
+
 export interface ArticleMetadataPanelProps {
   readonly value: ArticleMetadata
+  readonly infoData: InfoData
 
   onClose?(): void
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadataPanelProps) {
+export function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
   const {
     preTitle,
     title,
@@ -195,6 +200,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
         return (
           <Panel>
             <Form fluid={true}>
+            <div style={{paddingBottom: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${infoData.charCount}`} </div>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
                 <FormControl

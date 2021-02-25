@@ -10,7 +10,7 @@ import {RouteActionType} from '@karma.run/react'
 
 import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
-import {ArticleMetadata, ArticleMetadataPanel} from '../panel/articleMetadataPanel'
+import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
@@ -180,28 +180,29 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [createError, updateError, publishError])
 
-  function countRichTextBlocksChars(blocks: any) {
-    return blocks
-      .filter((value: any) => value.type === BlockType.RichText)
-      .reduce((blocksCount: any, block: any) => {
-        return (
-          blocksCount +
-          block.value.reduce(
-            (total: any, {children}: any) =>
-              total +
-              children.reduce((string: any, nodePair: any, index: any) => {
-                const {text} = nodePair
-                if (index === 0) return `${text}`
-                console.log(children);
-                // if (children){
-                //   return countRichTextBlocksChars(children);
-                // }
-                return `${string} ${text}`
-              }, '').length,
-            0
-          )
-        )
-      }, 0)
+  function countRichtextChars(blocksCharLength: number, nodes: any) {
+    return nodes.reduce((charLength: number, node: any) => {
+      if (!node.text && !node.children) return charLength
+      // node either has text (leaf node) or children (element node)
+      if (!!node.text) {
+        return charLength + (node.text as string).length
+      }
+      return countRichtextChars(charLength, node.children)
+    }, blocksCharLength)
+  }
+
+  function countRichTextBlocksChars(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if (!(block.type === BlockType.RichText)) return charLength
+      return countRichtextChars(charLength, block.value)
+    }, 0)
+  }
+
+  function countTitle(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if ((block.type === BlockType.Title)) return charLength + (block.value.title as string).length + (block.value.lead as string).length
+      else return charLength;
+    }, 0)
   }
 
   function createInput(): ArticleInput {
@@ -319,7 +320,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
-  const totalCharCount = countRichTextBlocksChars(blocks);
+  const totalCharCount = countRichTextBlocksChars(blocks) + countTitle(blocks);
+  const [infoData, setInfoData] = useState<InfoData>({
+    charCount: totalCharCount
+  })
+
+  useEffect(() => {
+    setInfoData({charCount: totalCharCount})
+  },[blocks])
 
   return (
     <>
@@ -396,6 +404,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
+          infoData= {infoData}
           onClose={() => setMetaDrawerOpen(false)}
           onChange={value => {
             setMetadata(value)
@@ -415,7 +424,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           }}
         />
       </Modal>
-      <div style={{textAlign: 'right', padding: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${totalCharCount}`} </div>
     </>
   )
 }
