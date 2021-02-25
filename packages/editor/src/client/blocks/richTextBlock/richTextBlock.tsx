@@ -12,12 +12,14 @@ import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
-import {LinkFormatButton, RemoveLinkFormatButton} from './toolbar/linkButton'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
+import {LinkMenu} from './toolbar/linkMenu'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
+  showCharCount?: boolean
+  displayOneLine?: boolean
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -25,7 +27,9 @@ export const RichTextBlock = memo(function RichTextBlock({
   autofocus,
   disabled,
   onChange,
-  displayOnly = false
+  displayOnly = false,
+  showCharCount = false,
+  displayOneLine = false
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -33,6 +37,12 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
   const [hasFocus, setFocus] = useState(false)
   const [location, setLocation] = useState<Location | null>(null)
+
+  const [charCount, setCharCount] = useState(0)
+
+  useEffect(() => {
+    setCharCount(WepublishEditor.calculateEditorCharCount(editor))
+  }, [editor.children])
 
   const {t} = useTranslation()
 
@@ -61,8 +71,8 @@ export const RichTextBlock = memo(function RichTextBlock({
         <>
           <Toolbar
             fadeOut={!hasFocus}
-            onMouseDown={e => {
-              e.preventDefault()
+            onMouseDown={() => {
+              // e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
             <FormatButton format={BlockFormat.H1}>
@@ -97,8 +107,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <LinkFormatButton />
-            <RemoveLinkFormatButton />
+            <SubMenuButton icon="link">
+              <LinkMenu />
+            </SubMenuButton>
 
             <ToolbarDivider />
 
@@ -114,6 +125,15 @@ export const RichTextBlock = memo(function RichTextBlock({
         </>
       )}
       <Editable
+        style={
+          displayOneLine
+            ? {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }
+            : undefined
+        }
         readOnly={disabled || displayOnly}
         // placeholder={t('blocks.richText.startWriting')}  # causes focusing problems on firefox !
         renderElement={renderElement}
@@ -122,6 +142,9 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
       />
+      {showCharCount && (
+        <p style={{textAlign: 'right'}}>{t('blocks.richText.charCount', {charCount: charCount})}</p>
+      )}
     </Slate>
   )
 })

@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
-import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
+import {Alert, Drawer, Icon, IconButton, Modal, Notification} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -8,21 +8,27 @@ import {NavigationBar} from '../atoms/navigationBar'
 
 import {RouteActionType} from '@karma.run/react'
 
-import {ArticleListRoute, useRouteDispatch, ArticleEditRoute, IconButtonLink} from '../route'
+import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
-import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
+import {ArticleMetadata, ArticleMetadataPanel} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
-  useCreateArticleMutation,
-  useArticleQuery,
-  useUpdateArticleMutation,
   ArticleInput,
+  AuthorRefFragment,
+  useArticleQuery,
+  useCreateArticleMutation,
   usePublishArticleMutation,
-  AuthorRefFragment
+  useUpdateArticleMutation
 } from '../api'
 
-import {BlockType, blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {
+  blockForQueryBlock,
+  BlockType,
+  BlockValue,
+  TitleBlockValue,
+  unionMapForBlock
+} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
@@ -68,6 +74,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     preTitle: '',
     title: '',
     lead: '',
+    seoTitle: '',
     authors: [],
     tags: [],
     properties: [],
@@ -117,6 +124,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         slug,
         preTitle,
         title,
+        seoTitle,
         lead,
         tags,
         breaking,
@@ -137,8 +145,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setMetadata({
         slug,
         preTitle: preTitle ?? '',
-        title,
+        title: title ?? '',
         lead: lead ?? '',
+        seoTitle: seoTitle ?? '',
         tags,
         properties: properties.map(property => ({
           key: property.key,
@@ -177,6 +186,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
       lead: metadata.lead,
+      seoTitle: metadata.seoTitle,
       authorIDs: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
@@ -189,6 +199,28 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       socialMediaDescription: metadata.socialMediaDescription || undefined,
       socialMediaAuthorIDs: metadata.socialMediaAuthors.map(({id}) => id),
       socialMediaImageID: metadata.socialMediaImage?.id || undefined
+    }
+  }
+
+  // Reads title and lead from the first block and saves them in variables
+  function syncFirstTitleBlockWithMetadata() {
+    if (
+      metadata.title === '' &&
+      metadata.lead === '' &&
+      metadata.seoTitle === '' &&
+      blocks.length > 0
+    ) {
+      const titleBlock = blocks.find(block => block.type === BlockType.Title)
+
+      if (titleBlock?.value) {
+        const titleBlockValue = titleBlock.value as TitleBlockValue
+        setMetadata({
+          ...metadata,
+          title: titleBlockValue.title,
+          lead: titleBlockValue.lead,
+          seoTitle: titleBlockValue.title
+        })
+      }
     }
   }
 
@@ -221,6 +253,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
+    if (!metadata.slug) {
+      Alert.error(t('articleEditor.overview.noSlug'), 0)
+      return
+    }
+
     if (articleID) {
       const {data} = await updateArticle({
         variables: {id: articleID, input: createInput()}
@@ -280,7 +317,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   icon={<Icon icon="newspaper-o" />}
                   size={'lg'}
                   disabled={isDisabled}
-                  onClick={() => setMetaDrawerOpen(true)}>
+                  onClick={() => {
+                    syncFirstTitleBlockWithMetadata()
+                    setMetaDrawerOpen(true)
+                  }}>
                   {t('articleEditor.overview.metadata')}
                 </IconButton>
 

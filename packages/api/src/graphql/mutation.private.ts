@@ -13,9 +13,11 @@ import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {Context} from '../context'
 
 import {
+  DuplicatePageSlugError,
   InvalidCredentialsError,
   InvalidOAuth2TokenError,
   NotActiveError,
+  NotFound,
   OAuth2ProviderNotFoundError,
   UserNotFoundError
 } from '../error'
@@ -60,6 +62,7 @@ import {
   CanPublishArticle,
   CanPublishPage,
   CanResetUserPassword,
+  CanTakeActionOnComment,
   CanUpdatePeerProfile,
   CanSendJWTLogin
 } from './permissions'
@@ -80,6 +83,8 @@ import {
 } from './peer'
 
 import {GraphQLCreatedToken, GraphQLTokenInput} from './token'
+import {GraphQLComment, GraphQLCommentRejectionReason} from './comment'
+import {CommentState} from '../db/comment'
 import {GraphQLMemberPlan, GraphQLMemberPlanInput} from './memberPlan'
 import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
@@ -712,6 +717,29 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       }
     },
 
+    duplicateArticle: {
+      type: GraphQLNonNull(GraphQLArticle),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const article = await loaders.articles.load(id)
+
+        if (!article) throw new NotFound('article', id)
+
+        const articleRevision = Object.assign(article.published ?? article.draft, {
+          slug: '',
+          publishedAt: undefined,
+          updatedAt: undefined
+        })
+        const output = await dbAdapter.article.createArticle({
+          input: {shared: article.shared, ...articleRevision}
+        })
+
+        return output
+      }
+    },
+
     // Page
     // =======
 
@@ -763,9 +791,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
       },
-      async resolve(root, {id, publishAt, updatedAt, publishedAt}, {authenticate, dbAdapter}) {
+      async resolve(
+        root,
+        {id, publishAt, updatedAt, publishedAt},
+        {authenticate, dbAdapter, loaders}
+      ) {
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
+
+        const page = await loaders.pages.load(id)
+
+        if (!page) throw new NotFound('page', id)
+        if (!page.draft) return null
+
+        const publishedPage = await loaders.publicPagesBySlug.load(page.draft.slug)
+        if (publishedPage && publishedPage.id !== id)
+          throw new DuplicatePageSlugError(publishedPage.id, publishedPage.slug)
 
         return dbAdapter.page.publishPage({
           id,
@@ -783,6 +824,27 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         const {roles} = authenticate()
         authorise(CanPublishPage, roles)
         return dbAdapter.page.unpublishPage({id})
+      }
+    },
+
+    duplicatePage: {
+      type: GraphQLNonNull(GraphQLPage),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {dbAdapter, loaders}) {
+        const page = await loaders.pages.load(id)
+
+        if (!page) throw new NotFound('page', id)
+
+        const pageRevision = Object.assign(page.published ?? page.draft, {
+          slug: '',
+          publishedAt: undefined,
+          updatedAt: undefined
+        })
+        const output = await dbAdapter.page.createPage({input: {...pageRevision}})
+
+        return output
       }
     },
 
@@ -964,8 +1026,59 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanDeleteInvoice, roles)
         return await dbAdapter.invoice.deleteInvoice({id})
       }
-    }
+    },
 
+    approveComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Approved
+        })
+      }
+    },
+
+    rejectComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.Rejected,
+          rejectionReason
+        })
+      }
+    },
+
+    requestChangesOnComment: {
+      type: GraphQLNonNull(GraphQLComment),
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+      },
+      async resolve(root, {id, rejectionReason}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanTakeActionOnComment, roles)
+
+        return await dbAdapter.comment.takeActionOnComment({
+          id,
+          state: CommentState.PendingUserChanges,
+          rejectionReason
+        })
+      }
+    }
     // Image
     // =====
   }

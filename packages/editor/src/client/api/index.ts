@@ -54,6 +54,7 @@ export type ArticleInput = {
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   tags: Array<Scalars['String']>;
   properties: Array<PropertiesInput>;
   imageID?: Maybe<Scalars['ID']>;
@@ -90,6 +91,7 @@ export type ArticleRevision = {
   preTitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   lead?: Maybe<Scalars['String']>;
+  seoTitle?: Maybe<Scalars['String']>;
   slug: Scalars['Slug'];
   tags: Array<Scalars['String']>;
   properties: Array<Properties>;
@@ -140,6 +142,7 @@ export type Author = {
   url: Scalars['String'];
   links?: Maybe<Array<AuthorLink>>;
   bio?: Maybe<Scalars['RichText']>;
+  jobTitle?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
 };
 
@@ -159,6 +162,7 @@ export type AuthorInput = {
   slug: Scalars['Slug'];
   links?: Maybe<Array<AuthorLinkInput>>;
   bio?: Maybe<Scalars['RichText']>;
+  jobTitle?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
 };
 
@@ -222,6 +226,66 @@ export type BlockInput = {
   teaserGrid?: Maybe<TeaserGridBlockInput>;
 };
 
+
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['ID'];
+  user: User;
+  authorType: CommentAuthorType;
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  parentID?: Maybe<Scalars['ID']>;
+  revisions: Array<CommentRevision>;
+  state: CommentState;
+  rejectionReason?: Maybe<CommentRejectionReason>;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+};
+
+export enum CommentAuthorType {
+  Author = 'Author',
+  Team = 'Team',
+  VerifiedUser = 'VerifiedUser'
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  nodes: Array<Comment>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type CommentFilter = {
+  state?: Maybe<CommentState>;
+};
+
+export enum CommentItemType {
+  Article = 'Article',
+  Page = 'Page'
+}
+
+export enum CommentRejectionReason {
+  Misconduct = 'Misconduct',
+  Spam = 'Spam'
+}
+
+export type CommentRevision = {
+  __typename?: 'CommentRevision';
+  text: Scalars['RichText'];
+  createdAt: Scalars['DateTime'];
+};
+
+export enum CommentSort {
+  ModifiedAt = 'ModifiedAt',
+  CreatedAt = 'CreatedAt'
+}
+
+export enum CommentState {
+  Approved = 'Approved',
+  PendingApproval = 'PendingApproval',
+  PendingUserChanges = 'PendingUserChanges',
+  Rejected = 'Rejected'
+}
 
 export type CreatedToken = {
   __typename?: 'CreatedToken';
@@ -599,11 +663,13 @@ export type Mutation = {
   deleteArticle?: Maybe<Scalars['Boolean']>;
   publishArticle?: Maybe<Article>;
   unpublishArticle?: Maybe<Article>;
+  duplicateArticle: Article;
   createPage: Page;
   updatePage?: Maybe<Page>;
   deletePage?: Maybe<Scalars['Boolean']>;
   publishPage?: Maybe<Page>;
   unpublishPage?: Maybe<Page>;
+  duplicatePage: Page;
   createMemberPlan?: Maybe<MemberPlan>;
   updateMemberPlan?: Maybe<MemberPlan>;
   deleteMemberPlan?: Maybe<Scalars['ID']>;
@@ -614,6 +680,9 @@ export type Mutation = {
   createPaymentFromInvoice?: Maybe<Payment>;
   updateInvoice?: Maybe<Invoice>;
   deleteInvoice?: Maybe<Scalars['ID']>;
+  approveComment: Comment;
+  rejectComment: Comment;
+  requestChangesOnComment: Comment;
 };
 
 
@@ -805,6 +874,11 @@ export type MutationUnpublishArticleArgs = {
 };
 
 
+export type MutationDuplicateArticleArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationCreatePageArgs = {
   input: PageInput;
 };
@@ -830,6 +904,11 @@ export type MutationPublishPageArgs = {
 
 
 export type MutationUnpublishPageArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDuplicatePageArgs = {
   id: Scalars['ID'];
 };
 
@@ -884,6 +963,23 @@ export type MutationUpdateInvoiceArgs = {
 
 export type MutationDeleteInvoiceArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationApproveCommentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationRejectCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+};
+
+
+export type MutationRequestChangesOnCommentArgs = {
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
 };
 
 export type Navigation = {
@@ -1202,6 +1298,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
@@ -1298,6 +1395,18 @@ export type QueryImagesArgs = {
   last?: Maybe<Scalars['Int']>;
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentsArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  filter?: Maybe<CommentFilter>;
+  sort?: Maybe<CommentSort>;
   order?: Maybe<SortOrder>;
 };
 
@@ -1855,6 +1964,19 @@ export type DeleteArticleMutation = (
   & Pick<Mutation, 'deleteArticle'>
 );
 
+export type DuplicateArticleMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DuplicateArticleMutation = (
+  { __typename?: 'Mutation' }
+  & { duplicateArticle: (
+    { __typename?: 'Article' }
+    & MutationArticleFragment
+  ) }
+);
+
 export type ArticleQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1873,7 +1995,7 @@ export type ArticleQuery = (
       & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -2023,7 +2145,7 @@ export type CreateSessionWithJwtMutation = (
 
 export type AuthorRefFragment = (
   { __typename?: 'Author' }
-  & Pick<Author, 'id' | 'name'>
+  & Pick<Author, 'id' | 'name' | 'jobTitle'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -2268,6 +2390,85 @@ type FullBlock_TeaserGridBlock_Fragment = (
 );
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+
+export type FullCommentFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & FullUserFragment
+  ), revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & Pick<CommentRevision, 'text' | 'createdAt'>
+  )> }
+);
+
+export type CommentListQueryVariables = Exact<{
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<CommentSort>;
+}>;
+
+
+export type CommentListQuery = (
+  { __typename?: 'Query' }
+  & { comments: (
+    { __typename?: 'CommentConnection' }
+    & Pick<CommentConnection, 'totalCount'>
+    & { nodes: Array<(
+      { __typename?: 'Comment' }
+      & FullCommentFragment
+    )>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
+  ) }
+);
+
+export type ApproveCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ApproveCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { approveComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state'>
+  ) }
+);
+
+export type RejectCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RejectCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { rejectComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
+
+export type RequestChangesOnCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RequestChangesOnCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { requestChangesOnComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
 
 export type ImageUrLsFragment = (
   { __typename?: 'Image' }
@@ -2676,6 +2877,19 @@ export type DeletePageMutationVariables = Exact<{
 export type DeletePageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deletePage'>
+);
+
+export type DuplicatePageMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DuplicatePageMutation = (
+  { __typename?: 'Mutation' }
+  & { duplicatePage: (
+    { __typename?: 'Page' }
+    & MutationPageFragment
+  ) }
 );
 
 export type PageQueryVariables = Exact<{
@@ -3289,6 +3503,7 @@ export const AuthorRefFragmentDoc = gql`
     fragment AuthorRef on Author {
   id
   name
+  jobTitle
   image {
     ...ImageRef
   }
@@ -3532,85 +3747,6 @@ export const FullBlockFragmentDoc = gql`
 }
     ${ImageRefFragmentDoc}
 ${FullTeaserFragmentDoc}`;
-export const FullImageFragmentDoc = gql`
-    fragment FullImage on Image {
-  id
-  createdAt
-  modifiedAt
-  filename
-  extension
-  width
-  height
-  fileSize
-  description
-  tags
-  author
-  source
-  license
-  focalPoint {
-    x
-    y
-  }
-  ...ImageRef
-}
-    ${ImageRefFragmentDoc}`;
-export const FullNavigationFragmentDoc = gql`
-    fragment FullNavigation on Navigation {
-  id
-  key
-  name
-  links {
-    __typename
-    ... on PageNavigationLink {
-      label
-      page {
-        ...PageRef
-      }
-    }
-    ... on ArticleNavigationLink {
-      label
-      article {
-        ...ArticleRef
-      }
-    }
-    ... on ExternalNavigationLink {
-      label
-      url
-    }
-  }
-}
-    ${PageRefFragmentDoc}
-${ArticleRefFragmentDoc}`;
-export const MutationPageFragmentDoc = gql`
-    fragment MutationPage on Page {
-  id
-  draft {
-    publishedAt
-    updatedAt
-    revision
-  }
-  pending {
-    publishAt
-    revision
-  }
-  published {
-    publishedAt
-    updatedAt
-    revision
-  }
-  latest {
-    publishedAt
-    updatedAt
-    revision
-  }
-}
-    `;
-export const TokenRefFragmentDoc = gql`
-    fragment TokenRef on Token {
-  id
-  name
-}
-    `;
 export const FullPermissionFragmentDoc = gql`
     fragment FullPermission on Permission {
   id
@@ -3721,6 +3857,101 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  revisions {
+    text
+    createdAt
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUserFragmentDoc}`;
+export const FullImageFragmentDoc = gql`
+    fragment FullImage on Image {
+  id
+  createdAt
+  modifiedAt
+  filename
+  extension
+  width
+  height
+  fileSize
+  description
+  tags
+  author
+  source
+  license
+  focalPoint {
+    x
+    y
+  }
+  ...ImageRef
+}
+    ${ImageRefFragmentDoc}`;
+export const FullNavigationFragmentDoc = gql`
+    fragment FullNavigation on Navigation {
+  id
+  key
+  name
+  links {
+    __typename
+    ... on PageNavigationLink {
+      label
+      page {
+        ...PageRef
+      }
+    }
+    ... on ArticleNavigationLink {
+      label
+      article {
+        ...ArticleRef
+      }
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
+}
+    ${PageRefFragmentDoc}
+${ArticleRefFragmentDoc}`;
+export const MutationPageFragmentDoc = gql`
+    fragment MutationPage on Page {
+  id
+  draft {
+    publishedAt
+    updatedAt
+    revision
+  }
+  pending {
+    publishAt
+    revision
+  }
+  published {
+    publishedAt
+    updatedAt
+    revision
+  }
+  latest {
+    publishedAt
+    updatedAt
+    revision
+  }
+}
+    `;
+export const TokenRefFragmentDoc = gql`
+    fragment TokenRef on Token {
+  id
+  name
+}
+    `;
 export const ArticleListDocument = gql`
     query ArticleList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: ArticleSort) {
   articles(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
@@ -3980,6 +4211,38 @@ export function useDeleteArticleMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteArticleMutationHookResult = ReturnType<typeof useDeleteArticleMutation>;
 export type DeleteArticleMutationResult = Apollo.MutationResult<DeleteArticleMutation>;
 export type DeleteArticleMutationOptions = Apollo.BaseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables>;
+export const DuplicateArticleDocument = gql`
+    mutation DuplicateArticle($id: ID!) {
+  duplicateArticle(id: $id) {
+    ...MutationArticle
+  }
+}
+    ${MutationArticleFragmentDoc}`;
+export type DuplicateArticleMutationFn = Apollo.MutationFunction<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
+
+/**
+ * __useDuplicateArticleMutation__
+ *
+ * To run a mutation, you first call `useDuplicateArticleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDuplicateArticleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [duplicateArticleMutation, { data, loading, error }] = useDuplicateArticleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDuplicateArticleMutation(baseOptions?: Apollo.MutationHookOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>) {
+        return Apollo.useMutation<DuplicateArticleMutation, DuplicateArticleMutationVariables>(DuplicateArticleDocument, baseOptions);
+      }
+export type DuplicateArticleMutationHookResult = ReturnType<typeof useDuplicateArticleMutation>;
+export type DuplicateArticleMutationResult = Apollo.MutationResult<DuplicateArticleMutation>;
+export type DuplicateArticleMutationOptions = Apollo.BaseMutationOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
 export const ArticleDocument = gql`
     query Article($id: ID!) {
   article(id: $id) {
@@ -4000,6 +4263,7 @@ export const ArticleDocument = gql`
       preTitle
       title
       lead
+      seoTitle
       image {
         ...ImageRef
       }
@@ -4382,6 +4646,154 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+export const CommentListDocument = gql`
+    query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+  comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullComment
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullCommentFragmentDoc}`;
+
+/**
+ * __useCommentListQuery__
+ *
+ * To run a query within a React component, call `useCommentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentListQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      first: // value for 'first'
+ *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useCommentListQuery(baseOptions?: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+        return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, baseOptions);
+      }
+export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+          return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, baseOptions);
+        }
+export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
+export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
+export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
+export const ApproveCommentDocument = gql`
+    mutation ApproveComment($id: ID!) {
+  approveComment(id: $id) {
+    state
+  }
+}
+    `;
+export type ApproveCommentMutationFn = Apollo.MutationFunction<ApproveCommentMutation, ApproveCommentMutationVariables>;
+
+/**
+ * __useApproveCommentMutation__
+ *
+ * To run a mutation, you first call `useApproveCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApproveCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approveCommentMutation, { data, loading, error }] = useApproveCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useApproveCommentMutation(baseOptions?: Apollo.MutationHookOptions<ApproveCommentMutation, ApproveCommentMutationVariables>) {
+        return Apollo.useMutation<ApproveCommentMutation, ApproveCommentMutationVariables>(ApproveCommentDocument, baseOptions);
+      }
+export type ApproveCommentMutationHookResult = ReturnType<typeof useApproveCommentMutation>;
+export type ApproveCommentMutationResult = Apollo.MutationResult<ApproveCommentMutation>;
+export type ApproveCommentMutationOptions = Apollo.BaseMutationOptions<ApproveCommentMutation, ApproveCommentMutationVariables>;
+export const RejectCommentDocument = gql`
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RejectCommentMutationFn = Apollo.MutationFunction<RejectCommentMutation, RejectCommentMutationVariables>;
+
+/**
+ * __useRejectCommentMutation__
+ *
+ * To run a mutation, you first call `useRejectCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectCommentMutation, { data, loading, error }] = useRejectCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRejectCommentMutation(baseOptions?: Apollo.MutationHookOptions<RejectCommentMutation, RejectCommentMutationVariables>) {
+        return Apollo.useMutation<RejectCommentMutation, RejectCommentMutationVariables>(RejectCommentDocument, baseOptions);
+      }
+export type RejectCommentMutationHookResult = ReturnType<typeof useRejectCommentMutation>;
+export type RejectCommentMutationResult = Apollo.MutationResult<RejectCommentMutation>;
+export type RejectCommentMutationOptions = Apollo.BaseMutationOptions<RejectCommentMutation, RejectCommentMutationVariables>;
+export const RequestChangesOnCommentDocument = gql`
+    mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export type RequestChangesOnCommentMutationFn = Apollo.MutationFunction<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+
+/**
+ * __useRequestChangesOnCommentMutation__
+ *
+ * To run a mutation, you first call `useRequestChangesOnCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRequestChangesOnCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [requestChangesOnCommentMutation, { data, loading, error }] = useRequestChangesOnCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      rejectionReason: // value for 'rejectionReason'
+ *   },
+ * });
+ */
+export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.MutationHookOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>) {
+        return Apollo.useMutation<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>(RequestChangesOnCommentDocument, baseOptions);
+      }
+export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
+export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {
@@ -5100,6 +5512,38 @@ export function useDeletePageMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePageMutationHookResult = ReturnType<typeof useDeletePageMutation>;
 export type DeletePageMutationResult = Apollo.MutationResult<DeletePageMutation>;
 export type DeletePageMutationOptions = Apollo.BaseMutationOptions<DeletePageMutation, DeletePageMutationVariables>;
+export const DuplicatePageDocument = gql`
+    mutation DuplicatePage($id: ID!) {
+  duplicatePage(id: $id) {
+    ...MutationPage
+  }
+}
+    ${MutationPageFragmentDoc}`;
+export type DuplicatePageMutationFn = Apollo.MutationFunction<DuplicatePageMutation, DuplicatePageMutationVariables>;
+
+/**
+ * __useDuplicatePageMutation__
+ *
+ * To run a mutation, you first call `useDuplicatePageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDuplicatePageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [duplicatePageMutation, { data, loading, error }] = useDuplicatePageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDuplicatePageMutation(baseOptions?: Apollo.MutationHookOptions<DuplicatePageMutation, DuplicatePageMutationVariables>) {
+        return Apollo.useMutation<DuplicatePageMutation, DuplicatePageMutationVariables>(DuplicatePageDocument, baseOptions);
+      }
+export type DuplicatePageMutationHookResult = ReturnType<typeof useDuplicatePageMutation>;
+export type DuplicatePageMutationResult = Apollo.MutationResult<DuplicatePageMutation>;
+export type DuplicatePageMutationOptions = Apollo.BaseMutationOptions<DuplicatePageMutation, DuplicatePageMutationVariables>;
 export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {

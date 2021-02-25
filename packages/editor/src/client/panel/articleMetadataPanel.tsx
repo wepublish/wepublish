@@ -14,7 +14,11 @@ import {
   Nav,
   Icon,
   Panel,
-  Message
+  Message,
+  InputGroup,
+  IconButton,
+  Tooltip,
+  Whisper
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -37,6 +41,7 @@ export interface ArticleMetadata {
   readonly preTitle: string
   readonly title: string
   readonly lead: string
+  readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
   readonly properties: ArticleMetadataProperty[]
@@ -62,6 +67,8 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
     preTitle,
     title,
     lead,
+    seoTitle,
+    slug,
     tags,
     authors,
     shared,
@@ -183,10 +190,7 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
-                <FormControl
-                  value={title}
-                  onChange={title => onChange?.({...value, title, slug: slugify(title)})}
-                />
+                <FormControl value={title} onChange={title => onChange?.({...value, title})} />
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
@@ -194,9 +198,41 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   rows={5}
                   componentClass="textarea"
                   value={lead}
-                  onChange={lead => onChange?.({...value, lead})}
+                  onChange={lead => {
+                    onChange?.({...value, lead})
+                  }}
                 />
               </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.seoTitle')}</ControlLabel>
+                <FormControl
+                  value={seoTitle}
+                  onChange={seoTitle => onChange?.({...value, seoTitle})}
+                />
+                <HelpBlock>{t('articleEditor.panels.seoTitleHelpBlock')}</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
+                <InputGroup style={{width: '100%'}}>
+                  <FormControl
+                    value={slug}
+                    onChange={slug => onChange?.({...value, slug})}
+                    onBlur={() => onChange?.({...value, slug: slugify(slug)})}
+                  />
+                  <Whisper
+                    placement="top"
+                    trigger="hover"
+                    speaker={<Tooltip>{t('articleEditor.panels.slugifySeoTitle')}</Tooltip>}>
+                    <IconButton
+                      icon={<Icon icon="magic" />}
+                      onClick={() => {
+                        onChange?.({...value, title, slug: slugify(seoTitle)})
+                      }}
+                    />
+                  </Whisper>
+                </InputGroup>
+              </FormGroup>
+
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
                 <CheckPicker

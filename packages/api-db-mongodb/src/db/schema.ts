@@ -1,5 +1,9 @@
 import {
   ArticleBlock,
+  CommentItemType,
+  CommentAuthorType,
+  CommentRejectionReason,
+  CommentState,
   AvailablePaymentMethod,
   FocalPoint,
   InvoiceItem,
@@ -8,6 +12,7 @@ import {
   PageBlock,
   PaymentProviderCustomer,
   RichTextNode,
+  CommentRevision,
   UserSubscription,
   MailLogState,
   PaymentState,
@@ -28,6 +33,8 @@ export enum CollectionName {
   Navigations = 'navigations',
   Authors = 'authors',
   Images = 'images',
+
+  Comments = 'comments',
 
   Articles = 'articles',
   ArticlesHistory = 'articles.history',
@@ -149,6 +156,7 @@ export interface DBAuthor {
 
   slug: string
   name: string
+  jobTitle?: string
   imageID?: string
 
   links: Array<{title: string; url: string}>
@@ -199,6 +207,25 @@ export interface DBImage {
   focalPoint?: FocalPoint
 }
 
+export interface DBComment {
+  _id: any
+
+  createdAt: Date
+  modifiedAt: Date
+
+  itemID: string
+  itemType: CommentItemType
+
+  userID: string
+
+  revisions: CommentRevision[]
+  parentID?: string
+
+  state: CommentState
+  rejectionReason?: CommentRejectionReason
+  authorType: CommentAuthorType
+}
+
 export interface DBArticle {
   _id: any
 
@@ -224,6 +251,7 @@ export interface DBArticleRevision {
   preTitle?: string
   title: string
   lead?: string
+  seoTitle?: string
   tags: string[]
 
   properties: MetadataProperty[]

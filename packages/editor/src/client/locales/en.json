@@ -24,6 +24,7 @@
         "delete": "Delete",
         "deleteArticle": "Delete Article?",
         "unpublishArticle": "Unpublish Article?",
+        "duplicateArticle": "Duplicate Article?",
         "confirm": "Confirm",
         "unpublish": "Unpublish",
         "title": "Title",
@@ -44,7 +45,8 @@
         "metadata": "Metadata",
         "create": "Create",
         "save": "Save",
-        "publish": "Publish"
+        "publish": "Publish",
+        "noSlug": "Article Not Published. Please add a slug."
       },
       "panels": {
         "metadata": "Metadata",
@@ -58,9 +60,11 @@
         "close": "Close",
         "preTitle": "Pre-title",
         "title": "Title",
+        "seoTitle": "SEO Title",
         "authors": "Authors",
         "tags": "Tags",
         "slug": "Slug",
+        "slugifySeoTitle": "Slugify SEO Title",
         "lead": "Lead",
         "addTag": "Press enter to add tag",
         "breakingNews": "Breaking News",
@@ -120,7 +124,51 @@
         "socialMediaImage": "Image for Social Media",
         "postImage": "Image for Post",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image"
+        "lightStyledWithNoImageError": "Light styled teasers must have an image",
+        "seoTitleHelpBlock": "Please use an SEO-optimised title"
+      }
+    },
+    "comments": {
+      "overview": {
+        "title": "Title",
+        "created": "Created",
+        "updated": "Modified",
+        "state": "State",
+        "comments": "Comments",
+        "action": "Action",
+        "search": "Search",
+        "loadMore": "Load More",
+        "untitled": "Untitled",
+        "userName": "User Name",
+        "text": "Text"
+      },
+      "panels": {
+        "id": "Id",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "untitled": "Untitled",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At",
+        "revisions": "Revisions",
+        "approveComment": "Approve Comment",
+        "requestChangesOnComment": "Request Changes On Comment",
+        "rejectComment": "Reject Comment",
+        "rejectionReason": "Rejection Reason",
+        "userName": "User Name",
+        "revisionCreatedAt": "Revision created at",
+        "approve": "Approve",
+        "requestChanges": "Request Changes",
+        "requestChangesReason": "Reason",
+        "reject": "Reject",
+        "chooseRejectionReason": "Please choose a rejection reason"
+      },
+      "state": {
+        "pendingApproval": "Pending Approval",
+        "pendingUserChanges": "Pending User Change",
+        "approved": "Approved",
+        "rejected": "Rejected"
       }
     },
     "pages": {
@@ -147,6 +195,7 @@
         "close": "Close",
         "unpublishPage": "Unpublish Page?",
         "deletePage": "Delete Page?",
+        "duplicatePage": "Duplicate Page?",
         "confirm": "Confirm",
         "title": "Title",
         "untitled": "Untitled",
@@ -170,9 +219,9 @@
       },
       "panels": {
         "metadata": "Metadata",
-        "title": "Title",
+        "title": "SEO Title",
         "slug": "Slug",
-        "description": "Description",
+        "description": "SEO Description",
         "tags": "Tags",
         "addTag": "Press enter to add tag",
         "image": "Image",
@@ -190,7 +239,9 @@
         "socialMediaDescription": "Description for Social Media",
         "socialMediaImage": "Image for Social Media",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
-        "lightStyledWithNoImageError": "Light styled teasers must have an image"
+        "lightStyledWithNoImageError": "Light styled teasers must have an image",
+        "titleHelpBlock": "Please use an SEO-optimised title",
+        "descriptionHelpBlock": "Please use an SEO-optimised description"
       }
     },
     "authors": {
@@ -215,6 +266,7 @@
         "save": "Save",
         "create": "Create",
         "name": "Name",
+        "jobTitle": "Job Title",
         "image": "Image",
         "chooseImage": "Choose Image",
         "editImage": "Remove Image",
@@ -495,9 +547,13 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
-        "title": "Title",
+        "text": "Text",
         "apply": "Apply",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "insert": "Insert",
+        "remove": "Remove",
+        "invalidLink": "Link input is invalid. Please check URL and try again.",
+        "charCount": "Characters count {{charCount}}"
       },
       "richTextTable": {
         "insertTable": "Insert Table",
@@ -516,6 +572,7 @@
     },
     "navbar": {
       "articles": "Articles",
+      "comments": "Comments",
       "pages": "Pages",
       "authors": "Authors",
       "navigations": "Navigations",
