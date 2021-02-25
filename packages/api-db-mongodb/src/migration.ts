@@ -580,7 +580,7 @@ export const Migrations: Migration[] = [
     }
   },
   {
-    //  Make slug for published pages unique
+    //  Rename street field in address to address
     version: 13,
     async migrate(db, locale) {
       const users = await db.collection(CollectionName.Users)
