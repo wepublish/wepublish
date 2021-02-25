@@ -1,10 +1,9 @@
 import {cssRule, useStyle} from '@karma.run/react'
 import React, {useContext, useState} from 'react'
 import {BaseButton} from '../atoms/baseButton'
-import {Image} from '../atoms/image'
 import {Color} from '../style/colors'
 import {Comment, RichTextBlockValue} from '../types'
-import gql from 'graphql-tag'
+import {AddComment} from '../query'
 import {useMutation} from '@apollo/client'
 import {AuthContext} from '../authContext'
 import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
@@ -39,22 +38,25 @@ const CommentAuthor = cssRule(() => ({
 
 const CommentMeta = cssRule(() => ({
   fontSize: '0.8em',
-  margin: '0 0 1em 0'
+  margin: '0'
 }))
 
 const CommentBody = cssRule(() => ({
-  margin: '1em 0 0 0',
+  margin: '-.75em 0 0 0',
   fontSize: '0.9em',
-  padding: '0 1.2em 0 3.5em'
+  padding: '0 1.2em 0 3.5em',
+  '& > div > p': {
+    marginBottom: 0
+  }
 }))
 
 const commentBorderLink = cssRule(() => ({
   display: 'block',
   position: 'absolute',
-  top: '3.125em',
+  top: '2.25em',
   left: 0,
   width: '.75em',
-  height: 'calc(100% - 4.125em)',
+  height: 'calc(100% - 3em)',
   borderLeft: '.25em solid transparent',
   borderRight: '.25em solid transparent',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -66,7 +68,7 @@ const commentBorderLink = cssRule(() => ({
 }))
 
 const CommentButton = cssRule(() => ({
-  margin: 0,
+  margin: '1em 0 0 0',
   fontSize: '0.9em',
   color: '#FFFFFF',
   backgroundColor: '#000000',
@@ -83,11 +85,13 @@ const CommentHeading = cssRule(() => ({
 }))
 
 const CommentInput = cssRule(() => ({
-  borderRadius: '.25em',
-  border: '1px solid rgba(0, 0, 0, 0.2)',
-  fontSize: '0.9em',
-  padding: '0.5em 1em',
-  marginTop: '1em'
+  '& > div': {
+    borderRadius: '.25em',
+    border: '1px solid rgba(0, 0, 0, 0.2)',
+    fontSize: '0.9em',
+    padding: '0.5em 1em',
+    marginTop: '1em'
+  }
 }))
 
 const PendingApproval = cssRule(() => ({
@@ -115,9 +119,10 @@ const SmallButton = cssRule(() => ({
   fontSize: '.9em',
   padding: '4px 8px',
   marginRight: '0.5em',
+  marginTop: '1em',
   color: 'rgba(0, 0, 0, 0.85)',
   backgroundColor: '#fff',
-  border: '1px solid rgba(0, 0, 0, 0.2)',
+  border: '1px solid rgba(0, 0, 0, 0.2) !important',
   borderRadius: '.25em',
   '&:hover, active, focus': {
     cursor: 'pointer',
@@ -149,9 +154,15 @@ const Timestamp = cssRule(() => ({
 // Interfaces
 // ==========
 
+export interface CommentProps {
+  readonly comment: Comment
+  readonly handleCurrentComment?: string
+  readonly activeComment?: string
+}
+
 export interface ComposeCommentProps {
-  readonly header?: string
-  readonly parentCommentAuthor?: string
+  readonly commentComposerHeader?: string
+  readonly CommentAuthor?: string
   readonly role?: string
   readonly parentID?: string
   readonly itemID?: string
@@ -159,7 +170,7 @@ export interface ComposeCommentProps {
   readonly itemType: string
 }
 
-export interface DisplayCommentsProps {
+export interface CommentListProps {
   readonly comments?: Comment[]
 }
 
@@ -172,18 +183,6 @@ export interface LoginToComment {
 // Queries
 // =======
 
-const AddComment = gql`
-  mutation AddComment($input: CommentInput!) {
-    addComment(input: $input) {
-      user {
-        id
-      }
-      text
-      parentID
-    }
-  }
-`
-
 // Components
 // ==========
 
@@ -193,7 +192,7 @@ export function ComposeComment(props: ComposeCommentProps) {
   const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
   const [commentState, setCommentState] = useState('')
 
-  const {header, role, itemID, itemType, parentID} = props
+  const {commentComposerHeader, role, itemID, itemType, parentID} = props
 
   const [addComment, {loading}] = useMutation(AddComment, {
     onCompleted() {
@@ -207,7 +206,7 @@ export function ComposeComment(props: ComposeCommentProps) {
 
   return (
     <div className={role === 'reply' ? css(ReplyBox) : css(Container)}>
-      {header ? <h3>{header}</h3> : ''}
+      {commentComposerHeader ? <h3>{commentComposerHeader}</h3> : ''}
       <form
         onSubmit={e => {
           e.preventDefault()
@@ -231,74 +230,118 @@ export function ComposeComment(props: ComposeCommentProps) {
             }}
           />
         </div>
-        <p>
-          <BaseButton
-            css={props.parentCommentAuthor ? SmallButton : CommentButton}
-            disabled={loading}>
-            {props.parentCommentAuthor ? 'Submit' : 'Post comment'}
-          </BaseButton>
-        </p>
+
+        <BaseButton css={props.parentID ? SmallButton : CommentButton} disabled={loading}>
+          {props.parentID ? 'Submit' : 'Post comment'}
+        </BaseButton>
       </form>
     </div>
   )
 }
 
-export function DisplayComments(props: DisplayCommentsProps) {
+export function CommentList(commentListProps: CommentListProps) {
   const css = useStyle()
 
-  const [commentID, setCommentID] = useState('')
-  const {comments} = props
+  const [activeCommentID, setActiveCommentID] = useState('')
+  const {comments} = commentListProps
 
-  return (
-    <div className={css(Container, CommentBox)}>
-      <h3 style={{marginTop: '2em'}}>Showing all comments</h3>
-      {comments?.map(parentComment => (
-        <ParentComment
-          comment={parentComment}
-          key={parentComment.id}
-          handleCurrentComment={(commentID: React.SetStateAction<string>) =>
-            setCommentID(commentID)
-          }
-          activeComment={commentID}
-        />
-      ))}
-    </div>
-  )
-}
+  function toggleReplyForm(id: string) {
+    activeCommentID === '' ? setActiveCommentID(id) : setActiveCommentID('')
+  }
 
-function ParentComment(props: any) {
-  const css = useStyle()
+  function Comment(CommentProps: CommentProps) {
+    const {
+      id,
+      state,
+      rejectionReason,
+      userName,
+      authorType,
+      modifiedAt,
+      children,
+      text,
+      itemID,
+      itemType
+    } = CommentProps.comment
 
-  const {
-    id,
-    state,
-    rejectionReason,
-    userName,
-    authorType,
-    modifiedAt,
-    children,
-    text,
-    itemID,
-    itemType
-  } = props.comment
+    // This allows to display the children in a chronological order for the sake of a better UX
+    let childrenReversed = [...children].reverse()
 
-  // This allows to display the children in a chronological order for the sake of a better UX
-  let childrenReversed = [...children].reverse()
+    return (
+      <div className={css(Thread)} key={id}>
+        <div className={css(CommentBox)} id={id}>
+          <a href={'#' + id} className={css(commentBorderLink)}>
+            <span className={css(SrOnly)}>Jump to comment {id}</span>
+          </a>
+          <div className={css(CommentHeading)}>
+            <div className={css(RightColumn)}>
+              <h4 className={css(CommentAuthor)}>{userName}</h4>
+              <p className={css(CommentMeta)}>
+                <span>{authorType}</span> ·{' '}
+                <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
+              </p>
+            </div>
+          </div>
 
-  const {activeComment} = props
+          <div className={css(CommentBody)}>
+            <RichTextBlock
+              disabled
+              displayOnly
+              value={text}
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
+            <div className={css(Actions)}>
+              {state === 'approved' ? (
+                <button className={css(SmallButton)} onClick={() => toggleReplyForm(id)}>
+                  Reply
+                </button>
+              ) : (
+                ''
+              )}
+              {state === 'pendingApproval' ? (
+                <span className={css(PendingApproval)}>Comment is awaiting approval</span>
+              ) : state === 'pendingUserChanges' ? (
+                <>
+                  <button
+                    className={css(SmallButton)}
+                    onClick={() => alert('This function is not yet working')}>
+                    Edit
+                  </button>
+                  <p className={css(PendingApproval)}>
+                    Your comment has been rejected because of {rejectionReason}. Please edit your
+                    comment.
+                  </p>
+                </>
+              ) : (
+                ''
+              )}
+            </div>
+          </div>
 
-  return (
-    <div className={css(Thread)}>
-      <div className={css(CommentBox)} id={id}>
+          {activeCommentID === id ? (
+            <ComposeComment itemID={itemID} itemType={itemType} role={'reply'} parentID={id} />
+          ) : (
+            ''
+          )}
+          {childrenReversed &&
+            childrenReversed.map((child: Comment) => <ChildComment key={child.id} value={child} />)}
+        </div>
+      </div>
+    )
+  }
+
+  function ChildComment(value: any) {
+    const {id, rejectionReason, state, user, authorType, modifiedAt, text} = value.value
+
+    return (
+      <div className={css(CommentBox, Replies)} id={id}>
         <a href={'#' + id} className={css(commentBorderLink)}>
           <span className={css(SrOnly)}>Jump to comment {id}</span>
         </a>
         <div className={css(CommentHeading)}>
-          <div style={{width: 50}}>
-            <Image src={'../../../static/icons/avatar.jpg'} />
-          </div>
           <div className={css(RightColumn)}>
-            <h4 className={css(CommentAuthor)}>{userName}</h4>
+            <h4 className={css(CommentAuthor)}>{user.name}</h4>
             <p className={css(CommentMeta)}>
               <span>{authorType}</span> ·{' '}
               <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
@@ -307,17 +350,15 @@ function ParentComment(props: any) {
         </div>
 
         <div className={css(CommentBody)}>
-          <RichTextBlock disabled value={text} onChange={value => value} />
+          <RichTextBlock
+            disabled
+            displayOnly
+            value={text}
+            onChange={() => {
+              /* do nothing */
+            }}
+          />
           <div className={css(Actions)}>
-            {state === 'approved' ? (
-              <button
-                className={css(SmallButton)}
-                onClick={() => props.handleCurrentComment(id === activeComment ? '' : id)}>
-                Reply
-              </button>
-            ) : (
-              ''
-            )}
             {state === 'pendingApproval' ? (
               <span className={css(PendingApproval)}>Comment is awaiting approval</span>
             ) : state === 'pendingUserChanges' ? (
@@ -327,74 +368,26 @@ function ParentComment(props: any) {
                   onClick={() => alert('This function is not yet working')}>
                   Edit
                 </button>
-                <span className={css(PendingApproval)}>
+                <p className={css(PendingApproval)}>
                   Your comment has been rejected because of {rejectionReason}. Please edit your
                   comment.
-                </span>
+                </p>
               </>
             ) : (
               ''
             )}
           </div>
         </div>
-
-        {props.activeComment === id ? (
-          <ComposeComment itemID={itemID} itemType={itemType} role={'reply'} parentID={id} />
-        ) : (
-          ''
-        )}
-        {childrenReversed &&
-          childrenReversed.map((child: any) => <ChildComment key={child.id} value={child} />)}
       </div>
-    </div>
-  )
-}
-
-function ChildComment(value: any) {
-  const css = useStyle()
-
-  const {id, rejectionReason, state, user, authorType, modifiedAt, text} = value.value
+    )
+  }
 
   return (
-    <div className={css(CommentBox, Replies)} id={id}>
-      <a href={'#' + id} className={css(commentBorderLink)}>
-        <span className={css(SrOnly)}>Jump to comment {id}</span>
-      </a>
-      <div className={css(CommentHeading)}>
-        <div style={{width: 50}}>
-          <Image src={'../../../static/icons/avatar.jpg'} />
-        </div>
-        <div className={css(RightColumn)}>
-          <h4 className={css(CommentAuthor)}>{user.name}</h4>
-          <p className={css(CommentMeta)}>
-            <span>{authorType}</span> ·{' '}
-            <span className={css(Timestamp)}>{new Date(modifiedAt).toLocaleString()}</span>
-          </p>
-        </div>
-      </div>
-
-      <div className={css(CommentBody)}>
-        <RichTextBlock disabled value={text} onChange={value => value} />
-        <div className={css(Actions)}>
-          {state === 'pendingApproval' ? (
-            <span className={css(PendingApproval)}>Comment is awaiting approval</span>
-          ) : state === 'pendingUserChanges' ? (
-            <>
-              <button
-                className={css(SmallButton)}
-                onClick={() => alert('This function is not yet working')}>
-                Edit
-              </button>
-              <span className={css(PendingApproval)}>
-                Your comment has been rejected because of {rejectionReason}. Please edit your
-                comment.
-              </span>
-            </>
-          ) : (
-            ''
-          )}
-        </div>
-      </div>
+    <div className={css(Container, CommentBox)}>
+      <h3 style={{marginTop: '2em'}}>Showing all comments</h3>
+      {comments?.map((comment: Comment) => (
+        <Comment comment={comment} key={comment.id} />
+      ))}
     </div>
   )
 }
@@ -410,7 +403,7 @@ export function LoginToComment(props: LoginToComment) {
           <ComposeComment
             itemID={props.itemID}
             itemType={props.itemType}
-            header={'Compose a new comment'}
+            commentComposerHeader={'Compose a new comment'}
           />
           <p className={css(Container, StateMessage)}>
             Logged in as {session?.email}. <Link route={LogoutRoute.create({})}>Logout</Link>

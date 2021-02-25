@@ -142,7 +142,14 @@ export function ListicalBLock({listical}: ListicalBLockProps) {
             )}
             {item.text && (
               <div className={css(ListicalTextStyle)}>
-                <RichTextBlock value={item.text} onChange={console.log} />
+                <RichTextBlock
+                  displayOnly
+                  disabled
+                  value={item.text}
+                  onChange={() => {
+                    /* do nothing */
+                  }}
+                />
               </div>
             )}
           </div>

@@ -44,6 +44,21 @@ const ArticleTagQuery = gql`
   ${articleMetaDataFragment}
 `
 
+// Article-Mutations
+// =================
+
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      user {
+        id
+      }
+      text
+      parentID
+    }
+  }
+`
+
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
 ) {

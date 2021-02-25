@@ -131,7 +131,14 @@ export function AuthorTemplateContainer({id}: AuthorProps) {
       )}
 
       {/* {bio && <RichText value={bio} />} */}
-      {bio && <RichTextBlock value={bio} onChange={console.log} />}
+      {bio && (
+        <RichTextBlock
+          value={bio}
+          onChange={() => {
+            /* do nothing */
+          }}
+        />
+      )}
 
       <GridBlock numColumns={articles.length <= 1 ? 1 : 3}>
         {articles.map(article => (

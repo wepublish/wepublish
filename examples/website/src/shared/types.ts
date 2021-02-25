@@ -1,10 +1,5 @@
 import {Node} from 'slate'
-import {
-  CommentAuthorType,
-  CommentItemType,
-  RichTextTextNode,
-  User
-} from '../../../../packages/api/lib'
+import {CommentAuthorType, CommentItemType, User} from '../../../../packages/api/lib'
 import {Route} from './route/routeContext'
 
 export enum VersionState {
@@ -43,7 +38,7 @@ export interface Comment {
   rejectionReason: string
   itemID: string
   itemType: CommentItemType
-  text: RichTextTextNode[]
+  text: RichTextBlockValue
   modifiedAt: Date
   parentID?: string
   authorType: CommentAuthorType
