@@ -184,7 +184,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     return nodes.reduce((charLength: number, node: any) => {
       if (!node.text && !node.children) return charLength
       // node either has text (leaf node) or children (element node)
-      if (!!node.text) {
+      if (node.text) {
         return charLength + (node.text as string).length
       }
       return countRichtextChars(charLength, node.children)
