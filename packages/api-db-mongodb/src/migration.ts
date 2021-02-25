@@ -578,6 +578,21 @@ export const Migrations: Migration[] = [
         }
       )
     }
+  },
+  {
+    //  Make slug for published pages unique
+    version: 13,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          'address.street': {$exists: true}
+        },
+        {
+          $rename: {'address.street': 'address.address'}
+        }
+      )
+    }
   }
 ]
 

@@ -72,7 +72,9 @@ export const GraphQLPublicUserSubscription = new GraphQLObjectType({
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
   fields: {
-    street: {type: GraphQLNonNull(GraphQLString)},
+    company: {type: GraphQLString},
+    address: {type: GraphQLNonNull(GraphQLString)},
+    address2: {type: GraphQLString},
     zipCode: {type: GraphQLNonNull(GraphQLString)},
     city: {type: GraphQLNonNull(GraphQLString)},
     country: {type: GraphQLNonNull(GraphQLString)}
@@ -163,7 +165,9 @@ export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
 export const GraphQLUserAddressInput = new GraphQLInputObjectType({
   name: 'UserAddressInput',
   fields: {
-    street: {type: GraphQLNonNull(GraphQLString)},
+    company: {type: GraphQLString},
+    address: {type: GraphQLNonNull(GraphQLString)},
+    address2: {type: GraphQLString},
     zipCode: {type: GraphQLNonNull(GraphQLString)},
     city: {type: GraphQLNonNull(GraphQLString)},
     country: {type: GraphQLNonNull(GraphQLString)}
