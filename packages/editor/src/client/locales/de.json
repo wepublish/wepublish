@@ -120,7 +120,7 @@
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "charCount": "Characters count {{charCount}}",
         "charCountWarning": "The maximum number of characters should be",
-        "totalCharCount": "Total characters count is {{charCount}}"
+        "totalCharCount": "Total characters count is {{totalCharCount}}"
       }
     },
     "pages": {
