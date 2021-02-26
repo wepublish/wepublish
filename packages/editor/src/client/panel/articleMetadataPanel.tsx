@@ -26,7 +26,7 @@ import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
 import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
 
-import {useTranslation} from 'react-i18next'
+import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
@@ -209,7 +209,17 @@ export function ArticleMetadataPanel({value, onClose, onChange}: ArticleMetadata
                   value={seoTitle}
                   onChange={seoTitle => onChange?.({...value, seoTitle})}
                 />
-                <HelpBlock>{t('articleEditor.panels.seoTitleHelpBlock')}</HelpBlock>
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.seoTitleHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page/"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>

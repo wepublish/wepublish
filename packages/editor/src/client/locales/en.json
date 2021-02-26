@@ -125,7 +125,7 @@
         "postImage": "Image for Post",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
         "lightStyledWithNoImageError": "Light styled teasers must have an image",
-        "seoTitleHelpBlock": "Please use an SEO-optimised title"
+        "seoTitleHelpBlock": "Please use an SEO-optimised title. <1>SEO Guide</1>"
       }
     },
     "comments": {
