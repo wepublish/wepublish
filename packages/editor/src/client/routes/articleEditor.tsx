@@ -320,14 +320,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
-  let totalCharCount = 0;
   const [infoData, setInfoData] = useState<InfoData>({
-    charCount: totalCharCount
+    charCount: 0
   })
 
   useEffect(() => {
-    totalCharCount = countRichTextBlocksChars(blocks) + countTitle(blocks);
-    setInfoData({charCount: totalCharCount})
+    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitle(blocks)})
   },[isMetaDrawerOpen])
 
   return (

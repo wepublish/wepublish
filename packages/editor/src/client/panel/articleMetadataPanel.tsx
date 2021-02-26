@@ -136,20 +136,23 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                 <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}
+                <label style={{float: 'right'}}> {value.socialMediaTitle?.length}</label>
+                </ControlLabel>
                 <FormControl
                   value={socialMediaTitle}
                   onChange={socialMediaTitle => {
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.socialMediaTitle?.length}`} </label>
                 { value.socialMediaTitle!.length > socialMediaTitleMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${socialMediaTitleMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${socialMediaTitleMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}
+                <label style={{float: 'right'}}> {`${value.socialMediaDescription?.length}`} </label>
+                </ControlLabel>
                 <FormControl
                   rows={5}
                   componentClass="textarea"
@@ -158,9 +161,8 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.socialMediaDescription?.length}`} </label>
                 { value.socialMediaDescription!.length > socialMediaDescriptionMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${socialMediaDescriptionMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${socialMediaDescriptionMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
@@ -203,27 +205,31 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
             <Form fluid={true}>
             <div style={{paddingBottom: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${infoData.charCount}`} </div>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.preTitle')}
+                <label style={{float: 'right'}}> {`${value.preTitle.length}`} </label>
+                </ControlLabel>
                 <FormControl
                   value={preTitle}
                   onChange={preTitle => onChange?.({...value, preTitle})}
                 />
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.preTitle.length}`} </label>
                 { value.preTitle.length > preTitleMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${preTitleMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${preTitleMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.title')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.title')}
+                <label style={{float: 'right'}}> {`${value.title.length}`} </label>
+                </ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.title.length}`} </label>
                 { value.title.length > titleMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${titleMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${titleMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.lead')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.lead')}
+                <label style={{float: 'right'}}> {`${value.lead.length}`} </label>
+                </ControlLabel>
                 <FormControl
                   rows={5}
                   componentClass="textarea"
@@ -233,21 +239,21 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                   }}
                 />
                 <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.lead.length}`} </label>
                 { value.lead.length > leadMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${leadMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${leadMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.seoTitle')}</ControlLabel>
+                <ControlLabel>{t('articleEditor.panels.seoTitle')}
+                <label style={{float: 'right'}}> {`${value.seoTitle.length}`} </label>
+                </ControlLabel>
                 <FormControl
                   value={seoTitle}
                   onChange={seoTitle => onChange?.({...value, seoTitle})}
                 />
                 <HelpBlock>{t('articleEditor.panels.seoTitleHelpBlock')}</HelpBlock>
-                <label style={{textAlign: 'right'}}> {`${t("articleEditor.panels.charCount")} ${value.seoTitle.length}`} </label>
                 { value.seoTitle.length > seoTitleMax && (
-                <label style={{textAlign: 'right', color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${seoTitleMax}`}</label>
+                <label style={{color: 'gold'}}>{`${t("articleEditor.panels.charCountWarning")} ${seoTitleMax}`}</label>
                  ) }
               </FormGroup>
               <FormGroup>
