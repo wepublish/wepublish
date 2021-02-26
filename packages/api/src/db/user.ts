@@ -133,8 +133,8 @@ export interface PaymentProviderCustomer {
 
 export interface UserAddress {
   readonly company?: string
-  readonly address: string
-  readonly address2?: string
+  readonly streetAddress: string
+  readonly streetAddress2?: string
   readonly zipCode: string
   readonly city: string
   readonly country: string

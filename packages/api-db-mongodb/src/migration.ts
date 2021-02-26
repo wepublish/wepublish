@@ -589,7 +589,7 @@ export const Migrations: Migration[] = [
           'address.street': {$exists: true}
         },
         {
-          $rename: {'address.street': 'address.address'}
+          $rename: {'address.street': 'address.streetAddress'}
         }
       )
     }
