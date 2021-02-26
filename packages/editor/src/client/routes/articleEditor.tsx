@@ -320,14 +320,15 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
-  const totalCharCount = countRichTextBlocksChars(blocks) + countTitle(blocks);
+  let totalCharCount = 0;
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: totalCharCount
   })
 
   useEffect(() => {
+    totalCharCount = countRichTextBlocksChars(blocks) + countTitle(blocks);
     setInfoData({charCount: totalCharCount})
-  },[blocks])
+  },[isMetaDrawerOpen])
 
   return (
     <>
@@ -401,7 +402,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)} >
         <ArticleMetadataPanel
           value={metadata}
           infoData= {infoData}
