@@ -118,6 +118,7 @@
         "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "leadHelpBlock": "Please use an SEO-optimised lead",
+        "charCount": "Characters count {{charCount}}",
         "charCountWarning": "The maximum number of characters should be",
         "totalCharCount": "Total characters count is {{charCount}}"
       }
