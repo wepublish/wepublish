@@ -203,7 +203,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
         return (
           <Panel>
             <Form fluid={true}>
-            <div style={{paddingBottom: '20px'}}> {`${t("articleEditor.panels.totalCharCount")} ${infoData.charCount}`} </div>
+            <div style={{paddingBottom: '20px'}}>{t("articleEditor.panels.totalCharCount",{totalCharCount: infoData.charCount})}</div>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.preTitle')}
                 <label style={{float: 'right'}}> {`${value.preTitle.length}`} </label>
