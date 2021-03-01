@@ -578,6 +578,21 @@ export const Migrations: Migration[] = [
         }
       )
     }
+  },
+  {
+    //  Rename street field in address to address
+    version: 13,
+    async migrate(db, locale) {
+      const users = await db.collection(CollectionName.Users)
+      await users.updateMany(
+        {
+          'address.street': {$exists: true}
+        },
+        {
+          $rename: {'address.street': 'address.streetAddress'}
+        }
+      )
+    }
   }
 ]
 
