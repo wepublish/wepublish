@@ -219,9 +219,10 @@ export function PageList() {
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
-              ? t('pages.panels.unpublishPage') : 
-              confirmAction === ConfirmAction.Delete ? t('pages.panels.deletePage') : 
-              t('pages.panels.duplicatePage')}
+              ? t('pages.panels.unpublishPage')
+              : confirmAction === ConfirmAction.Delete
+              ? t('pages.panels.deletePage')
+              : t('pages.panels.duplicatePage')}
           </Modal.Title>
         </Modal.Header>
 
@@ -292,7 +293,7 @@ export function PageList() {
                     variables: {id: currentPage.id}
                   })
                   break
-                
+
                 case ConfirmAction.Duplicate:
                   await duplicatePage({
                     variables: {id: currentPage.id}
