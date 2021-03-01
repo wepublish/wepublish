@@ -140,28 +140,28 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                 <label style={{float: 'right'}}> {value.socialMediaTitle?.length}</label>
                 </ControlLabel>
                 <FormControl
-                  value={socialMediaTitle}
+                  value={socialMediaTitle || ''}
                   onChange={socialMediaTitle => {
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
-                { value.socialMediaTitle!.length > socialMediaTitleMax && (
+                {value.socialMediaTitle && value.socialMediaTitle!.length > socialMediaTitleMax && (
                 <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaTitleMax})}</label>
                  ) }
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}
-                <label style={{float: 'right'}}> {`${value.socialMediaDescription?.length}`} </label>
+                <label style={{float: 'right'}}> {value.socialMediaDescription?.length} </label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
                   componentClass="textarea"
-                  value={socialMediaDescription}
+                  value={socialMediaDescription || ''}
                   onChange={socialMediaDescription => {
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
-                { value.socialMediaDescription!.length > socialMediaDescriptionMax && (
+                { value.socialMediaDescription && value.socialMediaDescription!.length > socialMediaDescriptionMax && (
                 <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaDescriptionMax})}</label>
                  ) }
               </FormGroup>
