@@ -276,6 +276,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     />
                   </Whisper>
                 </InputGroup>
+                <HelpBlock>{t('articleEditor.panels.dontChangeSlug')}</HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>

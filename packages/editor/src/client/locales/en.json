@@ -129,8 +129,8 @@
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "charCountWarning": "The maximum number of characters should be {{charCountWarning}}",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
-        "seoTitleHelpBlock": "Please use an SEO-optimised title"
-
+        "seoTitleHelpBlock": "Please use an SEO-optimised title",
+        "dontChangeSlug": "Please don't change the slug once the article is published"
       }
     },
     "comments": {
