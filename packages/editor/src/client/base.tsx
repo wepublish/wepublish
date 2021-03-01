@@ -28,9 +28,9 @@ export interface BaseProps {
 }
 
 const AVAILABLE_LANG = [
-  {id: 'en', lang: 'en_US', name: 'English'},
-  {id: 'fr', lang: 'fr_FR', name: 'Français'},
-  {id: 'de', lang: 'de_CH', name: 'Deutsch'}
+  {id: 'en', lang: 'en_US', name: 'English'}
+  /* {id: 'fr', lang: 'fr_FR', name: 'Français'},
+  {id: 'de', lang: 'de_CH', name: 'Deutsch'} */
 ]
 
 const iconStyles = {
