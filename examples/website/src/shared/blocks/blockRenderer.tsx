@@ -223,7 +223,7 @@ function renderTeaser(key: string, article: PublishedArticle) {
           title={article.title}
           preTitle={article.preTitle}
           date={article.publishedAt}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
         />
       )
   }
