@@ -13,13 +13,13 @@ const PrimaryButtonStyle = cssRule({
   border: `1px solid ${Color.NeutralDark}`,
 
   fontSize: '1em',
-  borderRadius: '3em',
 
   padding: '1.25em 2em',
   transition: 'background-color 200ms ease, color 200ms ease',
 
   '&:hover': {
-    backgroundColor: Color.PrimaryDark
+    backgroundColor: Color.PrimaryDark,
+    border: `1px solid ${Color.PrimaryDark}`
   }
 })
 

@@ -5,7 +5,7 @@ import {GalleryBlock} from './galleryBlock'
 import {GridBlock} from './gridBlock'
 import {ImageBlock} from './imageBlock'
 import {QuoteBlock} from './quoteBlock'
-import {RichTextBlock} from './richTextBlock'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 import {BreakingTeaser} from '../teasers/breakingTeaser'
 import {DefaultTeaser} from '../teasers/defaultTeaser'
 import {ImageTeaser} from '../teasers/imageTeaser'
@@ -57,7 +57,15 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
 
   switch (block.type) {
     case BlockType.RichText:
-      return <RichTextBlock value={block.value} />
+      return (
+        <RichTextBlock
+          displayOnly
+          value={block.value}
+          onChange={() => {
+            /* do nothing */
+          }}
+        />
+      )
 
     case BlockType.Gallery:
       return <GalleryBlock media={block.value.media} />
@@ -167,25 +175,6 @@ function renderTeaser(key: string, article: PublishedArticle) {
   }
 
   switch (article.teaserStyle) {
-    case TeaserStyle.Default:
-    default:
-      return (
-        <DefaultTeaser
-          key={key}
-          preTitle={article.preTitle}
-          title={article.title}
-          lead={article.lead}
-          isUpdated={article.updatedAt.getTime() !== article.publishedAt.getTime()}
-          date={article.updatedAt}
-          image={article.image}
-          peer={article.peer}
-          tags={getTeaserTags(article.tags, 3)}
-          route={route}
-          authors={article.authors}
-          isSingle={true}
-        />
-      )
-
     case TeaserStyle.Light:
       return (
         <ImageTeaser
@@ -223,7 +212,26 @@ function renderTeaser(key: string, article: PublishedArticle) {
           title={article.title}
           preTitle={article.preTitle}
           date={article.publishedAt}
-          route={ArticleRoute.create({id: article.id, slug: article.slug})}
+          route={route}
+        />
+      )
+
+    case TeaserStyle.Default:
+    default:
+      return (
+        <DefaultTeaser
+          key={key}
+          preTitle={article.preTitle}
+          title={article.title}
+          lead={article.lead}
+          isUpdated={article.updatedAt.getTime() !== article.publishedAt.getTime()}
+          date={article.updatedAt}
+          image={article.image}
+          peer={article.peer}
+          tags={getTeaserTags(article.tags, 3)}
+          route={route}
+          authors={article.authors}
+          isSingle={true}
         />
       )
   }
