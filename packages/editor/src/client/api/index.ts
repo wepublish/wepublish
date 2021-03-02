@@ -1679,14 +1679,18 @@ export type User = {
 
 export type UserAddress = {
   __typename?: 'UserAddress';
-  street: Scalars['String'];
+  company?: Maybe<Scalars['String']>;
+  streetAddress: Scalars['String'];
+  streetAddress2?: Maybe<Scalars['String']>;
   zipCode: Scalars['String'];
   city: Scalars['String'];
   country: Scalars['String'];
 };
 
 export type UserAddressInput = {
-  street: Scalars['String'];
+  company?: Maybe<Scalars['String']>;
+  streetAddress: Scalars['String'];
+  streetAddress2?: Maybe<Scalars['String']>;
   zipCode: Scalars['String'];
   city: Scalars['String'];
   country: Scalars['String'];
@@ -3223,7 +3227,7 @@ export type FullUserFragment = (
   & Pick<User, 'id' | 'createdAt' | 'modifiedAt' | 'name' | 'preferredName' | 'active' | 'lastLogin' | 'email'>
   & { address?: Maybe<(
     { __typename?: 'UserAddress' }
-    & Pick<UserAddress, 'street' | 'zipCode' | 'city' | 'country'>
+    & Pick<UserAddress, 'streetAddress' | 'zipCode' | 'city' | 'country'>
   )>, properties: Array<(
     { __typename?: 'Properties' }
     & Pick<Properties, 'key' | 'value' | 'public'>
@@ -3835,7 +3839,7 @@ export const FullUserFragmentDoc = gql`
   name
   preferredName
   address {
-    street
+    streetAddress
     zipCode
     city
     country
