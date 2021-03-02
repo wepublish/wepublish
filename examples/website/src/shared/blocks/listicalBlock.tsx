@@ -3,7 +3,7 @@ import {cssRule, useStyle} from '@karma.run/react'
 import {Color} from '../style/colors'
 import {pxToRem, whenTablet, whenDesktop} from '../style/helpers'
 import {Node} from 'slate'
-import {RichText} from '../atoms/richText'
+import {RichTextBlock} from './richTextBlock/richTextBlock'
 import {ImageData} from '../types'
 import {RatioImage} from '../atoms/ratioImage'
 import {usePermanentVisibility} from '../utils/hooks'
@@ -142,7 +142,14 @@ export function ListicalBLock({listical}: ListicalBLockProps) {
             )}
             {item.text && (
               <div className={css(ListicalTextStyle)}>
-                <RichText value={item.text} />
+                <RichTextBlock
+                  displayOnly
+                  disabled
+                  value={item.text}
+                  onChange={() => {
+                    /* do nothing */
+                  }}
+                />
               </div>
             )}
           </div>
