@@ -57,6 +57,33 @@ export const RichTextBlock = memo(function RichTextBlock({
     ReactEditor.focus(editor)
   }
 
+  const activateHotkey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.key.toLowerCase()) {
+      case 'b': {
+        e.preventDefault()
+        WepublishEditor.toggleFormat(editor, TextFormat.Bold)
+        break
+      }
+      case 'i': {
+        e.preventDefault()
+        WepublishEditor.toggleFormat(editor, TextFormat.Italic)
+        break
+      }
+      case 'u': {
+        e.preventDefault()
+        WepublishEditor.toggleFormat(editor, TextFormat.Underline)
+        break
+      }
+      case 'x': {
+        if (e.getModifierState('Shift')) {
+          e.preventDefault()
+          WepublishEditor.toggleFormat(editor, TextFormat.Strikethrough)
+        }
+        break
+      }
+    }
+  }
+
   return (
     <Slate
       editor={editor}
@@ -140,6 +167,9 @@ export const RichTextBlock = memo(function RichTextBlock({
         renderLeaf={renderLeaf}
         onBlur={() => {
           setLocation(editor.selection)
+        }}
+        onKeyDown={e => {
+          e.ctrlKey ? activateHotkey(e) : undefined
         }}
       />
       {showCharCount && (
