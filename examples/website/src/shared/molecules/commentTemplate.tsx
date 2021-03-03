@@ -1,9 +1,9 @@
 import {cssRule, useStyle} from '@karma.run/react'
-import React, {useContext, useState} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import {BaseButton} from '../atoms/baseButton'
 import {Color} from '../style/colors'
 import {Comment, RichTextBlockValue} from '../types'
-import {AddComment, UpdateComment} from '../query'
+import {AddComment, UpdateComment, ArticleQuery} from '../query'
 import {useMutation} from '@apollo/client'
 import {AuthContext} from '../authContext'
 import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
@@ -85,6 +85,23 @@ const CommentHeading = cssRule(() => ({
 }))
 
 const CommentInput = cssRule(() => ({
+  borderRadius: '.25em',
+  fontSize: '0.9em',
+  marginTop: '1em',
+  '& > div': {
+    borderRadius: '.25em',
+    border: '1px solid rgba(0, 0, 0, 0.2)',
+    fontSize: '0.9em',
+    padding: '0.5em 1em',
+    marginTop: '1em'
+  }
+}))
+
+const EditCommentInput = cssRule(() => ({
+  borderRadius: '.25em',
+  fontSize: '0.9em',
+  padding: '0.5em',
+  marginTop: '1em',
   '& > div': {
     borderRadius: '.25em',
     border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -156,7 +173,6 @@ const Timestamp = cssRule(() => ({
 
 export interface CommentProps {
   readonly comment: Comment
-  readonly handleCurrentComment?: string
   readonly activeComment?: string
 }
 
@@ -187,17 +203,17 @@ export function ComposeComment(props: ComposeCommentProps) {
   const css = useStyle()
 
   const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
-  const [commentState, setCommentState] = useState('')
+  const [commentStateInfo, setcommentStateInfo] = useState('')
 
   const {commentComposerHeader, role, itemID, itemType, parentID} = props
 
   const [addComment, {loading}] = useMutation(AddComment, {
     onCompleted() {
-      setCommentState('Your comment has been submitted and is awaiting approval')
+      setcommentStateInfo('Your comment has been submitted and is awaiting approval')
     },
     onError: error => {
       console.error('Error creating a post', error)
-      setCommentState("Something went wrong, your comment couldn't be saved")
+      setcommentStateInfo("Something went wrong, your comment couldn't be saved")
     }
   })
 
@@ -218,7 +234,7 @@ export function ComposeComment(props: ComposeCommentProps) {
             }
           })
         }}>
-        {commentState && <p className={css(StateMessage)}>{commentState}</p>}
+        {commentStateInfo && <p className={css(StateMessage)}>{commentStateInfo}</p>}
         <div className={css(CommentInput)}>
           <RichTextBlock
             value={commentInput}
@@ -263,17 +279,27 @@ export function CommentList(commentListProps: CommentListProps) {
     // This allows to display the children in a chronological order for the sake of a better UX
     let childrenReversed = [...children].reverse()
 
-    const [commentState, setCommentState] = useState('')
+    const [editMode, setEditMode] = useState(false)
+    const [commentInput, setCommentInput] = useState<RichTextBlockValue>(createDefaultValue())
 
+    // Feedback to user if comment is awaiting approval or needs improvements
+    const [commentStateInfo, setCommentStateInfo] = useState('')
+
+    const pendingApproval = 'Your comment has been submitted and is awaiting approval'
+    const pendingUserChanges = `Your comment has been rejected because of ${rejectionReason}. Please edit your comment.`
+
+    // Handling Comment Update
     const [updateComment, {loading}] = useMutation(UpdateComment, {
-      onCompleted() {
-        setCommentState('Your comment has been submitted and is awaiting approval')
-      },
-      onError: error => {
-        console.error('Error creating a post', error)
-        setCommentState("Something went wrong, your comment couldn't be saved")
-      }
+      refetchQueries: mutationResult => [{query: ArticleQuery, variables: {id: itemID}}]
     })
+
+    useEffect(() => {
+      if (state === 'pendingUserChanges') {
+        setCommentStateInfo(pendingUserChanges)
+      } else if (state === 'pendingApproval') {
+        setCommentStateInfo(pendingApproval)
+      }
+    }, [])
 
     return (
       <div className={css(Thread)} key={id}>
@@ -290,16 +316,21 @@ export function CommentList(commentListProps: CommentListProps) {
               </p>
             </div>
           </div>
-
           <div className={css(CommentBody)}>
-            <RichTextBlock
-              disabled
-              displayOnly
-              value={text}
-              onChange={() => {
-                /* do nothing */
-              }}
-            />
+            {editMode ? (
+              <div className={css(EditCommentInput)}>
+                <RichTextBlock value={commentInput} onChange={value => setCommentInput(value)} />
+              </div>
+            ) : (
+              <RichTextBlock
+                disabled
+                displayOnly
+                value={text}
+                onChange={() => {
+                  /* do nothing */
+                }}
+              />
+            )}
             <div className={css(Actions)}>
               {state === 'approved' ? (
                 <button className={css(SmallButton)} onClick={() => toggleReplyForm(id)}>
@@ -309,18 +340,30 @@ export function CommentList(commentListProps: CommentListProps) {
                 ''
               )}
               {state === 'pendingApproval' ? (
-                <span className={css(PendingApproval)}>Comment is awaiting approval</span>
+                <span className={css(PendingApproval)}>{commentStateInfo}</span>
               ) : state === 'pendingUserChanges' ? (
                 <>
                   <button
                     className={css(SmallButton)}
-                    onClick={() => alert('This function is not yet working')}>
-                    Edit
+                    disabled={loading}
+                    onClick={() => {
+                      if (editMode === true) {
+                        updateComment({
+                          variables: {
+                            input: {
+                              id,
+                              text: commentInput
+                            }
+                          }
+                        })
+                      } else {
+                        setCommentInput(text)
+                      }
+                      setEditMode(!editMode)
+                    }}>
+                    {editMode ? 'Save' : 'Edit'}
                   </button>
-                  <p className={css(PendingApproval)}>
-                    Your comment has been rejected because of {rejectionReason}. Please edit your
-                    comment.
-                  </p>
+                  <p className={css(PendingApproval)}>{commentStateInfo}</p>
                 </>
               ) : (
                 ''
@@ -342,6 +385,9 @@ export function CommentList(commentListProps: CommentListProps) {
 
   function ChildComment(value: any) {
     const {id, rejectionReason, state, user, authorType, modifiedAt, text} = value.value
+
+    const awaitingApproval = 'Your comment has been submitted and is awaiting approval'
+    const pendingUserChanges = `Your comment has been rejected because of ${rejectionReason}. Please edit your comment.`
 
     return (
       <div className={css(CommentBox, Replies)} id={id}>
@@ -369,7 +415,7 @@ export function CommentList(commentListProps: CommentListProps) {
           />
           <div className={css(Actions)}>
             {state === 'pendingApproval' ? (
-              <span className={css(PendingApproval)}>Comment is awaiting approval</span>
+              <span className={css(PendingApproval)}>{awaitingApproval}</span>
             ) : state === 'pendingUserChanges' ? (
               <>
                 <button
@@ -377,10 +423,7 @@ export function CommentList(commentListProps: CommentListProps) {
                   onClick={() => alert('This function is not yet working')}>
                   Edit
                 </button>
-                <p className={css(PendingApproval)}>
-                  Your comment has been rejected because of {rejectionReason}. Please edit your
-                  comment.
-                </p>
+                <p className={css(PendingApproval)}>{pendingUserChanges}</p>
               </>
             ) : (
               ''
@@ -395,7 +438,7 @@ export function CommentList(commentListProps: CommentListProps) {
     <div className={css(Container, CommentBox)}>
       <h3 style={{marginTop: '2em'}}>Showing all comments</h3>
       {comments?.map((comment: Comment) => (
-        <Comment comment={comment} key={comment.id} />
+        <Comment comment={comment} key={comment.id} activeComment={activeCommentID} />
       ))}
     </div>
   )

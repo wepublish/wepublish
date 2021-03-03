@@ -1,6 +1,6 @@
 import React from 'react'
 import {PageMeta, Peer} from '../types'
-import {DisplayComments, LoginToComment} from '../molecules/commentTemplate'
+import {CommentList, LoginToComment} from '../molecules/commentTemplate'
 import {Tag} from '../atoms/tag'
 import {Link, AuthorRoute, PageRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
@@ -107,7 +107,7 @@ export function PageFooter(props: PageFooterProps) {
           })}
       </div>
       <LoginToComment itemID={props.itemID} itemType={'Page'} />
-      <DisplayComments comments={props.comments} />
+      <CommentList comments={props.comments} />
     </div>
   )
 }
