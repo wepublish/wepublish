@@ -218,6 +218,9 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta): Block[] {
   })
 }
 
+// Other
+// =====
+
 export function imageAdapter(image: any): ImageData {
   return image
 }

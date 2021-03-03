@@ -31,6 +31,32 @@ export interface Author {
   image: ImageData
 }
 
+export interface Comment {
+  id: string
+  state: string
+  rejectionReason: string
+  itemID: string
+  itemType: CommentItemType
+  text: RichTextBlockValue
+  modifiedAt: Date
+  parentID?: string
+  authorType: CommentAuthorType
+  user: User
+  userName: string
+  children: Comment[]
+}
+
+export enum CommentAuthorType {
+  Team = 'team',
+  Author = 'author',
+  VerifiedUser = 'verifiedUser'
+}
+
+export enum CommentItemType {
+  Article = 'article',
+  Page = 'page'
+}
+
 export interface NavigationItem {
   title: string
   route?: Route
@@ -60,6 +86,8 @@ export interface ArticleMeta {
   socialMediaDescription?: string
   socialMediaAuthors: Author[]
   socialMediaImage?: any
+
+  comments?: Comment[]
 
   teaserType?: TeaserType
   teaserStyle?: TeaserStyle
@@ -102,9 +130,6 @@ export interface Peer {
 }
 
 export enum BlockType {
-  Foo = 'foo',
-  Bar = 'bar',
-
   // Content
   TitleImage = 'titleImage',
   Title = 'title',
@@ -120,6 +145,8 @@ export enum BlockType {
   // Layout
   Grid = 'grid'
 }
+
+export type RichTextBlockValue = Node[]
 
 export interface BaseBlock<T extends BlockType, V> {
   type: T
@@ -326,4 +353,26 @@ export interface PageInfo {
   readonly endCursor?: string
   readonly hasNextPage: boolean
   readonly hasPreviousPage: boolean
+}
+
+export interface User {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+  readonly name: string
+  readonly preferredName?: string
+  readonly email: string
+
+  readonly active: boolean
+  readonly lastLogin: Date | null
+
+  readonly properties: MetadataProperty[]
+
+  readonly roleIDs: string[]
+}
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
 }
