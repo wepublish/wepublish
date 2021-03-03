@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.0.1-alpha.0 (2021-02-16)
+## v1.0.1 (2021-03-03)
 
 #### :heart: New Feature
 * `editor`
