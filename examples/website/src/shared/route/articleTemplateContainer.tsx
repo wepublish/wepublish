@@ -397,7 +397,14 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
       <div className={css(PeerProfileCallToActionURL)}>
         {peer?.callToActionText?.length && (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
-            <RichTextBlock value={peer?.callToActionText} disabled onChange={console.log} />
+            <RichTextBlock
+              value={peer?.callToActionText}
+              displayOnly
+              disabled
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
           </a>
         )}
       </div>

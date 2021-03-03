@@ -111,7 +111,16 @@ export function PageBreakBlock({
           />
         )}
       </div>
-      {!!richText && <RichTextBlock value={richText} onChange={console.log} />}
+      {!!richText && (
+        <RichTextBlock
+          displayOnly
+          disabled
+          value={richText}
+          onChange={() => {
+            /* do nothing */
+          }}
+        />
+      )}
       <pre>layoutOption: {layoutOption || 'not set'}</pre>
       <pre>styleOption: {styleOption}</pre>
       <pre>templateOption: {templateOption}</pre>

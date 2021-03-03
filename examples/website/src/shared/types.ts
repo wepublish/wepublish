@@ -1,10 +1,4 @@
 import {Node} from 'slate'
-import {
-  CommentAuthorType,
-  CommentItemType,
-  RichTextTextNode,
-  User
-} from '../../../../packages/api/lib'
 import {Route} from './route/routeContext'
 
 export enum VersionState {
@@ -43,13 +37,24 @@ export interface Comment {
   rejectionReason: string
   itemID: string
   itemType: CommentItemType
-  text: RichTextTextNode[]
+  text: RichTextBlockValue
   modifiedAt: Date
   parentID?: string
   authorType: CommentAuthorType
   user: User
   userName: string
   children: Comment[]
+}
+
+export enum CommentAuthorType {
+  Team = 'team',
+  Author = 'author',
+  VerifiedUser = 'verifiedUser'
+}
+
+export enum CommentItemType {
+  Article = 'article',
+  Page = 'page'
 }
 
 export interface NavigationItem {
@@ -377,4 +382,26 @@ export interface PageInfo {
   readonly endCursor?: string
   readonly hasNextPage: boolean
   readonly hasPreviousPage: boolean
+}
+
+export interface User {
+  readonly id: string
+  readonly createdAt: Date
+  readonly modifiedAt: Date
+  readonly name: string
+  readonly preferredName?: string
+  readonly email: string
+
+  readonly active: boolean
+  readonly lastLogin: Date | null
+
+  readonly properties: MetadataProperty[]
+
+  readonly roleIDs: string[]
+}
+
+export interface MetadataProperty {
+  key: string
+  value: string
+  public: boolean
 }

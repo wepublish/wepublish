@@ -1,9 +1,5 @@
 import gql from 'graphql-tag'
-import {
-  articleMetaDataFragment,
-  pageMetaDataFragment,
-  simpleImageDataFragment
-} from './route/gqlFragments'
+import {articleMetaDataFragment, simpleImageDataFragment} from './route/gqlFragments'
 import {QueryHookOptions, useQuery} from '@apollo/client'
 import {ArticleReference, PageInfo, ImageRefData} from './types'
 
@@ -48,51 +44,34 @@ const ArticleTagQuery = gql`
   ${articleMetaDataFragment}
 `
 
+// Article-Mutations
+// =================
+
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      user {
+        id
+      }
+      text
+      parentID
+    }
+  }
+`
+
+export const UpdateComment = gql`
+  mutation UpdateComment($input: CommentUpdateInput!) {
+    updateComment(input: $input) {
+      id
+      text
+    }
+  }
+`
+
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
 ) {
   return useQuery(ArticleTagQuery, opts)
-}
-
-// Page-Queries
-// ============
-
-export interface ListPagesData {
-  pages: {
-    nodes: ArticleReference[]
-    pageInfo: PageInfo
-    totalCount: number
-  }
-}
-
-export interface ListPagesVariables {
-  first: number
-  cursor?: string | null
-  filter?: string[]
-  authors?: string[]
-}
-
-const PageTagQuery = gql`
-  query ArticleTag($first: Int, $authors: [ID!], $filter: [String!], $cursor: ID) {
-    articles(first: $first, after: $cursor, filter: {tags: $filter, authors: $authors}) {
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      totalCount
-      nodes {
-        id
-        ...PageMetaData
-      }
-    }
-  }
-  ${pageMetaDataFragment}
-`
-
-export function useListPagesQuery(opts?: QueryHookOptions<ListPagesData, ListPagesVariables>) {
-  return useQuery(PageTagQuery, opts)
 }
 
 // Author-Queries
