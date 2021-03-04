@@ -169,7 +169,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
         onKeyDown={e => {
-          e.ctrlKey ? activateHotkey(e) : undefined
+          if (e.ctrlKey) activateHotkey(e)
         }}
       />
       {showCharCount && (
