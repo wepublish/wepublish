@@ -5,7 +5,7 @@
   "compilerOptions": {
     "outDir": "../../dist/shared",
     "types": [],
-    "lib": ["dom", "dom.iterable", "es2017"],
+    "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019"],
     "composite": true
   }
 }

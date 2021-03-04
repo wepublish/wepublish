@@ -1,5 +1,51 @@
 # Change Log
 
+## v1.0.1 (2021-03-03)
+
+#### :heart: New Feature
+* `editor`
+  * [#184](https://github.com/wepublish/wepublish/pull/184) add ability to display only one line ([@bishoymelek](https://github.com/bishoymelek))
+  * [#167](https://github.com/wepublish/wepublish/pull/167) WPC-202 rich-text Get characters count method, and get string text method ([@bishoymelek](https://github.com/bishoymelek))
+  * [#168](https://github.com/wepublish/wepublish/pull/168) WPC-212 Rich Text in display only mode ([@bishoymelek](https://github.com/bishoymelek))
+* `api`, `editor`
+  * [#185](https://github.com/wepublish/wepublish/pull/185) Wpc 20 duplicate articles and pages ([@HanaAyman](https://github.com/HanaAyman))
+* `api-db-mongodb`, `api`
+  * [#181](https://github.com/wepublish/wepublish/pull/181) Unique page slug ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`, `editor`
+  * [#157](https://github.com/wepublish/wepublish/pull/157) Comments ([@bishoymelek](https://github.com/bishoymelek))
+  * [#170](https://github.com/wepublish/wepublish/pull/170) Author improvements ([@roosnic1](https://github.com/roosnic1))
+  * [#172](https://github.com/wepublish/wepublish/pull/172) Pagination for article and page lists ([@roosnic1](https://github.com/roosnic1))
+* Other
+  * [#166](https://github.com/wepublish/wepublish/pull/166) Auth in examples/website ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#175](https://github.com/wepublish/wepublish/pull/175) add displayOnly prop to richText ([@bishoymelek](https://github.com/bishoymelek))
+  * [#174](https://github.com/wepublish/wepublish/pull/174) Fixing delete image bug ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `editor`
+  * [#178](https://github.com/wepublish/wepublish/pull/178) F/WPC-199 improve metadata clarity ([@0815pascal](https://github.com/0815pascal))
+
+#### :memo: Documentation
+* [#173](https://github.com/wepublish/wepublish/pull/173) Magic module error documentation ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `editor`
+  * [#180](https://github.com/wepublish/wepublish/pull/180) f/WPC-200-sync-title-lead-with-metadata ([@0815pascal](https://github.com/0815pascal))
+  * [#179](https://github.com/wepublish/wepublish/pull/179) f/WPC-3-editeable-slug-field ([@0815pascal](https://github.com/0815pascal))
+* `api`
+  * [#139](https://github.com/wepublish/wepublish/pull/139) MailProvider Tests ([@roosnic1](https://github.com/roosnic1))
+* Other
+  * [#166](https://github.com/wepublish/wepublish/pull/166) Auth in examples/website ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 4
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pascal Witzig ([@0815pascal](https://github.com/0815pascal))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v1.0.0 (2021-02-16)
 
 #### :bug: Bug Fix
