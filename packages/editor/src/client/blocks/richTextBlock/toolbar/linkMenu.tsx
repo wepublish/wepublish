@@ -9,13 +9,17 @@ import {
   ButtonToolbar,
   HelpBlock,
   Toggle,
-  InputGroup
+  InputGroup,
+  InputPicker,
+  SelectPicker,
+  Popover
 } from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 import {SubMenuContext} from '../../../atoms/toolbar'
+import {ZIndex} from '../../../atoms/helpers'
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -62,18 +66,31 @@ export function LinkMenu() {
     <>
       <Form fluid>
         <FormGroup>
-          <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
-
-          <InputGroup>
-            <InputGroup.Addon>{secured ? 'https://' : 'http://'}</InputGroup.Addon>
-
-            <FormControl value={url} onChange={url => setURL(url)} />
+          <ControlLabel>
+            {t('blocks.richText.link')}{' '}
             {
-              // TODO change to Select field
+              <SelectPicker
+                placement="top"
+                size="sm"
+                placeholder="protocol"
+                data={[
+                  {
+                    label: 'Eugenia',
+                    value: 'Eugenia',
+                    role: 'Master'
+                  },
+                  {
+                    label: 'Kariane',
+                    value: 'Kariane',
+                    role: 'Master'
+                  }
+                ]}></SelectPicker>
             }
-            <InputGroup.Addon>
-              {<Toggle onChange={() => setSecured(!secured)} checkedChildren="Secure" size="sm" />}
-            </InputGroup.Addon>
+          </ControlLabel>
+
+          <InputGroup inside>
+            <InputGroup.Button></InputGroup.Button>
+            <FormControl value={url} onChange={url => setURL(url)} />
           </InputGroup>
           <HelpBlock>{url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}</HelpBlock>
         </FormGroup>
