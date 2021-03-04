@@ -1905,6 +1905,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -4896,6 +4897,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -7404,6 +7406,7 @@ exports[`Author Edit Panel should render 1`] = `
                             </Toolbar>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -9924,6 +9927,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
