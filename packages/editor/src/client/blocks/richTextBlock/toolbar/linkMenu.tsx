@@ -1,6 +1,16 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, HelpBlock} from 'rsuite'
+import {
+  Button,
+  Form,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  ButtonToolbar,
+  HelpBlock,
+  Toggle,
+  InputGroup
+} from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
 import {WepublishEditor} from '../editor/wepublishEditor'
@@ -14,6 +24,8 @@ export function LinkMenu() {
 
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
+  //TODO change to types
+  const [secured, setSecured] = useState(false)
 
   const [selection, setSelection] = useState<Range | null>(null)
 
@@ -51,7 +63,18 @@ export function LinkMenu() {
       <Form fluid>
         <FormGroup>
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
-          <FormControl value={url} onChange={url => setURL(url)} />
+
+          <InputGroup>
+            <InputGroup.Addon>{secured ? 'https://' : 'http://'}</InputGroup.Addon>
+
+            <FormControl value={url} onChange={url => setURL(url)} />
+            {
+              // TODO change to Select field
+            }
+            <InputGroup.Addon>
+              {<Toggle onChange={() => setSecured(!secured)} checkedChildren="Secure" size="sm" />}
+            </InputGroup.Addon>
+          </InputGroup>
           <HelpBlock>{url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}</HelpBlock>
         </FormGroup>
         <FormGroup>
