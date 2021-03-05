@@ -7,6 +7,9 @@ import {ArticleReference, PageInfo, ImageRefData} from './types'
 // TODO: Remove slate from dependencies.
 import {Node} from 'slate'
 
+// Article-Queries
+// ===============
+
 export interface ListArticlesData {
   articles: {
     nodes: ArticleReference[]
@@ -41,11 +44,29 @@ const ArticleTagQuery = gql`
   ${articleMetaDataFragment}
 `
 
+// Article-Mutations
+// =================
+
+export const AddComment = gql`
+  mutation AddComment($input: CommentInput!) {
+    addComment(input: $input) {
+      user {
+        id
+      }
+      text
+      parentID
+    }
+  }
+`
+
 export function useListArticlesQuery(
   opts?: QueryHookOptions<ListArticlesData, ListArticlesVariables>
 ) {
   return useQuery(ArticleTagQuery, opts)
 }
+
+// Author-Queries
+// ==============
 
 export interface AuthorLink {
   title: string

@@ -36,7 +36,7 @@ import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
 import {whenMobile, pxToRem} from '../style/helpers'
 import {Color} from '../style/colors'
-import {RichText} from '../atoms/richText'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
   query Article($id: ID!) {
@@ -95,7 +95,9 @@ const mapAuthors = (metaData: any[] | undefined) => {
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading} = useQuery(ArticleQuery, {variables: {id}})
+  const {data, loading, error} = useQuery(ArticleQuery, {variables: {id}})
+
+  if (error) return <NotFoundTemplate statusCode={500} />
 
   if (loading) return <Loader text="Loading" />
 
@@ -115,12 +117,12 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage,
-    socialMediaAuthors
+    socialMediaAuthors,
+    comments
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
   const canonicalURL = canonicalHost + path
-
   return (
     <>
       <Helmet>
@@ -156,7 +158,13 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         isArticle={true}
         blocks={blocks}
       />
-      <ArticleFooterContainer tags={tags} authors={authors} publishDate={publishedAt} id={id} />
+      <ArticleFooterContainer
+        tags={tags}
+        authors={authors}
+        publishDate={publishedAt}
+        id={id}
+        comments={comments}
+      />
     </>
   )
 }
@@ -389,7 +397,14 @@ export function PeerProfileBlock({peer, article}: PeerProfileBlockProps) {
       <div className={css(PeerProfileCallToActionURL)}>
         {peer?.callToActionText?.length && (
           <a target="_blank" rel="noreferrer" href={peer?.callToActionURL}>
-            <RichText value={peer?.callToActionText} />
+            <RichTextBlock
+              value={peer?.callToActionText}
+              displayOnly
+              disabled
+              onChange={() => {
+                /* do nothing */
+              }}
+            />
           </a>
         )}
       </div>

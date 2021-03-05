@@ -233,9 +233,10 @@ export function ArticleList() {
         <Modal.Header>
           <Modal.Title>
             {confirmAction === ConfirmAction.Unpublish
-              ? t('articles.panels.unpublishArticle') : 
-              confirmAction === ConfirmAction.Delete ? t('articles.panels.deleteArticle') : 
-              t('articles.panels.duplicateArticle')}
+              ? t('articles.panels.unpublishArticle')
+              : confirmAction === ConfirmAction.Delete
+              ? t('articles.panels.deleteArticle')
+              : t('articles.panels.duplicateArticle')}
           </Modal.Title>
         </Modal.Header>
 

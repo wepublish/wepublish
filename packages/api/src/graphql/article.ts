@@ -77,6 +77,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
@@ -116,6 +117,7 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     slug: {type: GraphQLNonNull(GraphQLSlug)},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
@@ -237,6 +239,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     preTitle: {type: GraphQLString},
     title: {type: GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
+    seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {

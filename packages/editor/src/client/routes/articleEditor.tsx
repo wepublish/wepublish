@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
-import {Drawer, Modal, Notification, Icon, IconButton, Alert} from 'rsuite'
+import {Alert, Drawer, Icon, IconButton, Modal, Notification} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -8,26 +8,26 @@ import {NavigationBar} from '../atoms/navigationBar'
 
 import {RouteActionType} from '@karma.run/react'
 
-import {ArticleListRoute, useRouteDispatch, ArticleEditRoute, IconButtonLink} from '../route'
+import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
-import {ArticleMetadataPanel, ArticleMetadata} from '../panel/articleMetadataPanel'
+import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
-  useCreateArticleMutation,
-  useArticleQuery,
-  useUpdateArticleMutation,
   ArticleInput,
+  AuthorRefFragment,
+  useArticleQuery,
+  useCreateArticleMutation,
   usePublishArticleMutation,
-  AuthorRefFragment
+  useUpdateArticleMutation
 } from '../api'
 
 import {
-  BlockType,
   blockForQueryBlock,
-  unionMapForBlock,
+  BlockType,
   BlockValue,
-  TitleBlockValue
+  TitleBlockValue,
+  unionMapForBlock
 } from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
@@ -74,6 +74,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     preTitle: '',
     title: '',
     lead: '',
+    seoTitle: '',
     authors: [],
     tags: [],
     properties: [],
@@ -123,6 +124,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         slug,
         preTitle,
         title,
+        seoTitle,
         lead,
         tags,
         breaking,
@@ -145,6 +147,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         preTitle: preTitle ?? '',
         title: title ?? '',
         lead: lead ?? '',
+        seoTitle: seoTitle ?? '',
         tags,
         properties: properties.map(property => ({
           key: property.key,
@@ -177,12 +180,38 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [createError, updateError, publishError])
 
+  function countRichtextChars(blocksCharLength: number, nodes: any) {
+    return nodes.reduce((charLength: number, node: any) => {
+      if (!node.text && !node.children) return charLength
+      // node either has text (leaf node) or children (element node)
+      if (node.text) {
+        return charLength + (node.text as string).length
+      }
+      return countRichtextChars(charLength, node.children)
+    }, blocksCharLength)
+  }
+
+  function countRichTextBlocksChars(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if (!(block.type === BlockType.RichText)) return charLength
+      return countRichtextChars(charLength, block.value)
+    }, 0)
+  }
+
+  function countTitle(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if ((block.type === BlockType.Title)) return charLength + (block.value.title as string).length + (block.value.lead as string).length
+      else return charLength;
+    }, 0)
+  }
+
   function createInput(): ArticleInput {
     return {
       slug: metadata.slug,
       preTitle: metadata.preTitle || undefined,
       title: metadata.title,
       lead: metadata.lead,
+      seoTitle: metadata.seoTitle,
       authorIDs: metadata.authors.map(({id}) => id),
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
@@ -200,17 +229,22 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   // Reads title and lead from the first block and saves them in variables
   function syncFirstTitleBlockWithMetadata() {
-    if (metadata.title === '' && metadata.lead === '' && blocks.length > 0) {
+    if (
+      metadata.title === '' &&
+      metadata.lead === '' &&
+      metadata.seoTitle === '' &&
+      blocks.length > 0
+    ) {
       const titleBlock = blocks.find(block => block.type === BlockType.Title)
 
       if (titleBlock?.value) {
         const titleBlockValue = titleBlock.value as TitleBlockValue
-        const syncedTitle = titleBlockValue ? titleBlockValue.title : ''
-        const syncedLead = titleBlockValue ? titleBlockValue.lead : ''
-        const title = syncedTitle
-        const lead = syncedLead
-
-        setMetadata({...metadata, title, lead})
+        setMetadata({
+          ...metadata,
+          title: titleBlockValue.title,
+          lead: titleBlockValue.lead,
+          seoTitle: titleBlockValue.title
+        })
       }
     }
   }
@@ -286,6 +320,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
+  const [infoData, setInfoData] = useState<InfoData>({
+    charCount: 0
+  })
+
+  useEffect(() => {
+    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitle(blocks)})
+  },[isMetaDrawerOpen])
+
   return (
     <>
       <EditorTemplate
@@ -358,9 +400,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)} >
         <ArticleMetadataPanel
           value={metadata}
+          infoData= {infoData}
           onClose={() => setMetaDrawerOpen(false)}
           onChange={value => {
             setMetadata(value)
