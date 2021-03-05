@@ -43,6 +43,7 @@ import {BaseMailProvider} from './mails/mailProvider'
 import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {logger} from './server'
 import {MemberContext} from './memberContext'
+import {Client, Issuer} from 'openid-client'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -78,6 +79,12 @@ export interface DataLoaderContext {
   readonly paymentsByID: DataLoader<string, OptionalPayment>
 }
 
+export interface OAuth2Clients {
+  name: string
+  provider: Oauth2Provider
+  client: Client
+}
+
 export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
@@ -95,6 +102,8 @@ export interface Context {
   readonly hooks?: Hooks
 
   sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+
+  getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): Session
   authenticateToken(): TokenSession
@@ -313,6 +322,24 @@ export async function contextFromRequest(
     hooks,
 
     sendMailFromProvider,
+
+    async getOauth2Clients() {
+      return await Promise.all(
+        oauth2Providers.map(async provider => {
+          const issuer = await Issuer.discover(provider.discoverUrl)
+          return {
+            name: provider.name,
+            provider,
+            client: new issuer.Client({
+              client_id: provider.clientId,
+              client_secret: provider.clientKey,
+              redirect_uris: provider.redirectUri,
+              response_types: ['code']
+            })
+          }
+        })
+      )
+    },
 
     authenticateUser() {
       if (!session || session.type !== SessionType.User) {

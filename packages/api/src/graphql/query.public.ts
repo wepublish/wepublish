@@ -1,4 +1,11 @@
-import {GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType} from 'graphql'
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
+} from 'graphql'
 import {Context} from '../context'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLSlug} from './slug'
@@ -37,6 +44,7 @@ import {
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
+import {GraphQLAuthProvider} from './auth'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -223,6 +231,29 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           order,
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Auth
+    // =======
+
+    authProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      args: {redirectUri: {type: GraphQLString}},
+      async resolve(root, {redirectUri}, {getOauth2Clients}) {
+        const clients = await getOauth2Clients()
+        return clients.map(client => {
+          const url = client.client.authorizationUrl({
+            scope: client.provider.scopes.join(),
+            response_mode: 'query',
+            redirect_uri: `${redirectUri}/${client.name}`,
+            state: 'fakeRandomString'
+          })
+          return {
+            name: client.name,
+            url
+          }
         })
       }
     },
