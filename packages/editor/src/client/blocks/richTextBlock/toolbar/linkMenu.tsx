@@ -10,12 +10,7 @@ import {
   HelpBlock,
   InputGroup,
   SelectPicker,
-  Popover,
-  Whisper,
-  Dropdown,
-  Tooltip,
-  IconButton,
-  Icon
+  Whisper
 } from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
@@ -31,7 +26,7 @@ export function LinkMenu() {
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
   //TODO change to types
-  const [secured, setSecured] = useState(false)
+  //const [secured, setSecured] = useState(false)
 
   const [selection, setSelection] = useState<Range | null>(null)
 
@@ -74,8 +69,8 @@ export function LinkMenu() {
               <SelectPicker
                 placement="top"
                 data={[
-                  {label: 'ggd', value: 'efs', role: 'dsr'},
-                  {label: 'ggd', value: 'efs', role: 'dsr'}
+                  {label: 'first', value: 'first', role: 'role'},
+                  {label: 'second', value: 'second', role: 'role'}
                 ]}></SelectPicker>
             </Whisper>
 
