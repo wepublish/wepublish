@@ -311,7 +311,28 @@ export function ArticleList() {
 
                 case ConfirmAction.Duplicate:
                   await duplicateArticle({
-                    variables: {id: currentArticle.id}
+                    variables: {id: currentArticle.id},
+                    update: cache => {
+                      const query = cache.readQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        variables: articleListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        data: {
+                          articles: {
+                            ...query.articles,
+                            nodes: query.articles.nodes.filter(
+                              article => article.id !== currentArticle.id
+                            )
+                          }
+                        },
+                        variables: articleListVariables
+                      })
+                    }
                   })
                   break
               }
