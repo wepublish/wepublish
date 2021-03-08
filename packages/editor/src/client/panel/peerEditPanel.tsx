@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel, Placeholder} from 'rsuite'
+import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -193,7 +193,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
         </Panel>
         {!isLoadingPeerProfile && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
-            {(profile?.logo )?(<ChooseEditImage disabled image={profile?.logo} />):(<ControlLabel>{t('chooseEditImage.header')}<Placeholder.Graph/> </ControlLabel>)}
+            <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
               <DescriptionListItem label={t('peerList.panels.name')}>
                 {profile?.name}

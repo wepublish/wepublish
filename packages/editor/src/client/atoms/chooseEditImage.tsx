@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dropdown, Icon, IconButton, Panel} from 'rsuite'
+import {Dropdown, Icon, IconButton, Panel, Placeholder} from 'rsuite'
 import {PlaceholderInput} from './placeholderInput'
 import {useTranslation} from 'react-i18next'
 
@@ -28,6 +28,7 @@ export function ChooseEditImage({
   header = header ?? t('chooseEditImage.header')
   return (
     <Panel header={header} bodyFill={true} style={{height: 240, marginBottom: 10}}>
+      {image == undefined && disabled == true && <Placeholder.Graph/>}
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
