@@ -8,18 +8,20 @@ import {
   FormControl,
   ButtonToolbar,
   HelpBlock,
-  Toggle,
   InputGroup,
-  InputPicker,
   SelectPicker,
-  Popover
+  Popover,
+  Whisper,
+  Dropdown,
+  Tooltip,
+  IconButton,
+  Icon
 } from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 import {SubMenuContext} from '../../../atoms/toolbar'
-import {ZIndex} from '../../../atoms/helpers'
 
 export function LinkMenu() {
   const editor = useSlate()
@@ -66,30 +68,17 @@ export function LinkMenu() {
     <>
       <Form fluid>
         <FormGroup>
-          <ControlLabel>
-            {t('blocks.richText.link')}{' '}
-            {
+          <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
+          <InputGroup>
+            <Whisper speaker={<Button>test button</Button>} trigger="click">
               <SelectPicker
                 placement="top"
-                size="sm"
-                placeholder="protocol"
                 data={[
-                  {
-                    label: 'Eugenia',
-                    value: 'Eugenia',
-                    role: 'Master'
-                  },
-                  {
-                    label: 'Kariane',
-                    value: 'Kariane',
-                    role: 'Master'
-                  }
+                  {label: 'ggd', value: 'efs', role: 'dsr'},
+                  {label: 'ggd', value: 'efs', role: 'dsr'}
                 ]}></SelectPicker>
-            }
-          </ControlLabel>
+            </Whisper>
 
-          <InputGroup inside>
-            <InputGroup.Button></InputGroup.Button>
             <FormControl value={url} onChange={url => setURL(url)} />
           </InputGroup>
           <HelpBlock>{url && !isValidURL ? t('blocks.richText.invalidLink') : undefined}</HelpBlock>

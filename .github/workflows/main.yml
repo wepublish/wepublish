@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - f/wpc-244-infer-link-protocol
 
 jobs:
   release:
