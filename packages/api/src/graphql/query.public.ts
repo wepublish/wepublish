@@ -149,6 +149,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
               ? ({
                   id: privateArticle.id,
                   shared: privateArticle.shared,
+                  updatedAt: new Date(),
+                  publishedAt: new Date(),
                   ...privateArticle.draft
                 } as PublicArticle)
               : null

@@ -39,8 +39,8 @@ import {Color} from '../style/colors'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 const ArticleQuery = gql`
-  query Article($id: ID!) {
-    article(id: $id) {
+  query Article($id: ID, $slug: Slug, $token: String) {
+    article(id: $id, slug: $slug, token: $token) {
       ...ArticleMetaData
 
       blocks {
@@ -85,6 +85,7 @@ const ArticleQuery = gql`
 export interface ArticleTemplateContainerProps {
   id: string
   slug?: string
+  token?: string
 }
 
 const mapAuthors = (metaData: any[] | undefined) => {
@@ -95,7 +96,14 @@ const mapAuthors = (metaData: any[] | undefined) => {
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading, error} = useQuery(ArticleQuery, {variables: {id}})
+  const variables =
+    id === 'preview'
+      ? {
+          token: slug
+        }
+      : {id}
+
+  const {data, loading, error} = useQuery(ArticleQuery, {variables})
 
   if (error) return <NotFoundTemplate statusCode={500} />
 

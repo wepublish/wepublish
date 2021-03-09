@@ -39,7 +39,7 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/article/${article.id}/${article.slug}`
+    return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
   getPublicPageURL(page: PublicPage): string {
@@ -51,11 +51,11 @@ class ExampleURLAdapter implements URLAdapter {
   }
 
   getCommentURL(article: PublicArticle, comment: PublicComment) {
-    return `${this.websiteURL}/article/${article.id}/${article.slug}#${comment.id}`
+    return `${this.websiteURL}/a/${article.id}/${article.slug}#${comment.id}`
   }
 
   getArticlePreviewURL(token: string) {
-    return `${this.websiteURL}/article/${token}`
+    return `${this.websiteURL}/a/preview/${token}`
   }
 }
 
