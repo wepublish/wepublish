@@ -757,7 +757,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         if (!article.draft) throw new UserInputError('Article needs to have a draft')
 
         const token = generateJWT({
-          userID: article.id,
+          id: article.id,
           expiresInMinutes: hours * 60
         })
 
