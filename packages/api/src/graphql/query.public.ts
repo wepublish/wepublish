@@ -1,4 +1,11 @@
-import {GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType} from 'graphql'
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString
+} from 'graphql'
 import {Context} from '../context'
 import {GraphQLPeer, GraphQLPeerProfile} from './peer'
 import {GraphQLSlug} from './slug'
@@ -20,7 +27,7 @@ import {
   GraphQLPublicArticleSort
 } from './article'
 import {SessionType} from '../db/session'
-import {ArticleSort} from '../db/article'
+import {ArticleSort, PublicArticle} from '../db/article'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicPage,
@@ -120,9 +127,30 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLPublicArticle,
-      args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
-        const article = await loaders.publicArticles.load(id)
+      args: {
+        id: {type: GraphQLID},
+        slug: {type: GraphQLSlug},
+        token: {type: GraphQLString}
+      },
+      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter}) {
+        let article = id ? await loaders.publicArticles.load(id) : null
+
+        if (!article && slug) {
+          article = await dbAdapter.article.getPublishedArticleBySlug(slug)
+        }
+
+        if (!article && token) {
+          // TODO: decode token
+          const privateArticle = await loaders.articles.load('fakeid')
+
+          article = privateArticle?.draft
+            ? ({
+                id: privateArticle.id,
+                shared: privateArticle.shared,
+                ...privateArticle.draft
+              } as PublicArticle)
+            : null
+        }
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null
