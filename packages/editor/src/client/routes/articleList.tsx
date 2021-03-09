@@ -211,16 +211,18 @@ export function ArticleList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
-                  <IconButton
-                    icon={<Icon icon="eye" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setArticlePreviewLinkOpen(true)
-                    }}
-                  />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setArticlePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -244,7 +246,7 @@ export function ArticleList() {
         onHide={() => setArticlePreviewLinkOpen(false)}>
         {currentArticle && (
           <ArticlePreviewLinkPanel
-            props={{id: currentArticle.id, title: currentArticle.latest.title}}
+            props={{id: currentArticle.id}}
             onClose={() => setArticlePreviewLinkOpen(false)}
           />
         )}
