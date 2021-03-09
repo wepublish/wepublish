@@ -44,6 +44,7 @@ import {
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
+import {logger} from '../server'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -132,7 +133,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         slug: {type: GraphQLSlug},
         token: {type: GraphQLString}
       },
-      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter}) {
+      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
         let article = id ? await loaders.publicArticles.load(id) : null
 
         if (!article && slug) {
@@ -140,16 +141,20 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         }
 
         if (!article && token) {
-          // TODO: decode token
-          const privateArticle = await loaders.articles.load('fakeid')
+          try {
+            const articleId = verifyJWT(token)
+            const privateArticle = await loaders.articles.load(articleId)
 
-          article = privateArticle?.draft
-            ? ({
-                id: privateArticle.id,
-                shared: privateArticle.shared,
-                ...privateArticle.draft
-              } as PublicArticle)
-            : null
+            article = privateArticle?.draft
+              ? ({
+                  id: privateArticle.id,
+                  shared: privateArticle.shared,
+                  ...privateArticle.draft
+                } as PublicArticle)
+              : null
+          } catch (error) {
+            logger('graphql-query').warn(error, 'Error while verifying token with article id')
+          }
         }
 
         if (session?.type === SessionType.Token) {

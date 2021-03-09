@@ -53,6 +53,10 @@ class ExampleURLAdapter implements URLAdapter {
   getCommentURL(article: PublicArticle, comment: PublicComment) {
     return `${this.websiteURL}/article/${article.id}/${article.slug}#${comment.id}`
   }
+
+  getArticlePreviewURL(token: string) {
+    return `${this.websiteURL}/article/${token}`
+  }
 }
 
 async function asyncMain() {
