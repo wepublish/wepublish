@@ -130,18 +130,6 @@ export function LinkMenu() {
     </>
   )
 }
-/*
-function getProtocol(url: string) {
- switch (url) {
-   case (url.startsWith('https://')):
- }
-  if (url.startsWith('https://')) {
-      
-  }
-
-function getBaseUrl(url: string) {
-   return url.replace('^(https?:\\/\\/)?((\\d{1,3}\\.){3}\\d{1,3}))', '')
-} */
 
 async function validateURL(url: string) {
   if (url) {
