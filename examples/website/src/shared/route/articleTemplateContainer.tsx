@@ -85,7 +85,6 @@ const ArticleQuery = gql`
 export interface ArticleTemplateContainerProps {
   id: string
   slug?: string
-  token?: string
 }
 
 const mapAuthors = (metaData: any[] | undefined) => {
