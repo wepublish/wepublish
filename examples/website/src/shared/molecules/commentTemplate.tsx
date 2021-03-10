@@ -336,9 +336,7 @@ export function CommentList(commentListProps: CommentListProps) {
                 <button className={css(SmallButton)} onClick={() => toggleReplyForm(id)}>
                   Reply
                 </button>
-              ) : (
-                ''
-              )}
+              ) : null}
               {state === 'pendingApproval' ? (
                 <span className={css(PendingApproval)}>{commentStateInfo}</span>
               ) : state === 'pendingUserChanges' ? (
@@ -365,9 +363,7 @@ export function CommentList(commentListProps: CommentListProps) {
                   </button>
                   <p className={css(PendingApproval)}>{commentStateInfo}</p>
                 </>
-              ) : (
-                ''
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -386,7 +382,6 @@ export function CommentList(commentListProps: CommentListProps) {
   function ChildComment(value: any) {
     const {id, rejectionReason, state, user, authorType, modifiedAt, text} = value.value
 
-    const awaitingApproval = 'Your comment has been submitted and is awaiting approval'
     const pendingUserChanges = `Your comment has been rejected because of ${rejectionReason}. Please edit your comment.`
 
     return (
@@ -415,7 +410,9 @@ export function CommentList(commentListProps: CommentListProps) {
           />
           <div className={css(Actions)}>
             {state === 'pendingApproval' ? (
-              <span className={css(PendingApproval)}>{awaitingApproval}</span>
+              <span className={css(PendingApproval)}>
+                Your comment has been submitted and is awaiting approval
+              </span>
             ) : state === 'pendingUserChanges' ? (
               <>
                 <button
