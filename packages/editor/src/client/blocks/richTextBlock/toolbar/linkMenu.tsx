@@ -8,9 +8,7 @@ import {
   FormControl,
   ButtonToolbar,
   HelpBlock,
-  InputGroup,
-  SelectPicker,
-  Whisper
+  InputGroup
 } from 'rsuite'
 import {Transforms, Range, Editor} from 'slate'
 import {useSlate} from 'slate-react'
@@ -25,8 +23,9 @@ export function LinkMenu() {
 
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
-  //TODO change to types
-  //const [secured, setSecured] = useState(false)
+
+  //TODO define the protocol option types
+  const [protocol, setProtocol] = useState('')
 
   const [selection, setSelection] = useState<Range | null>(null)
 
@@ -38,6 +37,10 @@ export function LinkMenu() {
   useEffect(() => {
     validateURL(url).then(value => setIsValidURL(value))
   }, [url])
+
+  useEffect(() => {
+    console.log('useEffect protocol update: ', protocol)
+  }, [protocol])
 
   useEffect(() => {
     setSelection(editor.selection)
@@ -52,7 +55,24 @@ export function LinkMenu() {
     if (tuple) {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
-      setURL((node.url as string) ?? '')
+      // check if existing link has protocol
+      // split the link into base url and protocol
+      // update select
+      let nodeUrl = node.url as string
+      if (nodeUrl.match('/^//|^.*?:(//)?/')) {
+        if (nodeUrl.startsWith('https://')) {
+          setProtocol('https://')
+          nodeUrl = nodeUrl.replace('https://', '')
+        } else if (nodeUrl.startsWith('http://')) {
+          setProtocol('http://')
+          nodeUrl = nodeUrl.replace('http://', '')
+        } else if (nodeUrl.startsWith('mailto://')) {
+          setProtocol('mailto://')
+          nodeUrl = nodeUrl.replace('mailto://', '')
+        }
+        console.log('url without protocol ', nodeUrl)
+      }
+      setURL((nodeUrl as string) ?? '')
     } else if (editor.selection) {
       const text = Editor.string(editor, editor.selection)
       setTitle(text ?? '')
@@ -65,14 +85,16 @@ export function LinkMenu() {
         <FormGroup>
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
           <InputGroup>
-            <Whisper speaker={<Button>test button</Button>} trigger="click">
-              <SelectPicker
-                placement="top"
-                data={[
-                  {label: 'first', value: 'first', role: 'role'},
-                  {label: 'second', value: 'second', role: 'role'}
-                ]}></SelectPicker>
-            </Whisper>
+            <select
+              value={protocol}
+              onChange={e => {
+                setProtocol(e.target.value !== 'none' ? e.target.value : '')
+              }}>
+              <option value="none"></option>
+              <option value="https://">https://</option>
+              <option value="http://">http://</option>
+              <option value="mailto://">mailto://</option>
+            </select>
 
             <FormControl value={url} onChange={url => setURL(url)} />
           </InputGroup>
@@ -92,7 +114,12 @@ export function LinkMenu() {
             disabled={isDisabled}
             onClick={e => {
               e.preventDefault()
-              insertLink(editor, selection, url, title || undefined)
+              insertLink(
+                editor,
+                selection,
+                protocol ? `${protocol}${url}` : url,
+                title || undefined
+              )
               closeMenu()
             }}>
             {t('blocks.richText.insert')}
@@ -103,6 +130,18 @@ export function LinkMenu() {
     </>
   )
 }
+/*
+function getProtocol(url: string) {
+ switch (url) {
+   case (url.startsWith('https://')):
+ }
+  if (url.startsWith('https://')) {
+      
+  }
+
+function getBaseUrl(url: string) {
+   return url.replace('^(https?:\\/\\/)?((\\d{1,3}\\.){3}\\d{1,3}))', '')
+} */
 
 async function validateURL(url: string) {
   if (url) {
