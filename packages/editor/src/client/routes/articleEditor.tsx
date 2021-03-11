@@ -10,7 +10,7 @@ import {RouteActionType} from '@karma.run/react'
 
 import {ArticleEditRoute, ArticleListRoute, IconButtonLink, useRouteDispatch} from '../route'
 
-import {ArticleMetadata, ArticleMetadataPanel} from '../panel/articleMetadataPanel'
+import {ArticleMetadata, ArticleMetadataPanel, InfoData} from '../panel/articleMetadataPanel'
 import {PublishArticlePanel} from '../panel/publishArticlePanel'
 
 import {
@@ -180,6 +180,34 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [createError, updateError, publishError])
 
+  function countRichtextChars(blocksCharLength: number, nodes: any) {
+    return nodes.reduce((charLength: number, node: any) => {
+      if (!node.text && !node.children) return charLength
+      // node either has text (leaf node) or children (element node)
+      if (node.text) {
+        return charLength + (node.text as string).length
+      }
+      return countRichtextChars(charLength, node.children)
+    }, blocksCharLength)
+  }
+
+  function countRichTextBlocksChars(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if (!(block.type === BlockType.RichText)) return charLength
+      return countRichtextChars(charLength, block.value)
+    }, 0)
+  }
+
+  function countTitle(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if (block.type === BlockType.Title)
+        return (
+          charLength + (block.value.title as string).length + (block.value.lead as string).length
+        )
+      else return charLength
+    }, 0)
+  }
+
   function createInput(): ArticleInput {
     return {
       slug: metadata.slug,
@@ -295,6 +323,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [isNotFound])
 
+  const [infoData, setInfoData] = useState<InfoData>({
+    charCount: 0
+  })
+
+  useEffect(() => {
+    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitle(blocks)})
+  }, [isMetaDrawerOpen])
+
   return (
     <>
       <EditorTemplate
@@ -370,6 +406,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
+          infoData={infoData}
           onClose={() => setMetaDrawerOpen(false)}
           onChange={value => {
             setMetadata(value)
