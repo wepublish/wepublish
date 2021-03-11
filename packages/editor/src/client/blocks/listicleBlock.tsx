@@ -39,7 +39,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
   const {image, title, richText} = value
 
   const {t} = useTranslation()
-
+    
   const handleRichTextChange = useCallback(
     (richText: React.SetStateAction<RichTextBlockValue>) =>
       onChange(value => ({
