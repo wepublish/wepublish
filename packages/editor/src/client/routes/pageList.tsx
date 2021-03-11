@@ -295,7 +295,26 @@ export function PageList() {
                 
                 case ConfirmAction.Duplicate:
                   await duplicatePage({
-                    variables: {id: currentPage.id}
+                    variables: {id: currentPage.id},
+                    update: cache => {
+                      const query = cache.readQuery<PageListQuery>({
+                        query: PageListDocument,
+                        variables: pageListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<PageListQuery>({
+                        query: PageListDocument,
+                        data: {
+                          pages: {
+                            ...query.pages,
+                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
+                          }
+                        },
+                        variables: pageListVariables
+                      })
+                    }
                   })
                   break
               }

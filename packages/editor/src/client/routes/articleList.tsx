@@ -75,12 +75,17 @@ export function ArticleList() {
   }, [filter, page, limit, sortOrder, sortField])
 
   const {t} = useTranslation()
+  var duplicatedData: object ;
 
   useEffect(() => {
     if (data?.articles.nodes) {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
+
+  const css = `.duplicated-row {
+    background-color: #fbfbfb ;
+  }`
 
   return (
     <>
@@ -120,6 +125,14 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={(rowData) => {
+            if (rowData === duplicatedData) {
+              console.log('yes');
+              return 'duplicated-row'
+            }
+            console.log('no');
+            return '';
+          }}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -333,7 +346,8 @@ export function ArticleList() {
                         variables: articleListVariables
                       })
                     }
-                  })
+                  }),
+                  duplicatedData = currentArticle;
                   break
               }
 
