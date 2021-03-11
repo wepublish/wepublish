@@ -265,7 +265,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
 
-        const token = generateJWT({userID: user.id})
+        const token = generateJWT({id: user.id})
         const link = `${process.env.WEBSITE_URL}/login?jwt=${token}`
         await sendMailFromProvider({
           message: `Click the link to login:\n\n${link}`,

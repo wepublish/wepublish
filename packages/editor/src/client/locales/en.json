@@ -130,7 +130,11 @@
         "charCountWarning": "The maximum number of characters should be {{charCountWarning}}",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
-        "dontChangeSlug": "Please don't change the slug once the article is published"
+        "dontChangeSlug": "Please don't change the slug once the article is published",
+        "articlePreviewLink": "Article Preview Link",
+        "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
+        "articlePreviewLinkHours": "Validity period of link",
+        "articlePreviewLinkField": "Preview Link"
       }
     },
     "comments": {

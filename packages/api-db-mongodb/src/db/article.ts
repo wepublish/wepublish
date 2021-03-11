@@ -413,6 +413,19 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     return ids.map(id => (articleMap[id] as PublicArticle) ?? null)
   }
 
+  async getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle> {
+    await this.updatePendingArticles()
+    const article = await this.articles.findOne({'published.slug': {$eq: slug}})
+
+    return article?.published
+      ? ({
+          id: article._id,
+          shared: article.shared,
+          ...article.published
+        } as PublicArticle)
+      : null
+  }
+
   async getPublishedArticles({
     filter,
     sort,
