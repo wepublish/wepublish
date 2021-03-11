@@ -1603,183 +1603,130 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <LinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        icon="link"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                    <ForwardRef
+                                      icon="link"
+                                    >
+                                      <withLocale(Whisper)
+                                        placement="top"
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="link"
-                                              icon="link"
+                                            <LinkMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <Whisper
+                                          locale={
+                                            Object {
+                                              "formatDate": [Function],
+                                            }
+                                          }
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="link"
-                                                icon="link"
+                                              <LinkMenu />
+                                            </defaultProps(Popover)>
+                                          }
+                                          trigger="none"
+                                        >
+                                          <OverlayTrigger
+                                            delayHide={200}
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            rootClose={true}
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-link"
-                                                  element="link"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                      <defaultProps(Modal)
-                                        animation={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "displayName": "Bounce",
-                                            "render": [Function],
-                                          }
-                                        }
-                                        animationTimeout={300}
-                                        autoFocus={true}
-                                        backdrop={true}
-                                        classPrefix="rs-modal"
-                                        dialogComponentClass={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "defaultProps": Object {
-                                              "classPrefix": "rs-modal",
-                                            },
-                                            "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                            "propTypes": Object {
-                                              "innerRef": [Function],
-                                              "size": [Function],
-                                            },
-                                            "render": [Function],
-                                          }
-                                        }
-                                        enforceFocus={true}
-                                        keyboard={true}
-                                        onHide={[Function]}
-                                        overflow={true}
-                                        show={false}
-                                        size="sm"
-                                      >
-                                        <Modal
-                                          animation={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "displayName": "Bounce",
-                                              "render": [Function],
+                                                <LinkMenu />
+                                              </defaultProps(Popover)>
                                             }
-                                          }
-                                          animationTimeout={300}
-                                          autoFocus={true}
-                                          backdrop={true}
-                                          classPrefix="rs-modal"
-                                          dialogComponentClass={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-modal",
-                                              },
-                                              "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          enforceFocus={true}
-                                          keyboard={true}
-                                          onHide={[Function]}
-                                          overflow={true}
-                                          show={false}
-                                          size="sm"
-                                        >
-                                          <BaseModal
-                                            autoFocus={true}
-                                            backdrop={true}
-                                            backdropClassName="rs-modal-backdrop"
-                                            backdropTransitionTimeout={150}
-                                            className="rs-modal-wrapper"
-                                            containerClassName="rs-modal-open rs-modal-has-backdrop"
-                                            dialogTransitionTimeout={300}
-                                            enforceFocus={true}
-                                            keyboard={true}
-                                            onEntered={[Function]}
-                                            onEntering={[Function]}
-                                            onExited={[Function]}
-                                            onHide={[Function]}
-                                            overflow={true}
-                                            show={false}
-                                            transition={
-                                              Object {
-                                                "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "Bounce",
-                                                "render": [Function],
-                                              }
-                                            }
-                                          />
-                                        </Modal>
-                                      </defaultProps(Modal)>
-                                    </LinkFormatButton>
-                                    <RemoveLinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        disabled={true}
-                                        icon="unlink"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          disabled={true}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            disabled={true}
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                            trigger="none"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="unlink"
-                                              icon="unlink"
+                                            <ForwardRef
+                                              active={false}
+                                              key="triggerComponent"
+                                              onMouseDown={[Function]}
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="unlink"
-                                                icon="unlink"
+                                              <button
+                                                className="icon-button"
+                                                onMouseDown={[Function]}
+                                                style={
+                                                  Object {
+                                                    "border": "#00000000 1px solid",
+                                                  }
+                                                }
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-unlink"
-                                                  element="unlink"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                    </RemoveLinkFormatButton>
+                                                <defaultProps(Icon)
+                                                  classPrefix="rs-icon"
+                                                  componentClass="i"
+                                                  icon="link"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                >
+                                                  <Icon
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="link"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <i
+                                                      className="rs-icon rs-icon-link"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    />
+                                                  </Icon>
+                                                </defaultProps(Icon)>
+                                              </button>
+                                            </ForwardRef>
+                                            <Portal
+                                              key="portal"
+                                            >
+                                              <Portal
+                                                containerInfo={<body />}
+                                              >
+                                                <Overlay
+                                                  placement="top"
+                                                  rootClose={true}
+                                                  target={[Function]}
+                                                >
+                                                  <BaseOverlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    target={[Function]}
+                                                    transition={
+                                                      Object {
+                                                        "$$typeof": Symbol(react.forward_ref),
+                                                        "displayName": "Fade",
+                                                        "render": [Function],
+                                                      }
+                                                    }
+                                                  />
+                                                </Overlay>
+                                              </Portal>
+                                            </Portal>
+                                          </OverlayTrigger>
+                                        </Whisper>
+                                      </withLocale(Whisper)>
+                                    </ForwardRef>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -1958,6 +1905,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -4647,183 +4595,130 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <LinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        icon="link"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                    <ForwardRef
+                                      icon="link"
+                                    >
+                                      <withLocale(Whisper)
+                                        placement="top"
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="link"
-                                              icon="link"
+                                            <LinkMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <Whisper
+                                          locale={
+                                            Object {
+                                              "formatDate": [Function],
+                                            }
+                                          }
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="link"
-                                                icon="link"
+                                              <LinkMenu />
+                                            </defaultProps(Popover)>
+                                          }
+                                          trigger="none"
+                                        >
+                                          <OverlayTrigger
+                                            delayHide={200}
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            rootClose={true}
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-link"
-                                                  element="link"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                      <defaultProps(Modal)
-                                        animation={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "displayName": "Bounce",
-                                            "render": [Function],
-                                          }
-                                        }
-                                        animationTimeout={300}
-                                        autoFocus={true}
-                                        backdrop={true}
-                                        classPrefix="rs-modal"
-                                        dialogComponentClass={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "defaultProps": Object {
-                                              "classPrefix": "rs-modal",
-                                            },
-                                            "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                            "propTypes": Object {
-                                              "innerRef": [Function],
-                                              "size": [Function],
-                                            },
-                                            "render": [Function],
-                                          }
-                                        }
-                                        enforceFocus={true}
-                                        keyboard={true}
-                                        onHide={[Function]}
-                                        overflow={true}
-                                        show={false}
-                                        size="sm"
-                                      >
-                                        <Modal
-                                          animation={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "displayName": "Bounce",
-                                              "render": [Function],
+                                                <LinkMenu />
+                                              </defaultProps(Popover)>
                                             }
-                                          }
-                                          animationTimeout={300}
-                                          autoFocus={true}
-                                          backdrop={true}
-                                          classPrefix="rs-modal"
-                                          dialogComponentClass={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-modal",
-                                              },
-                                              "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          enforceFocus={true}
-                                          keyboard={true}
-                                          onHide={[Function]}
-                                          overflow={true}
-                                          show={false}
-                                          size="sm"
-                                        >
-                                          <BaseModal
-                                            autoFocus={true}
-                                            backdrop={true}
-                                            backdropClassName="rs-modal-backdrop"
-                                            backdropTransitionTimeout={150}
-                                            className="rs-modal-wrapper"
-                                            containerClassName="rs-modal-open rs-modal-has-backdrop"
-                                            dialogTransitionTimeout={300}
-                                            enforceFocus={true}
-                                            keyboard={true}
-                                            onEntered={[Function]}
-                                            onEntering={[Function]}
-                                            onExited={[Function]}
-                                            onHide={[Function]}
-                                            overflow={true}
-                                            show={false}
-                                            transition={
-                                              Object {
-                                                "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "Bounce",
-                                                "render": [Function],
-                                              }
-                                            }
-                                          />
-                                        </Modal>
-                                      </defaultProps(Modal)>
-                                    </LinkFormatButton>
-                                    <RemoveLinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        disabled={true}
-                                        icon="unlink"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          disabled={true}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            disabled={true}
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                            trigger="none"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="unlink"
-                                              icon="unlink"
+                                            <ForwardRef
+                                              active={false}
+                                              key="triggerComponent"
+                                              onMouseDown={[Function]}
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="unlink"
-                                                icon="unlink"
+                                              <button
+                                                className="icon-button"
+                                                onMouseDown={[Function]}
+                                                style={
+                                                  Object {
+                                                    "border": "#00000000 1px solid",
+                                                  }
+                                                }
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-unlink"
-                                                  element="unlink"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                    </RemoveLinkFormatButton>
+                                                <defaultProps(Icon)
+                                                  classPrefix="rs-icon"
+                                                  componentClass="i"
+                                                  icon="link"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                >
+                                                  <Icon
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="link"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <i
+                                                      className="rs-icon rs-icon-link"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    />
+                                                  </Icon>
+                                                </defaultProps(Icon)>
+                                              </button>
+                                            </ForwardRef>
+                                            <Portal
+                                              key="portal"
+                                            >
+                                              <Portal
+                                                containerInfo={<body />}
+                                              >
+                                                <Overlay
+                                                  placement="top"
+                                                  rootClose={true}
+                                                  target={[Function]}
+                                                >
+                                                  <BaseOverlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    target={[Function]}
+                                                    transition={
+                                                      Object {
+                                                        "$$typeof": Symbol(react.forward_ref),
+                                                        "displayName": "Fade",
+                                                        "render": [Function],
+                                                      }
+                                                    }
+                                                  />
+                                                </Overlay>
+                                              </Portal>
+                                            </Portal>
+                                          </OverlayTrigger>
+                                        </Whisper>
+                                      </withLocale(Whisper)>
+                                    </ForwardRef>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -5002,6 +4897,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -7218,183 +7114,130 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <LinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        icon="link"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                    <ForwardRef
+                                      icon="link"
+                                    >
+                                      <withLocale(Whisper)
+                                        placement="top"
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="link"
-                                              icon="link"
+                                            <LinkMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <Whisper
+                                          locale={
+                                            Object {
+                                              "formatDate": [Function],
+                                            }
+                                          }
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="link"
-                                                icon="link"
+                                              <LinkMenu />
+                                            </defaultProps(Popover)>
+                                          }
+                                          trigger="none"
+                                        >
+                                          <OverlayTrigger
+                                            delayHide={200}
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            rootClose={true}
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-link"
-                                                  element="link"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                      <defaultProps(Modal)
-                                        animation={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "displayName": "Bounce",
-                                            "render": [Function],
-                                          }
-                                        }
-                                        animationTimeout={300}
-                                        autoFocus={true}
-                                        backdrop={true}
-                                        classPrefix="rs-modal"
-                                        dialogComponentClass={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "defaultProps": Object {
-                                              "classPrefix": "rs-modal",
-                                            },
-                                            "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                            "propTypes": Object {
-                                              "innerRef": [Function],
-                                              "size": [Function],
-                                            },
-                                            "render": [Function],
-                                          }
-                                        }
-                                        enforceFocus={true}
-                                        keyboard={true}
-                                        onHide={[Function]}
-                                        overflow={true}
-                                        show={false}
-                                        size="sm"
-                                      >
-                                        <Modal
-                                          animation={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "displayName": "Bounce",
-                                              "render": [Function],
+                                                <LinkMenu />
+                                              </defaultProps(Popover)>
                                             }
-                                          }
-                                          animationTimeout={300}
-                                          autoFocus={true}
-                                          backdrop={true}
-                                          classPrefix="rs-modal"
-                                          dialogComponentClass={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-modal",
-                                              },
-                                              "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          enforceFocus={true}
-                                          keyboard={true}
-                                          onHide={[Function]}
-                                          overflow={true}
-                                          show={false}
-                                          size="sm"
-                                        >
-                                          <BaseModal
-                                            autoFocus={true}
-                                            backdrop={true}
-                                            backdropClassName="rs-modal-backdrop"
-                                            backdropTransitionTimeout={150}
-                                            className="rs-modal-wrapper"
-                                            containerClassName="rs-modal-open rs-modal-has-backdrop"
-                                            dialogTransitionTimeout={300}
-                                            enforceFocus={true}
-                                            keyboard={true}
-                                            onEntered={[Function]}
-                                            onEntering={[Function]}
-                                            onExited={[Function]}
-                                            onHide={[Function]}
-                                            overflow={true}
-                                            show={false}
-                                            transition={
-                                              Object {
-                                                "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "Bounce",
-                                                "render": [Function],
-                                              }
-                                            }
-                                          />
-                                        </Modal>
-                                      </defaultProps(Modal)>
-                                    </LinkFormatButton>
-                                    <RemoveLinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        disabled={true}
-                                        icon="unlink"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          disabled={true}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            disabled={true}
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                            trigger="none"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="unlink"
-                                              icon="unlink"
+                                            <ForwardRef
+                                              active={false}
+                                              key="triggerComponent"
+                                              onMouseDown={[Function]}
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="unlink"
-                                                icon="unlink"
+                                              <button
+                                                className="icon-button"
+                                                onMouseDown={[Function]}
+                                                style={
+                                                  Object {
+                                                    "border": "#00000000 1px solid",
+                                                  }
+                                                }
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-unlink"
-                                                  element="unlink"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                    </RemoveLinkFormatButton>
+                                                <defaultProps(Icon)
+                                                  classPrefix="rs-icon"
+                                                  componentClass="i"
+                                                  icon="link"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                >
+                                                  <Icon
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="link"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <i
+                                                      className="rs-icon rs-icon-link"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    />
+                                                  </Icon>
+                                                </defaultProps(Icon)>
+                                              </button>
+                                            </ForwardRef>
+                                            <Portal
+                                              key="portal"
+                                            >
+                                              <Portal
+                                                containerInfo={<body />}
+                                              >
+                                                <Overlay
+                                                  placement="top"
+                                                  rootClose={true}
+                                                  target={[Function]}
+                                                >
+                                                  <BaseOverlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    target={[Function]}
+                                                    transition={
+                                                      Object {
+                                                        "$$typeof": Symbol(react.forward_ref),
+                                                        "displayName": "Fade",
+                                                        "render": [Function],
+                                                      }
+                                                    }
+                                                  />
+                                                </Overlay>
+                                              </Portal>
+                                            </Portal>
+                                          </OverlayTrigger>
+                                        </Whisper>
+                                      </withLocale(Whisper)>
+                                    </ForwardRef>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -7563,6 +7406,7 @@ exports[`Author Edit Panel should render 1`] = `
                             </Toolbar>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}
@@ -9781,183 +9625,130 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <LinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        icon="link"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                    <ForwardRef
+                                      icon="link"
+                                    >
+                                      <withLocale(Whisper)
+                                        placement="top"
+                                        speaker={
+                                          <defaultProps(Popover)
+                                            classPrefix="rs-popover"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="link"
-                                              icon="link"
+                                            <LinkMenu />
+                                          </defaultProps(Popover)>
+                                        }
+                                        trigger="none"
+                                      >
+                                        <Whisper
+                                          locale={
+                                            Object {
+                                              "formatDate": [Function],
+                                            }
+                                          }
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="link"
-                                                icon="link"
+                                              <LinkMenu />
+                                            </defaultProps(Popover)>
+                                          }
+                                          trigger="none"
+                                        >
+                                          <OverlayTrigger
+                                            delayHide={200}
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            rootClose={true}
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-link"
-                                                  element="link"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                      <defaultProps(Modal)
-                                        animation={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "displayName": "Bounce",
-                                            "render": [Function],
-                                          }
-                                        }
-                                        animationTimeout={300}
-                                        autoFocus={true}
-                                        backdrop={true}
-                                        classPrefix="rs-modal"
-                                        dialogComponentClass={
-                                          Object {
-                                            "$$typeof": Symbol(react.forward_ref),
-                                            "defaultProps": Object {
-                                              "classPrefix": "rs-modal",
-                                            },
-                                            "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                            "propTypes": Object {
-                                              "innerRef": [Function],
-                                              "size": [Function],
-                                            },
-                                            "render": [Function],
-                                          }
-                                        }
-                                        enforceFocus={true}
-                                        keyboard={true}
-                                        onHide={[Function]}
-                                        overflow={true}
-                                        show={false}
-                                        size="sm"
-                                      >
-                                        <Modal
-                                          animation={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "displayName": "Bounce",
-                                              "render": [Function],
+                                                <LinkMenu />
+                                              </defaultProps(Popover)>
                                             }
-                                          }
-                                          animationTimeout={300}
-                                          autoFocus={true}
-                                          backdrop={true}
-                                          classPrefix="rs-modal"
-                                          dialogComponentClass={
-                                            Object {
-                                              "$$typeof": Symbol(react.forward_ref),
-                                              "defaultProps": Object {
-                                                "classPrefix": "rs-modal",
-                                              },
-                                              "displayName": "withStyleProps(defaultProps(ModalDialog))",
-                                              "propTypes": Object {
-                                                "innerRef": [Function],
-                                                "size": [Function],
-                                              },
-                                              "render": [Function],
-                                            }
-                                          }
-                                          enforceFocus={true}
-                                          keyboard={true}
-                                          onHide={[Function]}
-                                          overflow={true}
-                                          show={false}
-                                          size="sm"
-                                        >
-                                          <BaseModal
-                                            autoFocus={true}
-                                            backdrop={true}
-                                            backdropClassName="rs-modal-backdrop"
-                                            backdropTransitionTimeout={150}
-                                            className="rs-modal-wrapper"
-                                            containerClassName="rs-modal-open rs-modal-has-backdrop"
-                                            dialogTransitionTimeout={300}
-                                            enforceFocus={true}
-                                            keyboard={true}
-                                            onEntered={[Function]}
-                                            onEntering={[Function]}
-                                            onExited={[Function]}
-                                            onHide={[Function]}
-                                            overflow={true}
-                                            show={false}
-                                            transition={
-                                              Object {
-                                                "$$typeof": Symbol(react.forward_ref),
-                                                "displayName": "Bounce",
-                                                "render": [Function],
-                                              }
-                                            }
-                                          />
-                                        </Modal>
-                                      </defaultProps(Modal)>
-                                    </LinkFormatButton>
-                                    <RemoveLinkFormatButton>
-                                      <ToolbarIconButton
-                                        active={false}
-                                        disabled={true}
-                                        icon="unlink"
-                                        onMouseDown={[Function]}
-                                      >
-                                        <ForwardRef
-                                          active={false}
-                                          disabled={true}
-                                          onMouseDown={[Function]}
-                                        >
-                                          <button
-                                            className="icon-button"
-                                            disabled={true}
-                                            onMouseDown={[Function]}
-                                            style={
-                                              Object {
-                                                "border": "#00000000 1px solid",
-                                              }
-                                            }
+                                            trigger="none"
                                           >
-                                            <defaultProps(Icon)
-                                              classPrefix="rs-icon"
-                                              componentClass="i"
-                                              element="unlink"
-                                              icon="unlink"
+                                            <ForwardRef
+                                              active={false}
+                                              key="triggerComponent"
+                                              onMouseDown={[Function]}
                                             >
-                                              <Icon
-                                                classPrefix="rs-icon"
-                                                componentClass="i"
-                                                element="unlink"
-                                                icon="unlink"
+                                              <button
+                                                className="icon-button"
+                                                onMouseDown={[Function]}
+                                                style={
+                                                  Object {
+                                                    "border": "#00000000 1px solid",
+                                                  }
+                                                }
                                               >
-                                                <i
-                                                  className="rs-icon rs-icon-unlink"
-                                                  element="unlink"
-                                                />
-                                              </Icon>
-                                            </defaultProps(Icon)>
-                                          </button>
-                                        </ForwardRef>
-                                      </ToolbarIconButton>
-                                    </RemoveLinkFormatButton>
+                                                <defaultProps(Icon)
+                                                  classPrefix="rs-icon"
+                                                  componentClass="i"
+                                                  icon="link"
+                                                  style={
+                                                    Object {
+                                                      "minWidth": "15px",
+                                                    }
+                                                  }
+                                                >
+                                                  <Icon
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="link"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <i
+                                                      className="rs-icon rs-icon-link"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    />
+                                                  </Icon>
+                                                </defaultProps(Icon)>
+                                              </button>
+                                            </ForwardRef>
+                                            <Portal
+                                              key="portal"
+                                            >
+                                              <Portal
+                                                containerInfo={<body />}
+                                              >
+                                                <Overlay
+                                                  placement="top"
+                                                  rootClose={true}
+                                                  target={[Function]}
+                                                >
+                                                  <BaseOverlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    target={[Function]}
+                                                    transition={
+                                                      Object {
+                                                        "$$typeof": Symbol(react.forward_ref),
+                                                        "displayName": "Fade",
+                                                        "render": [Function],
+                                                      }
+                                                    }
+                                                  />
+                                                </Overlay>
+                                              </Portal>
+                                            </Portal>
+                                          </OverlayTrigger>
+                                        </Whisper>
+                                      </withLocale(Whisper)>
+                                    </ForwardRef>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -10136,6 +9927,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             </div>
                             <Editable
                               onBlur={[Function]}
+                              onKeyDown={[Function]}
                               readOnly={false}
                               renderElement={[Function]}
                               renderLeaf={[Function]}

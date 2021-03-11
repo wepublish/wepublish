@@ -86,6 +86,9 @@ export function PublishArticlePanel({
           <DescriptionListItem label={t('articleEditor.panels.lead')}>
             {metadata.lead || '-'}
           </DescriptionListItem>
+          <DescriptionListItem label={t('articleEditor.panels.seoTitle')}>
+            {metadata.seoTitle || '-'}
+          </DescriptionListItem>
           <DescriptionListItem label={t('articleEditor.panels.slug')}>
             {metadata.slug || '-'}
           </DescriptionListItem>

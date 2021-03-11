@@ -58,6 +58,33 @@ export const imageEdgeDataFragment = gql`
   ${simpleImageDataFragment}
 `
 
+export const commentsDataFragment = gql`
+  fragment CommentsData on Comment {
+    id
+    state
+    rejectionReason
+    itemID
+    itemType
+    text
+    modifiedAt
+    parentID
+    authorType
+    user {
+      id
+      name
+      preferredName
+    }
+  }
+`
+
+export const recursiveCommentsDataFragment = gql`
+  fragment RecursiveCommentsData on Comment {
+    children {
+      ...CommentsData
+    }
+  }
+`
+
 export const articleMetaDataFragment = gql`
   fragment ArticleMetaData on Article {
     __typename
@@ -88,9 +115,15 @@ export const articleMetaDataFragment = gql`
     socialMediaImage {
       ...SimpleImageData
     }
+    comments {
+      ...CommentsData
+      ...RecursiveCommentsData
+    }
   }
   ${simpleImageDataFragment}
   ${authorsDataFragment}
+  ${commentsDataFragment}
+  ${recursiveCommentsDataFragment}
 `
 
 export const pageMetaDataFragment = gql`
