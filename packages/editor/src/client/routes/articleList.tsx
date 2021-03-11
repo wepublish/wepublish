@@ -16,6 +16,8 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
+import './theme.less'
+
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
@@ -82,10 +84,6 @@ export function ArticleList() {
       setArticles(data.articles.nodes)
     }
   }, [data?.articles])
-
-  const css = `.duplicated-row {
-    background-color: #fbfbfb ;
-  }`
 
   return (
     <>
