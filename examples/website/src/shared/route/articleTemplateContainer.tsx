@@ -19,7 +19,8 @@ import {
   quoteBlockDataFragment,
   titleBlockDataFragment,
   articleMetaDataFragment,
-  gridBlockFrontDataGQLfragment
+  gridBlockFrontDataGQLfragment,
+  peerMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
