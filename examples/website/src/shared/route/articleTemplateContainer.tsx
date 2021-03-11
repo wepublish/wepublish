@@ -2,22 +2,7 @@ import React from 'react'
 
 import {gql, useQuery} from '@apollo/client'
 import {articleAdapter, peerAdapter} from './articleAdapter'
-import {peerMetaDataFragment} from './gqlFragments'
-import {ArticleQuery} from '../query'
-import {BlockRenderer} from '../blocks/blockRenderer'
-import {ArticleFooterContainer} from './footerContainer'
-import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
-import {Loader} from '../atoms/loader'
-import {NotFoundTemplate} from '../templates/notFoundTemplate'
-import {Helmet} from 'react-helmet-async'
-import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
-import {useAppContext} from '../appContext'
-import {Peer, ArticleMeta} from '../types'
-import {useStyle, cssRule} from '@karma.run/react'
-import {Image} from '../atoms/image'
-import {whenMobile, pxToRem} from '../style/helpers'
-import {Color} from '../style/colors'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+
 import {
   imageBlockDataFragment,
   richTextBlockDataFragment,
@@ -37,6 +22,65 @@ import {
   gridBlockFrontDataGQLfragment
 } from './gqlFragments'
 
+import {BlockRenderer} from '../blocks/blockRenderer'
+import {ArticleFooterContainer} from './footerContainer'
+import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
+import {Loader} from '../atoms/loader'
+import {NotFoundTemplate} from '../templates/notFoundTemplate'
+import {Helmet} from 'react-helmet-async'
+import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
+import {useAppContext} from '../appContext'
+import {Peer, ArticleMeta} from '../types'
+import {useStyle, cssRule} from '@karma.run/react'
+import {Image} from '../atoms/image'
+import {whenMobile, pxToRem} from '../style/helpers'
+import {Color} from '../style/colors'
+import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+
+const ArticleQuery = gql`
+  query Article($id: ID, $slug: Slug, $token: String) {
+    article(id: $id, slug: $slug, token: $token) {
+      ...ArticleMetaData
+
+      blocks {
+        __typename
+        ...RichtTextBlockData
+        ...ImageBlockData
+        ...ImageGalleryBlockData
+        ...FacebookPostBlockData
+        ...InstagramPostBlockData
+        ...TwitterTweetBlockData
+        ...VimeoVideoBlockData
+        ...YoutubeVideoBlockData
+        ...SoundCloudTrackBlockData
+        ...EmbedBlockData
+        ...LinkPageBreakBlockData
+        ...ListicleBlockData
+        ...QuoteBlockData
+        ...TitleBlockData
+        ...ArticleGridBlockData
+      }
+    }
+  }
+
+  ${articleMetaDataFragment}
+  ${richTextBlockDataFragment}
+  ${imageBlockDataFragment}
+  ${imageGalleryBlockDataFragment}
+  ${instagramPostBlockDataFragment}
+  ${facebookPostBlockDataFragment}
+  ${twitterTweetBlockDataFragment}
+  ${vimeoVideoBlockDataFragment}
+  ${youtubeVideoBlockDataFragment}
+  ${soundCloudTrackBlockDataFragment}
+  ${embedBlockDataFragment}
+  ${linkPageBreakBlockDataFragment}
+  ${listicleBlockDataFragment}
+  ${quoteBlockDataFragment}
+  ${titleBlockDataFragment}
+  ${gridBlockFrontDataGQLfragment}
+`
+
 export interface ArticleTemplateContainerProps {
   id: string
   slug?: string
@@ -50,7 +94,14 @@ const mapAuthors = (metaData: any[] | undefined) => {
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
   const {canonicalHost} = useAppContext()
-  const {data, loading, error} = useQuery(ArticleQuery, {variables: {id}})
+  const variables =
+    id === 'preview'
+      ? {
+          token: slug
+        }
+      : {id}
+
+  const {data, loading, error} = useQuery(ArticleQuery, {variables})
 
   if (error) return <NotFoundTemplate statusCode={500} />
 

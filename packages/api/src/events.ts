@@ -187,7 +187,7 @@ invoiceModelEvents.on('update', async (context, model) => {
         })
         // Send FirstTime Hello
         const token = context.generateJWT({
-          userID: user.id,
+          id: user.id,
           expiresInMinutes: 60 * 24
         })
         const link = `${context.websiteURL}/login/jwt=${token}` // TODO: make this a setting
