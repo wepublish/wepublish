@@ -153,6 +153,8 @@ export interface DBArticleAdapter {
   getArticlesByID(ids: readonly string[]): Promise<OptionalArticle[]>
   getPublishedArticlesByID(ids: readonly string[]): Promise<OptionalPublicArticle[]>
 
+  getPublishedArticleBySlug(slug: string): Promise<OptionalPublicArticle>
+
   getArticles(args: GetArticlesArgs): Promise<ConnectionResult<Article>>
   getPublishedArticles(args: GetPublishedArticlesArgs): Promise<ConnectionResult<PublicArticle>>
 
