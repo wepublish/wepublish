@@ -20,6 +20,8 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
+import './theme.less'
+
 enum ConfirmAction {
   Delete = 'delete',
   Unpublish = 'unpublish',
@@ -71,6 +73,18 @@ export function PageList() {
     fetchPolicy: 'network-only'
   })
 
+  const [duplicatedDataId, setDuplicatedDataId]: any = useState()
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setDuplicatedDataId(undefined)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [duplicatedDataId])
+
+
   useEffect(() => {
     refetch(pageListVariables)
   }, [filter, page, limit, sortOrder, sortField])
@@ -116,6 +130,10 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={rowData => {
+            if (rowData && rowData.id === duplicatedDataId) return 'duplicated-row'
+            return ''
+          }}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -295,7 +313,7 @@ export function PageList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicatePage({
+                  const output = await duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
@@ -315,8 +333,9 @@ export function PageList() {
                         },
                         variables: pageListVariables
                       })
-                    }
+                    },
                   })
+                  setDuplicatedDataId(output.data?.duplicatePage.id)
                   break
               }
 

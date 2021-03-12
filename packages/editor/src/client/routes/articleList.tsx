@@ -76,8 +76,18 @@ export function ArticleList() {
     refetch(articleListVariables)
   }, [filter, page, limit, sortOrder, sortField])
 
+  const [duplicatedDataId, setDuplicatedDataId]: any = useState()
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setDuplicatedDataId(undefined)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [duplicatedDataId])
+
   const {t} = useTranslation()
-  var duplicatedData: object ;
 
   useEffect(() => {
     if (data?.articles.nodes) {
@@ -123,13 +133,9 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={(rowData) => {
-            if (rowData === duplicatedData) {
-              console.log('yes');
-              return 'duplicated-row'
-            }
-            console.log('no');
-            return '';
+          rowClassName={rowData => {
+            if (rowData && rowData.id === duplicatedDataId) return 'duplicated-row'
+            return ''
           }}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
@@ -322,7 +328,7 @@ export function ArticleList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicateArticle({
+                  const output = await duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({
@@ -338,15 +344,15 @@ export function ArticleList() {
                           articles: {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id
+                              article => article.id !== currentArticle.id,
                             )
                           }
                         },
                         variables: articleListVariables
                       })
                     }
-                  }),
-                  duplicatedData = currentArticle;
+                  })
+                  setDuplicatedDataId(output.data?.duplicateArticle.id)
                   break
               }
 
