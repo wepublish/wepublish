@@ -77,6 +77,7 @@ export function ArticleList() {
   }, [filter, page, limit, sortOrder, sortField])
 
   const [duplicatedDataId, setDuplicatedDataId]: any = useState()
+  let output;
 
   useEffect(() => {
     const timerID = setTimeout(() => {
@@ -328,7 +329,7 @@ export function ArticleList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  const output = await duplicateArticle({
+                  output = await duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({

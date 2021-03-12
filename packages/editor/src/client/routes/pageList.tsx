@@ -18,9 +18,10 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
-const {Column, HeaderCell, Cell, Pagination} = Table
 
 import './theme.less'
+
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -74,6 +75,8 @@ export function PageList() {
   })
 
   const [duplicatedDataId, setDuplicatedDataId]: any = useState()
+
+  let output
 
   useEffect(() => {
     const timerID = setTimeout(() => {
@@ -313,7 +316,7 @@ export function PageList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  const output = await duplicatePage({
+                  output = await duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
