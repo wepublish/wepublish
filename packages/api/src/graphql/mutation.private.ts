@@ -318,7 +318,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new Error('User does not exist') // TODO: make this proper error
-        const token = generateJWT({userID: user.id})
+        const token = generateJWT({id: user.id})
         const link = `${url}?jwt=${token}`
         await sendMailFromProvider({
           message: `Click the link to login:\n\n${link}`,

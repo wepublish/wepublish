@@ -21,6 +21,7 @@ import './theme.less'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+import {ArticlePreviewLinkPanel} from '../panel/articlePreviewLinkPanel'
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
@@ -46,6 +47,7 @@ export function ArticleList() {
   const [filter, setFilter] = useState('')
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
+  const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
   const [currentArticle, setCurrentArticle] = useState<ArticleRefFragment>()
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
 
@@ -188,7 +190,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
@@ -227,6 +229,18 @@ export function ArticleList() {
                       setConfirmationDialogOpen(true)
                     }}
                   />
+                  {rowData.draft && (
+                    <IconButton
+                      icon={<Icon icon="eye" />}
+                      circle
+                      size="sm"
+                      style={{marginLeft: '5px'}}
+                      onClick={() => {
+                        setCurrentArticle(rowData)
+                        setArticlePreviewLinkOpen(true)
+                      }}
+                    />
+                  )}
                 </>
               )}
             </Cell>
@@ -243,6 +257,18 @@ export function ArticleList() {
           onChangeLength={limit => setLimit(limit)}
         />
       </div>
+
+      <Modal
+        show={isArticlePreviewLinkOpen}
+        width={'sm'}
+        onHide={() => setArticlePreviewLinkOpen(false)}>
+        {currentArticle && (
+          <ArticlePreviewLinkPanel
+            props={{id: currentArticle.id}}
+            onClose={() => setArticlePreviewLinkOpen(false)}
+          />
+        )}
+      </Modal>
 
       <Modal
         show={isConfirmationDialogOpen}
