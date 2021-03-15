@@ -24,8 +24,14 @@ export function LinkMenu() {
   const [title, setTitle] = useState('')
   const [url, setURL] = useState('')
 
-  //TODO define the protocol option types
-  const [protocol, setProtocol] = useState('')
+  enum prefixType {
+    http = 'http://',
+    https = 'https://',
+    mailto = 'mailto://',
+    other = 'other'
+  }
+
+  const [prefix, setPrefix] = useState<prefixType | string>(prefixType.http)
 
   const [selection, setSelection] = useState<Range | null>(null)
 
@@ -36,11 +42,18 @@ export function LinkMenu() {
 
   useEffect(() => {
     validateURL(url).then(value => setIsValidURL(value))
-  }, [url])
 
-  useEffect(() => {
-    console.log('useEffect protocol update: ', protocol)
-  }, [protocol])
+    if (url.startsWith(prefixType.https)) {
+      setPrefix(prefixType.https)
+      setURL(url.replace(prefixType.https, ''))
+    } else if (url.startsWith(prefixType.http)) {
+      setPrefix(prefixType.http)
+      setURL(url.replace(prefixType.http, ''))
+    } else if (url.startsWith(prefixType.mailto)) {
+      setPrefix(prefixType.mailto)
+      setURL(url.replace(prefixType.mailto, ''))
+    }
+  }, [url])
 
   useEffect(() => {
     setSelection(editor.selection)
@@ -55,22 +68,20 @@ export function LinkMenu() {
     if (tuple) {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
-      // check if existing link has protocol
-      // split the link into base url and protocol
-      // update select
+
       let nodeUrl = node.url as string
-      if (nodeUrl.match('/^//|^.*?:(//)?/')) {
-        if (nodeUrl.startsWith('https://')) {
-          setProtocol('https://')
-          nodeUrl = nodeUrl.replace('https://', '')
-        } else if (nodeUrl.startsWith('http://')) {
-          setProtocol('http://')
-          nodeUrl = nodeUrl.replace('http://', '')
-        } else if (nodeUrl.startsWith('mailto://')) {
-          setProtocol('mailto://')
-          nodeUrl = nodeUrl.replace('mailto://', '')
-        }
-        console.log('url without protocol ', nodeUrl)
+
+      if (nodeUrl.startsWith(prefixType.https)) {
+        setPrefix(prefixType.https)
+        nodeUrl = nodeUrl.replace(prefixType.https, '')
+      } else if (nodeUrl.startsWith(prefixType.http)) {
+        setPrefix(prefixType.http)
+        nodeUrl = nodeUrl.replace(prefixType.http, '')
+      } else if (nodeUrl.startsWith(prefixType.mailto)) {
+        setPrefix(prefixType.mailto)
+        nodeUrl = nodeUrl.replace(prefixType.mailto, '')
+      } else {
+        setPrefix(prefixType.other)
       }
       setURL((nodeUrl as string) ?? '')
     } else if (editor.selection) {
@@ -86,14 +97,15 @@ export function LinkMenu() {
           <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
           <InputGroup>
             <select
-              value={protocol}
+              style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
+              value={prefix}
               onChange={e => {
-                setProtocol(e.target.value !== 'none' ? e.target.value : '')
+                setPrefix(e.target.value !== 'other' ? e.target.value : prefixType.other)
               }}>
-              <option value="none"></option>
-              <option value="https://">https://</option>
-              <option value="http://">http://</option>
-              <option value="mailto://">mailto://</option>
+              <option value={prefixType.http}>{prefixType.http}</option>
+              <option value={prefixType.https}>{prefixType.https}</option>
+              <option value={prefixType.mailto}>{prefixType.mailto}</option>
+              <option value={prefixType.other}>{prefixType.other}</option>
             </select>
 
             <FormControl value={url} onChange={url => setURL(url)} />
@@ -117,7 +129,7 @@ export function LinkMenu() {
               insertLink(
                 editor,
                 selection,
-                protocol ? `${protocol}${url}` : url,
+                prefix !== prefixType.other ? prefix + url : url,
                 title || undefined
               )
               closeMenu()
