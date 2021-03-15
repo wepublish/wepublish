@@ -19,7 +19,7 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
-import './theme.less'
+import './global.less'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
 
@@ -74,18 +74,16 @@ export function PageList() {
     fetchPolicy: 'network-only'
   })
 
-  const [duplicatedDataId, setDuplicatedDataId]: any = useState()
-
-  let output
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
 
   useEffect(() => {
     const timerID = setTimeout(() => {
-      setDuplicatedDataId(undefined)
+      setHighlightedRowId(null)
     }, 3000)
     return () => {
       clearTimeout(timerID)
     }
-  }, [duplicatedDataId])
+  }, [highlightedRowId])
 
 
   useEffect(() => {
@@ -134,8 +132,7 @@ export function PageList() {
           sortColumn={sortField}
           sortType={sortOrder}
           rowClassName={rowData => {
-            if (rowData && rowData.id === duplicatedDataId) return 'duplicated-row'
-            return ''
+            return rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
@@ -316,7 +313,7 @@ export function PageList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  output = await duplicatePage({
+                  await duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
@@ -337,8 +334,10 @@ export function PageList() {
                         variables: pageListVariables
                       })
                     },
+                  }).then(output => {
+                    if (output.data)
+                    setHighlightedRowId(output.data?.duplicatePage.id)
                   })
-                  setDuplicatedDataId(output.data?.duplicatePage.id)
                   break
               }
 

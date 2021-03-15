@@ -16,7 +16,7 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-import './theme.less'
+import './global.less'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
@@ -78,17 +78,16 @@ export function ArticleList() {
     refetch(articleListVariables)
   }, [filter, page, limit, sortOrder, sortField])
 
-  const [duplicatedDataId, setDuplicatedDataId]: any = useState()
-  let output;
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
 
   useEffect(() => {
     const timerID = setTimeout(() => {
-      setDuplicatedDataId(undefined)
+      setHighlightedRowId(null)
     }, 3000)
     return () => {
       clearTimeout(timerID)
     }
-  }, [duplicatedDataId])
+  }, [highlightedRowId])
 
   const {t} = useTranslation()
 
@@ -137,8 +136,7 @@ export function ArticleList() {
           sortColumn={sortField}
           sortType={sortOrder}
           rowClassName={rowData => {
-            if (rowData && rowData.id === duplicatedDataId) return 'duplicated-row'
-            return ''
+            return rowData?.id === highlightedRowId ? 'highlighted-row' : ''
           }}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
@@ -355,7 +353,7 @@ export function ArticleList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  output = await duplicateArticle({
+                  await duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({
@@ -378,8 +376,10 @@ export function ArticleList() {
                         variables: articleListVariables
                       })
                     }
+                  }).then(output => {
+                    if (output.data)
+                    setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
-                  setDuplicatedDataId(output.data?.duplicateArticle.id)
                   break
               }
 
