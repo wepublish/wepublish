@@ -143,6 +143,11 @@ export const pageMetaDataFragment = gql`
     image {
       ...SimpleImageData
     }
+    # Not yet needed in MVP
+    # comments {
+    #  ...CommentsData
+    #  ...RecursiveCommentsData
+    #}
   }
   ${simpleImageDataFragment}
 `
