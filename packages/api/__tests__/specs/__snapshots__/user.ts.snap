@@ -175,6 +175,11 @@ Object {
                 },
                 Object {
                   "deprecated": false,
+                  "description": "Allows to get preview links for articles",
+                  "id": "CAN_GET_ARTICLE_PREVIEW_LINK",
+                },
+                Object {
+                  "deprecated": false,
                   "description": "Allows to publish articles",
                   "id": "CAN_PUBLISH_ARTICLE",
                 },

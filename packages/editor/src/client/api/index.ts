@@ -1303,6 +1303,7 @@ export type Query = {
   articles: ArticleConnection;
   peerArticle?: Maybe<Article>;
   peerArticles: PeerArticleConnection;
+  articlePreviewLink?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   pages: PageConnection;
   memberPlan?: Maybe<MemberPlan>;
@@ -1440,6 +1441,12 @@ export type QueryPeerArticlesArgs = {
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryArticlePreviewLinkArgs = {
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
 };
 
 
@@ -1979,6 +1986,17 @@ export type DuplicateArticleMutation = (
     { __typename?: 'Article' }
     & MutationArticleFragment
   ) }
+);
+
+export type ArticlePreviewLinkQueryVariables = Exact<{
+  id: Scalars['ID'];
+  hours: Scalars['Int'];
+}>;
+
+
+export type ArticlePreviewLinkQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'articlePreviewLink'>
 );
 
 export type ArticleQueryVariables = Exact<{
@@ -4247,6 +4265,38 @@ export function useDuplicateArticleMutation(baseOptions?: Apollo.MutationHookOpt
 export type DuplicateArticleMutationHookResult = ReturnType<typeof useDuplicateArticleMutation>;
 export type DuplicateArticleMutationResult = Apollo.MutationResult<DuplicateArticleMutation>;
 export type DuplicateArticleMutationOptions = Apollo.BaseMutationOptions<DuplicateArticleMutation, DuplicateArticleMutationVariables>;
+export const ArticlePreviewLinkDocument = gql`
+    query ArticlePreviewLink($id: ID!, $hours: Int!) {
+  articlePreviewLink(id: $id, hours: $hours)
+}
+    `;
+
+/**
+ * __useArticlePreviewLinkQuery__
+ *
+ * To run a query within a React component, call `useArticlePreviewLinkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArticlePreviewLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArticlePreviewLinkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      hours: // value for 'hours'
+ *   },
+ * });
+ */
+export function useArticlePreviewLinkQuery(baseOptions?: Apollo.QueryHookOptions<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>) {
+        return Apollo.useQuery<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>(ArticlePreviewLinkDocument, baseOptions);
+      }
+export function useArticlePreviewLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>) {
+          return Apollo.useLazyQuery<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>(ArticlePreviewLinkDocument, baseOptions);
+        }
+export type ArticlePreviewLinkQueryHookResult = ReturnType<typeof useArticlePreviewLinkQuery>;
+export type ArticlePreviewLinkLazyQueryHookResult = ReturnType<typeof useArticlePreviewLinkLazyQuery>;
+export type ArticlePreviewLinkQueryResult = Apollo.QueryResult<ArticlePreviewLinkQuery, ArticlePreviewLinkQueryVariables>;
 export const ArticleDocument = gql`
     query Article($id: ID!) {
   article(id: $id) {
