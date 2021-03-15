@@ -69,18 +69,12 @@ export function LinkMenu() {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
 
-      let nodeUrl = node.url as string
-
-      if (nodeUrl.startsWith(prefixType.https)) {
-        setPrefix(prefixType.https)
-        nodeUrl = nodeUrl.replace(prefixType.https, '')
-      } else if (nodeUrl.startsWith(prefixType.http)) {
-        setPrefix(prefixType.http)
-        nodeUrl = nodeUrl.replace(prefixType.http, '')
-      } else if (nodeUrl.startsWith(prefixType.mailto)) {
-        setPrefix(prefixType.mailto)
-        nodeUrl = nodeUrl.replace(prefixType.mailto, '')
-      } else {
+      const nodeUrl = node.url as string
+      if (
+        !nodeUrl.startsWith(prefixType.https) ||
+        !nodeUrl.startsWith(prefixType.http) ||
+        !nodeUrl.startsWith(prefixType.mailto)
+      ) {
         setPrefix(prefixType.other)
       }
       setURL((nodeUrl as string) ?? '')
@@ -100,7 +94,7 @@ export function LinkMenu() {
               style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
               value={prefix}
               onChange={e => {
-                setPrefix(e.target.value !== 'other' ? e.target.value : prefixType.other)
+                setPrefix(e.target.value)
               }}>
               <option value={prefixType.http}>{prefixType.http}</option>
               <option value={prefixType.https}>{prefixType.https}</option>
