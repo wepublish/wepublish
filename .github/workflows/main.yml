@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - wpc-36-hotkeys
 
 jobs:
   release:
