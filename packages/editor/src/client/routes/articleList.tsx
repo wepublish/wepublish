@@ -16,7 +16,7 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-import './global.less'
+import '../global.less'
 
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
