@@ -18,6 +18,7 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
@@ -71,6 +72,18 @@ export function PageList() {
     fetchPolicy: 'network-only'
   })
 
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setHighlightedRowId(null)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [highlightedRowId])
+
+
   useEffect(() => {
     refetch(pageListVariables)
   }, [filter, page, limit, sortOrder, sortField])
@@ -116,6 +129,9 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={rowData => 
+            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
+          }
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -295,8 +311,30 @@ export function PageList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicatePage({
-                    variables: {id: currentPage.id}
+                  duplicatePage({
+                    variables: {id: currentPage.id},
+                    update: cache => {
+                      const query = cache.readQuery<PageListQuery>({
+                        query: PageListDocument,
+                        variables: pageListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<PageListQuery>({
+                        query: PageListDocument,
+                        data: {
+                          pages: {
+                            ...query.pages,
+                            nodes: query.pages.nodes.filter(page => page.id !== currentPage.id)
+                          }
+                        },
+                        variables: pageListVariables
+                      })
+                    },
+                  }).then(output => {
+                    if (output.data)
+                    setHighlightedRowId(output.data?.duplicatePage.id)
                   })
                   break
               }

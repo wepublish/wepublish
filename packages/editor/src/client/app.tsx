@@ -23,6 +23,8 @@ import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
+import './global.less'
+
 export function contentForRoute(route: Route) {
   switch (route.type) {
     case RouteType.Login:
