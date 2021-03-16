@@ -16,8 +16,6 @@ import {
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
-import '../global.less'
-
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
@@ -353,7 +351,7 @@ export function ArticleList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicateArticle({
+                  duplicateArticle({
                     variables: {id: currentArticle.id},
                     update: cache => {
                       const query = cache.readQuery<ArticleListQuery>({

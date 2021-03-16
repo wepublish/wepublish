@@ -19,8 +19,6 @@ import {FlexboxGrid, Input, InputGroup, Icon, Table, IconButton, Modal, Button} 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
-import '../global.less'
-
 const {Column, HeaderCell, Cell, Pagination} = Table
 
 enum ConfirmAction {
@@ -313,7 +311,7 @@ export function PageList() {
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicatePage({
+                  duplicatePage({
                     variables: {id: currentPage.id},
                     update: cache => {
                       const query = cache.readQuery<PageListQuery>({
