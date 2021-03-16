@@ -129,9 +129,9 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => {
-            return rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }}
+          rowClassName={rowData => 
+            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
+          }
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
