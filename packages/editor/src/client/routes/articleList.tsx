@@ -28,8 +28,6 @@ enum ConfirmAction {
   Duplicate = 'duplicate'
 }
 
-let output;
-
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   switch (columnField) {
     case 'createdAt':
