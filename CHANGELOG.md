@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.0.0-alpha.0 (2021-03-03)
+## v2.0.0 (2021-03-17)
 
 #### :boom: Breaking Change
 * `api-db-mongodb`, `api`
@@ -41,6 +41,7 @@
 - Pascal Witzig ([@0815pascal](https://github.com/0815pascal))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - [@bishoymelek](https://github.com/bishoymelek)
+
 
 
 ## v1.0.1 (2021-03-03)
