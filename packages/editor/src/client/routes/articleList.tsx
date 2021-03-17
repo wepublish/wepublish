@@ -28,6 +28,8 @@ enum ConfirmAction {
   Duplicate = 'duplicate'
 }
 
+let output;
+
 function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   switch (columnField) {
     case 'createdAt':
@@ -348,6 +350,7 @@ export function ArticleList() {
                   await unpublishArticle({
                     variables: {id: currentArticle.id}
                   })
+                  setHighlightedRowId(currentArticle.id)
                   break
 
                 case ConfirmAction.Duplicate:
