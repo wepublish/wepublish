@@ -87,7 +87,8 @@ import {
   CanGetInvoices,
   CanGetPayment,
   CanGetPayments,
-  CanGetPaymentProviders
+  CanGetPaymentProviders,
+  CanGetArticlePreviewLink
 } from './permissions'
 import {GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort, GraphQLUser} from './user'
 import {
@@ -99,7 +100,7 @@ import {
 } from './userRole'
 import {UserRoleSort} from '../db/userRole'
 
-import {NotAuthorisedError} from '../error'
+import {NotAuthorisedError, NotFound} from '../error'
 import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
@@ -720,6 +721,28 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
             hasNextPage: hasNextPage
           }
         }
+      }
+    },
+
+    articlePreviewLink: {
+      type: GraphQLString,
+      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      async resolve(root, {id, hours}, {authenticate, loaders, urlAdapter, generateJWT}) {
+        const {roles} = authenticate()
+        authorise(CanGetArticlePreviewLink, roles)
+
+        const article = await loaders.articles.load(id)
+
+        if (!article) throw new NotFound('article', id)
+
+        if (!article.draft) throw new UserInputError('Article needs to have a draft')
+
+        const token = generateJWT({
+          id: article.id,
+          expiresInMinutes: hours * 60
+        })
+
+        return urlAdapter.getArticlePreviewURL(token)
       }
     },
 

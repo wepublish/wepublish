@@ -27,7 +27,7 @@ import {
   GraphQLPublicArticleSort
 } from './article'
 import {SessionType} from '../db/session'
-import {ArticleSort} from '../db/article'
+import {ArticleSort, PublicArticle} from '../db/article'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicPage,
@@ -45,6 +45,7 @@ import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
 import {GraphQLAuthProvider} from './auth'
+import {logger} from '../server'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -128,9 +129,36 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLPublicArticle,
-      args: {id: {type: GraphQLID}},
-      async resolve(root, {id}, {session, loaders}) {
-        const article = await loaders.publicArticles.load(id)
+      args: {
+        id: {type: GraphQLID},
+        slug: {type: GraphQLSlug},
+        token: {type: GraphQLString}
+      },
+      async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
+        let article = id ? await loaders.publicArticles.load(id) : null
+
+        if (!article && slug) {
+          article = await dbAdapter.article.getPublishedArticleBySlug(slug)
+        }
+
+        if (!article && token) {
+          try {
+            const articleId = verifyJWT(token)
+            const privateArticle = await loaders.articles.load(articleId)
+
+            article = privateArticle?.draft
+              ? ({
+                  id: privateArticle.id,
+                  shared: privateArticle.shared,
+                  updatedAt: new Date(),
+                  publishedAt: new Date(),
+                  ...privateArticle.draft
+                } as PublicArticle)
+              : null
+          } catch (error) {
+            logger('graphql-query').warn(error, 'Error while verifying token with article id')
+          }
+        }
 
         if (session?.type === SessionType.Token) {
           return article?.shared ? article : null

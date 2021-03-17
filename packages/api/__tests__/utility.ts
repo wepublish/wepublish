@@ -33,6 +33,10 @@ class ExampleURLAdapter implements URLAdapter {
   getAuthorURL(author: Author): string {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
+
+  getArticlePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/article/preview/${token}`
+  }
 }
 
 export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> {

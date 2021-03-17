@@ -138,6 +138,10 @@ mutation DuplicateArticle($id: ID!) {
   }
 }
 
+query ArticlePreviewLink($id: ID!, $hours: Int!) {
+  articlePreviewLink(id: $id, hours: $hours)
+}
+
 query Article($id: ID!) {
   article(id: $id) {
     id

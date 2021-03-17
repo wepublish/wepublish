@@ -53,7 +53,12 @@ export function renderElement({attributes, children, element}: RenderElementProp
       // title={title}
 
       return (
-        <a data-title={element.title} data-href={element.url} {...attributes}>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={element.url as string}
+          title={element.title as string}
+          {...attributes}>
           {children}
         </a>
       )

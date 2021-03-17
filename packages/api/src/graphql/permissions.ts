@@ -159,6 +159,12 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanGetArticlePreviewLink: Permission = {
+  id: 'CAN_GET_ARTICLE_PREVIEW_LINK',
+  description: 'Allows to get preview links for articles',
+  deprecated: false
+}
+
 export const CanTakeActionOnComment: Permission = {
   id: 'CAN_TAKE_COMMENT_ACTION',
   description: 'Allows to take an action on comment',
@@ -447,6 +453,7 @@ export const AllPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanDeleteArticle,
+  CanGetArticlePreviewLink,
   CanPublishArticle,
   CanGetPeerArticle,
   CanGetPeerArticles,
@@ -510,6 +517,7 @@ export const EditorPermissions: Permission[] = [
   CanGetArticle,
   CanGetArticles,
   CanPublishArticle,
+  CanGetArticlePreviewLink,
   CanCreatePage,
   CanGetPage,
   CanGetPages,
