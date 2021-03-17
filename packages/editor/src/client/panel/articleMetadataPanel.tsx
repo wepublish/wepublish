@@ -137,8 +137,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}
-                {socialMediaTitle ? <label style={{float: 'right'}}> {value.socialMediaTitle?.length}/{socialMediaTitleMax}</label> :
-                <label style={{float: 'right'}}> 0/{socialMediaTitleMax}</label> }
+                <label style={{float: 'right'}}> {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/{socialMediaTitleMax}</label>
                 </ControlLabel>
                 <FormControl
                   value={socialMediaTitle || ''}
@@ -152,8 +151,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}
-                {socialMediaDescription ? <label style={{float: 'right'}}> {value.socialMediaDescription?.length}/{socialMediaDescriptionMax} </label> : 
-                <label style={{float: 'right'}}> 0/{socialMediaDescriptionMax} </label>}
+                <label style={{float: 'right'}}> {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/{socialMediaDescriptionMax}</label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
