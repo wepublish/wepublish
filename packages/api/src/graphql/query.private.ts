@@ -10,10 +10,9 @@ import {
 
 import {WrapQuery, ExtractField} from 'graphql-tools'
 
-import {Client, Issuer} from 'openid-client'
 import {UserInputError} from 'apollo-server-express'
 
-import {Context, Oauth2Provider} from '../context'
+import {Context} from '../context'
 
 import {GraphQLSession} from './session'
 import {GraphQLAuthProvider} from './auth'
@@ -185,26 +184,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     authProviders: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
       args: {redirectUri: {type: GraphQLString}},
-      async resolve(root, {redirectUri}, {oauth2Providers}) {
-        const clients: {
-          name: string
-          provider: Oauth2Provider
-          client: Client
-        }[] = await Promise.all(
-          oauth2Providers.map(async provider => {
-            const issuer = await Issuer.discover(provider.discoverUrl)
-            return {
-              name: provider.name,
-              provider,
-              client: new issuer.Client({
-                client_id: provider.clientId,
-                client_secret: provider.clientKey,
-                redirect_uris: provider.redirectUri,
-                response_types: ['code']
-              })
-            }
-          })
-        )
+      async resolve(root, {redirectUri}, {getOauth2Clients}) {
+        const clients = await getOauth2Clients()
         return clients.map(client => {
           const url = client.client.authorizationUrl({
             scope: client.provider.scopes.join(),
