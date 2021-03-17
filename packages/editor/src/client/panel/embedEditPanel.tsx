@@ -121,7 +121,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
           {t('blocks.embeds.panels.confirm')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('blocks.embeds.panels.confirm')}
+          {t('blocks.embeds.panels.close')}
         </Button>
       </Drawer.Footer>
     </>
