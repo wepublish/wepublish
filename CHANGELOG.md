@@ -1,5 +1,49 @@
 # Change Log
 
+## v2.0.0 (2021-03-17)
+
+#### :boom: Breaking Change
+* `api-db-mongodb`, `api`
+  * [#198](https://github.com/wepublish/wepublish/pull/198) Enhanced User address ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* Other
+  * [#153](https://github.com/wepublish/wepublish/pull/153) F/WPC-87 & F/WPC-55 comment frontend functionality ([@0815pascal](https://github.com/0815pascal))
+* `api-db-mongodb`, `api`
+  * [#198](https://github.com/wepublish/wepublish/pull/198) Enhanced User address ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#186](https://github.com/wepublish/wepublish/pull/186) f/wpc-56 & wpc-91 richtext editor link button and URL validation ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* Other
+  * [#201](https://github.com/wepublish/wepublish/pull/201) wpc-180-fix broken route for breaking articles ([@bishoymelek](https://github.com/bishoymelek))
+* `editor`
+  * [#196](https://github.com/wepublish/wepublish/pull/196) B/wpc 224 logout ([@penk85](https://github.com/penk85))
+* `api`
+  * [#188](https://github.com/wepublish/wepublish/pull/188) check first if visitor is authenticated or not ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :nail_care: Polish
+* `editor`
+  * [#199](https://github.com/wepublish/wepublish/pull/199) Added SEO guide link ([@roosnic1](https://github.com/roosnic1))
+* `api`, `editor`
+  * [#197](https://github.com/wepublish/wepublish/pull/197) f/WPC-228-more-clear-slug-field ([@0815pascal](https://github.com/0815pascal))
+
+#### :house: Internal
+* `editor`
+  * [#195](https://github.com/wepublish/wepublish/pull/195) Wpc 205 character counter ([@HanaAyman](https://github.com/HanaAyman))
+  * [#200](https://github.com/wepublish/wepublish/pull/200) Remove unmaintained translation files ([@roosnic1](https://github.com/roosnic1))
+* `api-db-mongodb`, `api`, `editor`
+  * [#192](https://github.com/wepublish/wepublish/pull/192) Added a new seoTitle field to the article metadata ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pascal Witzig ([@0815pascal](https://github.com/0815pascal))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
+
 ## v1.0.1 (2021-03-03)
 
 #### :heart: New Feature
