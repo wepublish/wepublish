@@ -30,7 +30,6 @@ import {useAppContext} from '../appContext'
 
 import {Helmet} from 'react-helmet-async'
 import {PageRoute} from './routeContext'
-// import { PageFooterContainer } from './footerContainer'
 
 const PageQuery = gql`
   query Page($id: ID, $slug: Slug) {
