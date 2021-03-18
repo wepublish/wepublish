@@ -137,7 +137,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}
-                <label style={{float: 'right'}}> {value.socialMediaTitle?.length}</label>
+                <label style={{float: 'right'}}> {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/{socialMediaTitleMax}</label>
                 </ControlLabel>
                 <FormControl
                   value={socialMediaTitle || ''}
@@ -145,13 +145,13 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     onChange?.({...value, socialMediaTitle})
                   }}
                 />
-                {value.socialMediaTitle && value.socialMediaTitle!.length > socialMediaTitleMax && (
+                {value.socialMediaTitle && value.socialMediaTitle?.length > socialMediaTitleMax && (
                 <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaTitleMax})}</label>
                  ) }
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}
-                <label style={{float: 'right'}}> {value.socialMediaDescription?.length} </label>
+                <label style={{float: 'right'}}> {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/{socialMediaDescriptionMax}</label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
@@ -161,7 +161,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
-                { value.socialMediaDescription && value.socialMediaDescription!.length > socialMediaDescriptionMax && (
+                { value.socialMediaDescription && value.socialMediaDescription?.length > socialMediaDescriptionMax && (
                 <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaDescriptionMax})}</label>
                  ) }
               </FormGroup>
@@ -206,7 +206,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
             <div style={{paddingBottom: '20px'}}>{t("articleEditor.panels.totalCharCount",{totalCharCount: infoData.charCount})}</div>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.preTitle')}
-                <label style={{float: 'right'}}> {`${value.preTitle.length}`} </label>
+                <label style={{float: 'right'}}> {value.preTitle.length}/{preTitleMax} </label>
                 </ControlLabel>
                 <FormControl
                   value={preTitle}
@@ -218,7 +218,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}
-                <label style={{float: 'right'}}> {`${value.title.length}`} </label>
+                <label style={{float: 'right'}}> {value.title.length}/{titleMax} </label>
                 </ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
@@ -228,7 +228,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}
-                <label style={{float: 'right'}}> {`${value.lead.length}`} </label>
+                <label style={{float: 'right'}}> {value.lead.length}/{leadMax} </label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
@@ -245,7 +245,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.seoTitle')}
-                <label style={{float: 'right'}}> {`${value.seoTitle.length}`} </label>
+                <label style={{float: 'right'}}> {value.seoTitle.length}/{seoTitleMax} </label>
                 </ControlLabel>
                 <FormControl
                   value={seoTitle}
