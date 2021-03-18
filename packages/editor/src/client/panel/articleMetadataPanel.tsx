@@ -206,7 +206,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
             <div style={{paddingBottom: '20px'}}>{t("articleEditor.panels.totalCharCount",{totalCharCount: infoData.charCount})}</div>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.preTitle')}
-                <label style={{float: 'right'}}> {`${value.preTitle.length}`}/{preTitleMax} </label>
+                <label style={{float: 'right'}}> {value.preTitle.length}/{preTitleMax} </label>
                 </ControlLabel>
                 <FormControl
                   value={preTitle}
@@ -228,7 +228,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.lead')}
-                <label style={{float: 'right'}}> {`${value.lead.length}`}/{leadMax} </label>
+                <label style={{float: 'right'}}> {value.lead.length}/{leadMax} </label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
@@ -245,7 +245,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.seoTitle')}
-                <label style={{float: 'right'}}> {`${value.seoTitle.length}`}/{seoTitleMax} </label>
+                <label style={{float: 'right'}}> {value.seoTitle.length}/{seoTitleMax} </label>
                 </ControlLabel>
                 <FormControl
                   value={seoTitle}
