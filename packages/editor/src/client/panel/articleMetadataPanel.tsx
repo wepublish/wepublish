@@ -218,7 +218,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.title')}
-                <label style={{float: 'right'}}> {`${value.title.length}`}/{titleMax} </label>
+                <label style={{float: 'right'}}> {value.title.length}/{titleMax} </label>
                 </ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
