@@ -348,6 +348,7 @@ export function ArticleList() {
                   await unpublishArticle({
                     variables: {id: currentArticle.id}
                   })
+                  setHighlightedRowId(currentArticle.id)
                   break
 
                 case ConfirmAction.Duplicate:

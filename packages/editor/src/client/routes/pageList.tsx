@@ -308,6 +308,7 @@ export function PageList() {
                   await unpublishPage({
                     variables: {id: currentPage.id}
                   })
+                  setHighlightedRowId(currentPage.id)
                   break
 
                 case ConfirmAction.Duplicate:

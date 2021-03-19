@@ -44,6 +44,7 @@ import {
 import {MemberPlanSort} from '../db/memberPlan'
 import {GraphQLPublicUser} from './user'
 import {GraphQLPublicInvoice} from './invoice'
+import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
 
 export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
@@ -258,6 +259,29 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           order,
           cursor: InputCursor(after, before),
           limit: Limit(first, last)
+        })
+      }
+    },
+
+    // Auth
+    // =======
+
+    authProviders: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      args: {redirectUri: {type: GraphQLString}},
+      async resolve(root, {redirectUri}, {getOauth2Clients}) {
+        const clients = await getOauth2Clients()
+        return clients.map(client => {
+          const url = client.client.authorizationUrl({
+            scope: client.provider.scopes.join(),
+            response_mode: 'query',
+            redirect_uri: `${redirectUri}/${client.name}`,
+            state: 'fakeRandomString'
+          })
+          return {
+            name: client.name,
+            url
+          }
         })
       }
     },
