@@ -465,7 +465,8 @@
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
         "callToActionURL": "Call To Action URL",
-        "image": "Image"
+        "image": "Image",
+        "validateToken": "Please confirm token is correct before saving"
       }
     },
     "tokenList": {
