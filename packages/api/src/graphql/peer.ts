@@ -79,7 +79,12 @@ export const GraphQLPeer = new GraphQLObjectType<Peer, Context>({
     profile: {
       type: GraphQLPeerProfile,
       resolve: createProxyingResolver(async (source, args, context, info) => {
-        return delegateToPeerSchema(source.id, true, context, {fieldName: 'peerProfile', info})
+        const peerProfile = await delegateToPeerSchema(source.id, true, context, {
+          fieldName: 'peerProfile',
+          info
+        })
+        // TODO: Improve error handling for invalid tokens WPC-298
+        return peerProfile.extensions?.code === 'UNAUTHENTICATED' ? null : peerProfile
       })
     }
   }
