@@ -34,6 +34,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
+import { title } from 'process'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -193,15 +194,49 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   function countRichTextBlocksChars(blocks: BlockValue[]) {
     return blocks.reduce((charLength: number, block: BlockValue) => {
-      if (!(block.type === BlockType.RichText)) return charLength
+      if (!(block.type === BlockType.RichText)) 
+        return charLength
       return countRichtextChars(charLength, block.value)
     }, 0)
   }
 
-  function countTitle(blocks: BlockValue[]) {
+  function countTitleChars(blocks: BlockValue[]) {
     return blocks.reduce((charLength: number, block: BlockValue) => {
-      if ((block.type === BlockType.Title)) return charLength + (block.value.title as string).length + (block.value.lead as string).length
-      else return charLength;
+      if ((block.type === BlockType.Title)) 
+        return charLength + (block.value.title as string).length + (block.value.lead as string).length
+      else 
+        return charLength;
+    }, 0)
+  }
+
+  function countQuoteChars(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if ((block.type === BlockType.Quote)) 
+        return charLength + (block.value.quote as string).length + (block.value.author as string).length
+      else 
+        return charLength;
+    }, 0)
+  }
+
+  function countListicleChars(blocks: BlockValue[]) {
+    return blocks.reduce((charLength: number, block: BlockValue) => {
+      if (block.type === BlockType.Listicle){
+        // return charLength 
+        // let titleLength = 0;
+        // return (block.value.items.forEach(function (items) => { 
+        //   console.log (items.value.title.length);
+        //   return(titleLength)
+        // }))
+        console.log(block.value);
+        const titleArray = (block.value.items.map(item => {return (item.value.title.length)}))
+        const totalTitleChars = titleArray.reduce(function(a, b){ return a + b; })
+        const richTextArray = (block.value.items.map(item => {return(item.value.richText.map(richText => {console.log(richText); return (richText) } ))}))
+        // const totalRichTextChars = countRichTextBlocksChars(block.value.items.values.richText)
+        // console.log(totalRichTextChars)
+        return charLength + totalTitleChars + countRichTextBlocksChars(richTextArray);
+      }
+      else 
+        return charLength;
     }, 0)
   }
 
@@ -325,7 +360,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   useEffect(() => {
-    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitle(blocks)})
+    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitleChars(blocks) + countQuoteChars(blocks) + countListicleChars(blocks)})
   },[isMetaDrawerOpen])
 
   return (
