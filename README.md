@@ -89,7 +89,7 @@ TBD
 * [GraphQL](https://graphql.org/)
 * [React](https://reactjs.org/)
 * [TypeScript](https://www.typescriptlang.org/)
-* [:green_heart:]()
+* :green_heart:
 
 
 ## Demo
