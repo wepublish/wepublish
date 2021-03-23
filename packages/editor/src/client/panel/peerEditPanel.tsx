@@ -1,6 +1,16 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Panel} from 'rsuite'
+import {
+  Alert,
+  Button,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Panel,
+  HelpBlock
+} from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
 import {
@@ -49,7 +59,8 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
     refetchQueries: [getOperationNameFromDocument(PeerListDocument)]
   })
 
-  const isDisabled = isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL
+  const isDisabled =
+    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL || (!token && !id)
 
   const {t} = useTranslation()
 
@@ -188,10 +199,11 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
                   setToken(value)
                 }}
               />
+              <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
             </FormGroup>
           </Form>
         </Panel>
-        {!isLoadingPeerProfile && isValidURL && (
+        {!isLoadingPeerProfile && (token || id) && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
             <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
