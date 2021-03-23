@@ -2,7 +2,25 @@ import React from 'react'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
+import {cssRule, useStyle} from '@karma.run/react'
+
+export const tableStyle = cssRule({
+  width: '100%',
+  borderCollapse: 'collapse',
+  tableLayout: 'fixed'
+})
+
+export const tableCellStyle = cssRule({
+  border: '1px solid',
+  padding: '8px',
+  // remove extra whitespace after paragraph inside of table-cell
+  '> p': {
+    marginBlockEnd: '0'
+  }
+})
+
 export function renderElement({attributes, children, element}: RenderElementProps) {
+  const css = useStyle()
   switch (element.type) {
     case BlockFormat.H1:
       return <h1 {...attributes}>{children}</h1>
@@ -24,7 +42,7 @@ export function renderElement({attributes, children, element}: RenderElementProp
 
     case BlockFormat.Table:
       return (
-        <table>
+        <table className={css(tableStyle)}>
           <tbody {...attributes}>{children}</tbody>
         </table>
       )
@@ -37,6 +55,7 @@ export function renderElement({attributes, children, element}: RenderElementProp
       return (
         <td
           {...attributes}
+          className={css(tableCellStyle)}
           style={{
             borderColor:
               element.borderColor === 'transparent'
