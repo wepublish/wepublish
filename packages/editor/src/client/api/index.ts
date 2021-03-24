@@ -13,12 +13,491 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
+  /** i18 String which supports the following languages: en,de */
+  i18nString: any;
+  RichText: Node[];
+  Reference: any;
   /** A hexidecimal color value. */
   Color: string;
-  RichText: Node[];
+  ContentModelSchema: any;
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+};
+
+export type _Cmp_Article = {
+  __typename?: '_cmp_article';
+  read: _Cmp_Article_Record;
+  list: _Cmp_ArticleConnection;
+};
+
+
+export type _Cmp_ArticleReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+
+export type _Cmp_ArticleListArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type _Cmp_Article_Record = {
+  __typename?: '_cmp_article_record';
+  id: Scalars['ID'];
+  contentType: Scalars['String'];
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmp_Article_Record_Content>;
+};
+
+export type _Cmp_Article_Record_Content = {
+  __typename?: '_cmp_article_record_content';
+  blocks?: Maybe<Array<Maybe<_Cmp_Article_Record_Content_Blocks>>>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks = _Cmp_Article_Record_Content_Blocks_Title | _Cmp_Article_Record_Content_Blocks_RichText | _Cmp_Article_Record_Content_Blocks_Image | _Cmp_Article_Record_Content_Blocks_Listicle | _Cmp_Article_Record_Content_Blocks_Vimeo | _Cmp_Article_Record_Content_Blocks_Youtube | _Cmp_Article_Record_Content_Blocks_GalleryImage;
+
+export type _Cmp_Article_Record_Content_Blocks_GalleryImage = {
+  __typename?: '_cmp_article_record_content_blocks_galleryImage';
+  images: Array<_Cmp_Article_Record_Content_Blocks_GalleryImage_Images>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_GalleryImage_Images = {
+  __typename?: '_cmp_article_record_content_blocks_galleryImage_images';
+  image?: Maybe<Scalars['Reference']>;
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Image = {
+  __typename?: '_cmp_article_record_content_blocks_image';
+  image?: Maybe<Scalars['Reference']>;
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Listicle = {
+  __typename?: '_cmp_article_record_content_blocks_listicle';
+  items: Array<Maybe<_Cmp_Article_Record_Content_Blocks_Listicle_Items>>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
+  __typename?: '_cmp_article_record_content_blocks_listicle_items';
+  title?: Maybe<Scalars['String']>;
+  richText?: Maybe<Scalars['RichText']>;
+  image?: Maybe<Scalars['Reference']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_RichText = {
+  __typename?: '_cmp_article_record_content_blocks_richText';
+  richText?: Maybe<Scalars['RichText']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Title = {
+  __typename?: '_cmp_article_record_content_blocks_title';
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Vimeo = {
+  __typename?: '_cmp_article_record_content_blocks_vimeo';
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Youtube = {
+  __typename?: '_cmp_article_record_content_blocks_youtube';
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_ArticleConnection = {
+  __typename?: '_cmp_articleConnection';
+  nodes: Array<_Cmp_Article_Record>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type _Cmp_Example = {
+  __typename?: '_cmp_example';
+  read: _Cmp_Example_Record;
+  list: _Cmp_ExampleConnection;
+};
+
+
+export type _Cmp_ExampleReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+
+export type _Cmp_ExampleListArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type _Cmp_Example_Record = {
+  __typename?: '_cmp_example_record';
+  id: Scalars['ID'];
+  contentType: Scalars['String'];
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmp_Example_Record_Content>;
+};
+
+export type _Cmp_Example_Record_Content = {
+  __typename?: '_cmp_example_record_content';
+  myString?: Maybe<Scalars['String']>;
+  myI18nString?: Maybe<Scalars['i18nString']>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myI18nRichText?: Maybe<Scalars['RichText']>;
+  myBoolean?: Maybe<Scalars['Boolean']>;
+  myI18nBoolean?: Maybe<Scalars['Boolean']>;
+  myInt?: Maybe<Scalars['Int']>;
+  myI18nInt?: Maybe<Scalars['Int']>;
+  myFloat?: Maybe<Scalars['Float']>;
+  myI18nFloat?: Maybe<Scalars['Float']>;
+  myDateTime?: Maybe<Scalars['DateTime']>;
+  myI18nDateTime?: Maybe<Scalars['DateTime']>;
+  myId?: Maybe<Scalars['ID']>;
+  myI18nId?: Maybe<Scalars['ID']>;
+  myEnum?: Maybe<_Cmp_Example_Record_Content_MyEnum>;
+  myI18nEnum?: Maybe<_Cmp_Example_Record_Content_MyI18nEnum>;
+  myList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  myObject?: Maybe<_Cmp_Example_Record_Content_MyObject>;
+  myUnion?: Maybe<_Cmp_Example_Record_Content_MyUnion>;
+  myReference?: Maybe<Scalars['Reference']>;
+};
+
+export enum _Cmp_Example_Record_Content_MyEnum {
+  /** Foo */
+  Foo = 'foo',
+  /** Bar */
+  Bar = 'bar'
+}
+
+export enum _Cmp_Example_Record_Content_MyI18nEnum {
+  /** Foo */
+  Foo = 'foo',
+  /** Bar */
+  Bar = 'bar'
+}
+
+export type _Cmp_Example_Record_Content_MyObject = {
+  __typename?: '_cmp_example_record_content_myObject';
+  fieldA?: Maybe<Scalars['String']>;
+  fieldB?: Maybe<Scalars['Int']>;
+};
+
+export type _Cmp_Example_Record_Content_MyUnion = _Cmp_Example_Record_Content_MyUnion_CaseA | _Cmp_Example_Record_Content_MyUnion_CaseB;
+
+export type _Cmp_Example_Record_Content_MyUnion_CaseA = {
+  __typename?: '_cmp_example_record_content_myUnion_caseA';
+  fieldA?: Maybe<Scalars['String']>;
+  fieldB?: Maybe<Scalars['Int']>;
+};
+
+export type _Cmp_Example_Record_Content_MyUnion_CaseB = {
+  __typename?: '_cmp_example_record_content_myUnion_caseB';
+  fieldA?: Maybe<Scalars['Int']>;
+  fieldB?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_ExampleConnection = {
+  __typename?: '_cmp_exampleConnection';
+  nodes: Array<_Cmp_Example_Record>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type _Cmpi_Article = {
+  __typename?: '_cmpi_article';
+  create: _Cmp_Article_Record;
+  update: _Cmp_Article_Record;
+  delete: Scalars['Boolean'];
+  publish?: Maybe<_Cmp_Article_Record>;
+  unpublish?: Maybe<_Cmp_Article_Record>;
+};
+
+
+export type _Cmpi_ArticleCreateArgs = {
+  input: _Cmpi_Article_Record;
+};
+
+
+export type _Cmpi_ArticleUpdateArgs = {
+  input: _Cmpi_Article_Record;
+};
+
+
+export type _Cmpi_ArticleDeleteArgs = {
+  id: Scalars['ID'];
+  revision?: Maybe<Scalars['Int']>;
+};
+
+
+export type _Cmpi_ArticlePublishArgs = {
+  id: Scalars['ID'];
+  revision: Scalars['Int'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type _Cmpi_ArticleUnpublishArgs = {
+  id: Scalars['ID'];
+};
+
+export type _Cmpi_Article_Record = {
+  id?: Maybe<Scalars['ID']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Article_Record_Content>;
+};
+
+export type _Cmpi_Article_Record_Content = {
+  blocks?: Maybe<Array<Maybe<_Cmpi_Article_Record_Content_Blocks>>>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks = {
+  title?: Maybe<_Cmpi_Article_Record_Content_Blocks_Title>;
+  richText?: Maybe<_Cmpi_Article_Record_Content_Blocks_RichText>;
+  image?: Maybe<_Cmpi_Article_Record_Content_Blocks_Image>;
+  listicle?: Maybe<_Cmpi_Article_Record_Content_Blocks_Listicle>;
+  vimeo?: Maybe<_Cmpi_Article_Record_Content_Blocks_Vimeo>;
+  youtube?: Maybe<_Cmpi_Article_Record_Content_Blocks_Youtube>;
+  galleryImage?: Maybe<_Cmpi_Article_Record_Content_Blocks_GalleryImage>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_GalleryImage = {
+  images: Array<_Cmpi_Article_Record_Content_Blocks_GalleryImage_Images>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_GalleryImage_Images = {
+  image?: Maybe<Scalars['Reference']>;
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Image = {
+  image?: Maybe<Scalars['Reference']>;
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Listicle = {
+  items: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_Listicle_Items>>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Listicle_Items = {
+  title?: Maybe<Scalars['String']>;
+  richText?: Maybe<Scalars['RichText']>;
+  image?: Maybe<Scalars['Reference']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_RichText = {
+  richText?: Maybe<Scalars['RichText']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Title = {
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Vimeo = {
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_Youtube = {
+  videoID?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Example = {
+  __typename?: '_cmpi_example';
+  create: _Cmp_Example_Record;
+  update: _Cmp_Example_Record;
+  delete: Scalars['Boolean'];
+  publish?: Maybe<_Cmp_Example_Record>;
+  unpublish?: Maybe<_Cmp_Example_Record>;
+};
+
+
+export type _Cmpi_ExampleCreateArgs = {
+  input: _Cmpi_Example_Record;
+};
+
+
+export type _Cmpi_ExampleUpdateArgs = {
+  input: _Cmpi_Example_Record;
+};
+
+
+export type _Cmpi_ExampleDeleteArgs = {
+  id: Scalars['ID'];
+  revision?: Maybe<Scalars['Int']>;
+};
+
+
+export type _Cmpi_ExamplePublishArgs = {
+  id: Scalars['ID'];
+  revision: Scalars['Int'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type _Cmpi_ExampleUnpublishArgs = {
+  id: Scalars['ID'];
+};
+
+export type _Cmpi_Example_Record = {
+  id?: Maybe<Scalars['ID']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Example_Record_Content>;
+};
+
+export type _Cmpi_Example_Record_Content = {
+  myString?: Maybe<Scalars['String']>;
+  myI18nString?: Maybe<Scalars['i18nString']>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myI18nRichText?: Maybe<Scalars['RichText']>;
+  myBoolean?: Maybe<Scalars['Boolean']>;
+  myI18nBoolean?: Maybe<Scalars['Boolean']>;
+  myInt?: Maybe<Scalars['Int']>;
+  myI18nInt?: Maybe<Scalars['Int']>;
+  myFloat?: Maybe<Scalars['Float']>;
+  myI18nFloat?: Maybe<Scalars['Float']>;
+  myDateTime?: Maybe<Scalars['DateTime']>;
+  myI18nDateTime?: Maybe<Scalars['DateTime']>;
+  myId?: Maybe<Scalars['ID']>;
+  myI18nId?: Maybe<Scalars['ID']>;
+  myEnum?: Maybe<_Cmpi_Example_Record_Content_MyEnum>;
+  myI18nEnum?: Maybe<_Cmpi_Example_Record_Content_MyI18nEnum>;
+  myList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  myObject?: Maybe<_Cmpi_Example_Record_Content_MyObject>;
+  myUnion?: Maybe<_Cmpi_Example_Record_Content_MyUnion>;
+  myReference?: Maybe<Scalars['Reference']>;
+};
+
+export enum _Cmpi_Example_Record_Content_MyEnum {
+  /** Foo */
+  Foo = 'foo',
+  /** Bar */
+  Bar = 'bar'
+}
+
+export enum _Cmpi_Example_Record_Content_MyI18nEnum {
+  /** Foo */
+  Foo = 'foo',
+  /** Bar */
+  Bar = 'bar'
+}
+
+export type _Cmpi_Example_Record_Content_MyObject = {
+  fieldA?: Maybe<Scalars['String']>;
+  fieldB?: Maybe<Scalars['Int']>;
+};
+
+export type _Cmpi_Example_Record_Content_MyUnion = {
+  caseA?: Maybe<_Cmpi_Example_Record_Content_MyUnion_CaseA>;
+  caseB?: Maybe<_Cmpi_Example_Record_Content_MyUnion_CaseB>;
+};
+
+export type _Cmpi_Example_Record_Content_MyUnion_CaseA = {
+  fieldA?: Maybe<Scalars['String']>;
+  fieldB?: Maybe<Scalars['Int']>;
+};
+
+export type _Cmpi_Example_Record_Content_MyUnion_CaseB = {
+  fieldA?: Maybe<Scalars['Int']>;
+  fieldB?: Maybe<Scalars['String']>;
+};
+
+export type All = {
+  __typename?: 'All';
+  list: ListByTypeConnection;
+};
+
+
+export type AllListArgs = {
+  type: ContentTypeEnum;
+  context?: Maybe<ContentContextEnum>;
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type AllCustomContents = {
+  __typename?: 'AllCustomContents';
+  id: Scalars['ID'];
+  shared: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  draft?: Maybe<AllCustomContentsRevision>;
+  published?: Maybe<AllCustomContentsRevision>;
+  pending?: Maybe<AllCustomContentsRevision>;
+  latest: AllCustomContentsRevision;
+};
+
+export type AllCustomContentsRevision = {
+  __typename?: 'AllCustomContentsRevision';
+  revision: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  slug: Scalars['Slug'];
+};
+
+export type AllMutations = {
+  __typename?: 'AllMutations';
+  delete?: Maybe<Scalars['Boolean']>;
+  publish?: Maybe<AllCustomContents>;
+  unpublish?: Maybe<AllCustomContents>;
+};
+
+
+export type AllMutationsDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type AllMutationsPublishArgs = {
+  id: Scalars['ID'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type AllMutationsUnpublishArgs = {
+  id: Scalars['ID'];
 };
 
 export type Article = {
@@ -287,6 +766,47 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export enum ContentContextEnum {
+  Local = 'local',
+  Peers = 'peers'
+}
+
+export type ContentModelConfig = {
+  __typename?: 'ContentModelConfig';
+  id: Scalars['ID'];
+  identifier: Scalars['String'];
+  namePlural: Scalars['String'];
+  nameSingular: Scalars['String'];
+  schema: Scalars['ContentModelSchema'];
+};
+
+
+export type ContentModelSummary = {
+  __typename?: 'ContentModelSummary';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  contentType: ContentTypeEnum;
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+};
+
+export enum ContentStateEnum {
+  Draft = 'Draft',
+  Review = 'Review',
+  Release = 'Release',
+  Archive = 'Archive'
+}
+
+export enum ContentTypeEnum {
+  Example = 'example',
+  Article = 'article'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -301,6 +821,21 @@ export type CreatePeerInput = {
   slug: Scalars['String'];
   hostURL: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type CustomContent = {
+  __typename?: 'CustomContent';
+  example: _Cmp_Example;
+  article: _Cmp_Article;
+  _all: All;
+  _schema: Array<ContentModelConfig>;
+};
+
+export type CustomContentMutations = {
+  __typename?: 'CustomContentMutations';
+  example: _Cmpi_Example;
+  article: _Cmpi_Article;
+  _all: AllMutations;
 };
 
 export type DateFilter = {
@@ -377,6 +912,7 @@ export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
 };
+
 
 export type Image = {
   __typename?: 'Image';
@@ -562,6 +1098,19 @@ export type LinkPageBreakBlockInput = {
   imageID?: Maybe<Scalars['ID']>;
 };
 
+export type ListByTypeConnection = {
+  __typename?: 'listByTypeConnection';
+  nodes: Array<ListByTypePeerCustomContent>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type ListByTypePeerCustomContent = {
+  __typename?: 'listByTypePeerCustomContent';
+  peer?: Maybe<Peer>;
+  content: ContentModelSummary;
+};
+
 export type ListicleBlock = {
   __typename?: 'ListicleBlock';
   items: Array<ListicleItem>;
@@ -627,6 +1176,7 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  content: CustomContentMutations;
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
@@ -1280,6 +1830,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  content: CustomContent;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -1529,6 +2080,7 @@ export type QuoteBlockInput = {
   quote?: Maybe<Scalars['String']>;
   author?: Maybe<Scalars['String']>;
 };
+
 
 
 export type RichTextBlock = {

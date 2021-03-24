@@ -44,6 +44,10 @@ import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {logger} from './server'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
+import {LanguageConfig} from './interfaces/languageConfig'
+import {ContentModel} from './interfaces/contentModelSchema'
+import {OptionalContent} from './db/content'
+import {BusinessLogic} from './business/contentModelBusiness'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -60,6 +64,9 @@ export interface DataLoaderContext {
   readonly pages: DataLoader<string, OptionalPage>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+
+  readonly content: DataLoader<string, OptionalContent>
+  readonly publicContent: DataLoader<string, OptionalContent>
 
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
 
@@ -89,6 +96,7 @@ export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
 
+  readonly business: BusinessLogic
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
@@ -134,6 +142,8 @@ export interface ContextOptions {
   readonly mailProvider?: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
+  readonly contentModels: ContentModel[]
+  readonly languageConfig: LanguageConfig
   readonly hooks?: Hooks
 }
 
@@ -224,6 +234,9 @@ export async function contextFromRequest(
     publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
     publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
 
+    content: new DataLoader(ids => dbAdapter.content.getContentsByID(ids)),
+    publicContent: new DataLoader(ids => dbAdapter.content.getContentsByID(ids)),
+
     userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
 
     mailLogsByID: new DataLoader(ids => dbAdapter.mailLog.getMailLogsByID(ids)),
@@ -306,7 +319,7 @@ export async function contextFromRequest(
     sendMailFromProvider
   })
 
-  return {
+  const context: Omit<Context, 'business'> = {
     hostURL,
     websiteURL,
     session: isSessionValid ? session : null,
@@ -439,6 +452,11 @@ export async function contextFromRequest(
 
       return updatedPayment
     }
+  }
+
+  return {
+    business: new BusinessLogic(context),
+    ...context
   }
 }
 

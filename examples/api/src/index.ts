@@ -26,6 +26,8 @@ import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
+import {contentModelExample} from './schemaExample'
+import {contentModelArticle} from './schemaArticle'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -66,8 +68,8 @@ async function asyncMain() {
   const hostURL = process.env.HOST_URL
   const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
-  const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+  const port = parseInt(process.env.PORT || process.env.API_PORT || '4000')
+  const address = process.env.ADDRESS || 'localhost'
 
   if (!process.env.MEDIA_SERVER_URL) {
     throw new Error('No MEDIA_SERVER_URL defined in environment.')
@@ -284,6 +286,22 @@ async function asyncMain() {
     playground: true,
     introspection: true,
     tracing: true,
+    contentModels: [contentModelExample, contentModelArticle],
+    languageConfig: {
+      defaultLanguageId: '1',
+      languages: [
+        {
+          id: '1',
+          description: 'en',
+          tag: 'en'
+        },
+        {
+          id: '2',
+          description: 'de',
+          tag: 'de'
+        }
+      ]
+    },
     logger
   })
 

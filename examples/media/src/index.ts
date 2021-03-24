@@ -27,8 +27,8 @@ if (cluster.isMaster) {
   const token = process.env.TOKEN!
   const storagePath = process.env.STORAGE_PATH!
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 3004
-  const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+  const port = parseInt(process.env.PORT || process.env.MEDIA_PORT || '3004')
+  const address = process.env.ADDRESS || 'localhost'
 
   const debug = Boolean(process.env.DEBUG)
 
