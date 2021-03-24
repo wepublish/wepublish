@@ -133,9 +133,7 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -172,7 +170,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -368,7 +366,7 @@ export function ArticleList() {
                           articles: {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id,
+                              article => article.id !== currentArticle.id
                             )
                           }
                         },
@@ -376,8 +374,7 @@ export function ArticleList() {
                       })
                     }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
                   break
               }
