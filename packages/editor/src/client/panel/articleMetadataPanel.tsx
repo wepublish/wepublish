@@ -361,8 +361,7 @@ export function ArticleMetadataPanel({
                     <a
                       href="https://wepublish.ch/just-another-page-2/"
                       target="_blank"
-                      rel="noreferrer">
-                    </a>
+                      rel="noreferrer"></a>
                   </Trans>
                 </HelpBlock>
               </FormGroup>
