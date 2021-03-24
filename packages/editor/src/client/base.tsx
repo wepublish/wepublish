@@ -33,13 +33,6 @@ const AVAILABLE_LANG = [
   {id: 'de', lang: 'de_CH', name: 'Deutsch'} */
 ]
 
-const iconStyles = {
-  width: 56,
-  height: 56,
-  lineHeight: '56px',
-  textAlign: 'center'
-}
-
 const headerStyles = {
   height: 60,
   paddingLeft: 10,

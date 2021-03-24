@@ -187,10 +187,10 @@ export function CommentList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>

@@ -111,10 +111,10 @@ export function ArticleList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -133,9 +133,7 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -368,7 +366,7 @@ export function ArticleList() {
                           articles: {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id,
+                              article => article.id !== currentArticle.id
                             )
                           }
                         },
@@ -376,8 +374,7 @@ export function ArticleList() {
                       })
                     }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
                   break
               }

@@ -116,10 +116,10 @@ export function ImageList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -250,7 +250,7 @@ export function ImageList() {
                   })
                 }
               })
-              setConfirmationDialogOpen(false);
+              setConfirmationDialogOpen(false)
             }}
             color="red">
             {t('images.panels.confirm')}

@@ -83,7 +83,6 @@ export function PageList() {
     }
   }, [highlightedRowId])
 
-
   useEffect(() => {
     refetch(pageListVariables)
   }, [filter, page, limit, sortOrder, sortField])
@@ -107,10 +106,10 @@ export function PageList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -129,9 +128,7 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -332,10 +329,9 @@ export function PageList() {
                         },
                         variables: pageListVariables
                       })
-                    },
+                    }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicatePage.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicatePage.id)
                   })
                   break
               }
