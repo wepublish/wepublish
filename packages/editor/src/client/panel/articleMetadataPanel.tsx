@@ -67,7 +67,12 @@ export interface ArticleMetadataPanelProps {
   onChange?(value: ArticleMetadata): void
 }
 
-export function ArticleMetadataPanel({value, infoData, onClose, onChange}: ArticleMetadataPanelProps) {
+export function ArticleMetadataPanel({
+  value,
+  infoData,
+  onClose,
+  onChange
+}: ArticleMetadataPanelProps) {
   const {
     preTitle,
     title,
@@ -111,6 +116,7 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
   }
 
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
+  const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
   const [authorsFilter, setAuthorsFilter] = useState('')
 
   const authorsVariables = {filter: authorsFilter || undefined, first: 10}
@@ -119,12 +125,24 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
     fetchPolicy: 'network-only'
   })
 
-  const preTitleMax = 30;
-  const seoTitleMax = 70;
-  const titleMax = 140;
-  const leadMax = 350;
-  const socialMediaTitleMax = 100;
-  const socialMediaDescriptionMax = 140;
+  useEffect(() => {
+    if (data?.authors?.nodes) {
+      const authorIDs = data.authors.nodes.map(author => author.id)
+      const selectedAuthors = authors.filter(author => !authorIDs.includes(author.id))
+      setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
+      const selectedSocialMediaAuthors = socialMediaAuthors.filter(
+        author => !authorIDs.includes(author.id)
+      )
+      setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
+    }
+  }, [data?.authors, authors, socialMediaAuthors])
+
+  const preTitleMax = 30
+  const seoTitleMax = 70
+  const titleMax = 140
+  const leadMax = 350
+  const socialMediaTitleMax = 100
+  const socialMediaDescriptionMax = 140
 
   function currentContent() {
     switch (activeKey) {
@@ -136,8 +154,13 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                 <Message showIcon type="info" description={t('pageEditor.panels.metadataInfo')} />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.socialMediaTitle')}
-                <label style={{float: 'right'}}> {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/{socialMediaTitleMax}</label>
+                <ControlLabel>
+                  {t('articleEditor.panels.socialMediaTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.socialMediaTitle ? value.socialMediaTitle.length : 0}/
+                    {socialMediaTitleMax}
+                  </label>
                 </ControlLabel>
                 <FormControl
                   value={socialMediaTitle || ''}
@@ -146,12 +169,21 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                   }}
                 />
                 {value.socialMediaTitle && value.socialMediaTitle?.length > socialMediaTitleMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaTitleMax})}</label>
-                 ) }
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {
+                      charCountWarning: socialMediaTitleMax
+                    })}
+                  </label>
+                )}
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.socialMediaDescription')}
-                <label style={{float: 'right'}}> {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/{socialMediaDescriptionMax}</label>
+                <ControlLabel>
+                  {t('articleEditor.panels.socialMediaDescription')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.socialMediaDescription ? value.socialMediaDescription.length : 0}/
+                    {socialMediaDescriptionMax}
+                  </label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
@@ -161,22 +193,33 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     onChange?.({...value, socialMediaDescription})
                   }}
                 />
-                { value.socialMediaDescription && value.socialMediaDescription?.length > socialMediaDescriptionMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: socialMediaDescriptionMax})}</label>
-                 ) }
+                {value.socialMediaDescription &&
+                  value.socialMediaDescription?.length > socialMediaDescriptionMax && (
+                    <label style={{color: 'gold'}}>
+                      {t('articleEditor.panels.charCountWarning', {
+                        charCountWarning: socialMediaDescriptionMax
+                      })}
+                    </label>
+                  )}
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
                 <CheckPicker
                   cleanable={true}
                   value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
-                  data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
+                  data={foundSocialMediaAuthors.map(author => ({
+                    value: author.id,
+                    label: author.name
+                  }))}
                   onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
                   onChange={socialMediaAuthorIDs => {
-                    const socialMediaAuthors = foundAuthors.filter(author =>
+                    const socialMediaAuthors = foundSocialMediaAuthors.filter(author =>
                       socialMediaAuthorIDs.includes(author.id)
                     )
                     onChange?.({...value, socialMediaAuthors})
+                  }}
+                  onExit={() => {
+                    setAuthorsFilter('')
                   }}
                   block
                 />
@@ -203,32 +246,50 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
         return (
           <Panel>
             <Form fluid={true}>
-            <div style={{paddingBottom: '20px'}}>{t("articleEditor.panels.totalCharCount",{totalCharCount: infoData.charCount})}</div>
+              <div style={{paddingBottom: '20px'}}>
+                {t('articleEditor.panels.totalCharCount', {totalCharCount: infoData.charCount})}
+              </div>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.preTitle')}
-                <label style={{float: 'right'}}> {value.preTitle.length}/{preTitleMax} </label>
+                <ControlLabel>
+                  {t('articleEditor.panels.preTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.preTitle.length}/{preTitleMax}{' '}
+                  </label>
                 </ControlLabel>
                 <FormControl
                   value={preTitle}
                   onChange={preTitle => onChange?.({...value, preTitle})}
                 />
-                { value.preTitle.length > preTitleMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: preTitleMax})}</label>
-                 ) }
+                {value.preTitle.length > preTitleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: preTitleMax})}
+                  </label>
+                )}
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.title')}
-                <label style={{float: 'right'}}> {value.title.length}/{titleMax} </label>
+                <ControlLabel>
+                  {t('articleEditor.panels.title')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.title.length}/{titleMax}{' '}
+                  </label>
                 </ControlLabel>
                 <FormControl value={title} onChange={title => onChange?.({...value, title})} />
                 <HelpBlock>{t('articleEditor.panels.titleHelpBlock')}</HelpBlock>
-                { value.title.length > titleMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: titleMax})}</label>
-                 ) }
+                {value.title.length > titleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: titleMax})}
+                  </label>
+                )}
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.lead')}
-                <label style={{float: 'right'}}> {value.lead.length}/{leadMax} </label>
+                <ControlLabel>
+                  {t('articleEditor.panels.lead')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.lead.length}/{leadMax}{' '}
+                  </label>
                 </ControlLabel>
                 <FormControl
                   rows={5}
@@ -239,13 +300,19 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                   }}
                 />
                 <HelpBlock>{t('articleEditor.panels.leadHelpBlock')}</HelpBlock>
-                { value.lead.length > leadMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: leadMax})}</label>
-                 ) }
+                {value.lead.length > leadMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: leadMax})}
+                  </label>
+                )}
               </FormGroup>
               <FormGroup>
-                <ControlLabel>{t('articleEditor.panels.seoTitle')}
-                <label style={{float: 'right'}}> {value.seoTitle.length}/{seoTitleMax} </label>
+                <ControlLabel>
+                  {t('articleEditor.panels.seoTitle')}
+                  <label style={{float: 'right'}}>
+                    {' '}
+                    {value.seoTitle.length}/{seoTitleMax}{' '}
+                  </label>
                 </ControlLabel>
                 <FormControl
                   value={seoTitle}
@@ -262,10 +329,11 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                     </a>
                   </Trans>
                 </HelpBlock>
-                { value.seoTitle.length > seoTitleMax && (
-                <label style={{color: 'gold'}}>{t("articleEditor.panels.charCountWarning",{charCountWarning: seoTitleMax})}</label>
-                 ) }
-        
+                {value.seoTitle.length > seoTitleMax && (
+                  <label style={{color: 'gold'}}>
+                    {t('articleEditor.panels.charCountWarning', {charCountWarning: seoTitleMax})}
+                  </label>
+                )}
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.slug')}</ControlLabel>
@@ -299,6 +367,9 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
                   onChange={authorsID => {
                     const authors = foundAuthors.filter(author => authorsID.includes(author.id))
                     onChange?.({...value, authors})
+                  }}
+                  onExit={() => {
+                    setAuthorsFilter('')
                   }}
                   block
                 />
@@ -356,12 +427,6 @@ export function ArticleMetadataPanel({value, infoData, onClose, onChange}: Artic
         return <></>
     }
   }
-
-  useEffect(() => {
-    if (data?.authors?.nodes) {
-      setFoundAuthors(data?.authors.nodes)
-    }
-  }, [data?.authors])
 
   return (
     <>
