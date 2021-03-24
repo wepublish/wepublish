@@ -382,6 +382,8 @@
         "close": "Close",
         "confirm": "Confirm",
         "name": "Name",
+        "preferredName": "Preferred Name",
+        "active": "Active",
         "email": "Email",
         "Unknown": "Unknown",
         "resetPassword": "Reset Password",
