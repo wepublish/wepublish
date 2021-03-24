@@ -230,10 +230,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         console.log(block.value);
         const titleArray = (block.value.items.map(item => {return (item.value.title.length)}))
         const totalTitleChars = titleArray.reduce(function(a, b){ return a + b; })
-        const richTextArray = (block.value.items.map(item => {return(item.value.richText.map(richText => {console.log(richText); return (richText) } ))}))
+        // const richText = (block.value.items.map(item => {return(item.value.richText.map(richText => {console.log(richText); return (richText) } ))}))
         // const totalRichTextChars = countRichTextBlocksChars(block.value.items.values.richText)
         // console.log(totalRichTextChars)
-        return charLength + totalTitleChars + countRichTextBlocksChars(richTextArray);
+        const richText = (block.value.items.map(item => {return(item.value.richText)}))
+        console.log(richText);
+        return charLength + totalTitleChars + countRichTextBlocksChars(richText);
       }
       else 
         return charLength;
