@@ -26,6 +26,10 @@ import {
   blockForQueryBlock,
   BlockType,
   BlockValue,
+  ListicleBlockListValue,
+  QuoteBlockListValue,
+  RichTextBlockListValue,
+  TitleBlockListValue,
   TitleBlockValue,
   unionMapForBlock
 } from '../blocks/types'
@@ -34,7 +38,6 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import { title } from 'process'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -181,64 +184,62 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [createError, updateError, publishError])
 
-  function countRichtextChars(blocksCharLength: number, nodes: any) {
+  function countRichtextChars(nodes: any) {
     return nodes.reduce((charLength: number, node: any) => {
       if (!node.text && !node.children) return charLength
       // node either has text (leaf node) or children (element node)
       if (node.text) {
         return charLength + (node.text as string).length
       }
-      return countRichtextChars(charLength, node.children)
-    }, blocksCharLength)
-  }
-
-  function countRichTextBlocksChars(blocks: BlockValue[]) {
-    return blocks.reduce((charLength: number, block: BlockValue) => {
-      if (!(block.type === BlockType.RichText)) 
-        return charLength
-      return countRichtextChars(charLength, block.value)
+      return countRichtextChars(node.children)
     }, 0)
   }
 
-  function countTitleChars(blocks: BlockValue[]) {
-    return blocks.reduce((charLength: number, block: BlockValue) => {
-      if ((block.type === BlockType.Title)) 
-        return charLength + (block.value.title as string).length + (block.value.lead as string).length
-      else 
-        return charLength;
-    }, 0)
+  function countRichTextBlocksChars(block: RichTextBlockListValue) {
+    return countRichtextChars(block.value)
   }
 
-  function countQuoteChars(blocks: BlockValue[]) {
-    return blocks.reduce((charLength: number, block: BlockValue) => {
-      if ((block.type === BlockType.Quote)) 
-        return charLength + (block.value.quote as string).length + (block.value.author as string).length
-      else 
-        return charLength;
-    }, 0)
+  function countTitleChars(block: TitleBlockListValue): number {
+    return (block.value.title as string).length + (block.value.lead as string).length
   }
 
-  function countListicleChars(blocks: BlockValue[]) {
+  function countQuoteChars(block: QuoteBlockListValue) {
+    return (block.value.quote as string).length + (block.value.author as string).length
+  }
+
+  function countListicleChars(block: ListicleBlockListValue) {
+    const titleArray = block.value.items.map(item => {
+      return item.value.title.length
+    })
+
+    const totalTitleChars = titleArray.reduce(function (charCount: number, b) {
+      return charCount + b
+    })
+
+    const richTextBlocks = block.value.items.map(item => item.value.richText)
+
+    const richTextBlocksCount = richTextBlocks.reduce(
+      (charCount: number, item) => charCount + countRichtextChars(item),
+      0
+    )
+
+    return totalTitleChars + richTextBlocksCount
+  }
+
+  function WordCounter(blocks: BlockValue[]): number {
     return blocks.reduce((charLength: number, block: BlockValue) => {
-      if (block.type === BlockType.Listicle){
-        // return charLength 
-        // let titleLength = 0;
-        // return (block.value.items.forEach(function (items) => { 
-        //   console.log (items.value.title.length);
-        //   return(titleLength)
-        // }))
-        console.log(block.value);
-        const titleArray = (block.value.items.map(item => {return (item.value.title.length)}))
-        const totalTitleChars = titleArray.reduce(function(a, b){ return a + b; })
-        // const richText = (block.value.items.map(item => {return(item.value.richText.map(richText => {console.log(richText); return (richText) } ))}))
-        // const totalRichTextChars = countRichTextBlocksChars(block.value.items.values.richText)
-        // console.log(totalRichTextChars)
-        const richText = (block.value.items.map(item => {return(item.value.richText)}))
-        console.log(richText);
-        return charLength + totalTitleChars + countRichTextBlocksChars(richText);
+      switch (block.type) {
+        case BlockType.Listicle:
+          return charLength + countListicleChars(block)
+        case BlockType.Title:
+          return charLength + countTitleChars(block)
+        case BlockType.Quote:
+          return charLength + countQuoteChars(block)
+        case BlockType.RichText:
+          return charLength + countRichTextBlocksChars(block)
+        default:
+          return charLength
       }
-      else 
-        return charLength;
     }, 0)
   }
 
@@ -362,8 +363,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   useEffect(() => {
-    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitleChars(blocks) + countQuoteChars(blocks) + countListicleChars(blocks)})
-  },[isMetaDrawerOpen])
+    setInfoData({
+      charCount: 0 + WordCounter(blocks)
+    })
+  }, [isMetaDrawerOpen])
 
   return (
     <>
@@ -437,10 +440,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)} >
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
-          infoData= {infoData}
+          infoData={infoData}
           onClose={() => setMetaDrawerOpen(false)}
           onChange={value => {
             setMetadata(value)
