@@ -595,6 +595,8 @@
       "memberPlans": "Member Plans",
       "paymentMethods": "Payment Methods",
       "usersAndMembers": "Users & Members",
+      "settings": "Settings",
+      "language": "Language",
       "languageSwitch": {
         "currentLanguage": "English",
         "close": "Close",
