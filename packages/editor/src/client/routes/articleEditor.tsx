@@ -184,19 +184,19 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [createError, updateError, publishError])
 
-  function countRichtextChars(nodes: any) {
+  function countRichtextChars(blocksCharLength: number, nodes: any) {
     return nodes.reduce((charLength: number, node: any) => {
       if (!node.text && !node.children) return charLength
       // node either has text (leaf node) or children (element node)
       if (node.text) {
         return charLength + (node.text as string).length
       }
-      return countRichtextChars(node.children)
-    }, 0)
+      return countRichtextChars(charLength, node.children)
+    }, blocksCharLength)
   }
 
   function countRichTextBlocksChars(block: RichTextBlockListValue) {
-    return countRichtextChars(block.value)
+    return countRichtextChars(0, block.value)
   }
 
   function countTitleChars(block: TitleBlockListValue): number {
@@ -219,7 +219,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     const richTextBlocks = block.value.items.map(item => item.value.richText)
 
     const richTextBlocksCount = richTextBlocks.reduce(
-      (charCount: number, item) => charCount + countRichtextChars(item),
+      (charCount: number, item) => charCount + countRichtextChars(0, item),
       0
     )
 
@@ -361,6 +361,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   const [infoData, setInfoData] = useState<InfoData>({
     charCount: 0
   })
+
+  console.log(WordCounter(blocks))
 
   useEffect(() => {
     setInfoData({
