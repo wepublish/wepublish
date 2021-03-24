@@ -362,8 +362,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     charCount: 0
   })
 
-  console.log(WordCounter(blocks))
-
   useEffect(() => {
     setInfoData({
       charCount: 0 + WordCounter(blocks)
