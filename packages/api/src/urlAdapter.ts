@@ -7,4 +7,5 @@ export interface URLAdapter {
   getPublicPageURL(page: PublicPage): string
   getAuthorURL(author: Author): string
   getArticlePreviewURL(token: string): string
+  getCommentURL(comment: Comment): string
 }
