@@ -1,4 +1,4 @@
-import {GraphQLScalarType} from 'graphql'
+import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
 
 export const GraphQLReference = new GraphQLScalarType({
   name: 'Reference',
@@ -11,6 +11,7 @@ export const GraphQLReference = new GraphQLScalarType({
   },
 
   parseLiteral(literal) {
-    return null
+    const obj = valueFromASTUntyped(literal)
+    return obj
   }
 })

@@ -1,5 +1,6 @@
 import {
   ContentModel,
+  ContentModelSchemaFieldEnum,
   ContentModelSchemaFieldObject,
   ContentModelSchemaTypes,
   ReferenceScope
@@ -21,7 +22,8 @@ const richText: ContentModelSchemaFieldObject = {
   type: ContentModelSchemaTypes.object,
   fields: {
     richText: {
-      type: ContentModelSchemaTypes.richText
+      type: ContentModelSchemaTypes.richText,
+      required: true
     }
   }
 }
@@ -36,10 +38,22 @@ const image: ContentModelSchemaFieldObject = {
           identifier: '__media',
           scope: ReferenceScope.local
         }
-      ]
+      ],
+      required: true
     },
     caption: {
       type: ContentModelSchemaTypes.string
+    }
+  }
+}
+
+const imageGallery: ContentModelSchemaFieldObject = {
+  type: ContentModelSchemaTypes.object,
+  fields: {
+    images: {
+      type: ContentModelSchemaTypes.list,
+      contentType: image,
+      required: true
     }
   }
 }
@@ -82,7 +96,8 @@ const vimeo: ContentModelSchemaFieldObject = {
   required: true,
   fields: {
     videoID: {
-      type: ContentModelSchemaTypes.string
+      type: ContentModelSchemaTypes.id,
+      required: true
     }
   }
 }
@@ -92,38 +107,154 @@ const youtube: ContentModelSchemaFieldObject = {
   required: true,
   fields: {
     videoID: {
+      type: ContentModelSchemaTypes.id,
+      required: true
+    }
+  }
+}
+
+const soundCloudTrack: ContentModelSchemaFieldObject = {
+  type: ContentModelSchemaTypes.object,
+  required: true,
+  fields: {
+    trackID: {
+      type: ContentModelSchemaTypes.id,
+      required: true
+    }
+  }
+}
+
+const embed: ContentModelSchemaFieldObject = {
+  type: ContentModelSchemaTypes.object,
+  required: true,
+  fields: {
+    url: {
+      type: ContentModelSchemaTypes.string
+    },
+    title: {
+      type: ContentModelSchemaTypes.string
+    },
+    width: {
+      type: ContentModelSchemaTypes.int
+    },
+    height: {
+      type: ContentModelSchemaTypes.int
+    },
+    styleCustom: {
       type: ContentModelSchemaTypes.string
     }
   }
 }
 
-const blockGalleryImageEdge: ContentModelSchemaFieldObject = {
+const linkPageBreak: ContentModelSchemaFieldObject = {
   type: ContentModelSchemaTypes.object,
   required: true,
   fields: {
+    text: {
+      type: ContentModelSchemaTypes.string
+    },
+    richText: {
+      type: ContentModelSchemaTypes.richText,
+      required: true
+    },
+    linkURL: {
+      type: ContentModelSchemaTypes.string
+    },
+    linkText: {
+      type: ContentModelSchemaTypes.string
+    },
+    linkTarget: {
+      type: ContentModelSchemaTypes.string
+    },
+    hideButton: {
+      type: ContentModelSchemaTypes.boolean,
+      required: true
+    },
+    styleOption: {
+      type: ContentModelSchemaTypes.string
+    },
+    layoutOption: {
+      type: ContentModelSchemaTypes.string
+    },
+    templateOption: {
+      type: ContentModelSchemaTypes.string
+    },
     image: {
       type: ContentModelSchemaTypes.reference,
       types: [
         {
-          identifier: '',
+          identifier: '__media',
           scope: ReferenceScope.local
         }
       ]
+    }
+  }
+}
+
+const quote: ContentModelSchemaFieldObject = {
+  type: ContentModelSchemaTypes.object,
+  required: true,
+  fields: {
+    quote: {
+      type: ContentModelSchemaTypes.string
     },
-    caption: {
+    author: {
       type: ContentModelSchemaTypes.string
     }
   }
 }
 
-const galleryImage: ContentModelSchemaFieldObject = {
+const teaserStyle: ContentModelSchemaFieldEnum = {
+  type: ContentModelSchemaTypes.enum,
+  values: [
+    {description: 'default', value: 'DEFAULT'},
+    {description: 'light', value: 'LIGHT'},
+    {description: 'text', value: 'TEXT'}
+  ]
+}
+
+const teaserGrid: ContentModelSchemaFieldObject = {
   type: ContentModelSchemaTypes.object,
   required: true,
   fields: {
-    images: {
+    teasers: {
       type: ContentModelSchemaTypes.list,
       required: true,
-      contentType: blockGalleryImageEdge
+      contentType: {
+        type: ContentModelSchemaTypes.object,
+        fields: {
+          style: teaserStyle,
+          imageID: {
+            type: ContentModelSchemaTypes.reference,
+            types: [
+              {
+                identifier: '__media',
+                scope: ReferenceScope.local
+              }
+            ]
+          },
+          preTitle: {type: ContentModelSchemaTypes.string},
+          title: {type: ContentModelSchemaTypes.string},
+          lead: {type: ContentModelSchemaTypes.string},
+          contentRef: {
+            type: ContentModelSchemaTypes.reference,
+            types: [
+              {
+                identifier: 'article',
+                scope: ReferenceScope.all
+              },
+              {
+                identifier: 'page',
+                scope: ReferenceScope.local
+              }
+            ]
+          }
+        }
+      }
+    },
+    numColumns: {
+      type: ContentModelSchemaTypes.int,
+      required: true
     }
   }
 }
@@ -142,10 +273,15 @@ export const contentModelArticle: ContentModel = {
             title,
             richText,
             image,
+            imageGallery,
             listicle,
             vimeo,
             youtube,
-            galleryImage
+            soundCloudTrack,
+            embed,
+            linkPageBreak,
+            quote,
+            teaserGrid
           }
         }
       }

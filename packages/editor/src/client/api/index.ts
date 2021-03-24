@@ -68,27 +68,75 @@ export type _Cmp_Article_Record_Content = {
   blocks?: Maybe<Array<Maybe<_Cmp_Article_Record_Content_Blocks>>>;
 };
 
-export type _Cmp_Article_Record_Content_Blocks = _Cmp_Article_Record_Content_Blocks_Title | _Cmp_Article_Record_Content_Blocks_RichText | _Cmp_Article_Record_Content_Blocks_Image | _Cmp_Article_Record_Content_Blocks_Listicle | _Cmp_Article_Record_Content_Blocks_Vimeo | _Cmp_Article_Record_Content_Blocks_Youtube | _Cmp_Article_Record_Content_Blocks_GalleryImage;
+export type _Cmp_Article_Record_Content_Blocks = _Cmp_Article_Record_Content_Blocks_Title | _Cmp_Article_Record_Content_Blocks_RichText | _Cmp_Article_Record_Content_Blocks_Image | _Cmp_Article_Record_Content_Blocks_ImageGallery | _Cmp_Article_Record_Content_Blocks_Listicle | _Cmp_Article_Record_Content_Blocks_Vimeo | _Cmp_Article_Record_Content_Blocks_Youtube | _Cmp_Article_Record_Content_Blocks_SoundCloudTrack | _Cmp_Article_Record_Content_Blocks_Embed | _Cmp_Article_Record_Content_Blocks_LinkPageBreak | _Cmp_Article_Record_Content_Blocks_Quote | _Cmp_Article_Record_Content_Blocks_TeaserGrid;
 
-export type _Cmp_Article_Record_Content_Blocks_GalleryImage = {
-  __typename?: '_cmp_article_record_content_blocks_galleryImage';
-  images: Array<_Cmp_Article_Record_Content_Blocks_GalleryImage_Images>;
+export type _Cmp_Article_Record_Content_Blocks_Embed = {
+  __typename?: '_cmp_article_record_content_blocks_embed';
+  embed?: Maybe<_Cmp_Article_Record_Content_Blocks_Embed_Content>;
 };
 
-export type _Cmp_Article_Record_Content_Blocks_GalleryImage_Images = {
-  __typename?: '_cmp_article_record_content_blocks_galleryImage_images';
-  image?: Maybe<Scalars['Reference']>;
-  caption?: Maybe<Scalars['String']>;
+export type _Cmp_Article_Record_Content_Blocks_Embed_Content = {
+  __typename?: '_cmp_article_record_content_blocks_embed_content';
+  url?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+  styleCustom?: Maybe<Scalars['String']>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Image = {
   __typename?: '_cmp_article_record_content_blocks_image';
-  image?: Maybe<Scalars['Reference']>;
+  image?: Maybe<_Cmp_Article_Record_Content_Blocks_Image_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Image_Content = {
+  __typename?: '_cmp_article_record_content_blocks_image_content';
+  image: Scalars['Reference'];
   caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_ImageGallery = {
+  __typename?: '_cmp_article_record_content_blocks_imageGallery';
+  imageGallery?: Maybe<_Cmp_Article_Record_Content_Blocks_ImageGallery_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Content = {
+  __typename?: '_cmp_article_record_content_blocks_imageGallery_content';
+  images: Array<Maybe<_Cmp_Article_Record_Content_Blocks_ImageGallery_Images>>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Images = {
+  __typename?: '_cmp_article_record_content_blocks_imageGallery_images';
+  image: Scalars['Reference'];
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak = {
+  __typename?: '_cmp_article_record_content_blocks_linkPageBreak';
+  linkPageBreak?: Maybe<_Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content = {
+  __typename?: '_cmp_article_record_content_blocks_linkPageBreak_content';
+  text?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  linkURL?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkTarget?: Maybe<Scalars['String']>;
+  hideButton: Scalars['Boolean'];
+  styleOption?: Maybe<Scalars['String']>;
+  layoutOption?: Maybe<Scalars['String']>;
+  templateOption?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['Reference']>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Listicle = {
   __typename?: '_cmp_article_record_content_blocks_listicle';
+  listicle?: Maybe<_Cmp_Article_Record_Content_Blocks_Listicle_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Listicle_Content = {
+  __typename?: '_cmp_article_record_content_blocks_listicle_content';
   items: Array<Maybe<_Cmp_Article_Record_Content_Blocks_Listicle_Items>>;
 };
 
@@ -99,25 +147,96 @@ export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
   image?: Maybe<Scalars['Reference']>;
 };
 
+export type _Cmp_Article_Record_Content_Blocks_Quote = {
+  __typename?: '_cmp_article_record_content_blocks_quote';
+  quote?: Maybe<_Cmp_Article_Record_Content_Blocks_Quote_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Quote_Content = {
+  __typename?: '_cmp_article_record_content_blocks_quote_content';
+  quote?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
+};
+
 export type _Cmp_Article_Record_Content_Blocks_RichText = {
   __typename?: '_cmp_article_record_content_blocks_richText';
-  richText?: Maybe<Scalars['RichText']>;
+  richText?: Maybe<_Cmp_Article_Record_Content_Blocks_RichText_Content>;
 };
+
+export type _Cmp_Article_Record_Content_Blocks_RichText_Content = {
+  __typename?: '_cmp_article_record_content_blocks_richText_content';
+  richText: Scalars['RichText'];
+};
+
+export type _Cmp_Article_Record_Content_Blocks_SoundCloudTrack = {
+  __typename?: '_cmp_article_record_content_blocks_soundCloudTrack';
+  soundCloudTrack?: Maybe<_Cmp_Article_Record_Content_Blocks_SoundCloudTrack_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_SoundCloudTrack_Content = {
+  __typename?: '_cmp_article_record_content_blocks_soundCloudTrack_content';
+  trackID: Scalars['ID'];
+};
+
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid = {
+  __typename?: '_cmp_article_record_content_blocks_teaserGrid';
+  teaserGrid?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Content = {
+  __typename?: '_cmp_article_record_content_blocks_teaserGrid_content';
+  teasers: Array<Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers>>;
+  numColumns: Scalars['Int'];
+};
+
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
+  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers';
+  style?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
+  imageID?: Maybe<Scalars['Reference']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentRef?: Maybe<Scalars['Reference']>;
+};
+
+export enum _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
+  /** default */
+  Default = 'DEFAULT',
+  /** light */
+  Light = 'LIGHT',
+  /** text */
+  Text = 'TEXT'
+}
 
 export type _Cmp_Article_Record_Content_Blocks_Title = {
   __typename?: '_cmp_article_record_content_blocks_title';
+  title?: Maybe<_Cmp_Article_Record_Content_Blocks_Title_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Title_Content = {
+  __typename?: '_cmp_article_record_content_blocks_title_content';
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Vimeo = {
   __typename?: '_cmp_article_record_content_blocks_vimeo';
-  videoID?: Maybe<Scalars['String']>;
+  vimeo?: Maybe<_Cmp_Article_Record_Content_Blocks_Vimeo_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Vimeo_Content = {
+  __typename?: '_cmp_article_record_content_blocks_vimeo_content';
+  videoID: Scalars['ID'];
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Youtube = {
   __typename?: '_cmp_article_record_content_blocks_youtube';
-  videoID?: Maybe<Scalars['String']>;
+  youtube?: Maybe<_Cmp_Article_Record_Content_Blocks_Youtube_Content>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_Youtube_Content = {
+  __typename?: '_cmp_article_record_content_blocks_youtube_content';
+  videoID: Scalars['ID'];
 };
 
 export type _Cmp_ArticleConnection = {
@@ -213,12 +332,22 @@ export type _Cmp_Example_Record_Content_MyUnion = _Cmp_Example_Record_Content_My
 
 export type _Cmp_Example_Record_Content_MyUnion_CaseA = {
   __typename?: '_cmp_example_record_content_myUnion_caseA';
+  caseA?: Maybe<_Cmp_Example_Record_Content_MyUnion_CaseA_Content>;
+};
+
+export type _Cmp_Example_Record_Content_MyUnion_CaseA_Content = {
+  __typename?: '_cmp_example_record_content_myUnion_caseA_content';
   fieldA?: Maybe<Scalars['String']>;
   fieldB?: Maybe<Scalars['Int']>;
 };
 
 export type _Cmp_Example_Record_Content_MyUnion_CaseB = {
   __typename?: '_cmp_example_record_content_myUnion_caseB';
+  caseB?: Maybe<_Cmp_Example_Record_Content_MyUnion_CaseB_Content>;
+};
+
+export type _Cmp_Example_Record_Content_MyUnion_CaseB_Content = {
+  __typename?: '_cmp_example_record_content_myUnion_caseB_content';
   fieldA?: Maybe<Scalars['Int']>;
   fieldB?: Maybe<Scalars['String']>;
 };
@@ -241,12 +370,12 @@ export type _Cmpi_Article = {
 
 
 export type _Cmpi_ArticleCreateArgs = {
-  input: _Cmpi_Article_Record;
+  input: _Cmpi_Article_Record_Create;
 };
 
 
 export type _Cmpi_ArticleUpdateArgs = {
-  input: _Cmpi_Article_Record;
+  input: _Cmpi_Article_Record_Update;
 };
 
 
@@ -269,13 +398,6 @@ export type _Cmpi_ArticleUnpublishArgs = {
   id: Scalars['ID'];
 };
 
-export type _Cmpi_Article_Record = {
-  id?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Article_Record_Content>;
-};
-
 export type _Cmpi_Article_Record_Content = {
   blocks?: Maybe<Array<Maybe<_Cmpi_Article_Record_Content_Blocks>>>;
 };
@@ -284,24 +406,50 @@ export type _Cmpi_Article_Record_Content_Blocks = {
   title?: Maybe<_Cmpi_Article_Record_Content_Blocks_Title>;
   richText?: Maybe<_Cmpi_Article_Record_Content_Blocks_RichText>;
   image?: Maybe<_Cmpi_Article_Record_Content_Blocks_Image>;
+  imageGallery?: Maybe<_Cmpi_Article_Record_Content_Blocks_ImageGallery>;
   listicle?: Maybe<_Cmpi_Article_Record_Content_Blocks_Listicle>;
   vimeo?: Maybe<_Cmpi_Article_Record_Content_Blocks_Vimeo>;
   youtube?: Maybe<_Cmpi_Article_Record_Content_Blocks_Youtube>;
-  galleryImage?: Maybe<_Cmpi_Article_Record_Content_Blocks_GalleryImage>;
+  soundCloudTrack?: Maybe<_Cmpi_Article_Record_Content_Blocks_SoundCloudTrack>;
+  embed?: Maybe<_Cmpi_Article_Record_Content_Blocks_Embed>;
+  linkPageBreak?: Maybe<_Cmpi_Article_Record_Content_Blocks_LinkPageBreak>;
+  quote?: Maybe<_Cmpi_Article_Record_Content_Blocks_Quote>;
+  teaserGrid?: Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid>;
 };
 
-export type _Cmpi_Article_Record_Content_Blocks_GalleryImage = {
-  images: Array<_Cmpi_Article_Record_Content_Blocks_GalleryImage_Images>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_GalleryImage_Images = {
-  image?: Maybe<Scalars['Reference']>;
-  caption?: Maybe<Scalars['String']>;
+export type _Cmpi_Article_Record_Content_Blocks_Embed = {
+  url?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+  styleCustom?: Maybe<Scalars['String']>;
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Image = {
-  image?: Maybe<Scalars['Reference']>;
+  image: Scalars['Reference'];
   caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_ImageGallery = {
+  images: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_ImageGallery_Images>>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_ImageGallery_Images = {
+  image: Scalars['Reference'];
+  caption?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_LinkPageBreak = {
+  text?: Maybe<Scalars['String']>;
+  richText: Scalars['RichText'];
+  linkURL?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkTarget?: Maybe<Scalars['String']>;
+  hideButton: Scalars['Boolean'];
+  styleOption?: Maybe<Scalars['String']>;
+  layoutOption?: Maybe<Scalars['String']>;
+  templateOption?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['Reference']>;
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Listicle = {
@@ -314,9 +462,41 @@ export type _Cmpi_Article_Record_Content_Blocks_Listicle_Items = {
   image?: Maybe<Scalars['Reference']>;
 };
 
-export type _Cmpi_Article_Record_Content_Blocks_RichText = {
-  richText?: Maybe<Scalars['RichText']>;
+export type _Cmpi_Article_Record_Content_Blocks_Quote = {
+  quote?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
 };
+
+export type _Cmpi_Article_Record_Content_Blocks_RichText = {
+  richText: Scalars['RichText'];
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_SoundCloudTrack = {
+  trackID: Scalars['ID'];
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid = {
+  teasers: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers>>;
+  numColumns: Scalars['Int'];
+};
+
+export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
+  style?: Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
+  imageID?: Maybe<Scalars['Reference']>;
+  preTitle?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  lead?: Maybe<Scalars['String']>;
+  contentRef?: Maybe<Scalars['Reference']>;
+};
+
+export enum _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
+  /** default */
+  Default = 'DEFAULT',
+  /** light */
+  Light = 'LIGHT',
+  /** text */
+  Text = 'TEXT'
+}
 
 export type _Cmpi_Article_Record_Content_Blocks_Title = {
   title?: Maybe<Scalars['String']>;
@@ -324,11 +504,24 @@ export type _Cmpi_Article_Record_Content_Blocks_Title = {
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Vimeo = {
-  videoID?: Maybe<Scalars['String']>;
+  videoID: Scalars['ID'];
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Youtube = {
-  videoID?: Maybe<Scalars['String']>;
+  videoID: Scalars['ID'];
+};
+
+export type _Cmpi_Article_Record_Create = {
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Article_Record_Content>;
+};
+
+export type _Cmpi_Article_Record_Update = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Article_Record_Content>;
 };
 
 export type _Cmpi_Example = {
@@ -342,12 +535,12 @@ export type _Cmpi_Example = {
 
 
 export type _Cmpi_ExampleCreateArgs = {
-  input: _Cmpi_Example_Record;
+  input: _Cmpi_Example_Record_Create;
 };
 
 
 export type _Cmpi_ExampleUpdateArgs = {
-  input: _Cmpi_Example_Record;
+  input: _Cmpi_Example_Record_Update;
 };
 
 
@@ -368,13 +561,6 @@ export type _Cmpi_ExamplePublishArgs = {
 
 export type _Cmpi_ExampleUnpublishArgs = {
   id: Scalars['ID'];
-};
-
-export type _Cmpi_Example_Record = {
-  id?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
 export type _Cmpi_Example_Record_Content = {
@@ -432,6 +618,19 @@ export type _Cmpi_Example_Record_Content_MyUnion_CaseA = {
 export type _Cmpi_Example_Record_Content_MyUnion_CaseB = {
   fieldA?: Maybe<Scalars['Int']>;
   fieldB?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Example_Record_Create = {
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Example_Record_Content>;
+};
+
+export type _Cmpi_Example_Record_Update = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
 export type All = {

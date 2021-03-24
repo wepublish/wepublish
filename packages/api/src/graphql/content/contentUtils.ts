@@ -11,11 +11,11 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
+  GraphQLScalarType,
   GraphQLString,
   GraphQLUnionType
 } from 'graphql'
 import {GraphQLRichText} from '../richText'
-import {getGraphQLi18nString} from '../i18nPrimitives'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {LanguageConfig} from '../../interfaces/languageConfig'
 import {GraphQLReference} from '../reference'
@@ -30,6 +30,7 @@ import {
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLPeer} from '../peer'
+import {getI18nOutputType, getI18nInputType} from '../i18nPrimitives'
 
 export interface PeerArticle {
   peerID: string
@@ -144,6 +145,22 @@ interface GenerateTypeConfig {
   language: LanguageConfig
   isInput: boolean
 }
+
+function getLeaf(
+  config: GenerateTypeConfig,
+  contentModelSchemas: ContentModelSchemas,
+  graphQLType: GraphQLScalarType
+) {
+  if ((contentModelSchemas as ContentModelSchemaFieldLeaf).i18n) {
+    if (config.isInput) {
+      return getI18nInputType(graphQLType, config.language)
+    } else {
+      return getI18nOutputType(graphQLType, config.language)
+    }
+  }
+  return graphQLType
+}
+
 function generateType(
   config: GenerateTypeConfig,
   contentModelSchemas: ContentModelSchemas,
@@ -153,26 +170,22 @@ function generateType(
 
   switch (contentModelSchemas.type) {
     case ContentModelSchemaTypes.id:
-      type = GraphQLID
+      type = getLeaf(config, contentModelSchemas, GraphQLID)
       break
     case ContentModelSchemaTypes.string:
-      if ((contentModelSchemas as ContentModelSchemaFieldLeaf).i18n) {
-        type = getGraphQLi18nString(config.language)
-      } else {
-        type = GraphQLString
-      }
+      type = getLeaf(config, contentModelSchemas, GraphQLString)
       break
     case ContentModelSchemaTypes.boolean:
-      type = GraphQLBoolean
+      type = getLeaf(config, contentModelSchemas, GraphQLBoolean)
       break
     case ContentModelSchemaTypes.int:
-      type = GraphQLInt
+      type = getLeaf(config, contentModelSchemas, GraphQLInt)
       break
     case ContentModelSchemaTypes.float:
-      type = GraphQLFloat
+      type = getLeaf(config, contentModelSchemas, GraphQLFloat)
       break
     case ContentModelSchemaTypes.dateTime:
-      type = GraphQLDateTime
+      type = getLeaf(config, contentModelSchemas, GraphQLDateTime)
       break
     case ContentModelSchemaTypes.list:
       type = GraphQLList(generateType(config, contentModelSchemas.contentType, name))
@@ -255,11 +268,11 @@ function generateType(
       break
 
     case ContentModelSchemaTypes.richText:
-      type = GraphQLRichText
+      type = getLeaf(config, contentModelSchemas, GraphQLRichText)
       break
 
     case ContentModelSchemaTypes.reference:
-      type = GraphQLReference
+      type = getLeaf(config, contentModelSchemas, GraphQLReference)
       break
   }
   if (contentModelSchemas.required) {

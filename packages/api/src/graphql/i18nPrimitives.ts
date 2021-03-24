@@ -1,54 +1,55 @@
-import {isObject} from '@karma.run/utility'
-import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
+import {
+  GraphQLFieldConfigMap,
+  GraphQLInputFieldConfigMap,
+  GraphQLInputObjectType,
+  GraphQLInputType,
+  GraphQLObjectType,
+  GraphQLOutputType
+} from 'graphql'
 import {LanguageConfig} from '../interfaces/languageConfig'
+import {nameJoin} from './content/contentUtils'
 
-let graphQLi18nString: GraphQLScalarType
-export function getGraphQLi18nString(languageConfig: LanguageConfig) {
-  if (graphQLi18nString) {
-    return graphQLi18nString
+interface InputCache {
+  [key: string]: GraphQLInputObjectType
+}
+interface OutputCache {
+  [key: string]: GraphQLObjectType
+}
+
+const inputTypes: InputCache = {}
+export function getI18nInputType(
+  graphQLType: GraphQLInputType,
+  languageConfig: LanguageConfig
+): GraphQLInputObjectType {
+  const type = graphQLType.toString()
+  if (type in inputTypes) {
+    return inputTypes[type]
   }
-
-  function serialize(value: {[lang: string]: any}): any {
-    if (!isObject(value)) {
-      throw Error(`Expected object, found ${value}.`)
-    }
-
-    // TODO schema validation
-    return Object.entries(value).reduce((accu, [lang, val]) => {
-      const r = languageConfig.languages.find(i => i.id === lang)
-      accu[r!.tag] = val
+  inputTypes[type] = new GraphQLInputObjectType({
+    name: nameJoin('i18n', type, 'input'),
+    fields: languageConfig.languages.reduce((accu, language) => {
+      accu[language.tag] = {type: graphQLType}
       return accu
-    }, {} as any)
-  }
-
-  function parse(value: {[lang: string]: any}): any {
-    if (!isObject(value)) {
-      throw Error(`Expected object, found ${value}.`)
-    }
-
-    // TODO schema validation
-    return Object.entries(value).reduce((accu, [lang, val]) => {
-      const r = languageConfig.languages.find(i => i.tag === lang)
-      accu[r!.id] = val
-      return accu
-    }, {} as any)
-  }
-
-  graphQLi18nString = new GraphQLScalarType({
-    name: 'i18nString',
-    description: `i18 String which supports the following languages: ${languageConfig.languages
-      .map(r => r.tag)
-      .join(',')}`,
-    serialize(value) {
-      return serialize(value)
-    },
-    parseValue(value) {
-      return parse(value)
-    },
-    parseLiteral(literal) {
-      const obj = valueFromASTUntyped(literal)
-      return parse(obj)
-    }
+    }, {} as GraphQLInputFieldConfigMap)
   })
-  return graphQLi18nString
+  return inputTypes[type]
+}
+
+const outputTypes: OutputCache = {}
+export function getI18nOutputType(
+  graphQLType: GraphQLOutputType,
+  languageConfig: LanguageConfig
+): GraphQLObjectType {
+  const type = graphQLType.toString()
+  if (type in outputTypes) {
+    return outputTypes[type]
+  }
+  outputTypes[type] = new GraphQLObjectType({
+    name: nameJoin('i18n', type),
+    fields: languageConfig.languages.reduce((accu, language) => {
+      accu[language.tag] = {type: graphQLType}
+      return accu
+    }, {} as GraphQLFieldConfigMap<any, any, any>)
+  })
+  return outputTypes[type]
 }
