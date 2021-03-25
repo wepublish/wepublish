@@ -9,7 +9,7 @@ import {
   PublicArticle,
   PublicPage,
   URLAdapter,
-  Comment,
+  PublicComment,
   CommentItemType
 } from '../src'
 import {ApolloServer} from 'apollo-server'
@@ -40,7 +40,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: Comment): string {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
     if (comment.itemType === CommentItemType.Article) {
       return `https://editor.demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }

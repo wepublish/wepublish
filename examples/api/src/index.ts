@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {
   Author,
-  Comment,
+  PublicComment,
   CommentItemType,
   MailgunMailProvider,
   Oauth2Provider,
@@ -51,7 +51,7 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/author/${author.slug || author.id}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: Comment) {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
     if (comment.itemType === CommentItemType.Article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }
