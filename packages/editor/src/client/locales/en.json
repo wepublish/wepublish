@@ -261,7 +261,7 @@
         "search": "Search",
         "authors": "Authors",
         "noAuthorsFound": "No Authors found",
-        "deleteAuthor": "Delete Author?",
+        "deleteAuthor": "Delete Author",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
@@ -284,6 +284,11 @@
         "title": "Title",
         "link": "Link",
         "bioInformation": "Biographical Information"
+      },
+      "popover": {
+        "deleteThisAuthor": "Delete this author",
+        "popoverText": "Are you sure? That can't be undone.",
+        "deleteNow": "Delete now"
       }
     },
     "navigation": {

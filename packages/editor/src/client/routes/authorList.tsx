@@ -25,10 +25,10 @@ import {
   Table,
   Avatar,
   Drawer,
-  Modal,
-  Button
+  Button,
+  Popover,
+  Whisper
 } from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
@@ -46,7 +46,6 @@ export function AuthorList() {
 
   const [filter, setFilter] = useState('')
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [authors, setAuthors] = useState<FullAuthorFragment[]>([])
   const [currentAuthor, setCurrentAuthor] = useState<FullAuthorFragment>()
 
@@ -65,6 +64,29 @@ export function AuthorList() {
   })
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
+
+  const speaker = (
+    <Popover title={t('authors.popover.deleteThisAuthor')}>
+      <p>{t('authors.popover.popoverText')}</p>
+      <p>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={async () => {
+            if (!currentAuthor) return
+
+            await deleteAuthor({
+              variables: {id: currentAuthor.id}
+            })
+
+            await authorListRefetch(authorListQueryVariables)
+            // fetchMore()
+          }}>
+          {t('authors.popover.deleteNow')}
+        </Button>
+      </p>
+    </Popover>
+  )
 
   useEffect(() => {
     switch (current?.type) {
@@ -127,7 +149,7 @@ export function AuthorList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={authors}>
-        <Column width={100} align="left" resizable>
+        <Column width={60} align="left">
           <HeaderCell></HeaderCell>
           <Cell style={{padding: 2}}>
             {(rowData: FullAuthorFragment) => (
@@ -135,7 +157,7 @@ export function AuthorList() {
             )}
           </Cell>
         </Column>
-        <Column width={400} align="left" resizable>
+        <Column flexGrow={4} align="left">
           <HeaderCell>{t('authors.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullAuthorFragment) => (
@@ -145,21 +167,22 @@ export function AuthorList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column flexGrow={1} align="right" fixed="right">
           <HeaderCell>{t('authors.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullAuthorFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentAuthor(rowData)
-                  }}
-                />
+                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
+                  <IconButton
+                    icon={<Icon icon="trash-o" />}
+                    circle
+                    size="sm"
+                    color="red"
+                    onClick={() => {
+                      setCurrentAuthor(rowData)
+                    }}
+                  />
+                </Whisper>
               </>
             )}
           </Cell>
@@ -167,8 +190,9 @@ export function AuthorList() {
       </Table>
 
       <Drawer
+        full
+        placement={'bottom'}
         show={isEditModalOpen}
-        size={'sm'}
         onHide={() => {
           setEditModalOpen(false)
           dispatch({
@@ -194,43 +218,6 @@ export function AuthorList() {
           }}
         />
       </Drawer>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('authors.overview.deleteAuthor')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('authors.overview.name')}>
-              {currentAuthor?.name || t('authors.overview.unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentAuthor) return
-
-              await deleteAuthor({
-                variables: {id: currentAuthor.id}
-              })
-
-              await authorListRefetch(authorListQueryVariables)
-
-              setConfirmationDialogOpen(false)
-              // fetchMore()
-            }}
-            color="red">
-            {t('authors.overview.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('authors.overview.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   )
 }
