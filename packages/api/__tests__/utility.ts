@@ -37,6 +37,10 @@ class ExampleURLAdapter implements URLAdapter {
   getArticlePreviewURL(token: string): string {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
+
+  getCommentURL(comment: Comment): string{
+    return `https://editor.demo.wepublish.media/comments/${comment}`
+  }
 }
 
 export async function createGraphQLTestClientWithMongoDB(): Promise<TestClient> {
