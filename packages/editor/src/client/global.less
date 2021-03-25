@@ -1,4 +1,19 @@
+@modal-body-margin: 1800px;
+
 .highlighted-row,
 .highlighted-row .rs-table-cell-group .rs-table-cell {
     background-color: #f2faff;
 }
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+  
+    &.in {
+      opacity: 0.3;
+    }
+  }
+
+  .rs-drawer-full.rs-drawer-left, .rs-drawer-full.rs-drawer-right {
+    width: calc(100% - 0px);
+  }

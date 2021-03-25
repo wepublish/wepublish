@@ -287,7 +287,7 @@
       },
       "popover": {
         "deleteThisAuthor": "Delete this author",
-        "popoverText": "Are you sure? That can't be undone.",
+        "popoverText": "Are you sure? It can’t be undone",
         "deleteNow": "Delete now"
       }
     },
@@ -407,6 +407,11 @@
         "subEdit": "Edit",
         "subCreate": "Create",
         "subDisableDescription": "Subscription can only be added once the user has been created."
+      },
+      "popover": {
+        "deleteThisUser": "Delete this user",
+        "popoverText": "Are you sure? It can’t be undone.",
+        "deleteNow": "Delete now"
       }
     },
     "userRoles": {

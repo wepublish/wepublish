@@ -25,7 +25,7 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
   const {t} = useTranslation()
 
   return (
-    <Panel>
+    <>
       <Form fluid={true}>
         <FormGroup>
           <ControlLabel>{t('userList.panels.resetPasswordFor', {userName})}</ControlLabel>
@@ -63,6 +63,6 @@ export function ResetUserPasswordPanel({userID, userName, onClose}: ResetUserPas
         }}>
         {t('userList.panels.resetPassword')}
       </Button>
-    </Panel>
+    </>
   )
 }

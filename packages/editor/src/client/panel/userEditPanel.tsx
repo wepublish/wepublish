@@ -248,7 +248,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           {id ? t('userList.panels.save') : t('userList.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('userList.panels.close')}
+          {t('userList.panels.cancel')}
         </Button>
       </Drawer.Footer>
 

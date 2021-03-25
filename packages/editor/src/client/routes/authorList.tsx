@@ -191,7 +191,7 @@ export function AuthorList() {
 
       <Drawer
         full
-        placement={'bottom'}
+        placement={'right'}
         show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
