@@ -28,6 +28,13 @@ import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
+declare global {
+  const PasswordCredential: any
+  interface Window {
+    PasswordCredential: any
+  }
+}
+
 export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -118,6 +125,14 @@ export function Login() {
       user: {email: responseEmail, roles}
     } = response.data.createSession
 
+    if (window.PasswordCredential) {
+      const cred = new PasswordCredential({
+        id: email,
+        password
+      })
+      await navigator.credentials.store(cred)
+    }
+
     authenticateUser(sessionToken, responseEmail, roles)
   }
 
@@ -181,7 +196,7 @@ export function Login() {
               <ControlLabel>{t('login.email')}</ControlLabel>
               <FormControl
                 value={email}
-                autoComplete={'username'}
+                autoComplete={'email'}
                 onChange={email => setEmail(email)}
               />
             </FormGroup>
