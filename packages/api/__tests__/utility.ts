@@ -42,9 +42,9 @@ class ExampleURLAdapter implements URLAdapter {
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
     if (comment.itemType === CommentItemType.Article) {
-      return `https://editor.demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
+      return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
     }
-    return `https://editor.demo.wepublish.media/comments/${item.slug}/${comment.id}`
+    return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
 }
 
