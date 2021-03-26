@@ -7,18 +7,19 @@ import {
   GraphQLID,
   GraphQLInputFieldConfigMap,
   GraphQLInputObjectType,
+  GraphQLInputType,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLScalarType,
+  GraphQLOutputType,
   GraphQLString,
   GraphQLUnionType
 } from 'graphql'
 import {GraphQLRichText} from '../richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {LanguageConfig} from '../../interfaces/languageConfig'
-import {GraphQLReference} from '../reference'
+import {GraphQLReference, GraphQLReferenceInput} from '../reference'
 import {DBContentState} from '../../db/content'
 import {createProxyingIsTypeOf} from '../../utility'
 import {
@@ -149,13 +150,13 @@ interface GenerateTypeConfig {
 function getLeaf(
   config: GenerateTypeConfig,
   contentModelSchemas: ContentModelSchemas,
-  graphQLType: GraphQLScalarType
+  graphQLType: GraphQLInputType | GraphQLOutputType
 ) {
   if ((contentModelSchemas as ContentModelSchemaFieldLeaf).i18n) {
     if (config.isInput) {
-      return getI18nInputType(graphQLType, config.language)
+      return getI18nInputType(graphQLType as GraphQLInputType, config.language)
     } else {
-      return getI18nOutputType(graphQLType, config.language)
+      return getI18nOutputType(graphQLType as GraphQLOutputType, config.language)
     }
   }
   return graphQLType
@@ -272,7 +273,11 @@ function generateType(
       break
 
     case ContentModelSchemaTypes.reference:
-      type = getLeaf(config, contentModelSchemas, GraphQLReference)
+      if (config.isInput) {
+        type = getLeaf(config, contentModelSchemas, GraphQLReferenceInput)
+      } else {
+        type = getLeaf(config, contentModelSchemas, GraphQLReference)
+      }
       break
   }
   if (contentModelSchemas.required) {
