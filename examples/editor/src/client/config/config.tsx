@@ -28,7 +28,7 @@ export const config: ExtensionConfig = {
     },
     {
       identifier: 'article',
-      defaultContent: {blocks: [{key: '0', type: BlockType.Title, value: {title: '', lead: ''}}]},
+      defaultContent: {blocks: [{[BlockType.Title]: {title: '', lead: ''}}]},
       getContentView: getContentView
     }
   ],

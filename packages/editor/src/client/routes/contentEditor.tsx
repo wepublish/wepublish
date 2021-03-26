@@ -18,7 +18,12 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {useTranslation} from 'react-i18next'
 import {PublishCustomContentPanel} from '../panel/contentPublishPanel'
 import {useMutation, useQuery} from '@apollo/client'
-import {getCreateMutation, getUpdateMutation, getReadQuery} from '../utils/queryUtils'
+import {
+  getCreateMutation,
+  getUpdateMutation,
+  getReadQuery,
+  stripTypename
+} from '../utils/queryUtils'
 import {ConfigMerged} from '../interfaces/extensionConfig'
 
 export interface ArticleEditorProps {
@@ -104,7 +109,7 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
 
   useEffect(() => {
     if (recordData) {
-      const {shared, title, content} = recordData
+      const {shared, title, content} = stripTypename(recordData)
       const publishedAt = new Date()
       if (publishedAt) setPublishedAt(new Date(publishedAt))
 
@@ -114,7 +119,7 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
       })
       setContentData(content)
     }
-  }, [data])
+  }, [recordData])
 
   useEffect(() => {
     if (createError || updateError || publishError) {

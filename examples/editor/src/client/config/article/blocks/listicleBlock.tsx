@@ -6,7 +6,7 @@ import {TypographicTextArea} from '../atoms/typographicTextArea'
 
 import {Drawer} from 'rsuite'
 
-import {ListicleBlockValue, ListicleItem, RichTextBlockValue} from './types'
+import {ListicleBlockValue, ListicleItem} from './types'
 import {isFunctionalUpdate} from '@karma.run/react'
 
 import {useTranslation} from 'react-i18next'
@@ -15,7 +15,8 @@ import {
   createDefaultValue,
   ImagedEditPanel,
   ImageSelectPanel,
-  RichTextBlock
+  RichTextBlock,
+  RichTextBlockValue
 } from '@wepublish/editor'
 
 export function ListicleBlock({value, onChange, disabled}: BlockProps<ListicleBlockValue>) {

@@ -1,6 +1,4 @@
 import React, {Fragment, useState, ReactNode, useCallback, useMemo, memo} from 'react'
-import nanoid from 'nanoid'
-
 import {isFunctionalUpdate} from '@karma.run/react'
 import {isValueConstructor, ValueConstructor, UnionToIntersection} from '@karma.run/utility'
 
@@ -26,9 +24,7 @@ export interface BlockCaseProps<V = any> {
 }
 
 export interface BlockListValue<T extends string = string, V = any> {
-  key: string
-  type: T
-  value: V
+  [unionCase: string]: V
 }
 
 export type BlockMap = Record<string, BlockCaseProps>
@@ -65,10 +61,15 @@ const BlockListItem = memo(function BlockListItem({
 }: BlockListItemProps) {
   const handleValueChange = useCallback(
     (fieldValue: React.SetStateAction<any>) => {
-      onChange(index, value => ({
-        ...value,
-        value: isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue
-      }))
+      onChange(index, value => {
+        const {unionCase} = destructUnionCase(value)
+        const updated = isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue
+        const r = {
+          ...value,
+          [unionCase]: updated
+        }
+        return r
+      })
     },
     [onChange, index]
   )
@@ -80,7 +81,7 @@ const BlockListItem = memo(function BlockListItem({
       onDelete={() => onDelete(index)}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
       onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}>
-      {children({value: value.value, onChange: handleValueChange, autofocus, disabled})}
+      {children({value, onChange: handleValueChange, autofocus, disabled})}
     </ListItemWrapper>
   )
 })
@@ -94,14 +95,14 @@ export function useBlockMap<V extends BlockListValue>(
 
 export interface BlockListProps<V extends BlockListValue> {
   value: BlockListRoot<V>
-  onChange: React.Dispatch<React.SetStateAction<{blocks: V[]}>>
+  onChange: React.Dispatch<React.SetStateAction<BlockListRoot<V>>>
   autofocus?: boolean
   disabled?: boolean
   children: BlockMapForValue<V>
 }
 
 export interface BlockListRoot<V> {
-  blocks: V[]
+  blocks: {[unionCase: string]: V}[]
 }
 
 export function BlockList<V extends BlockListValue>({
@@ -120,6 +121,8 @@ export function BlockList<V extends BlockListValue>({
         const updatedValue = isFunctionalUpdate(itemValue)
           ? itemValue(value.blocks[index])
           : itemValue
+
+        //console.log('updatedValue', updatedValue)
         return Object.assign({}, value, {
           blocks: Object.assign([], value.blocks, {
             [index]: updatedValue
@@ -138,10 +141,8 @@ export function BlockList<V extends BlockListValue>({
         const valuesCopy = values.blocks.slice()
 
         valuesCopy.splice(index, 0, {
-          key: nanoid(),
-          type,
-          value: isValueConstructor(defaultValue) ? defaultValue() : defaultValue
-        } as V)
+          [type]: isValueConstructor(defaultValue) ? defaultValue() : defaultValue
+        })
 
         return Object.assign({}, values, {blocks: valuesCopy})
       })
@@ -215,13 +216,15 @@ export function BlockList<V extends BlockListValue>({
   function listItemForIndex(value: V, index: number) {
     const hasPrevIndex = index - 1 >= 0
     const hasNextIndex = index + 1 < values.blocks.length
-    const blockDef = blockMap[value.type]
+    const {unionCase, val} = destructUnionCase(value)
+    const blockDef = blockMap[unionCase]
+    const key_ = unionCase + index // TODO improve key handling
 
     return (
-      <Fragment key={value.key}>
+      <Fragment key={key_}>
         <BlockListItem
           index={index}
-          value={value}
+          value={val}
           icon={blockDef.icon}
           onDelete={handleRemove}
           onChange={handleItemChange}
@@ -321,4 +324,12 @@ function ListItemWrapper({
       </div>
     </div>
   )
+}
+
+function destructUnionCase(value: any) {
+  const unionCase = Object.keys(value)[0]
+  return {
+    unionCase,
+    val: value[unionCase]
+  }
 }

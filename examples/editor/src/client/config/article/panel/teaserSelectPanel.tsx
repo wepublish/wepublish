@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react'
 
-import {useArticleListQuery, usePageListQuery, usePeerArticleListQuery} from '../api'
 import {TeaserType, TeaserLink} from '../blocks/types'
 
 import {useTranslation} from 'react-i18next'
 import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
+import {
+  useArticleListQuery,
+  usePageListQuery,
+  usePeerArticleListQuery
+} from '@wepublish/editor/src/client/api'
 
 export interface TeaserSelectPanelProps {
   onClose(): void

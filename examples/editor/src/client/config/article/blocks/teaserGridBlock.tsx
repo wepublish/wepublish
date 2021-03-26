@@ -16,9 +16,10 @@ import {TeaserGridBlockValue, Teaser, TeaserType} from './types'
 
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
-import {ImageRefFragment, TeaserStyle, PeerWithProfileFragment} from '../api'
+import {ImageRefFragment, TeaserStyle} from '../api'
 
 import {useTranslation} from 'react-i18next'
+import {PeerWithProfileFragment} from '@wepublish/editor/src/client/api'
 
 const GridItem = SortableElement((props: TeaserBlockProps) => {
   return <TeaserBlock {...props} />

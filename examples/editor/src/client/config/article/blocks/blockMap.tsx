@@ -12,7 +12,8 @@ import {EmbedBlock} from './embedBlock'
 import {TeaserGridBlock} from './teaserGridBlock'
 import {ImageGalleryBlock} from './imageGalleryBlock'
 import {ListicleBlock} from './listicleBlock'
-import {createDefaultValue, RichTextBlock} from '@wepublish/editor'
+import {createDefaultValue} from '@wepublish/editor'
+import {RichTextBlockExampleBlock} from './richTextBlockExample'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -23,8 +24,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
   },
 
   [BlockType.RichText]: {
-    field: props => <RichTextBlock {...props} />,
-    defaultValue: createDefaultValue,
+    field: props => <RichTextBlockExampleBlock {...props} />,
+    defaultValue: {richText: createDefaultValue()},
     label: 'Rich Text',
     icon: 'file-text'
   },

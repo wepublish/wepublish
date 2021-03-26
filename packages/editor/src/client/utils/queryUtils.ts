@@ -146,3 +146,21 @@ function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = 
       return ''
   }
 }
+
+export function stripTypename<T>(input: T) {
+  const newish = {...input}
+
+  for (const prop in newish) {
+    if (prop === '__typename') delete newish[prop]
+    else if (newish[prop] === null) {
+    } else if (Array.isArray(newish[prop])) {
+      for (const next in newish[prop]) {
+        newish[prop][next] = stripTypename(newish[prop][next])
+      }
+    } else if (typeof newish[prop] === 'object') {
+      newish[prop] = stripTypename(newish[prop])
+    }
+  }
+
+  return newish
+}

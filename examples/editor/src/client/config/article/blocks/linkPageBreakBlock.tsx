@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState, useCallback} from 'react'
 
 import {Drawer, IconButton, Icon, Input} from 'rsuite'
 import {BlockProps} from '../atoms/blockList'
-import {LinkPageBreakBlockValue, RichTextBlockValue} from './types'
+import {LinkPageBreakBlockValue} from './types'
 import {isFunctionalUpdate} from '@karma.run/react'
 
 import {useTranslation} from 'react-i18next'
@@ -12,7 +12,8 @@ import {
   createDefaultValue,
   ImagedEditPanel,
   ImageSelectPanel,
-  RichTextBlock
+  RichTextBlock,
+  RichTextBlockValue
 } from '@wepublish/editor'
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
