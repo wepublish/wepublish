@@ -25,7 +25,8 @@
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
-  "main": "./dist/server/index.js",
+  "module": "src/index.ts",
+  "typings": "src/index.ts",
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
@@ -34,10 +35,10 @@
     "build:server": "tsc -b ./src/shared ./src/server",
     "build:production": "webpack --mode production && yarn build:server",
     "watch": "npm-run-all copy-license --parallel watch:*",
-    "watch:client": "webpack-dev-server --mode development --hot --inline",
-    "watch:server": "run-p watch:server:*",
-    "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
-    "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
+    "_watch:client": "webpack-dev-server --mode development --hot --inline",
+    "_watch:server": "run-p watch:server:*",
+    "_watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
+    "_watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
     "clean": "shx rm -rf ./dist ./assets",

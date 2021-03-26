@@ -52,6 +52,7 @@
     "clean:oauth2": "yarn workspace @wepublish/oauth2 clean",
     "build:oauth2": "yarn workspace @wepublish/oauth2 build",
     "watch:oauth2": "yarn workspace @wepublish/oauth2 watch",
+    "watch:editor-example": "yarn workspace @wepublish/editor-example watch",
     "setup:api-example": "yarn workspace @wepublish/api-example setup",
     "clean:api-example": "yarn workspace @wepublish/api-example clean",
     "build:api-example": "yarn workspace @wepublish/api-example build",

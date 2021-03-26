@@ -1,7 +1,6 @@
-import {initClient} from './client'
-import {ExtensionConfig} from './interfaces/extensionConfig'
+import {initClient} from '@wepublish/editor'
+import {config} from './config/config'
 
-const config: ExtensionConfig = {}
 if (document.readyState !== 'loading') {
   initClient(config)
 } else {

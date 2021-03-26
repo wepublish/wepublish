@@ -28,6 +28,7 @@ import yargs from 'yargs'
 import {hideBin} from 'yargs/helpers'
 import {contentModelExample} from './schemaExample'
 import {contentModelArticle} from './schemaArticle'
+import {contentModelSimpleExample} from './schemaSimple'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -286,7 +287,7 @@ async function asyncMain() {
     playground: true,
     introspection: true,
     tracing: true,
-    contentModels: [contentModelExample, contentModelArticle],
+    contentModels: [contentModelExample, contentModelSimpleExample, contentModelArticle],
     languageConfig: {
       defaultLanguageId: '1',
       languages: [

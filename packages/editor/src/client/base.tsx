@@ -18,13 +18,17 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
-  LogoutRoute
+  LogoutRoute,
+  ContentListRoute,
+  ExtensionRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
+import {ConfigMerged} from './interfaces/extensionConfig'
 
 export interface BaseProps {
   children?: ReactNode
+  readonly contentTypeList: ConfigMerged
 }
 
 const AVAILABLE_LANG = [
@@ -57,7 +61,7 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue]
 }
 
-export function Base({children}: BaseProps) {
+export function Base({children, contentTypeList}: BaseProps) {
   const {current} = useRoute()
 
   const {t, i18n} = useTranslation()
@@ -65,6 +69,39 @@ export function Base({children}: BaseProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
+
+  let customContentNavItems: any = []
+  if (contentTypeList) {
+    customContentNavItems = contentTypeList.contentModelExtension.map(item => {
+      const route = ContentListRoute.create({type: item.identifier})
+      return (
+        <NavItemLink
+          key={item.identifier}
+          icon={<Icon icon="file" />}
+          route={route}
+          active={
+            current?.type === RouteType.ContentList && current.params.type === item.identifier
+          }>
+          {item.namePlural}
+        </NavItemLink>
+      )
+    })
+
+    contentTypeList.cusomExtension?.forEach(item => {
+      const route = ExtensionRoute.create({type: item.identifier})
+      customContentNavItems.push(
+        <NavItemLink
+          key={item.identifier}
+          icon={<Icon icon="file" />}
+          route={route}
+          active={
+            current?.type === RouteType.ContentList && current.params.type === item.identifier
+          }>
+          {item.namePlural}
+        </NavItemLink>
+      )
+    })
+  }
 
   useEffect(() => {
     i18n.changeLanguage(uiLanguage)
@@ -97,6 +134,8 @@ export function Base({children}: BaseProps) {
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
                 </NavItemLink>
+
+                {customContentNavItems}
 
                 <NavItemLink
                   icon={<Icon icon="people-group" />}
