@@ -136,7 +136,9 @@ function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = 
         ${Object.entries(schema.cases)
           .map(([unionCase, val]) => {
             const unionCaseName = nameJoin(name, unionCase)
-            return `... on ${unionCaseName} ${getFragmentSchemaRecursive(val, unionCaseName)}`
+            return `... on ${unionCaseName} {
+              ${unionCase} ${getFragmentSchemaRecursive(val, unionCaseName)}
+            }`
           })
           .join('\n')}
       }`

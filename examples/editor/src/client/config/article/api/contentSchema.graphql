@@ -1,0 +1,11 @@
+query ContentModelSchema {
+  content {
+    _schema {
+      id
+      identifier
+      nameSingular
+      namePlural
+      schema
+    }
+  }
+}

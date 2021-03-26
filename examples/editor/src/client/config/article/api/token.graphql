@@ -1,0 +1,22 @@
+fragment TokenRef on Token {
+  id
+  name
+}
+
+query TokenList {
+  tokens {
+    ...TokenRef
+  }
+}
+
+mutation CreateToken($input: TokenInput!) {
+  createToken(input: $input) {
+    id
+    name
+    token
+  }
+}
+
+mutation DeleteToken($id: ID!) {
+  deleteToken(id: $id)
+}

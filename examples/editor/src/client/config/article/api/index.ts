@@ -357,57 +357,6 @@ export type _Cmp_ExampleConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type _Cmp_Simple = {
-  __typename?: '_cmp_simple';
-  read: _Cmp_Simple_Record;
-  list: _Cmp_SimpleConnection;
-};
-
-
-export type _Cmp_SimpleReadArgs = {
-  peerID?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
-};
-
-
-export type _Cmp_SimpleListArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
-};
-
-export type _Cmp_Simple_Record = {
-  __typename?: '_cmp_simple_record';
-  id: Scalars['ID'];
-  contentType: Scalars['String'];
-  revision: Scalars['Int'];
-  state: ContentStateEnum;
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  publicationDate?: Maybe<Scalars['DateTime']>;
-  dePublicationDate?: Maybe<Scalars['DateTime']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_Simple_Record_Content>;
-};
-
-export type _Cmp_Simple_Record_Content = {
-  __typename?: '_cmp_simple_record_content';
-  myString?: Maybe<Scalars['String']>;
-  myRichText?: Maybe<Scalars['RichText']>;
-};
-
-export type _Cmp_SimpleConnection = {
-  __typename?: '_cmp_simpleConnection';
-  nodes: Array<_Cmp_Simple_Record>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type _Cmpi_Article = {
   __typename?: '_cmpi_article';
   create: _Cmp_Article_Record;
@@ -680,63 +629,6 @@ export type _Cmpi_Example_Record_Update = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
   content?: Maybe<_Cmpi_Example_Record_Content>;
-};
-
-export type _Cmpi_Simple = {
-  __typename?: '_cmpi_simple';
-  create: _Cmp_Simple_Record;
-  update: _Cmp_Simple_Record;
-  delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_Simple_Record>;
-  unpublish?: Maybe<_Cmp_Simple_Record>;
-};
-
-
-export type _Cmpi_SimpleCreateArgs = {
-  input: _Cmpi_Simple_Record_Create;
-};
-
-
-export type _Cmpi_SimpleUpdateArgs = {
-  input: _Cmpi_Simple_Record_Update;
-};
-
-
-export type _Cmpi_SimpleDeleteArgs = {
-  id: Scalars['ID'];
-  revision?: Maybe<Scalars['Int']>;
-};
-
-
-export type _Cmpi_SimplePublishArgs = {
-  id: Scalars['ID'];
-  revision: Scalars['Int'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type _Cmpi_SimpleUnpublishArgs = {
-  id: Scalars['ID'];
-};
-
-export type _Cmpi_Simple_Record_Content = {
-  myString?: Maybe<Scalars['String']>;
-  myRichText?: Maybe<Scalars['RichText']>;
-};
-
-export type _Cmpi_Simple_Record_Create = {
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Simple_Record_Content>;
-};
-
-export type _Cmpi_Simple_Record_Update = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Simple_Record_Content>;
 };
 
 export type All = {
@@ -1109,7 +1001,6 @@ export enum ContentStateEnum {
 
 export enum ContentTypeEnum {
   Example = 'example',
-  Simple = 'simple',
   Article = 'article'
 }
 
@@ -1132,7 +1023,6 @@ export type CreatePeerInput = {
 export type CustomContent = {
   __typename?: 'CustomContent';
   example: _Cmp_Example;
-  simple: _Cmp_Simple;
   article: _Cmp_Article;
   _all: All;
   _schema: Array<ContentModelConfig>;
@@ -1141,7 +1031,6 @@ export type CustomContent = {
 export type CustomContentMutations = {
   __typename?: 'CustomContentMutations';
   example: _Cmpi_Example;
-  simple: _Cmpi_Simple;
   article: _Cmpi_Article;
   _all: AllMutations;
 };
