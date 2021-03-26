@@ -200,11 +200,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   function countTitleChars(block: TitleBlockListValue): number {
-    return (block.value.title as string).length + (block.value.lead as string).length
+    return (block.value.title).length + (block.value.lead).length
   }
 
   function countQuoteChars(block: QuoteBlockListValue) {
-    return (block.value.quote as string).length + (block.value.author as string).length
+    return (block.value.quote).length + (block.value.author).length
   }
 
   function countListicleChars(block: ListicleBlockListValue) {
@@ -226,7 +226,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     return totalTitleChars + richTextBlocksCount
   }
 
-  function WordCounter(blocks: BlockValue[]): number {
+  function wordCounter(blocks: BlockValue[]): number {
     return blocks.reduce((charLength: number, block: BlockValue) => {
       switch (block.type) {
         case BlockType.Listicle:
@@ -364,7 +364,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     setInfoData({
-      charCount: 0 + WordCounter(blocks)
+      charCount: wordCounter(blocks)
     })
   }, [isMetaDrawerOpen])
 
