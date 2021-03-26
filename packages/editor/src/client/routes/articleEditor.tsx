@@ -200,11 +200,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   function countTitleChars(block: TitleBlockListValue): number {
-    return (block.value.title).length + (block.value.lead).length
+    return block.value.title.length + block.value.lead.length
   }
 
   function countQuoteChars(block: QuoteBlockListValue) {
-    return (block.value.quote).length + (block.value.author).length
+    return block.value.quote.length + block.value.author.length
   }
 
   function countListicleChars(block: ListicleBlockListValue) {
