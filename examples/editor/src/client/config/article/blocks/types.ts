@@ -1,7 +1,7 @@
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
 import {ImageRefFragment, TeaserStyle} from '../api'
-import {RichTextBlockValue} from '@wepublish/editor'
+import {Reference, RichTextBlockValue} from '@wepublish/editor'
 import {
   ArticleRefFragment,
   PageRefFragment,
@@ -26,7 +26,7 @@ export interface RichTextBlockExampleValue {
 }
 
 export interface ImageBlockValue {
-  image: ImageRefFragment | null
+  image: Reference | null
   caption: string
 }
 

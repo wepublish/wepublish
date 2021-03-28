@@ -1,5 +1,6 @@
 import {ContentModel, ContentModelSchema, ContentModelSchemas} from '@wepublish/api'
 import gql from 'graphql-tag'
+import {ContentModelSchemaTypes} from '../interfaces/apiTypes'
 
 export const ContentModelPrefix = '_cm'
 export const ContentModelPrefixPrivate = '_cmp'
@@ -120,7 +121,7 @@ function getFragmentSchema(contentModelSchemas: ContentModelSchema, fragmentName
 
 function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = ''): string {
   switch (schema.type) {
-    case 'object':
+    case ContentModelSchemaTypes.object:
       return `{
         ${Object.entries(schema.fields)
           .map(([key, val]) => {
@@ -129,9 +130,15 @@ function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = 
           })
           .join('\n')}
       }`
-    case 'list':
+    case ContentModelSchemaTypes.list:
       return getFragmentSchemaRecursive(schema.contentType, name)
-    case 'union':
+    case ContentModelSchemaTypes.reference:
+      return `{
+        recordId
+        contentType
+        peerId
+      }`
+    case ContentModelSchemaTypes.union:
       return `{
         ${Object.entries(schema.cases)
           .map(([unionCase, val]) => {

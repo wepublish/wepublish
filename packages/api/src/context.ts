@@ -7,7 +7,7 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLError, GraphQLSchema, print} from 'graphql'
+import {GraphQLError, GraphQLFieldConfigMap, GraphQLSchema, print} from 'graphql'
 
 import {
   Fetcher,
@@ -45,9 +45,26 @@ import {logger} from './server'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
 import {LanguageConfig} from './interfaces/languageConfig'
-import {ContentModel} from './interfaces/contentModelSchema'
 import {OptionalContent} from './db/content'
 import {BusinessLogic} from './business/contentModelBusiness'
+import {ContentModelSchema} from './interfaces/contentModelSchema'
+
+export interface ContentModel {
+  identifier: string
+  nameSingular: string
+  namePlural: string
+  schema: ContentModelSchema
+  apiExtension?: {
+    public?: {
+      queries?: GraphQLFieldConfigMap<any, Context, any>
+      mutations?: GraphQLFieldConfigMap<any, Context, any>
+    }
+    private?: {
+      queries?: GraphQLFieldConfigMap<any, Context, any>
+      mutations?: GraphQLFieldConfigMap<any, Context, any>
+    }
+  }
+}
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>

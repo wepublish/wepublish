@@ -14,7 +14,7 @@ export type Scalars = {
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   RichText: Node[];
-  Reference: any;
+  Any: any;
   /** A hexidecimal color value. */
   Color: string;
   ContentModelSchema: any;
@@ -89,7 +89,7 @@ export type _Cmp_Article_Record_Content_Blocks_Image = {
 
 export type _Cmp_Article_Record_Content_Blocks_Image_Content = {
   __typename?: '_cmp_article_record_content_blocks_image_content';
-  image: Scalars['Reference'];
+  image: Ref___Medialocal;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -105,7 +105,7 @@ export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Content = {
 
 export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Images = {
   __typename?: '_cmp_article_record_content_blocks_imageGallery_images';
-  image: Scalars['Reference'];
+  image: Ref___Medialocal;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -125,7 +125,7 @@ export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content = {
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['Reference']>;
+  image?: Maybe<Ref___Medialocal>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Listicle = {
@@ -142,7 +142,7 @@ export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
   __typename?: '_cmp_article_record_content_blocks_listicle_items';
   title?: Maybe<Scalars['String']>;
   richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Scalars['Reference']>;
+  image?: Maybe<Ref_Local>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Quote = {
@@ -190,11 +190,11 @@ export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Content = {
 export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
   __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers';
   style?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Scalars['Reference']>;
+  imageID?: Maybe<Ref___Medialocal>;
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
-  contentRef?: Maybe<Scalars['Reference']>;
+  contentRef?: Maybe<Ref_Articleall_Pagelocal>;
 };
 
 export enum _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
@@ -303,7 +303,7 @@ export type _Cmp_Example_Record_Content = {
   myList?: Maybe<Array<Maybe<Scalars['String']>>>;
   myObject?: Maybe<_Cmp_Example_Record_Content_MyObject>;
   myUnion?: Maybe<_Cmp_Example_Record_Content_MyUnion>;
-  myReference?: Maybe<Scalars['Reference']>;
+  myReference?: Maybe<Ref_Examplelocal>;
 };
 
 export enum _Cmp_Example_Record_Content_MyEnum {
@@ -475,7 +475,7 @@ export type _Cmpi_Article_Record_Content_Blocks_Embed = {
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Image = {
-  image: Scalars['Reference'];
+  image: Ref_Input;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -484,7 +484,7 @@ export type _Cmpi_Article_Record_Content_Blocks_ImageGallery = {
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_ImageGallery_Images = {
-  image: Scalars['Reference'];
+  image: Ref_Input;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -498,7 +498,7 @@ export type _Cmpi_Article_Record_Content_Blocks_LinkPageBreak = {
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['Reference']>;
+  image?: Maybe<Ref_Input>;
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Listicle = {
@@ -508,7 +508,7 @@ export type _Cmpi_Article_Record_Content_Blocks_Listicle = {
 export type _Cmpi_Article_Record_Content_Blocks_Listicle_Items = {
   title?: Maybe<Scalars['String']>;
   richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Scalars['Reference']>;
+  image?: Maybe<Ref_Input>;
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Quote = {
@@ -531,11 +531,11 @@ export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid = {
 
 export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
   style?: Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Scalars['Reference']>;
+  imageID?: Maybe<Ref_Input>;
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
-  contentRef?: Maybe<Scalars['Reference']>;
+  contentRef?: Maybe<Ref_Input>;
 };
 
 export enum _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
@@ -632,7 +632,7 @@ export type _Cmpi_Example_Record_Content = {
   myList?: Maybe<Array<Maybe<Scalars['String']>>>;
   myObject?: Maybe<_Cmpi_Example_Record_Content_MyObject>;
   myUnion?: Maybe<_Cmpi_Example_Record_Content_MyUnion>;
-  myReference?: Maybe<Scalars['Reference']>;
+  myReference?: Maybe<Ref_Input>;
 };
 
 export enum _Cmpi_Example_Record_Content_MyEnum {
@@ -804,6 +804,7 @@ export type AllMutationsPublishArgs = {
 export type AllMutationsUnpublishArgs = {
   id: Scalars['ID'];
 };
+
 
 export type Article = {
   __typename?: 'Article';
@@ -2465,6 +2466,49 @@ export type QuoteBlockInput = {
   author?: Maybe<Scalars['String']>;
 };
 
+export type Ref___Medialocal = {
+  __typename?: 'ref___medialocal';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<Scalars['Any']>;
+  peer?: Maybe<Scalars['Any']>;
+};
+
+export type Ref_Articleall_Pagelocal = {
+  __typename?: 'ref_articleall_pagelocal';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<Scalars['Any']>;
+  peer?: Maybe<Scalars['Any']>;
+};
+
+export type Ref_Examplelocal = {
+  __typename?: 'ref_examplelocal';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<Scalars['Any']>;
+  peer?: Maybe<Scalars['Any']>;
+};
+
+export type Ref_Input = {
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<Scalars['Any']>;
+  peer?: Maybe<Scalars['Any']>;
+};
+
+export type Ref_Local = {
+  __typename?: 'ref_local';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<Scalars['Any']>;
+  peer?: Maybe<Scalars['Any']>;
+};
 
 
 export type RichTextBlock = {

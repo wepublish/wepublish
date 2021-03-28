@@ -19,7 +19,7 @@ import {
 import {GraphQLRichText} from '../richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {LanguageConfig} from '../../interfaces/languageConfig'
-import {getReference, GraphQLReferenceInput} from '../reference'
+import {getReference, GraphQLReferenceInput} from './reference'
 import {DBContentState} from '../../db/content'
 import {createProxyingIsTypeOf} from '../../utility'
 import {

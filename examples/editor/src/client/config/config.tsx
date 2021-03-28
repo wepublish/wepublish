@@ -20,7 +20,8 @@ export const config: ExtensionConfig = {
               }
             ]
           }
-        ]
+        ],
+        myRef: null
       },
       getContentView: (content: any, handleChange: any, disabled: boolean) => {
         return <CustomContentExample value={content} onChange={handleChange} />

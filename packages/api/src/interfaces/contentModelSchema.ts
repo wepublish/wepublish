@@ -1,6 +1,3 @@
-import {GraphQLFieldConfigMap} from 'graphql'
-import {Context} from '../context'
-
 export interface ContentModelSchemaFieldBase {
   type: ContentModelSchemaTypes
   nameGUI?: string
@@ -135,22 +132,5 @@ export interface ContentModelSchema {
   }
   meta?: {
     [key: string]: ContentModelSchemas
-  }
-}
-
-export interface ContentModel {
-  identifier: string
-  nameSingular: string
-  namePlural: string
-  schema: ContentModelSchema
-  apiExtension?: {
-    public?: {
-      queries?: GraphQLFieldConfigMap<any, Context, any>
-      mutations?: GraphQLFieldConfigMap<any, Context, any>
-    }
-    private?: {
-      queries?: GraphQLFieldConfigMap<any, Context, any>
-      mutations?: GraphQLFieldConfigMap<any, Context, any>
-    }
   }
 }

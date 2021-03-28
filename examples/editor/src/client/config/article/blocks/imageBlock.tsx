@@ -4,12 +4,12 @@ import {Drawer, Dropdown, Icon, IconButton, Panel} from 'rsuite'
 import {BlockProps} from '../atoms/blockList'
 import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
-
 import {ImageRefFragment} from '../api'
+
 import {ImageBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
-import {ImagedEditPanel, ImageSelectPanel} from '@wepublish/editor'
+import {ImagedEditPanel, ImageSelectPanel, Reference} from '@wepublish/editor'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
@@ -25,10 +25,43 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     }
   }, [])
 
-  function handleImageChange(image: ImageRefFragment | null) {
+  function handleImageChange(image: Reference | null) {
     onChange({...value, image})
   }
 
+  let imageComponent = null
+  console.log('imageimageimageimageimage', image)
+  if (image?.record) {
+    const imageRefFragment = image.record as ImageRefFragment
+    imageComponent = (
+      <Panel
+        style={{
+          padding: 0,
+          position: 'relative',
+          height: '100%',
+          backgroundSize: `${imageRefFragment.height > 300 ? 'contain' : 'auto'}`,
+          backgroundPositionX: 'center',
+          backgroundPositionY: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundImage: `url(${
+            imageRefFragment?.largeURL ?? 'https://via.placeholder.com/240x240'
+          })`
+        }}>
+        <Dropdown
+          renderTitle={() => {
+            return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
+          }}>
+          <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
+            <Icon icon="image" /> {t('blocks.image.overview.chooseImage')}
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => setEditModalOpen(true)}>
+            <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
+          </Dropdown.Item>
+          {/* TODO: Meta sync for metadata image */}
+        </Dropdown>
+      </Panel>
+    )
+  }
   return (
     <>
       <Panel
@@ -40,32 +73,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           marginBottom: 10
         }}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-          {image && (
-            <Panel
-              style={{
-                padding: 0,
-                position: 'relative',
-                height: '100%',
-                backgroundSize: `${image?.height > 300 ? 'contain' : 'auto'}`,
-                backgroundPositionX: 'center',
-                backgroundPositionY: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
-              }}>
-              <Dropdown
-                renderTitle={() => {
-                  return <IconButton appearance="subtle" icon={<Icon icon="wrench" />} circle />
-                }}>
-                <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
-                  <Icon icon="image" /> {t('blocks.image.overview.chooseImage')}
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setEditModalOpen(true)}>
-                  <Icon icon="pencil" /> {t('blocks.image.overview.editImage')}
-                </Dropdown.Item>
-                {/* TODO: Meta sync for metadata image */}
-              </Dropdown>
-            </Panel>
-          )}
+          {imageComponent}
         </PlaceholderInput>
       </Panel>
       <TypographicTextArea
@@ -80,7 +88,9 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={value => {}}
+          onSelectRef={value => {
+            console.log('worksdddd', value.recordId, value.record)
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -88,7 +98,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       </Drawer>
       {image && (
         <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImagedEditPanel id={image!.recordId} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
     </>
