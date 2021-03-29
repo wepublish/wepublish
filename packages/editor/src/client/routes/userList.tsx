@@ -215,6 +215,7 @@ export function UserList() {
                   }}>
                   {t('userList.panels.resetPassword')}
                 </Button>
+
                 <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
                   <IconButton
                     icon={<Icon icon="trash-o" />}
@@ -241,9 +242,8 @@ export function UserList() {
         onChangeLength={limit => setLimit(limit)}
       />
 
-      <Drawer
-        full
-        placement={'right'}
+      <Modal
+        size={'sm'}
         show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
@@ -270,7 +270,7 @@ export function UserList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
 
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
