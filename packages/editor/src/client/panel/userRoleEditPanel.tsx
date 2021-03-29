@@ -165,7 +165,7 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
         </Form>
       </Modal.Body>
 
-      <Modal.Footer classPrefix="wp-modal-footer">
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
         </Button>

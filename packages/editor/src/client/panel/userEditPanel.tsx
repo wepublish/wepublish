@@ -194,7 +194,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
             <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
           </FormGroup>
         </Form>
-        <h5 className="wp-section-title">{t('userList.panels.subTitle')}</h5>
+        <h5 className="wep-section-title">{t('userList.panels.subTitle')}</h5>
 
         {subscription && (
           <DescriptionList>
@@ -223,7 +223,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
         )}
       </Modal.Body>
 
-      <Modal.Footer classPrefix="wp-modal-footer">
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userList.panels.save') : t('userList.panels.create')}
         </Button>
@@ -245,7 +245,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           />
         </Modal.Body>
 
-        <Modal.Footer classPrefix="wp-modal-footer">
+        <Modal.Footer classPrefix="wep-modal-footer">
           <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
             {t('userList.panels.cancel')}
           </Button>

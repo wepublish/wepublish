@@ -242,7 +242,7 @@ export function UserSubscriptionEditPanel({
       </Drawer.Body>
 
       <Drawer.Footer>
-        <div className="wp-drawer-footer">
+        <div className="wep-drawer-footer">
           <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
             {subscription ? t('save') : t('create')}
           </Button>
