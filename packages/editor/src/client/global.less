@@ -5,15 +5,25 @@
     background-color: #f2faff;
 }
 
-.fade {
-    opacity: 0;
-    transition: opacity 0.15s linear;
+// .fade {
+//     opacity: 0;
+//     transition: opacity 0.15s linear;
   
-    &.in {
-      opacity: 0.3;
-    }
-  }
+//     &.in {
+//       opacity: 0.3;
+//     }
+//   }
 
-  .rs-drawer-full.rs-drawer-left, .rs-drawer-full.rs-drawer-right {
-    width: calc(100% - 0px);
-  }
+//Typo overrides
+//--------------
+.wp-section-title {
+  margin: 30px 0 15px 0;
+}
+
+
+// Override modal footer styles - use classPrefix='modal-footer-wepublish'
+.wp-modal-footer {
+  text-align: right;
+  border-top: 1px solid #e5e5ea;
+  padding-top:20px ;
+}
