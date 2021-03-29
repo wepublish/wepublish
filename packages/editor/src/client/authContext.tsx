@@ -1,8 +1,8 @@
-import React, {useEffect, createContext, Dispatch, useReducer, ReactNode, useState} from 'react'
+import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from 'react'
 import {useQuery, gql} from '@apollo/client'
 
 import {LocalStorageKey} from './utility'
-//@ts-ignore
+// @ts-ignore
 import {usePageVisibility} from 'react-page-visibility'
 
 export interface AuthContextState {
@@ -86,10 +86,10 @@ export function AuthProvider({children}: AuthProviderProps) {
         sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
       })
     } else {
-      localStorage.removeItem(LocalStorageKey.SessionToken)
-      dispatch({
-        type: AuthDispatchActionType.Logout
-      })
+      // localStorage.removeItem(LocalStorageKey.SessionToken)
+      // dispatch({
+      //   type: AuthDispatchActionType.Logout
+      // })
     }
   }, [data])
 

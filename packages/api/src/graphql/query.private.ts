@@ -165,7 +165,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     me: {
       type: GraphQLUser,
-      resolve(root, args, {session}) {
+      resolve(root, args, {authenticate}) {
+        const session = authenticate()
         return session?.type === SessionType.User ? session.user : null
       }
     },
