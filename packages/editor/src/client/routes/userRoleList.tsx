@@ -24,7 +24,9 @@ import {
   Table,
   Drawer,
   Modal,
-  Button
+  Button,
+  Popover,
+  Whisper
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
@@ -58,6 +60,29 @@ export function UserRoleList() {
   })
 
   const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
+
+  const speaker = (
+    <Popover title={t('userRoles.popover.deleteThisUser')}>
+      <p>{t('userRoles.popover.popoverText')}</p>
+      <p>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={async () => {
+            if (!currentUserRole) return
+
+            await deleteUserRole({
+              variables: {id: currentUserRole.id}
+            })
+
+            setConfirmationDialogOpen(false)
+            refetch()
+          }}>
+          {t('userRoles.popover.deleteNow')}
+        </Button>
+      </p>
+    </Popover>
+  )
 
   useEffect(() => {
     if (current?.type === RouteType.UserRoleCreate) {
@@ -102,7 +127,7 @@ export function UserRoleList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
-        <Column width={200} align="left" resizable>
+        <Column flexGrow={1} align="left">
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullUserRoleFragment) => (
@@ -112,31 +137,33 @@ export function UserRoleList() {
             )}
           </Cell>
         </Column>
-        <Column width={400} align="left" resizable>
+        <Column flexGrow={2} align="left">
           <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
           <Cell dataKey="description" />
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
-              <IconButton
-                icon={<Icon icon="trash" />}
-                disabled={rowData.systemRole}
-                circle
-                size="sm"
-                style={{marginLeft: '5px'}}
-                onClick={() => {
-                  setConfirmationDialogOpen(true)
-                  setCurrentUserRole(rowData)
-                }}
-              />
+              <>
+                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
+                  <IconButton
+                    icon={<Icon icon="trash-o" />}
+                    circle
+                    size="sm"
+                    color="red"
+                    onClick={() => {
+                      setCurrentUserRole(rowData)
+                    }}
+                  />
+                </Whisper>
+              </>
             )}
           </Cell>
         </Column>
       </Table>
 
-      <Drawer
+      <Modal
         show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
@@ -164,8 +191,8 @@ export function UserRoleList() {
             })
           }}
         />
-      </Drawer>
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
+      </Modal>
+      {/* <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
         </Modal.Header>
@@ -198,7 +225,7 @@ export function UserRoleList() {
             {t('userRoles.panels.cancel')}
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </>
   )
 }

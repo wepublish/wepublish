@@ -8,7 +8,8 @@ import {
   Drawer,
   Form,
   FormControl,
-  FormGroup
+  FormGroup,
+  Modal
 } from 'rsuite'
 
 import {
@@ -118,13 +119,13 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
+      <Modal.Body>
         <Form fluid={true}>
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
@@ -162,16 +163,16 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
             />
           </FormGroup>
         </Form>
-      </Drawer.Body>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wp-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('userRoles.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }
