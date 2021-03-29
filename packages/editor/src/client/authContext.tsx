@@ -85,11 +85,6 @@ export function AuthProvider({children}: AuthProviderProps) {
         email,
         sessionToken: localStorage.getItem(LocalStorageKey.SessionToken)!
       })
-    } else {
-      // localStorage.removeItem(LocalStorageKey.SessionToken)
-      // dispatch({
-      //   type: AuthDispatchActionType.Logout
-      // })
     }
   }, [data])
 
