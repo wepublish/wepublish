@@ -2,6 +2,7 @@
 import {
   Author,
   PublicComment,
+  CommentItemType,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
@@ -50,8 +51,11 @@ class ExampleURLAdapter implements URLAdapter {
     return `${this.websiteURL}/author/${author.slug || author.id}`
   }
 
-  getCommentURL(article: PublicArticle, comment: PublicComment) {
-    return `${this.websiteURL}/a/${article.id}/${article.slug}#${comment.id}`
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
+    if (comment.itemType === CommentItemType.Article) {
+      return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
+    }
+    return `${this.websiteURL}/${item.slug}#${comment.id}`
   }
 
   getArticlePreviewURL(token: string) {
