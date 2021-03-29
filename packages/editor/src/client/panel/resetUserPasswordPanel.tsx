@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {Button, ControlLabel, Form, FormControl, FormGroup, Notification, Panel} from 'rsuite'
+import {Button, ControlLabel, Form, FormControl, FormGroup, Notification} from 'rsuite'
 
 import {useResetUserPasswordMutation} from '../api'
 

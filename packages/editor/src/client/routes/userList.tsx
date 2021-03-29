@@ -20,7 +20,6 @@ import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
-  Drawer,
   FlexboxGrid,
   Icon,
   IconButton,
@@ -31,7 +30,6 @@ import {
   Popover,
   Whisper
 } from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -242,6 +240,7 @@ export function UserList() {
         onChangeLength={limit => setLimit(limit)}
       />
 
+      {/* Modal: Create/edit user */}
       <Modal
         size={'sm'}
         show={isEditModalOpen}
@@ -272,6 +271,7 @@ export function UserList() {
         />
       </Modal>
 
+      {/* Modal: Reset password */}
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>

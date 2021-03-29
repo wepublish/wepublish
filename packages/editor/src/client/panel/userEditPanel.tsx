@@ -248,7 +248,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           />
         </Modal.Body>
 
-        <Modal.Footer>
+        <Modal.Footer classPrefix="wp-modal-footer">
           <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
             {t('userList.panels.cancel')}
           </Button>

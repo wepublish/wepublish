@@ -150,110 +150,106 @@ export function UserSubscriptionEditPanel({
       </Drawer.Header>
 
       <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
-              <SelectPicker
-                block
-                disabled={isDisabled}
-                data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
-                value={subscription?.memberPlan.id}
-                onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
-              />
-              {memberPlan && (
-                <HelpBlock>
-                  <DescriptionList>
-                    <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.amountPerMonthMin}
-                    </DescriptionListItem>
-                  </DescriptionList>
-                </HelpBlock>
-              )}
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
-              <FormControl
-                name={t('userSubscriptionEdit.monthlyAmount')}
-                value={monthlyAmount}
-                type="number"
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={value => {
-                  setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
-              <SelectPicker
-                value={paymentPeriodicity}
-                data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                  value: pp,
-                  label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-                }))}
-                onChange={value => setPaymentPeriodicity(value)}
-                block
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
-              <Toggle
-                checked={autoRenew}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={value => setAutoRenew(value)}
-              />
-              <HelpBlock>{t('userSubscriptionEdit.autoRenewDescription')}</HelpBlock>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
-              <DatePicker
-                block
-                value={startsAt}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={value => setStartsAt(value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
-              <DatePicker
-                block
-                value={paidUntil ?? undefined}
-                disabled={true /* TODO fix this */}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
-              <SelectPicker
-                block
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                value={subscription?.paymentMethod.id}
-                onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
-              />
-            </FormGroup>
-            {/* TODO Payment Method */}
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.selectMemberPlan')}</ControlLabel>
+            <SelectPicker
+              block
+              disabled={isDisabled}
+              data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
+              value={subscription?.memberPlan.id}
+              onChange={value => setMemberPlan(memberPlans.find(mp => mp.id === value))}
+            />
+            {memberPlan && (
+              <HelpBlock>
+                <DescriptionList>
+                  <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                    {memberPlan.amountPerMonthMin}
+                  </DescriptionListItem>
+                </DescriptionList>
+              </HelpBlock>
+            )}
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
+            <FormControl
+              name={t('userSubscriptionEdit.monthlyAmount')}
+              value={monthlyAmount}
+              type="number"
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={value => {
+                setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+            <SelectPicker
+              value={paymentPeriodicity}
+              data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                value: pp,
+                label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+              }))}
+              onChange={value => setPaymentPeriodicity(value)}
+              block
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
+            <Toggle
+              checked={autoRenew}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={value => setAutoRenew(value)}
+            />
+            <HelpBlock>{t('userSubscriptionEdit.autoRenewDescription')}</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
+            <DatePicker
+              block
+              value={startsAt}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={value => setStartsAt(value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.payedUntil')}</ControlLabel>
+            <DatePicker block value={paidUntil ?? undefined} disabled={true /* TODO fix this */} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.paymentMethod')}</ControlLabel>
+            <SelectPicker
+              block
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+              value={subscription?.paymentMethod.id}
+              onChange={value => setPaymentMethod(paymentMethods.find(pm => pm.id === value))}
+            />
+          </FormGroup>
+          {/* TODO Payment Method */}
 
-            <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.deactivatedAt')}</ControlLabel>
-              <DatePicker
-                block
-                value={deactivatedAt ?? undefined}
-                disabled={isDisabled || hasNoMemberPlanSelected}
-                onChange={value => setDeactivatedAt(value)}
-              />
-            </FormGroup>
-          </Form>
-          {/* TODO: implement end subscription */}
-        </Panel>
+          <FormGroup>
+            <ControlLabel>{t('userSubscriptionEdit.deactivatedAt')}</ControlLabel>
+            <DatePicker
+              block
+              value={deactivatedAt ?? undefined}
+              disabled={isDisabled || hasNoMemberPlanSelected}
+              onChange={value => setDeactivatedAt(value)}
+            />
+          </FormGroup>
+        </Form>
+        {/* TODO: implement end subscription */}
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
-          {subscription ? t('save') : t('create')}
-        </Button>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('close')}
-        </Button>
+        <div className="wp-drawer-footer">
+          <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
+            {subscription ? t('save') : t('create')}
+          </Button>
+          <Button appearance={'subtle'} onClick={() => onClose?.()}>
+            {t('close')}
+          </Button>
+        </div>
       </Drawer.Footer>
     </>
   )
