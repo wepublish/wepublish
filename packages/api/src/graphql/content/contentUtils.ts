@@ -19,7 +19,7 @@ import {
 import {GraphQLRichText} from '../richText'
 import {GraphQLDateTime} from 'graphql-iso-date'
 import {LanguageConfig} from '../../interfaces/languageConfig'
-import {GraphQLReference, GraphQLReferenceInput} from '../reference'
+import {getReference, GraphQLReferenceInput} from '../reference'
 import {DBContentState} from '../../db/content'
 import {createProxyingIsTypeOf} from '../../utility'
 import {
@@ -276,7 +276,7 @@ function generateType(
       if (config.isInput) {
         type = getLeaf(config, contentModelSchemas, GraphQLReferenceInput)
       } else {
-        type = getLeaf(config, contentModelSchemas, GraphQLReference)
+        type = getLeaf(config, contentModelSchemas, getReference(contentModelSchemas))
       }
       break
   }
