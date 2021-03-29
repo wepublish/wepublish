@@ -27,8 +27,8 @@ export function ChooseEditImage({
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
-    <Panel header={header} bodyFill={true} style={{height: 240, marginBottom: 10}}>
-      {!image && disabled === true && <Placeholder.Graph/>}
+    <Panel bodyFill={true} bordered style={{height: 240, marginBottom: 10}}>
+      {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
@@ -47,7 +47,14 @@ export function ChooseEditImage({
               <div style={{position: 'absolute', left: left, top: top}}>
                 <Dropdown
                   renderTitle={() => {
-                    return <IconButton appearance="primary" icon={<Icon icon="wrench" />} circle />
+                    return (
+                      <IconButton
+                        size="lg"
+                        appearance="primary"
+                        icon={<Icon icon="wrench" />}
+                        circle
+                      />
+                    )
                   }}>
                   {openChooseModalOpen && (
                     <Dropdown.Item disabled={disabled} onClick={() => openChooseModalOpen()}>

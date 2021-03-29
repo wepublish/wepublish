@@ -5,7 +5,7 @@ import arrayMove from 'array-move'
 
 import {isFunctionalUpdate} from '@karma.run/react'
 
-import {Icon, IconButton, Panel} from 'rsuite'
+import {Icon, IconButton, Button, Panel} from 'rsuite'
 
 export interface FieldProps<V = any> {
   readonly value: V
@@ -34,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton icon={<Icon icon="th2" />} disabled={disabled} />
+  <IconButton appearance="subtle" icon={<Icon icon="th2" />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -61,12 +61,19 @@ const ListItem = SortableElement(
           <DragHandle disabled={itemDisabled} />
         </div>
         <Panel bodyFill style={{width: '100%'}}>
+          {/* TODO:: add Translation */}
+          <h4>Option</h4>
           <div style={{minHeight: '100%'}}>
             {children({value: value.value, onChange: handleValueChange})}
           </div>
         </Panel>
+
         <div style={{marginLeft: '10px'}}>
-          <IconButton icon={<Icon icon="trash" />} onClick={handleRemove} disabled={itemDisabled} />
+          {/* TODO:: add Translation */}
+          <Button appearance="link" onClick={handleRemove} color="red" disabled={itemDisabled}>
+            {' '}
+            Delete
+          </Button>
         </div>
       </div>
     )
@@ -105,7 +112,15 @@ const SortableList = SortableContainer(
             {children}
           </ListItem>
         ))}
-        <IconButton icon={<Icon icon="plus-circle" />} onClick={handleAdd} disabled={disabled} />
+
+        <IconButton
+          size="lg"
+          color="green"
+          appearance="ghost"
+          icon={<Icon icon="plus-circle" />}
+          onClick={handleAdd}
+          disabled={disabled}
+        />
       </div>
     )
   }

@@ -1,16 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Alert,
-  Button,
-  CheckPicker,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup,
-  Modal
-} from 'rsuite'
+import {Alert, Button, CheckPicker, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 
 import {
   Permission,

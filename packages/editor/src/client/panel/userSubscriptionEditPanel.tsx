@@ -10,7 +10,6 @@ import {
   FormControl,
   FormGroup,
   HelpBlock,
-  Panel,
   SelectPicker,
   Toggle
 } from 'rsuite'
