@@ -443,6 +443,11 @@
         "description": "Description",
         "permissions": "Permissions",
         "systemRole": "is a System Role and can not be edited"
+      },
+      "popover": {
+        "deleteThisUser": "Delete this user role",
+        "popoverText": "Are you sure? It can’t be undone.",
+        "deleteNow": "Delete now"
       }
     },
     "peerList": {

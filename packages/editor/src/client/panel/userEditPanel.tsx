@@ -10,9 +10,7 @@ import {
   FormControl,
   FormGroup,
   Modal,
-  Panel,
-  Toggle,
-  Divider
+  Toggle
 } from 'rsuite'
 
 import {DescriptionListItem, DescriptionList} from '../atoms/descriptionList'
@@ -31,7 +29,6 @@ import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Typography} from '../atoms/typography'
 
 export interface UserEditPanelProps {
   id?: string
