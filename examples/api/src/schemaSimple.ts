@@ -18,11 +18,11 @@ export const contentModelSimpleExample: ContentModel = {
           {
             identifier: 'article',
             scope: ReferenceScope.local
-          },
-          {
-            identifier: 'simple',
-            scope: ReferenceScope.local
           }
+          // {
+          //   identifier: 'simple',
+          //   scope: ReferenceScope.local
+          // }
         ]
       }
     }

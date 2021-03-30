@@ -57,6 +57,7 @@ import {
   ContentModelPrefixPrivate,
   ContentModelPrefixPrivateInput
 } from './contentUtils'
+import {MapType} from '../../interfaces/utilTypes'
 
 export interface PeerArticle {
   peerID: string
@@ -68,19 +69,26 @@ export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions
   let queryPublic: GraphQLFieldConfigMap<any, Context, any> = {}
   let mutation: GraphQLFieldConfigMap<any, Context, any> = {}
 
+  const contentModelsPrivate: MapType<GraphQLObjectType> = {}
+  const contentModelsPublic: MapType<GraphQLObjectType> = {}
+
   contextOptions.contentModels.forEach(item => {
     const idPublic = nameJoin(ContentModelPrefix, item.identifier)
     const idPrivate = nameJoin(ContentModelPrefixPrivate, item.identifier)
     const idPrivateInput = nameJoin(ContentModelPrefixPrivateInput, item.identifier)
     const typePublic = generateSchema(
       contextOptions.languageConfig,
+      item.identifier,
       nameJoin(idPublic, 'record'),
-      item.schema
+      item.schema,
+      contentModelsPublic
     )
     const typePrivate = generateSchema(
       contextOptions.languageConfig,
+      item.identifier,
       nameJoin(idPrivate, 'record'),
-      item.schema
+      item.schema,
+      contentModelsPrivate
     )
     const {create: inputTypeCreate, update: inputTypeUpdate} = generateInputSchema(
       contextOptions.languageConfig,

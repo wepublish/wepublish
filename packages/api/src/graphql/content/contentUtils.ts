@@ -32,6 +32,7 @@ import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLPeer} from '../peer'
 import {getI18nOutputType, getI18nInputType} from '../i18nPrimitives'
+import {MapType} from '../../interfaces/utilTypes'
 
 export interface PeerArticle {
   peerID: string
@@ -51,7 +52,9 @@ export const GraphQLContentSateEnum = new GraphQLEnumType({
 export function generateSchema(
   languageConfig: LanguageConfig,
   identifier: string,
-  contentModelSchema: ContentModelSchema
+  id: string,
+  contentModelSchema: ContentModelSchema,
+  contentModels: MapType<GraphQLObjectType>
 ) {
   const baseFields: GraphQLFieldConfigMap<unknown, unknown, unknown> = {
     id: {type: GraphQLNonNull(GraphQLID)},
@@ -68,26 +71,29 @@ export function generateSchema(
     title: {type: GraphQLNonNull(GraphQLString)},
     shared: {type: GraphQLNonNull(GraphQLBoolean)}
   }
-  return new GraphQLObjectType({
-    name: identifier,
-    fields: Object.entries(contentModelSchema).reduce((accu, [key, val]) => {
-      const schema = generateType(
-        {
-          language: languageConfig,
-          isInput: false
-        },
-        {
-          type: ContentModelSchemaTypes.object,
-          fields: val
-        },
-        nameJoin(identifier, key)
-      )
-      accu[`${key}`] = {
-        type: schema
-      }
-      return accu
-    }, baseFields)
+  contentModels[identifier] = new GraphQLObjectType({
+    name: id,
+    fields: () =>
+      Object.entries(contentModelSchema).reduce((accu, [key, val]) => {
+        const schema = generateType(
+          {
+            language: languageConfig,
+            isInput: false,
+            contentModels
+          },
+          {
+            type: ContentModelSchemaTypes.object,
+            fields: val
+          },
+          nameJoin(id, key)
+        )
+        accu[`${key}`] = {
+          type: schema
+        }
+        return accu
+      }, baseFields)
   })
+  return contentModels[identifier]
 }
 
 export function generateInputSchema(
@@ -145,6 +151,7 @@ export function nameJoin(...slug: string[]) {
 interface GenerateTypeConfig {
   language: LanguageConfig
   isInput: boolean
+  contentModels?: MapType<GraphQLObjectType>
 }
 
 function getLeaf(
@@ -276,7 +283,11 @@ function generateType(
       if (config.isInput) {
         type = getLeaf(config, contentModelSchemas, GraphQLReferenceInput)
       } else {
-        type = getLeaf(config, contentModelSchemas, getReference(contentModelSchemas))
+        type = getLeaf(
+          config,
+          contentModelSchemas,
+          getReference(contentModelSchemas, config.contentModels)
+        )
       }
       break
   }
