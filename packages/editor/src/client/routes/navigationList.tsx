@@ -18,9 +18,10 @@ import {
   Input,
   InputGroup,
   Table,
-  Drawer,
   Modal,
-  Button
+  Button,
+  Popover,
+  Whisper
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -55,6 +56,30 @@ export function NavigationList() {
   })
 
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
+
+  const speaker = (
+    <Popover title={t('authors.popover.deleteThisAuthor')}>
+      <p>{currentNavigation?.name}</p>
+      {/* <p> {t('authors.popover.popoverText')}</p> */}
+      <p>
+        <Button
+          color="red"
+          appearance="primary"
+          disabled={isDeleting}
+          onClick={async () => {
+            if (!currentNavigation) return
+            await deleteNavigation({
+              variables: {id: currentNavigation.id}
+            })
+
+            setConfirmationDialogOpen(false)
+            refetch()
+          }}>
+          {t('authors.popover.deleteNow')}
+        </Button>
+      </p>
+    </Popover>
+  )
 
   useEffect(() => {
     switch (current?.type) {
@@ -117,23 +142,24 @@ export function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setCurrentNavigation(rowData)
-                    setConfirmationDialogOpen(true)
-                  }}
-                />
+                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
+                  <IconButton
+                    icon={<Icon icon="trash-o" />}
+                    circle
+                    size="sm"
+                    color="red"
+                    onClick={() => {
+                      setCurrentNavigation(rowData)
+                    }}
+                  />
+                </Whisper>
               </>
             )}
           </Cell>
         </Column>
       </Table>
 
-      <Drawer
+      <Modal
         show={isEditModalOpen}
         size={'sm'}
         onHide={() => {
@@ -160,7 +186,7 @@ export function NavigationList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
