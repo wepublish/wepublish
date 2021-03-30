@@ -11,8 +11,6 @@ import {
   ButtonLink
 } from '../route'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
 import {RouteActionType} from '@karma.run/react'
 import {
   FullPaymentMethodFragment,
@@ -21,7 +19,7 @@ import {
 } from '../api'
 
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
-import {FlexboxGrid, Icon, IconButton, Drawer, Table, Modal, Button} from 'rsuite'
+import {FlexboxGrid, Icon, IconButton, Table, Modal, Button, Popover, Whisper} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
@@ -49,6 +47,29 @@ export function PaymentMethodList() {
   })
 
   const [deletePaymentMethod, {loading: isDeleting}] = useDeletePaymentMethodMutation()
+
+  const speaker = (
+    <Popover title={t('userList.popover.deleteThisUser')}>
+      <p>{t('userList.popover.popoverText')}</p>
+      <p>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={async () => {
+            if (!currentPaymentMethod) return
+
+            await deletePaymentMethod({
+              variables: {id: currentPaymentMethod.id}
+            })
+
+            await refetch()
+            setConfirmationDialogOpen(false)
+          }}>
+          {t('userList.popover.deleteNow')}
+        </Button>
+      </p>
+    </Popover>
+  )
 
   useEffect(() => {
     switch (current?.type) {
@@ -91,7 +112,7 @@ export function PaymentMethodList() {
         style={{marginTop: '20px'}}
         loading={isLoading}
         data={paymentMethods}>
-        <Column width={200} align="left" resizable>
+        <Column flexGrow={6} align="left">
           <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
           <Cell>
             {(rowData: FullPaymentMethodFragment) => (
@@ -101,28 +122,29 @@ export function PaymentMethodList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
               <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setConfirmationDialogOpen(true)
-                    setCurrentPaymentMethod(rowData)
-                  }}
-                />
+                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
+                  <IconButton
+                    icon={<Icon icon="trash-o" />}
+                    circle
+                    size="sm"
+                    color="red"
+                    onClick={() => {
+                      setCurrentPaymentMethod(rowData)
+                    }}
+                  />
+                </Whisper>
               </>
             )}
           </Cell>
         </Column>
       </Table>
 
-      <Drawer
+      <Modal
         show={isEditModalOpen}
         size={'sm'}
         onHide={() => {
@@ -151,41 +173,6 @@ export function PaymentMethodList() {
             await refetch()
           }}
         />
-      </Drawer>
-
-      <Modal show={isConfirmationDialogOpen} size={'sm'}>
-        <Modal.Header>
-          <Modal.Title>{t('paymentMethodList.deleteModalTitle')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('paymentMethodList.name')}>
-              {currentPaymentMethod?.name || t('untitled')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentPaymentMethod) return
-
-              await deletePaymentMethod({
-                variables: {id: currentPaymentMethod.id}
-              })
-
-              await refetch()
-              setConfirmationDialogOpen(false)
-            }}
-            color="red">
-            {t('confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )
