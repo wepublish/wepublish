@@ -26,6 +26,10 @@ import {
   blockForQueryBlock,
   BlockType,
   BlockValue,
+  ListicleBlockListValue,
+  QuoteBlockListValue,
+  RichTextBlockListValue,
+  TitleBlockListValue,
   TitleBlockValue,
   unionMapForBlock
 } from '../blocks/types'
@@ -191,17 +195,51 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }, blocksCharLength)
   }
 
-  function countRichTextBlocksChars(blocks: BlockValue[]) {
-    return blocks.reduce((charLength: number, block: BlockValue) => {
-      if (!(block.type === BlockType.RichText)) return charLength
-      return countRichtextChars(charLength, block.value)
-    }, 0)
+  function countRichTextBlocksChars(block: RichTextBlockListValue) {
+    return countRichtextChars(0, block.value)
   }
 
-  function countTitle(blocks: BlockValue[]) {
+  function countTitleChars(block: TitleBlockListValue): number {
+    return block.value.title.length + block.value.lead.length
+  }
+
+  function countQuoteChars(block: QuoteBlockListValue) {
+    return block.value.quote.length + block.value.author.length
+  }
+
+  function countListicleChars(block: ListicleBlockListValue) {
+    const titleArray = block.value.items.map(item => {
+      return item.value.title.length
+    })
+
+    const totalTitleChars = titleArray.reduce(function (charCount: number, b) {
+      return charCount + b
+    })
+
+    const richTextBlocks = block.value.items.map(item => item.value.richText)
+
+    const richTextBlocksCount = richTextBlocks.reduce(
+      (charCount: number, item) => charCount + countRichtextChars(0, item),
+      0
+    )
+
+    return totalTitleChars + richTextBlocksCount
+  }
+
+  function wordCounter(blocks: BlockValue[]): number {
     return blocks.reduce((charLength: number, block: BlockValue) => {
-      if ((block.type === BlockType.Title)) return charLength + (block.value.title as string).length + (block.value.lead as string).length
-      else return charLength;
+      switch (block.type) {
+        case BlockType.Listicle:
+          return charLength + countListicleChars(block)
+        case BlockType.Title:
+          return charLength + countTitleChars(block)
+        case BlockType.Quote:
+          return charLength + countQuoteChars(block)
+        case BlockType.RichText:
+          return charLength + countRichTextBlocksChars(block)
+        default:
+          return charLength
+      }
     }, 0)
   }
 
@@ -325,8 +363,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   })
 
   useEffect(() => {
-    setInfoData({charCount: countRichTextBlocksChars(blocks) + countTitle(blocks)})
-  },[isMetaDrawerOpen])
+    setInfoData({
+      charCount: wordCounter(blocks)
+    })
+  }, [isMetaDrawerOpen])
 
   return (
     <>
@@ -400,10 +440,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           {useBlockMap<BlockValue>(() => BlockMap, [])}
         </BlockList>
       </EditorTemplate>
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)} >
+      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}
-          infoData= {infoData}
+          infoData={infoData}
           onClose={() => setMetaDrawerOpen(false)}
           onChange={value => {
             setMetadata(value)
