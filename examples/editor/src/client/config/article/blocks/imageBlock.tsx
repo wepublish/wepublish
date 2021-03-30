@@ -10,12 +10,19 @@ import {ImageBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
 import {ImagedEditPanel, ImageSelectPanel, Reference} from '@wepublish/editor'
+import {useImageQuery} from '@wepublish/editor/src/client/api'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {
+  const {image, caption} = value
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const {image, caption} = value
+  const {data} = useImageQuery({
+    skip: image?.record || !image?.recordId,
+    variables: {
+      id: image?.recordId!
+    }
+  })
 
   const {t} = useTranslation()
 
@@ -29,23 +36,20 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
     onChange({...value, image})
   }
 
+  const imageRecord: ImageRefFragment = image?.record || data?.image
   let imageComponent = null
-  console.log('imageimageimageimageimage', image)
-  if (image?.record) {
-    const imageRefFragment = image.record as ImageRefFragment
+  if (imageRecord) {
     imageComponent = (
       <Panel
         style={{
           padding: 0,
           position: 'relative',
           height: '100%',
-          backgroundSize: `${imageRefFragment.height > 300 ? 'contain' : 'auto'}`,
+          backgroundSize: `${imageRecord.height > 300 ? 'contain' : 'auto'}`,
           backgroundPositionX: 'center',
           backgroundPositionY: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundImage: `url(${
-            imageRefFragment?.largeURL ?? 'https://via.placeholder.com/240x240'
-          })`
+          backgroundImage: `url(${imageRecord?.largeURL ?? 'https://via.placeholder.com/240x240'})`
         }}>
         <Dropdown
           renderTitle={() => {
@@ -90,7 +94,6 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {}}
           onSelectRef={value => {
-            console.log('worksdddd', value.recordId, value.record)
             setChooseModalOpen(false)
             handleImageChange(value)
           }}

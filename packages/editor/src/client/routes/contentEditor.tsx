@@ -91,7 +91,7 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
   })
 
   const isNotFound = data && !data.content
-  const recordData: ContentBody = data?.content[type].read
+  const recordData: ContentBody = data?.content[type]?.read
 
   const isDisabled = isLoading || isCreating || isUpdating || isPublishing || isNotFound
   const pendingPublishDate = recordData?.createdAt

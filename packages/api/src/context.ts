@@ -124,6 +124,10 @@ export interface Context {
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
+
+  readonly contentModels: ContentModel[]
+  readonly languageConfig: LanguageConfig
+
   readonly hooks?: Hooks
 
   sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
@@ -198,7 +202,9 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
     mailProvider,
-    paymentProviders
+    paymentProviders,
+    contentModels,
+    languageConfig
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -349,6 +355,9 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
+    contentModels,
+    languageConfig,
+
     hooks,
 
     sendMailFromProvider,

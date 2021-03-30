@@ -7,7 +7,7 @@ export enum DBContentState {
   Archive = 'Archive'
 }
 
-export interface Content {
+export interface Content<T = any> {
   id: string
   contentType: string
   revision: number
@@ -22,8 +22,8 @@ export interface Content {
   shared: boolean
   title: string
 
-  content: any
-  meta: any
+  content: T
+  meta: T
 }
 
 export type OptionalContent = Content | null

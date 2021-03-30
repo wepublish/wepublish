@@ -1,3 +1,5 @@
+import {MapType} from './utilTypes'
+
 export interface ContentModelSchemaFieldBase {
   type: ContentModelSchemaTypes
   nameGUI?: string
@@ -100,16 +102,12 @@ export interface ContentModelSchemaFieldList extends ContentModelSchemaFieldBase
 
 export interface ContentModelSchemaFieldObject extends ContentModelSchemaFieldBase {
   type: ContentModelSchemaTypes.object
-  fields: {
-    [key: string]: ContentModelSchemas
-  }
+  fields: MapType<ContentModelSchemas>
 }
 
 export interface ContentModelSchemaFieldUnion extends ContentModelSchemaFieldBase {
   type: ContentModelSchemaTypes.union
-  cases: {
-    [key: string]: ContentModelSchemaFieldObject
-  }
+  cases: MapType<ContentModelSchemaFieldObject>
 }
 
 export type ContentModelSchemas =
@@ -127,10 +125,6 @@ export type ContentModelSchemas =
   | ContentModelSchemaFieldUnion
 
 export interface ContentModelSchema {
-  content: {
-    [key: string]: ContentModelSchemas
-  }
-  meta?: {
-    [key: string]: ContentModelSchemas
-  }
+  content: MapType<ContentModelSchemas>
+  meta?: MapType<ContentModelSchemas>
 }

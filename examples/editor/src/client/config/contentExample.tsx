@@ -1,8 +1,15 @@
 import React, {useCallback, useState} from 'react'
 import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Tag, TagGroup} from 'rsuite'
 import {isFunctionalUpdate} from '@karma.run/react'
-import {RichTextBlock, RichTextBlockValue, Reference, RefSelectPanel} from '@wepublish/editor'
-import {ContentContextEnum, ContentTypeEnum} from './article/api'
+import {
+  Link,
+  ContentEditRoute,
+  RichTextBlock,
+  RichTextBlockValue,
+  Reference,
+  RefSelectPanel
+} from '@wepublish/editor'
+import {ContentContextEnum, ContentTypeEnum, useModelAQuery} from './article/api'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -13,7 +20,7 @@ export interface ArticleMetadataProperty {
 export interface CustomContentValue {
   readonly myString: string
   readonly myRichText: RichTextBlockValue
-  readonly myRef?: Reference
+  readonly myRef?: Reference | null
 }
 
 export interface CustomContentExampleProps {
@@ -44,7 +51,7 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
         <Tag
           closable
           onClose={() => {
-            onChange?.({...value, myRef: undefined})
+            onChange?.({...value, myRef: null})
           }}>
           {revSummary}
         </Tag>
@@ -107,6 +114,12 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
     return null
   }
   const {myString, myRichText, myRef} = value
+  const {data} = useModelAQuery({
+    skip: myRef?.record || !myRef?.recordId,
+    variables: {
+      id: myRef?.recordId!
+    }
+  })
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const handleRichTextChange = useCallback(
     (richText: React.SetStateAction<RichTextBlockValue>) =>
@@ -119,15 +132,26 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
 
   let ref = null
   if (myRef) {
-    const revSummary = `Type: ${myRef.contentType} Id: ${myRef.recordId}`
+    const referenceSummary = (
+      <Link route={ContentEditRoute.create({type: myRef.contentType, id: myRef.recordId})}>
+        Type: {myRef.contentType} Id: {myRef.recordId}
+      </Link>
+    )
+    let referencePreview: any = null
+    if (data?.content.modelA.read.title) {
+      const {title, content} = data.content.modelA.read
+      referencePreview = `${title} ${content?.myString}`
+    }
     ref = (
       <TagGroup>
         <Tag
           closable
           onClose={() => {
-            onChange?.({...value, myRef: undefined})
+            onChange?.({...value, myRef: null})
           }}>
-          {revSummary}
+          {referenceSummary}
+          <br />
+          {referencePreview}
         </Tag>
       </TagGroup>
     )

@@ -475,7 +475,7 @@ export type _Cmp_ModelB_Record_Content = {
   __typename?: '_cmp_modelB_record_content';
   myString?: Maybe<Scalars['String']>;
   myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_ModelAlocal_ModelBlocal>;
+  myRef?: Maybe<Ref_ModelAlocal>;
 };
 
 export type _Cmp_ModelBConnection = {
@@ -2648,6 +2648,15 @@ export type Ref_Local = {
   peer?: Maybe<Peer>;
 };
 
+export type Ref_ModelAlocal = {
+  __typename?: 'ref_modelAlocal';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<_Cmp_ModelA_Record>;
+  peer?: Maybe<Peer>;
+};
+
 export type Ref_ModelAlocal_ModelBlocal = {
   __typename?: 'ref_modelAlocal_modelBlocal';
   recordId: Scalars['ID'];
@@ -3051,6 +3060,29 @@ export type DeleteContentMutation = (
   ) }
 );
 
+export type ModelAQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ModelAQuery = (
+  { __typename?: 'Query' }
+  & { content: (
+    { __typename?: 'CustomContent' }
+    & { modelA: (
+      { __typename?: '_cmp_modelA' }
+      & { read: (
+        { __typename?: '_cmp_modelA_record' }
+        & Pick<_Cmp_ModelA_Record, 'id' | 'contentType' | 'title'>
+        & { content?: Maybe<(
+          { __typename?: '_cmp_modelA_record_content' }
+          & Pick<_Cmp_ModelA_Record_Content, 'myString' | 'myRichText'>
+        )> }
+      ) }
+    ) }
+  ) }
+);
+
 export type ContentModelSchemaQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3397,6 +3429,49 @@ export function useDeleteContentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteContentMutationHookResult = ReturnType<typeof useDeleteContentMutation>;
 export type DeleteContentMutationResult = Apollo.MutationResult<DeleteContentMutation>;
 export type DeleteContentMutationOptions = Apollo.BaseMutationOptions<DeleteContentMutation, DeleteContentMutationVariables>;
+export const ModelADocument = gql`
+    query ModelA($id: ID!) {
+  content {
+    modelA {
+      read(id: $id) {
+        id
+        contentType
+        title
+        content {
+          myString
+          myRichText
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useModelAQuery__
+ *
+ * To run a query within a React component, call `useModelAQuery` and pass it any options that fit your needs.
+ * When your component renders, `useModelAQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useModelAQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useModelAQuery(baseOptions?: Apollo.QueryHookOptions<ModelAQuery, ModelAQueryVariables>) {
+        return Apollo.useQuery<ModelAQuery, ModelAQueryVariables>(ModelADocument, baseOptions);
+      }
+export function useModelALazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ModelAQuery, ModelAQueryVariables>) {
+          return Apollo.useLazyQuery<ModelAQuery, ModelAQueryVariables>(ModelADocument, baseOptions);
+        }
+export type ModelAQueryHookResult = ReturnType<typeof useModelAQuery>;
+export type ModelALazyQueryHookResult = ReturnType<typeof useModelALazyQuery>;
+export type ModelAQueryResult = Apollo.QueryResult<ModelAQuery, ModelAQueryVariables>;
 export const ContentModelSchemaDocument = gql`
     query ContentModelSchema {
   content {

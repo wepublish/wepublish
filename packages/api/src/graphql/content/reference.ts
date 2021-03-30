@@ -40,12 +40,11 @@ export const GraphQLUnknown = new GraphQLScalarType({
   },
 
   parseValue(value) {
-    return value
+    return null
   },
 
   parseLiteral(literal) {
-    const obj = valueFromASTUntyped(literal)
-    return obj
+    return null
   }
 })
 
