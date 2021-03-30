@@ -342,6 +342,7 @@
         "filename": "Filename",
         "title": "Title",
         "description": "Description",
+        "meta": "Metadata",
         "cancel": "Cancel",
         "close": "Close",
         "upload": "Upload",

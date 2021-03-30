@@ -18,13 +18,15 @@ import {Point} from '../atoms/draggable'
 import {
   Button,
   ControlLabel,
-  Drawer,
+  Modal,
   Form,
   FormControl,
   FormGroup,
   Panel,
   TagPicker,
-  Notification
+  Notification,
+  FlexboxGrid,
+  HelpBlock
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -218,139 +220,142 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {isUpload ? t('images.panels.uploadImage') : t('images.panels.editImage')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        {!isLoading && (
-          <>
-            <Panel style={{backgroundColor: 'dark'}}>
-              {imageURL && imageWidth && imageHeight && (
-                <FocalPointInput
-                  imageURL={imageURL}
-                  imageWidth={imageWidth}
-                  imageHeight={imageHeight}
-                  maxHeight={300}
-                  focalPoint={focalPoint}
-                  onChange={point => setFocalPoint(point)}
-                />
-              )}
-            </Panel>
-            <Panel header={t('images.panels.description')}>
-              <DescriptionList>
-                <DescriptionListItem label={t('images.panels.filename')}>
-                  {filename || t('images.panels.untitled')}
-                  {extension}
-                </DescriptionListItem>
-                <DescriptionListItem label={t('images.panels.dimension')}>
-                  {t('images.panels.imageDimension', {imageWidth, imageHeight})}
-                </DescriptionListItem>
-                {createdAt && (
-                  <DescriptionListItem label={t('images.panels.created')}>
-                    {new Date(createdAt).toLocaleString()}
+      <Modal.Body>
+        <FlexboxGrid justify="space-between">
+          {!isLoading && (
+            <>
+              <FlexboxGrid.Item colspan={12}>
+                <h5 className="wep-section-title">{t('images.panels.information')}</h5>
+                <Form fluid={true}>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.filename')}</ControlLabel>
+                    <FormControl
+                      value={filename}
+                      disabled={isDisabled}
+                      onChange={value => setFilename(value)}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.title')}</ControlLabel>
+                    <FormControl
+                      value={title}
+                      disabled={isDisabled}
+                      onChange={value => setTitle(value)}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.description')}</ControlLabel>
+                    <FormControl
+                      value={description}
+                      disabled={isDisabled}
+                      onChange={value => setDescription(value)}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.tags')}</ControlLabel>
+                    <TagPicker
+                      block={true}
+                      creatable={true}
+                      disabled={isDisabled}
+                      value={tags}
+                      data={tags.map(tag => ({value: tag, label: tag}))}
+                      onChange={value => setTags(value ?? [])}
+                    />
+                  </FormGroup>
+                </Form>
+                <h5 className="wep-section-title">{t('images.panels.attribution')}</h5>
+                <Form fluid={true}>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.author')}</ControlLabel>
+                    <FormControl
+                      value={author}
+                      disabled={isDisabled}
+                      onChange={value => setAuthor(value)}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.source')}</ControlLabel>
+                    <FormControl
+                      value={source}
+                      disabled={isDisabled}
+                      onChange={value => setSource(value)}
+                    />
+                    <HelpBlock>{t('images.panels.sourceLink')}</HelpBlock>
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('images.panels.license')}</ControlLabel>
+                    <FormControl
+                      value={license}
+                      disabled={isDisabled}
+                      onChange={value => setLicense(value)}
+                    />
+                  </FormGroup>
+                </Form>
+              </FlexboxGrid.Item>
+              <FlexboxGrid.Item colspan={10}>
+                <h5 className="wep-section-title">{t('images.panels.meta')}</h5>
+                <Panel style={{backgroundColor: '#000', marginBottom: '20px'}}>
+                  {imageURL && imageWidth && imageHeight && (
+                    <FocalPointInput
+                      imageURL={imageURL}
+                      imageWidth={imageWidth}
+                      imageHeight={imageHeight}
+                      maxHeight={300}
+                      focalPoint={focalPoint}
+                      onChange={point => setFocalPoint(point)}
+                    />
+                  )}
+                </Panel>
+                <DescriptionList>
+                  <DescriptionListItem label={t('images.panels.filename')}>
+                    {filename || t('images.panels.untitled')}
+                    {extension}
                   </DescriptionListItem>
-                )}
-                {updatedAt && (
-                  <DescriptionListItem label={t('images.panels.updated')}>
-                    {new Date(updatedAt).toLocaleString()}
+                  <DescriptionListItem label={t('images.panels.dimension')}>
+                    {t('images.panels.imageDimension', {imageWidth, imageHeight})}
                   </DescriptionListItem>
-                )}
-                <DescriptionListItem label={t('images.panels.fileSize')}>
-                  {prettyBytes(fileSize)}
-                </DescriptionListItem>
+                  {createdAt && (
+                    <DescriptionListItem label={t('images.panels.created')}>
+                      {new Date(createdAt).toLocaleString()}
+                    </DescriptionListItem>
+                  )}
+                  {updatedAt && (
+                    <DescriptionListItem label={t('images.panels.updated')}>
+                      {new Date(updatedAt).toLocaleString()}
+                    </DescriptionListItem>
+                  )}
+                  <DescriptionListItem label={t('images.panels.fileSize')}>
+                    {prettyBytes(fileSize)}
+                  </DescriptionListItem>
 
-                {originalImageURL && (
-                  <DescriptionListItem label={t('images.panels.link')}>
-                    <Link href={originalImageURL} target="_blank">
-                      {originalImageURL}
-                    </Link>
-                  </DescriptionListItem>
-                )}
-              </DescriptionList>
-            </Panel>
-            <Panel header={t('images.panels.information')}>
-              <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.filename')}</ControlLabel>
-                  <FormControl
-                    value={filename}
-                    disabled={isDisabled}
-                    onChange={value => setFilename(value)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.title')}</ControlLabel>
-                  <FormControl
-                    value={title}
-                    disabled={isDisabled}
-                    onChange={value => setTitle(value)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.description')}</ControlLabel>
-                  <FormControl
-                    value={description}
-                    disabled={isDisabled}
-                    onChange={value => setDescription(value)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.tags')}</ControlLabel>
-                  <TagPicker
-                    block={true}
-                    creatable={true}
-                    disabled={isDisabled}
-                    value={tags}
-                    data={tags.map(tag => ({value: tag, label: tag}))}
-                    onChange={value => setTags(value ?? [])}
-                  />
-                </FormGroup>
-              </Form>
-            </Panel>
-            <Panel header={t('images.panels.attribution')}>
-              <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.author')}</ControlLabel>
-                  <FormControl
-                    value={author}
-                    disabled={isDisabled}
-                    onChange={value => setAuthor(value)}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.source')}</ControlLabel>
-                  <FormControl
-                    value={source}
-                    disabled={isDisabled}
-                    onChange={value => setSource(value)}
-                  />
-                  <p>{t('images.panels.sourceLink')}</p>
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('images.panels.license')}</ControlLabel>
-                  <FormControl
-                    value={license}
-                    disabled={isDisabled}
-                    onChange={value => setLicense(value)}
-                  />
-                </FormGroup>
-              </Form>
-            </Panel>
-          </>
-        )}
-      </Drawer.Body>
+                  {originalImageURL && (
+                    <DescriptionListItem label={t('images.panels.link')}>
+                      <Link href={originalImageURL} target="_blank">
+                        {originalImageURL}
+                      </Link>
+                    </DescriptionListItem>
+                  )}
+                </DescriptionList>
+              </FlexboxGrid.Item>
+            </>
+          )}
+        </FlexboxGrid>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {isUpload ? t('images.panels.upload') : t('images.panels.save')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {isUpload ? t('images.panels.cancel') : t('images.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }
