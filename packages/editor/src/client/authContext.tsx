@@ -2,6 +2,7 @@ import React, {useEffect, createContext, Dispatch, useReducer, ReactNode} from '
 import {useQuery, gql} from '@apollo/client'
 
 import {LocalStorageKey} from './utility'
+// eslint-disable-next-line
 // @ts-ignore
 import {usePageVisibility} from 'react-page-visibility'
 
