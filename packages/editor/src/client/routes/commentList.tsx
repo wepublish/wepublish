@@ -211,7 +211,7 @@ export function CommentList() {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={350} align="left" resizable>
+          <Column flexGrow={3} align="left">
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="createdAt">
               {(rowData: FullCommentFragment) => (
@@ -230,11 +230,11 @@ export function CommentList() {
               )}
             </Cell>
           </Column>
-          <Column width={150} align="left" resizable>
+          <Column flexGrow={2} align="left">
             <HeaderCell>{t('comments.overview.userName')}</HeaderCell>
             <Cell>{(rowData: FullCommentFragment) => <>{rowData.user?.name}</>}</Cell>
           </Column>
-          <Column width={150} align="left" resizable>
+          <Column flexGrow={1} align="left">
             <HeaderCell>{t('comments.overview.state')}</HeaderCell>
             <Cell dataKey="state">
               {(rowData: FullCommentFragment) => {
@@ -257,13 +257,13 @@ export function CommentList() {
               }}
             </Cell>
           </Column>
-          <Column width={150} align="left" resizable sortable>
+          <Column flexGrow={1} align="left" sortable>
             <HeaderCell>{t('comments.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: Comment) => new Date(modifiedAt).toLocaleString()}
             </Cell>
           </Column>
-          <Column width={150} align="center" fixed="right">
+          <Column width={150} align="right" fixed="right">
             <HeaderCell>{t('comments.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: Comment) => (
