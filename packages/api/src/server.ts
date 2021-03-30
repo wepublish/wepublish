@@ -1,7 +1,7 @@
 import express, {Application, NextFunction} from 'express'
 import {ApolloServer} from 'apollo-server-express'
 import {contextFromRequest, ContextOptions} from './context'
-import {getGraphQLWepublishPublicSchema, getGraphQLWepublishSchema} from './graphql/schema'
+import {getGraphQLWepublishSchemas} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 import {capitalizeFirstLetter} from './utility'
@@ -67,8 +67,10 @@ export class WepublishServer {
       }
     })
 
+    const {privateSchema, publicSchema} = getGraphQLWepublishSchemas(opts)
+
     const adminServer = new ApolloServer({
-      schema: getGraphQLWepublishSchema(opts),
+      schema: privateSchema,
       playground: opts.playground ?? false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
@@ -76,7 +78,7 @@ export class WepublishServer {
     })
 
     const publicServer = new ApolloServer({
-      schema: getGraphQLWepublishPublicSchema(opts),
+      schema: publicSchema,
       playground: opts.playground ?? false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,

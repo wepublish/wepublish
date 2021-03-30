@@ -1,14 +1,14 @@
 import React from 'react'
 import {ExtensionConfig} from '@wepublish/editor'
 import {CustomViewExample} from './customView'
-import {CustomContentExample} from './contentExample'
+import {CustomContentExample, ModelBView} from './contentExample'
 import {BlockType} from './article/articleInterfaces'
 import {getContentView} from './article/articleContentView'
 
 export const config: ExtensionConfig = {
   contentModelExtension: [
     {
-      identifier: 'simple',
+      identifier: 'modelA',
       defaultContent: {
         myString: '',
         myRichText: [
@@ -25,6 +25,26 @@ export const config: ExtensionConfig = {
       },
       getContentView: (content: any, handleChange: any, disabled: boolean) => {
         return <CustomContentExample value={content} onChange={handleChange} />
+      }
+    },
+    {
+      identifier: 'modelB',
+      defaultContent: {
+        myString: '',
+        myRichText: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ],
+        myRef: null
+      },
+      getContentView: (content: any, handleChange: any, disabled: boolean) => {
+        return <ModelBView value={content} onChange={handleChange} />
       }
     },
     {

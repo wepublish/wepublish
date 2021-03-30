@@ -14,9 +14,9 @@ export type Scalars = {
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
   RichText: Node[];
-  Any: any;
   /** A hexidecimal color value. */
   Color: string;
+  Unknown: any;
   ContentModelSchema: any;
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
@@ -197,6 +197,18 @@ export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
   contentRef?: Maybe<Ref_Articleall_Pagelocal>;
 };
 
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef = _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Article | _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Page;
+
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Article = {
+  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers_contentRef_article';
+  article?: Maybe<_Cmp_Article_Record>;
+};
+
+export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Page = {
+  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers_contentRef_page';
+  page?: Maybe<Scalars['Unknown']>;
+};
+
 export enum _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
   /** default */
   Default = 'DEFAULT',
@@ -357,20 +369,20 @@ export type _Cmp_ExampleConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type _Cmp_Simple = {
-  __typename?: '_cmp_simple';
-  read: _Cmp_Simple_Record;
-  list: _Cmp_SimpleConnection;
+export type _Cmp_ModelA = {
+  __typename?: '_cmp_modelA';
+  read: _Cmp_ModelA_Record;
+  list: _Cmp_ModelAConnection;
 };
 
 
-export type _Cmp_SimpleReadArgs = {
+export type _Cmp_ModelAReadArgs = {
   peerID?: Maybe<Scalars['ID']>;
   id: Scalars['ID'];
 };
 
 
-export type _Cmp_SimpleListArgs = {
+export type _Cmp_ModelAListArgs = {
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -380,8 +392,8 @@ export type _Cmp_SimpleListArgs = {
   order?: Maybe<SortOrder>;
 };
 
-export type _Cmp_Simple_Record = {
-  __typename?: '_cmp_simple_record';
+export type _Cmp_ModelA_Record = {
+  __typename?: '_cmp_modelA_record';
   id: Scalars['ID'];
   contentType: Scalars['String'];
   revision: Scalars['Int'];
@@ -392,18 +404,83 @@ export type _Cmp_Simple_Record = {
   dePublicationDate?: Maybe<Scalars['DateTime']>;
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_Simple_Record_Content>;
+  content?: Maybe<_Cmp_ModelA_Record_Content>;
 };
 
-export type _Cmp_Simple_Record_Content = {
-  __typename?: '_cmp_simple_record_content';
+export type _Cmp_ModelA_Record_Content = {
+  __typename?: '_cmp_modelA_record_content';
   myString?: Maybe<Scalars['String']>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_ModelAlocal_ModelBlocal>;
 };
 
-export type _Cmp_SimpleConnection = {
-  __typename?: '_cmp_simpleConnection';
-  nodes: Array<_Cmp_Simple_Record>;
+export type _Cmp_ModelA_Record_Content_MyRef = _Cmp_ModelA_Record_Content_MyRef_ModelA | _Cmp_ModelA_Record_Content_MyRef_ModelB;
+
+export type _Cmp_ModelA_Record_Content_MyRef_ModelA = {
+  __typename?: '_cmp_modelA_record_content_myRef_modelA';
+  modelA?: Maybe<_Cmp_ModelA_Record>;
+};
+
+export type _Cmp_ModelA_Record_Content_MyRef_ModelB = {
+  __typename?: '_cmp_modelA_record_content_myRef_modelB';
+  modelB?: Maybe<_Cmp_ModelB_Record>;
+};
+
+export type _Cmp_ModelAConnection = {
+  __typename?: '_cmp_modelAConnection';
+  nodes: Array<_Cmp_ModelA_Record>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type _Cmp_ModelB = {
+  __typename?: '_cmp_modelB';
+  read: _Cmp_ModelB_Record;
+  list: _Cmp_ModelBConnection;
+};
+
+
+export type _Cmp_ModelBReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+
+export type _Cmp_ModelBListArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type _Cmp_ModelB_Record = {
+  __typename?: '_cmp_modelB_record';
+  id: Scalars['ID'];
+  contentType: Scalars['String'];
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmp_ModelB_Record_Content>;
+};
+
+export type _Cmp_ModelB_Record_Content = {
+  __typename?: '_cmp_modelB_record_content';
+  myString?: Maybe<Scalars['String']>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_ModelAlocal_ModelBlocal>;
+};
+
+export type _Cmp_ModelBConnection = {
+  __typename?: '_cmp_modelBConnection';
+  nodes: Array<_Cmp_ModelB_Record>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
@@ -682,33 +759,33 @@ export type _Cmpi_Example_Record_Update = {
   content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
-export type _Cmpi_Simple = {
-  __typename?: '_cmpi_simple';
-  create: _Cmp_Simple_Record;
-  update: _Cmp_Simple_Record;
+export type _Cmpi_ModelA = {
+  __typename?: '_cmpi_modelA';
+  create: _Cmp_ModelA_Record;
+  update: _Cmp_ModelA_Record;
   delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_Simple_Record>;
-  unpublish?: Maybe<_Cmp_Simple_Record>;
+  publish?: Maybe<_Cmp_ModelA_Record>;
+  unpublish?: Maybe<_Cmp_ModelA_Record>;
 };
 
 
-export type _Cmpi_SimpleCreateArgs = {
-  input: _Cmpi_Simple_Record_Create;
+export type _Cmpi_ModelACreateArgs = {
+  input: _Cmpi_ModelA_Record_Create;
 };
 
 
-export type _Cmpi_SimpleUpdateArgs = {
-  input: _Cmpi_Simple_Record_Update;
+export type _Cmpi_ModelAUpdateArgs = {
+  input: _Cmpi_ModelA_Record_Update;
 };
 
 
-export type _Cmpi_SimpleDeleteArgs = {
+export type _Cmpi_ModelADeleteArgs = {
   id: Scalars['ID'];
   revision?: Maybe<Scalars['Int']>;
 };
 
 
-export type _Cmpi_SimplePublishArgs = {
+export type _Cmpi_ModelAPublishArgs = {
   id: Scalars['ID'];
   revision: Scalars['Int'];
   publishAt?: Maybe<Scalars['DateTime']>;
@@ -717,26 +794,85 @@ export type _Cmpi_SimplePublishArgs = {
 };
 
 
-export type _Cmpi_SimpleUnpublishArgs = {
+export type _Cmpi_ModelAUnpublishArgs = {
   id: Scalars['ID'];
 };
 
-export type _Cmpi_Simple_Record_Content = {
+export type _Cmpi_ModelA_Record_Content = {
   myString?: Maybe<Scalars['String']>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_Input>;
 };
 
-export type _Cmpi_Simple_Record_Create = {
+export type _Cmpi_ModelA_Record_Create = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Simple_Record_Content>;
+  content?: Maybe<_Cmpi_ModelA_Record_Content>;
 };
 
-export type _Cmpi_Simple_Record_Update = {
+export type _Cmpi_ModelA_Record_Update = {
   id: Scalars['ID'];
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Simple_Record_Content>;
+  content?: Maybe<_Cmpi_ModelA_Record_Content>;
+};
+
+export type _Cmpi_ModelB = {
+  __typename?: '_cmpi_modelB';
+  create: _Cmp_ModelB_Record;
+  update: _Cmp_ModelB_Record;
+  delete: Scalars['Boolean'];
+  publish?: Maybe<_Cmp_ModelB_Record>;
+  unpublish?: Maybe<_Cmp_ModelB_Record>;
+};
+
+
+export type _Cmpi_ModelBCreateArgs = {
+  input: _Cmpi_ModelB_Record_Create;
+};
+
+
+export type _Cmpi_ModelBUpdateArgs = {
+  input: _Cmpi_ModelB_Record_Update;
+};
+
+
+export type _Cmpi_ModelBDeleteArgs = {
+  id: Scalars['ID'];
+  revision?: Maybe<Scalars['Int']>;
+};
+
+
+export type _Cmpi_ModelBPublishArgs = {
+  id: Scalars['ID'];
+  revision: Scalars['Int'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type _Cmpi_ModelBUnpublishArgs = {
+  id: Scalars['ID'];
+};
+
+export type _Cmpi_ModelB_Record_Content = {
+  myString?: Maybe<Scalars['String']>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_Input>;
+};
+
+export type _Cmpi_ModelB_Record_Create = {
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_ModelB_Record_Content>;
+};
+
+export type _Cmpi_ModelB_Record_Update = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_ModelB_Record_Content>;
 };
 
 export type All = {
@@ -804,7 +940,6 @@ export type AllMutationsPublishArgs = {
 export type AllMutationsUnpublishArgs = {
   id: Scalars['ID'];
 };
-
 
 export type Article = {
   __typename?: 'Article';
@@ -1110,7 +1245,8 @@ export enum ContentStateEnum {
 
 export enum ContentTypeEnum {
   Example = 'example',
-  Simple = 'simple',
+  ModelA = 'modelA',
+  ModelB = 'modelB',
   Article = 'article'
 }
 
@@ -1133,7 +1269,8 @@ export type CreatePeerInput = {
 export type CustomContent = {
   __typename?: 'CustomContent';
   example: _Cmp_Example;
-  simple: _Cmp_Simple;
+  modelA: _Cmp_ModelA;
+  modelB: _Cmp_ModelB;
   article: _Cmp_Article;
   _all: All;
   _schema: Array<ContentModelConfig>;
@@ -1142,7 +1279,8 @@ export type CustomContent = {
 export type CustomContentMutations = {
   __typename?: 'CustomContentMutations';
   example: _Cmpi_Example;
-  simple: _Cmpi_Simple;
+  modelA: _Cmpi_ModelA;
+  modelB: _Cmpi_ModelB;
   article: _Cmpi_Article;
   _all: AllMutations;
 };
@@ -2471,8 +2609,8 @@ export type Ref___Medialocal = {
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Any']>;
-  peer?: Maybe<Scalars['Any']>;
+  record?: Maybe<Image>;
+  peer?: Maybe<Peer>;
 };
 
 export type Ref_Articleall_Pagelocal = {
@@ -2480,8 +2618,8 @@ export type Ref_Articleall_Pagelocal = {
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Any']>;
-  peer?: Maybe<Scalars['Any']>;
+  record?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef>;
+  peer?: Maybe<Peer>;
 };
 
 export type Ref_Examplelocal = {
@@ -2489,16 +2627,16 @@ export type Ref_Examplelocal = {
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Any']>;
-  peer?: Maybe<Scalars['Any']>;
+  record?: Maybe<_Cmp_Example_Record>;
+  peer?: Maybe<Peer>;
 };
 
 export type Ref_Input = {
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Any']>;
-  peer?: Maybe<Scalars['Any']>;
+  record?: Maybe<Scalars['Unknown']>;
+  peer?: Maybe<Scalars['Unknown']>;
 };
 
 export type Ref_Local = {
@@ -2506,8 +2644,17 @@ export type Ref_Local = {
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Any']>;
-  peer?: Maybe<Scalars['Any']>;
+  record?: Maybe<Scalars['Unknown']>;
+  peer?: Maybe<Peer>;
+};
+
+export type Ref_ModelAlocal_ModelBlocal = {
+  __typename?: 'ref_modelAlocal_modelBlocal';
+  recordId: Scalars['ID'];
+  contentType: Scalars['ID'];
+  peerId?: Maybe<Scalars['ID']>;
+  record?: Maybe<_Cmp_ModelA_Record_Content_MyRef>;
+  peer?: Maybe<Peer>;
 };
 
 
@@ -2616,6 +2763,7 @@ export type UnidirectionalPageInfo = {
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
 };
+
 
 export type UpdateImageInput = {
   filename?: Maybe<Scalars['String']>;

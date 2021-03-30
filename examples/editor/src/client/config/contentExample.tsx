@@ -88,9 +88,87 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <RefSelectPanel
           types={[
-            {context: ContentContextEnum.Local, type: ContentTypeEnum.Simple},
-            {context: ContentContextEnum.Local, type: ContentTypeEnum.Article}
+            {context: ContentContextEnum.Local, type: ContentTypeEnum.ModelA},
+            {context: ContentContextEnum.Local, type: ContentTypeEnum.ModelB}
           ]}
+          onClose={() => setChooseModalOpen(false)}
+          onSelectRef={ref => {
+            setChooseModalOpen(false)
+            onChange?.({...value, myRef: ref})
+          }}
+        />
+      </Drawer>
+    </>
+  )
+}
+
+export function ModelBView({value, onChange}: CustomContentExampleProps) {
+  if (!value) {
+    return null
+  }
+  const {myString, myRichText, myRef} = value
+  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
+  const handleRichTextChange = useCallback(
+    (richText: React.SetStateAction<RichTextBlockValue>) =>
+      onChange(value => ({
+        ...value,
+        myRichText: isFunctionalUpdate(richText) ? richText(value.myRichText) : richText
+      })),
+    [onChange]
+  )
+
+  let ref = null
+  if (myRef) {
+    const revSummary = `Type: ${myRef.contentType} Id: ${myRef.recordId}`
+    ref = (
+      <TagGroup>
+        <Tag
+          closable
+          onClose={() => {
+            onChange?.({...value, myRef: undefined})
+          }}>
+          {revSummary}
+        </Tag>
+      </TagGroup>
+    )
+  } else {
+    ref = (
+      <Button
+        appearance="default"
+        active
+        onClick={teaser => {
+          setChooseModalOpen(true)
+        }}>
+        reference to
+      </Button>
+    )
+  }
+
+  return (
+    <>
+      <Form fluid={true} style={{width: '100%'}}>
+        <FormGroup>
+          <ControlLabel>myRef</ControlLabel>
+          {ref}
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>myString</ControlLabel>
+          <FormControl
+            componentClass="textarea"
+            rows={3}
+            value={myString}
+            onChange={myString => onChange?.({...value, myString})}
+          />
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>myRichText</ControlLabel>
+          <RichTextBlock value={myRichText} onChange={handleRichTextChange} />
+        </FormGroup>
+      </Form>
+
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+        <RefSelectPanel
+          types={[{context: ContentContextEnum.Local, type: ContentTypeEnum.ModelA}]}
           onClose={() => setChooseModalOpen(false)}
           onSelectRef={ref => {
             setChooseModalOpen(false)

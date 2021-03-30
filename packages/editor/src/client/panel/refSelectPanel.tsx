@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
-import {ContentContextEnum, ContentListQuery, ContentTypeEnum, useContentListQuery} from '../api'
+import {ContentContextEnum, ContentListQuery, useContentListQuery} from '../api'
 import {Reference} from '@wepublish/editor'
 
 export interface RefType {
-  type: ContentTypeEnum
+  type: string
   context: ContentContextEnum
 }
 
@@ -21,7 +21,7 @@ export function RefSelectPanel({onClose, onSelectRef, types}: TeaserSelectPanelP
 
   const currentType = types[tabIndex]
   const listVariables: {
-    type: ContentTypeEnum
+    type: any
     context: ContentContextEnum
     filter: string | undefined
     first: number

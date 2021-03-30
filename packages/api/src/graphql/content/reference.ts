@@ -5,15 +5,17 @@ import {
   GraphQLObjectType,
   GraphQLScalarType,
   GraphQLType,
-  valueFromASTUntyped
+  valueFromASTUntyped,
+  GraphQLUnionType
 } from 'graphql'
 import {Context} from '../../context'
 import {ContentModelSchemaFieldRef} from '../../interfaces/contentModelSchema'
-import {MediaReferenceType} from '../../interfaces/referenceType'
+import {MediaReferenceType, Reference} from '../../interfaces/referenceType'
 import {MapType} from '../../interfaces/utilTypes'
-import {createProxyingResolver} from '../../utility'
+import {createProxyingIsTypeOf, createProxyingResolver} from '../../utility'
 import {GraphQLImage} from '../image'
 import {GraphQLPeer} from '../peer'
+import {nameJoin} from './contentUtils'
 
 export const GraphQLReference = new GraphQLScalarType({
   name: 'Reference',
@@ -60,6 +62,7 @@ export const GraphQLReferenceInput = new GraphQLInputObjectType({
 
 const refTypes: {[type: string]: any} = {}
 export function getReference(
+  name: string,
   type: ContentModelSchemaFieldRef,
   contentModels?: MapType<GraphQLObjectType>
 ) {
@@ -76,10 +79,35 @@ export function getReference(
       graphQLRecordType = GraphQLImage
     } else if (contentModels?.[type.types[0].identifier]) {
       graphQLRecordType = contentModels[type.types[0].identifier]
-      console.log('graphQLRecordType', graphQLRecordType)
     }
   } else {
-    // TODO handle reference with multiple tpyes. Implement union
+    graphQLRecordType = new GraphQLUnionType({
+      name,
+      types: type.types.map(({identifier, scope}) => {
+        let graphQLUnionCase: GraphQLType = GraphQLUnknown
+        if (identifier === MediaReferenceType) {
+          graphQLUnionCase = GraphQLImage
+        } else if (contentModels?.[identifier]) {
+          graphQLUnionCase = contentModels[identifier]
+        }
+
+        const unionCaseName = nameJoin(name, identifier)
+        return new GraphQLObjectType({
+          name: unionCaseName,
+          fields: {
+            [identifier]: {
+              type: graphQLUnionCase,
+              resolve: source => {
+                return source
+              }
+            }
+          },
+          isTypeOf: createProxyingIsTypeOf((value: Reference) => {
+            return value.contentType === identifier
+          })
+        })
+      })
+    })
   }
 
   refTypes[typeKey] = new GraphQLObjectType<any, Context>({
@@ -90,7 +118,7 @@ export function getReference(
       peerId: {type: GraphQLID},
       record: {
         type: graphQLRecordType,
-        resolve: createProxyingResolver(({contentType, recordId}, _args, {loaders}) => {
+        resolve: createProxyingResolver(async ({contentType, recordId}, _args, {loaders}) => {
           if (recordId && contentType === MediaReferenceType) {
             return loaders.images.load(recordId)
           }

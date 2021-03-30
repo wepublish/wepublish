@@ -286,7 +286,7 @@ function generateType(
         type = getLeaf(
           config,
           contentModelSchemas,
-          getReference(contentModelSchemas, config.contentModels)
+          getReference(name, contentModelSchemas, config.contentModels)
         )
       }
       break
