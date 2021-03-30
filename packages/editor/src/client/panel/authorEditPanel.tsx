@@ -12,7 +12,8 @@ import {
   InputGroup,
   Icon,
   ControlLabel,
-  FormGroup
+  FormGroup,
+  Modal
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -139,100 +140,98 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <PanelGroup>
-          <Panel>
-            <Form fluid={true}>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.name')}</ControlLabel>
-                <FormControl
-                  name={t('authors.panels.name')}
-                  value={name}
-                  disabled={isDisabled}
-                  onChange={value => {
-                    setName(value)
-                    setSlug(slugify(value))
-                  }}
-                />
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
-                <FormControl
-                  name={t('authors.panels.jobTitle')}
-                  value={jobTitle}
-                  disabled={isDisabled}
-                  onChange={value => {
-                    setJobTitle(value)
-                  }}
-                />
-              </FormGroup>
-            </Form>
-          </Panel>
-          <Panel header={t('authors.panels.image')}>
-            <ChooseEditImage
-              image={image}
-              header={''}
-              top={0}
-              left={0}
-              disabled={isLoading}
-              openChooseModalOpen={() => setChooseModalOpen(true)}
-              openEditModalOpen={() => setEditModalOpen(true)}
-              removeImage={() => setImage(undefined)}
+      <Modal.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('authors.panels.name')}</ControlLabel>
+            <FormControl
+              name={t('authors.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => {
+                setName(value)
+                setSlug(slugify(value))
+              }}
             />
-          </Panel>
-          <Panel header={t('authors.panels.links')}>
-            <ListInput
-              value={links}
-              onChange={links => setLinks(links)}
-              defaultValue={{title: '', url: ''}}>
-              {({value, onChange}) => (
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <Input
-                    placeholder={t('authors.panels.title')}
-                    style={{
-                      width: '30%',
-                      marginRight: '10px'
-                    }}
-                    value={value.title}
-                    onChange={title => onChange({...value, title})}
-                  />
-                  <InputGroup inside>
-                    <InputGroup.Addon>
-                      <Icon icon="link" />
-                    </InputGroup.Addon>
-                    <Input
-                      placeholder={t('authors.panels.link')}
-                      style={{
-                        width: '70%'
-                      }}
-                      value={value.url}
-                      onChange={url => onChange({...value, url})}
-                    />
-                  </InputGroup>
-                </div>
-              )}
-            </ListInput>
-          </Panel>
-          <Panel header={t('authors.panels.bioInformation')}>
-            <RichTextBlock value={bio} onChange={value => setBio(value)} />
-          </Panel>
-        </PanelGroup>
-      </Drawer.Body>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('authors.panels.jobTitle')}</ControlLabel>
+            <FormControl
+              name={t('authors.panels.jobTitle')}
+              value={jobTitle}
+              disabled={isDisabled}
+              onChange={value => {
+                setJobTitle(value)
+              }}
+            />
+          </FormGroup>
+        </Form>
 
-      <Drawer.Footer>
+        <h5 className="wep-section-title">{t('authors.panels.image')}</h5>
+        <ChooseEditImage
+          image={image}
+          header={''}
+          top={0}
+          left={0}
+          disabled={isLoading}
+          openChooseModalOpen={() => setChooseModalOpen(true)}
+          openEditModalOpen={() => setEditModalOpen(true)}
+          removeImage={() => setImage(undefined)}
+        />
+
+        <h5 className="wep-section-title">{t('authors.panels.bioInformation')}</h5>
+        <Panel bordered>
+          <RichTextBlock value={bio} onChange={value => setBio(value)} />
+        </Panel>
+
+        <h5 className="wep-section-title">{t('authors.panels.links')}</h5>
+        <ListInput
+          value={links}
+          onChange={links => setLinks(links)}
+          defaultValue={{title: '', url: ''}}>
+          {({value, onChange}) => (
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <Input
+                placeholder={t('authors.panels.title')}
+                style={{
+                  width: '40%',
+                  marginRight: '10px'
+                }}
+                value={value.title}
+                onChange={title => onChange({...value, title})}
+              />
+              <InputGroup inside>
+                <InputGroup.Addon>
+                  <Icon icon="link" />
+                </InputGroup.Addon>
+                <Input
+                  placeholder={t('authors.panels.link')}
+                  style={{
+                    width: '60%'
+                  }}
+                  value={value.url}
+                  onChange={url => onChange({...value, url})}
+                />
+              </InputGroup>
+            </div>
+          )}
+        </ListInput>
+      </Modal.Body>
+
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('authors.panels.save') : t('authors.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('authors.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

@@ -27,7 +27,8 @@ import {
   Drawer,
   Button,
   Popover,
-  Whisper
+  Whisper,
+  Modal
 } from 'rsuite'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
@@ -67,10 +68,12 @@ export function AuthorList() {
 
   const speaker = (
     <Popover title={t('authors.popover.deleteThisAuthor')}>
-      <p>{t('authors.popover.popoverText')}</p>
+      <p>{currentAuthor?.name}</p>
+      {/* <p> {t('authors.popover.popoverText')}</p> */}
       <p>
         <Button
           color="red"
+          appearance="primary"
           disabled={isDeleting}
           onClick={async () => {
             if (!currentAuthor) return
@@ -189,9 +192,8 @@ export function AuthorList() {
         </Column>
       </Table>
 
-      <Drawer
-        full
-        placement={'right'}
+      <Modal
+        size={'sm'}
         show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
@@ -217,7 +219,7 @@ export function AuthorList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
     </>
   )
 }
