@@ -52,7 +52,7 @@ export function MemberPlanList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
-  const {data, /* fetchMore, */ loading: isLoading} = useMemberPlanListQuery({
+  const {data, refetch, loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -75,8 +75,7 @@ export function MemberPlanList() {
             await deleteMemberPlan({
               variables: {id: currentMemberPlan.id}
             })
-
-            setConfirmationDialogOpen(false)
+            refetch()
           }}>
           {t('userList.popover.deleteNow')}
         </Button>

@@ -9,6 +9,7 @@ import {
   Form,
   FormControl,
   FormGroup,
+  HelpBlock,
   Modal,
   Toggle
 } from 'rsuite'
@@ -216,11 +217,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           onClick={() => setIsUserSubscriptonEditOpen(true)}>
           {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
         </Button>
-        {id === undefined && (
-          <div>
-            <em>{t('userList.panels.subDisableDescription')}</em>
-          </div>
-        )}
+        {id === undefined && <HelpBlock>{t('userList.panels.subDisableDescription')}</HelpBlock>}
       </Modal.Body>
 
       <Modal.Footer classPrefix="wep-modal-footer">

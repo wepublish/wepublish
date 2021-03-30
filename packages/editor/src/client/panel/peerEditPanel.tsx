@@ -9,7 +9,8 @@ import {
   FormControl,
   FormGroup,
   Panel,
-  HelpBlock
+  HelpBlock,
+  Modal
 } from 'rsuite'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 
@@ -158,51 +159,49 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('peerList.panels.editPeer') : t('peerList.panels.createPeer')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
-              <FormControl
-                value={name}
-                name={t('peerList.panels.name')}
-                onChange={value => {
-                  setName(value)
-                  setSlug(slugify(value))
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
-              <FormControl
-                value={urlString}
-                name={t('peerList.panels.URL')}
-                errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
-                onChange={value => {
-                  setURLString(value)
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
-              <FormControl
-                value={token}
-                name={t('peerList.panels.token')}
-                placeholder={id ? "Leave empty if you don't want to change it" : undefined}
-                onChange={value => {
-                  setToken(value)
-                }}
-              />
-              <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
-            </FormGroup>
-          </Form>
-        </Panel>
+      <Modal.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
+            <FormControl
+              value={name}
+              name={t('peerList.panels.name')}
+              onChange={value => {
+                setName(value)
+                setSlug(slugify(value))
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.URL')}</ControlLabel>
+            <FormControl
+              value={urlString}
+              name={t('peerList.panels.URL')}
+              errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
+              onChange={value => {
+                setURLString(value)
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.token')}</ControlLabel>
+            <FormControl
+              value={token}
+              name={t('peerList.panels.token')}
+              placeholder={id ? "Leave empty if you don't want to change it" : undefined}
+              onChange={value => {
+                setToken(value)
+              }}
+            />
+            <HelpBlock>{token ? t('peerList.panels.validateToken') : ''}</HelpBlock>
+          </FormGroup>
+        </Form>
         {!isLoadingPeerProfile && (token || id) && isValidURL && (
           <Panel header={t('peerList.panels.information')}>
             <ChooseEditImage disabled image={profile?.logo} />
@@ -230,16 +229,16 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             </DescriptionList>
           </Panel>
         )}
-      </Drawer.Body>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('peerList.panels.save') : t('peerList.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('peerList.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }

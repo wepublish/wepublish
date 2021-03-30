@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, Drawer, Input, Panel} from 'rsuite'
+import {Alert, Button, Drawer, Input, Modal, Panel} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
@@ -34,10 +34,10 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('tokenList.panels.generateToken')}</Drawer.Title>
-      </Drawer.Header>
-      <Drawer.Body>
+      <Modal.Header>
+        <Modal.Title>{t('tokenList.panels.generateToken')}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         {token ? (
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
@@ -53,9 +53,9 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
             }}
           />
         )}
-      </Drawer.Body>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer>
         {!hasGeneratedToken && (
           <Button disabled={isDisabled} onClick={handleSave} appearance="primary">
             {t('tokenList.panels.generate')}
@@ -64,7 +64,7 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
         <Button onClick={() => onClose?.()} appearance="subtle">
           {t('tokenList.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }
