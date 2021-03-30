@@ -43,10 +43,9 @@ export interface AuthorEditPanelProps {
 
   onClose?(): void
   onSave?(author: FullAuthorFragment): void
-  onFormChange?(): void
 }
 
-export function AuthorEditPanel({id, onClose, onSave, onFormChange}: AuthorEditPanelProps) {
+export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState<Maybe<string>>()
@@ -149,11 +148,7 @@ export function AuthorEditPanel({id, onClose, onSave, onFormChange}: AuthorEditP
       <Drawer.Body>
         <PanelGroup>
           <Panel>
-            <Form
-              fluid={true}
-              onChange={() => {
-                onFormChange?.()
-              }}>
+            <Form fluid={true}>
               <FormGroup>
                 <ControlLabel>{t('authors.panels.name')}</ControlLabel>
                 <FormControl
@@ -194,10 +189,7 @@ export function AuthorEditPanel({id, onClose, onSave, onFormChange}: AuthorEditP
           <Panel header={t('authors.panels.links')}>
             <ListInput
               value={links}
-              onChange={links => {
-                setLinks(links)
-                onFormChange?.()
-              }}
+              onChange={links => setLinks(links)}
               defaultValue={{title: '', url: ''}}>
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -228,13 +220,7 @@ export function AuthorEditPanel({id, onClose, onSave, onFormChange}: AuthorEditP
             </ListInput>
           </Panel>
           <Panel header={t('authors.panels.bioInformation')}>
-            <RichTextBlock
-              value={bio}
-              onChange={value => {
-                setBio(value)
-                onFormChange?.()
-              }}
-            />
+            <RichTextBlock value={bio} onChange={value => setBio(value)} />
           </Panel>
         </PanelGroup>
       </Drawer.Body>
@@ -254,7 +240,6 @@ export function AuthorEditPanel({id, onClose, onSave, onFormChange}: AuthorEditP
           onSelect={value => {
             setChooseModalOpen(false)
             handleImageChange(value)
-            onFormChange?.()
           }}
         />
       </Drawer>

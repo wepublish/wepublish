@@ -29,9 +29,6 @@ import {
   Button
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-
-import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
-
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function AuthorList() {
@@ -58,12 +55,6 @@ export function AuthorList() {
     first: 50
   }
 
-  const [hasChanged, setChanged] = useState(false)
-
-  const handleChange = () => {
-    setChanged(true)
-  }
-
   const {
     data,
     /* fetchMore, */ loading: isLoading,
@@ -74,8 +65,6 @@ export function AuthorList() {
   })
 
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
-
-  const unsavedChangesDialog = useUnsavedChangesDialog(hasChanged)
 
   useEffect(() => {
     switch (current?.type) {
@@ -96,15 +85,6 @@ export function AuthorList() {
       setAuthors(data.authors.nodes)
     }
   }, [data?.authors])
-
-  const closeDrawer = () => {
-    setChanged(false)
-    setEditModalOpen(false)
-    dispatch({
-      type: RouteActionType.PushRoute,
-      route: AuthorListRoute.create({}, current ?? undefined)
-    })
-  }
 
   /* function loadMore() {
     fetchMore({
@@ -190,30 +170,27 @@ export function AuthorList() {
         show={isEditModalOpen}
         size={'sm'}
         onHide={() => {
-          if (hasChanged) {
-            if (unsavedChangesDialog()) {
-              closeDrawer()
-            }
-          } else {
-            closeDrawer()
-          }
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: AuthorListRoute.create({}, current ?? undefined)
+          })
         }}>
         <AuthorEditPanel
-          onFormChange={handleChange}
           id={editID}
           onClose={() => {
-            console.log('changed', hasChanged)
-            if (hasChanged) {
-              if (unsavedChangesDialog()) {
-                closeDrawer()
-              }
-            } else {
-              closeDrawer()
-            }
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: AuthorListRoute.create({}, current ?? undefined)
+            })
           }}
           onSave={() => {
-            console.log('changed: ', hasChanged)
-            closeDrawer()
+            setEditModalOpen(false)
+            dispatch({
+              type: RouteActionType.PushRoute,
+              route: AuthorListRoute.create({}, current ?? undefined)
+            })
           }}
         />
       </Drawer>
