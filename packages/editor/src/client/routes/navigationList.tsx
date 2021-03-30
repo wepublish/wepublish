@@ -102,7 +102,7 @@ export function NavigationList() {
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
-        <Column width={400} align="left" resizable>
+        <Column flexGrow={4} align="left">
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullNavigationFragment) => (
@@ -112,7 +112,7 @@ export function NavigationList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={100} align="right" fixed="right">
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
