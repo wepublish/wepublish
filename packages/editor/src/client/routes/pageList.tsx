@@ -121,7 +121,7 @@ export function PageList() {
           marginTop: '20px'
         }}>
         <Table
-          minHeight={600}
+          minHeight={200}
           autoHeight={true}
           style={{flex: 1}}
           loading={isLoading}
@@ -133,19 +133,19 @@ export function PageList() {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('pages.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
               {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) => new Date(modifiedAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable>
+          <Column flexGrow={4} align="left">
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => (
@@ -155,7 +155,7 @@ export function PageList() {
               )}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column flexGrow={1} align="left">
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -169,7 +169,7 @@ export function PageList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={90} align="right" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
@@ -187,17 +187,6 @@ export function PageList() {
                     />
                   )}
                   <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
                     icon={<Icon icon="copy" />}
                     circle
                     size="sm"
@@ -205,6 +194,17 @@ export function PageList() {
                     onClick={() => {
                       setCurrentPage(rowData)
                       setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
                       setConfirmationDialogOpen(true)
                     }}
                   />

@@ -126,7 +126,7 @@ export function ArticleList() {
           marginTop: '20px'
         }}>
         <Table
-          minHeight={600}
+          minHeight={200}
           autoHeight={true}
           style={{flex: 1}}
           loading={isLoading}
@@ -138,19 +138,19 @@ export function ArticleList() {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('articles.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
               {({createdAt}: ArticleRefFragment) => new Date(createdAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: ArticleRefFragment) => new Date(modifiedAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable>
+          <Column flexGrow={6} minWidth={360} align="left">
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => (
@@ -160,7 +160,7 @@ export function ArticleList() {
               )}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable>
+          <Column flexGrow={2} minWidth={120} align="left">
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => {
@@ -170,7 +170,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column flexGrow={1} align="left">
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -184,7 +184,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={200} align="center" fixed="right">
+          <Column width={130} align="right" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
@@ -201,28 +201,6 @@ export function ArticleList() {
                       }}
                     />
                   )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
                   {rowData.draft && (
                     <IconButton
                       icon={<Icon icon="eye" />}
@@ -235,6 +213,28 @@ export function ArticleList() {
                       }}
                     />
                   )}
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                 </>
               )}
             </Cell>
