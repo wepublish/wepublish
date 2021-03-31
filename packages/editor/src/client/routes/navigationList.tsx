@@ -11,18 +11,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Modal,
-  Button,
-  Popover,
-  Whisper
-} from 'rsuite'
+import {FlexboxGrid, Icon, Input, InputGroup, Table, Modal, Button, Popover, Whisper} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
@@ -58,26 +47,22 @@ export function NavigationList() {
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
 
   const speaker = (
-    <Popover title={t('authors.popover.deleteThisAuthor')}>
-      <p>{currentNavigation?.name}</p>
-      {/* <p> {t('authors.popover.popoverText')}</p> */}
-      <p>
-        <Button
-          color="red"
-          appearance="primary"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentNavigation) return
-            await deleteNavigation({
-              variables: {id: currentNavigation.id}
-            })
+    <Popover title={currentNavigation?.name}>
+      <Button
+        color="red"
+        appearance="primary"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentNavigation) return
+          await deleteNavigation({
+            variables: {id: currentNavigation.id}
+          })
 
-            setConfirmationDialogOpen(false)
-            refetch()
-          }}>
-          {t('authors.popover.deleteNow')}
-        </Button>
-      </p>
+          setConfirmationDialogOpen(false)
+          refetch()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -142,16 +127,16 @@ export function NavigationList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullNavigationFragment) => (
               <>
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentNavigation(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}
