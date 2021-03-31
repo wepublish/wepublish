@@ -43,8 +43,6 @@ export function TokenList() {
     current?.type === RouteType.TokenGenerate
   )
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
-
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
   const {
@@ -62,20 +60,17 @@ export function TokenList() {
   const {t} = useTranslation()
 
   const speaker = (
-    <Popover title={t('userList.popover.deleteThisUser')}>
-      <p>{t('userList.popover.popoverText')}</p>
-      <p>
-        <Button
-          color="red"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentToken) return
+    <Popover title={currentToken?.name}>
+      <Button
+        color="red"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentToken) return
 
-            await deleteToken({variables: {id: currentToken.id}})
-          }}>
-          {t('userList.popover.deleteNow')}
-        </Button>
-      </p>
+          await deleteToken({variables: {id: currentToken.id}})
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -117,21 +112,21 @@ export function TokenList() {
         <List bordered style={{marginTop: '40px'}}>
           {tokenListData?.tokens.map((token, index) => (
             <List.Item key={token.name} index={index}>
-              <FlexboxGrid>
+              <FlexboxGrid align="middle">
                 <FlexboxGrid.Item colspan={23} style={{paddingLeft: '10px'}}>
                   {token.name}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px', textAlign: 'right'}}>
-                  <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                    <IconButton
-                      icon={<Icon icon="trash-o" />}
-                      circle
-                      size="sm"
+                  <Whisper placement="left" trigger="click" speaker={speaker}>
+                    <Button
+                      appearance="link"
                       color="red"
                       onClick={() => {
                         setCurrentToken(token)
-                      }}
-                    />
+                      }}>
+                      {' '}
+                      {t('global.buttons.delete')}{' '}
+                    </Button>
                   </Whisper>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
