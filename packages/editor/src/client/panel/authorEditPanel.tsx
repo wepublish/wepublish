@@ -43,9 +43,11 @@ export interface AuthorEditPanelProps {
 
   onClose?(): void
   onSave?(author: FullAuthorFragment): void
+
+  isOpen: boolean
 }
 
-export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
+export function AuthorEditPanel({id, onClose, onSave, isOpen}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState<Maybe<string>>()
@@ -55,6 +57,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+  const [isDrawerOpen, setDrawerOpen] = useState(false)
 
   const {data, loading: isLoading, error: loadError} = useAuthorQuery({
     variables: {id: id!},
@@ -71,6 +74,13 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const isDisabled = isLoading || isCreating || isUpdating || loadError !== undefined
 
   const {t} = useTranslation()
+
+  useEffect(() => {
+    setDrawerOpen(isOpen)
+    console.log(isOpen ? 'open' : 'closed')
+    // const unsavedChangesDialog = useUnsavedChangesDialog(true)
+    console.log('data: ', data)
+  }, [isOpen])
 
   useEffect(() => {
     if (data?.author) {
@@ -138,7 +148,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   }
 
   return (
-    <>
+    <Drawer onHide={() => onClose?.()} show={isDrawerOpen} size={'sm'}>
       <Drawer.Header>
         <Drawer.Title>
           {id ? t('authors.panels.editAuthor') : t('authors.panels.createAuthor')}
@@ -250,6 +260,6 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
           onSave={() => setEditModalOpen(false)}
         />
       </Drawer>
-    </>
+    </Drawer>
   )
 }
