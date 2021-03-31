@@ -19,12 +19,10 @@ import {useTranslation} from 'react-i18next'
 import {
   FlexboxGrid,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   Table,
   Avatar,
-  Drawer,
   Button,
   Popover,
   Whisper,
@@ -67,27 +65,23 @@ export function AuthorList() {
   const [deleteAuthor, {loading: isDeleting}] = useDeleteAuthorMutation()
 
   const speaker = (
-    <Popover title={t('authors.popover.deleteThisAuthor')}>
-      <p>{currentAuthor?.name}</p>
-      {/* <p> {t('authors.popover.popoverText')}</p> */}
-      <p>
-        <Button
-          color="red"
-          appearance="primary"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentAuthor) return
+    <Popover title={currentAuthor?.name}>
+      <Button
+        color="red"
+        appearance="primary"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentAuthor) return
 
-            await deleteAuthor({
-              variables: {id: currentAuthor.id}
-            })
+          await deleteAuthor({
+            variables: {id: currentAuthor.id}
+          })
 
-            await authorListRefetch(authorListQueryVariables)
-            // fetchMore()
-          }}>
-          {t('authors.popover.deleteNow')}
-        </Button>
-      </p>
+          await authorListRefetch(authorListQueryVariables)
+          // fetchMore()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -175,16 +169,16 @@ export function AuthorList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullAuthorFragment) => (
               <>
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentAuthor(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}

@@ -1,5 +1,16 @@
 {
   "translation": {
+    "global": {
+      "buttons": {
+        "delete": "Delete",
+        "deleteNow": "Delete now",
+        "cancel": "Cancel",
+        "save": "Save",
+        "close": "Close",
+        "confirm": "Confirm",
+        "back": "Back"
+      }
+    },
     "articles": {
       "overview": {
         "title": "Title",
@@ -284,11 +295,6 @@
         "title": "Title",
         "link": "Link",
         "bioInformation": "Biographical Information"
-      },
-      "popover": {
-        "deleteThisAuthor": "Delete this author",
-        "popoverText": "Are you sure? It can’t be undone",
-        "deleteNow": "Delete now"
       }
     },
     "navigation": {
