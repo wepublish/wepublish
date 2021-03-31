@@ -15,8 +15,7 @@ import {
   HelpBlock,
   CheckPicker,
   Modal,
-  FlexboxGrid,
-  Divider
+  FlexboxGrid
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
