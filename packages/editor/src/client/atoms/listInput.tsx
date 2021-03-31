@@ -5,7 +5,7 @@ import arrayMove from 'array-move'
 
 import {isFunctionalUpdate} from '@karma.run/react'
 
-import {Icon, IconButton, Button, Panel} from 'rsuite'
+import {Icon, IconButton, Panel, Divider} from 'rsuite'
 
 export interface FieldProps<V = any> {
   readonly value: V
@@ -34,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton appearance="subtle" icon={<Icon icon="th2" />} disabled={disabled} />
+  <IconButton icon={<Icon icon="th2" />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -57,23 +57,15 @@ const ListItem = SortableElement(
           flexDirection: 'row',
           marginBottom: '10px'
         }}>
-        <div style={{marginRight: '10px'}}>
-          <DragHandle disabled={itemDisabled} />
-        </div>
-        <Panel bodyFill style={{width: '100%'}}>
-          {/* TODO:: add Translation */}
-          <h4>Option</h4>
+        <Panel bordered bodyFill style={{width: '100%', padding: '20px'}}>
           <div style={{minHeight: '100%'}}>
             {children({value: value.value, onChange: handleValueChange})}
           </div>
         </Panel>
-
         <div style={{marginLeft: '10px'}}>
-          {/* TODO:: add Translation */}
-          <Button appearance="link" onClick={handleRemove} color="red" disabled={itemDisabled}>
-            {' '}
-            Delete
-          </Button>
+          <DragHandle disabled={itemDisabled} />
+          <Divider></Divider>
+          <IconButton icon={<Icon icon="trash" />} onClick={handleRemove} disabled={itemDisabled} />
         </div>
       </div>
     )
@@ -113,14 +105,16 @@ const SortableList = SortableContainer(
           </ListItem>
         ))}
 
-        <IconButton
-          size="lg"
-          color="green"
-          appearance="ghost"
-          icon={<Icon icon="plus-circle" />}
-          onClick={handleAdd}
-          disabled={disabled}
-        />
+        <Divider>
+          <IconButton
+            size="md"
+            color="green"
+            circle
+            icon={<Icon icon="plus" />}
+            onClick={handleAdd}
+            disabled={disabled}
+          />
+        </Divider>
       </div>
     )
   }
