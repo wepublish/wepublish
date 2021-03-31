@@ -19,7 +19,7 @@ import {
 } from '../api'
 
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
-import {FlexboxGrid, Icon, IconButton, Table, Modal, Button, Popover, Whisper} from 'rsuite'
+import {FlexboxGrid, Table, Modal, Button, Popover, Whisper} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
@@ -39,7 +39,6 @@ export function PaymentMethodList() {
 
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<FullPaymentMethodFragment>()
 
   const {data, loading: isLoading, refetch} = usePaymentMethodListQuery({
@@ -49,25 +48,21 @@ export function PaymentMethodList() {
   const [deletePaymentMethod, {loading: isDeleting}] = useDeletePaymentMethodMutation()
 
   const speaker = (
-    <Popover title={t('userList.popover.deleteThisUser')}>
-      <p>{t('userList.popover.popoverText')}</p>
-      <p>
-        <Button
-          color="red"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentPaymentMethod) return
+    <Popover title={currentPaymentMethod?.name}>
+      <Button
+        color="red"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentPaymentMethod) return
 
-            await deletePaymentMethod({
-              variables: {id: currentPaymentMethod.id}
-            })
+          await deletePaymentMethod({
+            variables: {id: currentPaymentMethod.id}
+          })
 
-            await refetch()
-            setConfirmationDialogOpen(false)
-          }}>
-          {t('userList.popover.deleteNow')}
-        </Button>
-      </p>
+          await refetch()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -127,16 +122,16 @@ export function PaymentMethodList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullPaymentMethodFragment) => (
               <>
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentPaymentMethod(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}
