@@ -2,20 +2,21 @@ import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
 import {ContentContextEnum, ContentListQuery, useContentListQuery} from '../api'
-import {Reference} from '@wepublish/editor'
-
-export interface RefType {
-  type: string
-  context: ContentContextEnum
-}
+import {ContentModelSchemaFieldRefTypeMap, Reference} from '../interfaces/referenceType'
 
 export interface TeaserSelectPanelProps {
-  readonly types: RefType[]
+  readonly config: ContentModelSchemaFieldRefTypeMap
   onClose(): void
   onSelectRef: (ref: Reference) => void
 }
 
-export function RefSelectPanel({onClose, onSelectRef, types}: TeaserSelectPanelProps) {
+export function RefSelectPanel({onClose, onSelectRef, config}: TeaserSelectPanelProps) {
+  const types = Object.entries(config).map(([type, val]) => {
+    return {
+      type,
+      context: val.scope
+    }
+  })
   const [tabIndex, setTabIndex] = useState(0)
   const [filter, setFilter] = useState('')
 

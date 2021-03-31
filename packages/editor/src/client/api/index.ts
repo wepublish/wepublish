@@ -89,7 +89,7 @@ export type _Cmp_Article_Record_Content_Blocks_Image = {
 
 export type _Cmp_Article_Record_Content_Blocks_Image_Content = {
   __typename?: '_cmp_article_record_content_blocks_image_content';
-  image: Ref___Medialocal;
+  image: Ref___Media;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -105,7 +105,7 @@ export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Content = {
 
 export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Images = {
   __typename?: '_cmp_article_record_content_blocks_imageGallery_images';
-  image: Ref___Medialocal;
+  image: Ref___Media;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -125,7 +125,7 @@ export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content = {
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Ref___Medialocal>;
+  image?: Maybe<Ref___Media>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Listicle = {
@@ -142,7 +142,7 @@ export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
   __typename?: '_cmp_article_record_content_blocks_listicle_items';
   title?: Maybe<Scalars['String']>;
   richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Ref_Local>;
+  image?: Maybe<Ref___Media>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Quote = {
@@ -190,11 +190,11 @@ export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Content = {
 export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
   __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers';
   style?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Ref___Medialocal>;
+  imageID?: Maybe<Ref___Media>;
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
-  contentRef?: Maybe<Ref_Articleall_Pagelocal>;
+  contentRef?: Maybe<Ref_Article_Page>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef = _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Article | _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Page;
@@ -315,7 +315,7 @@ export type _Cmp_Example_Record_Content = {
   myList?: Maybe<Array<Maybe<Scalars['String']>>>;
   myObject?: Maybe<_Cmp_Example_Record_Content_MyObject>;
   myUnion?: Maybe<_Cmp_Example_Record_Content_MyUnion>;
-  myReference?: Maybe<Ref_Examplelocal>;
+  myReference?: Maybe<Ref_Example>;
 };
 
 export enum _Cmp_Example_Record_Content_MyEnum {
@@ -411,7 +411,7 @@ export type _Cmp_ModelA_Record_Content = {
   __typename?: '_cmp_modelA_record_content';
   myString?: Maybe<Scalars['String']>;
   myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_ModelAlocal_ModelBlocal>;
+  myRef?: Maybe<Ref_ModelA_ModelB>;
 };
 
 export type _Cmp_ModelA_Record_Content_MyRef = _Cmp_ModelA_Record_Content_MyRef_ModelA | _Cmp_ModelA_Record_Content_MyRef_ModelB;
@@ -475,7 +475,7 @@ export type _Cmp_ModelB_Record_Content = {
   __typename?: '_cmp_modelB_record_content';
   myString?: Maybe<Scalars['String']>;
   myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_ModelAlocal_ModelBlocal>;
+  myRef?: Maybe<Ref_ModelA>;
 };
 
 export type _Cmp_ModelBConnection = {
@@ -1207,6 +1207,25 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export type Content = {
+  __typename?: 'content';
+  example: _Cmp_Example;
+  modelA: _Cmp_ModelA;
+  modelB: _Cmp_ModelB;
+  article: _Cmp_Article;
+  _all: All;
+  _schema: Array<ContentModelConfig>;
+};
+
+export type Content_Mutations = {
+  __typename?: 'content_mutations';
+  example: _Cmpi_Example;
+  modelA: _Cmpi_ModelA;
+  modelB: _Cmpi_ModelB;
+  article: _Cmpi_Article;
+  _all: AllMutations;
+};
+
 export enum ContentContextEnum {
   Local = 'local',
   Peers = 'peers'
@@ -1264,25 +1283,6 @@ export type CreatePeerInput = {
   slug: Scalars['String'];
   hostURL: Scalars['String'];
   token: Scalars['String'];
-};
-
-export type CustomContent = {
-  __typename?: 'CustomContent';
-  example: _Cmp_Example;
-  modelA: _Cmp_ModelA;
-  modelB: _Cmp_ModelB;
-  article: _Cmp_Article;
-  _all: All;
-  _schema: Array<ContentModelConfig>;
-};
-
-export type CustomContentMutations = {
-  __typename?: 'CustomContentMutations';
-  example: _Cmpi_Example;
-  modelA: _Cmpi_ModelA;
-  modelB: _Cmpi_ModelB;
-  article: _Cmpi_Article;
-  _all: AllMutations;
 };
 
 export type DateFilter = {
@@ -1699,7 +1699,7 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  content: CustomContentMutations;
+  content: Content_Mutations;
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
@@ -2353,7 +2353,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
-  content: CustomContent;
+  content: Content;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -2604,8 +2604,8 @@ export type QuoteBlockInput = {
   author?: Maybe<Scalars['String']>;
 };
 
-export type Ref___Medialocal = {
-  __typename?: 'ref___medialocal';
+export type Ref___Media = {
+  __typename?: 'ref___media';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
@@ -2613,8 +2613,8 @@ export type Ref___Medialocal = {
   peer?: Maybe<Peer>;
 };
 
-export type Ref_Articleall_Pagelocal = {
-  __typename?: 'ref_articleall_pagelocal';
+export type Ref_Article_Page = {
+  __typename?: 'ref_article_page';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
@@ -2622,8 +2622,8 @@ export type Ref_Articleall_Pagelocal = {
   peer?: Maybe<Peer>;
 };
 
-export type Ref_Examplelocal = {
-  __typename?: 'ref_examplelocal';
+export type Ref_Example = {
+  __typename?: 'ref_example';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
@@ -2639,17 +2639,17 @@ export type Ref_Input = {
   peer?: Maybe<Scalars['Unknown']>;
 };
 
-export type Ref_Local = {
-  __typename?: 'ref_local';
+export type Ref_ModelA = {
+  __typename?: 'ref_modelA';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Unknown']>;
+  record?: Maybe<_Cmp_ModelA_Record>;
   peer?: Maybe<Peer>;
 };
 
-export type Ref_ModelAlocal_ModelBlocal = {
-  __typename?: 'ref_modelAlocal_modelBlocal';
+export type Ref_ModelA_ModelB = {
+  __typename?: 'ref_modelA_modelB';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
@@ -3632,7 +3632,7 @@ export type ContentListQueryVariables = Exact<{
 export type ContentListQuery = (
   { __typename?: 'Query' }
   & { content: (
-    { __typename?: 'CustomContent' }
+    { __typename?: 'content' }
     & { _all: (
       { __typename?: 'All' }
       & { list: (
@@ -3672,7 +3672,7 @@ export type PublishContentMutationVariables = Exact<{
 export type PublishContentMutation = (
   { __typename?: 'Mutation' }
   & { content: (
-    { __typename?: 'CustomContentMutations' }
+    { __typename?: 'content_mutations' }
     & { _all: (
       { __typename?: 'AllMutations' }
       & { publish?: Maybe<(
@@ -3698,7 +3698,7 @@ export type UnpublishContentMutationVariables = Exact<{
 export type UnpublishContentMutation = (
   { __typename?: 'Mutation' }
   & { content: (
-    { __typename?: 'CustomContentMutations' }
+    { __typename?: 'content_mutations' }
     & { _all: (
       { __typename?: 'AllMutations' }
       & { unpublish?: Maybe<(
@@ -3724,7 +3724,7 @@ export type DeleteContentMutationVariables = Exact<{
 export type DeleteContentMutation = (
   { __typename?: 'Mutation' }
   & { content: (
-    { __typename?: 'CustomContentMutations' }
+    { __typename?: 'content_mutations' }
     & { _all: (
       { __typename?: 'AllMutations' }
       & Pick<AllMutations, 'delete'>
@@ -3738,7 +3738,7 @@ export type ContentModelSchemaQueryVariables = Exact<{ [key: string]: never; }>;
 export type ContentModelSchemaQuery = (
   { __typename?: 'Query' }
   & { content: (
-    { __typename?: 'CustomContent' }
+    { __typename?: 'content' }
     & { _schema: Array<(
       { __typename?: 'ContentModelConfig' }
       & Pick<ContentModelConfig, 'id' | 'identifier' | 'nameSingular' | 'namePlural' | 'schema'>

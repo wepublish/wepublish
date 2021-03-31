@@ -15,11 +15,32 @@ import {withNormalizeNode} from './editor/normalizing'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
+import {RefMenu} from './toolbar/refMenu'
+import {ContentModelSchemaFieldRefTypeMap} from '../../interfaces/referenceType'
+
+export interface RichTextConfig {
+  h1?: boolean
+  h2?: boolean
+  h3?: boolean
+  italic?: boolean
+  bold?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  superscript?: boolean
+  subscript?: boolean
+  table?: boolean
+  emoji?: boolean
+  unorderedList?: boolean
+  orderedList?: boolean
+  url?: boolean
+  ref?: ContentModelSchemaFieldRefTypeMap
+}
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
   displayOneLine?: boolean
+  config?: RichTextConfig
 }
 
 export const RichTextBlock = memo(function RichTextBlock({
@@ -29,7 +50,24 @@ export const RichTextBlock = memo(function RichTextBlock({
   onChange,
   displayOnly = false,
   showCharCount = false,
-  displayOneLine = false
+  displayOneLine = false,
+  config = {
+    h1: true,
+    h2: true,
+    h3: true,
+    italic: true,
+    bold: true,
+    underline: true,
+    strikethrough: true,
+    superscript: true,
+    subscript: true,
+    table: true,
+    emoji: true,
+    unorderedList: true,
+    orderedList: true,
+    url: true,
+    ref: undefined
+  }
 }: RichTextBlockProps) {
   const editor = useMemo(
     () => withNormalizeNode(withTable(withRichText(withHistory(withReact(createEditor()))))),
@@ -102,47 +140,85 @@ export const RichTextBlock = memo(function RichTextBlock({
               // e.preventDefault()
               if (!hasFocus && location) focusAtPreviousLocation(location)
             }}>
-            <FormatButton format={BlockFormat.H1}>
-              <H1Icon />
-            </FormatButton>
-            <FormatButton format={BlockFormat.H2}>
-              <H2Icon />
-            </FormatButton>
-            <FormatButton format={BlockFormat.H3}>
-              <H3Icon />
-            </FormatButton>
+            {config.h1 && (
+              <FormatButton format={BlockFormat.H1}>
+                <H1Icon />
+              </FormatButton>
+            )}
+            {config.h2 && (
+              <FormatButton format={BlockFormat.H2}>
+                <H2Icon />
+              </FormatButton>
+            )}
+            {config.h3 && (
+              <FormatButton format={BlockFormat.H3}>
+                <H3Icon />
+              </FormatButton>
+            )}
+            {(config.h1 || config.h2 || config.h3) && <ToolbarDivider />}
 
-            <ToolbarDivider />
+            {config.unorderedList && (
+              <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
+            )}
+            {config.orderedList && (
+              <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
+            )}
 
-            <FormatIconButton icon="list-ul" format={BlockFormat.UnorderedList} />
-            <FormatIconButton icon="list-ol" format={BlockFormat.OrderedList} />
+            {(config.orderedList || config.unorderedList) && <ToolbarDivider />}
 
-            <ToolbarDivider />
+            {config.table && (
+              <>
+                <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
+                  <TableMenu />
+                </EditorSubMenuButton>
+                <ToolbarDivider />
+              </>
+            )}
 
-            <EditorSubMenuButton icon="table" editorHasFocus={hasFocus}>
-              <TableMenu />
-            </EditorSubMenuButton>
+            {config.bold && <FormatIconButton icon="bold" format={TextFormat.Bold} />}
+            {config.italic && <FormatIconButton icon="italic" format={TextFormat.Italic} />}
+            {config.underline && (
+              <FormatIconButton icon="underline" format={TextFormat.Underline} />
+            )}
+            {config.strikethrough && (
+              <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
+            )}
+            {config.superscript && (
+              <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
+            )}
+            {config.subscript && (
+              <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+            )}
+            {(config.bold ||
+              config.italic ||
+              config.underline ||
+              config.strikethrough ||
+              config.superscript ||
+              config.subscript) && <ToolbarDivider />}
 
-            <ToolbarDivider />
+            {config?.url && (
+              <>
+                <SubMenuButton icon="link">
+                  <LinkMenu />
+                </SubMenuButton>
+                <ToolbarDivider />
+              </>
+            )}
 
-            <FormatIconButton icon="bold" format={TextFormat.Bold} />
-            <FormatIconButton icon="italic" format={TextFormat.Italic} />
-            <FormatIconButton icon="underline" format={TextFormat.Underline} />
-            <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
-            <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
-            <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+            {config?.ref && (
+              <>
+                <SubMenuButton icon="link">
+                  <RefMenu types={config?.ref} />
+                </SubMenuButton>
+                <ToolbarDivider />
+              </>
+            )}
 
-            <ToolbarDivider />
-
-            <SubMenuButton icon="link">
-              <LinkMenu />
-            </SubMenuButton>
-
-            <ToolbarDivider />
-
-            <SubMenuButton icon="smile-o">
-              <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
-            </SubMenuButton>
+            {config.emoji && (
+              <SubMenuButton icon="smile-o">
+                <EmojiPicker setEmoji={emoji => editor.insertText(emoji)} />
+              </SubMenuButton>
+            )}
           </Toolbar>
           {WepublishEditor.isEmpty(editor) && ( // Alternative placeholder
             <div onClick={() => ReactEditor.focus(editor)} style={{color: '#cad5e4'}}>

@@ -58,6 +58,13 @@ export function renderElement({attributes, children, element}: RenderElementProp
         </a>
       )
 
+    case InlineFormat.Reference:
+      return (
+        <a data-title={element.title} data-href={element.url} {...attributes}>
+          {children}
+        </a>
+      )
+
     default:
       return <p {...attributes}>{children}</p>
   }

@@ -770,15 +770,15 @@ export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions
 
   return {
     queryPublic: new GraphQLObjectType<undefined, Context>({
-      name: 'CustomContentPublic',
+      name: nameJoin('content', 'public'),
       fields: queryPublic
     }),
     query: new GraphQLObjectType<undefined, Context>({
-      name: 'CustomContent',
+      name: 'content',
       fields: query
     }),
     mutation: new GraphQLObjectType<undefined, Context>({
-      name: 'CustomContentMutations',
+      name: nameJoin('content', 'mutations'),
       fields: mutation
     })
   }

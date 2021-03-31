@@ -42,6 +42,7 @@ export * from './mediaAdapter'
 export * from './urlAdapter'
 
 export * from './interfaces/contentModelSchema'
+export * from './interfaces/referenceType'
 export * from './utility'
 export * from './error'
 export * from './jobs'

@@ -3,7 +3,7 @@ import {
   ContentModelSchemaFieldEnum,
   ContentModelSchemaFieldObject,
   ContentModelSchemaTypes,
-  ReferenceScope
+  MediaReferenceType
 } from '@wepublish/api'
 
 const title: ContentModelSchemaFieldObject = {
@@ -33,12 +33,11 @@ const image: ContentModelSchemaFieldObject = {
   fields: {
     image: {
       type: ContentModelSchemaTypes.reference,
-      types: [
-        {
-          identifier: '__media',
-          scope: ReferenceScope.local
+      types: {
+        [MediaReferenceType]: {
+          scope: 'local'
         }
-      ],
+      },
       required: true
     },
     caption: {
@@ -69,12 +68,11 @@ const blockListicleItem: ContentModelSchemaFieldObject = {
     },
     image: {
       type: ContentModelSchemaTypes.reference,
-      types: [
-        {
-          identifier: '',
-          scope: ReferenceScope.local
+      types: {
+        [MediaReferenceType]: {
+          scope: 'local'
         }
-      ]
+      }
     }
   }
 }
@@ -181,12 +179,11 @@ const linkPageBreak: ContentModelSchemaFieldObject = {
     },
     image: {
       type: ContentModelSchemaTypes.reference,
-      types: [
-        {
-          identifier: '__media',
-          scope: ReferenceScope.local
+      types: {
+        [MediaReferenceType]: {
+          scope: 'local'
         }
-      ]
+      }
     }
   }
 }
@@ -226,28 +223,25 @@ const teaserGrid: ContentModelSchemaFieldObject = {
           style: teaserStyle,
           imageID: {
             type: ContentModelSchemaTypes.reference,
-            types: [
-              {
-                identifier: '__media',
-                scope: ReferenceScope.local
+            types: {
+              [MediaReferenceType]: {
+                scope: 'local'
               }
-            ]
+            }
           },
           preTitle: {type: ContentModelSchemaTypes.string},
           title: {type: ContentModelSchemaTypes.string},
           lead: {type: ContentModelSchemaTypes.string},
           contentRef: {
             type: ContentModelSchemaTypes.reference,
-            types: [
-              {
-                identifier: 'article',
-                scope: ReferenceScope.all
+            types: {
+              article: {
+                scope: 'all'
               },
-              {
-                identifier: 'page',
-                scope: ReferenceScope.local
+              page: {
+                scope: 'local'
               }
-            ]
+            }
           }
         }
       }

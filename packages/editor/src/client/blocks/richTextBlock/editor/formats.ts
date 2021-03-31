@@ -12,7 +12,8 @@ export enum BlockFormat {
 }
 
 export enum InlineFormat {
-  Link = 'link'
+  Link = 'link',
+  Reference = 'reference'
 }
 
 export enum TextFormat {

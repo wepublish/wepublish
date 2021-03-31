@@ -9,7 +9,7 @@ import {
   Reference,
   RefSelectPanel
 } from '@wepublish/editor'
-import {ContentContextEnum, ContentTypeEnum, useModelAQuery} from './article/api'
+import {ContentContextEnum, useModelAQuery} from './article/api'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -88,16 +88,28 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
         </FormGroup>
         <FormGroup>
           <ControlLabel>myRichText</ControlLabel>
-          <RichTextBlock value={myRichText} onChange={handleRichTextChange} />
+          <RichTextBlock
+            value={myRichText}
+            onChange={handleRichTextChange}
+            config={{
+              bold: true,
+              italic: true,
+              url: true,
+              ref: {
+                modelA: {scope: ContentContextEnum.Local},
+                modelB: {scope: ContentContextEnum.Local}
+              }
+            }}
+          />
         </FormGroup>
       </Form>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <RefSelectPanel
-          types={[
-            {context: ContentContextEnum.Local, type: ContentTypeEnum.ModelA},
-            {context: ContentContextEnum.Local, type: ContentTypeEnum.ModelB}
-          ]}
+          config={{
+            modelA: {scope: ContentContextEnum.Local},
+            modelB: {scope: ContentContextEnum.Local}
+          }}
           onClose={() => setChooseModalOpen(false)}
           onSelectRef={ref => {
             setChooseModalOpen(false)
@@ -186,13 +198,23 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
         </FormGroup>
         <FormGroup>
           <ControlLabel>myRichText</ControlLabel>
-          <RichTextBlock value={myRichText} onChange={handleRichTextChange} />
+          <RichTextBlock
+            value={myRichText}
+            onChange={handleRichTextChange}
+            config={{
+              ref: {
+                modelA: {scope: ContentContextEnum.Local}
+              }
+            }}
+          />
         </FormGroup>
       </Form>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <RefSelectPanel
-          types={[{context: ContentContextEnum.Local, type: ContentTypeEnum.ModelA}]}
+          config={{
+            modelA: {scope: ContentContextEnum.Local}
+          }}
           onClose={() => setChooseModalOpen(false)}
           onSelectRef={ref => {
             setChooseModalOpen(false)

@@ -158,9 +158,16 @@ async function validateRecursive(
         let record
         try {
           if (ref.contentType === MediaReferenceType) {
-            record = await validatorContext.context.loaders.images.load(ref.recordId)
+            const image = await validatorContext.context.loaders.images.load(ref.recordId)
+            if (Object.keys(schema.types).some(type => type === MediaReferenceType)) {
+              record = image
+            }
+          } else {
+            const content = await validatorContext.context.loaders.content.load(ref.recordId)
+            if (Object.keys(schema.types).some(type => type === content?.contentType)) {
+              record = content
+            }
           }
-          record = await validatorContext.context.loaders.content.load(ref.recordId)
         } catch (error) {}
         if (!record) {
           throw new Error(`Reference of type ${ref.contentType} and id ${ref.recordId} not valid`)

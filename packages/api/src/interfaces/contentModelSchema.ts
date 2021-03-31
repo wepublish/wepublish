@@ -75,24 +75,40 @@ export interface ContentModelSchemaFieldDate extends ContentModelSchemaFieldLeaf
   defaultValue?: Date
 }
 
+export interface RichTextConfig {
+  h1?: boolean
+  h2?: boolean
+  h3?: boolean
+  italic?: boolean
+  bold?: boolean
+  underline?: boolean
+  strikethrough?: boolean
+  superscript?: boolean
+  subscript?: boolean
+  table?: boolean
+  emoji?: boolean
+  unorderedList?: boolean
+  orderedList?: boolean
+  url?: boolean
+  ref?: ContentModelSchemaFieldRefTypeMap
+}
+
 export interface ContentModelSchemaFieldRichText extends ContentModelSchemaFieldLeaf {
   type: ContentModelSchemaTypes.richText
+  config?: RichTextConfig
 }
 
-export enum ReferenceScope {
-  local = 'local',
-  peers = 'peers',
-  all = 'all'
-}
+export type ReferenceScope = 'local' | 'peers' | 'all'
 
-export interface ContentModelSchemaFieldRefType {
-  scope: ReferenceScope
-  identifier: string
+export interface ContentModelSchemaFieldRefTypeMap {
+  [contentType: string]: {
+    scope: ReferenceScope
+  }
 }
 
 export interface ContentModelSchemaFieldRef extends ContentModelSchemaFieldLeaf {
   type: ContentModelSchemaTypes.reference
-  types: ContentModelSchemaFieldRefType[]
+  types: ContentModelSchemaFieldRefTypeMap
 }
 
 export interface ContentModelSchemaFieldList extends ContentModelSchemaFieldBase {

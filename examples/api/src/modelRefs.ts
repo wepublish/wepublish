@@ -1,4 +1,4 @@
-import {ContentModel, ContentModelSchemaTypes, ReferenceScope} from '@wepublish/api'
+import {ContentModel, ContentModelSchemaTypes} from '@wepublish/api'
 
 export const contentModelA: ContentModel = {
   identifier: 'modelA',
@@ -14,16 +14,14 @@ export const contentModelA: ContentModel = {
       },
       myRef: {
         type: ContentModelSchemaTypes.reference,
-        types: [
-          {
-            identifier: 'modelA',
-            scope: ReferenceScope.local
+        types: {
+          modelA: {
+            scope: 'local'
           },
-          {
-            identifier: 'modelB',
-            scope: ReferenceScope.local
+          modelB: {
+            scope: 'local'
           }
-        ]
+        }
       }
     }
   }
@@ -43,12 +41,11 @@ export const contentModelB: ContentModel = {
       },
       myRef: {
         type: ContentModelSchemaTypes.reference,
-        types: [
-          {
-            identifier: 'modelA',
-            scope: ReferenceScope.local
+        types: {
+          modelA: {
+            scope: 'local'
           }
-        ]
+        }
       }
     }
   }

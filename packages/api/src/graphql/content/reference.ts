@@ -65,36 +65,38 @@ export function getReference(
   type: ContentModelSchemaFieldRef,
   contentModels?: MapType<GraphQLObjectType>
 ) {
-  const typeKey = type.types.map(t => t.identifier + t.scope).join('_')
+  const typeKey = Object.keys(type.types).join('_')
   if (typeKey in refTypes) {
     return refTypes[typeKey]
   }
 
+  const typeArray = Object.entries(type.types)
   let graphQLRecordType: GraphQLType = GraphQLUnknown
-  if (type.types.length === 0) {
+  if (typeArray.length === 0) {
     throw Error('At least one type should be definied for Reference')
-  } else if (type.types.length === 1) {
-    if (type.types[0].identifier === MediaReferenceType) {
+  } else if (typeArray.length === 1) {
+    const contentType = typeArray[0][0]
+    if (typeArray[0][0] === MediaReferenceType) {
       graphQLRecordType = GraphQLImage
-    } else if (contentModels?.[type.types[0].identifier]) {
-      graphQLRecordType = contentModels[type.types[0].identifier]
+    } else if (contentModels?.[contentType]) {
+      graphQLRecordType = contentModels[contentType]
     }
   } else {
     graphQLRecordType = new GraphQLUnionType({
       name,
-      types: type.types.map(({identifier, scope}) => {
+      types: typeArray.map(([contentType, {scope}]) => {
         let graphQLUnionCase: GraphQLType = GraphQLUnknown
-        if (identifier === MediaReferenceType) {
+        if (contentType === MediaReferenceType) {
           graphQLUnionCase = GraphQLImage
-        } else if (contentModels?.[identifier]) {
-          graphQLUnionCase = contentModels[identifier]
+        } else if (contentModels?.[contentType]) {
+          graphQLUnionCase = contentModels[contentType]
         }
 
-        const unionCaseName = nameJoin(name, identifier)
+        const unionCaseName = nameJoin(name, contentType)
         return new GraphQLObjectType({
           name: unionCaseName,
           fields: {
-            [identifier]: {
+            [contentType]: {
               type: graphQLUnionCase,
               resolve: source => {
                 return source
@@ -102,7 +104,7 @@ export function getReference(
             }
           },
           isTypeOf: createProxyingIsTypeOf((value: Reference) => {
-            return value.contentType === identifier
+            return value.contentType === contentType
           })
         })
       })

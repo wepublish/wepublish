@@ -10,6 +10,7 @@ export enum ElementNodeType {
   OrderedList = 'ordered-list',
   ListItem = 'list-item',
   Link = 'link',
+  Reference = 'reference',
   Table = 'table',
   TableRow = 'table-row',
   TableCell = 'table-cell'
@@ -31,6 +32,11 @@ export enum ElementNodeFields {
 }
 
 export enum LinkNodeFields {
+  URL = 'url',
+  Title = 'title'
+}
+
+export enum ReferenceNodeFields {
   URL = 'url',
   Title = 'title'
 }
@@ -67,6 +73,13 @@ export interface RichTextLinkNode {
   readonly children: RichTextNode[]
 }
 
+export interface RichTextReferenceNode {
+  readonly type: ElementNodeType.Reference
+  readonly url: string
+  readonly title?: string
+  readonly children: RichTextNode[]
+}
+
 export interface RichTextTextNode {
   readonly bold?: boolean
   readonly italic?: boolean
@@ -81,6 +94,7 @@ export type RichTextNode =
   | RichTextBlockNode
   | RichTextTableCellNode
   | RichTextLinkNode
+  | RichTextReferenceNode
   | RichTextTextNode
 
 export const GraphQLRichText = new GraphQLScalarType({
@@ -108,6 +122,11 @@ const ElmentNodeFieldsArr: string[] = Object.values(ElementNodeFields)
 const LinkNodeFieldsArr: string[] = [
   ...Object.values(ElementNodeFields),
   ...Object.values(LinkNodeFields)
+]
+
+const ReferenceNodeFieldsArr: string[] = [
+  ...Object.values(ElementNodeFields),
+  ...Object.values(ReferenceNodeFields)
 ]
 
 const TableCellNodeFieldsArr: string[] = [
@@ -181,12 +200,17 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
+    const isReferenceNode = value.type === ElementNodeType.Reference
     const isTableCellNode = value.type === ElementNodeType.TableCell
 
     for (const field of Object.keys(value)) {
       if (isLinkNode) {
         if (!LinkNodeFieldsArr.includes(field)) {
           throw createRichTextError(`Unknown LinkNode field "${field}".`, path)
+        }
+      } else if (isReferenceNode) {
+        if (!ReferenceNodeFieldsArr.includes(field)) {
+          throw createRichTextError(`Unknown ReferenceNode field "${field}".`, path)
         }
       } else if (isTableCellNode) {
         if (!TableCellNodeFieldsArr.includes(field)) {
@@ -216,6 +240,25 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       case ElementNodeType.Link: {
         if (!isString(value.url)) {
           // TODO: Check URL for malicious content.
+          throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
+        }
+
+        if (value.title != undefined && !isString(value.title)) {
+          throw createRichTextError(`Expected string found ${value.title}`, [...path, 'title'])
+        }
+
+        return Object.assign(
+          {
+            type,
+            url: value.url,
+            children: parseRichTextNodes(value.children, [...path, 'children'])
+          },
+          value.title != undefined ? {title: value.title as string} : {}
+        )
+      }
+
+      case ElementNodeType.Reference: {
+        if (!isString(value.url)) {
           throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
         }
 

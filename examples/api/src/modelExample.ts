@@ -1,4 +1,4 @@
-import {ContentModel, ContentModelSchemaTypes, ReferenceScope} from '@wepublish/api'
+import {ContentModel, ContentModelSchemaTypes} from '@wepublish/api'
 
 export const contentModelExample: ContentModel = {
   identifier: 'example',
@@ -116,12 +116,11 @@ export const contentModelExample: ContentModel = {
       },
       myReference: {
         type: ContentModelSchemaTypes.reference,
-        types: [
-          {
-            identifier: 'example',
-            scope: ReferenceScope.local
+        types: {
+          example: {
+            scope: 'local'
           }
-        ]
+        }
       }
     }
   }
