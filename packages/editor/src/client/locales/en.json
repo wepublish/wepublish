@@ -380,7 +380,7 @@
         "description": "Description",
         "noDescription": "No Description",
         "action": "Action",
-        "resetPassword": "Reset Password",
+        "reset": "Reset",
         "delete": "Delete",
         "users": "Users",
         "newUser": "New User",

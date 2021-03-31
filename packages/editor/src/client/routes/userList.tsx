@@ -22,13 +22,13 @@ import {
   Button,
   FlexboxGrid,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   Modal,
   Table,
   Popover,
-  Whisper
+  Whisper,
+  Divider
 } from 'rsuite'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
@@ -62,7 +62,6 @@ export function UserList() {
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<FullUserFragment>()
 
   const [page, setPage] = useState(1)
@@ -98,24 +97,19 @@ export function UserList() {
 
   const speaker = (
     <Popover title={t('userList.popover.deleteThisUser')}>
-      <p>{t('userList.popover.popoverText')}</p>
-      <p>
-        <Button
-          color="red"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentUser) return
+      <Button
+        color="red"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentUser) return
 
-            await deleteUser({
-              variables: {id: currentUser.id}
-            })
-
-            setConfirmationDialogOpen(false)
-            refetch()
-          }}>
-          {t('userList.popover.deleteNow')}
-        </Button>
-      </p>
+          await deleteUser({
+            variables: {id: currentUser.id}
+          })
+          refetch()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -199,7 +193,7 @@ export function UserList() {
           </Cell>
         </Column>
 
-        <Column width={160} align="right" fixed="right">
+        <Column width={250} align="right" fixed="right">
           <HeaderCell>{t('action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserFragment) => (
@@ -211,19 +205,19 @@ export function UserList() {
                     setCurrentUser(rowData)
                     setIsResetUserPasswordOpen(true)
                   }}>
-                  {t('userList.panels.resetPassword')}
+                  {t('userList.overview.reset')}
                 </Button>
-
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Divider vertical></Divider>
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentUser(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}
