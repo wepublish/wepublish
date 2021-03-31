@@ -27,7 +27,7 @@ export function ChooseEditImage({
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
-    <Panel bodyFill={true} bordered style={{height: 240, marginBottom: 10}}>
+    <Panel bodyFill bordered style={{height: 240, marginBottom: 10}}>
       {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
@@ -37,14 +37,15 @@ export function ChooseEditImage({
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
-              position: 'relative'
+              position: 'relative',
+              background: '#000'
             }}>
             <img
               style={{maxHeight: '240'}}
               src={image?.largeURL ?? '/static/placeholder-240x240.png'}
             />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', left: left, top: top}}>
+              <div style={{position: 'absolute', left: '5px', top: '5px'}}>
                 <Dropdown
                   renderTitle={() => {
                     return (
