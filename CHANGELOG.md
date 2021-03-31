@@ -1,5 +1,45 @@
 # Change Log
 
+## v2.2.0-alpha.0 (2021-03-31)
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#228](https://github.com/wepublish/wepublish/pull/228) use Visibility API to check if still logged in ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#223](https://github.com/wepublish/wepublish/pull/223) fix table column width ([@penk85](https://github.com/penk85))
+  * [#222](https://github.com/wepublish/wepublish/pull/222) Add missing translations to userlist panel ([@penk85](https://github.com/penk85))
+  * [#217](https://github.com/wepublish/wepublish/pull/217) Selected authors stay selected during search ([@roosnic1](https://github.com/roosnic1))
+  * [#213](https://github.com/wepublish/wepublish/pull/213) b/WPC-261-embed-close-button-labeled-as-confirm ([@HanaAyman](https://github.com/HanaAyman))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* `api`, `editor`
+  * [#219](https://github.com/wepublish/wepublish/pull/219) Disable save without peer data and handle errors of invalid tokens ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#225](https://github.com/wepublish/wepublish/pull/225) f/wpc-296-add-slug-guide ([@HanaAyman](https://github.com/HanaAyman))
+  * [#216](https://github.com/wepublish/wepublish/pull/216) f/WPC-276-highlight-article-after-being-unpublished ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `editor`
+  * [#224](https://github.com/wepublish/wepublish/pull/224) f/wpc-255-character-counter-count-more-blocks ([@HanaAyman](https://github.com/HanaAyman))
+  * [#214](https://github.com/wepublish/wepublish/pull/214) f/wpc-256-see-the-max-amount-of-characters ([@HanaAyman](https://github.com/HanaAyman))
+  * [#210](https://github.com/wepublish/wepublish/pull/210) b/Wpc-229-make-duplicated-articles-appear-immediatly ([@HanaAyman](https://github.com/HanaAyman))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* Other
+  * [#218](https://github.com/wepublish/wepublish/pull/218) Added color to the table in the example website ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pat Mächler ([@valioDOTch](https://github.com/valioDOTch))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.1.0 (2021-03-31)
 
 #### :heart: New Feature
