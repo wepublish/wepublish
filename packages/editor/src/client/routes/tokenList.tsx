@@ -22,18 +22,7 @@ import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Button,
-  FlexboxGrid,
-  Icon,
-  List,
-  Loader,
-  IconButton,
-  Modal,
-  Alert,
-  Popover,
-  Whisper
-} from 'rsuite'
+import {Button, FlexboxGrid, List, Loader, Modal, Alert, Popover, Whisper} from 'rsuite'
 
 export function TokenList() {
   const {current} = useRoute()
