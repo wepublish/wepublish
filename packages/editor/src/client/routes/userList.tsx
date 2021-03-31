@@ -180,20 +180,20 @@ export function UserList() {
           <HeaderCell>{t('email')}</HeaderCell>
           <Cell dataKey="email" />
         </Column>
-        <Column flexGrow={1} align="left" sortable>
+        <Column flexGrow={1} minWidth={140} align="left" sortable>
           <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
           <Cell dataKey="createdAt">
             {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
           </Cell>
         </Column>
-        <Column flexGrow={1} align="left" sortable>
+        <Column flexGrow={1} minWidth={140} align="left" sortable>
           <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
           <Cell dataKey="modifiedAt">
             {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
           </Cell>
         </Column>
 
-        <Column width={250} align="right" fixed="right">
+        <Column width={140} align="right" fixed="right">
           <HeaderCell>{t('action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserFragment) => (

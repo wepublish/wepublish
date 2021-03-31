@@ -8,7 +8,8 @@
         "save": "Save",
         "close": "Close",
         "confirm": "Confirm",
-        "back": "Back"
+        "back": "Back",
+        "add": "Add"
       }
     },
     "articles": {

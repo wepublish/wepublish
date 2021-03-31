@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 
 import {
   Button,
-  Drawer,
   Form,
   FormControl,
   Panel,
@@ -232,7 +231,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Button>
       </Modal.Footer>
 
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Modal show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -240,14 +239,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             handleImageChange(value)
           }}
         />
-      </Drawer>
-      <Drawer show={isEditModalOpen} size={'sm'}>
+      </Modal>
+      <Modal show={isEditModalOpen} size={'lg'}>
         <ImagedEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
           onSave={() => setEditModalOpen(false)}
         />
-      </Drawer>
+      </Modal>
     </>
   )
 }
