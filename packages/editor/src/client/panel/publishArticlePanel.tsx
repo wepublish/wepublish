@@ -6,7 +6,6 @@ import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import i18n from '../i18n'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
