@@ -96,7 +96,7 @@ export function UserList() {
   const {t} = useTranslation()
 
   const speaker = (
-    <Popover title={t('userList.popover.deleteThisUser')}>
+    <Popover title={currentUser?.name}>
       <Button
         color="red"
         disabled={isDeleting}

@@ -15,20 +15,8 @@ import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} f
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Drawer,
-  Modal,
-  Button,
-  Popover,
-  Whisper
-} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {FlexboxGrid, Icon, Input, InputGroup, Table, Modal, Button, Popover, Whisper} from 'rsuite'
+
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
@@ -47,7 +35,6 @@ export function UserRoleList() {
 
   const [filter, setFilter] = useState('')
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
@@ -62,25 +49,21 @@ export function UserRoleList() {
   const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
 
   const speaker = (
-    <Popover title={t('userRoles.popover.deleteThisUser')}>
-      <p>{t('userRoles.popover.popoverText')}</p>
-      <p>
-        <Button
-          color="red"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentUserRole) return
+    <Popover title={currentUserRole?.name}>
+      <Button
+        color="red"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentUserRole) return
 
-            await deleteUserRole({
-              variables: {id: currentUserRole.id}
-            })
+          await deleteUserRole({
+            variables: {id: currentUserRole.id}
+          })
 
-            setConfirmationDialogOpen(false)
-            refetch()
-          }}>
-          {t('userRoles.popover.deleteNow')}
-        </Button>
-      </p>
+          refetch()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -146,16 +129,16 @@ export function UserRoleList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullUserRoleFragment) => (
               <>
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentUserRole(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}
@@ -192,40 +175,6 @@ export function UserRoleList() {
           }}
         />
       </Modal>
-      {/* <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('userRoles.panels.name')}>
-              {currentUserRole?.name || t('userRoles.panels.Unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentUserRole) return
-
-              await deleteUserRole({
-                variables: {id: currentUserRole.id}
-              })
-
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}
-            color="red">
-            {t('userRoles.panels.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userRoles.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </>
   )
 }
