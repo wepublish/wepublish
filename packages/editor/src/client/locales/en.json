@@ -711,6 +711,7 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "paymentPeriodicities": "Possible Payment Periodicities",
       "paymentMethods": "Possible Payment Methods",
+      "paymentOptions": "Payment options",
       "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
       "paymentPeriodicity": {
         "MONTHLY": "Monthly",

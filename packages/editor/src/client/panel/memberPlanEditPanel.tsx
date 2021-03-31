@@ -255,7 +255,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
           </FlexboxGrid.Item>
 
           <FlexboxGrid.Item colspan={10}>
-            <Divider>Payment options</Divider>
+            <h5 className="wep-section-title">{t('memberPlanList.paymentOptions')}</h5>
             <ListInput
               value={availablePaymentMethods}
               onChange={app => setAvailablePaymentMethods(app)}
