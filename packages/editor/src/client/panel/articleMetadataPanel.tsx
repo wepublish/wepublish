@@ -355,7 +355,15 @@ export function ArticleMetadataPanel({
                     />
                   </Whisper>
                 </InputGroup>
-                <HelpBlock>{t('articleEditor.panels.dontChangeSlug')}</HelpBlock>
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.dontChangeSlug'}>
+                    text{' '}
+                    <a
+                      href="https://wepublish.ch/just-another-page-2/"
+                      target="_blank"
+                      rel="noreferrer"></a>
+                  </Trans>
+                </HelpBlock>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>

@@ -68,6 +68,7 @@
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.18",
     "react-i18next": "^11.7.3",
+    "react-page-visibility": "^6.4.0",
     "react-sortable-hoc": "^1.11.0",
     "regenerator-runtime": "^0.13.3",
     "rsuite": "^4.8.4",

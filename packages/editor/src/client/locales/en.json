@@ -130,7 +130,7 @@
         "charCountWarning": "The maximum number of characters should be {{charCountWarning}}",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
-        "dontChangeSlug": "Please don't change the slug once the article is published",
+        "dontChangeSlug": "Please don't change the slug once the article is published. <2>Slug Guide</2>",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
         "articlePreviewLinkHours": "Validity period of link",
@@ -382,6 +382,8 @@
         "close": "Close",
         "confirm": "Confirm",
         "name": "Name",
+        "preferredName": "Preferred Name",
+        "active": "Active",
         "email": "Email",
         "Unknown": "Unknown",
         "resetPassword": "Reset Password",
@@ -465,7 +467,8 @@
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
         "callToActionURL": "Call To Action URL",
-        "image": "Image"
+        "image": "Image",
+        "validateToken": "Please confirm token is correct before saving"
       }
     },
     "tokenList": {

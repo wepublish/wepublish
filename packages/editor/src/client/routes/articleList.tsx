@@ -76,6 +76,17 @@ export function ArticleList() {
     refetch(articleListVariables)
   }, [filter, page, limit, sortOrder, sortField])
 
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timerID = setTimeout(() => {
+      setHighlightedRowId(null)
+    }, 3000)
+    return () => {
+      clearTimeout(timerID)
+    }
+  }, [highlightedRowId])
+
   const {t} = useTranslation()
 
   useEffect(() => {
@@ -122,6 +133,7 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -158,7 +170,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column width={150} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -334,11 +346,35 @@ export function ArticleList() {
                   await unpublishArticle({
                     variables: {id: currentArticle.id}
                   })
+                  setHighlightedRowId(currentArticle.id)
                   break
 
                 case ConfirmAction.Duplicate:
-                  await duplicateArticle({
-                    variables: {id: currentArticle.id}
+                  duplicateArticle({
+                    variables: {id: currentArticle.id},
+                    update: cache => {
+                      const query = cache.readQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        variables: articleListVariables
+                      })
+
+                      if (!query) return
+
+                      cache.writeQuery<ArticleListQuery>({
+                        query: ArticleListDocument,
+                        data: {
+                          articles: {
+                            ...query.articles,
+                            nodes: query.articles.nodes.filter(
+                              article => article.id !== currentArticle.id
+                            )
+                          }
+                        },
+                        variables: articleListVariables
+                      })
+                    }
+                  }).then(output => {
+                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
                   break
               }

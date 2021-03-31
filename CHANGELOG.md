@@ -25,6 +25,7 @@
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 
 
+
 ## v2.0.0 (2021-03-17)
 
 #### :boom: Breaking Change

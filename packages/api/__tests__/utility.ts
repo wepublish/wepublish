@@ -8,7 +8,9 @@ import {
   OptionalUserSession,
   PublicArticle,
   PublicPage,
-  URLAdapter
+  URLAdapter,
+  PublicComment,
+  CommentItemType
 } from '../src'
 import {ApolloServer} from 'apollo-server'
 import {createTestClient} from 'apollo-server-testing'
@@ -36,6 +38,13 @@ class ExampleURLAdapter implements URLAdapter {
 
   getArticlePreviewURL(token: string): string {
     return `https://demo.wepulish.ch/article/preview/${token}`
+  }
+
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
+    if (comment.itemType === CommentItemType.Article) {
+      return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
+    }
+    return `https://demo.wepublish.media/comments/${item.slug}/${comment.id}`
   }
 }
 
