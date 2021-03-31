@@ -46,14 +46,28 @@ export function PublishPagePanel({
         )}
         <Form fluid={true}>
           <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.publishDate')}</ControlLabel>
+            <ControlLabel>{t('articleEditor.panels.publishTime')}</ControlLabel>
             <DatePicker
-              block
+              style={{width: 100, marginRight: 8}}
+              placement="auto"
               value={publishDate}
-              format="YYYY-MM-DD HH:mm"
+              format="HH:mm"
               ranges={[
                 {
-                  label: 'Now',
+                  label: t('pageEditor.panels.now'),
+                  value: new Date()
+                }
+              ]}
+              onChange={publishDate => setPublishDate(publishDate)}
+            />
+            <DatePicker
+              style={{width: 130}}
+              placement="auto"
+              value={publishDate}
+              format="DD MMM YY"
+              ranges={[
+                {
+                  label: t('pageEditor.panels.now'),
                   value: new Date()
                 }
               ]}
@@ -61,14 +75,27 @@ export function PublishPagePanel({
             />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.updateDate')}</ControlLabel>
+            <ControlLabel>{t('articleEditor.panels.updateTime')}</ControlLabel>
             <DatePicker
-              block
+              style={{width: 100, marginRight: 8}}
               value={updateDate}
-              format="YYYY-MM-DD HH:mm"
+              format="HH:mm"
               ranges={[
                 {
-                  label: 'Now',
+                  label: t('pageEditor.panels.now'),
+                  value: new Date()
+                }
+              ]}
+              onChange={updateDate => setUpdateDate(updateDate)}
+            />
+            <DatePicker
+              style={{width: 130}}
+              placement="auto"
+              value={updateDate}
+              format="DD MMM YY"
+              ranges={[
+                {
+                  label: t('pageEditor.panels.now'),
                   value: new Date()
                 }
               ]}

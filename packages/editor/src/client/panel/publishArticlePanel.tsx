@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import i18n from '../i18n'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -45,14 +46,28 @@ export function PublishArticlePanel({
         )}
         <Form fluid={true}>
           <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.publishDate')}</ControlLabel>
+            <ControlLabel>{t('articleEditor.panels.publishTime')}</ControlLabel>
             <DatePicker
-              block
+              style={{width: 100, marginRight: 8}}
+              placement="auto"
               value={publishDate}
-              format="YYYY-MM-DD HH:mm"
+              format="HH:mm"
               ranges={[
                 {
-                  label: 'Now',
+                  label: t('articleEditor.panels.now'),
+                  value: new Date()
+                }
+              ]}
+              onChange={publishDate => setPublishDate(publishDate)}
+            />
+            <DatePicker
+              style={{width: 130}}
+              placement="auto"
+              value={publishDate}
+              format="DD MMM YY"
+              ranges={[
+                {
+                  label: t('articleEditor.panels.now'),
                   value: new Date()
                 }
               ]}
@@ -60,14 +75,27 @@ export function PublishArticlePanel({
             />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.updateDate')}</ControlLabel>
+            <ControlLabel>{t('articleEditor.panels.updateTime')}</ControlLabel>
             <DatePicker
-              block
+              style={{width: 100, marginRight: 8}}
               value={updateDate}
-              format="YYYY-MM-DD HH:mm"
+              format="HH:mm"
               ranges={[
                 {
-                  label: 'Now',
+                  label: t('articleEditor.panels.now'),
+                  value: new Date()
+                }
+              ]}
+              onChange={updateDate => setUpdateDate(updateDate)}
+            />
+            <DatePicker
+              style={{width: 130}}
+              placement="auto"
+              value={updateDate}
+              format="DD MMM YY"
+              ranges={[
+                {
+                  label: t('articleEditor.panels.now'),
                   value: new Date()
                 }
               ]}
