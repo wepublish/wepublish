@@ -1,17 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Table,
-  Modal,
-  Button,
-  InputGroup,
-  Input,
-  Popover,
-  Whisper
-} from 'rsuite'
+import {FlexboxGrid, Icon, Table, Modal, Button, InputGroup, Input, Popover, Whisper} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
 import {
@@ -49,7 +38,6 @@ export function MemberPlanList() {
 
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
   const {data, refetch, loading: isLoading} = useMemberPlanListQuery({
@@ -63,23 +51,21 @@ export function MemberPlanList() {
   const [deleteMemberPlan, {loading: isDeleting}] = useDeleteMemberPlanMutation()
 
   const speaker = (
-    <Popover title={t('memberPlanList.deleteModalTitle')}>
-      <p>{t('userList.popover.popoverText')}</p>
-      <p>
-        <Button
-          color="red"
-          disabled={isDeleting}
-          onClick={async () => {
-            if (!currentMemberPlan) return
+    <Popover title={currentMemberPlan?.name}>
+      <Button
+        color="red"
+        appearance="primary"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentMemberPlan) return
 
-            await deleteMemberPlan({
-              variables: {id: currentMemberPlan.id}
-            })
-            refetch()
-          }}>
-          {t('userList.popover.deleteNow')}
-        </Button>
-      </p>
+          await deleteMemberPlan({
+            variables: {id: currentMemberPlan.id}
+          })
+          refetch()
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
     </Popover>
   )
 
@@ -159,16 +145,16 @@ export function MemberPlanList() {
           <Cell style={{padding: '6px 0'}}>
             {(rowData: FullMemberPlanFragment) => (
               <>
-                <Whisper placement="leftEnd" trigger="click" speaker={speaker}>
-                  <IconButton
-                    icon={<Icon icon="trash-o" />}
-                    circle
-                    size="sm"
+                <Whisper placement="left" trigger="click" speaker={speaker}>
+                  <Button
+                    appearance="link"
                     color="red"
                     onClick={() => {
                       setCurrentMemberPlan(rowData)
-                    }}
-                  />
+                    }}>
+                    {' '}
+                    {t('global.buttons.delete')}{' '}
+                  </Button>
                 </Whisper>
               </>
             )}
