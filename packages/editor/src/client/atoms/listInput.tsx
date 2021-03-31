@@ -34,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton icon={<Icon icon="th2" />} disabled={disabled} />
+  <IconButton size="sm" icon={<Icon icon="th2" />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -55,7 +55,7 @@ const ListItem = SortableElement(
         style={{
           display: 'flex',
           flexDirection: 'row',
-          marginBottom: '10px'
+          marginBottom: '20px'
         }}>
         <Panel bordered bodyFill style={{width: '100%', padding: '20px'}}>
           <div style={{minHeight: '100%'}}>
@@ -64,8 +64,13 @@ const ListItem = SortableElement(
         </Panel>
         <div style={{marginLeft: '10px'}}>
           <DragHandle disabled={itemDisabled} />
-          <Divider></Divider>
-          <IconButton icon={<Icon icon="trash" />} onClick={handleRemove} disabled={itemDisabled} />
+          <Divider style={{margin: '12px 0'}}></Divider>
+          <IconButton
+            size="sm"
+            icon={<Icon icon="trash" />}
+            onClick={handleRemove}
+            disabled={itemDisabled}
+          />
         </div>
       </div>
     )
@@ -108,7 +113,7 @@ const SortableList = SortableContainer(
         <Divider>
           <IconButton
             size="md"
-            color="green"
+            appearance="ghost"
             circle
             icon={<Icon icon="plus" />}
             onClick={handleAdd}
