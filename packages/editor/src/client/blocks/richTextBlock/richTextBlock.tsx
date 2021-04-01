@@ -89,7 +89,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
   useEffect(() => {
     const nodes = WepublishEditor.nodes(editor, {
-      match: node => node.type === TextFormat
+      match: node => node.type === TextFormat.FontColor
     })
     for (const [node] of nodes) {
       setFontColor(node.fontColor as string)
@@ -100,7 +100,7 @@ export const RichTextBlock = memo(function RichTextBlock({
   useEffect(() => {
     if (fontColor) {
       const nodes = WepublishEditor.nodes(editor, {
-        match: node => node.type === TextFormat
+        match: node => node.type === TextFormat.FontColor
       })
       for (const [, path] of nodes) {
         Transforms.setNodes(
@@ -108,7 +108,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           {fontColor},
           {
             at: path,
-            match: node => node.type === TextFormat
+            match: node => node.type === TextFormat.FontColor
           }
         )
         return

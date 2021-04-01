@@ -88,5 +88,9 @@ export function renderLeaf({attributes, children, leaf}: RenderLeafProps) {
     children = <sub {...attributes}>{children}</sub>
   }
 
+  if (leaf[TextFormat.FontColor]) {
+    children = <span style= {{color: leaf.fontColor as string}}>{children}</span>
+  }
+
   return <span {...attributes}>{children}</span>
 }

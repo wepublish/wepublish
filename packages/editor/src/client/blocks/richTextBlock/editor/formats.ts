@@ -21,7 +21,8 @@ export enum TextFormat {
   Underline = 'underline',
   Strikethrough = 'strikethrough',
   Superscript = 'superscript',
-  Subscript = 'subscript'
+  Subscript = 'subscript',
+  FontColor = 'fontColor'
 }
 
 export type Format = BlockFormat | InlineFormat | TextFormat
