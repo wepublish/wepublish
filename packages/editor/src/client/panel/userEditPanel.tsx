@@ -250,7 +250,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       </Modal>
 
       {id !== undefined && (
-        <Drawer
+        <Modal
           show={isUserSubscriptonEditOpen}
           size={'sm'}
           onHide={() => setIsUserSubscriptonEditOpen(false)}>
@@ -263,7 +263,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               setUserSubscription(value)
             }}
           />
-        </Drawer>
+        </Modal>
       )}
     </>
   )
