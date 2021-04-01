@@ -191,7 +191,7 @@ export function ArticleList() {
                 <>
                   {rowData.published && (
                     <IconButton
-                      icon={<Icon icon="arrow-circle-o-down" />}
+                      icon={<Icon icon="btn-off" />}
                       circle
                       size="sm"
                       onClick={e => {
