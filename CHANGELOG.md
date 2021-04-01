@@ -1,5 +1,31 @@
 # Change Log
 
+## v2.1.0 (2021-03-31)
+
+#### :heart: New Feature
+* Other
+  * [#194](https://github.com/wepublish/wepublish/pull/194) F/wpc 88 update comment ([@0815pascal](https://github.com/0815pascal))
+* `api-db-mongodb`, `api`, `editor`
+  * [#207](https://github.com/wepublish/wepublish/pull/207) Article Preview Links ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#206](https://github.com/wepublish/wepublish/pull/206) B/wpc 245 image selection disabled in edit peer ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `editor`
+  * [#209](https://github.com/wepublish/wepublish/pull/209) F/wpc 244 infer link protocol ([@penk85](https://github.com/penk85))
+  * [#211](https://github.com/wepublish/wepublish/pull/211) hotkey cmd support for macs ([@penk85](https://github.com/penk85))
+  * [#205](https://github.com/wepublish/wepublish/pull/205) Add hotkey shortcuts to Richtext Editor ([@penk85](https://github.com/penk85))
+
+#### Committers: 4
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pascal Witzig ([@0815pascal](https://github.com/0815pascal))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+
 ## v2.0.0 (2021-03-17)
 
 #### :boom: Breaking Change
