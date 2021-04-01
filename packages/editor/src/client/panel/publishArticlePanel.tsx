@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 
@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
@@ -30,6 +31,11 @@ export function PublishArticlePanel({
 
   const {t} = useTranslation()
 
+  useEffect(() => {
+    console.log('publish date ', publishDate)
+    console.log('update date ', updateDate)
+  }, [publishDate, updateDate])
+
   return (
     <>
       <Modal.Header>
@@ -43,65 +49,16 @@ export function PublishArticlePanel({
             description={t('articleEditor.panels.articlePending', {pendingPublishDate})}
           />
         )}
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.publishTime')}</ControlLabel>
-            <DatePicker
-              style={{width: 100, marginRight: 8}}
-              placement="auto"
-              value={publishDate}
-              format="HH:mm"
-              ranges={[
-                {
-                  label: t('articleEditor.panels.now'),
-                  value: new Date()
-                }
-              ]}
-              onChange={publishDate => setPublishDate(publishDate)}
-            />
-            <DatePicker
-              style={{width: 130}}
-              placement="auto"
-              value={publishDate}
-              format="DD MMM YY"
-              ranges={[
-                {
-                  label: t('articleEditor.panels.now'),
-                  value: new Date()
-                }
-              ]}
-              onChange={publishDate => setPublishDate(publishDate)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.updateTime')}</ControlLabel>
-            <DatePicker
-              style={{width: 100, marginRight: 8}}
-              value={updateDate}
-              format="HH:mm"
-              ranges={[
-                {
-                  label: t('articleEditor.panels.now'),
-                  value: new Date()
-                }
-              ]}
-              onChange={updateDate => setUpdateDate(updateDate)}
-            />
-            <DatePicker
-              style={{width: 130}}
-              placement="auto"
-              value={updateDate}
-              format="DD MMM YY"
-              ranges={[
-                {
-                  label: t('articleEditor.panels.now'),
-                  value: new Date()
-                }
-              ]}
-              onChange={updateDate => setUpdateDate(updateDate)}
-            />
-          </FormGroup>
-        </Form>
+        <DateTimePicker
+          dateTime={publishDate ?? now}
+          label={t('articleEditor.panels.publishDate')}
+          setNewDate={(date: Date) => setPublishDate(date)}
+        />
+        <DateTimePicker
+          dateTime={updateDate ?? now}
+          label={t('articleEditor.panels.updateDate')}
+          setNewDate={(date: Date) => setUpdateDate(date)}
+        />
 
         <DescriptionList>
           <DescriptionListItem label={t('articleEditor.panels.preTitle')}>
