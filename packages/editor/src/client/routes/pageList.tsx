@@ -121,7 +121,7 @@ export function PageList() {
           marginTop: '20px'
         }}>
         <Table
-          minHeight={200}
+          minHeight={600}
           autoHeight={true}
           style={{flex: 1}}
           loading={isLoading}
