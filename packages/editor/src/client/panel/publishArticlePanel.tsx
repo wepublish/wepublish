@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {ArticleMetadata} from './articleMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
+import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DateTimePicker} from '../atoms/dateTimePicker'
