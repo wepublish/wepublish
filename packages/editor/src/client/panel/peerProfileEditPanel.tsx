@@ -153,7 +153,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
         </Button>
       </Modal.Footer>
 
-      <Modal show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -161,13 +161,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             setLogoImage(value)
           }}
         />
-      </Modal>
+      </Drawer>
 
-      <Modal show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         {logoImage && (
           <ImagedEditPanel id={logoImage!.id} onClose={() => setEditModalOpen(false)} />
         )}
-      </Modal>
+      </Drawer>
     </>
   )
 }

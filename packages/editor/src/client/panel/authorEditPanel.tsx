@@ -11,7 +11,8 @@ import {
   Icon,
   ControlLabel,
   FormGroup,
-  Modal
+  Modal,
+  Drawer
 } from 'rsuite'
 
 import {ListInput, ListValue} from '../atoms/listInput'
@@ -231,7 +232,7 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
         </Button>
       </Modal.Footer>
 
-      <Modal show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
+      <Drawer show={isChooseModalOpen} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
@@ -239,14 +240,14 @@ export function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             handleImageChange(value)
           }}
         />
-      </Modal>
-      <Modal show={isEditModalOpen} size={'lg'}>
+      </Drawer>
+      <Drawer show={isEditModalOpen}>
         <ImagedEditPanel
           id={image?.id}
           onClose={() => setEditModalOpen(false)}
           onSave={() => setEditModalOpen(false)}
         />
-      </Modal>
+      </Drawer>
     </>
   )
 }

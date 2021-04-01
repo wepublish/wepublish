@@ -25,7 +25,17 @@ import {
 } from '../api'
 
 import {useTranslation} from 'react-i18next'
-import {FlexboxGrid, Icon, Input, InputGroup, Panel, IconButton, Modal, Button} from 'rsuite'
+import {
+  FlexboxGrid,
+  Icon,
+  Input,
+  InputGroup,
+  Panel,
+  IconButton,
+  Modal,
+  Button,
+  Drawer
+} from 'rsuite'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
 
@@ -152,9 +162,8 @@ export function ImageList() {
         <p>{t('images.overview.noImagesFound')}</p>
       )}
 
-      <Modal
+      <Drawer
         show={isUploadModalOpen}
-        size="lg"
         onHide={() => {
           setUploadModalOpen(false)
           dispatch({
@@ -178,10 +187,9 @@ export function ImageList() {
             })
           }}
         />
-      </Modal>
-      <Modal
+      </Drawer>
+      <Drawer
         show={isEditModalOpen}
-        size="lg"
         onHide={() => {
           setEditModalOpen(false)
           dispatch({
@@ -199,7 +207,7 @@ export function ImageList() {
             })
           }}
         />
-      </Modal>
+      </Drawer>
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Title>{t('images.panels.deleteImage')}</Modal.Title>
 

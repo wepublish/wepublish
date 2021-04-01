@@ -12,7 +12,6 @@ import {
 } from '../route'
 
 import {FlexboxGrid, Icon, Input, InputGroup, Table, Modal, Button, Popover, Whisper} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
@@ -36,7 +35,6 @@ export function NavigationList() {
 
   const [filter, setFilter] = useState('')
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
@@ -58,7 +56,6 @@ export function NavigationList() {
             variables: {id: currentNavigation.id}
           })
 
-          setConfirmationDialogOpen(false)
           refetch()
         }}>
         {t('global.buttons.deleteNow')}
@@ -171,40 +168,6 @@ export function NavigationList() {
             })
           }}
         />
-      </Modal>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('navigation.overview.name')}>
-              {currentNavigation?.name || t('navigation.overview.unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentNavigation) return
-              await deleteNavigation({
-                variables: {id: currentNavigation.id}
-              })
-
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}
-            color="red">
-            {t('navigation.overview.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('navigation.overview.cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )

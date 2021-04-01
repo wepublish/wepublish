@@ -302,7 +302,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
         </ListInput>
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('navigation.panels.save') : t('navigation.panels.create')}
         </Button>
