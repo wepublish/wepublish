@@ -7,14 +7,15 @@ import {WepublishEditor} from '../editor/wepublishEditor'
 import {InlineFormat} from '../editor/formats'
 import {Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup} from 'rsuite'
 import {useTranslation} from 'react-i18next'
-import {ContentModelSchemaFieldRefTypeMap} from '../../../interfaces/referenceType'
+import {ContentModelSchemaFieldRefTypeMap, Reference} from '../../../interfaces/referenceType'
+import {ReferencePreview} from '../../../atoms/referencePreview'
 
 export function RefMenu({types}: {types: ContentModelSchemaFieldRefTypeMap}) {
   const {t} = useTranslation()
   const editor = useSlate()
   const [selection, setSelection] = useState<Range | null>(null)
   const [title, setTitle] = useState('')
-  const [url, setURL] = useState('')
+  const [reference, setReferences] = useState<Reference | undefined>(undefined)
   const {closeMenu} = useContext(SubMenuContext)
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export function RefMenu({types}: {types: ContentModelSchemaFieldRefTypeMap}) {
     if (tuple) {
       const [node] = tuple
       setTitle((node.title as string) ?? '')
-      setURL((node.url as string) ?? '')
+      setReferences(node.reference as Reference)
     } else if (editor.selection) {
       const text = Editor.string(editor, editor.selection)
       setTitle(text ?? '')
@@ -49,35 +50,53 @@ export function RefMenu({types}: {types: ContentModelSchemaFieldRefTypeMap}) {
               setTitle(title)
             }}
           />
-          <p>{url}</p>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>{t('blocks.richText.reference')}</ControlLabel>
+          <ReferencePreview
+            reference={reference}
+            onClose={() => setReferences(undefined)}></ReferencePreview>
         </FormGroup>
         <ButtonToolbar>
           <Button
+            disabled={!reference}
             onClick={e => {
               e.preventDefault()
-              insertLink(editor, selection, url, title || undefined)
+              insertLink(editor, selection, reference, title || undefined)
               closeMenu()
             }}>
             {t('blocks.richText.insert')}
           </Button>
           <RemoveLinkFormatButton />
+          <Button
+            onClick={e => {
+              e.preventDefault()
+              closeMenu()
+            }}>
+            {t('blocks.richText.cancel')}
+          </Button>
         </ButtonToolbar>
       </Form>
       <RefSelectPanel
         config={types}
         onClose={() => {
-          insertLink(editor, selection, url, title || undefined)
+          insertLink(editor, selection, reference, title || undefined)
           closeMenu()
         }}
         onSelectRef={ref => {
-          setURL(`wepublish://${ref.contentType}/${ref.recordId}/${ref.peerId}`)
+          setReferences(ref)
         }}
       />
     </>
   )
 }
 
-function insertLink(editor: Editor, selection: Range | null, url: string, title?: string) {
+function insertLink(
+  editor: Editor,
+  selection: Range | null,
+  reference?: Reference,
+  title?: string
+) {
   if (selection) {
     if (Range.isCollapsed(selection)) {
       const nodes = Array.from(
@@ -109,7 +128,7 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
   Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Reference})
   Transforms.wrapNodes(
     editor,
-    {type: InlineFormat.Reference, url, title, children: []},
+    {type: InlineFormat.Reference, reference, title, children: []},
     {split: true}
   )
   Transforms.collapse(editor, {edge: 'end'})

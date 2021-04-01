@@ -557,6 +557,7 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
+        "reference": "Reference",
         "text": "Text",
         "apply": "Apply",
         "cancel": "Cancel",

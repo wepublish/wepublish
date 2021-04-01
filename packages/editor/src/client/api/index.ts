@@ -878,6 +878,7 @@ export type _Cmpi_ModelB_Record_Update = {
 export type All = {
   __typename?: 'All';
   list: ListByTypeConnection;
+  read: ContentModelSummary;
 };
 
 
@@ -891,6 +892,12 @@ export type AllListArgs = {
   filter?: Maybe<ArticleFilter>;
   sort?: Maybe<ArticleSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type AllReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
 };
 
 export type AllCustomContents = {
@@ -3656,6 +3663,25 @@ export type ContentListQuery = (
   ) }
 );
 
+export type ContentGetQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ContentGetQuery = (
+  { __typename?: 'Query' }
+  & { content: (
+    { __typename?: 'content' }
+    & { _all: (
+      { __typename?: 'All' }
+      & { read: (
+        { __typename?: 'ContentModelSummary' }
+        & ContentListRefFragment
+      ) }
+    ) }
+  ) }
+);
+
 export type ContentListRefFragment = (
   { __typename?: 'ContentModelSummary' }
   & Pick<ContentModelSummary, 'id' | 'title' | 'shared' | 'contentType' | 'revision' | 'state' | 'createdAt' | 'modifiedAt' | 'publicationDate' | 'dePublicationDate'>
@@ -6172,6 +6198,43 @@ export function useContentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type ContentListQueryHookResult = ReturnType<typeof useContentListQuery>;
 export type ContentListLazyQueryHookResult = ReturnType<typeof useContentListLazyQuery>;
 export type ContentListQueryResult = Apollo.QueryResult<ContentListQuery, ContentListQueryVariables>;
+export const ContentGetDocument = gql`
+    query ContentGet($id: ID!) {
+  content {
+    _all {
+      read(id: $id) {
+        ...ContentListRef
+      }
+    }
+  }
+}
+    ${ContentListRefFragmentDoc}`;
+
+/**
+ * __useContentGetQuery__
+ *
+ * To run a query within a React component, call `useContentGetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useContentGetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useContentGetQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useContentGetQuery(baseOptions?: Apollo.QueryHookOptions<ContentGetQuery, ContentGetQueryVariables>) {
+        return Apollo.useQuery<ContentGetQuery, ContentGetQueryVariables>(ContentGetDocument, baseOptions);
+      }
+export function useContentGetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentGetQuery, ContentGetQueryVariables>) {
+          return Apollo.useLazyQuery<ContentGetQuery, ContentGetQueryVariables>(ContentGetDocument, baseOptions);
+        }
+export type ContentGetQueryHookResult = ReturnType<typeof useContentGetQuery>;
+export type ContentGetLazyQueryHookResult = ReturnType<typeof useContentGetLazyQuery>;
+export type ContentGetQueryResult = Apollo.QueryResult<ContentGetQuery, ContentGetQueryVariables>;
 export const PublishContentDocument = gql`
     mutation PublishContent($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
   content {

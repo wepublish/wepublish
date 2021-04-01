@@ -1,8 +1,13 @@
-import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import {Button, Icon, Nav, List, Input, InputGroup, Notification} from 'rsuite'
-import {ContentContextEnum, ContentListQuery, useContentListQuery} from '../api'
-import {ContentModelSchemaFieldRefTypeMap, Reference} from '../interfaces/referenceType'
+import React, {useState} from 'react'
+import {Icon, Nav, List} from 'rsuite'
+import {ContentContextEnum} from '../api'
+import {
+  ContentModelSchemaFieldRefTypeMap,
+  MediaReferenceType,
+  Reference
+} from '../interfaces/referenceType'
+import {RefContentSelectPanel} from './refContentSelectPanel'
+import {RefImageSelectPanel} from './refMediaSelectPanel'
 
 export interface RefSelectPanelProps {
   readonly config: ContentModelSchemaFieldRefTypeMap
@@ -18,110 +23,27 @@ export function RefSelectPanel({onClose, onSelectRef, config}: RefSelectPanelPro
     }
   })
   const [tabIndex, setTabIndex] = useState(0)
-  const [filter, setFilter] = useState('')
-
   const currentType = types[tabIndex]
-  const listVariables: {
-    type: any
-    context: ContentContextEnum
-    filter: string | undefined
-    first: number
-  } = {
-    type: currentType.type,
-    context: currentType.context,
-    filter: filter || undefined,
-    first: 20
-  }
-
-  const {data, fetchMore, error} = useContentListQuery({
-    variables: listVariables,
-    fetchPolicy: 'network-only'
-  })
-
-  const {t} = useTranslation()
-
-  useEffect(() => {
-    if (error) {
-      Notification.error({
-        title: error?.message,
-        duration: 5000
-      })
-    }
-  }, [error])
-
-  function loadMoreArticles() {
-    fetchMore({
-      variables: {...listVariables, after: data?.content._all.list.pageInfo.endCursor},
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev
-
-        return {
-          content: {
-            _all: {
-              list: {
-                ...(fetchMoreResult as ContentListQuery).content._all.list,
-                nodes: [
-                  ...(prev as ContentListQuery).content._all.list.nodes,
-                  ...(fetchMoreResult as ContentListQuery)?.content._all.list.nodes
-                ]
-              }
-            }
-          }
-        }
-      }
-    })
-  }
 
   const tabs = types.map((type, index) => {
     return (
       <Nav.Item key={index} eventKey={index} icon={<Icon icon="file-text" />}>
-        {type.type}
+        {type.type === MediaReferenceType ? 'media' : type.type}
       </Nav.Item>
     )
   })
 
-  function currentContent() {
+  function currentContent(currentType: {type: string; context: ContentContextEnum}) {
+    if (currentType.type === MediaReferenceType) {
+      return (
+        <RefImageSelectPanel onSelectRef={onSelectRef} onClose={() => {}}></RefImageSelectPanel>
+      )
+    }
     return (
-      <>
-        {data?.content._all.list.nodes.map(node => {
-          const {content, peer} = node
-          const states = []
-
-          if (content.state) states.push(t('articleEditor.panels.draft'))
-          // if (content.pending) states.push(t('articleEditor.panels.pending'))
-          // if (content.published) states.push(t('articleEditor.panels.published'))
-
-          return (
-            <List.Item key={content.id}>
-              <h3
-                style={{cursor: 'pointer'}}
-                onClick={() =>
-                  onSelectRef({
-                    contentType: currentType.type,
-                    recordId: content.id,
-                    peerId: peer?.id
-                  })
-                }>
-                {content.title || t('articleEditor.panels.untitled')}
-              </h3>
-              <div>
-                <div style={{display: 'inline', fontSize: 12}}>
-                  {new Date(content.createdAt).toLocaleString()}
-                </div>
-                <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                  {new Date(content.modifiedAt).toLocaleString()}
-                </div>
-                <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                  {states.join(' / ')}
-                </div>
-              </div>
-            </List.Item>
-          )
-        })}
-        {data?.content._all.list.pageInfo.hasNextPage && (
-          <Button onClick={loadMoreArticles}>{t('articleEditor.panels.loadMore')}</Button>
-        )}
-      </>
+      <RefContentSelectPanel
+        onSelectRef={onSelectRef}
+        context={currentType.context}
+        type={currentType.type}></RefContentSelectPanel>
     )
   }
 
@@ -134,14 +56,7 @@ export function RefSelectPanel({onClose, onSelectRef, config}: RefSelectPanelPro
         style={{marginBottom: 20}}>
         {tabs}
       </Nav>
-
-      <InputGroup style={{marginBottom: 20}}>
-        <Input value={filter} onChange={value => setFilter(value)} />
-        <InputGroup.Addon>
-          <Icon icon="search" />
-        </InputGroup.Addon>
-      </InputGroup>
-      <List>{currentContent()}</List>
+      {currentContent(currentType)}
     </>
   )
 }

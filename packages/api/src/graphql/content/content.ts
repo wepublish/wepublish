@@ -655,6 +655,41 @@ export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions
                 throw new NotAuthorisedError()
               }
             }
+          },
+          read: {
+            type: GraphQLNonNull(GraphQLContentModelSummary),
+            args: {
+              peerID: {type: GraphQLID},
+              id: {type: GraphQLNonNull(GraphQLID)}
+            },
+            async resolve(root, {peerID, id}, context, info) {
+              if (peerID) {
+                const {authenticate} = context
+                const {roles} = authenticate()
+
+                authorise(CanGetPeerArticle, roles)
+
+                return null // todo
+              }
+
+              const {authenticate, loaders} = context
+              const {roles} = authenticate()
+
+              const canGetArticle = isAuthorised(CanGetArticle, roles)
+              const canGetSharedArticle = isAuthorised(CanGetSharedArticle, roles)
+
+              if (canGetArticle || canGetSharedArticle) {
+                const content = await loaders.content.load(id)
+
+                if (canGetArticle) {
+                  return content
+                } else {
+                  return content?.shared ? content : null
+                }
+              } else {
+                throw new NotAuthorisedError()
+              }
+            }
           }
         }
       })

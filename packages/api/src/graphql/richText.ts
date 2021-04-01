@@ -1,5 +1,6 @@
 import {GraphQLScalarType, valueFromASTUntyped} from 'graphql'
 import {isObject, isString, isArray, isBoolean} from '@karma.run/utility'
+import {Reference} from '../interfaces/referenceType'
 
 export enum ElementNodeType {
   H1 = 'heading-one',
@@ -37,7 +38,7 @@ export enum LinkNodeFields {
 }
 
 export enum ReferenceNodeFields {
-  URL = 'url',
+  Reference = 'reference',
   Title = 'title'
 }
 
@@ -75,7 +76,7 @@ export interface RichTextLinkNode {
 
 export interface RichTextReferenceNode {
   readonly type: ElementNodeType.Reference
-  readonly url: string
+  readonly reference: Reference
   readonly title?: string
   readonly children: RichTextNode[]
 }
@@ -258,8 +259,9 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       }
 
       case ElementNodeType.Reference: {
-        if (!isString(value.url)) {
-          throw createRichTextError(`Expected string found ${value.url}`, [...path, 'url'])
+        const reference = value.reference as Reference
+        if (!(reference?.contentType && reference?.recordId)) {
+          throw createRichTextError(`Expected reference not found ${value.url}`, [...path, 'url'])
         }
 
         if (value.title != undefined && !isString(value.title)) {
@@ -269,7 +271,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
         return Object.assign(
           {
             type,
-            url: value.url,
+            reference,
             children: parseRichTextNodes(value.children, [...path, 'children'])
           },
           value.title != undefined ? {title: value.title as string} : {}

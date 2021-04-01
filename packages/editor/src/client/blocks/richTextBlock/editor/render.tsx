@@ -1,5 +1,6 @@
 import React from 'react'
 import {RenderElementProps, RenderLeafProps} from 'slate-react'
+import {Reference} from '../../../interfaces/referenceType'
 import {BlockFormat, InlineFormat, TextFormat} from './formats'
 
 export function renderElement({attributes, children, element}: RenderElementProps) {
@@ -59,8 +60,9 @@ export function renderElement({attributes, children, element}: RenderElementProp
       )
 
     case InlineFormat.Reference:
+      const reference = element.reference as Reference
       return (
-        <a data-title={element.title} data-href={element.url} {...attributes}>
+        <a data-title={element.title} data-href={reference.recordId} {...attributes}>
           {children}
         </a>
       )
