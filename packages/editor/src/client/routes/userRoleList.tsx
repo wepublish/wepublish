@@ -48,24 +48,45 @@ export function UserRoleList() {
 
   const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
 
-  const speaker = (
-    <Popover title={currentUserRole?.name}>
-      <Button
-        color="red"
-        disabled={isDeleting}
-        onClick={async () => {
-          if (!currentUserRole) return
-
-          await deleteUserRole({
-            variables: {id: currentUserRole.id}
-          })
-
-          refetch()
-        }}>
-        {t('global.buttons.deleteNow')}
-      </Button>
-    </Popover>
-  )
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentUserRole?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentUserRole) return
+            close()
+            deleteUserRole({
+              variables: {id: currentUserRole.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentUserRole(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     if (current?.type === RouteType.UserRoleCreate) {
@@ -127,21 +148,7 @@ export function UserRoleList() {
         <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullUserRoleFragment) => (
-              <>
-                <Whisper placement="left" trigger="click" speaker={speaker}>
-                  <Button
-                    appearance="link"
-                    color="red"
-                    onClick={() => {
-                      setCurrentUserRole(rowData)
-                    }}>
-                    {' '}
-                    {t('global.buttons.delete')}{' '}
-                  </Button>
-                </Whisper>
-              </>
-            )}
+            {(rowData: FullUserRoleFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>

@@ -50,24 +50,64 @@ export function MemberPlanList() {
 
   const [deleteMemberPlan, {loading: isDeleting}] = useDeleteMemberPlanMutation()
 
-  const speaker = (
-    <Popover title={currentMemberPlan?.name}>
-      <Button
-        color="red"
-        appearance="primary"
-        disabled={isDeleting}
-        onClick={async () => {
-          if (!currentMemberPlan) return
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentMemberPlan?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentMemberPlan) return
+            close()
+            deleteMemberPlan({
+              variables: {id: currentMemberPlan.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentMemberPlan(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
-          await deleteMemberPlan({
-            variables: {id: currentMemberPlan.id}
-          })
-          refetch()
-        }}>
-        {t('global.buttons.deleteNow')}
-      </Button>
-    </Popover>
-  )
+  // const speaker = (
+  //   <Popover title={currentMemberPlan?.name}>
+  //     <Button
+  //       color="red"
+  //       appearance="primary"
+  //       disabled={isDeleting}
+  //       onClick={async () => {
+  //         if (!currentMemberPlan) return
+
+  //         await deleteMemberPlan({
+  //           variables: {id: currentMemberPlan.id}
+  //         })
+  //         refetch()
+  //       }}>
+  //       {t('global.buttons.deleteNow')}
+  //     </Button>
+  //   </Popover>
+  // )
 
   useEffect(() => {
     switch (current?.type) {
@@ -143,21 +183,7 @@ export function MemberPlanList() {
         <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullMemberPlanFragment) => (
-              <>
-                <Whisper placement="left" trigger="click" speaker={speaker}>
-                  <Button
-                    appearance="link"
-                    color="red"
-                    onClick={() => {
-                      setCurrentMemberPlan(rowData)
-                    }}>
-                    {' '}
-                    {t('global.buttons.delete')}{' '}
-                  </Button>
-                </Whisper>
-              </>
-            )}
+            {(rowData: FullMemberPlanFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>

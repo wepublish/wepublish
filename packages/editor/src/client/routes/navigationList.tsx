@@ -44,24 +44,45 @@ export function NavigationList() {
 
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
 
-  const speaker = (
-    <Popover title={currentNavigation?.name}>
-      <Button
-        color="red"
-        appearance="primary"
-        disabled={isDeleting}
-        onClick={async () => {
-          if (!currentNavigation) return
-          await deleteNavigation({
-            variables: {id: currentNavigation.id}
-          })
-
-          refetch()
-        }}>
-        {t('global.buttons.deleteNow')}
-      </Button>
-    </Popover>
-  )
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentNavigation?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentNavigation) return
+            close()
+            deleteNavigation({
+              variables: {id: currentNavigation.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentNavigation(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     switch (current?.type) {
@@ -122,21 +143,7 @@ export function NavigationList() {
         <Column width={100} align="right" fixed="right">
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullNavigationFragment) => (
-              <>
-                <Whisper placement="left" trigger="click" speaker={speaker}>
-                  <Button
-                    appearance="link"
-                    color="red"
-                    onClick={() => {
-                      setCurrentNavigation(rowData)
-                    }}>
-                    {' '}
-                    {t('global.buttons.delete')}{' '}
-                  </Button>
-                </Whisper>
-              </>
-            )}
+            {(rowData: FullNavigationFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>

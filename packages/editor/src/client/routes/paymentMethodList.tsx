@@ -47,24 +47,45 @@ export function PaymentMethodList() {
 
   const [deletePaymentMethod, {loading: isDeleting}] = useDeletePaymentMethodMutation()
 
-  const speaker = (
-    <Popover title={currentPaymentMethod?.name}>
-      <Button
-        color="red"
-        disabled={isDeleting}
-        onClick={async () => {
-          if (!currentPaymentMethod) return
-
-          await deletePaymentMethod({
-            variables: {id: currentPaymentMethod.id}
-          })
-
-          await refetch()
-        }}>
-        {t('global.buttons.deleteNow')}
-      </Button>
-    </Popover>
-  )
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentPaymentMethod?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentPaymentMethod) return
+            close()
+            deletePaymentMethod({
+              variables: {id: currentPaymentMethod.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentPaymentMethod(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     switch (current?.type) {
@@ -120,21 +141,7 @@ export function PaymentMethodList() {
         <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullPaymentMethodFragment) => (
-              <>
-                <Whisper placement="left" trigger="click" speaker={speaker}>
-                  <Button
-                    appearance="link"
-                    color="red"
-                    onClick={() => {
-                      setCurrentPaymentMethod(rowData)
-                    }}>
-                    {' '}
-                    {t('global.buttons.delete')}{' '}
-                  </Button>
-                </Whisper>
-              </>
-            )}
+            {(rowData: FullPaymentMethodFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>

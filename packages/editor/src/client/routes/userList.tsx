@@ -95,23 +95,45 @@ export function UserList() {
 
   const {t} = useTranslation()
 
-  const speaker = (
-    <Popover title={currentUser?.name}>
-      <Button
-        color="red"
-        disabled={isDeleting}
-        onClick={async () => {
-          if (!currentUser) return
-
-          await deleteUser({
-            variables: {id: currentUser.id}
-          })
-          refetch()
-        }}>
-        {t('global.buttons.deleteNow')}
-      </Button>
-    </Popover>
-  )
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentUser?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentUser) return
+            close()
+            deleteUser({
+              variables: {id: currentUser.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentUser(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     if (current?.type === RouteType.UserCreate) {
@@ -208,17 +230,7 @@ export function UserList() {
                   {t('userList.overview.reset')}
                 </Button>
                 <Divider vertical></Divider>
-                <Whisper placement="left" trigger="click" speaker={speaker}>
-                  <Button
-                    appearance="link"
-                    color="red"
-                    onClick={() => {
-                      setCurrentUser(rowData)
-                    }}>
-                    {' '}
-                    {t('global.buttons.delete')}{' '}
-                  </Button>
-                </Whisper>
+                {rowDeleteButton(rowData)}
               </>
             )}
           </Cell>
