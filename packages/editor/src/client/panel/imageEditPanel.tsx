@@ -24,7 +24,8 @@ import {
   FormGroup,
   Panel,
   TagPicker,
-  Notification
+  Notification,
+  Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -205,10 +206,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         variables: {id: id!, input: commonInput}
       })
 
-      Notification.success({
-        title: t('images.panels.imageUpdated'),
-        duration: 2000
-      })
+      Alert.success(t('images.panels.imageUpdated'), 2000)
 
       if (data?.updateImage) {
         onSave?.(data.updateImage)
