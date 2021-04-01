@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next'
 
 export interface DateTimeProps {
   dateTime: Date
-  label: String
+  label: string
   setNewDate(publishDate: Date): void
 }
 
