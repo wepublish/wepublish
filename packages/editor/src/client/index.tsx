@@ -80,8 +80,11 @@ const onDOMContentLoaded = async () => {
   const authErrorLink = onError(({graphQLErrors, /* networkError, */ operation, forward}) => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
-        // console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
-        if (extensions?.code === 'UNAUTHENTICATED') {
+        if (
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          !['/logout', '/login'].includes(window.location.pathname)
+        ) {
+          localStorage.removeItem(LocalStorageKey.SessionToken)
           window.location.pathname = '/logout'
         }
       })
