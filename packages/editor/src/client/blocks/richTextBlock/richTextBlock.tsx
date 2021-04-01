@@ -15,6 +15,7 @@ import {withNormalizeNode} from './editor/normalizing'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
+import {ColorPicker} from '../../atoms/colorPicker'
 
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
@@ -84,6 +85,44 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }
 
+  const [fontColor, setFontColor] = useState<string>()
+
+  useEffect(() => {
+    const nodes = WepublishEditor.nodes(editor, {
+      match: node => node.type === TextFormat
+    })
+    for (const [node] of nodes) {
+      setFontColor(node.fontColor as string)
+      return
+    }
+  }, [editor.selection])
+
+  useEffect(() => {
+    if (fontColor) {
+      const nodes = WepublishEditor.nodes(editor, {
+        match: node => node.type === TextFormat
+      })
+      for (const [, path] of nodes) {
+        Transforms.setNodes(
+          editor,
+          {fontColor},
+          {
+            at: path,
+            match: node => node.type === TextFormat
+          }
+        )
+        return
+      }
+    }
+  }, [fontColor])
+
+  useEffect(() => {
+    if (fontColor) {
+      console.log(fontColor)
+      console.log(WepublishEditor.getTextString(editor))
+    }
+  }, [fontColor])
+
   return (
     <Slate
       editor={editor}
@@ -131,6 +170,16 @@ export const RichTextBlock = memo(function RichTextBlock({
             <FormatIconButton icon="strikethrough" format={TextFormat.Strikethrough} />
             <FormatIconButton icon="superscript" format={TextFormat.Superscript} />
             <FormatIconButton icon="subscript" format={TextFormat.Subscript} />
+
+            <ToolbarDivider />
+
+            <EditorSubMenuButton icon="font" editorHasFocus={hasFocus}>
+              <ColorPicker
+                setColor={color => {
+                  setFontColor(color)
+                }}
+              />
+            </EditorSubMenuButton>
 
             <ToolbarDivider />
 
