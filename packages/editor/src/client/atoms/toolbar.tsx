@@ -141,7 +141,7 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
           closeMenu,
           openMenu
         }}>
-        <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+        <Whisper placement="auto" speaker={menu} ref={triggerRef} trigger="none">
           <ToolbarButton
             active={isMenuOpen}
             onMouseDown={e => {

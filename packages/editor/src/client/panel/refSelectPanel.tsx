@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Icon, Drawer, Nav, List, Input, InputGroup, Notification} from 'rsuite'
+import {Button, Icon, Nav, List, Input, InputGroup, Notification} from 'rsuite'
 import {ContentContextEnum, ContentListQuery, useContentListQuery} from '../api'
 import {ContentModelSchemaFieldRefTypeMap, Reference} from '../interfaces/referenceType'
 
-export interface TeaserSelectPanelProps {
+export interface RefSelectPanelProps {
   readonly config: ContentModelSchemaFieldRefTypeMap
   onClose(): void
   onSelectRef: (ref: Reference) => void
 }
 
-export function RefSelectPanel({onClose, onSelectRef, config}: TeaserSelectPanelProps) {
+export function RefSelectPanel({onClose, onSelectRef, config}: RefSelectPanelProps) {
   const types = Object.entries(config).map(([type, val]) => {
     return {
       type,
@@ -127,33 +127,21 @@ export function RefSelectPanel({onClose, onSelectRef, config}: TeaserSelectPanel
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>Choose a reference</Drawer.Title>
-      </Drawer.Header>
+      <Nav
+        appearance="tabs"
+        activeKey={tabIndex}
+        onSelect={tabIndex => setTabIndex(tabIndex)}
+        style={{marginBottom: 20}}>
+        {tabs}
+      </Nav>
 
-      <Drawer.Body>
-        <Nav
-          appearance="tabs"
-          activeKey={tabIndex}
-          onSelect={tabIndex => setTabIndex(tabIndex)}
-          style={{marginBottom: 20}}>
-          {tabs}
-        </Nav>
-
-        <InputGroup style={{marginBottom: 20}}>
-          <Input value={filter} onChange={value => setFilter(value)} />
-          <InputGroup.Addon>
-            <Icon icon="search" />
-          </InputGroup.Addon>
-        </InputGroup>
-        <List>{currentContent()}</List>
-      </Drawer.Body>
-
-      <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
-        </Button>
-      </Drawer.Footer>
+      <InputGroup style={{marginBottom: 20}}>
+        <Input value={filter} onChange={value => setFilter(value)} />
+        <InputGroup.Addon>
+          <Icon icon="search" />
+        </InputGroup.Addon>
+      </InputGroup>
+      <List>{currentContent()}</List>
     </>
   )
 }

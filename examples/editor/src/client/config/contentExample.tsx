@@ -7,7 +7,7 @@ import {
   RichTextBlock,
   RichTextBlockValue,
   Reference,
-  RefSelectPanel
+  RefSelectPanelDrawer
 } from '@wepublish/editor'
 import {ContentContextEnum, useModelAQuery} from './article/api'
 
@@ -105,7 +105,7 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
       </Form>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
-        <RefSelectPanel
+        <RefSelectPanelDrawer
           config={{
             modelA: {scope: ContentContextEnum.Local},
             modelB: {scope: ContentContextEnum.Local}
@@ -211,7 +211,7 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
       </Form>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
-        <RefSelectPanel
+        <RefSelectPanelDrawer
           config={{
             modelA: {scope: ContentContextEnum.Local}
           }}

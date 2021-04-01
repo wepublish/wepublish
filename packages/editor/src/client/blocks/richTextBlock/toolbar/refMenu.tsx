@@ -39,42 +39,41 @@ export function RefMenu({types}: {types: ContentModelSchemaFieldRefTypeMap}) {
   }, [])
 
   return (
-    <Form fluid>
-      <FormGroup>
-        <ControlLabel>{t('blocks.richText.link')}</ControlLabel>
-        <RefSelectPanel
-          config={types}
-          onClose={() => {
-            insertLink(editor, selection, url, title || undefined)
-            closeMenu()
-          }}
-          onSelectRef={ref => {
-            setURL(`wepublish://${ref.contentType}/${ref.recordId}/${ref.peerId}`)
-          }}
-        />
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
-        <FormControl
-          value={title}
-          onChange={title => {
-            setTitle(title)
-          }}
-        />
-        <p>{url}</p>
-      </FormGroup>
-      <ButtonToolbar>
-        <Button
-          onClick={e => {
-            e.preventDefault()
-            insertLink(editor, selection, url, title || undefined)
-            closeMenu()
-          }}>
-          {t('blocks.richText.insert')}
-        </Button>
-        <RemoveLinkFormatButton />
-      </ButtonToolbar>
-    </Form>
+    <>
+      <Form fluid>
+        <FormGroup>
+          <ControlLabel>{t('blocks.richText.text')}</ControlLabel>
+          <FormControl
+            value={title}
+            onChange={title => {
+              setTitle(title)
+            }}
+          />
+          <p>{url}</p>
+        </FormGroup>
+        <ButtonToolbar>
+          <Button
+            onClick={e => {
+              e.preventDefault()
+              insertLink(editor, selection, url, title || undefined)
+              closeMenu()
+            }}>
+            {t('blocks.richText.insert')}
+          </Button>
+          <RemoveLinkFormatButton />
+        </ButtonToolbar>
+      </Form>
+      <RefSelectPanel
+        config={types}
+        onClose={() => {
+          insertLink(editor, selection, url, title || undefined)
+          closeMenu()
+        }}
+        onSelectRef={ref => {
+          setURL(`wepublish://${ref.contentType}/${ref.recordId}/${ref.peerId}`)
+        }}
+      />
+    </>
   )
 }
 
