@@ -5,7 +5,15 @@ import {withHistory} from 'slate-history'
 import {withReact, ReactEditor, Editable, Slate} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
-import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
+import {
+  Toolbar,
+  ToolbarDivider,
+  H1Icon,
+  H2Icon,
+  H3Icon,
+  SubMenuButton,
+  FontColorIcon
+} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
@@ -105,7 +113,7 @@ export const RichTextBlock = memo(function RichTextBlock({
       for (const [, path] of nodes) {
         Transforms.setNodes(
           editor,
-          {fontColor},
+          {color: fontColor},
           {
             at: path,
             match: node => node.type === TextFormat.FontColor
@@ -173,7 +181,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <EditorSubMenuButton icon="font" editorHasFocus={hasFocus}>
+            <EditorSubMenuButton
+              icon="font"
+              editorHasFocus={hasFocus}>
               <ColorPicker
                 setColor={color => {
                   setFontColor(color)
