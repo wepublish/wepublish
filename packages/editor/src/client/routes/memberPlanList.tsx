@@ -28,7 +28,13 @@ import {
 
 import {RouteActionType} from '@karma.run/react'
 
-import {FullMemberPlanFragment, MemberPlanListDocument, MemberPlanListQuery, useDeleteMemberPlanMutation, useMemberPlanListQuery} from '../api'
+import {
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
+  MemberPlanListQuery,
+  useDeleteMemberPlanMutation,
+  useMemberPlanListQuery
+} from '../api'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
