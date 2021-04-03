@@ -180,7 +180,7 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {},
       value.superscript != undefined ? {superscript: value.superscript as boolean} : {},
       value.subscript != undefined ? {subscript: value.subscript as boolean} : {},
-      value.fontColor != undefined ? {fontColor: value.fontColor as boolean} : {}
+      value.fontColor != undefined ? {fontColor: value.fontColor as string} : {}
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link
