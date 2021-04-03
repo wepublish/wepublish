@@ -22,7 +22,8 @@ export enum TextNodeFields {
   Underline = 'underline',
   Strikethrough = 'strikethrough',
   Superscript = 'superscript',
-  Subscript = 'subscript'
+  Subscript = 'subscript',
+  FontColor = 'fontColor'
 }
 
 export enum ElementNodeFields {
@@ -74,6 +75,7 @@ export interface RichTextTextNode {
   readonly strikethrough?: boolean
   readonly superscript?: boolean
   readonly subscript?: boolean
+  readonly fontColor?: string
   readonly text: string
 }
 
@@ -177,7 +179,8 @@ export function parseRichTextNode(value: unknown, path: string[] = []): RichText
       value.underline != undefined ? {underline: value.underline as boolean} : {},
       value.strikethrough != undefined ? {strikethrough: value.strikethrough as boolean} : {},
       value.superscript != undefined ? {superscript: value.superscript as boolean} : {},
-      value.subscript != undefined ? {subscript: value.subscript as boolean} : {}
+      value.subscript != undefined ? {subscript: value.subscript as boolean} : {},
+      value.fontColor != undefined ? {fontColor: value.fontColor as boolean} : {}
     )
   } else {
     const isLinkNode = value.type === ElementNodeType.Link

@@ -140,6 +140,7 @@ export const RichTextBlock = memo(function RichTextBlock({
             <ToolbarDivider />
 
             <FormatFontColor />
+
             <ToolbarDivider />
 
             <SubMenuButton icon="link">
