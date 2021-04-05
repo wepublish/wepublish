@@ -11,6 +11,7 @@ import {
 } from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {Format} from '../editor/formats'
+import {ColorPicker} from '../../../atoms/colorPicker'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly format: Format
@@ -46,6 +47,18 @@ export function FormatButton({format, children}: FormatBlockButtonProps) {
         WepublishEditor.toggleFormat(editor, format)
       }}>
       {children}
+    </ToolbarButton>
+  )
+}
+
+export function FormatFontColor() {
+  const editor = useSlate()
+
+  return (
+    <ToolbarButton>
+      <ColorPicker
+        setColor={(color: string | undefined) => WepublishEditor.changeFontColor(editor, color)}
+      />
     </ToolbarButton>
   )
 }
