@@ -11,6 +11,15 @@ export interface DateTimeProps {
 export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
   const {t} = useTranslation()
 
+  //const now = new Date()
+
+  const tomorrow = new Date()
+  tomorrow.setDate(new Date().getDate() + 1)
+
+  const nextSaturday = new Date()
+  const i = 6 - new Date().getDay()
+  nextSaturday.setDate(i ? nextSaturday.getDate() + i : nextSaturday.getDate() + 7)
+
   return (
     <Form fluid={true}>
       <FormGroup>
@@ -22,18 +31,16 @@ export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
           format="DD MMM YYYY"
           ranges={[
             {
-              label: t('today'),
+              label: t('timeDatePicker.today'),
               value: new Date()
             },
             {
-              label: t('tomorrow'),
-              // TODO Change date
-              value: new Date()
+              label: t('timeDatePicker.tomorrow'),
+              value: tomorrow
             },
             {
-              label: t('nextSaturday'),
-              // TODO Change date
-              value: new Date()
+              label: t('timeDatePicker.nextSaturday'),
+              value: nextSaturday
             }
           ]}
           onChange={value => {
@@ -46,16 +53,16 @@ export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
           format="HH:mm"
           ranges={[
             {
-              label: t('now'),
+              label: t('timeDatePicker.now'),
               value: new Date()
             },
             {
-              label: t('am', {hour: 6}),
+              label: t('timeDatePicker.am', {hour: 6}),
               // TODO Change time
               value: new Date()
             },
             {
-              label: t('pm', {hour: 2}),
+              label: t('timeDatePicker.pm', {hour: 2}),
               // TODO Change time
               value: new Date()
             }
