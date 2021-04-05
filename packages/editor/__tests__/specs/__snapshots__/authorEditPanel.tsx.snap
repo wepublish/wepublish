@@ -1603,6 +1603,65 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatFontColor>
+                                      <ForwardRef>
+                                        <button
+                                          className="icon-button"
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <ColorPicker
+                                            setColor={[Function]}
+                                          >
+                                            <input
+                                              id="fakeNanoid1"
+                                              onChange={[Function]}
+                                              style={
+                                                Object {
+                                                  "cursor": "pointer",
+                                                }
+                                              }
+                                              type="color"
+                                            />
+                                          </ColorPicker>
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatFontColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
                                       icon="link"
                                     >
@@ -4595,6 +4654,65 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatFontColor>
+                                      <ForwardRef>
+                                        <button
+                                          className="icon-button"
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <ColorPicker
+                                            setColor={[Function]}
+                                          >
+                                            <input
+                                              id="fakeNanoid1"
+                                              onChange={[Function]}
+                                              style={
+                                                Object {
+                                                  "cursor": "pointer",
+                                                }
+                                              }
+                                              type="color"
+                                            />
+                                          </ColorPicker>
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatFontColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
                                       icon="link"
                                     >
@@ -7114,6 +7232,65 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatFontColor>
+                                      <ForwardRef>
+                                        <button
+                                          className="icon-button"
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <ColorPicker
+                                            setColor={[Function]}
+                                          >
+                                            <input
+                                              id="fakeNanoid1"
+                                              onChange={[Function]}
+                                              style={
+                                                Object {
+                                                  "cursor": "pointer",
+                                                }
+                                              }
+                                              type="color"
+                                            />
+                                          </ColorPicker>
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatFontColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
                                       icon="link"
                                     >
@@ -9593,6 +9770,65 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </ForwardRef>
                                       </ToolbarIconButton>
                                     </FormatIconButton>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
+                                    <FormatFontColor>
+                                      <ForwardRef>
+                                        <button
+                                          className="icon-button"
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <ColorPicker
+                                            setColor={[Function]}
+                                          >
+                                            <input
+                                              id="fakeNanoid1"
+                                              onChange={[Function]}
+                                              style={
+                                                Object {
+                                                  "cursor": "pointer",
+                                                }
+                                              }
+                                              type="color"
+                                            />
+                                          </ColorPicker>
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatFontColor>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
