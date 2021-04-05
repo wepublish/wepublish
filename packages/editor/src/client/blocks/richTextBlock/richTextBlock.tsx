@@ -12,10 +12,9 @@ import {
   H2Icon,
   H3Icon,
   SubMenuButton,
-  FontColorIcon
 } from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
+import {FormatButton, FormatIconButton, EditorSubMenuButton, FormatFontColor} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
@@ -23,8 +22,6 @@ import {withNormalizeNode} from './editor/normalizing'
 import {TableMenu} from './toolbar/tableMenu'
 import {WepublishEditor} from './editor/wepublishEditor'
 import {LinkMenu} from './toolbar/linkMenu'
-import {ColorPicker} from '../../atoms/colorPicker'
-
 export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
   displayOnly?: boolean
   showCharCount?: boolean
@@ -93,44 +90,6 @@ export const RichTextBlock = memo(function RichTextBlock({
     }
   }
 
-  const [fontColor, setFontColor] = useState<string>()
-
-  useEffect(() => {
-    const nodes = WepublishEditor.nodes(editor, {
-      match: node => node.type === TextFormat.FontColor
-    })
-    for (const [node] of nodes) {
-      setFontColor(node.fontColor as string)
-      return
-    }
-  }, [editor.selection])
-
-  useEffect(() => {
-    if (fontColor) {
-      const nodes = WepublishEditor.nodes(editor, {
-        match: node => node.type === TextFormat.FontColor
-      })
-      for (const [, path] of nodes) {
-        Transforms.setNodes(
-          editor,
-          {color: fontColor},
-          {
-            at: path,
-            match: node => node.type === TextFormat.FontColor
-          }
-        )
-        return
-      }
-    }
-  }, [fontColor])
-
-  useEffect(() => {
-    if (fontColor) {
-      console.log(fontColor)
-      console.log(WepublishEditor.getTextString(editor))
-    }
-  }, [fontColor])
-
   return (
     <Slate
       editor={editor}
@@ -181,15 +140,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <EditorSubMenuButton
-              icon="font"
-              editorHasFocus={hasFocus}>
-              <ColorPicker
-                setColor={color => {
-                  setFontColor(color)
-                }}
-              />
-            </EditorSubMenuButton>
+            <FormatFontColor />
 
             <ToolbarDivider />
 
