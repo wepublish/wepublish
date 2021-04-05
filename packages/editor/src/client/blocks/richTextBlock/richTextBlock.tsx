@@ -11,8 +11,7 @@ import {
   H1Icon,
   H2Icon,
   H3Icon,
-  SubMenuButton,
-  FontColorIcon
+  SubMenuButton
 } from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
