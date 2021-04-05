@@ -234,4 +234,3 @@ export function H3Icon() {
     </svg>
   )
 }
-
