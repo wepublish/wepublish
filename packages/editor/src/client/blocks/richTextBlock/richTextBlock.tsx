@@ -7,12 +7,7 @@ import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {Toolbar, ToolbarDivider, H1Icon, H2Icon, H3Icon, SubMenuButton} from '../../atoms/toolbar'
 import {RichTextBlockValue} from '../types'
-import {
-  FormatButton,
-  FormatIconButton,
-  EditorSubMenuButton,
-  FormatFontColor
-} from './toolbar/buttons'
+import {FormatButton, FormatIconButton, EditorSubMenuButton, FormatColor} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
 import {BlockFormat, TextFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
@@ -139,7 +134,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <FormatFontColor />
+            <SubMenuButton icon="font">
+              <FormatColor />
+            </SubMenuButton>
 
             <ToolbarDivider />
 

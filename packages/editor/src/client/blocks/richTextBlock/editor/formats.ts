@@ -22,7 +22,7 @@ export enum TextFormat {
   Strikethrough = 'strikethrough',
   Superscript = 'superscript',
   Subscript = 'subscript',
-  FontColor = 'fontColor'
+  Color = 'color'
 }
 
 export type Format = BlockFormat | InlineFormat | TextFormat

@@ -51,13 +51,13 @@ export function FormatButton({format, children}: FormatBlockButtonProps) {
   )
 }
 
-export function FormatFontColor() {
+export function FormatColor() {
   const editor = useSlate()
 
   return (
     <ToolbarButton>
       <ColorPicker
-        setColor={(color: string | undefined) => WepublishEditor.changeFontColor(editor, color)}
+        setColor={(color: string | undefined) => WepublishEditor.changeColor(editor, color)}
       />
     </ToolbarButton>
   )

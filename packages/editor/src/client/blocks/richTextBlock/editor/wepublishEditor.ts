@@ -53,11 +53,11 @@ export const WepublishEditor = {
     }
   },
 
-  changeFontColor(editor: Editor, fontColor?: string) {
-    if (fontColor) {
+  changeColor(editor: Editor, color?: string) {
+    if (color) {
       Transforms.setNodes(
         editor,
-        {fontColor},
+        {color},
         {
           match: () => true,
           split: true
