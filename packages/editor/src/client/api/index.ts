@@ -75,6 +75,7 @@ export type _Cmp_Article_Record_Content_Blocks_Embed = {
 
 export type _Cmp_Article_Record_Content_Blocks_Embed_Content = {
   __typename?: '_cmp_article_record_content_blocks_embed_content';
+  type?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
@@ -89,7 +90,7 @@ export type _Cmp_Article_Record_Content_Blocks_Image = {
 
 export type _Cmp_Article_Record_Content_Blocks_Image_Content = {
   __typename?: '_cmp_article_record_content_blocks_image_content';
-  image: Ref___Media;
+  image: Ref__Media;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -105,7 +106,7 @@ export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Content = {
 
 export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Images = {
   __typename?: '_cmp_article_record_content_blocks_imageGallery_images';
-  image: Ref___Media;
+  image: Ref__Media;
   caption?: Maybe<Scalars['String']>;
 };
 
@@ -125,7 +126,7 @@ export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content = {
   styleOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Ref___Media>;
+  image?: Maybe<Ref__Media>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Listicle = {
@@ -142,7 +143,7 @@ export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
   __typename?: '_cmp_article_record_content_blocks_listicle_items';
   title?: Maybe<Scalars['String']>;
   richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Ref___Media>;
+  image?: Maybe<Ref__Media>;
 };
 
 export type _Cmp_Article_Record_Content_Blocks_Quote = {
@@ -190,7 +191,7 @@ export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Content = {
 export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
   __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers';
   style?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Ref___Media>;
+  imageID?: Maybe<Ref__Media>;
   preTitle?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
@@ -410,11 +411,17 @@ export type _Cmp_ModelA_Record = {
 export type _Cmp_ModelA_Record_Content = {
   __typename?: '_cmp_modelA_record_content';
   myString?: Maybe<Scalars['String']>;
+  myStringI18n?: Maybe<I18n_String>;
   myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_ModelA_ModelB>;
+  myRef?: Maybe<Ref_ModelA_ModelB__Media>;
 };
 
-export type _Cmp_ModelA_Record_Content_MyRef = _Cmp_ModelA_Record_Content_MyRef_ModelA | _Cmp_ModelA_Record_Content_MyRef_ModelB;
+export type _Cmp_ModelA_Record_Content_MyRef = _Cmp_ModelA_Record_Content_MyRef_ModelA | _Cmp_ModelA_Record_Content_MyRef_ModelB | _Cmp_ModelA_Record_Content_MyRef__Media;
+
+export type _Cmp_ModelA_Record_Content_MyRef__Media = {
+  __typename?: '_cmp_modelA_record_content_myRef__media';
+  _media?: Maybe<Image>;
+};
 
 export type _Cmp_ModelA_Record_Content_MyRef_ModelA = {
   __typename?: '_cmp_modelA_record_content_myRef_modelA';
@@ -544,6 +551,7 @@ export type _Cmpi_Article_Record_Content_Blocks = {
 };
 
 export type _Cmpi_Article_Record_Content_Blocks_Embed = {
+  type?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
@@ -800,6 +808,7 @@ export type _Cmpi_ModelAUnpublishArgs = {
 
 export type _Cmpi_ModelA_Record_Content = {
   myString?: Maybe<Scalars['String']>;
+  myStringI18n?: Maybe<I18n_String_Input>;
   myRichText?: Maybe<Scalars['RichText']>;
   myRef?: Maybe<Ref_Input>;
 };
@@ -2630,8 +2639,8 @@ export type QuoteBlockInput = {
   author?: Maybe<Scalars['String']>;
 };
 
-export type Ref___Media = {
-  __typename?: 'ref___media';
+export type Ref__Media = {
+  __typename?: 'ref__media';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
@@ -2674,8 +2683,8 @@ export type Ref_ModelA = {
   peer?: Maybe<Peer>;
 };
 
-export type Ref_ModelA_ModelB = {
-  __typename?: 'ref_modelA_modelB';
+export type Ref_ModelA_ModelB__Media = {
+  __typename?: 'ref_modelA_modelB__media';
   recordId: Scalars['ID'];
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;

@@ -9,7 +9,7 @@ import React, {
   ReactEventHandler
 } from 'react'
 
-import {Icon, Popover, PopoverProps, Whisper, Divider} from 'rsuite'
+import {Icon, Popover, PopoverProps, Whisper, Divider, Modal} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
@@ -156,6 +156,49 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
             />
           </ToolbarButton>
         </Whisper>
+      </SubMenuContext.Provider>
+    )
+  }
+)
+
+export const SubMenuModalButton = forwardRef<PopoverProps, SubMenuButtonProps>(
+  ({children, icon}, ref) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    const closeMenu = () => {
+      setIsMenuOpen(false)
+    }
+
+    const openMenu = () => {
+      setIsMenuOpen(false)
+    }
+
+    return (
+      <SubMenuContext.Provider
+        value={{
+          closeMenu,
+          openMenu
+        }}>
+        <ToolbarButton
+          active={isMenuOpen}
+          onMouseDown={e => {
+            setIsMenuOpen(true)
+          }}>
+          <Icon
+            style={{
+              minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+            }}
+            icon={isMenuOpen ? 'close' : icon}
+          />
+        </ToolbarButton>
+        <Modal
+          full
+          show={isMenuOpen}
+          onHide={() => {
+            setIsMenuOpen(false)
+          }}>
+          {children}
+        </Modal>
       </SubMenuContext.Provider>
     )
   }

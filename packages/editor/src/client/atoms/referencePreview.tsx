@@ -8,7 +8,7 @@ export function ReferencePreview({
   reference,
   onClose
 }: {
-  readonly reference?: Reference
+  readonly reference?: Reference | null
   readonly onClose: (event: React.MouseEvent<HTMLElement>) => void
 }) {
   if (!reference) return null

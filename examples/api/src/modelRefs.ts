@@ -1,4 +1,4 @@
-import {ContentModel, ContentModelSchemaTypes} from '@wepublish/api'
+import {ContentModel, ContentModelSchemaTypes, MediaReferenceType} from '@wepublish/api'
 
 export const contentModelA: ContentModel = {
   identifier: 'modelA',
@@ -23,6 +23,9 @@ export const contentModelA: ContentModel = {
             scope: 'local'
           },
           modelB: {
+            scope: 'local'
+          },
+          [MediaReferenceType]: {
             scope: 'local'
           }
         }

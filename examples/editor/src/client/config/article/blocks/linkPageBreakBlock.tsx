@@ -12,9 +12,11 @@ import {
   createDefaultValue,
   ImagedEditPanel,
   ImageSelectPanel,
+  Reference,
   RichTextBlock,
   RichTextBlockValue
 } from '@wepublish/editor'
+import {ImageRefFragment, useImageQuery} from '../api'
 export type LinkPageBreakBlockProps = BlockProps<LinkPageBreakBlockValue>
 
 export function LinkPageBreakBlock({
@@ -42,9 +44,20 @@ export function LinkPageBreakBlock({
     [onChange]
   )
 
+  function handleImageChange(image: Reference | undefined) {
+    onChange({...value, image})
+  }
+
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
   const [isEditPanelOpen, setEditPanelOpen] = useState(false)
+  const {data} = useImageQuery({
+    skip: image?.record || !image?.recordId,
+    variables: {
+      id: image?.recordId!
+    }
+  })
+  const imageRecord: ImageRefFragment = image?.record || data?.image
 
   return (
     <>
@@ -61,7 +74,7 @@ export function LinkPageBreakBlock({
         <div style={{flex: '1 0 25%', alignSelf: 'center', marginBottom: '10px'}}>
           <ChooseEditImage
             header={''}
-            image={image}
+            image={imageRecord}
             disabled={false}
             openChooseModalOpen={() => setChooseModalOpen(true)}
             openEditModalOpen={() => setEditModalOpen(true)}
@@ -84,16 +97,17 @@ export function LinkPageBreakBlock({
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={image => {
+          onSelect={value => {}}
+          onSelectRef={value => {
             setChooseModalOpen(false)
-            onChange(value => ({...value, image, imageID: image.id}))
+            handleImageChange(value)
           }}
         />
       </Drawer>
       {image && (
         <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
           <ImagedEditPanel
-            id={image!.id}
+            id={image!.recordId}
             onClose={() => setEditModalOpen(false)}
             onSave={() => setEditModalOpen(false)}
           />

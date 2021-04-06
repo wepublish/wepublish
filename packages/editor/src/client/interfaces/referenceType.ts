@@ -1,6 +1,6 @@
 import {ContentContextEnum} from '../api'
 
-export const MediaReferenceType = '__media'
+export const MediaReferenceType = '_media'
 
 export interface Reference {
   recordId: string

@@ -126,6 +126,9 @@ const embed: ContentModelSchemaFieldObject = {
   type: ContentModelSchemaTypes.object,
   required: true,
   fields: {
+    type: {
+      type: ContentModelSchemaTypes.string
+    },
     url: {
       type: ContentModelSchemaTypes.string
     },

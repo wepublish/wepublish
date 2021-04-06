@@ -3,27 +3,24 @@ import {
   Button,
   Col,
   ControlLabel,
-  Drawer,
   Form,
   FormControl,
   FormGroup,
   Grid,
+  Modal,
   Row,
-  SelectPicker,
-  Tag,
-  TagGroup
+  SelectPicker
 } from 'rsuite'
 import {isFunctionalUpdate} from '@karma.run/react'
 import {
-  Link,
-  ContentEditRoute,
   RichTextBlock,
   RichTextBlockValue,
   Reference,
-  RefSelectPanelDrawer,
-  MediaReferenceType
+  RefSelectModal,
+  MediaReferenceType,
+  ReferenceButton
 } from '@wepublish/editor'
-import {ContentContextEnum, useModelAQuery} from './article/api'
+import {ContentContextEnum} from './article/api'
 import {ConfigContext} from '@wepublish/editor/src/client/Editorcontext'
 import {I18nWrapper} from './i18nWrapper'
 
@@ -105,33 +102,6 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
     )
   }, [viewLang, editLang])
 
-  let ref = null
-  if (myRef) {
-    const revSummary = `Type: ${myRef.contentType} Id: ${myRef.recordId}`
-    ref = (
-      <TagGroup>
-        <Tag
-          closable
-          onClose={() => {
-            onChange?.({...value, myRef: null})
-          }}>
-          {revSummary}
-        </Tag>
-      </TagGroup>
-    )
-  } else {
-    ref = (
-      <Button
-        appearance="default"
-        active
-        onClick={teaser => {
-          setChooseModalOpen(true)
-        }}>
-        reference to
-      </Button>
-    )
-  }
-
   return (
     <>
       <Grid>
@@ -147,7 +117,7 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
         </I18nWrapper>
 
         <I18nWrapper value={myStringI18n[editLang]} display={myStringI18n[viewLang]}>
-          <ControlLabel>Evaluation Body Name</ControlLabel>
+          <ControlLabel>myStringI18n</ControlLabel>
           <FormControl
             value={myStringI18n[editLang]}
             onChange={val =>
@@ -176,12 +146,17 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
 
         <I18nWrapper>
           <ControlLabel>myRef</ControlLabel>
-          {ref}
+          <ReferenceButton
+            reference={myRef}
+            onClick={() => setChooseModalOpen(true)}
+            onClose={() => {
+              onChange?.({...value, myRef: null})
+            }}></ReferenceButton>
         </I18nWrapper>
       </Grid>
 
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
-        <RefSelectPanelDrawer
+      <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>
+        <RefSelectModal
           config={{
             modelA: {scope: ContentContextEnum.Local},
             modelB: {scope: ContentContextEnum.Local},
@@ -193,7 +168,7 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
             onChange?.({...value, myRef: ref})
           }}
         />
-      </Drawer>
+      </Modal>
     </>
   )
 }
@@ -203,12 +178,6 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
     return null
   }
   const {myString, myRichText, myRef} = value
-  const {data} = useModelAQuery({
-    skip: myRef?.record || !myRef?.recordId,
-    variables: {
-      id: myRef?.recordId!
-    }
-  })
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const handleRichTextChange = useCallback(
     (richText: React.SetStateAction<RichTextBlockValue>) =>
@@ -219,50 +188,17 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
     [onChange]
   )
 
-  let ref = null
-  if (myRef) {
-    const referenceSummary = (
-      <Link route={ContentEditRoute.create({type: myRef.contentType, id: myRef.recordId})}>
-        Type: {myRef.contentType} Id: {myRef.recordId}
-      </Link>
-    )
-    let referencePreview: any = null
-    if (data?.content.modelA.read.title) {
-      const {title, content} = data.content.modelA.read
-      referencePreview = `${title} ${content?.myString}`
-    }
-    ref = (
-      <TagGroup>
-        <Tag
-          closable
-          onClose={() => {
-            onChange?.({...value, myRef: null})
-          }}>
-          {referenceSummary}
-          <br />
-          {referencePreview}
-        </Tag>
-      </TagGroup>
-    )
-  } else {
-    ref = (
-      <Button
-        appearance="default"
-        active
-        onClick={teaser => {
-          setChooseModalOpen(true)
-        }}>
-        reference to
-      </Button>
-    )
-  }
-
   return (
     <>
       <Form fluid={true} style={{width: '100%'}}>
         <FormGroup>
           <ControlLabel>myRef</ControlLabel>
-          {ref}
+          <ReferenceButton
+            reference={myRef}
+            onClick={() => setChooseModalOpen(true)}
+            onClose={() => {
+              onChange?.({...value, myRef: null})
+            }}></ReferenceButton>
         </FormGroup>
         <FormGroup>
           <ControlLabel>myString</ControlLabel>
@@ -287,8 +223,8 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
         </FormGroup>
       </Form>
 
-      <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
-        <RefSelectPanelDrawer
+      <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>
+        <RefSelectModal
           config={{
             modelA: {scope: ContentContextEnum.Local}
           }}
@@ -298,7 +234,7 @@ export function ModelBView({value, onChange}: CustomContentExampleProps) {
             onChange?.({...value, myRef: ref})
           }}
         />
-      </Drawer>
+      </Modal>
     </>
   )
 }

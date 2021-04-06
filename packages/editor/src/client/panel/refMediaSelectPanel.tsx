@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 
 import {useImageListQuery} from '../api'
-import {ImagedEditPanel} from './imageEditPanel'
 
 import {useTranslation} from 'react-i18next'
 import {
@@ -19,6 +18,7 @@ import {
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
 import {MediaReferenceType, Reference} from '../interfaces/referenceType'
+import {ImagedEditComponent} from './imageEditComponent'
 
 export interface ImageSelectPanelProps {
   onClose(): void
@@ -77,7 +77,7 @@ export function RefImageSelectPanel({onClose, onSelectRef}: ImageSelectPanelProp
 
   if (file) {
     return (
-      <ImagedEditPanel
+      <ImagedEditComponent
         onClose={onClose}
         file={file}
         onSave={image => {

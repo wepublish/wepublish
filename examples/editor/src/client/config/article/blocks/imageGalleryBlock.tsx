@@ -6,12 +6,12 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TypographicTextArea} from '../atoms/typographicTextArea'
 import {BlockProps} from '../atoms/blockList'
 
-import {ImageRefFragment} from '../api'
 import {ImageGalleryBlockValue} from './types'
 import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {ImagedEditPanel, ImageSelectPanel} from '@wepublish/editor'
+import {ImagedEditPanel, ImageSelectPanel, Reference} from '@wepublish/editor'
+import {ImageRefFragment, useImageQuery} from '@wepublish/editor/src/client/api'
 
 export function ImageGalleryBlock({
   value,
@@ -29,6 +29,15 @@ export function ImageGalleryBlock({
   const item = value.images[index]
 
   const image = item?.image
+
+  const {data} = useImageQuery({
+    skip: image?.record || !image?.recordId,
+    variables: {
+      id: image?.recordId!
+    }
+  })
+  const imageRecord: ImageRefFragment = image?.record || data?.image
+
   const caption = item?.caption ?? ''
 
   const hasPrevious = index > 0
@@ -44,7 +53,7 @@ export function ImageGalleryBlock({
     }
   }, [])
 
-  function handleImageChange(image: ImageRefFragment | null) {
+  function handleImageChange(image: Reference | null) {
     onChange({
       ...value,
       images: Object.assign([], value.images, {
@@ -140,17 +149,19 @@ export function ImageGalleryBlock({
           marginBottom: 10
         }}>
         <PlaceholderInput onAddClick={() => setChooseModalOpen(true)}>
-          {image && (
+          {imageRecord && (
             <div
               style={{
                 padding: 0,
                 position: 'relative',
                 height: '100%',
-                backgroundSize: `${image?.height > 300 ? 'contain' : 'auto'}`,
+                backgroundSize: `${imageRecord?.height > 300 ? 'contain' : 'auto'}`,
                 backgroundPositionX: 'center',
                 backgroundPositionY: 'center',
                 backgroundRepeat: 'no-repeat',
-                backgroundImage: `url(${image?.largeURL ?? 'https://via.placeholder.com/240x240'})`
+                backgroundImage: `url(${
+                  imageRecord?.largeURL ?? 'https://via.placeholder.com/240x240'
+                })`
               }}>
               <Dropdown
                 renderTitle={() => {
@@ -181,7 +192,8 @@ export function ImageGalleryBlock({
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel
           onClose={() => setChooseModalOpen(false)}
-          onSelect={value => {
+          onSelect={value => {}}
+          onSelectRef={value => {
             setChooseModalOpen(false)
             handleImageChange(value)
           }}
@@ -189,7 +201,7 @@ export function ImageGalleryBlock({
       </Drawer>
       {image && (
         <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-          <ImagedEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImagedEditPanel id={image!.recordId} onClose={() => setEditModalOpen(false)} />
         </Drawer>
       )}
       <Drawer

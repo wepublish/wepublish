@@ -31,7 +31,7 @@ export interface ImageBlockValue {
 }
 
 export interface GalleryImageEdge {
-  image: ImageRefFragment | null
+  image: Reference | null
   caption: string
 }
 
@@ -69,7 +69,7 @@ export interface LinkPageBreakBlockValue {
   styleOption?: string
   layoutOption?: string
   templateOption?: string
-  image?: ImageRefFragment | undefined
+  image?: Reference | undefined
 }
 
 export enum EmbedType {
