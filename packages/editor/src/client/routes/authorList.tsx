@@ -65,7 +65,7 @@ export function AuthorList() {
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState(AuthorSort.CreatedAt)
+  const [sortField, setSortField] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filter, setFilter] = useState('')
 
