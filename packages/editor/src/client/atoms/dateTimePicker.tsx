@@ -3,22 +3,13 @@ import {DatePicker, FormGroup, ControlLabel, Form} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
 export interface DateTimeProps {
-  dateTime: Date
+  dateTime?: Date
   label: string
-  setNewDate(publishDate: Date): void
+  changeDate(publishDate?: Date): void
 }
 
-export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
+export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
   const {t} = useTranslation()
-
-  //const now = new Date()
-
-  const tomorrow = new Date()
-  tomorrow.setDate(new Date().getDate() + 1)
-
-  const nextSaturday = new Date()
-  const i = 6 - new Date().getDay()
-  nextSaturday.setDate(i ? nextSaturday.getDate() + i : nextSaturday.getDate() + 7)
 
   return (
     <Form fluid={true}>
@@ -36,15 +27,29 @@ export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
             },
             {
               label: t('timeDatePicker.tomorrow'),
-              value: tomorrow
+              value: () => {
+                const tomorrow = new Date()
+                tomorrow.setDate(new Date().getDate() + 1)
+                return tomorrow
+              }
             },
             {
               label: t('timeDatePicker.nextSaturday'),
-              value: nextSaturday
+              value: () => {
+                const nextSaturday = new Date()
+                const i = 6 - new Date().getDay()
+                nextSaturday.setDate(i ? nextSaturday.getDate() + i : nextSaturday.getDate() + 7)
+                return nextSaturday
+              }
             }
           ]}
           onChange={value => {
-            setNewDate(new Date(Date.parse(value.toDateString() + ' ' + dateTime.toTimeString())))
+            if (dateTime) {
+              dateTime.setFullYear(value?.getFullYear())
+              dateTime.setMonth(value?.getMonth())
+              dateTime.setDate(value?.getDate())
+              changeDate(new Date(dateTime))
+            }
           }}
         />
         <DatePicker
@@ -58,17 +63,27 @@ export function DateTimePicker({dateTime, label, setNewDate}: DateTimeProps) {
             },
             {
               label: t('timeDatePicker.am', {hour: 6}),
-              // TODO Change time
-              value: new Date()
+              value: () => {
+                const six = new Date()
+                six.setHours(6, 0, 0)
+                return six
+              }
             },
             {
               label: t('timeDatePicker.pm', {hour: 2}),
-              // TODO Change time
-              value: new Date()
+              value: () => {
+                const two = new Date()
+                two.setHours(14, 0, 0)
+                return two
+              }
             }
           ]}
           onChange={value => {
-            setNewDate(new Date(Date.parse(dateTime.toDateString() + ' ' + value.toTimeString())))
+            if (dateTime) {
+              dateTime.setHours(value?.getHours())
+              dateTime.setMinutes(value?.getMinutes())
+              changeDate(new Date(dateTime))
+            }
           }}
         />
       </FormGroup>
