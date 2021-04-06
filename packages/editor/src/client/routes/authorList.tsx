@@ -165,7 +165,7 @@ export function AuthorList() {
               )}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable>
+          <Column width={300} align="left" resizable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
             <Cell>
               {(rowData: FullAuthorFragment) => (
