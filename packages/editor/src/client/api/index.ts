@@ -1378,6 +1378,7 @@ export type QueryAuthorsArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<AuthorFilter>;
   sort?: Maybe<AuthorSort>;
   order?: Maybe<SortOrder>;
