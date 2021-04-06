@@ -28,6 +28,7 @@ export type Article = {
   preTitle?: Maybe<Scalars['String']>
   title: Scalars['String']
   lead?: Maybe<Scalars['String']>
+  seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PublicProperties>
   image?: Maybe<Image>
@@ -84,6 +85,7 @@ export type Author = {
   url: Scalars['String']
   links?: Maybe<Array<AuthorLink>>
   bio?: Maybe<Scalars['RichText']>
+  jobTitle?: Maybe<Scalars['String']>
   image?: Maybe<Image>
 }
 
@@ -107,6 +109,12 @@ export type AuthorLink = {
 export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
   ModifiedAt = 'MODIFIED_AT'
+}
+
+export type AuthProvider = {
+  __typename?: 'AuthProvider'
+  name: Scalars['String']
+  url: Scalars['String']
 }
 
 export type AvailablePaymentMethod = {
@@ -583,6 +591,7 @@ export type Query = {
   peerArticle?: Maybe<Article>
   page?: Maybe<Page>
   pages: PageConnection
+  authProviders: Array<AuthProvider>
   me?: Maybe<User>
   invoices: Array<Invoice>
   memberPlans: MemberPlanConnection
@@ -615,6 +624,8 @@ export type QueryAuthorsArgs = {
 
 export type QueryArticleArgs = {
   id?: Maybe<Scalars['ID']>
+  slug?: Maybe<Scalars['Slug']>
+  token?: Maybe<Scalars['String']>
 }
 
 export type QueryArticlesArgs = {
@@ -646,6 +657,10 @@ export type QueryPagesArgs = {
   filter?: Maybe<PublishedPageFilter>
   sort?: Maybe<PublishedPageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryAuthProvidersArgs = {
+  redirectUri?: Maybe<Scalars['String']>
 }
 
 export type QueryMemberPlansArgs = {
@@ -725,14 +740,18 @@ export type User = {
 
 export type UserAddress = {
   __typename?: 'UserAddress'
-  street: Scalars['String']
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
 }
 
 export type UserAddressInput = {
-  street: Scalars['String']
+  company?: Maybe<Scalars['String']>
+  streetAddress: Scalars['String']
+  streetAddress2?: Maybe<Scalars['String']>
   zipCode: Scalars['String']
   city: Scalars['String']
   country: Scalars['String']
