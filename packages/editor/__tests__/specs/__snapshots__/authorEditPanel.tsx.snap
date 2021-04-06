@@ -1603,33 +1603,137 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <FormatFontColor>
-                                      <ForwardRef>
-                                        <button
-                                          className="icon-button"
-                                          style={
-                                            Object {
-                                              "border": "#00000000 1px solid",
-                                            }
+                                    <EditorSubMenuButton
+                                      editorHasFocus={false}
+                                      icon="font"
+                                    >
+                                      <ForwardRef
+                                        icon="font"
+                                      >
+                                        <withLocale(Whisper)
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
+                                            >
+                                              <FormatColor />
+                                            </defaultProps(Popover)>
                                           }
+                                          trigger="none"
                                         >
-                                          <ColorPicker
-                                            setColor={[Function]}
+                                          <Whisper
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
+                                              >
+                                                <FormatColor />
+                                              </defaultProps(Popover)>
+                                            }
+                                            trigger="none"
                                           >
-                                            <input
-                                              id="fakeNanoid1"
-                                              onChange={[Function]}
-                                              style={
+                                            <OverlayTrigger
+                                              delayHide={200}
+                                              locale={
                                                 Object {
-                                                  "cursor": "pointer",
+                                                  "formatDate": [Function],
                                                 }
                                               }
-                                              type="color"
-                                            />
-                                          </ColorPicker>
-                                        </button>
+                                              placement="top"
+                                              rootClose={true}
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <FormatColor />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
+                                            >
+                                              <ForwardRef
+                                                active={false}
+                                                key="triggerComponent"
+                                                onMouseDown={[Function]}
+                                              >
+                                                <button
+                                                  className="icon-button"
+                                                  onMouseDown={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "border": "#00000000 1px solid",
+                                                    }
+                                                  }
+                                                >
+                                                  <defaultProps(Icon)
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="font"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      classPrefix="rs-icon"
+                                                      componentClass="i"
+                                                      icon="font"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    >
+                                                      <i
+                                                        className="rs-icon rs-icon-font"
+                                                        style={
+                                                          Object {
+                                                            "minWidth": "15px",
+                                                          }
+                                                        }
+                                                      />
+                                                    </Icon>
+                                                  </defaultProps(Icon)>
+                                                </button>
+                                              </ForwardRef>
+                                              <Portal
+                                                key="portal"
+                                              >
+                                                <Portal
+                                                  containerInfo={<body />}
+                                                >
+                                                  <Overlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    show={false}
+                                                    target={[Function]}
+                                                  >
+                                                    <BaseOverlay
+                                                      placement="top"
+                                                      rootClose={true}
+                                                      show={false}
+                                                      target={[Function]}
+                                                      transition={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "displayName": "Fade",
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                    />
+                                                  </Overlay>
+                                                </Portal>
+                                              </Portal>
+                                            </OverlayTrigger>
+                                          </Whisper>
+                                        </withLocale(Whisper)>
                                       </ForwardRef>
-                                    </FormatFontColor>
+                                    </EditorSubMenuButton>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -4654,33 +4758,137 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <FormatFontColor>
-                                      <ForwardRef>
-                                        <button
-                                          className="icon-button"
-                                          style={
-                                            Object {
-                                              "border": "#00000000 1px solid",
-                                            }
+                                    <EditorSubMenuButton
+                                      editorHasFocus={false}
+                                      icon="font"
+                                    >
+                                      <ForwardRef
+                                        icon="font"
+                                      >
+                                        <withLocale(Whisper)
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
+                                            >
+                                              <FormatColor />
+                                            </defaultProps(Popover)>
                                           }
+                                          trigger="none"
                                         >
-                                          <ColorPicker
-                                            setColor={[Function]}
+                                          <Whisper
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
+                                              >
+                                                <FormatColor />
+                                              </defaultProps(Popover)>
+                                            }
+                                            trigger="none"
                                           >
-                                            <input
-                                              id="fakeNanoid1"
-                                              onChange={[Function]}
-                                              style={
+                                            <OverlayTrigger
+                                              delayHide={200}
+                                              locale={
                                                 Object {
-                                                  "cursor": "pointer",
+                                                  "formatDate": [Function],
                                                 }
                                               }
-                                              type="color"
-                                            />
-                                          </ColorPicker>
-                                        </button>
+                                              placement="top"
+                                              rootClose={true}
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <FormatColor />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
+                                            >
+                                              <ForwardRef
+                                                active={false}
+                                                key="triggerComponent"
+                                                onMouseDown={[Function]}
+                                              >
+                                                <button
+                                                  className="icon-button"
+                                                  onMouseDown={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "border": "#00000000 1px solid",
+                                                    }
+                                                  }
+                                                >
+                                                  <defaultProps(Icon)
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="font"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      classPrefix="rs-icon"
+                                                      componentClass="i"
+                                                      icon="font"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    >
+                                                      <i
+                                                        className="rs-icon rs-icon-font"
+                                                        style={
+                                                          Object {
+                                                            "minWidth": "15px",
+                                                          }
+                                                        }
+                                                      />
+                                                    </Icon>
+                                                  </defaultProps(Icon)>
+                                                </button>
+                                              </ForwardRef>
+                                              <Portal
+                                                key="portal"
+                                              >
+                                                <Portal
+                                                  containerInfo={<body />}
+                                                >
+                                                  <Overlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    show={false}
+                                                    target={[Function]}
+                                                  >
+                                                    <BaseOverlay
+                                                      placement="top"
+                                                      rootClose={true}
+                                                      show={false}
+                                                      target={[Function]}
+                                                      transition={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "displayName": "Fade",
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                    />
+                                                  </Overlay>
+                                                </Portal>
+                                              </Portal>
+                                            </OverlayTrigger>
+                                          </Whisper>
+                                        </withLocale(Whisper)>
                                       </ForwardRef>
-                                    </FormatFontColor>
+                                    </EditorSubMenuButton>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -7232,33 +7440,137 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <FormatFontColor>
-                                      <ForwardRef>
-                                        <button
-                                          className="icon-button"
-                                          style={
-                                            Object {
-                                              "border": "#00000000 1px solid",
-                                            }
+                                    <EditorSubMenuButton
+                                      editorHasFocus={false}
+                                      icon="font"
+                                    >
+                                      <ForwardRef
+                                        icon="font"
+                                      >
+                                        <withLocale(Whisper)
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
+                                            >
+                                              <FormatColor />
+                                            </defaultProps(Popover)>
                                           }
+                                          trigger="none"
                                         >
-                                          <ColorPicker
-                                            setColor={[Function]}
+                                          <Whisper
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
+                                              >
+                                                <FormatColor />
+                                              </defaultProps(Popover)>
+                                            }
+                                            trigger="none"
                                           >
-                                            <input
-                                              id="fakeNanoid1"
-                                              onChange={[Function]}
-                                              style={
+                                            <OverlayTrigger
+                                              delayHide={200}
+                                              locale={
                                                 Object {
-                                                  "cursor": "pointer",
+                                                  "formatDate": [Function],
                                                 }
                                               }
-                                              type="color"
-                                            />
-                                          </ColorPicker>
-                                        </button>
+                                              placement="top"
+                                              rootClose={true}
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <FormatColor />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
+                                            >
+                                              <ForwardRef
+                                                active={false}
+                                                key="triggerComponent"
+                                                onMouseDown={[Function]}
+                                              >
+                                                <button
+                                                  className="icon-button"
+                                                  onMouseDown={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "border": "#00000000 1px solid",
+                                                    }
+                                                  }
+                                                >
+                                                  <defaultProps(Icon)
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="font"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      classPrefix="rs-icon"
+                                                      componentClass="i"
+                                                      icon="font"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    >
+                                                      <i
+                                                        className="rs-icon rs-icon-font"
+                                                        style={
+                                                          Object {
+                                                            "minWidth": "15px",
+                                                          }
+                                                        }
+                                                      />
+                                                    </Icon>
+                                                  </defaultProps(Icon)>
+                                                </button>
+                                              </ForwardRef>
+                                              <Portal
+                                                key="portal"
+                                              >
+                                                <Portal
+                                                  containerInfo={<body />}
+                                                >
+                                                  <Overlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    show={false}
+                                                    target={[Function]}
+                                                  >
+                                                    <BaseOverlay
+                                                      placement="top"
+                                                      rootClose={true}
+                                                      show={false}
+                                                      target={[Function]}
+                                                      transition={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "displayName": "Fade",
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                    />
+                                                  </Overlay>
+                                                </Portal>
+                                              </Portal>
+                                            </OverlayTrigger>
+                                          </Whisper>
+                                        </withLocale(Whisper)>
                                       </ForwardRef>
-                                    </FormatFontColor>
+                                    </EditorSubMenuButton>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"
@@ -9802,33 +10114,137 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
-                                    <FormatFontColor>
-                                      <ForwardRef>
-                                        <button
-                                          className="icon-button"
-                                          style={
-                                            Object {
-                                              "border": "#00000000 1px solid",
-                                            }
+                                    <EditorSubMenuButton
+                                      editorHasFocus={false}
+                                      icon="font"
+                                    >
+                                      <ForwardRef
+                                        icon="font"
+                                      >
+                                        <withLocale(Whisper)
+                                          placement="top"
+                                          speaker={
+                                            <defaultProps(Popover)
+                                              classPrefix="rs-popover"
+                                            >
+                                              <FormatColor />
+                                            </defaultProps(Popover)>
                                           }
+                                          trigger="none"
                                         >
-                                          <ColorPicker
-                                            setColor={[Function]}
+                                          <Whisper
+                                            locale={
+                                              Object {
+                                                "formatDate": [Function],
+                                              }
+                                            }
+                                            placement="top"
+                                            speaker={
+                                              <defaultProps(Popover)
+                                                classPrefix="rs-popover"
+                                              >
+                                                <FormatColor />
+                                              </defaultProps(Popover)>
+                                            }
+                                            trigger="none"
                                           >
-                                            <input
-                                              id="fakeNanoid1"
-                                              onChange={[Function]}
-                                              style={
+                                            <OverlayTrigger
+                                              delayHide={200}
+                                              locale={
                                                 Object {
-                                                  "cursor": "pointer",
+                                                  "formatDate": [Function],
                                                 }
                                               }
-                                              type="color"
-                                            />
-                                          </ColorPicker>
-                                        </button>
+                                              placement="top"
+                                              rootClose={true}
+                                              speaker={
+                                                <defaultProps(Popover)
+                                                  classPrefix="rs-popover"
+                                                >
+                                                  <FormatColor />
+                                                </defaultProps(Popover)>
+                                              }
+                                              trigger="none"
+                                            >
+                                              <ForwardRef
+                                                active={false}
+                                                key="triggerComponent"
+                                                onMouseDown={[Function]}
+                                              >
+                                                <button
+                                                  className="icon-button"
+                                                  onMouseDown={[Function]}
+                                                  style={
+                                                    Object {
+                                                      "border": "#00000000 1px solid",
+                                                    }
+                                                  }
+                                                >
+                                                  <defaultProps(Icon)
+                                                    classPrefix="rs-icon"
+                                                    componentClass="i"
+                                                    icon="font"
+                                                    style={
+                                                      Object {
+                                                        "minWidth": "15px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Icon
+                                                      classPrefix="rs-icon"
+                                                      componentClass="i"
+                                                      icon="font"
+                                                      style={
+                                                        Object {
+                                                          "minWidth": "15px",
+                                                        }
+                                                      }
+                                                    >
+                                                      <i
+                                                        className="rs-icon rs-icon-font"
+                                                        style={
+                                                          Object {
+                                                            "minWidth": "15px",
+                                                          }
+                                                        }
+                                                      />
+                                                    </Icon>
+                                                  </defaultProps(Icon)>
+                                                </button>
+                                              </ForwardRef>
+                                              <Portal
+                                                key="portal"
+                                              >
+                                                <Portal
+                                                  containerInfo={<body />}
+                                                >
+                                                  <Overlay
+                                                    placement="top"
+                                                    rootClose={true}
+                                                    show={false}
+                                                    target={[Function]}
+                                                  >
+                                                    <BaseOverlay
+                                                      placement="top"
+                                                      rootClose={true}
+                                                      show={false}
+                                                      target={[Function]}
+                                                      transition={
+                                                        Object {
+                                                          "$$typeof": Symbol(react.forward_ref),
+                                                          "displayName": "Fade",
+                                                          "render": [Function],
+                                                        }
+                                                      }
+                                                    />
+                                                  </Overlay>
+                                                </Portal>
+                                              </Portal>
+                                            </OverlayTrigger>
+                                          </Whisper>
+                                        </withLocale(Whisper)>
                                       </ForwardRef>
-                                    </FormatFontColor>
+                                    </EditorSubMenuButton>
                                     <ToolbarDivider>
                                       <defaultProps(Divider)
                                         classPrefix="rs-divider"

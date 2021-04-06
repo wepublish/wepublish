@@ -133,9 +133,9 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             <ToolbarDivider />
 
-            <SubMenuButton icon="font">
+            <EditorSubMenuButton icon="font" editorHasFocus={hasFocus}>
               <FormatColor />
-            </SubMenuButton>
+            </EditorSubMenuButton>
 
             <ToolbarDivider />
 
