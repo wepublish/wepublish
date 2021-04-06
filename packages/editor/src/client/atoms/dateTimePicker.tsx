@@ -18,7 +18,7 @@ export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
         <DatePicker
           style={{marginRight: 8}}
           placement="auto"
-          value={dateTime}
+          value={dateTime?.getTime() === dateTime?.getTime() ? dateTime : undefined}
           format="DD MMM YYYY"
           ranges={[
             {
@@ -54,7 +54,7 @@ export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
         />
         <DatePicker
           placement="auto"
-          value={dateTime}
+          value={dateTime?.getTime() === dateTime?.getTime() ? dateTime : undefined}
           format="HH:mm"
           ranges={[
             {
