@@ -1,6 +1,12 @@
-import {ContentModel, ContentModelSchema, ContentModelSchemas} from '@wepublish/api'
+import {
+  ContentModel,
+  ContentModelSchema,
+  ContentModelSchemaFieldLeaf,
+  ContentModelSchemas
+} from '@wepublish/api'
 import gql from 'graphql-tag'
 import {ContentModelSchemaTypes} from '../interfaces/apiTypes'
+import {EditorConfig} from '../interfaces/extensionConfig'
 
 export const ContentModelPrefix = '_cm'
 export const ContentModelPrefixPrivate = '_cmp'
@@ -17,9 +23,9 @@ export function getCrudQueries(schema: ContentModel) {
   }
 }
 
-export function getCreateMutation(schema: ContentModel) {
+export function getCreateMutation(config: EditorConfig, schema: ContentModel) {
   return gql`
-  ${getFragment(schema)}
+  ${getFragment(config, schema)}
 
   mutation CreateContent_${schema.identifier}($input: ${nameJoin(
     ContentModelPrefixPrivateInput,
@@ -38,9 +44,9 @@ export function getCreateMutation(schema: ContentModel) {
   `
 }
 
-export function getReadQuery(schema: ContentModel) {
+export function getReadQuery(config: EditorConfig, schema: ContentModel) {
   return gql`
-  ${getFragment(schema)}
+  ${getFragment(config, schema)}
 
     query ReadContent_${schema.identifier}($id: ID!) {
       content {
@@ -54,9 +60,9 @@ export function getReadQuery(schema: ContentModel) {
   `
 }
 
-export function getUpdateMutation(schema: ContentModel) {
+export function getUpdateMutation(config: EditorConfig, schema: ContentModel) {
   return gql`
-  ${getFragment(schema)}
+  ${getFragment(config, schema)}
 
   mutation UpdateContent_${schema.identifier}($input: ${nameJoin(
     ContentModelPrefixPrivateInput,
@@ -87,7 +93,7 @@ export function getDeleteMutation(schema: ContentModel) {
   `
 }
 
-function getFragment(schema: ContentModel) {
+function getFragment(config: EditorConfig, schema: ContentModel) {
   const fragmentName = nameJoin(ContentModelPrefixPrivate, schema.identifier, 'record')
   const fragment = `
     fragment Content_${schema.identifier} on ${fragmentName} {
@@ -100,17 +106,25 @@ function getFragment(schema: ContentModel) {
       dePublicationDate
       title
       shared
-      ${getFragmentSchema(schema.schema, fragmentName)}
+      ${getFragmentSchema(config, schema.schema, fragmentName)}
     }
   `
   return fragment
 }
 
-function getFragmentSchema(contentModelSchemas: ContentModelSchema, fragmentName: string) {
+function getFragmentSchema(
+  config: EditorConfig,
+  contentModelSchemas: ContentModelSchema,
+  fragmentName: string
+) {
   return Object.entries(contentModelSchemas).reduce((accu, [key, val]) => {
     const n = nameJoin(fragmentName, key)
     const children = Object.entries(val).reduce((accu, [key, val]) => {
-      accu += `${key} ${getFragmentSchemaRecursive(val as ContentModelSchemas, nameJoin(n, key))}\n`
+      accu += `${key} ${getFragmentSchemaRecursive(
+        config,
+        val as ContentModelSchemas,
+        nameJoin(n, key)
+      )}\n`
       return accu
     }, '')
 
@@ -119,19 +133,23 @@ function getFragmentSchema(contentModelSchemas: ContentModelSchema, fragmentName
   }, '')
 }
 
-function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = ''): string {
+function getFragmentSchemaRecursive(
+  config: EditorConfig,
+  schema: ContentModelSchemas,
+  name: string = ''
+): string {
   switch (schema.type) {
     case ContentModelSchemaTypes.object:
       return `{
         ${Object.entries(schema.fields)
           .map(([key, val]) => {
             const ObjectName = nameJoin(name, key)
-            return `${key} ${getFragmentSchemaRecursive(val, ObjectName)}`
+            return `${key} ${getFragmentSchemaRecursive(config, val, ObjectName)}`
           })
           .join('\n')}
       }`
     case ContentModelSchemaTypes.list:
-      return getFragmentSchemaRecursive(schema.contentType, name)
+      return getFragmentSchemaRecursive(config, schema.contentType, name)
     case ContentModelSchemaTypes.reference:
       return `{
         recordId
@@ -144,12 +162,15 @@ function getFragmentSchemaRecursive(schema: ContentModelSchemas, name: string = 
           .map(([unionCase, val]) => {
             const unionCaseName = nameJoin(name, unionCase)
             return `... on ${unionCaseName} {
-              ${unionCase} ${getFragmentSchemaRecursive(val, unionCaseName)}
+              ${unionCase} ${getFragmentSchemaRecursive(config, val, unionCaseName)}
             }`
           })
           .join('\n')}
       }`
     default:
+      if ((schema as ContentModelSchemaFieldLeaf).i18n) {
+        return `{${config.lang.languages.map(v => v.tag).join('\n')}}`
+      }
       return ''
   }
 }

@@ -1,4 +1,4 @@
-import {ContentModelConfig} from '../api'
+import {ContentConfig, LanguagesConfig} from '../api'
 
 export interface ExtensionBase {
   identifier: string
@@ -22,8 +22,9 @@ export interface ContentModelExtension extends ExtensionBase {
   mapStateToInput?: (obj: any) => any
 }
 
-export type ContentModelConfigMerged = ContentModelConfig & Partial<ContentModelExtension>
-export interface ConfigMerged {
+export type ContentModelConfigMerged = ContentConfig & Partial<ContentModelExtension>
+export interface EditorConfig {
   contentModelExtension: ContentModelConfigMerged[]
   cusomExtension?: CusomExtension[]
+  lang: LanguagesConfig
 }

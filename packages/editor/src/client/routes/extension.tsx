@@ -1,9 +1,9 @@
 import React from 'react'
 import {useRoute} from '../route'
-import {ConfigMerged, CusomExtension} from '../interfaces/extensionConfig'
+import {EditorConfig, CusomExtension} from '../interfaces/extensionConfig'
 
 export interface ArticleEditorProps {
-  readonly configs: ConfigMerged
+  readonly configs: EditorConfig
 }
 
 export function Extension({configs}: ArticleEditorProps) {

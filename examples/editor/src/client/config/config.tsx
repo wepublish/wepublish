@@ -11,6 +11,10 @@ export const config: ExtensionConfig = {
       identifier: 'modelA',
       defaultContent: {
         myString: '',
+        myStringI18n: {
+          de: '',
+          en: ''
+        },
         myRichText: [
           {
             type: 'paragraph',

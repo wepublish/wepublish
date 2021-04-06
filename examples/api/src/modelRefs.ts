@@ -9,6 +9,10 @@ export const contentModelA: ContentModel = {
       myString: {
         type: ContentModelSchemaTypes.string
       },
+      myStringI18n: {
+        type: ContentModelSchemaTypes.string,
+        i18n: true
+      },
       myRichText: {
         type: ContentModelSchemaTypes.richText
       },

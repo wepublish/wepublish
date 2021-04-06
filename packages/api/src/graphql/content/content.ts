@@ -38,7 +38,6 @@ import {
 } from '../permissions'
 import {getGraphQLContentConnection, getGraphQLPeerCustomContent} from './contentUtils'
 import {CustomContentSort} from './contentInterfaces'
-import {GraphQLContentModelSchema} from '../contentModelSchema'
 
 import {
   base64Decode,
@@ -696,35 +695,6 @@ export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions
     ),
     resolve: () => {
       return {}
-    }
-  }
-
-  query['_schema'] = {
-    type: GraphQLNonNull(
-      GraphQLList(
-        GraphQLNonNull(
-          new GraphQLObjectType<undefined, Context>({
-            name: `ContentModelConfig`,
-            fields: {
-              id: {
-                type: GraphQLNonNull(GraphQLID),
-                resolve: (source: any, args, context) => {
-                  return source.identifier
-                }
-              },
-              identifier: {type: GraphQLNonNull(GraphQLString)},
-              namePlural: {type: GraphQLNonNull(GraphQLString)},
-              nameSingular: {type: GraphQLNonNull(GraphQLString)},
-              schema: {
-                type: GraphQLNonNull(GraphQLContentModelSchema)
-              }
-            }
-          })
-        )
-      )
-    ),
-    resolve: () => {
-      return contextOptions.contentModels
     }
   }
 

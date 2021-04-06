@@ -15,7 +15,7 @@ import {getDeleteMutation} from '../utils/queryUtils'
 import {useMutation} from '@apollo/client'
 const {Column, HeaderCell, Cell} = Table
 import {Content} from '@wepublish/api'
-import {ConfigMerged} from '../interfaces/extensionConfig'
+import {EditorConfig} from '../interfaces/extensionConfig'
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -25,7 +25,7 @@ enum ConfirmAction {
 const RecordsPerPage = 10
 
 export interface ArticleEditorProps {
-  readonly contentTypeList: ConfigMerged
+  readonly contentTypeList: EditorConfig
 }
 
 export function ContentList({contentTypeList}: ArticleEditorProps) {

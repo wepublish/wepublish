@@ -24,13 +24,14 @@ import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
 import './global.less'
-import {useContentModelSchemaQuery} from './api'
-import {ConfigMerged, ContentModelConfigMerged, ExtensionConfig} from './interfaces/extensionConfig'
+import {useConfigQuery} from './api'
+import {EditorConfig, ContentModelConfigMerged, ExtensionConfig} from './interfaces/extensionConfig'
 import {Extension} from './routes/extension'
 import {ContentEditor} from './routes/contentEditor'
 import {ContentList} from './routes/contentList'
+import {ConfigContext} from './Editorcontext'
 
-export function contentForRoute(route: Route, configs: ConfigMerged) {
+export function contentForRoute(route: Route, configs: EditorConfig) {
   switch (route.type) {
     case RouteType.Login:
       return <Login />
@@ -102,15 +103,15 @@ export function contentForRoute(route: Route, configs: ConfigMerged) {
 
 export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
   const {current} = useRoute()
-  const {data} = useContentModelSchemaQuery({
+  const {data} = useConfigQuery({
     fetchPolicy: 'network-only'
   })
 
-  if (!(current && data?.content._schema)) {
+  if (!(current && data?.config.content)) {
     return null
   }
 
-  let contentModelConfigMerged: ContentModelConfigMerged[] = data.content._schema.map(config => {
+  const contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
     const editorConfig = contentModelExtension?.find(c => c.identifier === config.identifier)
 
     let result = config
@@ -120,46 +121,54 @@ export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
     return result
   })
 
-  const ConfigMerged: ConfigMerged = {
+  const editorConfig: EditorConfig = {
     contentModelExtension: contentModelConfigMerged,
-    cusomExtension: cusomExtension
+    cusomExtension: cusomExtension,
+    lang: data.config.languages
   }
 
+  let comp = null
   switch (current.type) {
     case RouteType.Login:
-      return <Login />
+      comp = <Login />
+      break
 
     case RouteType.ArticleCreate:
     case RouteType.ArticleEdit:
-      return (
+      comp = (
         <ArticleEditor
           id={current.type === RouteType.ArticleEdit ? current.params.id : undefined}
         />
       )
+      break
 
     case RouteType.PageCreate:
     case RouteType.PageEdit:
-      return <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
+      comp = <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
+      break
 
     case RouteType.ContentCreate:
     case RouteType.ContentEdit:
-      return (
+      comp = (
         <ContentEditor
-          contentTypeList={ConfigMerged}
+          editorConfig={editorConfig}
           id={current.type === RouteType.ContentEdit ? current.params.id : undefined}
         />
       )
+      break
 
     case RouteType.Extension:
-      return (
-        <Base contentTypeList={ConfigMerged}>
-          <Extension configs={ConfigMerged} />
+      comp = (
+        <Base contentTypeList={editorConfig}>
+          <Extension configs={editorConfig} />
         </Base>
       )
+      break
 
     default:
-      return <Base contentTypeList={ConfigMerged}>{contentForRoute(current, ConfigMerged)}</Base>
+      comp = <Base contentTypeList={editorConfig}>{contentForRoute(current, editorConfig)}</Base>
   }
+  return <ConfigContext.Provider value={editorConfig}>{comp}</ConfigContext.Provider>
 }
 
 export const HotApp = hot(App)

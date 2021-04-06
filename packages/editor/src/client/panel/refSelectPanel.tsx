@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Icon, Nav, List} from 'rsuite'
+import {Icon, Nav} from 'rsuite'
 import {ContentContextEnum} from '../api'
 import {
   ContentModelSchemaFieldRefTypeMap,

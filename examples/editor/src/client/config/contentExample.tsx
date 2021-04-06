@@ -1,5 +1,18 @@
-import React, {useCallback, useState} from 'react'
-import {Button, ControlLabel, Drawer, Form, FormControl, FormGroup, Tag, TagGroup} from 'rsuite'
+import React, {useCallback, useContext, useMemo, useState} from 'react'
+import {
+  Button,
+  Col,
+  ControlLabel,
+  Drawer,
+  Form,
+  FormControl,
+  FormGroup,
+  Grid,
+  Row,
+  SelectPicker,
+  Tag,
+  TagGroup
+} from 'rsuite'
 import {isFunctionalUpdate} from '@karma.run/react'
 import {
   Link,
@@ -11,6 +24,8 @@ import {
   MediaReferenceType
 } from '@wepublish/editor'
 import {ContentContextEnum, useModelAQuery} from './article/api'
+import {ConfigContext} from '@wepublish/editor/src/client/Editorcontext'
+import {I18nWrapper} from './i18nWrapper'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -20,6 +35,9 @@ export interface ArticleMetadataProperty {
 
 export interface CustomContentValue {
   readonly myString: string
+  readonly myStringI18n: {
+    [lang: string]: string
+  }
   readonly myRichText: RichTextBlockValue
   readonly myRef?: Reference | null
 }
@@ -33,7 +51,12 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
   if (!value) {
     return null
   }
-  const {myString, myRichText, myRef} = value
+
+  const config = useContext(ConfigContext)
+  const [editLang, setEditLang] = useState(config.lang.languages[0].tag)
+  const [viewLang, setViewLang] = useState(config.lang.languages[1].tag)
+
+  const {myString, myStringI18n, myRichText, myRef} = value
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const handleRichTextChange = useCallback(
     (richText: React.SetStateAction<RichTextBlockValue>) =>
@@ -43,6 +66,44 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
       })),
     [onChange]
   )
+
+  const languages = config.lang.languages.map(v => {
+    return {
+      label: v.tag,
+      value: v.tag
+    }
+  })
+  const header = useMemo(() => {
+    return (
+      <Row className="show-grid">
+        <Col xs={10}>
+          <SelectPicker
+            data={languages}
+            value={editLang}
+            onChange={setEditLang}
+            style={{width: 224}}
+          />
+        </Col>
+        <Col xs={4}>
+          <Button
+            onClick={() => {
+              setEditLang(viewLang)
+              setViewLang(editLang)
+            }}>
+            {'<-->'}
+          </Button>
+        </Col>
+        <Col xs={10}>
+          <SelectPicker
+            data={languages}
+            value={viewLang}
+            onChange={setViewLang}
+            style={{width: 224}}
+          />
+        </Col>
+      </Row>
+    )
+  }, [viewLang, editLang])
 
   let ref = null
   if (myRef) {
@@ -73,21 +134,29 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
 
   return (
     <>
-      <Form fluid={true} style={{width: '100%'}}>
-        <FormGroup>
-          <ControlLabel>myRef</ControlLabel>
-          {ref}
-        </FormGroup>
-        <FormGroup>
+      <Grid>
+        {header}
+
+        <Row>
+          <br></br>
+        </Row>
+
+        <I18nWrapper value={myString}>
           <ControlLabel>myString</ControlLabel>
+          <FormControl value={myString} onChange={myString => onChange?.({...value, myString})} />
+        </I18nWrapper>
+
+        <I18nWrapper value={myStringI18n[editLang]} display={myStringI18n[viewLang]}>
+          <ControlLabel>Evaluation Body Name</ControlLabel>
           <FormControl
-            componentClass="textarea"
-            rows={3}
-            value={myString}
-            onChange={myString => onChange?.({...value, myString})}
+            value={myStringI18n[editLang]}
+            onChange={val =>
+              onChange?.({...value, myStringI18n: {...myStringI18n, [editLang]: val}})
+            }
           />
-        </FormGroup>
-        <FormGroup>
+        </I18nWrapper>
+
+        <I18nWrapper>
           <ControlLabel>myRichText</ControlLabel>
           <RichTextBlock
             value={myRichText}
@@ -103,8 +172,13 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
               }
             }}
           />
-        </FormGroup>
-      </Form>
+        </I18nWrapper>
+
+        <I18nWrapper>
+          <ControlLabel>myRef</ControlLabel>
+          {ref}
+        </I18nWrapper>
+      </Grid>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <RefSelectPanelDrawer

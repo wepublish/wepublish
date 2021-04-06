@@ -1214,6 +1214,12 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export type Config = {
+  __typename?: 'Config';
+  content: Array<ContentConfig>;
+  languages: LanguagesConfig;
+};
+
 export type Content = {
   __typename?: 'content';
   example: _Cmp_Example;
@@ -1221,7 +1227,6 @@ export type Content = {
   modelB: _Cmp_ModelB;
   article: _Cmp_Article;
   _all: All;
-  _schema: Array<ContentModelConfig>;
 };
 
 export type Content_Mutations = {
@@ -1233,19 +1238,19 @@ export type Content_Mutations = {
   _all: AllMutations;
 };
 
-export enum ContentContextEnum {
-  Local = 'local',
-  Peers = 'peers'
-}
-
-export type ContentModelConfig = {
-  __typename?: 'ContentModelConfig';
+export type ContentConfig = {
+  __typename?: 'ContentConfig';
   id: Scalars['ID'];
   identifier: Scalars['String'];
   namePlural: Scalars['String'];
   nameSingular: Scalars['String'];
   schema: Scalars['ContentModelSchema'];
 };
+
+export enum ContentContextEnum {
+  Local = 'local',
+  Peers = 'peers'
+}
 
 
 export type ContentModelSummary = {
@@ -1600,6 +1605,19 @@ export enum InvoiceSort {
   ModifiedAt = 'MODIFIED_AT',
   PaidAt = 'PAID_AT'
 }
+
+export type LanguageConfig = {
+  __typename?: 'LanguageConfig';
+  id: Scalars['ID'];
+  tag: Scalars['String'];
+  description: Scalars['String'];
+};
+
+export type LanguagesConfig = {
+  __typename?: 'LanguagesConfig';
+  defaultLanguageId: Scalars['String'];
+  languages: Array<LanguageConfig>;
+};
 
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
@@ -2361,6 +2379,7 @@ export type PropertiesInput = {
 export type Query = {
   __typename?: 'Query';
   content: Content;
+  config: Config;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -3758,17 +3777,24 @@ export type DeleteContentMutation = (
   ) }
 );
 
-export type ContentModelSchemaQueryVariables = Exact<{ [key: string]: never; }>;
+export type ConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ContentModelSchemaQuery = (
+export type ConfigQuery = (
   { __typename?: 'Query' }
-  & { content: (
-    { __typename?: 'content' }
-    & { _schema: Array<(
-      { __typename?: 'ContentModelConfig' }
-      & Pick<ContentModelConfig, 'id' | 'identifier' | 'nameSingular' | 'namePlural' | 'schema'>
-    )> }
+  & { config: (
+    { __typename?: 'Config' }
+    & { content: Array<(
+      { __typename?: 'ContentConfig' }
+      & Pick<ContentConfig, 'id' | 'identifier' | 'namePlural' | 'nameSingular' | 'schema'>
+    )>, languages: (
+      { __typename?: 'LanguagesConfig' }
+      & Pick<LanguagesConfig, 'defaultLanguageId'>
+      & { languages: Array<(
+        { __typename?: 'LanguageConfig' }
+        & Pick<LanguageConfig, 'id' | 'tag' | 'description'>
+      )> }
+    ) }
   ) }
 );
 
@@ -6356,44 +6382,52 @@ export function useDeleteContentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteContentMutationHookResult = ReturnType<typeof useDeleteContentMutation>;
 export type DeleteContentMutationResult = Apollo.MutationResult<DeleteContentMutation>;
 export type DeleteContentMutationOptions = Apollo.BaseMutationOptions<DeleteContentMutation, DeleteContentMutationVariables>;
-export const ContentModelSchemaDocument = gql`
-    query ContentModelSchema {
-  content {
-    _schema {
+export const ConfigDocument = gql`
+    query Config {
+  config {
+    content {
       id
       identifier
-      nameSingular
       namePlural
+      nameSingular
       schema
+    }
+    languages {
+      defaultLanguageId
+      languages {
+        id
+        tag
+        description
+      }
     }
   }
 }
     `;
 
 /**
- * __useContentModelSchemaQuery__
+ * __useConfigQuery__
  *
- * To run a query within a React component, call `useContentModelSchemaQuery` and pass it any options that fit your needs.
- * When your component renders, `useContentModelSchemaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useContentModelSchemaQuery({
+ * const { data, loading, error } = useConfigQuery({
  *   variables: {
  *   },
  * });
  */
-export function useContentModelSchemaQuery(baseOptions?: Apollo.QueryHookOptions<ContentModelSchemaQuery, ContentModelSchemaQueryVariables>) {
-        return Apollo.useQuery<ContentModelSchemaQuery, ContentModelSchemaQueryVariables>(ContentModelSchemaDocument, baseOptions);
+export function useConfigQuery(baseOptions?: Apollo.QueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
+        return Apollo.useQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, baseOptions);
       }
-export function useContentModelSchemaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentModelSchemaQuery, ContentModelSchemaQueryVariables>) {
-          return Apollo.useLazyQuery<ContentModelSchemaQuery, ContentModelSchemaQueryVariables>(ContentModelSchemaDocument, baseOptions);
+export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
+          return Apollo.useLazyQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, baseOptions);
         }
-export type ContentModelSchemaQueryHookResult = ReturnType<typeof useContentModelSchemaQuery>;
-export type ContentModelSchemaLazyQueryHookResult = ReturnType<typeof useContentModelSchemaLazyQuery>;
-export type ContentModelSchemaQueryResult = Apollo.QueryResult<ContentModelSchemaQuery, ContentModelSchemaQueryVariables>;
+export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
+export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
+export type ConfigQueryResult = Apollo.QueryResult<ConfigQuery, ConfigQueryVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {

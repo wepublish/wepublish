@@ -24,11 +24,11 @@ import {
   getReadQuery,
   stripTypename
 } from '../utils/queryUtils'
-import {ConfigMerged} from '../interfaces/extensionConfig'
+import {EditorConfig} from '../interfaces/extensionConfig'
 
 export interface ArticleEditorProps {
   readonly id?: string
-  readonly contentTypeList: ConfigMerged
+  readonly editorConfig: EditorConfig
 }
 
 interface ContentBody {
@@ -45,25 +45,25 @@ interface ContentBody {
   __typename: string
 }
 
-export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
+export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
   const {t} = useTranslation()
   const {current} = useRoute()
   const dispatch = useRouteDispatch()
   const type = (current?.params as any).type || ''
 
-  const cusomContentConfig = contentTypeList.contentModelExtension.find(config => {
+  const contentConfig = editorConfig.contentModelExtension.find(config => {
     return config.identifier === type
   })
-  if (!cusomContentConfig) {
+  if (!contentConfig) {
     throw Error(`Content type ${type} not supported`)
   }
 
   const [createContent, {loading: isCreating, data: createData, error: createError}] = useMutation(
-    getCreateMutation(cusomContentConfig)
+    getCreateMutation(editorConfig, contentConfig)
   )
 
   const [updateContent, {loading: isUpdating, error: updateError}] = useMutation(
-    getUpdateMutation(cusomContentConfig)
+    getUpdateMutation(editorConfig, contentConfig)
   )
 
   const [publishContent, {loading: isPublishing, error: publishError}] = usePublishContentMutation({
@@ -80,10 +80,10 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
   })
 
   const isNew = id === undefined
-  const [contentData, setContentData] = useState<any>(cusomContentConfig.defaultContent ?? null)
+  const [contentData, setContentData] = useState<any>(contentConfig.defaultContent ?? null)
   const contentdId = id || createData?.content[type].create.id
 
-  const {data, loading: isLoading} = useQuery(getReadQuery(cusomContentConfig), {
+  const {data, loading: isLoading} = useQuery(getReadQuery(editorConfig, contentConfig), {
     skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
@@ -132,8 +132,8 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
 
   function createInput(): any {
     let {__typename, ...content} = contentData
-    if (cusomContentConfig?.mapStateToInput) {
-      content = cusomContentConfig.mapStateToInput(content)
+    if (contentConfig?.mapStateToInput) {
+      content = contentConfig.mapStateToInput(content)
     }
 
     return {
@@ -210,15 +210,15 @@ export function ContentEditor({id, contentTypeList}: ArticleEditorProps) {
   }, [isNotFound])
 
   let content = null
-  if (cusomContentConfig.getContentView) {
-    content = cusomContentConfig.getContentView(contentData, handleChange, isLoading || isDisabled)
+  if (contentConfig.getContentView) {
+    content = contentConfig.getContentView(contentData, handleChange, isLoading || isDisabled)
   }
 
   let drawer = null
-  if (cusomContentConfig.getMetaView) {
+  if (contentConfig.getMetaView) {
     drawer = (
       <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
-        {cusomContentConfig.getMetaView(
+        {contentConfig.getMetaView(
           metadata,
           () => setMetaDrawerOpen(false),
           (value: any) => {

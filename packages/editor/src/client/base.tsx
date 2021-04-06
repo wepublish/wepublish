@@ -24,11 +24,11 @@ import {
 } from './route'
 
 import {useTranslation} from 'react-i18next'
-import {ConfigMerged} from './interfaces/extensionConfig'
+import {EditorConfig} from './interfaces/extensionConfig'
 
 export interface BaseProps {
   children?: ReactNode
-  readonly contentTypeList: ConfigMerged
+  readonly contentTypeList: EditorConfig
 }
 
 const AVAILABLE_LANG = [

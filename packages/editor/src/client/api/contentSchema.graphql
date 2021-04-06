@@ -1,11 +1,19 @@
-query ContentModelSchema {
-  content {
-    _schema {
+query Config {
+  config {
+    content {
       id
       identifier
-      nameSingular
       namePlural
+      nameSingular
       schema
+    }
+    languages {
+      defaultLanguageId
+      languages {
+        id
+        tag
+        description
+      }
     }
   }
 }

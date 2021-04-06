@@ -125,6 +125,7 @@ import {
 } from './payment'
 import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
+import {GraphQLContentModelSchema} from './contentModelSchema'
 
 export function getGraphQLQuery<TSource, TContext, TArgs>(type: GraphQLObjectType<any, Context>) {
   return new GraphQLObjectType<undefined, Context>({
@@ -132,8 +133,75 @@ export function getGraphQLQuery<TSource, TContext, TArgs>(type: GraphQLObjectTyp
     fields: {
       content: {
         type: GraphQLNonNull(type),
-        resolve: (source, args, context) => {
+        resolve: () => {
           return {}
+        }
+      },
+
+      // Configuration
+      // =======
+      config: {
+        type: GraphQLNonNull(
+          new GraphQLObjectType<undefined, Context>({
+            name: `Config`,
+            fields: {
+              content: {
+                type: GraphQLNonNull(
+                  GraphQLList(
+                    GraphQLNonNull(
+                      new GraphQLObjectType<undefined, Context>({
+                        name: `ContentConfig`,
+                        fields: {
+                          id: {
+                            type: GraphQLNonNull(GraphQLID),
+                            resolve: (source: any, args, context) => {
+                              return source.identifier
+                            }
+                          },
+                          identifier: {type: GraphQLNonNull(GraphQLString)},
+                          namePlural: {type: GraphQLNonNull(GraphQLString)},
+                          nameSingular: {type: GraphQLNonNull(GraphQLString)},
+                          schema: {
+                            type: GraphQLNonNull(GraphQLContentModelSchema)
+                          }
+                        }
+                      })
+                    )
+                  )
+                )
+              },
+              languages: {
+                type: GraphQLNonNull(
+                  new GraphQLObjectType<undefined, Context>({
+                    name: `LanguagesConfig`,
+                    fields: {
+                      defaultLanguageId: {type: GraphQLNonNull(GraphQLString)},
+                      languages: {
+                        type: GraphQLNonNull(
+                          GraphQLList(
+                            GraphQLNonNull(
+                              new GraphQLObjectType<undefined, Context>({
+                                name: `LanguageConfig`,
+                                fields: {
+                                  id: {type: GraphQLNonNull(GraphQLID)},
+                                  tag: {type: GraphQLNonNull(GraphQLString)},
+                                  description: {type: GraphQLNonNull(GraphQLString)}
+                                }
+                              })
+                            )
+                          )
+                        )
+                      }
+                    }
+                  })
+                )
+              }
+            }
+          })
+        ),
+
+        resolve: (source, args, context) => {
+          return {content: context.contentModels, languages: context.languageConfig}
         }
       },
 
