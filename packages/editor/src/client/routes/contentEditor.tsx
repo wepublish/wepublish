@@ -80,7 +80,7 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
     title: '',
     shared: false
   })
-  const [customMetadata, setCustomMetadata] = useState<any>(undefined)
+  const [customMetadata, setCustomMetadata] = useState<any>(contentConfig.defaultMeta ?? undefined)
 
   const isNew = id === undefined
   const [contentData, setContentData] = useState<any>(contentConfig.defaultContent ?? null)
