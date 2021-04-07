@@ -39,6 +39,8 @@ function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
       return AuthorSort.CreatedAt
     case 'modifiedAt':
       return AuthorSort.ModifiedAt
+    case 'name':
+      return AuthorSort.Name
     default:
       return null
   }
@@ -159,9 +161,9 @@ export function AuthorList() {
               )}
             </Cell>
           </Column>
-          <Column width={300} align="left" resizable>
+          <Column width={300} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.name')}</HeaderCell>
-            <Cell>
+            <Cell dataKey="name">
               {(rowData: FullAuthorFragment) => (
                 <Link route={AuthorEditRoute.create({id: rowData.id})}>
                   {rowData.name || t('authors.overview.untitled')}

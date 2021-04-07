@@ -195,6 +195,8 @@ function authorSortFieldForSort(sort: AuthorSort) {
       return 'createdAt'
     case AuthorSort.ModifiedAt:
       return 'modifiedAt'
+    case AuthorSort.Name:
+      return 'name'
   }
 }
 
@@ -204,5 +206,7 @@ function authorDateForSort(author: DBAuthor, sort: AuthorSort): Date {
       return author.createdAt
     case AuthorSort.ModifiedAt:
       return author.modifiedAt
+    case AuthorSort.Name:
+      return author.createdAt
   }
 }

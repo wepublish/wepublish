@@ -178,7 +178,8 @@ export type AuthorLinkInput = {
 
 export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type AuthProvider = {
