@@ -6,12 +6,14 @@
   "scripts": {
     "build": "run-p build:*",
     "build:client": "webpack --mode development",
+    "start": "node ./dist/server/index.js",
     "watch": "run-p watch:*",
     "watch:client": "webpack-dev-server --mode development --hot --inline",
     "watch:server": "run-p watch:server:*",
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9230 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
+    "clean": "shx rm -rf ./LICENSE ./dist",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml"
   },
   "dependencies": {

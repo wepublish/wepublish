@@ -41,7 +41,8 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  //const [password, setPassword] = useState('') // TODO implement setPassword again
+  const password = ''
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
