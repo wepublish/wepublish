@@ -7,7 +7,6 @@ import {
   Form,
   FormControl,
   FormGroup,
-  Panel,
   Input,
   SelectPicker,
   Alert

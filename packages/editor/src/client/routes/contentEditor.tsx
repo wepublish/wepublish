@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react'
-import {Drawer, Modal, Notification, Icon, IconButton} from 'rsuite'
+import {Modal, Notification, Icon, IconButton} from 'rsuite'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
 import {RouteActionType} from '@karma.run/react'
@@ -12,7 +12,7 @@ import {
   ContentEditRoute
 } from '../route'
 
-import {ContentMetadata, CustomContentMetadataPanel} from '../panel/contentMetadataPanel'
+import {ContentMetadataPanel, DefaultMetadata} from '../panel/contentMetadataPanel'
 import {usePublishContentMutation} from '../api'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {useTranslation} from 'react-i18next'
@@ -25,6 +25,7 @@ import {
   stripTypename
 } from '../utils/queryUtils'
 import {EditorConfig} from '../interfaces/extensionConfig'
+import {ContentMetadataPanelModal} from '../panel/contentMetadataPanelModal'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -42,6 +43,7 @@ interface ContentBody {
   state: string
   title: string
   content: any
+  meta?: any
   __typename: string
 }
 
@@ -70,14 +72,15 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
     fetchPolicy: 'no-cache'
   })
 
-  const [isMetaDrawerOpen, setMetaDrawerOpen] = useState(false)
+  const [isMetaVisible, setMetaVisible] = useState(false)
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false)
 
   const [publishedAt, setPublishedAt] = useState<Date>()
-  const [metadata, setMetadata] = useState<ContentMetadata>({
+  const [metadata, setMetadata] = useState<DefaultMetadata>({
     title: '',
     shared: false
   })
+  const [customMetadata, setCustomMetadata] = useState<any>(undefined)
 
   const isNew = id === undefined
   const [contentData, setContentData] = useState<any>(contentConfig.defaultContent ?? null)
@@ -109,7 +112,7 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
 
   useEffect(() => {
     if (recordData) {
-      const {shared, title, content} = stripTypename(recordData)
+      const {shared, title, content, meta} = stripTypename(recordData)
       const publishedAt = new Date()
       if (publishedAt) setPublishedAt(new Date(publishedAt))
 
@@ -117,6 +120,7 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
         title,
         shared
       })
+      setCustomMetadata(meta)
       setContentData(content)
     }
   }, [recordData])
@@ -132,15 +136,14 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
 
   function createInput(): any {
     let {__typename, ...content} = contentData
-    if (contentConfig?.mapStateToInput) {
-      content = contentConfig.mapStateToInput(content)
-    }
+    let {__typename: waste, ...meta} = customMetadata
 
     return {
       id: contentdId,
       title: metadata.title,
       shared: metadata.shared,
-      content
+      content,
+      meta
     }
   }
 
@@ -214,32 +217,29 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
     content = contentConfig.getContentView(contentData, handleChange, isLoading || isDisabled)
   }
 
-  let drawer = null
+  let metadataView = null
   if (contentConfig.getMetaView) {
-    drawer = (
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
-        {contentConfig.getMetaView(
-          metadata,
-          () => setMetaDrawerOpen(false),
-          (value: any) => {
-            setMetadata(value)
-            setChanged(true)
-          }
-        )}
-      </Drawer>
+    metadataView = contentConfig.getMetaView(
+      metadata,
+      customMetadata,
+      value => {
+        setMetadata(value)
+        setChanged(true)
+      },
+      (value: any) => {
+        setCustomMetadata(value)
+        setChanged(true)
+      }
     )
   } else {
-    drawer = (
-      <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
-        <CustomContentMetadataPanel
-          value={metadata}
-          onClose={() => setMetaDrawerOpen(false)}
-          onChange={(value: any) => {
-            setMetadata(value)
-            setChanged(true)
-          }}
-        />
-      </Drawer>
+    metadataView = (
+      <ContentMetadataPanel
+        defaultMetadata={metadata}
+        onChangeDefaultMetadata={(value: any) => {
+          setMetadata(value)
+          setChanged(true)
+        }}
+      />
     )
   }
 
@@ -261,12 +261,12 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
             }
             centerChildren={
               <>
-                {drawer ? (
+                {metadataView ? (
                   <IconButton
                     icon={<Icon icon="newspaper-o" />}
                     size={'lg'}
                     disabled={isDisabled}
-                    onClick={() => setMetaDrawerOpen(true)}>
+                    onClick={() => setMetaVisible(true)}>
                     {t('articleEditor.overview.metadata')}
                   </IconButton>
                 ) : null}
@@ -312,7 +312,13 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
         }>
         {content}
       </EditorTemplate>
-      {drawer}
+
+      <Modal show={isMetaVisible} full backdrop="static" onHide={() => setMetaVisible(false)}>
+        <ContentMetadataPanelModal onClose={() => setMetaVisible(false)}>
+          {metadataView}
+        </ContentMetadataPanelModal>
+      </Modal>
+
       <Modal show={isPublishDialogOpen} size={'sm'} onHide={() => setPublishDialogOpen(false)}>
         <PublishCustomContentPanel
           initialPublishDate={publishedAt}

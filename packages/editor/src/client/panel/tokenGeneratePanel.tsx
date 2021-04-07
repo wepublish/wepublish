@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, Drawer, Input, Modal, Panel} from 'rsuite'
+import {Alert, Button, Input, Modal, Panel} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'

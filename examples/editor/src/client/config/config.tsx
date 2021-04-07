@@ -5,6 +5,7 @@ import {ContentA_EditView} from './contentA'
 import {ContentB_EditView} from './contentB'
 import {BlockType} from './article/articleInterfaces'
 import {getContentView} from './article/articleContentView'
+import {ContentMetadataPanel} from './contentAMetadata'
 
 export const config: ExtensionConfig = {
   contentModelExtension: [
@@ -28,8 +29,36 @@ export const config: ExtensionConfig = {
         ],
         myRef: null
       },
-      getContentView: (content: any, handleChange: any, disabled: boolean) => {
-        return <ContentA_EditView value={content} onChange={handleChange} />
+      defaultMeta: {
+        myString: '',
+        myStringI18n: {
+          de: '',
+          en: ''
+        },
+        myRichText: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ],
+        myRef: null
+      },
+      getContentView: (content, onChange, disabled) => {
+        return <ContentA_EditView value={content} onChange={onChange} />
+      },
+      getMetaView: (metadata, customMetadata, onChange, onChangeMetadata) => {
+        return (
+          <ContentMetadataPanel
+            defaultMetadata={metadata}
+            customMetadata={customMetadata}
+            onChangeDefaultMetadata={onChange}
+            onChangeCustomMetadata={onChangeMetadata}
+          />
+        )
       }
     },
     {

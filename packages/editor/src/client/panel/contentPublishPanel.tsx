@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {ContentMetadata} from './contentMetadataPanel'
+import {DefaultMetadata} from './contentMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
 import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
@@ -10,7 +10,7 @@ import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 export interface PublishArticlePanelProps {
   initialPublishDate?: Date
   pendingPublishDate?: Date
-  metadata: ContentMetadata
+  metadata: DefaultMetadata
 
   onClose(): void
   onConfirm(publishDate: Date, updateDate: Date): void

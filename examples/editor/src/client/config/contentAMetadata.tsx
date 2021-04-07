@@ -1,6 +1,7 @@
 import React from 'react'
 import {ControlLabel, Form, FormControl, FormGroup, Toggle, HelpBlock, Panel} from 'rsuite'
 import {useTranslation} from 'react-i18next'
+import {ContentA_EditView, ContentA_EditViewValue} from './contentA'
 
 export interface DefaultMetadata {
   readonly title: string
@@ -9,12 +10,16 @@ export interface DefaultMetadata {
 
 export interface ContentMetadataPanelProps {
   readonly defaultMetadata: DefaultMetadata
+  readonly customMetadata: ContentA_EditViewValue
   onChangeDefaultMetadata?(defaultMetadata: DefaultMetadata): void
+  onChangeCustomMetadata?(customMetadata: ContentA_EditViewValue): void
 }
 
 export function ContentMetadataPanel({
   defaultMetadata,
-  onChangeDefaultMetadata
+  customMetadata,
+  onChangeDefaultMetadata,
+  onChangeCustomMetadata
 }: ContentMetadataPanelProps) {
   const {title, shared} = defaultMetadata
   const {t} = useTranslation()
@@ -40,6 +45,8 @@ export function ContentMetadataPanel({
           <HelpBlock>{t('articleEditor.panels.allowPeerPublishing')}</HelpBlock>
         </FormGroup>
       </Form>
+      <hr></hr>
+      <ContentA_EditView value={customMetadata} onChange={onChangeCustomMetadata as any} />
     </Panel>
   )
 }

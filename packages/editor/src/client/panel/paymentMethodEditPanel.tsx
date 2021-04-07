@@ -3,11 +3,9 @@ import React, {useState, useEffect} from 'react'
 import {
   Button,
   ControlLabel,
-  Drawer,
   Form,
   FormControl,
   FormGroup,
-  Panel,
   Alert,
   Toggle,
   HelpBlock,

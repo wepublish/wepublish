@@ -293,6 +293,7 @@ export type _Cmp_ModelA_Record = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
   content?: Maybe<_Cmp_ModelA_Record_Content>;
+  meta?: Maybe<_Cmp_ModelA_Record_Meta>;
 };
 
 export type _Cmp_ModelA_Record_Content = {
@@ -318,6 +319,14 @@ export type _Cmp_ModelA_Record_Content_MyRef_ModelA = {
 export type _Cmp_ModelA_Record_Content_MyRef_ModelB = {
   __typename?: '_cmp_modelA_record_content_myRef_modelB';
   modelB?: Maybe<_Cmp_ModelB_Record>;
+};
+
+export type _Cmp_ModelA_Record_Meta = {
+  __typename?: '_cmp_modelA_record_meta';
+  myString?: Maybe<Scalars['String']>;
+  myStringI18n?: Maybe<I18n_String>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_ModelA_ModelB__Media>;
 };
 
 export type _Cmp_ModelAConnection = {
@@ -595,6 +604,14 @@ export type _Cmpi_ModelA_Record_Create = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
   content?: Maybe<_Cmpi_ModelA_Record_Content>;
+  meta?: Maybe<_Cmpi_ModelA_Record_Meta>;
+};
+
+export type _Cmpi_ModelA_Record_Meta = {
+  myString?: Maybe<Scalars['String']>;
+  myStringI18n?: Maybe<I18n_String_Input>;
+  myRichText?: Maybe<Scalars['RichText']>;
+  myRef?: Maybe<Ref_Input>;
 };
 
 export type _Cmpi_ModelA_Record_Update = {
@@ -602,6 +619,7 @@ export type _Cmpi_ModelA_Record_Update = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
   content?: Maybe<_Cmpi_ModelA_Record_Content>;
+  meta?: Maybe<_Cmpi_ModelA_Record_Meta>;
 };
 
 export type _Cmpi_ModelB = {

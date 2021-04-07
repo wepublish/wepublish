@@ -30,6 +30,32 @@ export const contentModelA: ContentModel = {
           }
         }
       }
+    },
+    meta: {
+      myString: {
+        type: ContentModelSchemaTypes.string
+      },
+      myStringI18n: {
+        type: ContentModelSchemaTypes.string,
+        i18n: true
+      },
+      myRichText: {
+        type: ContentModelSchemaTypes.richText
+      },
+      myRef: {
+        type: ContentModelSchemaTypes.reference,
+        types: {
+          modelA: {
+            scope: 'local'
+          },
+          modelB: {
+            scope: 'local'
+          },
+          [MediaReferenceType]: {
+            scope: 'local'
+          }
+        }
+      }
     }
   }
 }

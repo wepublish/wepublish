@@ -5,7 +5,6 @@ import {
   Button,
   CheckPicker,
   ControlLabel,
-  Drawer,
   Form,
   FormControl,
   FormGroup,
