@@ -257,119 +257,6 @@ export type _Cmp_ArticleConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type _Cmp_Example = {
-  __typename?: '_cmp_example';
-  read: _Cmp_Example_Record;
-  list: _Cmp_ExampleConnection;
-};
-
-
-export type _Cmp_ExampleReadArgs = {
-  peerID?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
-};
-
-
-export type _Cmp_ExampleListArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
-};
-
-export type _Cmp_Example_Record = {
-  __typename?: '_cmp_example_record';
-  id: Scalars['ID'];
-  contentType: Scalars['String'];
-  revision: Scalars['Int'];
-  state: ContentStateEnum;
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  publicationDate?: Maybe<Scalars['DateTime']>;
-  dePublicationDate?: Maybe<Scalars['DateTime']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_Example_Record_Content>;
-};
-
-export type _Cmp_Example_Record_Content = {
-  __typename?: '_cmp_example_record_content';
-  myString?: Maybe<Scalars['String']>;
-  myI18nString?: Maybe<I18n_String>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myI18nRichText?: Maybe<I18n_RichText>;
-  myBoolean?: Maybe<Scalars['Boolean']>;
-  myI18nBoolean?: Maybe<I18n_Boolean>;
-  myInt?: Maybe<Scalars['Int']>;
-  myI18nInt?: Maybe<I18n_Int>;
-  myFloat?: Maybe<Scalars['Float']>;
-  myI18nFloat?: Maybe<I18n_Float>;
-  myDateTime?: Maybe<Scalars['DateTime']>;
-  myI18nDateTime?: Maybe<I18n_DateTime>;
-  myId?: Maybe<Scalars['ID']>;
-  myI18nId?: Maybe<I18n_Id>;
-  myEnum?: Maybe<_Cmp_Example_Record_Content_MyEnum>;
-  myI18nEnum?: Maybe<_Cmp_Example_Record_Content_MyI18nEnum>;
-  myList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  myObject?: Maybe<_Cmp_Example_Record_Content_MyObject>;
-  myUnion?: Maybe<_Cmp_Example_Record_Content_MyUnion>;
-  myReference?: Maybe<Ref_Example>;
-};
-
-export enum _Cmp_Example_Record_Content_MyEnum {
-  /** Foo */
-  Foo = 'foo',
-  /** Bar */
-  Bar = 'bar'
-}
-
-export enum _Cmp_Example_Record_Content_MyI18nEnum {
-  /** Foo */
-  Foo = 'foo',
-  /** Bar */
-  Bar = 'bar'
-}
-
-export type _Cmp_Example_Record_Content_MyObject = {
-  __typename?: '_cmp_example_record_content_myObject';
-  fieldA?: Maybe<Scalars['String']>;
-  fieldB?: Maybe<Scalars['Int']>;
-};
-
-export type _Cmp_Example_Record_Content_MyUnion = _Cmp_Example_Record_Content_MyUnion_CaseA | _Cmp_Example_Record_Content_MyUnion_CaseB;
-
-export type _Cmp_Example_Record_Content_MyUnion_CaseA = {
-  __typename?: '_cmp_example_record_content_myUnion_caseA';
-  caseA?: Maybe<_Cmp_Example_Record_Content_MyUnion_CaseA_Content>;
-};
-
-export type _Cmp_Example_Record_Content_MyUnion_CaseA_Content = {
-  __typename?: '_cmp_example_record_content_myUnion_caseA_content';
-  fieldA?: Maybe<Scalars['String']>;
-  fieldB?: Maybe<Scalars['Int']>;
-};
-
-export type _Cmp_Example_Record_Content_MyUnion_CaseB = {
-  __typename?: '_cmp_example_record_content_myUnion_caseB';
-  caseB?: Maybe<_Cmp_Example_Record_Content_MyUnion_CaseB_Content>;
-};
-
-export type _Cmp_Example_Record_Content_MyUnion_CaseB_Content = {
-  __typename?: '_cmp_example_record_content_myUnion_caseB_content';
-  fieldA?: Maybe<Scalars['Int']>;
-  fieldB?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_ExampleConnection = {
-  __typename?: '_cmp_exampleConnection';
-  nodes: Array<_Cmp_Example_Record>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
 export type _Cmp_ModelA = {
   __typename?: '_cmp_modelA';
   read: _Cmp_ModelA_Record;
@@ -656,115 +543,6 @@ export type _Cmpi_Article_Record_Update = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
   content?: Maybe<_Cmpi_Article_Record_Content>;
-};
-
-export type _Cmpi_Example = {
-  __typename?: '_cmpi_example';
-  create: _Cmp_Example_Record;
-  update: _Cmp_Example_Record;
-  delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_Example_Record>;
-  unpublish?: Maybe<_Cmp_Example_Record>;
-};
-
-
-export type _Cmpi_ExampleCreateArgs = {
-  input: _Cmpi_Example_Record_Create;
-};
-
-
-export type _Cmpi_ExampleUpdateArgs = {
-  input: _Cmpi_Example_Record_Update;
-};
-
-
-export type _Cmpi_ExampleDeleteArgs = {
-  id: Scalars['ID'];
-  revision?: Maybe<Scalars['Int']>;
-};
-
-
-export type _Cmpi_ExamplePublishArgs = {
-  id: Scalars['ID'];
-  revision: Scalars['Int'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type _Cmpi_ExampleUnpublishArgs = {
-  id: Scalars['ID'];
-};
-
-export type _Cmpi_Example_Record_Content = {
-  myString?: Maybe<Scalars['String']>;
-  myI18nString?: Maybe<I18n_String_Input>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myI18nRichText?: Maybe<I18n_RichText_Input>;
-  myBoolean?: Maybe<Scalars['Boolean']>;
-  myI18nBoolean?: Maybe<I18n_Boolean_Input>;
-  myInt?: Maybe<Scalars['Int']>;
-  myI18nInt?: Maybe<I18n_Int_Input>;
-  myFloat?: Maybe<Scalars['Float']>;
-  myI18nFloat?: Maybe<I18n_Float_Input>;
-  myDateTime?: Maybe<Scalars['DateTime']>;
-  myI18nDateTime?: Maybe<I18n_DateTime_Input>;
-  myId?: Maybe<Scalars['ID']>;
-  myI18nId?: Maybe<I18n_Id_Input>;
-  myEnum?: Maybe<_Cmpi_Example_Record_Content_MyEnum>;
-  myI18nEnum?: Maybe<_Cmpi_Example_Record_Content_MyI18nEnum>;
-  myList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  myObject?: Maybe<_Cmpi_Example_Record_Content_MyObject>;
-  myUnion?: Maybe<_Cmpi_Example_Record_Content_MyUnion>;
-  myReference?: Maybe<Ref_Input>;
-};
-
-export enum _Cmpi_Example_Record_Content_MyEnum {
-  /** Foo */
-  Foo = 'foo',
-  /** Bar */
-  Bar = 'bar'
-}
-
-export enum _Cmpi_Example_Record_Content_MyI18nEnum {
-  /** Foo */
-  Foo = 'foo',
-  /** Bar */
-  Bar = 'bar'
-}
-
-export type _Cmpi_Example_Record_Content_MyObject = {
-  fieldA?: Maybe<Scalars['String']>;
-  fieldB?: Maybe<Scalars['Int']>;
-};
-
-export type _Cmpi_Example_Record_Content_MyUnion = {
-  caseA?: Maybe<_Cmpi_Example_Record_Content_MyUnion_CaseA>;
-  caseB?: Maybe<_Cmpi_Example_Record_Content_MyUnion_CaseB>;
-};
-
-export type _Cmpi_Example_Record_Content_MyUnion_CaseA = {
-  fieldA?: Maybe<Scalars['String']>;
-  fieldB?: Maybe<Scalars['Int']>;
-};
-
-export type _Cmpi_Example_Record_Content_MyUnion_CaseB = {
-  fieldA?: Maybe<Scalars['Int']>;
-  fieldB?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Example_Record_Create = {
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Example_Record_Content>;
-};
-
-export type _Cmpi_Example_Record_Update = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
 export type _Cmpi_ModelA = {
@@ -1231,7 +1009,6 @@ export type Config = {
 
 export type Content = {
   __typename?: 'content';
-  example: _Cmp_Example;
   modelA: _Cmp_ModelA;
   modelB: _Cmp_ModelB;
   article: _Cmp_Article;
@@ -1240,7 +1017,6 @@ export type Content = {
 
 export type Content_Mutations = {
   __typename?: 'content_mutations';
-  example: _Cmpi_Example;
   modelA: _Cmpi_ModelA;
   modelB: _Cmpi_ModelB;
   article: _Cmpi_Article;
@@ -1284,7 +1060,6 @@ export enum ContentStateEnum {
 }
 
 export enum ContentTypeEnum {
-  Example = 'example',
   ModelA = 'modelA',
   ModelB = 'modelB',
   Article = 'article'
@@ -1379,72 +1154,6 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
-};
-
-export type I18n_Boolean = {
-  __typename?: 'i18n_Boolean';
-  en?: Maybe<Scalars['Boolean']>;
-  de?: Maybe<Scalars['Boolean']>;
-};
-
-export type I18n_Boolean_Input = {
-  en?: Maybe<Scalars['Boolean']>;
-  de?: Maybe<Scalars['Boolean']>;
-};
-
-export type I18n_DateTime = {
-  __typename?: 'i18n_DateTime';
-  en?: Maybe<Scalars['DateTime']>;
-  de?: Maybe<Scalars['DateTime']>;
-};
-
-export type I18n_DateTime_Input = {
-  en?: Maybe<Scalars['DateTime']>;
-  de?: Maybe<Scalars['DateTime']>;
-};
-
-export type I18n_Float = {
-  __typename?: 'i18n_Float';
-  en?: Maybe<Scalars['Float']>;
-  de?: Maybe<Scalars['Float']>;
-};
-
-export type I18n_Float_Input = {
-  en?: Maybe<Scalars['Float']>;
-  de?: Maybe<Scalars['Float']>;
-};
-
-export type I18n_Id = {
-  __typename?: 'i18n_ID';
-  en?: Maybe<Scalars['ID']>;
-  de?: Maybe<Scalars['ID']>;
-};
-
-export type I18n_Id_Input = {
-  en?: Maybe<Scalars['ID']>;
-  de?: Maybe<Scalars['ID']>;
-};
-
-export type I18n_Int = {
-  __typename?: 'i18n_Int';
-  en?: Maybe<Scalars['Int']>;
-  de?: Maybe<Scalars['Int']>;
-};
-
-export type I18n_Int_Input = {
-  en?: Maybe<Scalars['Int']>;
-  de?: Maybe<Scalars['Int']>;
-};
-
-export type I18n_RichText = {
-  __typename?: 'i18n_RichText';
-  en?: Maybe<Scalars['RichText']>;
-  de?: Maybe<Scalars['RichText']>;
-};
-
-export type I18n_RichText_Input = {
-  en?: Maybe<Scalars['RichText']>;
-  de?: Maybe<Scalars['RichText']>;
 };
 
 export type I18n_String = {
@@ -2654,15 +2363,6 @@ export type Ref_Article_Page = {
   contentType: Scalars['ID'];
   peerId?: Maybe<Scalars['ID']>;
   record?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef>;
-  peer?: Maybe<Peer>;
-};
-
-export type Ref_Example = {
-  __typename?: 'ref_example';
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<_Cmp_Example_Record>;
   peer?: Maybe<Peer>;
 };
 

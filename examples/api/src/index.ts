@@ -26,9 +26,9 @@ import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
-import {contentModelExample} from './modelExample'
 import {contentModelArticle} from './modelArticle'
-import {contentModelA, contentModelB} from './modelRefs'
+import {contentModelA} from './modelA'
+import {contentModelB} from './modelB'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -287,7 +287,7 @@ async function asyncMain() {
     playground: true,
     introspection: true,
     tracing: true,
-    contentModels: [contentModelExample, contentModelA, contentModelB, contentModelArticle],
+    contentModels: [contentModelA, contentModelB, contentModelArticle],
     languageConfig: {
       defaultLanguageId: '1',
       languages: [

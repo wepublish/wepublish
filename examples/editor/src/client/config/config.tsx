@@ -1,7 +1,8 @@
 import React from 'react'
 import {ExtensionConfig} from '@wepublish/editor'
 import {CustomViewExample} from './customView'
-import {CustomContentExample, ModelBView} from './contentExample'
+import {ContentA_EditView} from './contentA'
+import {ContentB_EditView} from './contentB'
 import {BlockType} from './article/articleInterfaces'
 import {getContentView} from './article/articleContentView'
 
@@ -28,7 +29,7 @@ export const config: ExtensionConfig = {
         myRef: null
       },
       getContentView: (content: any, handleChange: any, disabled: boolean) => {
-        return <CustomContentExample value={content} onChange={handleChange} />
+        return <ContentA_EditView value={content} onChange={handleChange} />
       }
     },
     {
@@ -48,7 +49,7 @@ export const config: ExtensionConfig = {
         myRef: null
       },
       getContentView: (content: any, handleChange: any, disabled: boolean) => {
-        return <ModelBView value={content} onChange={handleChange} />
+        return <ContentB_EditView value={content} onChange={handleChange} />
       }
     },
     {

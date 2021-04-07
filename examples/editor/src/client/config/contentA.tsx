@@ -1,16 +1,5 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react'
-import {
-  Button,
-  Col,
-  ControlLabel,
-  Form,
-  FormControl,
-  FormGroup,
-  Grid,
-  Modal,
-  Row,
-  SelectPicker
-} from 'rsuite'
+import {Button, Col, ControlLabel, FormControl, Grid, Modal, Row, SelectPicker} from 'rsuite'
 import {isFunctionalUpdate} from '@karma.run/react'
 import {
   RichTextBlock,
@@ -24,13 +13,7 @@ import {ContentContextEnum} from './article/api'
 import {ConfigContext} from '@wepublish/editor/src/client/Editorcontext'
 import {I18nWrapper} from './i18nWrapper'
 
-export interface ArticleMetadataProperty {
-  readonly key: string
-  readonly value: string
-  readonly public: boolean
-}
-
-export interface CustomContentValue {
+export interface ContentA_EditViewValue {
   readonly myString: string
   readonly myStringI18n: {
     [lang: string]: string
@@ -39,12 +22,12 @@ export interface CustomContentValue {
   readonly myRef?: Reference | null
 }
 
-export interface CustomContentExampleProps {
-  readonly value: CustomContentValue
-  readonly onChange: React.Dispatch<React.SetStateAction<CustomContentValue>>
+export interface ContentA_EditViewProps {
+  readonly value: ContentA_EditViewValue
+  readonly onChange: React.Dispatch<React.SetStateAction<ContentA_EditViewValue>>
 }
 
-export function CustomContentExample({value, onChange}: CustomContentExampleProps) {
+export function ContentA_EditView({value, onChange}: ContentA_EditViewProps) {
   if (!value) {
     return null
   }
@@ -161,72 +144,6 @@ export function CustomContentExample({value, onChange}: CustomContentExampleProp
             modelA: {scope: ContentContextEnum.Local},
             modelB: {scope: ContentContextEnum.Local},
             [MediaReferenceType]: {scope: ContentContextEnum.Local}
-          }}
-          onClose={() => setChooseModalOpen(false)}
-          onSelectRef={ref => {
-            setChooseModalOpen(false)
-            onChange?.({...value, myRef: ref})
-          }}
-        />
-      </Modal>
-    </>
-  )
-}
-
-export function ModelBView({value, onChange}: CustomContentExampleProps) {
-  if (!value) {
-    return null
-  }
-  const {myString, myRichText, myRef} = value
-  const [isChooseModalOpen, setChooseModalOpen] = useState(false)
-  const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue>) =>
-      onChange(value => ({
-        ...value,
-        myRichText: isFunctionalUpdate(richText) ? richText(value.myRichText) : richText
-      })),
-    [onChange]
-  )
-
-  return (
-    <>
-      <Form fluid={true} style={{width: '100%'}}>
-        <FormGroup>
-          <ControlLabel>myRef</ControlLabel>
-          <ReferenceButton
-            reference={myRef}
-            onClick={() => setChooseModalOpen(true)}
-            onClose={() => {
-              onChange?.({...value, myRef: null})
-            }}></ReferenceButton>
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>myString</ControlLabel>
-          <FormControl
-            componentClass="textarea"
-            rows={3}
-            value={myString}
-            onChange={myString => onChange?.({...value, myString})}
-          />
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>myRichText</ControlLabel>
-          <RichTextBlock
-            value={myRichText}
-            onChange={handleRichTextChange}
-            config={{
-              ref: {
-                modelA: {scope: ContentContextEnum.Local}
-              }
-            }}
-          />
-        </FormGroup>
-      </Form>
-
-      <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>
-        <RefSelectModal
-          config={{
-            modelA: {scope: ContentContextEnum.Local}
           }}
           onClose={() => setChooseModalOpen(false)}
           onSelectRef={ref => {
