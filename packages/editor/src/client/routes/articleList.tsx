@@ -111,10 +111,10 @@ export function ArticleList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -133,26 +133,24 @@ export function ArticleList() {
           data={articles}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('articles.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
               {({createdAt}: ArticleRefFragment) => new Date(createdAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: ArticleRefFragment) => new Date(modifiedAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable>
+          <Column flexGrow={6} minWidth={360} align="left">
             <HeaderCell>{t('articles.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => (
@@ -162,7 +160,7 @@ export function ArticleList() {
               )}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable>
+          <Column flexGrow={2} minWidth={120} align="left">
             <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
             <Cell>
               {(rowData: ArticleRefFragment) => {
@@ -172,7 +170,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column flexGrow={1} align="left">
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -186,7 +184,7 @@ export function ArticleList() {
               }}
             </Cell>
           </Column>
-          <Column width={200} align="center" fixed="right">
+          <Column width={130} align="right" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: ArticleRefFragment) => (
@@ -203,28 +201,6 @@ export function ArticleList() {
                       }}
                     />
                   )}
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="copy" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentArticle(rowData)
-                      setConfirmAction(ConfirmAction.Duplicate)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
                   {rowData.draft && (
                     <IconButton
                       icon={<Icon icon="eye" />}
@@ -237,6 +213,28 @@ export function ArticleList() {
                       }}
                     />
                   )}
+                  <IconButton
+                    icon={<Icon icon="copy" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentArticle(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
                 </>
               )}
             </Cell>
@@ -368,7 +366,7 @@ export function ArticleList() {
                           articles: {
                             ...query.articles,
                             nodes: query.articles.nodes.filter(
-                              article => article.id !== currentArticle.id,
+                              article => article.id !== currentArticle.id
                             )
                           }
                         },
@@ -376,8 +374,7 @@ export function ArticleList() {
                       })
                     }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicateArticle.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicateArticle.id)
                   })
                   break
               }

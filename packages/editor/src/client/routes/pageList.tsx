@@ -83,7 +83,6 @@ export function PageList() {
     }
   }, [highlightedRowId])
 
-
   useEffect(() => {
     refetch(pageListVariables)
   }, [filter, page, limit, sortOrder, sortField])
@@ -107,10 +106,10 @@ export function PageList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
@@ -129,26 +128,24 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('pages.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
               {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column flexGrow={2} minWidth={150} align="left" sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) => new Date(modifiedAt).toDateString()}
             </Cell>
           </Column>
-          <Column width={400} align="left" resizable>
+          <Column flexGrow={4} align="left">
             <HeaderCell>{t('pages.overview.title')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => (
@@ -158,7 +155,7 @@ export function PageList() {
               )}
             </Cell>
           </Column>
-          <Column width={100} align="left" resizable>
+          <Column flexGrow={1} align="left">
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: PageRefFragment) => {
@@ -172,7 +169,7 @@ export function PageList() {
               }}
             </Cell>
           </Column>
-          <Column width={100} align="center" fixed="right">
+          <Column width={90} align="right" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <Cell style={{padding: '6px 0'}}>
               {(rowData: PageRefFragment) => (
@@ -190,17 +187,6 @@ export function PageList() {
                     />
                   )}
                   <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setCurrentPage(rowData)
-                      setConfirmAction(ConfirmAction.Delete)
-                      setConfirmationDialogOpen(true)
-                    }}
-                  />
-                  <IconButton
                     icon={<Icon icon="copy" />}
                     circle
                     size="sm"
@@ -208,6 +194,17 @@ export function PageList() {
                     onClick={() => {
                       setCurrentPage(rowData)
                       setConfirmAction(ConfirmAction.Duplicate)
+                      setConfirmationDialogOpen(true)
+                    }}
+                  />
+                  <IconButton
+                    icon={<Icon icon="trash" />}
+                    circle
+                    size="sm"
+                    style={{marginLeft: '5px'}}
+                    onClick={() => {
+                      setCurrentPage(rowData)
+                      setConfirmAction(ConfirmAction.Delete)
                       setConfirmationDialogOpen(true)
                     }}
                   />
@@ -332,10 +329,9 @@ export function PageList() {
                         },
                         variables: pageListVariables
                       })
-                    },
+                    }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicatePage.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicatePage.id)
                   })
                   break
               }

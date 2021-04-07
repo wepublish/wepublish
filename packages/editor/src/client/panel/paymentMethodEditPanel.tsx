@@ -11,7 +11,8 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  SelectPicker
+  SelectPicker,
+  Modal
 } from 'rsuite'
 
 import {
@@ -134,64 +135,62 @@ export function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditP
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('paymentMethodList.editTitle') : t('paymentMethodList.createTitle')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('paymentMethodList.name')}</ControlLabel>
-              <FormControl
-                name={t('paymentMethodList.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={value => {
-                  setName(value)
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('paymentMethodList.active')}</ControlLabel>
-              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-              <HelpBlock>{t('paymentMethodList.activeDescription')}</HelpBlock>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
-              <SelectPicker
-                value={paymentProvider?.id}
-                data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
-                searchable={false}
-                block={true}
-                onChange={value => setPaymentProvider(paymentProviders.find(pp => pp.id === value))}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('paymentMethodList.description')}</ControlLabel>
-              <FormControl
-                name={t('paymentMethodList.description')}
-                value={description}
-                disabled={isDisabled}
-                onChange={value => {
-                  setDescription(value)
-                }}
-              />
-            </FormGroup>
-          </Form>
-        </Panel>
-      </Drawer.Body>
+      <Modal.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('paymentMethodList.name')}</ControlLabel>
+            <FormControl
+              name={t('paymentMethodList.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => {
+                setName(value)
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('paymentMethodList.active')}</ControlLabel>
+            <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
+            <HelpBlock>{t('paymentMethodList.activeDescription')}</HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('paymentMethodList.adapter')}</ControlLabel>
+            <SelectPicker
+              value={paymentProvider?.id}
+              data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
+              searchable={false}
+              block={true}
+              onChange={value => setPaymentProvider(paymentProviders.find(pp => pp.id === value))}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('paymentMethodList.description')}</ControlLabel>
+            <FormControl
+              name={t('paymentMethodList.description')}
+              value={description}
+              disabled={isDisabled}
+              onChange={value => {
+                setDescription(value)
+              }}
+            />
+          </FormGroup>
+        </Form>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('save') : t('create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }

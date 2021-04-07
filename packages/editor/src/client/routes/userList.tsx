@@ -20,16 +20,16 @@ import {ResetUserPasswordPanel} from '../panel/resetUserPasswordPanel'
 import {useTranslation} from 'react-i18next'
 import {
   Button,
-  Drawer,
   FlexboxGrid,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   Modal,
-  Table
+  Table,
+  Popover,
+  Whisper,
+  Divider
 } from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
 
 const {Column, HeaderCell, Cell, Pagination} = Table
@@ -62,7 +62,6 @@ export function UserList() {
   const [filter, setFilter] = useState('')
 
   const [isResetUserPasswordOpen, setIsResetUserPasswordOpen] = useState(false)
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<FullUserFragment>()
 
   const [page, setPage] = useState(1)
@@ -95,6 +94,46 @@ export function UserList() {
   const [deleteUser, {loading: isDeleting}] = useDeleteUserMutation()
 
   const {t} = useTranslation()
+
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentUser?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentUser) return
+            close()
+            deleteUser({
+              variables: {id: currentUser.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentUser(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     if (current?.type === RouteType.UserCreate) {
@@ -130,103 +169,87 @@ export function UserList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <div
-        style={{
-          display: 'flex',
-          flexFlow: 'column',
-          marginTop: '20px'
+      <Table
+        style={{marginTop: '20px'}}
+        autoHeight={true}
+        loading={isLoading}
+        data={users}
+        sortColumn={sortField}
+        sortType={sortOrder}
+        onSortColumn={(sortColumn, sortType) => {
+          setSortOrder(sortType)
+          setSortField(sortColumn)
         }}>
-        <Table
-          minHeight={600}
-          autoHeight={true}
-          style={{flex: 1}}
-          loading={isLoading}
-          data={users}
-          sortColumn={sortField}
-          sortType={sortOrder}
-          onSortColumn={(sortColumn, sortType) => {
-            setSortOrder(sortType)
-            setSortField(sortColumn)
-          }}>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
-            </Cell>
-          </Column>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
-            </Cell>
-          </Column>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('userList.overview.name')}</HeaderCell>
-            <Cell dataKey={'name'}>
-              {(rowData: FullUserFragment) => (
-                <Link route={UserEditRoute.create({id: rowData.id})}>
-                  {rowData.name || t('userList.overview.unknown')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('email')}</HeaderCell>
-            <Cell dataKey="email" />
-          </Column>
-          <Column width={100} align="center" fixed="right">
-            <HeaderCell>{t('action')}</HeaderCell>
-            <Cell style={{padding: '6px 0'}}>
-              {(rowData: FullUserFragment) => (
-                <>
-                  <IconButton
-                    icon={<Icon icon="key" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={e => {
-                      setCurrentUser(rowData)
-                      setIsResetUserPasswordOpen(true)
-                    }}
-                  />
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    style={{marginLeft: '5px'}}
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentUser(rowData)
-                    }}
-                  />
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+        <Column flexGrow={2} align="left" sortable>
+          <HeaderCell>{t('userList.overview.name')}</HeaderCell>
+          <Cell dataKey={'name'}>
+            {(rowData: FullUserFragment) => (
+              <Link route={UserEditRoute.create({id: rowData.id})}>
+                {rowData.name || t('userList.overview.unknown')}
+              </Link>
+            )}
+          </Cell>
+        </Column>
+        <Column flexGrow={2} align="left" sortable>
+          <HeaderCell>{t('email')}</HeaderCell>
+          <Cell dataKey="email" />
+        </Column>
+        <Column flexGrow={1} minWidth={140} align="left" sortable>
+          <HeaderCell>{t('userList.overview.createdAt')}</HeaderCell>
+          <Cell dataKey="createdAt">
+            {({createdAt}: FullUserFragment) => new Date(createdAt).toDateString()}
+          </Cell>
+        </Column>
+        <Column flexGrow={1} minWidth={140} align="left" sortable>
+          <HeaderCell>{t('userList.overview.modifiedAt')}</HeaderCell>
+          <Cell dataKey="modifiedAt">
+            {({modifiedAt}: FullUserFragment) => new Date(modifiedAt).toDateString()}
+          </Cell>
+        </Column>
 
-        <Pagination
-          style={{height: '50px'}}
-          lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
-          activePage={page}
-          displayLength={limit}
-          total={data?.users.totalCount}
-          onChangePage={page => setPage(page)}
-          onChangeLength={limit => setLimit(limit)}
-        />
-      </div>
+        <Column width={140} align="right" fixed="right">
+          <HeaderCell>{t('action')}</HeaderCell>
+          <Cell style={{padding: '6px 0'}}>
+            {(rowData: FullUserFragment) => (
+              <>
+                <Button
+                  color="orange"
+                  appearance="link"
+                  onClick={e => {
+                    setCurrentUser(rowData)
+                    setIsResetUserPasswordOpen(true)
+                  }}>
+                  {t('userList.overview.reset')}
+                </Button>
+                <Divider vertical></Divider>
+                {rowDeleteButton(rowData)}
+              </>
+            )}
+          </Cell>
+        </Column>
+      </Table>
 
-      <Drawer
-        show={isEditModalOpen}
+      <Pagination
+        lengthMenu={DEFAULT_TABLE_PAGE_SIZES}
+        activePage={page}
+        displayLength={limit}
+        total={data?.users.totalCount}
+        onChangePage={page => setPage(page)}
+        onChangeLength={limit => setLimit(limit)}
+      />
+
+      {/* Modal: Create/edit user */}
+      <Modal
         size={'sm'}
+        show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
           dispatch({
@@ -252,8 +275,9 @@ export function UserList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
 
+      {/* Modal: Reset password */}
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
           <Modal.Title>{t('userList.panels.resetPassword')}</Modal.Title>
@@ -269,41 +293,6 @@ export function UserList() {
 
         <Modal.Footer>
           <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
-            {t('userList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userList.panels.deleteUser')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('userList.panels.name')}>
-              {currentUser?.name || t('userList.panels.Unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentUser) return
-
-              await deleteUser({
-                variables: {id: currentUser.id}
-              })
-
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}
-            color="red">
-            {t('userList.panels.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
             {t('userList.panels.cancel')}
           </Button>
         </Modal.Footer>

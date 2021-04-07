@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {
   Button,
   ControlLabel,
-  Drawer,
+  Modal,
   Form,
   FormControl,
   FormGroup,
@@ -207,112 +207,109 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('navigation.panels.editNavigation') : t('navigation.panels.createNavigation')}
-        </Drawer.Title>
-      </Drawer.Header>
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('navigation.panels.name')}</ControlLabel>
-              <FormControl
-                placeholder={t('navigation.panels.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={value => {
-                  setName(value)
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('navigation.panels.name')}</ControlLabel>
+            <FormControl
+              placeholder={t('navigation.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => {
+                setName(value)
+              }}
+            />
+            <ControlLabel>{t('navigation.panels.key')}</ControlLabel>
+            <FormControl
+              placeholder={t('navigation.panels.key')}
+              value={key}
+              disabled={isDisabled}
+              onChange={value => {
+                setKey(value)
+              }}
+            />
+          </FormGroup>
+        </Form>
+        <h5 className="wep-section-title">{t('authors.panels.links')}</h5>
+        <ListInput
+          value={navigationLinks}
+          onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
+          defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
+          {({value, onChange}) => (
+            <>
+              <Input
+                placeholder={t('navigation.panels.label')}
+                value={value.label}
+                onChange={label => {
+                  onChange({...value, label})
                 }}
               />
-              <ControlLabel>{t('navigation.panels.key')}</ControlLabel>
-              <FormControl
-                placeholder={t('navigation.panels.key')}
-                value={key}
-                disabled={isDisabled}
-                onChange={value => {
-                  setKey(value)
+              <SelectPicker
+                block={true}
+                label={t('navigation.panels.linkType')}
+                value={value.type}
+                data={linkTypes}
+                onChange={(type: string) => {
+                  if (!type) return
+                  onChange({...value, type})
                 }}
               />
-            </FormGroup>
-          </Form>
-        </Panel>
-        <Panel header={t('authors.panels.links')}>
-          <ListInput
-            value={navigationLinks}
-            onChange={navigationLinkInput => setNavigationLinks(navigationLinkInput)}
-            defaultValue={{label: '', url: '', type: 'ExternalNavigationLink'}}>
-            {({value, onChange}) => (
-              <>
-                <Input
-                  placeholder={t('navigation.panels.label')}
-                  value={value.label}
-                  onChange={label => {
-                    onChange({...value, label})
-                  }}
-                />
+              {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
                 <SelectPicker
                   block={true}
-                  label={t('navigation.panels.linkType')}
-                  value={value.type}
-                  data={linkTypes}
-                  onChange={(type: string) => {
-                    if (!type) return
-                    onChange({...value, type})
+                  placeholder={
+                    value.type === 'PageNavigationLink'
+                      ? t('navigation.panels.selectPage')
+                      : t('navigation.panels.selectArticle')
+                  }
+                  value={value.type === 'PageNavigationLink' ? value.pageID : value.articleID}
+                  data={
+                    value.type === 'PageNavigationLink'
+                      ? pages.map(page => ({value: page.id!, label: page.latest.title}))
+                      : articles.map(article => ({
+                          value: article.id!,
+                          label: article.latest.title
+                        }))
+                  }
+                  onChange={chosenReferenceID => {
+                    if (!chosenReferenceID) return
+                    if (value.type === 'PageNavigationLink') {
+                      onChange({...value, pageID: chosenReferenceID})
+                    } else {
+                      onChange({...value, articleID: chosenReferenceID})
+                    }
                   }}
                 />
-                {value.type === 'PageNavigationLink' || value.type === 'ArticleNavigationLink' ? (
-                  <SelectPicker
-                    block={true}
-                    placeholder={
-                      value.type === 'PageNavigationLink'
-                        ? t('navigation.panels.selectPage')
-                        : t('navigation.panels.selectArticle')
-                    }
-                    value={value.type === 'PageNavigationLink' ? value.pageID : value.articleID}
-                    data={
-                      value.type === 'PageNavigationLink'
-                        ? pages.map(page => ({value: page.id!, label: page.latest.title}))
-                        : articles.map(article => ({
-                            value: article.id!,
-                            label: article.latest.title
-                          }))
-                    }
-                    onChange={chosenReferenceID => {
-                      if (!chosenReferenceID) return
-                      if (value.type === 'PageNavigationLink') {
-                        onChange({...value, pageID: chosenReferenceID})
-                      } else {
-                        onChange({...value, articleID: chosenReferenceID})
-                      }
-                    }}
-                  />
-                ) : (
-                  <Input
-                    placeholder={t('navigation.panels.url')}
-                    value={value.url}
-                    onChange={url =>
-                      onChange({
-                        ...value,
-                        url
-                      })
-                    }
-                  />
-                )}
-              </>
-            )}
-          </ListInput>
-        </Panel>
-      </Drawer.Body>
+              ) : (
+                <Input
+                  placeholder={t('navigation.panels.url')}
+                  value={value.url}
+                  onChange={url =>
+                    onChange({
+                      ...value,
+                      url
+                    })
+                  }
+                />
+              )}
+            </>
+          )}
+        </ListInput>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('navigation.panels.save') : t('navigation.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('navigation.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }

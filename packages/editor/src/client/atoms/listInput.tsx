@@ -5,7 +5,7 @@ import arrayMove from 'array-move'
 
 import {isFunctionalUpdate} from '@karma.run/react'
 
-import {Icon, IconButton, Panel} from 'rsuite'
+import {Icon, IconButton, Panel, Divider} from 'rsuite'
 
 export interface FieldProps<V = any> {
   readonly value: V
@@ -34,7 +34,7 @@ export interface ListItemProps<T = any> {
 }
 
 const DragHandle = SortableHandle(({disabled}: {disabled?: boolean}) => (
-  <IconButton icon={<Icon icon="th2" />} disabled={disabled} />
+  <IconButton size="sm" icon={<Icon icon="th2" />} disabled={disabled} />
 ))
 
 const ListItem = SortableElement(
@@ -55,18 +55,22 @@ const ListItem = SortableElement(
         style={{
           display: 'flex',
           flexDirection: 'row',
-          marginBottom: '10px'
+          marginBottom: '20px'
         }}>
-        <div style={{marginRight: '10px'}}>
-          <DragHandle disabled={itemDisabled} />
-        </div>
-        <Panel bodyFill style={{width: '100%'}}>
+        <Panel bordered bodyFill style={{width: '100%', padding: '20px'}}>
           <div style={{minHeight: '100%'}}>
             {children({value: value.value, onChange: handleValueChange})}
           </div>
         </Panel>
         <div style={{marginLeft: '10px'}}>
-          <IconButton icon={<Icon icon="trash" />} onClick={handleRemove} disabled={itemDisabled} />
+          <DragHandle disabled={itemDisabled} />
+          <Divider style={{margin: '12px 0'}}></Divider>
+          <IconButton
+            size="sm"
+            icon={<Icon icon="trash" />}
+            onClick={handleRemove}
+            disabled={itemDisabled}
+          />
         </div>
       </div>
     )
@@ -105,7 +109,17 @@ const SortableList = SortableContainer(
             {children}
           </ListItem>
         ))}
-        <IconButton icon={<Icon icon="plus-circle" />} onClick={handleAdd} disabled={disabled} />
+
+        <Divider>
+          <IconButton
+            size="md"
+            appearance="ghost"
+            circle
+            icon={<Icon icon="plus" />}
+            onClick={handleAdd}
+            disabled={disabled}
+          />
+        </Divider>
       </div>
     )
   }

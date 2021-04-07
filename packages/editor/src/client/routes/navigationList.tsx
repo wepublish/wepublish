@@ -11,18 +11,7 @@ import {
   ButtonLink
 } from '../route'
 
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Drawer,
-  Modal,
-  Button
-} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {FlexboxGrid, Icon, Input, InputGroup, Table, Modal, Button, Popover, Whisper} from 'rsuite'
 
 import {useNavigationListQuery, useDeleteNavigationMutation, FullNavigationFragment} from '../api'
 import {NavigationEditPanel} from '../panel/navigationEditPanel'
@@ -46,7 +35,6 @@ export function NavigationList() {
 
   const [filter, setFilter] = useState('')
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [navigations, setNavigations] = useState<FullNavigationFragment[]>([])
   const [currentNavigation, setCurrentNavigation] = useState<FullNavigationFragment>()
 
@@ -55,6 +43,46 @@ export function NavigationList() {
   })
 
   const [deleteNavigation, {loading: isDeleting}] = useDeleteNavigationMutation()
+
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentNavigation?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentNavigation) return
+            close()
+            deleteNavigation({
+              variables: {id: currentNavigation.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentNavigation(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     switch (current?.type) {
@@ -93,16 +121,16 @@ export function NavigationList() {
 
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={navigations}>
-        <Column width={400} align="left" resizable>
+        <Column flexGrow={4} align="left">
           <HeaderCell>{t('navigation.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullNavigationFragment) => (
@@ -112,28 +140,15 @@ export function NavigationList() {
             )}
           </Cell>
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={100} align="right" fixed="right">
           <HeaderCell>{t('navigation.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullNavigationFragment) => (
-              <>
-                <IconButton
-                  icon={<Icon icon="trash" />}
-                  circle
-                  size="sm"
-                  style={{marginLeft: '5px'}}
-                  onClick={() => {
-                    setCurrentNavigation(rowData)
-                    setConfirmationDialogOpen(true)
-                  }}
-                />
-              </>
-            )}
+            {(rowData: FullNavigationFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>
 
-      <Drawer
+      <Modal
         show={isEditModalOpen}
         size={'sm'}
         onHide={() => {
@@ -160,40 +175,6 @@ export function NavigationList() {
             })
           }}
         />
-      </Drawer>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('navigation.overview.deleteNavigation')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('navigation.overview.name')}>
-              {currentNavigation?.name || t('navigation.overview.unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentNavigation) return
-              await deleteNavigation({
-                variables: {id: currentNavigation.id}
-              })
-
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}
-            color="red">
-            {t('navigation.overview.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('navigation.overview.cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )

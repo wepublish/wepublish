@@ -27,8 +27,8 @@ export function ChooseEditImage({
   const {t} = useTranslation()
   header = header ?? t('chooseEditImage.header')
   return (
-    <Panel header={header} bodyFill={true} style={{height: 240, marginBottom: 10}}>
-      {!image && disabled === true && <Placeholder.Graph/>}
+    <Panel bodyFill bordered style={{height: 240, marginBottom: 10}}>
+      {!image && disabled === true && <Placeholder.Graph />}
       <PlaceholderInput onAddClick={() => openChooseModalOpen?.()}>
         {image && (
           <div
@@ -37,17 +37,25 @@ export function ChooseEditImage({
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
-              position: 'relative'
+              position: 'relative',
+              background: '#000'
             }}>
             <img
               style={{maxHeight: '240'}}
               src={image?.largeURL ?? '/static/placeholder-240x240.png'}
             />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', left: left, top: top}}>
+              <div style={{position: 'absolute', left: '5px', top: '5px'}}>
                 <Dropdown
                   renderTitle={() => {
-                    return <IconButton appearance="primary" icon={<Icon icon="wrench" />} circle />
+                    return (
+                      <IconButton
+                        size="lg"
+                        appearance="primary"
+                        icon={<Icon icon="wrench" />}
+                        circle
+                      />
+                    )
                   }}>
                   {openChooseModalOpen && (
                     <Dropdown.Item disabled={disabled} onClick={() => openChooseModalOpen()}>

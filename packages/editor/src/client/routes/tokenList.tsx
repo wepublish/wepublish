@@ -22,7 +22,7 @@ import {getOperationNameFromDocument} from '../utility'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
 
 import {useTranslation} from 'react-i18next'
-import {Button, FlexboxGrid, Icon, List, Loader, IconButton, Drawer, Modal, Alert} from 'rsuite'
+import {Button, FlexboxGrid, List, Loader, Modal, Alert, Popover, Whisper} from 'rsuite'
 
 export function TokenList() {
   const {current} = useRoute()
@@ -31,8 +31,6 @@ export function TokenList() {
   const [isTokenGeneratePanelOpen, setTokenGeneratePanelOpen] = useState(
     current?.type === RouteType.TokenGenerate
   )
-
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
 
   const [currentToken, setCurrentToken] = useState<TokenRefFragment>()
 
@@ -49,6 +47,21 @@ export function TokenList() {
   })
 
   const {t} = useTranslation()
+
+  const speaker = (
+    <Popover title={currentToken?.name}>
+      <Button
+        color="red"
+        disabled={isDeleting}
+        onClick={async () => {
+          if (!currentToken) return
+
+          await deleteToken({variables: {id: currentToken.id}})
+        }}>
+        {t('global.buttons.deleteNow')}
+      </Button>
+    </Popover>
+  )
 
   useEffect(() => {
     const error = tokenListError?.message ?? deleteTokenError?.message
@@ -85,23 +98,25 @@ export function TokenList() {
       {isTokenListLoading ? (
         <Loader backdrop content={t('tokenList.overview.loading')} vertical />
       ) : (
-        <List bordered={true} style={{marginTop: '40px'}}>
+        <List bordered style={{marginTop: '40px'}}>
           {tokenListData?.tokens.map((token, index) => (
             <List.Item key={token.name} index={index}>
-              <FlexboxGrid>
+              <FlexboxGrid align="middle">
                 <FlexboxGrid.Item colspan={23} style={{paddingLeft: '10px'}}>
                   {token.name}
                 </FlexboxGrid.Item>
-                <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px'}}>
-                  <IconButton
-                    icon={<Icon icon="trash" />}
-                    circle
-                    size="sm"
-                    onClick={() => {
-                      setConfirmationDialogOpen(true)
-                      setCurrentToken(token)
-                    }}
-                  />
+                <FlexboxGrid.Item colspan={1} style={{paddingRight: '10px', textAlign: 'right'}}>
+                  <Whisper placement="left" trigger="click" speaker={speaker}>
+                    <Button
+                      appearance="link"
+                      color="red"
+                      onClick={() => {
+                        setCurrentToken(token)
+                      }}>
+                      {' '}
+                      {t('global.buttons.delete')}{' '}
+                    </Button>
+                  </Whisper>
                 </FlexboxGrid.Item>
               </FlexboxGrid>
             </List.Item>
@@ -109,7 +124,7 @@ export function TokenList() {
         </List>
       )}
 
-      <Drawer
+      <Modal
         show={isTokenGeneratePanelOpen}
         onHide={() => {
           dispatch({
@@ -126,31 +141,6 @@ export function TokenList() {
             })
           }}
         />
-      </Drawer>
-
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('tokenList.panels.deleteToken')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {t('tokenList.panels.deleteTokenText', {name: currentToken?.name || currentToken?.id})}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentToken) return
-
-              await deleteToken({variables: {id: currentToken.id}})
-              setConfirmationDialogOpen(false)
-            }}
-            color="red">
-            {t('tokenList.panels.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('tokenList.panels.cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )

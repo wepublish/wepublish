@@ -25,18 +25,7 @@ import {PeerInfoEditPanel} from '../panel/peerProfileEditPanel'
 import {PeerEditPanel} from '../panel/peerEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  Drawer,
-  FlexboxGrid,
-  List,
-  Avatar,
-  Icon,
-  IconButton,
-  Button,
-  Divider,
-  Modal,
-  Alert
-} from 'rsuite'
+import {FlexboxGrid, List, Avatar, Icon, IconButton, Button, Divider, Modal, Alert} from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -151,18 +140,18 @@ export function PeerList() {
   return (
     <>
       <FlexboxGrid>
-        <FlexboxGrid.Item colspan={2} style={{textAlign: 'center'}}>
+        <FlexboxGrid.Item colspan={1} style={{textAlign: 'left'}}>
           <Avatar
             circle={true}
             src={peerInfoData?.peerProfile?.logo?.squareURL || undefined}
             alt={peerInfoData?.peerProfile?.name?.substr(0, 2)}
           />
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={21}>
+        <FlexboxGrid.Item colspan={22}>
           <h5>{peerInfoData?.peerProfile.name || 'Unnamed'}</h5>
           <p>{peerInfoData?.peerProfile.hostURL}</p>
         </FlexboxGrid.Item>
-        <FlexboxGrid.Item colspan={1}>
+        <FlexboxGrid.Item colspan={1} style={{textAlign: 'right'}}>
           <IconButtonLink
             icon={<Icon icon="cog" />}
             circle={true}
@@ -193,7 +182,7 @@ export function PeerList() {
         ) : null}
       </div>
 
-      <Drawer
+      <Modal
         show={isPeerProfileEditModalOpen}
         size={'sm'}
         onHide={() => setPeerProfileEditModalOpen(false)}>
@@ -207,9 +196,9 @@ export function PeerList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
 
-      <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
+      <Modal show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <PeerEditPanel
           id={editID}
           onClose={() => {
@@ -234,7 +223,7 @@ export function PeerList() {
             })
           }}
         />
-      </Drawer>
+      </Modal>
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
@@ -247,7 +236,7 @@ export function PeerList() {
             </DescriptionListItem>
           </DescriptionList>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer classPrefix="wep-modal-footer">
           <Button
             disabled={isDeleting}
             color="red"

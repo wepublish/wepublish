@@ -9,8 +9,8 @@ import {
   Form,
   FormControl,
   FormGroup,
+  HelpBlock,
   Modal,
-  Panel,
   Toggle
 } from 'rsuite'
 
@@ -30,7 +30,6 @@ import {ResetUserPasswordPanel} from './resetUserPasswordPanel'
 import {UserSubscriptionEditPanel} from './userSubscriptionEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {Typography} from '../atoms/typography'
 
 export interface UserEditPanelProps {
   id?: string
@@ -143,114 +142,92 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('userList.panels.editUser') : t('userList.panels.createUser')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.name')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={value => setName(value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.preferredName')}
-                value={preferredName}
-                disabled={isDisabled}
-                onChange={value => setPreferredName(value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.email')}</ControlLabel>
-              <FormControl
-                name={t('userList.panels.email')}
-                value={email}
-                disabled={isDisabled}
-                onChange={value => setEmail(value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.active')}</ControlLabel>
-              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-            </FormGroup>
-            {!id ? (
-              <FormGroup>
-                <ControlLabel>{t('userList.panels.password')}</ControlLabel>
-                <FormControl
-                  type="password"
-                  name={t('userList.panels.password')}
-                  value={password}
-                  disabled={isDisabled}
-                  onChange={value => setPassword(value)}
-                />
-              </FormGroup>
-            ) : (
-              <FormGroup>
-                <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
-                  {t('userList.panels.resetPassword')}
-                </Button>
-              </FormGroup>
-            )}
-            <FormGroup>
-              <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
-              <CheckPicker
-                name={t('userList.panels.userRoles')}
-                block={true}
-                value={roles.map(role => role.id)}
-                data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
-                onChange={value => {
-                  setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
-                }}
-              />
-            </FormGroup>
-          </Form>
-        </Panel>
-        <Panel header={t('userList.panels.subTitle')}>
-          {subscription && (
-            <DescriptionList>
-              <DescriptionListItem label={t('userList.panels.startedAt')}>
-                {new Date(subscription.startsAt).toLocaleString()}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('userList.panels.payedUntil')}>
-                {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
-              </DescriptionListItem>
-              <DescriptionListItem label={t('userList.panels.memberPlan')}>
-                {subscription.memberPlan.name}
-              </DescriptionListItem>
-            </DescriptionList>
-          )}
-          <Button
-            disabled={isDisabled || id === undefined}
-            appearance="primary"
-            onClick={() => setIsUserSubscriptonEditOpen(true)}>
-            {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
-          </Button>
-          {id === undefined && (
-            <div>
-              <Typography variant="body1">{t('userList.panels.subDisableDescription')}</Typography>
-            </div>
-          )}
-        </Panel>
-      </Drawer.Body>
+      <Modal.Body>
+        <Form fluid>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.name')}</ControlLabel>
+            <FormControl
+              name={t('userList.panels.name')}
+              value={name}
+              disabled={isDisabled}
+              onChange={value => setName(value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.preferredName')}</ControlLabel>
+            <FormControl
+              name={t('userList.panels.preferredName')}
+              value={preferredName}
+              disabled={isDisabled}
+              onChange={value => setPreferredName(value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.email')}</ControlLabel>
+            <FormControl
+              name={t('userList.panels.email')}
+              value={email}
+              disabled={isDisabled}
+              onChange={value => setEmail(value)}
+            />
+          </FormGroup>
 
-      <Drawer.Footer>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
+            <CheckPicker
+              name={t('userList.panels.userRoles')}
+              block={true}
+              value={roles.map(role => role.id)}
+              data={userRoles.map(userRole => ({value: userRole.id, label: userRole.name}))}
+              onChange={value => {
+                setRoles(userRoles.filter(userRole => value.includes(userRole.id)))
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('userList.panels.active')}</ControlLabel>
+            <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
+          </FormGroup>
+        </Form>
+        <h5 className="wep-section-title">{t('userList.panels.subTitle')}</h5>
+
+        {subscription && (
+          <DescriptionList>
+            <DescriptionListItem label={t('userList.panels.startedAt')}>
+              {new Date(subscription.startsAt).toLocaleString()}
+            </DescriptionListItem>
+            <DescriptionListItem label={t('userList.panels.payedUntil')}>
+              {subscription.paidUntil ? new Date(subscription.paidUntil).toLocaleString() : ''}
+            </DescriptionListItem>
+            <DescriptionListItem label={t('userList.panels.memberPlan')}>
+              {subscription.memberPlan.name}
+            </DescriptionListItem>
+          </DescriptionList>
+        )}
+        <Button
+          disabled={isDisabled || id === undefined}
+          appearance="ghost"
+          color="green"
+          onClick={() => setIsUserSubscriptonEditOpen(true)}>
+          {t(subscription ? 'userList.panels.subEdit' : 'userList.panels.subCreate')}
+        </Button>
+        {id === undefined && <HelpBlock>{t('userList.panels.subDisableDescription')}</HelpBlock>}
+      </Modal.Body>
+
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userList.panels.save') : t('userList.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('userList.panels.close')}
+          {t('userList.panels.cancel')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
 
       <Modal show={isResetUserPasswordOpen} onHide={() => setIsResetUserPasswordOpen(false)}>
         <Modal.Header>
@@ -265,7 +242,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
           />
         </Modal.Body>
 
-        <Modal.Footer>
+        <Modal.Footer classPrefix="wep-modal-footer">
           <Button onClick={() => setIsResetUserPasswordOpen(false)} appearance="subtle">
             {t('userList.panels.cancel')}
           </Button>
@@ -273,7 +250,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
       </Modal>
 
       {id !== undefined && (
-        <Drawer
+        <Modal
           show={isUserSubscriptonEditOpen}
           size={'sm'}
           onHide={() => setIsUserSubscriptonEditOpen(false)}>
@@ -286,7 +263,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               setUserSubscription(value)
             }}
           />
-        </Drawer>
+        </Modal>
       )}
     </>
   )
