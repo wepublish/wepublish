@@ -75,6 +75,6 @@ services:
 
   test:
     build: .
-    command: [ 'yarn', 'test']
+    command: ['yarn', 'test']
     environment:
       TEST_MONGO_URL: mongodb://mongo:27017/wepublish-test

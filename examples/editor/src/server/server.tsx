@@ -65,7 +65,7 @@ export async function initServer() {
     res.send(markup)
   })
 
-  const port = parseInt(process.env.PORT || process.env.EDITOR_PORT || '8000')
+  const port = parseInt(process.env.PORT || process.env.EDITOR_PORT || '3000')
   const address = process.env.ADDRESS || 'localhost'
 
   app.listen(port, address)
