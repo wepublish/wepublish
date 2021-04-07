@@ -198,7 +198,7 @@ function authorSortFieldForSort(sort: AuthorSort) {
   }
 }
 
-function authorDateForSort(author: DBAuthor, sort: AuthorSort): Date | undefined {
+function authorDateForSort(author: DBAuthor, sort: AuthorSort): Date {
   switch (sort) {
     case AuthorSort.CreatedAt:
       return author.createdAt

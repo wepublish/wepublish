@@ -11,13 +11,7 @@ import {
   Link
 } from '../route'
 
-import {
-  useAuthorListQuery,
-  useDeleteAuthorMutation,
-  FullAuthorFragment,
-  AuthorSort,
-  AuthorRefFragment
-} from '../api'
+import {useAuthorListQuery, useDeleteAuthorMutation, FullAuthorFragment, AuthorSort} from '../api'
 import {AuthorEditPanel} from '../panel/authorEditPanel'
 import {RouteActionType} from '@karma.run/react'
 
@@ -178,7 +172,7 @@ export function AuthorList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('authors.overview.created')}</HeaderCell>
             <Cell dataKey="createdAt">
-              {({createdAt}: AuthorRefFragment) => new Date(createdAt).toDateString()}
+              {({createdAt}: FullAuthorFragment) => new Date(createdAt).toDateString()}
             </Cell>
           </Column>
           <Column width={100} align="center" fixed="right">

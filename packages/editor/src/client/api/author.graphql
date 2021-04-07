@@ -2,7 +2,6 @@ fragment AuthorRef on Author {
   id
   name
   jobTitle
-  createdAt
   image {
     ...ImageRef
   }

@@ -2168,7 +2168,7 @@ export type CreateSessionWithJwtMutation = (
 
 export type AuthorRefFragment = (
   { __typename?: 'Author' }
-  & Pick<Author, 'id' | 'name' | 'jobTitle' | 'createdAt'>
+  & Pick<Author, 'id' | 'name' | 'jobTitle'>
   & { image?: Maybe<(
     { __typename?: 'Image' }
     & ImageRefFragment
@@ -3530,7 +3530,6 @@ export const AuthorRefFragmentDoc = gql`
   id
   name
   jobTitle
-  createdAt
   image {
     ...ImageRef
   }
