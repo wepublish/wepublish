@@ -39,6 +39,7 @@ export interface ArticleMetadata {
 }
 
 export interface I18nProps {
+  readonly label: string
   readonly value?: any
   readonly display?: any
   readonly children: any
@@ -53,12 +54,21 @@ export const tooltip = (
   </Tooltip>
 )
 
-export const I18nWrapper = memo(function I18nWrapper({children, display}: I18nProps) {
+export const I18nWrapper = memo(function I18nWrapper({label, children, display}: I18nProps) {
+  let preview = null
+  if (!display || typeof display === 'string') {
+    preview = <Input className="wep-input-disabled" value={display} disabled />
+  } else {
+    preview = display
+  }
   return (
     <Row className="show-grid" style={{display: 'flex', alignItems: 'center'}}>
       <Col xs={11}>
         <Form fluid>
-          <FormGroup>{children}</FormGroup>
+          <FormGroup>
+            <ControlLabel>{label}</ControlLabel>
+            {children}
+          </FormGroup>
         </Form>
       </Col>
       <Col xs={2} style={{textAlign: 'center', paddingTop: '5px'}}>
@@ -69,8 +79,8 @@ export const I18nWrapper = memo(function I18nWrapper({children, display}: I18nPr
       <Col xs={11}>
         <Form>
           <FormGroup>
-            <ControlLabel>Input Label</ControlLabel>
-            <Input className="wep-input-disabled" value={display} disabled />
+            <ControlLabel>{label}</ControlLabel>
+            {preview}
           </FormGroup>
         </Form>
       </Col>

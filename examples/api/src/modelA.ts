@@ -16,6 +16,10 @@ export const contentModelA: ContentModel = {
       myRichText: {
         type: ContentModelSchemaTypes.richText
       },
+      myRichTextI18n: {
+        type: ContentModelSchemaTypes.richText,
+        i18n: true
+      },
       myRef: {
         type: ContentModelSchemaTypes.reference,
         types: {
@@ -41,6 +45,10 @@ export const contentModelA: ContentModel = {
       },
       myRichText: {
         type: ContentModelSchemaTypes.richText
+      },
+      myRichTextI18n: {
+        type: ContentModelSchemaTypes.richText,
+        i18n: true
       },
       myRef: {
         type: ContentModelSchemaTypes.reference,
