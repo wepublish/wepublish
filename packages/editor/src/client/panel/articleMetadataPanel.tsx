@@ -407,15 +407,16 @@ export function ArticleMetadataPanel({
                     setAuthorsFilter('')
                   }}
                   block
-                  renderExtraFooter={() => (
-                    authorsFilter && data?.authors.nodes.length === 0 && <div style={{float: 'right', margin: '20px'}}>
-                      <Button
-                        onClick={() => handleCreateAuthor()}
-                        appearance={'primary'}>
-                        {t('authors.panels.createAuthor')}
-                      </Button>
-                    </div>
-                  )}
+                  renderExtraFooter={() =>
+                    authorsFilter &&
+                    data?.authors.nodes.length === 0 && (
+                      <div style={{float: 'right', margin: '20px'}}>
+                        <Button onClick={() => handleCreateAuthor()} appearance={'primary'}>
+                          {t('authors.panels.createAuthor')}
+                        </Button>
+                      </div>
+                    )
+                  }
                 />
               </FormGroup>
               <FormGroup>
