@@ -712,13 +712,12 @@
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter"
     },
-    "timeDatePicker": {
+    "dateTimePicker": {
       "now": "Now",
       "today": "Today",
       "tomorrow": "Tomorrow",
       "nextSaturday": "Next Saturday",
-      "am": "{{hour}} AM",
-      "pm": "{{hour}} PM"
+      "hour": "{{hour}}:00"
     },
     "untitled": "Untitled",
     "confirm": "Confirm",

@@ -2,13 +2,28 @@ import React from 'react'
 import {DatePicker, FormGroup, ControlLabel, Form} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
-export interface DateTimeProps {
-  dateTime?: Date
+export interface DateTimeRange {
   label: string
-  changeDate(publishDate?: Date): void
+  value: Date
 }
 
-export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
+export interface DateTimePickerProps {
+  dateTime: Date | undefined
+  label: string
+
+  dateRanges?: DateTimeRange[]
+  timeRanges?: DateTimeRange[]
+
+  changeDate(publishDate: Date): void
+}
+
+export function DateTimePicker({
+  dateTime,
+  label,
+  dateRanges,
+  timeRanges,
+  changeDate
+}: DateTimePickerProps) {
   const {t} = useTranslation()
 
   return (
@@ -18,33 +33,42 @@ export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
         <DatePicker
           style={{marginRight: 8}}
           placement="auto"
-          value={dateTime?.getTime() === dateTime?.getTime() ? dateTime : undefined}
+          value={dateTime ? dateTime : undefined}
+          cleanable={false}
           format="DD MMM YYYY"
-          ranges={[
-            {
-              label: t('timeDatePicker.today'),
-              value: new Date()
-            },
-            {
-              label: t('timeDatePicker.tomorrow'),
-              value: () => {
-                const tomorrow = new Date()
-                tomorrow.setDate(new Date().getDate() + 1)
-                return tomorrow
-              }
-            },
-            {
-              label: t('timeDatePicker.nextSaturday'),
-              value: () => {
-                const nextSaturday = new Date()
-                const i = 6 - new Date().getDay()
-                nextSaturday.setDate(i ? nextSaturday.getDate() + i : nextSaturday.getDate() + 7)
-                return nextSaturday
-              }
-            }
-          ]}
+          ranges={
+            dateRanges
+              ? dateRanges
+              : [
+                  {
+                    label: t('dateTimePicker.today'),
+                    value: new Date()
+                  },
+                  {
+                    label: t('dateTimePicker.tomorrow'),
+                    value: () => {
+                      const tomorrow = new Date()
+                      tomorrow.setDate(new Date().getDate() + 1)
+                      return tomorrow
+                    }
+                  },
+                  {
+                    label: t('dateTimePicker.nextSaturday'),
+                    value: () => {
+                      const nextSaturday = new Date()
+                      const remainingDaysInWeek = 6 - new Date().getDay()
+                      nextSaturday.setDate(
+                        remainingDaysInWeek
+                          ? nextSaturday.getDate() + remainingDaysInWeek
+                          : nextSaturday.getDate() + 7
+                      )
+                      return nextSaturday
+                    }
+                  }
+                ]
+          }
           onChange={value => {
-            if (dateTime) {
+            if (dateTime && value) {
               dateTime.setFullYear(value?.getFullYear())
               dateTime.setMonth(value?.getMonth())
               dateTime.setDate(value?.getDate())
@@ -54,32 +78,37 @@ export function DateTimePicker({dateTime, label, changeDate}: DateTimeProps) {
         />
         <DatePicker
           placement="auto"
-          value={dateTime?.getTime() === dateTime?.getTime() ? dateTime : undefined}
           format="HH:mm"
-          ranges={[
-            {
-              label: t('timeDatePicker.now'),
-              value: new Date()
-            },
-            {
-              label: t('timeDatePicker.am', {hour: 6}),
-              value: () => {
-                const six = new Date()
-                six.setHours(6, 0, 0)
-                return six
-              }
-            },
-            {
-              label: t('timeDatePicker.pm', {hour: 2}),
-              value: () => {
-                const two = new Date()
-                two.setHours(14, 0, 0)
-                return two
-              }
-            }
-          ]}
+          value={dateTime ? dateTime : undefined}
+          cleanable={false}
+          ranges={
+            timeRanges
+              ? timeRanges
+              : [
+                  {
+                    label: t('dateTimePicker.now'),
+                    value: new Date()
+                  },
+                  {
+                    label: t('dateTimePicker.hour', {hour: '6'}),
+                    value: () => {
+                      const six = new Date()
+                      six.setHours(6, 0, 0)
+                      return six
+                    }
+                  },
+                  {
+                    label: t('dateTimePicker.hour', {hour: '14'}),
+                    value: () => {
+                      const two = new Date()
+                      two.setHours(14, 0, 0)
+                      return two
+                    }
+                  }
+                ]
+          }
           onChange={value => {
-            if (dateTime) {
+            if (dateTime && value) {
               dateTime.setHours(value?.getHours())
               dateTime.setMinutes(value?.getMinutes())
               changeDate(new Date(dateTime))

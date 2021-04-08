@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
 import {ArticleMetadata} from './articleMetadataPanel'
 
@@ -31,11 +31,6 @@ export function PublishArticlePanel({
 
   const {t} = useTranslation()
 
-  useEffect(() => {
-    console.log('publish date ', publishDate)
-    console.log('update date ', updateDate)
-  }, [publishDate, updateDate])
-
   return (
     <>
       <Modal.Header>
@@ -52,12 +47,12 @@ export function PublishArticlePanel({
         <DateTimePicker
           dateTime={publishDate}
           label={t('articleEditor.panels.publishDate')}
-          changeDate={(date: Date) => setPublishDate(date)}
+          changeDate={date => setPublishDate(date)}
         />
         <DateTimePicker
           dateTime={updateDate}
           label={t('articleEditor.panels.updateDate')}
-          changeDate={(date: Date) => setUpdateDate(date)}
+          changeDate={date => setUpdateDate(date)}
         />
 
         <DescriptionList>
