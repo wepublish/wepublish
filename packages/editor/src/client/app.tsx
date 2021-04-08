@@ -1,7 +1,7 @@
 import React from 'react'
 import {hot} from 'react-hot-loader/root'
 
-import 'rsuite/lib/styles/index.less'
+//import 'rsuite/lib/styles/index.less'
 
 import {useRoute, RouteType, Route} from './route'
 
@@ -23,7 +23,7 @@ import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
-import './global.less'
+// import './global.less'
 import {useConfigQuery} from './api'
 import {EditorConfig, ContentModelConfigMerged, ExtensionConfig} from './interfaces/extensionConfig'
 import {Extension} from './routes/extension'

@@ -8,7 +8,7 @@ import {
   useArticleListQuery,
   usePageListQuery,
   usePeerArticleListQuery
-} from '@wepublish/editor/src/client/api'
+} from '@wepublish/editor/lib/client/api'
 
 export interface TeaserSelectPanelProps {
   onClose(): void

@@ -13,7 +13,7 @@ import {Icon, Popover, PopoverProps, Whisper, Divider, Modal} from 'rsuite'
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
-import './toolbar.less'
+// import './toolbar.less'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler

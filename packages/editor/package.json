@@ -26,7 +26,7 @@
     "wepublish-editor": "./dist/server/index.js"
   },
   "module": "lib/index.js",
-  "types": "src/index.ts",
+  "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",

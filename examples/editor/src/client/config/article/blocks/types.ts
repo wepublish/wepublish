@@ -6,7 +6,7 @@ import {
   ArticleRefFragment,
   PageRefFragment,
   PeerRefFragment
-} from '@wepublish/editor/src/client/api'
+} from '@wepublish/editor/lib/client/api'
 
 export enum BlockType {
   RichText = 'richText',

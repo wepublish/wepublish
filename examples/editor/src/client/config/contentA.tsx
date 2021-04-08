@@ -10,7 +10,7 @@ import {
   ReferenceButton
 } from '@wepublish/editor'
 import {ContentContextEnum} from './article/api'
-import {ConfigContext} from '@wepublish/editor/src/client/Editorcontext'
+import {ConfigContext} from '@wepublish/editor'
 import {I18nWrapper} from './i18nWrapper'
 
 export interface ContentA_EditViewValue {

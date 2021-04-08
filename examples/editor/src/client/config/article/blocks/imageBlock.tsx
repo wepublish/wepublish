@@ -10,7 +10,7 @@ import {ImageBlockValue} from './types'
 
 import {useTranslation} from 'react-i18next'
 import {ImagedEditPanel, ImageSelectPanel, Reference} from '@wepublish/editor'
-import {useImageQuery} from '@wepublish/editor/src/client/api'
+import {useImageQuery} from '@wepublish/editor/lib/client/api'
 
 // TODO: Handle disabled prop
 export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockValue>) {

@@ -11,7 +11,7 @@ import {GalleryListEditPanel} from '../panel/galleryListEditPanel'
 
 import {useTranslation} from 'react-i18next'
 import {ImagedEditPanel, ImageSelectPanel, Reference} from '@wepublish/editor'
-import {ImageRefFragment, useImageQuery} from '@wepublish/editor/src/client/api'
+import {ImageRefFragment, useImageQuery} from '../api'
 
 export function ImageGalleryBlock({
   value,
