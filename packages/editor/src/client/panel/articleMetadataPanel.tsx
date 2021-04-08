@@ -24,7 +24,7 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
+import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment, useCreateAuthorMutation} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
@@ -136,6 +136,21 @@ export function ArticleMetadataPanel({
       setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
     }
   }, [data?.authors, authors, socialMediaAuthors])
+
+  const [createAuthor] = useCreateAuthorMutation({})
+  const [authorName, setAuthorName] = useState('')
+  const [authorSlug, setAuthorSlug] = useState('')
+
+  async function handleCreateAuthor() {
+      const {data} = await createAuthor({
+        variables: {
+          input: {
+            name: authorName,
+            slug: authorSlug
+          }
+        }
+      })
+  }
 
   const preTitleMax = 30
   const seoTitleMax = 70
@@ -371,7 +386,11 @@ export function ArticleMetadataPanel({
                   cleanable={true}
                   value={authors.map(author => author.id)}
                   data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
-                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
+                  onSearch={searchKeyword => {
+                    setAuthorsFilter(searchKeyword)
+                    setAuthorName(searchKeyword)
+                    setAuthorSlug(slugify(searchKeyword))
+                  }}
                   onChange={authorsID => {
                     const authors = foundAuthors.filter(author => authorsID.includes(author.id))
                     onChange?.({...value, authors})
@@ -380,6 +399,11 @@ export function ArticleMetadataPanel({
                     setAuthorsFilter('')
                   }}
                   block
+                  renderExtraFooter={() => (
+                    <Button onClick={() => handleCreateAuthor()}>
+                      {t('authors.panels.createAuthor')}
+                    </Button>
+                  )}
                 />
               </FormGroup>
               <FormGroup>
