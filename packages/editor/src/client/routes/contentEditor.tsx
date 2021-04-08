@@ -251,7 +251,8 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
             leftChildren={
               <IconButtonLink
                 size={'lg'}
-                icon={<Icon icon="arrow-left" />}
+                appearance="subtle"
+                icon={<Icon icon="angle-left" />}
                 route={ContentListRoute.create({type})}
                 onClick={e => {
                   if (!unsavedChangesDialog()) e.preventDefault()
@@ -264,6 +265,7 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
                 {metadataView ? (
                   <IconButton
                     icon={<Icon icon="newspaper-o" />}
+                    appearance="subtle"
                     size={'lg'}
                     disabled={isDisabled}
                     onClick={() => setMetaVisible(true)}>
@@ -274,8 +276,9 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
                 {isNew && createData == null ? (
                   <IconButton
                     style={{
-                      marginLeft: '10px'
+                      marginLeft: '20px'
                     }}
+                    appearance="subtle"
                     size={'lg'}
                     icon={<Icon icon="save" />}
                     disabled={isDisabled}
@@ -286,8 +289,9 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
                   <>
                     <IconButton
                       style={{
-                        marginLeft: '10px'
+                        marginLeft: '20px'
                       }}
+                      appearance="subtle"
                       size={'lg'}
                       icon={<Icon icon="save" />}
                       disabled={isDisabled}
@@ -296,8 +300,9 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
                     </IconButton>
                     <IconButton
                       style={{
-                        marginLeft: '10px'
+                        marginLeft: '20px'
                       }}
+                      appearance="subtle"
                       size={'lg'}
                       icon={<Icon icon="cloud-upload" />}
                       disabled={isDisabled}

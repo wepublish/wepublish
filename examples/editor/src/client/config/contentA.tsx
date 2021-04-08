@@ -1,5 +1,16 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react'
-import {Button, Col, ControlLabel, FormControl, Grid, Modal, Row, SelectPicker} from 'rsuite'
+import {
+  Button,
+  Icon,
+  Col,
+  ControlLabel,
+  FormControl,
+  Grid,
+  Modal,
+  Row,
+  SelectPicker,
+  Panel
+} from 'rsuite'
 import {isFunctionalUpdate} from '@karma.run/react'
 import {
   RichTextBlock,
@@ -56,29 +67,32 @@ export function ContentA_EditView({value, onChange}: ContentA_EditViewProps) {
   const header = useMemo(() => {
     return (
       <Row className="show-grid">
-        <Col xs={10}>
+        <Col xs={11}>
           <SelectPicker
             data={languages}
             value={editLang}
+            appearance="subtle"
             onChange={setEditLang}
-            style={{width: 224}}
+            style={{width: 100}}
           />
         </Col>
-        <Col xs={4}>
+        <Col xs={2} style={{textAlign: 'center'}}>
           <Button
+            appearance="link"
             onClick={() => {
               setEditLang(viewLang)
               setViewLang(editLang)
             }}>
-            {'<-->'}
+            {<Icon icon="exchange" />}
           </Button>
         </Col>
-        <Col xs={10}>
+        <Col xs={11} style={{textAlign: 'right'}}>
           <SelectPicker
             data={languages}
             value={viewLang}
+            appearance="subtle"
             onChange={setViewLang}
-            style={{width: 224}}
+            style={{width: 100}}
           />
         </Col>
       </Row>
@@ -89,53 +103,52 @@ export function ContentA_EditView({value, onChange}: ContentA_EditViewProps) {
     <>
       <Grid>
         {header}
+        <Panel bordered>
+          <I18nWrapper value={myString}>
+            <ControlLabel>myString</ControlLabel>
+            <FormControl value={myString} onChange={myString => onChange?.({...value, myString})} />
+          </I18nWrapper>
 
-        <Row>
-          <br></br>
-        </Row>
-
-        <I18nWrapper value={myString}>
-          <ControlLabel>myString</ControlLabel>
-          <FormControl value={myString} onChange={myString => onChange?.({...value, myString})} />
-        </I18nWrapper>
-
-        <I18nWrapper value={myStringI18n[editLang]} display={myStringI18n[viewLang]}>
-          <ControlLabel>myStringI18n</ControlLabel>
-          <FormControl
-            value={myStringI18n[editLang]}
-            onChange={val =>
-              onChange?.({...value, myStringI18n: {...myStringI18n, [editLang]: val}})
-            }
-          />
-        </I18nWrapper>
-
-        <I18nWrapper>
-          <ControlLabel>myRichText</ControlLabel>
-          <RichTextBlock
-            value={myRichText}
-            onChange={handleRichTextChange}
-            config={{
-              bold: true,
-              italic: true,
-              url: true,
-              ref: {
-                modelA: {scope: ContentContextEnum.Local},
-                modelB: {scope: ContentContextEnum.Local},
-                [MediaReferenceType]: {scope: ContentContextEnum.Local}
+          <I18nWrapper value={myStringI18n[editLang]} display={myStringI18n[viewLang]}>
+            <ControlLabel>myStringI18n</ControlLabel>
+            <FormControl
+              value={myStringI18n[editLang]}
+              onChange={val =>
+                onChange?.({...value, myStringI18n: {...myStringI18n, [editLang]: val}})
               }
-            }}
-          />
-        </I18nWrapper>
+            />
+          </I18nWrapper>
 
-        <I18nWrapper>
-          <ControlLabel>myRef</ControlLabel>
-          <ReferenceButton
-            reference={myRef}
-            onClick={() => setChooseModalOpen(true)}
-            onClose={() => {
-              onChange?.({...value, myRef: null})
-            }}></ReferenceButton>
-        </I18nWrapper>
+          <I18nWrapper>
+            <ControlLabel>myRichText</ControlLabel>
+            <Panel bordered>
+              <RichTextBlock
+                value={myRichText}
+                onChange={handleRichTextChange}
+                config={{
+                  bold: true,
+                  italic: true,
+                  url: true,
+                  ref: {
+                    modelA: {scope: ContentContextEnum.Local},
+                    modelB: {scope: ContentContextEnum.Local},
+                    [MediaReferenceType]: {scope: ContentContextEnum.Local}
+                  }
+                }}
+              />
+            </Panel>
+          </I18nWrapper>
+
+          <I18nWrapper>
+            <ControlLabel>myRef</ControlLabel>
+            <ReferenceButton
+              reference={myRef}
+              onClick={() => setChooseModalOpen(true)}
+              onClose={() => {
+                onChange?.({...value, myRef: null})
+              }}></ReferenceButton>
+          </I18nWrapper>
+        </Panel>
       </Grid>
 
       <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>

@@ -1,5 +1,16 @@
 import React, {memo} from 'react'
-import {Form, FormGroup, Row, Col} from 'rsuite'
+import {
+  Form,
+  FormGroup,
+  Input,
+  IconButton,
+  Icon,
+  Whisper,
+  Tooltip,
+  ControlLabel,
+  Row,
+  Col
+} from 'rsuite'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -33,18 +44,36 @@ export interface I18nProps {
   readonly children: any
 }
 
+export const tooltip = (
+  <Tooltip>
+    <p>
+      Translate text with <b>Deepl</b>.<br />
+      Attention: All formatting will be lost
+    </p>
+  </Tooltip>
+)
+
 export const I18nWrapper = memo(function I18nWrapper({children, display}: I18nProps) {
   return (
-    <Row className="show-grid">
-      <Col xs={12}>
-        <Form
-          style={{
-            width: '100%'
-          }}>
+    <Row className="show-grid" style={{display: 'flex', alignItems: 'center'}}>
+      <Col xs={11}>
+        <Form fluid>
           <FormGroup>{children}</FormGroup>
         </Form>
       </Col>
-      <Col xs={12}>{display}</Col>
+      <Col xs={2} style={{textAlign: 'center', paddingTop: '5px'}}>
+        <Whisper placement="top" trigger="hover" speaker={tooltip}>
+          <IconButton icon={<Icon icon="left" />} circle size="sm" />
+        </Whisper>
+      </Col>
+      <Col xs={11}>
+        <Form>
+          <FormGroup>
+            <ControlLabel>Input Label</ControlLabel>
+            <Input className="wep-input-disabled" value={display} disabled />
+          </FormGroup>
+        </Form>
+      </Col>
     </Row>
   )
 })
