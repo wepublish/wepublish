@@ -112,10 +112,10 @@ export function RefContentSelectPanel({onSelectRef, type, context}: RefContentSe
   return (
     <>
       <InputGroup style={{marginBottom: 20}}>
-        <Input value={filter} onChange={value => setFilter(value)} />
         <InputGroup.Addon>
           <Icon icon="search" />
         </InputGroup.Addon>
+        <Input value={filter} onChange={value => setFilter(value)} />
       </InputGroup>
       <List>{currentContent()}</List>
     </>
