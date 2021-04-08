@@ -23,8 +23,14 @@ import {
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment, useCreateAuthorMutation} from '../api'
+import {slugify, getOperationNameFromDocument} from '../utility'
+import {
+  useAuthorListQuery,
+  AuthorRefFragment,
+  ImageRefFragment,
+  useCreateAuthorMutation,
+  AuthorListDocument
+} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
@@ -137,19 +143,21 @@ export function ArticleMetadataPanel({
     }
   }, [data?.authors, authors, socialMediaAuthors])
 
-  const [createAuthor] = useCreateAuthorMutation({})
+  const [createAuthor] = useCreateAuthorMutation({
+    refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
+  })
   const [authorName, setAuthorName] = useState('')
   const [authorSlug, setAuthorSlug] = useState('')
 
   async function handleCreateAuthor() {
-      const {data} = await createAuthor({
-        variables: {
-          input: {
-            name: authorName,
-            slug: authorSlug
-          }
+    await createAuthor({
+      variables: {
+        input: {
+          name: authorName,
+          slug: authorSlug
         }
-      })
+      }
+    })
   }
 
   const preTitleMax = 30
@@ -400,9 +408,13 @@ export function ArticleMetadataPanel({
                   }}
                   block
                   renderExtraFooter={() => (
-                    <Button onClick={() => handleCreateAuthor()}>
-                      {t('authors.panels.createAuthor')}
-                    </Button>
+                    authorsFilter && <div style={{float: 'right', margin: '20px'}}>
+                      <Button
+                        onClick={() => handleCreateAuthor()}
+                        appearance={'primary'}>
+                        {t('authors.panels.createAuthor')}
+                      </Button>
+                    </div>
                   )}
                 />
               </FormGroup>
