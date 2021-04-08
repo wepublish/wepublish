@@ -25,13 +25,14 @@
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
-  "module": "src/index.ts",
-  "typings": "src/index.ts",
+  "module": "lib/index.js",
+  "types": "src/index.ts",
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
     "build": "run-p build:client build:server",
     "build:client": "webpack --mode development",
+    "build:client-lib": "webpack --mode development --config webpack.lib.config.ts",
     "build:server": "tsc -b ./src/shared ./src/server",
     "build:production": "webpack --mode production && yarn build:server",
     "watch": "npm-run-all copy-license --parallel watch:*",
