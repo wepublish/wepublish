@@ -234,7 +234,11 @@ export function ArticleMetadataPanel({
                     value: author.id,
                     label: author.name
                   }))}
-                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
+                  onSearch={searchKeyword => {
+                    setAuthorsFilter(searchKeyword)
+                    setAuthorName(searchKeyword)
+                    setAuthorSlug(slugify(searchKeyword))
+                  }}
                   onChange={socialMediaAuthorIDs => {
                     const socialMediaAuthors = foundSocialMediaAuthors.filter(author =>
                       socialMediaAuthorIDs.includes(author.id)
@@ -245,6 +249,16 @@ export function ArticleMetadataPanel({
                     setAuthorsFilter('')
                   }}
                   block
+                  renderExtraFooter={() =>
+                    authorsFilter &&
+                    data?.authors.nodes.length === 0 && (
+                      <div style={{float: 'right', margin: '20px'}}>
+                        <Button onClick={() => handleCreateAuthor()} appearance={'primary'}>
+                          {t('authors.panels.createAuthor')}
+                        </Button>
+                      </div>
+                    )
+                  }
                 />
               </FormGroup>
               <FormGroup>
