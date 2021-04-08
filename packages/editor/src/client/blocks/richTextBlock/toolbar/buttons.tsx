@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {PopoverProps} from 'rsuite'
 import {useSlate} from 'slate-react'
 import {
@@ -7,11 +7,11 @@ import {
   ToolbarButton,
   ToolbarIconButton,
   SubMenuButton,
-  SubMenuButtonProps
+  SubMenuButtonProps,
+  TextColorIcon
 } from '../../../atoms/toolbar'
 import {WepublishEditor} from '../editor/wepublishEditor'
 import {Format} from '../editor/formats'
-import {ColorPicker} from '../../../atoms/colorPicker'
 
 interface FormatBlockIconButtonProps extends ToolbarIconButtonProps {
   readonly format: Format
@@ -54,10 +54,42 @@ export function FormatButton({format, children}: FormatBlockButtonProps) {
 export function FormatColor() {
   const editor = useSlate()
 
+  const [color, setColor] = useState<string>()
+
+  const [checkColor, toggleCheckColor] = useState<boolean>(false)
+
+  const textInput = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const nodes = Array.from(
+      WepublishEditor.nodes(editor, {
+        at: editor.selection ?? undefined,
+        match: node => !!node.color
+      })
+    )
+    if (nodes?.length) {
+      setColor(nodes[0][0].color)
+    }
+  }, [checkColor])
+
+  useEffect(() => {
+    textInput.current.click()
+  }, [color])
+
   return (
-    <ToolbarButton>
-      <ColorPicker
-        setColor={(color: string | undefined) => WepublishEditor.changeColor(editor, color)}
+    <ToolbarButton onClick={() => toggleCheckColor(!checkColor)}>
+      <TextColorIcon />
+      <input
+        ref={textInput}
+        type="color"
+        value={color}
+        onChange={e => {
+          const color = e.target.value
+          if (color) setColor(color)
+          WepublishEditor.changeColor(editor, color)
+          toggleCheckColor(!checkColor)
+        }}
+        style={{width: 0, visibility: 'hidden'}}
       />
     </ToolbarButton>
   )
