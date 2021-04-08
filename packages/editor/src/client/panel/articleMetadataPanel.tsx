@@ -408,7 +408,7 @@ export function ArticleMetadataPanel({
                   }}
                   block
                   renderExtraFooter={() => (
-                    authorsFilter && <div style={{float: 'right', margin: '20px'}}>
+                    authorsFilter && data?.authors.nodes.length === 0 && <div style={{float: 'right', margin: '20px'}}>
                       <Button
                         onClick={() => handleCreateAuthor()}
                         appearance={'primary'}>
