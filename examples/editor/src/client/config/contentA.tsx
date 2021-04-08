@@ -151,7 +151,7 @@ export function ContentA_EditView({value, onChange}: ContentA_EditViewProps) {
         </Panel>
       </Grid>
 
-      <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>
+      <Modal show={isChooseModalOpen} size="lg" onHide={() => setChooseModalOpen(false)}>
         <RefSelectModal
           config={{
             modelA: {scope: ContentContextEnum.Local},
