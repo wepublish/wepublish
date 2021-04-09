@@ -146,7 +146,7 @@ export function ArticleMetadataPanel({
   const [createAuthor] = useCreateAuthorMutation({
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
   })
-  
+
   async function handleCreateAuthor() {
     await createAuthor({
       variables: {
@@ -249,8 +249,8 @@ export function ArticleMetadataPanel({
                     authorsFilter &&
                     !data?.authors.nodes.length && (
                       <div style={{margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance='primary'>
-                          {t('articles.panels.createAuthorProfile' , {name: authorsFilter})}
+                        <Button onClick={() => handleCreateAuthor()} appearance="primary">
+                          {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
                         </Button>
                       </div>
                     )
@@ -419,8 +419,8 @@ export function ArticleMetadataPanel({
                     authorsFilter &&
                     !data?.authors.nodes.length && (
                       <div style={{margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance='primary'>
-                        {t('articles.panels.createAuthorProfile' , {name: authorsFilter})}
+                        <Button onClick={() => handleCreateAuthor()} appearance="primary">
+                          {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
                         </Button>
                       </div>
                     )
