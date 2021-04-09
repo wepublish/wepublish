@@ -24,7 +24,7 @@ import {
   FormGroup,
   Panel,
   TagPicker,
-  Notification
+  Alert
 } from 'rsuite'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
@@ -142,10 +142,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
 
         setLoading(false)
       } else {
-        Notification.error({
-          title: t('images.panels.notFound'),
-          duration: 5000
-        })
+        Alert.error(t('images.panels.notFound'), 0)
       }
     }
 
@@ -155,25 +152,8 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
   }, [file, data])
 
   useEffect(() => {
-    if (loadingError) {
-      Notification.error({
-        title: loadingError.message,
-        duration: 5000
-      })
-    }
-    if (savingError) {
-      Notification.error({
-        title: savingError.message,
-        duration: 5000
-      })
-    }
-
-    if (uploadError) {
-      Notification.error({
-        title: uploadError.message,
-        duration: 5000
-      })
-    }
+    const error = loadingError?.message ?? savingError?.message ?? uploadError?.message
+    if (error) Alert.error(error, 0)
   }, [loadingError, savingError, uploadError])
 
   async function handleSave() {
@@ -205,10 +185,7 @@ export function ImagedEditPanel({id, file, onClose, onSave}: ImageEditPanelProps
         variables: {id: id!, input: commonInput}
       })
 
-      Notification.success({
-        title: t('images.panels.imageUpdated'),
-        duration: 2000
-      })
+      Alert.success(t('images.panels.imageUpdated'), 2000)
 
       if (data?.updateImage) {
         onSave?.(data.updateImage)
