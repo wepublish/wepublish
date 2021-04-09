@@ -14,7 +14,7 @@
     "watch:server:start": "nodemon -r dotenv/config --inspect=0.0.0.0:9232 ./dist/server/index.js",
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
-    "clean": "shx rm -rf ./LICENSE ./dist",
+    "clean": "shx rm -rf ./LICENSE ./dist .env",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml"
   },
   "dependencies": {

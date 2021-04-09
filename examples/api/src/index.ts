@@ -31,7 +31,7 @@ import {contentModelA} from './modelA'
 import {contentModelB} from './modelB'
 
 interface ExampleURLAdapterProps {
-  websiteURL: string
+  websiteURL: string //a
 }
 
 class ExampleURLAdapter implements URLAdapter {

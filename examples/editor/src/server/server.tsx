@@ -14,7 +14,7 @@ import {ElementID} from '../shared/elementID'
 export async function initServer() {
   if (!process.env.API_URL) throw new Error('No API_URL specified in environment.')
 
-  const assetHost = process.env.ASSET_HOST || '/assets'
+  const assetHost = process.env.EDITOR_EXAMPLE_ASSET_HOST || '/assets'
 
   const assetList = JSON.parse(
     await fs.promises.readFile(path.resolve(__dirname, '../assetList.json'), 'utf-8')
@@ -65,7 +65,7 @@ export async function initServer() {
     res.send(markup)
   })
 
-  const port = parseInt(process.env.PORT || process.env.EDITOR_EXAMPLE_PORT || '3000')
+  const port = parseInt(process.env.PORT || process.env.EDITOR_EXAMPLE_PORT || '3010')
   const address = process.env.ADDRESS || 'localhost'
 
   app.listen(port, address)

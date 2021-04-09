@@ -47,8 +47,10 @@ services:
       MEDIA_PORT: 7000
       EDITOR_PORT: 3000
       EDITOR_ASSET_PORT: 3001
+      EDITOR_ASSET_HOST: http://localhost:3001
       EDITOR_EXAMPLE_PORT: 3010
       EDITOR_EXAMPLE_ASSET_PORT: 3011
+      EDITOR_EXAMPLE_ASSET_HOST: http://localhost:3011
       ADDRESS: 0.0.0.0
 
   peer-b:
@@ -93,8 +95,10 @@ services:
       MEDIA_PORT: 7100
       EDITOR_PORT: 3100
       EDITOR_ASSET_PORT: 3101
+      EDITOR_ASSET_HOST: http://localhost:3101
       EDITOR_EXAMPLE_PORT: 3110
       EDITOR_EXAMPLE_ASSET_PORT: 3111
+      EDITOR_EXAMPLE_ASSET_HOST: http://localhost:3111
       ADDRESS: 0.0.0.0
 
   mongo:

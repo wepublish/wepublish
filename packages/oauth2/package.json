@@ -36,7 +36,7 @@
     "watch:server:build": "tsc -b ./src/server --watch",
     "copy-assets": "shx mkdir -p ./dist/server && shx cp -R ./src/server/views ./dist/server/views",
     "crlf": "crlf --set=LF dist/**/*",
-    "clean": "shx rm -rf ./dist",
+    "clean": "shx rm -rf ./dist .env",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "prepare": "run-s clean copy-license build crlf"
