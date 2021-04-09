@@ -26,6 +26,8 @@ export function DateTimePicker({
 }: DateTimePickerProps) {
   const {t} = useTranslation()
 
+  const date = new Date(dateTime?.getTime() ?? new Date())
+
   return (
     <Form fluid={true}>
       <FormGroup>
@@ -33,7 +35,7 @@ export function DateTimePicker({
         <DatePicker
           style={{marginRight: 8}}
           placement="auto"
-          value={dateTime}
+          value={date}
           cleanable={false}
           format="DD MMM YYYY"
           ranges={
@@ -66,18 +68,18 @@ export function DateTimePicker({
             ]
           }
           onChange={value => {
-            if (dateTime && value) {
-              dateTime.setFullYear(value?.getFullYear())
-              dateTime.setMonth(value?.getMonth())
-              dateTime.setDate(value?.getDate())
-              changeDate(new Date(dateTime))
+            if (date && value) {
+              date.setFullYear(value?.getFullYear())
+              date.setMonth(value?.getMonth())
+              date.setDate(value?.getDate())
+              changeDate(new Date(date))
             }
           }}
         />
         <DatePicker
           placement="auto"
           format="HH:mm"
-          value={dateTime}
+          value={date}
           cleanable={false}
           ranges={
             timeRanges ?? [
@@ -104,10 +106,10 @@ export function DateTimePicker({
             ]
           }
           onChange={value => {
-            if (dateTime && value) {
-              dateTime.setHours(value?.getHours())
-              dateTime.setMinutes(value?.getMinutes())
-              changeDate(new Date(dateTime))
+            if (date && value) {
+              date.setHours(value?.getHours())
+              date.setMinutes(value?.getMinutes())
+              changeDate(new Date(date))
             }
           }}
         />
