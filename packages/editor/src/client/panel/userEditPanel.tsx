@@ -41,8 +41,7 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
   const [name, setName] = useState('')
   const [preferredName, setPreferredName] = useState<string | undefined>()
   const [email, setEmail] = useState('')
-  //const [password, setPassword] = useState('') // TODO implement setPassword again
-  const password = ''
+  const [password, setPassword] = useState('')
   const [active, setActive] = useState(true)
   const [roles, setRoles] = useState<FullUserRoleFragment[]>([])
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
@@ -177,6 +176,25 @@ export function UserEditPanel({id, onClose, onSave}: UserEditPanelProps) {
               onChange={value => setEmail(value)}
             />
           </FormGroup>
+
+          {!id ? (
+            <FormGroup>
+              <ControlLabel>{t('userList.panels.password')}</ControlLabel>
+              <FormControl
+                type="password"
+                name={t('userList.panels.password')}
+                value={password}
+                disabled={isDisabled}
+                onChange={value => setPassword(value)}
+              />
+            </FormGroup>
+          ) : (
+            <FormGroup>
+              <Button appearance="primary" onClick={() => setIsResetUserPasswordOpen(true)}>
+                {t('userList.panels.resetPassword')}
+              </Button>
+            </FormGroup>
+          )}
 
           <FormGroup>
             <ControlLabel>{t('userList.panels.userRoles')}</ControlLabel>
