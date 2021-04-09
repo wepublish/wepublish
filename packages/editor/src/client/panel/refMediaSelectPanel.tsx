@@ -12,7 +12,8 @@ import {
   Message,
   Loader,
   FlexboxGrid,
-  Notification
+  Notification,
+  Divider
 } from 'rsuite'
 
 import {FileDropInput} from '../atoms/fileDropInput'
@@ -96,15 +97,16 @@ export function RefImageSelectPanel({onClose, onSelectRef}: ImageSelectPanelProp
           onDrop={handleDrop}
         />
       </Panel>
+      <Divider></Divider>
 
-      <Panel header={t('articleEditor.panels.images')}>
-        <InputGroup>
-          <Input value={filter} onChange={value => setFilter(value)} />
-          <InputGroup.Addon>
-            <Icon icon="search" />
-          </InputGroup.Addon>
-        </InputGroup>
-      </Panel>
+      <h5 className="wep-section-title">{t('articleEditor.panels.images')}</h5>
+      <InputGroup style={{margin: '0 0 20px 0'}}>
+        <InputGroup.Addon>
+          <Icon icon="search" />
+        </InputGroup.Addon>
+        <Input value={filter} onChange={value => setFilter(value)} />
+      </InputGroup>
+
       {images.length ? (
         <>
           <FlexboxGrid justify="space-around">

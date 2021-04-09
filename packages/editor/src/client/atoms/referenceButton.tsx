@@ -17,8 +17,8 @@ export function ReferenceButton({
     ref = <ReferencePreview reference={reference} onClose={onClose} />
   } else {
     ref = (
-      <Button appearance="default" active onClick={onClick}>
-        reference to
+      <Button appearance="ghost" active onClick={onClick}>
+        Reference to
       </Button>
     )
   }

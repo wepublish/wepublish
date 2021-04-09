@@ -74,7 +74,7 @@ export function ContentB_EditView({value, onChange}: ContentB_EditViewProps) {
         </FormGroup>
       </Form>
 
-      <Modal show={isChooseModalOpen} full onHide={() => setChooseModalOpen(false)}>
+      <Modal show={isChooseModalOpen} size="lg" onHide={() => setChooseModalOpen(false)}>
         <RefSelectModal
           config={{
             modelA: {scope: ContentContextEnum.Local}

@@ -103,16 +103,16 @@ export function ContentList({contentTypeList}: ArticleEditorProps) {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
-      <Table height={800} style={{marginTop: '20px'}} loading={isLoading} data={articles}>
-        <Column width={400} align="left" resizable>
+      <Table style={{marginTop: '20px'}} loading={isLoading} data={articles}>
+        <Column flexGrow={3} align="left">
           <HeaderCell>{t('articles.overview.title')}</HeaderCell>
           <Cell>
             {(rowData: ContentListRefFragment) => {
@@ -124,15 +124,15 @@ export function ContentList({contentTypeList}: ArticleEditorProps) {
             }}
           </Cell>
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column flexGrow={2} minWidth={140} align="left">
           <HeaderCell>{t('articles.overview.created')}</HeaderCell>
           <Cell dataKey="createdAt" />
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column flexGrow={2} minWidth={140} align="left">
           <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
           <Cell dataKey="modifiedAt" />
         </Column>
-        <Column width={100} align="left" resizable>
+        <Column flexGrow={2} align="left">
           <HeaderCell>{t('articles.overview.states')}</HeaderCell>
           <Cell>
             {(rowData: PageRefFragment) => {
@@ -146,7 +146,7 @@ export function ContentList({contentTypeList}: ArticleEditorProps) {
             }}
           </Cell>
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={90} align="right" fixed="right">
           <HeaderCell>{t('articles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
             {(rowData: Content) => (

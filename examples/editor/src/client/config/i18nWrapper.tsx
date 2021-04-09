@@ -1,5 +1,16 @@
 import React, {memo} from 'react'
-import {Form, FormGroup, Row, Col} from 'rsuite'
+import {
+  Form,
+  FormGroup,
+  Input,
+  IconButton,
+  Icon,
+  Whisper,
+  Tooltip,
+  ControlLabel,
+  Row,
+  Col
+} from 'rsuite'
 
 export interface ArticleMetadataProperty {
   readonly key: string
@@ -28,23 +39,51 @@ export interface ArticleMetadata {
 }
 
 export interface I18nProps {
+  readonly label: string
   readonly value?: any
   readonly display?: any
   readonly children: any
 }
 
-export const I18nWrapper = memo(function I18nWrapper({children, display}: I18nProps) {
+export const tooltip = (
+  <Tooltip>
+    <p>
+      Translate text with <b>Deepl</b>.<br />
+      Attention: All formatting will be lost
+    </p>
+  </Tooltip>
+)
+
+export const I18nWrapper = memo(function I18nWrapper({label, children, display}: I18nProps) {
+  let preview = null
+  if (!display || typeof display === 'string') {
+    preview = <Input className="wep-input-disabled" value={display} disabled />
+  } else {
+    preview = display
+  }
   return (
-    <Row className="show-grid">
-      <Col xs={12}>
-        <Form
-          style={{
-            width: '100%'
-          }}>
-          <FormGroup>{children}</FormGroup>
+    <Row className="show-grid" style={{display: 'flex', alignItems: 'center'}}>
+      <Col xs={11}>
+        <Form fluid>
+          <FormGroup>
+            <ControlLabel>{label}</ControlLabel>
+            {children}
+          </FormGroup>
         </Form>
       </Col>
-      <Col xs={12}>{display}</Col>
+      <Col xs={2} style={{textAlign: 'center', paddingTop: '5px'}}>
+        <Whisper placement="top" trigger="hover" speaker={tooltip}>
+          <IconButton icon={<Icon icon="left" />} circle size="sm" />
+        </Whisper>
+      </Col>
+      <Col xs={11}>
+        <Form>
+          <FormGroup>
+            <ControlLabel>{label}</ControlLabel>
+            {preview}
+          </FormGroup>
+        </Form>
+      </Col>
     </Row>
   )
 })

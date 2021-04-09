@@ -27,6 +27,28 @@ export const config: ExtensionConfig = {
             ]
           }
         ],
+        myRichTextI18n: {
+          de: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: ''
+                }
+              ]
+            }
+          ],
+          en: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: ''
+                }
+              ]
+            }
+          ]
+        },
         myRef: null
       },
       defaultMeta: {
@@ -45,6 +67,28 @@ export const config: ExtensionConfig = {
             ]
           }
         ],
+        myRichTextI18n: {
+          de: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: ''
+                }
+              ]
+            }
+          ],
+          en: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: ''
+                }
+              ]
+            }
+          ]
+        },
         myRef: null
       },
       getContentView: (content, onChange, disabled) => {
