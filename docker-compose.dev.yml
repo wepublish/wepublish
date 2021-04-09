@@ -1,16 +1,5 @@
 version: '3.7'
 services:
-  # website:
-  #   build: .
-  #   ports:
-  #     - 5000:8000
-  #   command: ['node', './examples/website/dist/server/index.js']
-  #   environment:
-  #     NODE_ENV: production
-  #     CANONICAL_HOST: http://localhost:5000
-  #     API_URL: http://api:8000
-  #     ALLOWED_HOSTS: localhost
-  #     NUM_WORKERS: 1
 
   peer-a:
     container_name: peer-a
@@ -20,8 +9,10 @@ services:
     ports:
       - 4000:4000
       - 3000:3000
-      - 8000:8000
       - 3001:3001
+      - 3010:3010
+      - 3011:3011
+      - 8000:8000
       - 7000:7000
     command: ['yarn', 'watch']
     volumes:
@@ -52,10 +43,12 @@ services:
       OAUTH_REDIRECT_URIS: http://localhost:3000/login/wepublish,http://localhost:4000/auth/wepublish
       OAUTH_COOKIE_KEYS: secret
       JWKS_KEYS: '[{"p":"ycTPs5WM9C2kLPw6Mqt-YQ4xKIeNmmnN_qECh_rV8AiNnShzYWjCvytf24ndma7Fr78L4-ZFm9utReKFv3So_MeAGOkv8XyG37CI0YMdhW6PXYDPOvYkEHWN71mDFh_PS9EdZQDg2uPR2SB90mhe5L5Cv4pFaD2DBPoyUZKQZfM","kty":"RSA","q":"qGvPhy3Ns4Xjvulni1L_KDkahGK9Jg710f0X68ZWpaQsU1tIjbM7JW6ciKkBOVIALz8zeKgm0UUmBWZ4HZNK5eOKrQ31NfyhAgbIT0asGIgcukUkQOXb0UG1Ppuuno90oyQlXf46tADFBMSbZpHW68pHqTS7i0Y5l12i_pxMHjU","d":"F8hw6yamubk7j08V0-g1JJCOW7DvIKI-eDRZZhfUoF3_4HvBjZWXUTMhNt0GwSDrqW58ct2h8WOADZ8WM2w1PAWbH4x1BqaY6ZFf2JyNsUiXy5keBpwiqOnq_LXmxL6j2jerG94eqHT2AY0woOpnVB5XuiaPuAjKoaeQXTS76dsGvyypmSb2wtPA3VwZ0yBGCym2kBwUuRT7LP-kRG3QZUap-PVkNroYqR_S75tLVsZZF9NWs2EyiLfVBwSRYAEe6eytw4ws_kd1xTgLyBkaE3O-iEVteM3QcOhUSMbsLqQpoLKnwIQU3zqoGobILnUlpzvpBPwjwbh7tDSZLkPosQ","e":"AQAB","qi":"BL7cJVwM19NrqC9kHfvyGD5DdsTlZFYx-ccMYrQkN0KK0mNCaCr0dA-lgLyrTgUn6e5GD9-FbRMIXL7WzOlNaJfn-vsMKb4nZtOmJQ0jQCuUhLHU4EymJpVpI9uE8rM04ISy242oynfVD47Gvei5iNbI7Zx0WYD6zPBEnKnLes8","dp":"biMutXrHDGr1mVC9e_c870HN96-2zjk_JuVA-nUj3vjsRINWKDAFTlEg7DffbQqIAp0oomiKSr-pX-J827uUmxdTh0WS1CEDhotYw_TsYm-tdn7fn_HIUeu5ZJPaCHOotlwZzY6jLxj47arcw8QROI_a469Yn8QkBs2ENh7pD50","dq":"XpwJfUdmqTVKRYF6EBL0kNTbJ4kL9igrQOXrHSBSpkP-Pmkl7avESvfC6SX_MQL2ZZQcRug2vhIZFKmGSh7m0RMsYKBZohUjIS9MMPRjUniLoruabPZysC84ME5mHl45yDdS4mUg9uMDyfTj0w-T6uq7rLqZq9gsG_KW0G5eeA0","n":"hL4hIVkJeGPhqc8Dgo02kM2GySyUz8KV9ueSsauN75MrWmInXDRB5zLwTWcSZ4JZnT1kXNXD5GLs-C0VM-XaEcPlE-r-zaEFR5qx3G1_JWsor9T0WgvNAYnq8_Dmz5YkYnKe4ihuuTjespXIwX6AQE8YNggmsJujQ4Dk8EhoRTnW4FV32TZJjixjvthcQqVUKAawDQPTdwOoMjNr3SBOZ9rYIbK3KvRq4qQYJAGkFiHUUF0RRIMkZQe-jKgPGeKB48Mf-CWO9LI9IAzSenJ_7rBSdvutAZ1GuAU-dtsKqZq2KRy_qh6Y3P3utVPitjd5VVcBYVLbIwcpSWgom_uVTw"}]'
-      ASSET_PORT: 3001
       API_PORT: 4000
       MEDIA_PORT: 7000
       EDITOR_PORT: 3000
+      EDITOR_ASSET_PORT: 3001
+      EDITOR_EXAMPLE_PORT: 3010
+      EDITOR_EXAMPLE_ASSET_PORT: 3011
       ADDRESS: 0.0.0.0
 
   peer-b:
@@ -67,6 +60,8 @@ services:
       - 4100:4100
       - 3100:3100
       - 3101:3101
+      - 3110:3110
+      - 3111:3111
       - 7100:7100
     command: ['yarn', 'watch']
     volumes:
@@ -94,10 +89,12 @@ services:
       OAUTH_REDIRECT_URIS: http://localhost:3100/login/wepublish,http://localhost:4100/auth/wepublish
       OAUTH_COOKIE_KEYS: secret
       JWKS_KEYS: '[{"p":"ycTPs5WM9C2kLPw6Mqt-YQ4xKIeNmmnN_qECh_rV8AiNnShzYWjCvytf24ndma7Fr78L4-ZFm9utReKFv3So_MeAGOkv8XyG37CI0YMdhW6PXYDPOvYkEHWN71mDFh_PS9EdZQDg2uPR2SB90mhe5L5Cv4pFaD2DBPoyUZKQZfM","kty":"RSA","q":"qGvPhy3Ns4Xjvulni1L_KDkahGK9Jg710f0X68ZWpaQsU1tIjbM7JW6ciKkBOVIALz8zeKgm0UUmBWZ4HZNK5eOKrQ31NfyhAgbIT0asGIgcukUkQOXb0UG1Ppuuno90oyQlXf46tADFBMSbZpHW68pHqTS7i0Y5l12i_pxMHjU","d":"F8hw6yamubk7j08V0-g1JJCOW7DvIKI-eDRZZhfUoF3_4HvBjZWXUTMhNt0GwSDrqW58ct2h8WOADZ8WM2w1PAWbH4x1BqaY6ZFf2JyNsUiXy5keBpwiqOnq_LXmxL6j2jerG94eqHT2AY0woOpnVB5XuiaPuAjKoaeQXTS76dsGvyypmSb2wtPA3VwZ0yBGCym2kBwUuRT7LP-kRG3QZUap-PVkNroYqR_S75tLVsZZF9NWs2EyiLfVBwSRYAEe6eytw4ws_kd1xTgLyBkaE3O-iEVteM3QcOhUSMbsLqQpoLKnwIQU3zqoGobILnUlpzvpBPwjwbh7tDSZLkPosQ","e":"AQAB","qi":"BL7cJVwM19NrqC9kHfvyGD5DdsTlZFYx-ccMYrQkN0KK0mNCaCr0dA-lgLyrTgUn6e5GD9-FbRMIXL7WzOlNaJfn-vsMKb4nZtOmJQ0jQCuUhLHU4EymJpVpI9uE8rM04ISy242oynfVD47Gvei5iNbI7Zx0WYD6zPBEnKnLes8","dp":"biMutXrHDGr1mVC9e_c870HN96-2zjk_JuVA-nUj3vjsRINWKDAFTlEg7DffbQqIAp0oomiKSr-pX-J827uUmxdTh0WS1CEDhotYw_TsYm-tdn7fn_HIUeu5ZJPaCHOotlwZzY6jLxj47arcw8QROI_a469Yn8QkBs2ENh7pD50","dq":"XpwJfUdmqTVKRYF6EBL0kNTbJ4kL9igrQOXrHSBSpkP-Pmkl7avESvfC6SX_MQL2ZZQcRug2vhIZFKmGSh7m0RMsYKBZohUjIS9MMPRjUniLoruabPZysC84ME5mHl45yDdS4mUg9uMDyfTj0w-T6uq7rLqZq9gsG_KW0G5eeA0","n":"hL4hIVkJeGPhqc8Dgo02kM2GySyUz8KV9ueSsauN75MrWmInXDRB5zLwTWcSZ4JZnT1kXNXD5GLs-C0VM-XaEcPlE-r-zaEFR5qx3G1_JWsor9T0WgvNAYnq8_Dmz5YkYnKe4ihuuTjespXIwX6AQE8YNggmsJujQ4Dk8EhoRTnW4FV32TZJjixjvthcQqVUKAawDQPTdwOoMjNr3SBOZ9rYIbK3KvRq4qQYJAGkFiHUUF0RRIMkZQe-jKgPGeKB48Mf-CWO9LI9IAzSenJ_7rBSdvutAZ1GuAU-dtsKqZq2KRy_qh6Y3P3utVPitjd5VVcBYVLbIwcpSWgom_uVTw"}]'
-      ASSET_PORT: 3101
       API_PORT: 4100
       MEDIA_PORT: 7100
       EDITOR_PORT: 3100
+      EDITOR_ASSET_PORT: 3101
+      EDITOR_EXAMPLE_PORT: 3110
+      EDITOR_EXAMPLE_ASSET_PORT: 3111
       ADDRESS: 0.0.0.0
 
   mongo:

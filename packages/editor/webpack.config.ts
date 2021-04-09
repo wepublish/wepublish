@@ -6,7 +6,7 @@ import {AssetListPlugin} from '@karma.run/webpack'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
-const port = process.env.ASSET_PORT || '3001'
+const port = process.env.EDITOR_ASSET_PORT || '3001'
 
 export default (env: any, {mode}: any) =>
   ({

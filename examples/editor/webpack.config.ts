@@ -6,7 +6,7 @@ import {AssetListPlugin} from '@karma.run/webpack'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 
-const port = process.env.ASSET_PORT || '3001'
+const port = process.env.EDITOR_EXAMPLE_ASSET_PORT || '3001'
 
 export default (env: any, {mode}: any) =>
   ({
@@ -19,7 +19,7 @@ export default (env: any, {mode}: any) =>
       publicPath: mode === 'production' ? '/assets' : `http://localhost:${port}/`
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
+      extensions: ['.ts', '.tsx', '.mjs', '.js'],
       alias:
         mode === 'production'
           ? {}
@@ -29,6 +29,11 @@ export default (env: any, {mode}: any) =>
     },
     module: {
       rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto'
+        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,

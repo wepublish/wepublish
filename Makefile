@@ -1,5 +1,9 @@
-install:
+setup-dev-environment:
 	docker-compose -f docker-compose.dev.yml run --no-deps peer-a yarn install --frozen-lockfile
+	docker-compose -f docker-compose.dev.yml run --no-deps peer-a yarn build
+
+install:
+	docker-compose -f docker-compose.dev.yml run --no-deps peer-a yarn install
 
 sh:
 	docker-compose -f docker-compose.dev.yml run --no-deps peer-a sh	
