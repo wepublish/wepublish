@@ -73,7 +73,7 @@ export function AuthorList() {
     filter: filter || undefined,
     skip: page - 1,
     sort: mapColumFieldToGraphQLField(sortField),
-    first: 50,
+    first: limit,
     order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
