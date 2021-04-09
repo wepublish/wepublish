@@ -146,15 +146,13 @@ export function ArticleMetadataPanel({
   const [createAuthor] = useCreateAuthorMutation({
     refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
   })
-  const [authorName, setAuthorName] = useState('')
-  const [authorSlug, setAuthorSlug] = useState('')
-
+  
   async function handleCreateAuthor() {
     await createAuthor({
       variables: {
         input: {
-          name: authorName,
-          slug: authorSlug
+          name: authorsFilter,
+          slug: slugify(authorsFilter)
         }
       }
     })
@@ -236,8 +234,6 @@ export function ArticleMetadataPanel({
                   }))}
                   onSearch={searchKeyword => {
                     setAuthorsFilter(searchKeyword)
-                    setAuthorName(searchKeyword)
-                    setAuthorSlug(slugify(searchKeyword))
                   }}
                   onChange={socialMediaAuthorIDs => {
                     const socialMediaAuthors = foundSocialMediaAuthors.filter(author =>
@@ -251,10 +247,10 @@ export function ArticleMetadataPanel({
                   block
                   renderExtraFooter={() =>
                     authorsFilter &&
-                    data?.authors.nodes.length === 0 && (
-                      <div style={{float: 'right', margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance={'primary'}>
-                          {t('authors.panels.createAuthor')}
+                    !data?.authors.nodes.length && (
+                      <div style={{margin: '20px'}}>
+                        <Button onClick={() => handleCreateAuthor()} appearance='primary'>
+                          {t('articles.panels.createAuthorProfile' , {name: authorsFilter})}
                         </Button>
                       </div>
                     )
@@ -410,8 +406,6 @@ export function ArticleMetadataPanel({
                   data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
                   onSearch={searchKeyword => {
                     setAuthorsFilter(searchKeyword)
-                    setAuthorName(searchKeyword)
-                    setAuthorSlug(slugify(searchKeyword))
                   }}
                   onChange={authorsID => {
                     const authors = foundAuthors.filter(author => authorsID.includes(author.id))
@@ -423,10 +417,10 @@ export function ArticleMetadataPanel({
                   block
                   renderExtraFooter={() =>
                     authorsFilter &&
-                    data?.authors.nodes.length === 0 && (
-                      <div style={{float: 'right', margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance={'primary'}>
-                          {t('authors.panels.createAuthor')}
+                    !data?.authors.nodes.length && (
+                      <div style={{margin: '20px'}}>
+                        <Button onClick={() => handleCreateAuthor()} appearance='primary'>
+                        {t('articles.panels.createAuthorProfile' , {name: authorsFilter})}
                         </Button>
                       </div>
                     )

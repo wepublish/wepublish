@@ -32,7 +32,8 @@
         "lead": "Lead",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
-        "publishedAt": "Published At"
+        "publishedAt": "Published At",
+        "createAuthorProfile": "Create Auhtor Profile for {{name}}"
       }
     },
     "articleEditor": {
