@@ -1,0 +1,18 @@
+{
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "targets": [
+          "last 2 Chrome versions",
+          "last 2 Safari versions",
+          "last 2 Firefox versions",
+          "ie 11",
+          "cover 85% in US"
+        ]
+      }
+    ],
+    "@babel/preset-typescript"
+  ]
+}
