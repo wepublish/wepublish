@@ -51,7 +51,7 @@ export function PageList() {
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pages, setPages] = useState<PageRefFragment[]>([])
 
@@ -82,7 +82,6 @@ export function PageList() {
       clearTimeout(timerID)
     }
   }, [highlightedRowId])
-
 
   useEffect(() => {
     refetch(pageListVariables)
@@ -129,9 +128,7 @@ export function PageList() {
           data={pages}
           sortColumn={sortField}
           sortType={sortOrder}
-          rowClassName={rowData => 
-            rowData?.id === highlightedRowId ? 'highlighted-row' : ''
-          }
+          rowClassName={rowData => (rowData?.id === highlightedRowId ? 'highlighted-row' : '')}
           onSortColumn={(sortColumn, sortType) => {
             setSortOrder(sortType)
             setSortField(sortColumn)
@@ -332,10 +329,9 @@ export function PageList() {
                         },
                         variables: pageListVariables
                       })
-                    },
+                    }
                   }).then(output => {
-                    if (output.data)
-                    setHighlightedRowId(output.data?.duplicatePage.id)
+                    if (output.data) setHighlightedRowId(output.data?.duplicatePage.id)
                   })
                   break
               }
