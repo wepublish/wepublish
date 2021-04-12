@@ -138,6 +138,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
@@ -192,9 +193,10 @@ function authorSortFieldForSort(sort: AuthorSort) {
   switch (sort) {
     case AuthorSort.CreatedAt:
       return 'createdAt'
-
     case AuthorSort.ModifiedAt:
       return 'modifiedAt'
+    case AuthorSort.Name:
+      return 'name'
   }
 }
 
@@ -202,8 +204,9 @@ function authorDateForSort(author: DBAuthor, sort: AuthorSort): Date {
   switch (sort) {
     case AuthorSort.CreatedAt:
       return author.createdAt
-
     case AuthorSort.ModifiedAt:
       return author.modifiedAt
+    case AuthorSort.Name:
+      return author.createdAt
   }
 }

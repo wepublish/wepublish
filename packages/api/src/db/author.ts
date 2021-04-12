@@ -43,8 +43,9 @@ export interface DeleteAuthorArgs {
 }
 
 export enum AuthorSort {
-  CreatedAt = 'modifiedAt',
-  ModifiedAt = 'modifiedAt'
+  CreatedAt = 'createdAt',
+  ModifiedAt = 'modifiedAt',
+  Name = 'name'
 }
 
 export interface AuthorFilter {
