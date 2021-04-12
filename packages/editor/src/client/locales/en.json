@@ -33,7 +33,7 @@
         "createdAt": "Created At",
         "updatedAt": "Updated At",
         "publishedAt": "Published At",
-        "createAuthorProfile": "Create Auhtor Profile for {{name}}"
+        "createAuthorProfile": "Create Author Profile for {{name}}"
       }
     },
     "articleEditor": {
