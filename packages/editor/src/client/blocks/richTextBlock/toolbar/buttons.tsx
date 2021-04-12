@@ -61,7 +61,7 @@ export function FormatColor() {
   const textInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const nodes = Array.from(
+    const nodes: Array<any> | null = Array.from(
       WepublishEditor.nodes(editor, {
         at: editor.selection ?? undefined,
         match: node => !!node.color
@@ -73,7 +73,7 @@ export function FormatColor() {
   }, [checkColor])
 
   useEffect(() => {
-    textInput.current.click()
+    textInput.current?.click()
   }, [color])
 
   return (
