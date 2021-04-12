@@ -1604,6 +1604,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
                                     <ForwardRef
+                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -4596,6 +4597,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
                                     <ForwardRef
+                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -7115,6 +7117,7 @@ exports[`Author Edit Panel should render 1`] = `
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
                                     <ForwardRef
+                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -9626,6 +9629,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
                                     <ForwardRef
+                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
