@@ -25,3 +25,7 @@ export function isNonNull<T>(value: T): value is NonNullable<T> {
 export enum MongoErrorCode {
   DuplicateKey = 11000
 }
+
+export function escapeRegExp(string: string) {
+  return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+}
