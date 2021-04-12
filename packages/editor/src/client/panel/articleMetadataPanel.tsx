@@ -22,6 +22,7 @@ import {
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
+import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify, getOperationNameFromDocument} from '../utility'
 import {
@@ -121,42 +122,42 @@ export function ArticleMetadataPanel({
     }
   }
 
-  const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
-  const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
-  const [authorsFilter, setAuthorsFilter] = useState('')
+  // const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
+  // const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
+  // const [authorsFilter, setAuthorsFilter] = useState('')
 
-  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
-  const {data} = useAuthorListQuery({
-    variables: authorsVariables,
-    fetchPolicy: 'network-only'
-  })
+  // const authorsVariables = {filter: authorsFilter || undefined, first: 10}
+  // const {data} = useAuthorListQuery({
+  //   variables: authorsVariables,
+  //   fetchPolicy: 'network-only'
+  // })
 
-  useEffect(() => {
-    if (data?.authors?.nodes) {
-      const authorIDs = data.authors.nodes.map(author => author.id)
-      const selectedAuthors = authors.filter(author => !authorIDs.includes(author.id))
-      setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
-      const selectedSocialMediaAuthors = socialMediaAuthors.filter(
-        author => !authorIDs.includes(author.id)
-      )
-      setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
-    }
-  }, [data?.authors, authors, socialMediaAuthors])
+  // useEffect(() => {
+  //   if (data?.authors?.nodes) {
+  //     const authorIDs = data.authors.nodes.map(author => author.id)
+  //     const selectedAuthors = authors.filter(author => !authorIDs.includes(author.id))
+  //     setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
+  //     const selectedSocialMediaAuthors = socialMediaAuthors.filter(
+  //       author => !authorIDs.includes(author.id)
+  //     )
+  //     setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
+  //   }
+  // }, [data?.authors, authors, socialMediaAuthors])
 
-  const [createAuthor] = useCreateAuthorMutation({
-    refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
-  })
+  // const [createAuthor] = useCreateAuthorMutation({
+  //   refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
+  // })
 
-  async function handleCreateAuthor() {
-    await createAuthor({
-      variables: {
-        input: {
-          name: authorsFilter,
-          slug: slugify(authorsFilter)
-        }
-      }
-    })
-  }
+  // async function handleCreateAuthor() {
+  //   await createAuthor({
+  //     variables: {
+  //       input: {
+  //         name: authorsFilter,
+  //         slug: slugify(authorsFilter)
+  //       }
+  //     }
+  //   })
+  // }
 
   const preTitleMax = 30
   const seoTitleMax = 70
@@ -225,7 +226,7 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
-                <CheckPicker
+                {/* <CheckPicker
                   cleanable={true}
                   value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
                   data={foundSocialMediaAuthors.map(author => ({
@@ -255,7 +256,8 @@ export function ArticleMetadataPanel({
                       </div>
                     )
                   }
-                />
+                /> */}
+                <AuthorCheckPicker list={socialMediaAuthors}></AuthorCheckPicker>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaImage')}</ControlLabel>
@@ -400,7 +402,7 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
-                <CheckPicker
+                {/* <CheckPicker
                   cleanable={true}
                   value={authors.map(author => author.id)}
                   data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
@@ -425,7 +427,8 @@ export function ArticleMetadataPanel({
                       </div>
                     )
                   }
-                />
+                /> */}
+                <AuthorCheckPicker list={authors}></AuthorCheckPicker>
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
