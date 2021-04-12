@@ -257,6 +257,7 @@
       "overview": {
         "delete": "Delete",
         "unknown": "Unknown",
+        "created": "Created",
         "newAuthor": "New Author",
         "search": "Search",
         "authors": "Authors",
