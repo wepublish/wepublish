@@ -30,7 +30,7 @@ export class WepublishServer {
   constructor(opts: WepublishServerOpts) {
     const app = express()
     this.opts = opts
-    const {dbAdapter} = opts
+    const {dbAdapter, customGraphQLSchema} = opts
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
 
@@ -113,6 +113,21 @@ export class WepublishServer {
       path: '/admin',
       cors: corsOptions
     })
+
+    if (customGraphQLSchema) {
+      const customServer = new ApolloServer({
+        schema: customGraphQLSchema,
+        playground: opts.playground ?? false,
+        introspection: opts.introspection ?? false,
+        tracing: opts.tracing ?? false,
+        context: ({req}) => contextFromRequest(req, opts)
+      })
+      customServer.applyMiddleware({
+        app,
+        path: '/custom',
+        cors: corsOptions
+      })
+    }
 
     publicServer.applyMiddleware({
       app,

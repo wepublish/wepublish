@@ -301,6 +301,7 @@ export type _Cmp_ModelA_Record_Content = {
   myString?: Maybe<Scalars['String']>;
   myStringI18n?: Maybe<I18n_String>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRichTextI18n?: Maybe<I18n_RichText>;
   myRef?: Maybe<Ref_ModelA_ModelB__Media>;
 };
 
@@ -326,6 +327,7 @@ export type _Cmp_ModelA_Record_Meta = {
   myString?: Maybe<Scalars['String']>;
   myStringI18n?: Maybe<I18n_String>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRichTextI18n?: Maybe<I18n_RichText>;
   myRef?: Maybe<Ref_ModelA_ModelB__Media>;
 };
 
@@ -597,6 +599,7 @@ export type _Cmpi_ModelA_Record_Content = {
   myString?: Maybe<Scalars['String']>;
   myStringI18n?: Maybe<I18n_String_Input>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRichTextI18n?: Maybe<I18n_RichText_Input>;
   myRef?: Maybe<Ref_Input>;
 };
 
@@ -611,6 +614,7 @@ export type _Cmpi_ModelA_Record_Meta = {
   myString?: Maybe<Scalars['String']>;
   myStringI18n?: Maybe<I18n_String_Input>;
   myRichText?: Maybe<Scalars['RichText']>;
+  myRichTextI18n?: Maybe<I18n_RichText_Input>;
   myRef?: Maybe<Ref_Input>;
 };
 
@@ -1172,6 +1176,17 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
+};
+
+export type I18n_RichText = {
+  __typename?: 'i18n_RichText';
+  en?: Maybe<Scalars['RichText']>;
+  de?: Maybe<Scalars['RichText']>;
+};
+
+export type I18n_RichText_Input = {
+  en?: Maybe<Scalars['RichText']>;
+  de?: Maybe<Scalars['RichText']>;
 };
 
 export type I18n_String = {

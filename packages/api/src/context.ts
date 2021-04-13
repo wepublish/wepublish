@@ -165,6 +165,7 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly contentModels: ContentModel[]
   readonly languageConfig: LanguageConfig
+  readonly customGraphQLSchema?: GraphQLSchema
   readonly hooks?: Hooks
 }
 
