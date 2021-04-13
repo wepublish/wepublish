@@ -161,7 +161,7 @@ function mapNavigationLinkInput(value: any) {
 }
 
 export function getGraphQLPrivateMutation<TSource, TContext, TArgs>(
-  type: GraphQLObjectType<any, Context>,
+  content?: GraphQLObjectType<any, Context>,
   extension?: GraphQLObjectType<any, Context>
 ) {
   let extensionsFields = {}
@@ -175,21 +175,21 @@ export function getGraphQLPrivateMutation<TSource, TContext, TArgs>(
       }
     }
   }
+  if (content) {
+    extensionsFields = {
+      content: {
+        type: GraphQLNonNull(content),
+        resolve: () => {
+          return {}
+        }
+      }
+    }
+  }
 
   return new GraphQLObjectType<undefined, Context>({
     name: 'Mutation',
     fields: {
       ...extensionsFields,
-
-      // Content
-      // =======
-
-      content: {
-        type: GraphQLNonNull(type),
-        resolve: (source, args, context) => {
-          return {}
-        }
-      },
 
       updatePeerProfile: {
         type: GraphQLNonNull(GraphQLPeerProfile),

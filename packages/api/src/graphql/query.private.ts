@@ -128,10 +128,20 @@ import {CommentSort} from '../db/comment'
 import {GraphQLContentModelSchema} from './contentModelSchema'
 
 export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
-  content: GraphQLObjectType<any, Context>,
+  content?: GraphQLObjectType<any, Context>,
   extension?: GraphQLObjectType<any, Context>
 ) {
   let extensionsFields = {}
+  if (content) {
+    extensionsFields = {
+      content: {
+        type: GraphQLNonNull(content),
+        resolve: () => {
+          return {}
+        }
+      }
+    }
+  }
   if (extension) {
     extensionsFields = {
       extensions: {
@@ -146,13 +156,6 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
     name: 'Query',
     fields: {
       ...extensionsFields,
-
-      content: {
-        type: GraphQLNonNull(content),
-        resolve: () => {
-          return {}
-        }
-      },
 
       // Configuration
       // =======

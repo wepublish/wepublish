@@ -1134,6 +1134,16 @@ export type EmbedBlockInput = {
   styleCustom?: Maybe<Scalars['String']>;
 };
 
+export type ExtensionFoo = {
+  __typename?: 'ExtensionFoo';
+  example: Scalars['String'];
+};
+
+export type ExtensionMutationFoo = {
+  __typename?: 'ExtensionMutationFoo';
+  example: Scalars['String'];
+};
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
   label: Scalars['String'];
@@ -1475,6 +1485,7 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  extensions: ExtensionMutationFoo;
   content: Content_Mutations;
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
@@ -2129,6 +2140,7 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  extensions: ExtensionFoo;
   content: Content;
   config: Config;
   peerProfile: PeerProfile;

@@ -28,7 +28,7 @@ import {EditorConfig} from './interfaces/extensionConfig'
 
 export interface BaseProps {
   children?: ReactNode
-  readonly contentTypeList: EditorConfig
+  readonly editorConfig?: EditorConfig
 }
 
 const AVAILABLE_LANG = [
@@ -66,7 +66,7 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue]
 }
 
-export function Base({children, contentTypeList}: BaseProps) {
+export function Base({children, editorConfig}: BaseProps) {
   const {current} = useRoute()
 
   const {t, i18n} = useTranslation()
@@ -76,8 +76,8 @@ export function Base({children, contentTypeList}: BaseProps) {
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
 
   let customContentNavItems: any = []
-  if (contentTypeList) {
-    customContentNavItems = contentTypeList.contentModelExtension.map(item => {
+  if (editorConfig) {
+    customContentNavItems = editorConfig.contentModelExtension.map(item => {
       const route = ContentListRoute.create({type: item.identifier})
       return (
         <NavItemLink
@@ -92,7 +92,7 @@ export function Base({children, contentTypeList}: BaseProps) {
       )
     })
 
-    contentTypeList.cusomExtension?.forEach(item => {
+    editorConfig.cusomExtension?.forEach(item => {
       const route = ExtensionRoute.create({type: item.identifier})
       customContentNavItems.push(
         <NavItemLink

@@ -63,7 +63,10 @@ export interface PeerArticle {
   content: any
 }
 
-export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions: ContextOptions) {
+export function getGraphQLContent<TSource, TContext, TArgs>(contextOptions: ContextOptions) {
+  if (!(contextOptions?.contentModels && contextOptions.contentModels.length > 0)) {
+    return
+  }
   let query: GraphQLFieldConfigMap<any, Context, any> = {}
   let queryPublic: GraphQLFieldConfigMap<any, Context, any> = {}
   let mutation: GraphQLFieldConfigMap<any, Context, any> = {}
@@ -778,11 +781,11 @@ export function getGraphQLCustomContent<TSource, TContext, TArgs>(contextOptions
       name: nameJoin('content', 'public'),
       fields: queryPublic
     }),
-    query: new GraphQLObjectType<undefined, Context>({
+    queryPrivate: new GraphQLObjectType<undefined, Context>({
       name: 'content',
       fields: query
     }),
-    mutation: new GraphQLObjectType<undefined, Context>({
+    mutationPrivate: new GraphQLObjectType<undefined, Context>({
       name: nameJoin('content', 'mutations'),
       fields: mutation
     })

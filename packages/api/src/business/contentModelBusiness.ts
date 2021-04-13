@@ -26,7 +26,7 @@ export class BusinessLogic {
     const {roles} = this.context.authenticate()
     authorise(CanCreateArticle, roles)
 
-    const schema = this.context.contentModels.find(item => item.identifier === identifier)
+    const schema = this.context.contentModels?.find(item => item.identifier === identifier)
     if (!schema) {
       throw Error(`Schema ${identifier} not found`)
     }
@@ -52,7 +52,7 @@ export class BusinessLogic {
     const {roles} = this.context.authenticate()
     authorise(CanCreateArticle, roles)
 
-    const schema = this.context.contentModels.find(item => item.identifier === identifier)
+    const schema = this.context.contentModels?.find(item => item.identifier === identifier)
     if (!schema) {
       throw Error(`Schema ${identifier} not found`)
     }

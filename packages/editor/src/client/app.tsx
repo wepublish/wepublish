@@ -31,7 +31,7 @@ import {ContentEditor} from './routes/contentEditor'
 import {ContentList} from './routes/contentList'
 import {ConfigContext} from './Editorcontext'
 
-export function contentForRoute(route: Route, configs: EditorConfig) {
+export function contentForRoute(route: Route, configs?: EditorConfig) {
   switch (route.type) {
     case RouteType.Login:
       return <Login />
@@ -51,7 +51,7 @@ export function contentForRoute(route: Route, configs: EditorConfig) {
       return <ArticleList />
 
     case RouteType.ContentList:
-      return <ContentList contentTypeList={configs} />
+      return configs && <ContentList contentTypeList={configs} />
 
     case RouteType.CommentList:
       return <CommentList />
@@ -107,24 +107,27 @@ export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
     fetchPolicy: 'network-only'
   })
 
-  if (!(current && data?.config.content)) {
+  if (!current) {
     return null
   }
 
-  const contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
-    const editorConfig = contentModelExtension?.find(c => c.identifier === config.identifier)
+  let editorConfig: EditorConfig | undefined = undefined
+  if (data) {
+    let contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
+      const editorConfig = contentModelExtension?.find(c => c.identifier === config.identifier)
 
-    let result = config
-    if (editorConfig) {
-      result = Object.assign({}, result, editorConfig)
+      let result = config
+      if (editorConfig) {
+        result = Object.assign({}, result, editorConfig)
+      }
+      return result
+    })
+
+    editorConfig = {
+      contentModelExtension: contentModelConfigMerged,
+      cusomExtension: cusomExtension,
+      lang: data.config.languages
     }
-    return result
-  })
-
-  const editorConfig: EditorConfig = {
-    contentModelExtension: contentModelConfigMerged,
-    cusomExtension: cusomExtension,
-    lang: data.config.languages
   }
 
   let comp = null
@@ -149,7 +152,7 @@ export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
 
     case RouteType.ContentCreate:
     case RouteType.ContentEdit:
-      comp = (
+      comp = editorConfig && (
         <ContentEditor
           editorConfig={editorConfig}
           id={current.type === RouteType.ContentEdit ? current.params.id : undefined}
@@ -158,15 +161,15 @@ export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
       break
 
     case RouteType.Extension:
-      comp = (
-        <Base contentTypeList={editorConfig}>
+      comp = editorConfig && (
+        <Base editorConfig={editorConfig}>
           <Extension configs={editorConfig} />
         </Base>
       )
       break
 
     default:
-      comp = <Base contentTypeList={editorConfig}>{contentForRoute(current, editorConfig)}</Base>
+      comp = <Base editorConfig={editorConfig}>{contentForRoute(current, editorConfig)}</Base>
   }
   return <ConfigContext.Provider value={editorConfig}>{comp}</ConfigContext.Provider>
 }

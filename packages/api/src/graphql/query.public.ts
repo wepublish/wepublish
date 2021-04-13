@@ -48,17 +48,24 @@ import {GraphQLAuthProvider} from './auth'
 import {logger} from '../server'
 
 export function getGraphQLPublicQuery<TSource, TContext, TArgs>(
-  type: GraphQLObjectType<any, Context>
+  content?: GraphQLObjectType<any, Context>
 ) {
+  let extensionsFields = {}
+  if (content) {
+    extensionsFields = {
+      content: {
+        type: GraphQLNonNull(content),
+        resolve: () => {
+          return {}
+        }
+      }
+    }
+  }
+
   return new GraphQLObjectType<undefined, Context>({
     name: 'Query',
     fields: {
-      content: {
-        type: GraphQLNonNull(type),
-        resolve: (source, args, context) => {
-          return {}
-        }
-      },
+      ...extensionsFields,
 
       // Settings
       // ========
