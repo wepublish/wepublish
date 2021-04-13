@@ -32,7 +32,8 @@
         "lead": "Lead",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
-        "publishedAt": "Published At"
+        "publishedAt": "Published At",
+        "createAuthorProfile": "Create Author Profile for {{name}}"
       }
     },
     "articleEditor": {
@@ -712,6 +713,13 @@
       "active": "Active",
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter"
+    },
+    "dateTimePicker": {
+      "now": "Now",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextSaturday": "Next Saturday",
+      "hour": "{{hour}}:00"
     },
     "untitled": "Untitled",
     "confirm": "Confirm",
