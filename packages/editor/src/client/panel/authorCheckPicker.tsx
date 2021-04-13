@@ -9,12 +9,6 @@ import {
   useCreateAuthorMutation,
   AuthorListDocument
 } from '../api'
-
-// export interface AuthorCheckPicker {
-//   readonly authors: AuthorRefFragment[]
-//   // readonly socialMediaAuthors: AuthorRefFragment[]
-// }
-
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
   onClose?(): void
@@ -23,10 +17,8 @@ export interface AuthorCheckPickerProps {
 
 export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
   const {t} = useTranslation()
-  // const {authors} = list
 
   const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
-  // const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
   const [authorsFilter, setAuthorsFilter] = useState('')
 
   const authorsVariables = {filter: authorsFilter || undefined, first: 10}
@@ -40,10 +32,6 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
       const authorIDs = data.authors.nodes.map(author => author.id)
       const selectedAuthors = list.filter(author => !authorIDs.includes(author.id))
       setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
-      // const selectedSocialMediaAuthors = socialMediaAuthors.filter(
-      //   author => !authorIDs.includes(author.id)
-      // )
-      // setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
     }
   }, [data?.authors, list])
 

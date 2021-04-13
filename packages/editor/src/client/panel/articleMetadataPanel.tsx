@@ -115,43 +115,6 @@ export function ArticleMetadataPanel({
     }
   }
 
-  // const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
-  // const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
-  // const [authorsFilter, setAuthorsFilter] = useState('')
-
-  // const authorsVariables = {filter: authorsFilter || undefined, first: 10}
-  // const {data} = useAuthorListQuery({
-  //   variables: authorsVariables,
-  //   fetchPolicy: 'network-only'
-  // })
-
-  // useEffect(() => {
-  //   if (data?.authors?.nodes) {
-  //     const authorIDs = data.authors.nodes.map(author => author.id)
-  //     const selectedAuthors = authors.filter(author => !authorIDs.includes(author.id))
-  //     setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
-  //     const selectedSocialMediaAuthors = socialMediaAuthors.filter(
-  //       author => !authorIDs.includes(author.id)
-  //     )
-  //     setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
-  //   }
-  // }, [data?.authors, authors, socialMediaAuthors])
-
-  // const [createAuthor] = useCreateAuthorMutation({
-  //   refetchQueries: [getOperationNameFromDocument(AuthorListDocument)]
-  // })
-
-  // async function handleCreateAuthor() {
-  //   await createAuthor({
-  //     variables: {
-  //       input: {
-  //         name: authorsFilter,
-  //         slug: slugify(authorsFilter)
-  //       }
-  //     }
-  //   })
-  // }
-
   const preTitleMax = 30
   const seoTitleMax = 70
   const titleMax = 140
@@ -219,28 +182,6 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
-                {/* <CheckPicker
-                  cleanable={true}
-                  value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
-                  data={foundSocialMediaAuthors.map(author => ({
-                    value: author.id,
-                    label: author.name
-                  }))}
-                  onSearch={searchKeyword => {
-                    setAuthorsFilter(searchKeyword)
-                  }}
-                  block
-                  renderExtraFooter={() =>
-                    authorsFilter &&
-                    !data?.authors.nodes.length && (
-                      <div style={{margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance="primary">
-                          {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
-                        </Button>
-                      </div>
-                    )
-                  }
-                /> */}
                 <AuthorCheckPicker
                   list={socialMediaAuthors}
                   onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
@@ -389,22 +330,6 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
-                {/* <CheckPicker
-                  cleanable={true}
-                  value={authors.map(author => author.id)}
-                  data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
-                  block
-                  renderExtraFooter={() =>
-                    authorsFilter &&
-                    !data?.authors.nodes.length && (
-                      <div style={{margin: '20px'}}>
-                        <Button onClick={() => handleCreateAuthor()} appearance="primary">
-                          {t('articles.panels.createAuthorProfile', {name: authorsFilter})}
-                        </Button>
-                      </div>
-                    )
-                  }
-                /> */}
                 <AuthorCheckPicker
                   list={authors}
                   onChange={authors => onChange?.({...value, authors})}
