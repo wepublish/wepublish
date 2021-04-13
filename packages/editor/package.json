@@ -25,6 +25,8 @@
   "files": [
     "src",
     "static",
+    "dist",
+    "assets",
     "lib"
   ],
   "bin": {
@@ -47,7 +49,8 @@
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
-    "clean": "shx rm -rf ./dist ./assets ./lib .env",
+    "clean": "shx rm -rf ./dist ./assets ./lib",
+    "cleanDevEnv": "shx rm -rf ./node_modules .env",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "prepare": "run-s clean copy-license build crlf",

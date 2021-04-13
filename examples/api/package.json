@@ -15,7 +15,8 @@
     "watch": "npm-run-all --parallel watch:*",
     "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9240 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
-    "clean": "shx rm -rf ./LICENSE ./dist .env",
+    "clean": "shx rm -rf ./LICENSE ./dist",
+    "cleanDevEnv": "shx rm -rf ./node_modules .env",
     "prepare": "run-s clean build"
   },
   "dependencies": {
