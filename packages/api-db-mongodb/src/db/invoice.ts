@@ -19,6 +19,7 @@ import {CollectionName, DBInvoice} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
 import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
   private invoices: Collection<DBInvoice>
@@ -130,7 +131,7 @@ export class MongoDBInvoiceAdapter implements DBInvoiceAdapter {
 
     // TODO: Rename to search
     if (filter?.mail !== undefined) {
-      textFilter.$and?.push({mail: {$regex: filter.mail, $options: 'i'}})
+      textFilter.$and?.push({mail: {$regex: escapeRegExp(filter.mail), $options: 'i'}})
     }
 
     if (filter?.paidAt !== undefined) {

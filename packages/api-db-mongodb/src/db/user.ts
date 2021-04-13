@@ -26,7 +26,7 @@ import {
 import {Collection, Db, FilterQuery, MongoCountPreferences, MongoError} from 'mongodb'
 
 import {CollectionName, DBUser} from './schema'
-import {MongoErrorCode} from '../utility'
+import {escapeRegExp, MongoErrorCode} from '../utility'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
 import {mapDateFilterComparisonToMongoQueryOperatior} from './utility'
@@ -245,14 +245,14 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     }
     // TODO: Rename to search
     if (filter?.name !== undefined) {
-      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+      textFilter.$and?.push({name: {$regex: escapeRegExp(filter.name), $options: 'i'}})
     }
 
     if (filter?.text !== undefined) {
       textFilter.$and?.push({
         $or: [
-          {name: {$regex: filter.text, $options: 'im'}},
-          {email: {$regex: filter.text, $options: 'im'}}
+          {name: {$regex: escapeRegExp(filter.text), $options: 'im'}},
+          {email: {$regex: escapeRegExp(filter.text), $options: 'im'}}
         ]
       })
     }
