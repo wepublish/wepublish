@@ -18,7 +18,7 @@ import {
 export interface AuthorCheckPickerProps {
   readonly list: AuthorRefFragment[]
   onClose?(): void
-  onChange?(list: AuthorRefFragment[]): void
+  onChange?(authors: AuthorRefFragment[]): void
 }
 
 export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
@@ -71,12 +71,8 @@ export function AuthorCheckPicker({list, onChange}: AuthorCheckPickerProps) {
         setAuthorsFilter(searchKeyword)
       }}
       onChange={authorsID => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const authors: AuthorRefFragment = foundAuthors.filter(author => authorsID.includes(author.id))
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        onChange?.({...list, authors})
+        const authors = foundAuthors.filter(author => authorsID.includes(author.id))
+        onChange?.(authors)
       }}
       onExit={() => {
         setAuthorsFilter('')

@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
 import {
   Button,
-  CheckPicker,
   ControlLabel,
   Drawer,
   Form,
@@ -24,14 +23,8 @@ import {
 import {ImagedEditPanel} from './imageEditPanel'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify, getOperationNameFromDocument} from '../utility'
-import {
-  useAuthorListQuery,
-  AuthorRefFragment,
-  ImageRefFragment,
-  useCreateAuthorMutation,
-  AuthorListDocument
-} from '../api'
+import {slugify} from '../utility'
+import {AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
@@ -236,15 +229,6 @@ export function ArticleMetadataPanel({
                   onSearch={searchKeyword => {
                     setAuthorsFilter(searchKeyword)
                   }}
-                  onChange={socialMediaAuthorIDs => {
-                    const socialMediaAuthors = foundSocialMediaAuthors.filter(author =>
-                      socialMediaAuthorIDs.includes(author.id)
-                    )
-                    onChange?.({...value, socialMediaAuthors})
-                  }}
-                  onExit={() => {
-                    setAuthorsFilter('')
-                  }}
                   block
                   renderExtraFooter={() =>
                     authorsFilter &&
@@ -257,7 +241,10 @@ export function ArticleMetadataPanel({
                     )
                   }
                 /> */}
-                <AuthorCheckPicker list={socialMediaAuthors}></AuthorCheckPicker>
+                <AuthorCheckPicker
+                  list={socialMediaAuthors}
+                  onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
+                />
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaImage')}</ControlLabel>
@@ -406,16 +393,6 @@ export function ArticleMetadataPanel({
                   cleanable={true}
                   value={authors.map(author => author.id)}
                   data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
-                  onSearch={searchKeyword => {
-                    setAuthorsFilter(searchKeyword)
-                  }}
-                  onChange={authorsID => {
-                    const authors = foundAuthors.filter(author => authorsID.includes(author.id))
-                    onChange?.({...value, authors})
-                  }}
-                  onExit={() => {
-                    setAuthorsFilter('')
-                  }}
                   block
                   renderExtraFooter={() =>
                     authorsFilter &&
@@ -428,7 +405,10 @@ export function ArticleMetadataPanel({
                     )
                   }
                 /> */}
-                <AuthorCheckPicker list={authors}></AuthorCheckPicker>
+                <AuthorCheckPicker
+                  list={authors}
+                  onChange={authors => onChange?.({...value, authors})}
+                />
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.hideAuthors')}</ControlLabel>
