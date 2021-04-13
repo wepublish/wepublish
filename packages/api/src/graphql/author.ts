@@ -66,7 +66,8 @@ export const GraphQLAuthorSort = new GraphQLEnumType({
   name: 'AuthorSort',
   values: {
     CREATED_AT: {value: AuthorSort.CreatedAt},
-    MODIFIED_AT: {value: AuthorSort.ModifiedAt}
+    MODIFIED_AT: {value: AuthorSort.ModifiedAt},
+    NAME: {value: AuthorSort.Name}
   }
 })
 

@@ -51,7 +51,7 @@ export function ArticleList() {
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [articles, setArticles] = useState<ArticleRefFragment[]>([])
 
