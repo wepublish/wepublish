@@ -30,7 +30,7 @@ import {hideBin} from 'yargs/helpers'
 import {contentModelArticle} from './modelArticle'
 import {contentModelA} from './modelA'
 import {contentModelB} from './modelB'
-import {GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString} from 'graphql'
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 
 interface ExampleURLAdapterProps {
   websiteURL: string //a
@@ -305,9 +305,9 @@ async function asyncMain() {
         }
       ]
     },
-    customGraphQLSchema: new GraphQLSchema({
-      query: new GraphQLObjectType<undefined, Context>({
-        name: 'Query',
+    graphQLExtensionPrivate: {
+      mutation: new GraphQLObjectType<undefined, Context>({
+        name: 'ExtensionMutationFoo',
         fields: {
           example: {
             type: GraphQLNonNull(GraphQLString),
@@ -317,10 +317,10 @@ async function asyncMain() {
           }
         }
       }),
-      mutation: new GraphQLObjectType<undefined, Context>({
-        name: 'Mutation',
+      query: new GraphQLObjectType<undefined, Context>({
+        name: 'ExtensionFoo',
         fields: {
-          uploadPanelMembers: {
+          example: {
             type: GraphQLNonNull(GraphQLString),
             resolve: () => {
               return 'foo'
@@ -328,7 +328,7 @@ async function asyncMain() {
           }
         }
       })
-    }),
+    },
     logger
   })
 

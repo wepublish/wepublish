@@ -7,7 +7,7 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLError, GraphQLFieldConfigMap, GraphQLSchema, print} from 'graphql'
+import {GraphQLError, GraphQLFieldConfigMap, GraphQLObjectType, GraphQLSchema, print} from 'graphql'
 
 import {
   Fetcher,
@@ -165,7 +165,10 @@ export interface ContextOptions {
   readonly paymentProviders: PaymentProvider[]
   readonly contentModels: ContentModel[]
   readonly languageConfig: LanguageConfig
-  readonly customGraphQLSchema?: GraphQLSchema
+  readonly graphQLExtensionPrivate?: {
+    query: GraphQLObjectType<any, Context>
+    mutation: GraphQLObjectType<any, Context>
+  }
   readonly hooks?: Hooks
 }
 

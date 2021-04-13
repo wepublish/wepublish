@@ -127,12 +127,28 @@ import {PaymentSort} from '../db/payment'
 import {CommentSort} from '../db/comment'
 import {GraphQLContentModelSchema} from './contentModelSchema'
 
-export function getGraphQLQuery<TSource, TContext, TArgs>(type: GraphQLObjectType<any, Context>) {
+export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
+  content: GraphQLObjectType<any, Context>,
+  extension?: GraphQLObjectType<any, Context>
+) {
+  let extensionsFields = {}
+  if (extension) {
+    extensionsFields = {
+      extensions: {
+        type: GraphQLNonNull(extension),
+        resolve: () => {
+          return {}
+        }
+      }
+    }
+  }
   return new GraphQLObjectType<undefined, Context>({
     name: 'Query',
     fields: {
+      ...extensionsFields,
+
       content: {
-        type: GraphQLNonNull(type),
+        type: GraphQLNonNull(content),
         resolve: () => {
           return {}
         }

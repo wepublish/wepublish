@@ -160,12 +160,27 @@ function mapNavigationLinkInput(value: any) {
   return {type: key, ...value[key]} as Block
 }
 
-export function getGraphQLAdminMutation<TSource, TContext, TArgs>(
-  type: GraphQLObjectType<any, Context>
+export function getGraphQLPrivateMutation<TSource, TContext, TArgs>(
+  type: GraphQLObjectType<any, Context>,
+  extension?: GraphQLObjectType<any, Context>
 ) {
+  let extensionsFields = {}
+  if (extension) {
+    extensionsFields = {
+      extensions: {
+        type: GraphQLNonNull(extension),
+        resolve: () => {
+          return {}
+        }
+      }
+    }
+  }
+
   return new GraphQLObjectType<undefined, Context>({
     name: 'Mutation',
     fields: {
+      ...extensionsFields,
+
       // Content
       // =======
 
