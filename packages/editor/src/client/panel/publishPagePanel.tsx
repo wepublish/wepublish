@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
 
-import {Button, ControlLabel, DatePicker, Form, FormGroup, Message, Modal} from 'rsuite'
+import {Button, Message, Modal} from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 
 import {PageMetadata} from './pageMetadataPanel'
 
 import {useTranslation} from 'react-i18next'
+import {DateTimePicker} from '../atoms/dateTimePicker'
 
 export interface PublishPagePanelProps {
   initialPublishDate?: Date
@@ -44,38 +45,16 @@ export function PublishPagePanel({
             description={t('pageEditor.panels.pagePending', {pendingPublishDate})}
           />
         )}
-        <Form fluid={true}>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.publishDate')}</ControlLabel>
-            <DatePicker
-              block
-              value={publishDate}
-              format="YYYY-MM-DD HH:mm"
-              ranges={[
-                {
-                  label: 'Now',
-                  value: new Date()
-                }
-              ]}
-              onChange={publishDate => setPublishDate(publishDate)}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>{t('articleEditor.panels.updateDate')}</ControlLabel>
-            <DatePicker
-              block
-              value={updateDate}
-              format="YYYY-MM-DD HH:mm"
-              ranges={[
-                {
-                  label: 'Now',
-                  value: new Date()
-                }
-              ]}
-              onChange={updateDate => setUpdateDate(updateDate)}
-            />
-          </FormGroup>
-        </Form>
+        <DateTimePicker
+          dateTime={publishDate}
+          label={t('articleEditor.panels.publishDate')}
+          changeDate={date => setPublishDate(date)}
+        />
+        <DateTimePicker
+          dateTime={updateDate}
+          label={t('articleEditor.panels.updateDate')}
+          changeDate={date => setUpdateDate(date)}
+        />
 
         <DescriptionList>
           <DescriptionListItem label={t('pageEditor.panels.title')}>
