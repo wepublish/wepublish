@@ -28,12 +28,7 @@ import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
-declare global {
-  const PasswordCredential: any
-  interface Window {
-    PasswordCredential: any
-  }
-}
+declare var PasswordCredential: any
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -125,7 +120,7 @@ export function Login() {
       user: {email: responseEmail, roles}
     } = response.data.createSession
 
-    if (window.PasswordCredential) {
+    if (PasswordCredential) {
       const cred = new PasswordCredential({
         id: email,
         password

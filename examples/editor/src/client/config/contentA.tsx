@@ -31,11 +31,10 @@ export interface ContentA_EditViewProps {
 }
 
 export function ContentA_EditView({value, onChange}: ContentA_EditViewProps) {
-  if (!value) {
+  const config = useContext(ConfigContext)
+  if (!(value && config)) {
     return null
   }
-
-  const config = useContext(ConfigContext)
   const [editLang, setEditLang] = useState(config.lang.languages[0].tag)
   const [viewLang, setViewLang] = useState(config.lang.languages[1].tag)
 
