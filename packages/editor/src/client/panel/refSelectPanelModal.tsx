@@ -8,7 +8,7 @@ export function RefSelectModal(props: RefSelectPanelProps) {
   return (
     <>
       <Modal.Header>
-        <Modal.Title>Choose a reference</Modal.Title>
+        <Modal.Title>{t('articleEditor.panels.chooseAReference')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

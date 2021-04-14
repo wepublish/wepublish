@@ -28,8 +28,8 @@ import {
   Whisper,
   Modal
 } from 'rsuite'
-const {Column, HeaderCell, Cell, Pagination} = Table
 import {DEFAULT_TABLE_PAGE_SIZES, mapTableSortTypeToGraphQLSortOrder} from '../utility'
+const {Column, HeaderCell, Cell, Pagination} = Table
 
 function mapColumFieldToGraphQLField(columnField: string): AuthorSort | null {
   switch (columnField) {

@@ -136,7 +136,7 @@ function getFragmentSchema(
 function getFragmentSchemaRecursive(
   config: EditorConfig,
   schema: ContentModelSchemas,
-  name: string = ''
+  name = ''
 ): string {
   switch (schema.type) {
     case ContentModelSchemaTypes.object:

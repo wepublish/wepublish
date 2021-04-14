@@ -135,9 +135,9 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
   }, [createError, updateError, publishError])
 
   function createInput(): any {
-    let {__typename, ...content} = contentData
+    const {__typename, ...content} = contentData
 
-    let meta = undefined
+    let meta
     if (customMetadata) {
       const {__typename: waste, ...rest} = customMetadata
       meta = rest

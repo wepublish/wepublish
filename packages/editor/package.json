@@ -158,6 +158,8 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "classPrefix",
+            "backdrop",
             "componentClass",
             "autoComplete",
             "controlId",
