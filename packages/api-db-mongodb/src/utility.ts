@@ -25,3 +25,13 @@ export function isNonNull<T>(value: T): value is NonNullable<T> {
 export enum MongoErrorCode {
   DuplicateKey = 11000
 }
+
+/**
+ * this method gets a string with special characters like:
+ *  - , [ , ] , / , { , } , ( , ) , * , + , ? , . , \ , ^ , $ , |
+ * and it adds \ the slash to let regex works properly as intended
+ * @param string string with special characters
+ */
+export function escapeRegExp(string: string) {
+  return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+}

@@ -244,6 +244,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
               <Input
                 placeholder={t('navigation.panels.label')}
                 value={value.label}
+                style={{marginBottom: 4}}
                 onChange={label => {
                   onChange({...value, label})
                 }}
@@ -252,6 +253,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
                 block={true}
                 label={t('navigation.panels.linkType')}
                 value={value.type}
+                style={{marginBottom: 4}}
                 data={linkTypes}
                 onChange={(type: string) => {
                   if (!type) return
@@ -287,6 +289,7 @@ export function NavigationEditPanel({id, onClose, onSave}: NavigationEditPanelPr
               ) : (
                 <Input
                   placeholder={t('navigation.panels.url')}
+                  style={{marginBottom: 8}}
                   value={value.url}
                   onChange={url =>
                     onChange({

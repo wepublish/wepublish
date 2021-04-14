@@ -16,7 +16,13 @@ import {
 
 import {RouteActionType} from '@karma.run/react'
 
-import {FullMemberPlanFragment, useDeleteMemberPlanMutation, useMemberPlanListQuery} from '../api'
+import {
+  FullMemberPlanFragment,
+  MemberPlanListDocument,
+  MemberPlanListQuery,
+  useDeleteMemberPlanMutation,
+  useMemberPlanListQuery
+} from '../api'
 import {MemberPlanEditPanel} from '../panel/memberPlanEditPanel'
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
@@ -40,7 +46,7 @@ export function MemberPlanList() {
 
   const [currentMemberPlan, setCurrentMemberPlan] = useState<FullMemberPlanFragment>()
 
-  const {data, refetch, loading: isLoading} = useMemberPlanListQuery({
+  const {data, loading: isLoading} = useMemberPlanListQuery({
     variables: {
       filter: filter || undefined,
       first: 50
@@ -58,16 +64,35 @@ export function MemberPlanList() {
         <Button
           color="red"
           disabled={isDeleting}
-          onClick={() => {
+          onClick={async () => {
             if (!currentMemberPlan) return
             close()
-            deleteMemberPlan({
-              variables: {id: currentMemberPlan.id}
+            await deleteMemberPlan({
+              variables: {id: currentMemberPlan.id},
+              update: cache => {
+                const query = cache.readQuery<MemberPlanListQuery>({
+                  query: MemberPlanListDocument,
+                  variables: {
+                    filter: filter || undefined,
+                    first: 50
+                  }
+                })
+
+                if (!query) return
+
+                cache.writeQuery<MemberPlanListQuery>({
+                  query: MemberPlanListDocument,
+                  data: {
+                    memberPlans: {
+                      ...query.memberPlans,
+                      nodes: query.memberPlans.nodes.filter(
+                        memberPlan => memberPlan.id !== currentMemberPlan.id
+                      )
+                    }
+                  }
+                })
+              }
             })
-              .then(() => {
-                refetch()
-              })
-              .catch(console.error)
           }}>
           {t('global.buttons.deleteNow')}
         </Button>

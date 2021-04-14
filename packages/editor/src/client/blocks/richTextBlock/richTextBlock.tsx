@@ -17,7 +17,7 @@ import {
 import {RichTextBlockValue} from '../types'
 import {FormatButton, FormatIconButton, EditorSubMenuButton} from './toolbar/buttons'
 import {renderElement, renderLeaf} from './editor/render'
-import {BlockFormat, TextFormat} from './editor/formats'
+import {BlockFormat, TextFormat, InlineFormat} from './editor/formats'
 import {withRichText, withTable} from './editor/plugins'
 import {withNormalizeNode} from './editor/normalizing'
 import {TableMenu} from './toolbar/tableMenu'
@@ -206,7 +206,7 @@ export const RichTextBlock = memo(function RichTextBlock({
 
             {config?.url && (
               <>
-                <SubMenuButton icon="link">
+                <SubMenuButton icon="link" format={InlineFormat.Link}>
                   <LinkMenu />
                 </SubMenuButton>
                 <ToolbarDivider />

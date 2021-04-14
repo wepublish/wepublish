@@ -1,5 +1,68 @@
 # Change Log
 
+## v2.2.0 (2021-04-14)
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#228](https://github.com/wepublish/wepublish/pull/228) use Visibility API to check if still logged in ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#223](https://github.com/wepublish/wepublish/pull/223) fix table column width ([@penk85](https://github.com/penk85))
+  * [#222](https://github.com/wepublish/wepublish/pull/222) Add missing translations to userlist panel ([@penk85](https://github.com/penk85))
+  * [#217](https://github.com/wepublish/wepublish/pull/217) Selected authors stay selected during search ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* `api`, `editor`
+  * [#219](https://github.com/wepublish/wepublish/pull/219) Disable save without peer data and handle errors of invalid tokens ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#225](https://github.com/wepublish/wepublish/pull/225) f/wpc-296-add-slug-guide ([@HanaAyman](https://github.com/HanaAyman))
+  * [#216](https://github.com/wepublish/wepublish/pull/216) f/WPC-276-highlight-article-after-being-unpublished ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `editor`
+  * [#224](https://github.com/wepublish/wepublish/pull/224) f/wpc-255-character-counter-count-more-blocks ([@HanaAyman](https://github.com/HanaAyman))
+  * [#214](https://github.com/wepublish/wepublish/pull/214) f/wpc-256-see-the-max-amount-of-characters ([@HanaAyman](https://github.com/HanaAyman))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* Other
+  * [#218](https://github.com/wepublish/wepublish/pull/218) Added color to the table in the example website ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pat Mächler ([@valioDOTch](https://github.com/valioDOTch))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+## v2.1.0 (2021-03-31)
+
+#### :heart: New Feature
+* Other
+  * [#194](https://github.com/wepublish/wepublish/pull/194) F/wpc 88 update comment ([@0815pascal](https://github.com/0815pascal))
+* `api-db-mongodb`, `api`, `editor`
+  * [#207](https://github.com/wepublish/wepublish/pull/207) Article Preview Links ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#206](https://github.com/wepublish/wepublish/pull/206) B/wpc 245 image selection disabled in edit peer ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `editor`
+  * [#209](https://github.com/wepublish/wepublish/pull/209) F/wpc 244 infer link protocol ([@penk85](https://github.com/penk85))
+  * [#211](https://github.com/wepublish/wepublish/pull/211) hotkey cmd support for macs ([@penk85](https://github.com/penk85))
+  * [#205](https://github.com/wepublish/wepublish/pull/205) Add hotkey shortcuts to Richtext Editor ([@penk85](https://github.com/penk85))
+
+#### Committers: 4
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pascal Witzig ([@0815pascal](https://github.com/0815pascal))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+
 ## v2.0.0 (2021-03-17)
 
 #### :boom: Breaking Change

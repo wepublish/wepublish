@@ -18,6 +18,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBPayment} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBPaymentAdapter implements DBPaymentAdapter {
   private payment: Collection<DBPayment>
@@ -124,7 +125,7 @@ export class MongoDBPaymentAdapter implements DBPaymentAdapter {
 
     // TODO: Rename to search
     if (filter?.intentID !== undefined) {
-      textFilter.$or = [{mail: {$regex: filter.intentID, $options: 'i'}}]
+      textFilter.$or = [{mail: {$regex: escapeRegExp(filter.intentID), $options: 'i'}}]
     }
 
     const [totalCount, payments] = await Promise.all([
