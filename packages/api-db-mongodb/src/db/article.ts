@@ -23,6 +23,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBArticle} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBArticleAdapter implements DBArticleAdapter {
   private articles: Collection<DBArticle>
@@ -294,9 +295,9 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
     if (filter?.title != undefined) {
       // TODO: Only match based on state filter
       textFilter['$or'] = [
-        {'draft.title': {$regex: filter.title, $options: 'i'}},
-        {'pending.title': {$regex: filter.title, $options: 'i'}},
-        {'published.title': {$regex: filter.title, $options: 'i'}}
+        {'draft.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'pending.title': {$regex: escapeRegExp(filter.title), $options: 'i'}},
+        {'published.title': {$regex: escapeRegExp(filter.title), $options: 'i'}}
       ]
     }
 
