@@ -176,6 +176,9 @@ function getFragmentSchemaRecursive(
 }
 
 export function stripTypename<T>(input: T) {
+  if (typeof input === 'string' || input instanceof String) {
+    return input
+  }
   const newish = {...input}
 
   for (const prop in newish) {

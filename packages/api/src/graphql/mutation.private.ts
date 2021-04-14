@@ -175,8 +175,9 @@ export function getGraphQLPrivateMutation<TSource, TContext, TArgs>(
       }
     }
   }
+  let contentFields = {}
   if (content) {
-    extensionsFields = {
+    contentFields = {
       content: {
         type: GraphQLNonNull(content),
         resolve: () => {
@@ -190,6 +191,7 @@ export function getGraphQLPrivateMutation<TSource, TContext, TArgs>(
     name: 'Mutation',
     fields: {
       ...extensionsFields,
+      ...contentFields,
 
       updatePeerProfile: {
         type: GraphQLNonNull(GraphQLPeerProfile),

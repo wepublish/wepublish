@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect, useCallback, useReducer} from 'react'
 import {Modal, Notification, Icon, IconButton} from 'rsuite'
 import {EditorTemplate} from '../atoms/editorTemplate'
 import {NavigationBar} from '../atoms/navigationBar'
@@ -13,7 +13,7 @@ import {
 } from '../route'
 
 import {ContentMetadataPanel, DefaultMetadata} from '../panel/contentMetadataPanel'
-import {usePublishContentMutation} from '../api'
+import {LanguagesConfig, usePublishContentMutation} from '../api'
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {useTranslation} from 'react-i18next'
 import {PublishCustomContentPanel} from '../panel/contentPublishPanel'
@@ -26,6 +26,17 @@ import {
 } from '../utils/queryUtils'
 import {EditorConfig} from '../interfaces/extensionConfig'
 import {ContentMetadataPanelModal} from '../panel/contentMetadataPanelModal'
+import {GenericContentView} from '../atoms/contentEdit/GenericContentView'
+import {
+  ContentModelSchemaFieldBase,
+  ContentModelSchemaFieldEnum,
+  ContentModelSchemaFieldLeaf,
+  ContentModelSchemaFieldObject,
+  ContentModelSchemaFieldUnion,
+  ContentModelSchemaTypes
+} from '../interfaces/contentModelSchema'
+import update, {CustomCommands} from 'immutability-helper'
+import {SchemaPath} from '../interfaces/utilTypes'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -45,6 +56,86 @@ interface ContentBody {
   content: any
   meta?: any
   __typename: string
+}
+
+export enum ContentEditActionEnum {
+  setInitialState = 'setInitialState',
+  update = 'update',
+  splice = 'splice',
+  push = 'push'
+}
+export type ContentEditAction =
+  | ContentEditActionInitial
+  | ContentEditActionUpdate
+  | ContentEditActionSplice
+  | ContentEditActionPush
+
+export interface ContentEditActionBase {
+  type: ContentEditActionEnum
+}
+
+export interface ContentEditActionInitial extends ContentEditActionBase {
+  type: ContentEditActionEnum
+  value: unknown
+}
+
+export interface ContentEditActionUpdate extends ContentEditActionBase {
+  type: ContentEditActionEnum.update
+  schemaPath: SchemaPath
+  value: unknown
+}
+
+export interface ContentEditActionSplice extends ContentEditActionBase {
+  type: ContentEditActionEnum.splice
+  schemaPath: SchemaPath
+  start: number
+  delete: number
+  insert: any[]
+}
+
+export interface ContentEditActionPush extends ContentEditActionBase {
+  type: ContentEditActionEnum.push
+  schemaPath: SchemaPath
+  insert: any[]
+}
+
+function reducer(state: any, action: ContentEditAction) {
+  switch (action.type) {
+    case ContentEditActionEnum.setInitialState:
+      const actionInitial = action as ContentEditActionInitial
+      return actionInitial.value
+
+    case ContentEditActionEnum.update:
+      const actionUpdate = action as ContentEditActionUpdate
+      let updateOperation: CustomCommands<any> = {$set: actionUpdate.value}
+      updateOperation = actionUpdate.schemaPath.reverse().reduce((accu, item) => {
+        return {[item]: accu}
+      }, updateOperation)
+      return update(state, updateOperation)
+
+    case ContentEditActionEnum.splice:
+      const actionSplice = action as ContentEditActionSplice
+      let spliceOperation: CustomCommands<any> = {
+        $splice: [[actionSplice.start, actionSplice.delete, ...actionSplice.insert]]
+      }
+      spliceOperation = actionSplice.schemaPath.reverse().reduce((accu, item) => {
+        return {[item]: accu}
+      }, spliceOperation)
+      return update(state, spliceOperation)
+
+    case ContentEditActionEnum.push:
+      const actionPush = action as ContentEditActionPush
+      let pushOperation: CustomCommands<any> = {
+        $push: actionPush.insert
+      }
+      pushOperation = actionPush.schemaPath.reverse().reduce((accu, item) => {
+        return {[item]: accu}
+      }, pushOperation)
+      return update(state, pushOperation)
+
+    default:
+      throw new Error()
+  }
 }
 
 export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
@@ -83,7 +174,18 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
   const [customMetadata, setCustomMetadata] = useState<any>(contentConfig.defaultMeta ?? undefined)
 
   const isNew = id === undefined
-  const [contentData, setContentData] = useState<any>(contentConfig.defaultContent ?? null)
+  function setContentData(value: unknown) {
+    dispatcher({
+      type: ContentEditActionEnum.setInitialState,
+      value
+    })
+  }
+
+  const intitialContent =
+    contentConfig.defaultContent ??
+    generateEmptyRootContent(contentConfig.schema.content, editorConfig.lang)
+  const [contentData, dispatcher] = useReducer(reducer, intitialContent)
+
   const contentdId = id || createData?.content[type].create.id
 
   const {data, loading: isLoading} = useQuery(getReadQuery(editorConfig, contentConfig), {
@@ -220,6 +322,13 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
   let content = null
   if (contentConfig.getContentView) {
     content = contentConfig.getContentView(contentData, handleChange, isLoading || isDisabled)
+  } else {
+    content = (
+      <GenericContentView
+        record={contentData}
+        model={contentConfig.schema.content}
+        dispatch={dispatcher}></GenericContentView>
+    )
   }
 
   let metadataView = null
@@ -343,4 +452,83 @@ export function ContentEditor({id, editorConfig}: ArticleEditorProps) {
       </Modal>
     </>
   )
+}
+
+export function generateEmptyRootContent(schema: any, lang: LanguagesConfig): unknown {
+  return generateEmptyContent(
+    {
+      type: ContentModelSchemaTypes.object,
+      fields: schema
+    } as any,
+    lang
+  )
+}
+
+export function generateEmptyContent(
+  field: ContentModelSchemaFieldBase,
+  lang?: LanguagesConfig
+): unknown {
+  function defaultVal(defaultVal: unknown) {
+    if ((field as ContentModelSchemaFieldLeaf).i18n) {
+      return lang?.languages.reduce((accu, lang) => {
+        accu[lang.tag] = defaultVal
+        return accu
+      }, {} as any)
+    }
+    return defaultVal
+  }
+
+  if (!field) {
+    return undefined
+  }
+  if (field.type === ContentModelSchemaTypes.object) {
+    const schema = field as ContentModelSchemaFieldObject
+    const r: {[key: string]: unknown} = {}
+    return Object.entries(schema.fields).reduce((accu, item) => {
+      const [key, val] = item
+      accu[key] = generateEmptyContent(val, lang)
+      return accu
+    }, r)
+  }
+  if (field.type === ContentModelSchemaTypes.string) {
+    return defaultVal('')
+  }
+  if (field.type === ContentModelSchemaTypes.richText) {
+    return defaultVal([
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: ''
+          }
+        ]
+      }
+    ])
+  }
+  if (field.type === ContentModelSchemaTypes.enum) {
+    const schema = field as ContentModelSchemaFieldEnum
+    return defaultVal(schema.values[0].value)
+  }
+  if (field.type === ContentModelSchemaTypes.int) {
+    return defaultVal(0)
+  }
+  if (field.type === ContentModelSchemaTypes.float) {
+    return defaultVal(0)
+  }
+  if (field.type === ContentModelSchemaTypes.boolean) {
+    return defaultVal(true)
+  }
+  if (field.type === ContentModelSchemaTypes.list) {
+    return []
+  }
+  if (field.type === ContentModelSchemaTypes.reference) {
+    return defaultVal(null)
+  }
+  if (field.type === ContentModelSchemaTypes.union) {
+    const schema = field as ContentModelSchemaFieldUnion
+    const [key, val] = Object.entries(schema.cases)[0]
+    return {[key]: generateEmptyContent(val, lang)}
+  }
+
+  return {}
 }

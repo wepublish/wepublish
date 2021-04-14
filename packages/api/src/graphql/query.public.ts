@@ -50,9 +50,9 @@ import {logger} from '../server'
 export function getGraphQLPublicQuery<TSource, TContext, TArgs>(
   content?: GraphQLObjectType<any, Context>
 ) {
-  let extensionsFields = {}
+  let contentFields = {}
   if (content) {
-    extensionsFields = {
+    contentFields = {
       content: {
         type: GraphQLNonNull(content),
         resolve: () => {
@@ -65,7 +65,7 @@ export function getGraphQLPublicQuery<TSource, TContext, TArgs>(
   return new GraphQLObjectType<undefined, Context>({
     name: 'Query',
     fields: {
-      ...extensionsFields,
+      ...contentFields,
 
       // Settings
       // ========

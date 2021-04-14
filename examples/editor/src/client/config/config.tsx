@@ -2,7 +2,6 @@ import React from 'react'
 import {ExtensionConfig} from '@wepublish/editor'
 import {CustomViewExample} from './customView'
 import {ContentA_EditView} from './contentA'
-import {ContentB_EditView} from './contentB'
 import {BlockType} from './article/articleInterfaces'
 import {getContentView} from './article/articleContentView'
 import {ContentMetadataPanel} from './contentAMetadata'
@@ -103,26 +102,6 @@ export const config: ExtensionConfig = {
             onChangeCustomMetadata={onChangeMetadata}
           />
         )
-      }
-    },
-    {
-      identifier: 'modelB',
-      defaultContent: {
-        myString: '',
-        myRichText: [
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: ''
-              }
-            ]
-          }
-        ],
-        myRef: null
-      },
-      getContentView: (content: any, handleChange: any, disabled: boolean) => {
-        return <ContentB_EditView value={content} onChange={handleChange} />
       }
     },
     {

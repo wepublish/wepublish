@@ -131,9 +131,9 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
   content?: GraphQLObjectType<any, Context>,
   extension?: GraphQLObjectType<any, Context>
 ) {
-  let extensionsFields = {}
+  let contentFields = {}
   if (content) {
-    extensionsFields = {
+    contentFields = {
       content: {
         type: GraphQLNonNull(content),
         resolve: () => {
@@ -142,6 +142,7 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
       }
     }
   }
+  let extensionsFields = {}
   if (extension) {
     extensionsFields = {
       extensions: {
@@ -156,6 +157,7 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
     name: 'Query',
     fields: {
       ...extensionsFields,
+      ...contentFields,
 
       // Configuration
       // =======
