@@ -33,7 +33,7 @@ import {contentModelB} from './modelB'
 import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 
 interface ExampleURLAdapterProps {
-  websiteURL: string //a
+  websiteURL: string
 }
 
 class ExampleURLAdapter implements URLAdapter {

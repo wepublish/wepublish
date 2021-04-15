@@ -9,6 +9,7 @@ import {methodsToProxy} from './events'
 import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
+import {getDemoModel} from './graphql/content/contentUtils'
 
 let serverLogger: pino.Logger
 
@@ -29,6 +30,9 @@ export class WepublishServer {
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
+    if (!(opts?.contentModels && opts.contentModels.length > 0)) {
+      opts.contentModels = [getDemoModel()]
+    }
     this.opts = opts
     const {dbAdapter, graphQLExtensionPrivate} = opts
 

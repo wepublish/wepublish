@@ -163,7 +163,7 @@ export interface ContextOptions {
   readonly mailProvider?: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
-  readonly contentModels?: ContentModel[]
+  contentModels?: ContentModel[]
   readonly languageConfig: LanguageConfig
   readonly graphQLExtensionPrivate?: {
     query: GraphQLObjectType<any, Context>

@@ -33,6 +33,7 @@ import {GraphQLPageInfo} from '../common'
 import {GraphQLPeer} from '../peer'
 import {getI18nOutputType, getI18nInputType} from '../i18nPrimitives'
 import {MapType} from '../../interfaces/utilTypes'
+import {ContentModel} from '../..'
 
 export interface PeerArticle {
   peerID: string
@@ -326,4 +327,19 @@ export function getGraphQLPeerCustomContent(parentName: string, content?: any) {
       content: {type: GraphQLNonNull(content)}
     }
   })
+}
+
+export function getDemoModel(): ContentModel {
+  return {
+    identifier: 'example',
+    namePlural: 'Examples',
+    nameSingular: 'Example',
+    schema: {
+      content: {
+        foo: {
+          type: ContentModelSchemaTypes.string
+        }
+      }
+    }
+  }
 }

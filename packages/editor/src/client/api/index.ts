@@ -13,30 +13,29 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: string;
-  RichText: Node[];
   /** A hexidecimal color value. */
   Color: string;
-  Unknown: any;
+  RichText: Node[];
   ContentModelSchema: any;
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
 };
 
-export type _Cmp_Article = {
-  __typename?: '_cmp_article';
-  read: _Cmp_Article_Record;
-  list: _Cmp_ArticleConnection;
+export type _Cmp_Example = {
+  __typename?: '_cmp_example';
+  read: _Cmp_Example_Record;
+  list: _Cmp_ExampleConnection;
 };
 
 
-export type _Cmp_ArticleReadArgs = {
+export type _Cmp_ExampleReadArgs = {
   peerID?: Maybe<Scalars['ID']>;
   id: Scalars['ID'];
 };
 
 
-export type _Cmp_ArticleListArgs = {
+export type _Cmp_ExampleListArgs = {
   after?: Maybe<Scalars['ID']>;
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
@@ -46,8 +45,8 @@ export type _Cmp_ArticleListArgs = {
   order?: Maybe<SortOrder>;
 };
 
-export type _Cmp_Article_Record = {
-  __typename?: '_cmp_article_record';
+export type _Cmp_Example_Record = {
+  __typename?: '_cmp_example_record';
   id: Scalars['ID'];
   contentType: Scalars['String'];
   revision: Scalars['Int'];
@@ -58,365 +57,48 @@ export type _Cmp_Article_Record = {
   dePublicationDate?: Maybe<Scalars['DateTime']>;
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_Article_Record_Content>;
+  content?: Maybe<_Cmp_Example_Record_Content>;
 };
 
-export type _Cmp_Article_Record_Content = {
-  __typename?: '_cmp_article_record_content';
-  blocks?: Maybe<Array<Maybe<_Cmp_Article_Record_Content_Blocks>>>;
+export type _Cmp_Example_Record_Content = {
+  __typename?: '_cmp_example_record_content';
+  foo?: Maybe<Scalars['String']>;
 };
 
-export type _Cmp_Article_Record_Content_Blocks = _Cmp_Article_Record_Content_Blocks_Title | _Cmp_Article_Record_Content_Blocks_RichText | _Cmp_Article_Record_Content_Blocks_Image | _Cmp_Article_Record_Content_Blocks_ImageGallery | _Cmp_Article_Record_Content_Blocks_Listicle | _Cmp_Article_Record_Content_Blocks_Vimeo | _Cmp_Article_Record_Content_Blocks_Youtube | _Cmp_Article_Record_Content_Blocks_SoundCloudTrack | _Cmp_Article_Record_Content_Blocks_Embed | _Cmp_Article_Record_Content_Blocks_LinkPageBreak | _Cmp_Article_Record_Content_Blocks_Quote | _Cmp_Article_Record_Content_Blocks_TeaserGrid;
-
-export type _Cmp_Article_Record_Content_Blocks_Embed = {
-  __typename?: '_cmp_article_record_content_blocks_embed';
-  embed?: Maybe<_Cmp_Article_Record_Content_Blocks_Embed_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Embed_Content = {
-  __typename?: '_cmp_article_record_content_blocks_embed_content';
-  type?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-  styleCustom?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Image = {
-  __typename?: '_cmp_article_record_content_blocks_image';
-  image?: Maybe<_Cmp_Article_Record_Content_Blocks_Image_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Image_Content = {
-  __typename?: '_cmp_article_record_content_blocks_image_content';
-  image: Ref__Media;
-  caption?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_ImageGallery = {
-  __typename?: '_cmp_article_record_content_blocks_imageGallery';
-  imageGallery?: Maybe<_Cmp_Article_Record_Content_Blocks_ImageGallery_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Content = {
-  __typename?: '_cmp_article_record_content_blocks_imageGallery_content';
-  images: Array<Maybe<_Cmp_Article_Record_Content_Blocks_ImageGallery_Images>>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_ImageGallery_Images = {
-  __typename?: '_cmp_article_record_content_blocks_imageGallery_images';
-  image: Ref__Media;
-  caption?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak = {
-  __typename?: '_cmp_article_record_content_blocks_linkPageBreak';
-  linkPageBreak?: Maybe<_Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_LinkPageBreak_Content = {
-  __typename?: '_cmp_article_record_content_blocks_linkPageBreak_content';
-  text?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  linkURL?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  styleOption?: Maybe<Scalars['String']>;
-  layoutOption?: Maybe<Scalars['String']>;
-  templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Ref__Media>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Listicle = {
-  __typename?: '_cmp_article_record_content_blocks_listicle';
-  listicle?: Maybe<_Cmp_Article_Record_Content_Blocks_Listicle_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Listicle_Content = {
-  __typename?: '_cmp_article_record_content_blocks_listicle_content';
-  items: Array<Maybe<_Cmp_Article_Record_Content_Blocks_Listicle_Items>>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Listicle_Items = {
-  __typename?: '_cmp_article_record_content_blocks_listicle_items';
-  title?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Ref__Media>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Quote = {
-  __typename?: '_cmp_article_record_content_blocks_quote';
-  quote?: Maybe<_Cmp_Article_Record_Content_Blocks_Quote_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Quote_Content = {
-  __typename?: '_cmp_article_record_content_blocks_quote_content';
-  quote?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_RichText = {
-  __typename?: '_cmp_article_record_content_blocks_richText';
-  richText?: Maybe<_Cmp_Article_Record_Content_Blocks_RichText_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_RichText_Content = {
-  __typename?: '_cmp_article_record_content_blocks_richText_content';
-  richText: Scalars['RichText'];
-};
-
-export type _Cmp_Article_Record_Content_Blocks_SoundCloudTrack = {
-  __typename?: '_cmp_article_record_content_blocks_soundCloudTrack';
-  soundCloudTrack?: Maybe<_Cmp_Article_Record_Content_Blocks_SoundCloudTrack_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_SoundCloudTrack_Content = {
-  __typename?: '_cmp_article_record_content_blocks_soundCloudTrack_content';
-  trackID: Scalars['ID'];
-};
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid = {
-  __typename?: '_cmp_article_record_content_blocks_teaserGrid';
-  teaserGrid?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Content = {
-  __typename?: '_cmp_article_record_content_blocks_teaserGrid_content';
-  teasers: Array<Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers>>;
-  numColumns: Scalars['Int'];
-};
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
-  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers';
-  style?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Ref__Media>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  contentRef?: Maybe<Ref_Article_Page>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef = _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Article | _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Page;
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Article = {
-  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers_contentRef_article';
-  article?: Maybe<_Cmp_Article_Record>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef_Page = {
-  __typename?: '_cmp_article_record_content_blocks_teaserGrid_teasers_contentRef_page';
-  page?: Maybe<Scalars['Unknown']>;
-};
-
-export enum _Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
-  /** default */
-  Default = 'DEFAULT',
-  /** light */
-  Light = 'LIGHT',
-  /** text */
-  Text = 'TEXT'
-}
-
-export type _Cmp_Article_Record_Content_Blocks_Title = {
-  __typename?: '_cmp_article_record_content_blocks_title';
-  title?: Maybe<_Cmp_Article_Record_Content_Blocks_Title_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Title_Content = {
-  __typename?: '_cmp_article_record_content_blocks_title_content';
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Vimeo = {
-  __typename?: '_cmp_article_record_content_blocks_vimeo';
-  vimeo?: Maybe<_Cmp_Article_Record_Content_Blocks_Vimeo_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Vimeo_Content = {
-  __typename?: '_cmp_article_record_content_blocks_vimeo_content';
-  videoID: Scalars['ID'];
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Youtube = {
-  __typename?: '_cmp_article_record_content_blocks_youtube';
-  youtube?: Maybe<_Cmp_Article_Record_Content_Blocks_Youtube_Content>;
-};
-
-export type _Cmp_Article_Record_Content_Blocks_Youtube_Content = {
-  __typename?: '_cmp_article_record_content_blocks_youtube_content';
-  videoID: Scalars['ID'];
-};
-
-export type _Cmp_ArticleConnection = {
-  __typename?: '_cmp_articleConnection';
-  nodes: Array<_Cmp_Article_Record>;
+export type _Cmp_ExampleConnection = {
+  __typename?: '_cmp_exampleConnection';
+  nodes: Array<_Cmp_Example_Record>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int'];
 };
 
-export type _Cmp_ModelA = {
-  __typename?: '_cmp_modelA';
-  read: _Cmp_ModelA_Record;
-  list: _Cmp_ModelAConnection;
-};
-
-
-export type _Cmp_ModelAReadArgs = {
-  peerID?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
-};
-
-
-export type _Cmp_ModelAListArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
-};
-
-export type _Cmp_ModelA_Record = {
-  __typename?: '_cmp_modelA_record';
-  id: Scalars['ID'];
-  contentType: Scalars['String'];
-  revision: Scalars['Int'];
-  state: ContentStateEnum;
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  publicationDate?: Maybe<Scalars['DateTime']>;
-  dePublicationDate?: Maybe<Scalars['DateTime']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_ModelA_Record_Content>;
-  meta?: Maybe<_Cmp_ModelA_Record_Meta>;
-};
-
-export type _Cmp_ModelA_Record_Content = {
-  __typename?: '_cmp_modelA_record_content';
-  myString?: Maybe<Scalars['String']>;
-  myStringI18n?: Maybe<I18n_String>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRichTextI18n?: Maybe<I18n_RichText>;
-  myRef?: Maybe<Ref_ModelA_ModelB__Media>;
-};
-
-export type _Cmp_ModelA_Record_Content_MyRef = _Cmp_ModelA_Record_Content_MyRef_ModelA | _Cmp_ModelA_Record_Content_MyRef_ModelB | _Cmp_ModelA_Record_Content_MyRef__Media;
-
-export type _Cmp_ModelA_Record_Content_MyRef__Media = {
-  __typename?: '_cmp_modelA_record_content_myRef__media';
-  _media?: Maybe<Image>;
-};
-
-export type _Cmp_ModelA_Record_Content_MyRef_ModelA = {
-  __typename?: '_cmp_modelA_record_content_myRef_modelA';
-  modelA?: Maybe<_Cmp_ModelA_Record>;
-};
-
-export type _Cmp_ModelA_Record_Content_MyRef_ModelB = {
-  __typename?: '_cmp_modelA_record_content_myRef_modelB';
-  modelB?: Maybe<_Cmp_ModelB_Record>;
-};
-
-export type _Cmp_ModelA_Record_Meta = {
-  __typename?: '_cmp_modelA_record_meta';
-  myString?: Maybe<Scalars['String']>;
-  myStringI18n?: Maybe<I18n_String>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRichTextI18n?: Maybe<I18n_RichText>;
-  myRef?: Maybe<Ref_ModelA_ModelB__Media>;
-};
-
-export type _Cmp_ModelAConnection = {
-  __typename?: '_cmp_modelAConnection';
-  nodes: Array<_Cmp_ModelA_Record>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type _Cmp_ModelB = {
-  __typename?: '_cmp_modelB';
-  read: _Cmp_ModelB_Record;
-  list: _Cmp_ModelBConnection;
-};
-
-
-export type _Cmp_ModelBReadArgs = {
-  peerID?: Maybe<Scalars['ID']>;
-  id: Scalars['ID'];
-};
-
-
-export type _Cmp_ModelBListArgs = {
-  after?: Maybe<Scalars['ID']>;
-  before?: Maybe<Scalars['ID']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  filter?: Maybe<ArticleFilter>;
-  sort?: Maybe<ArticleSort>;
-  order?: Maybe<SortOrder>;
-};
-
-export type _Cmp_ModelB_Record = {
-  __typename?: '_cmp_modelB_record';
-  id: Scalars['ID'];
-  contentType: Scalars['String'];
-  revision: Scalars['Int'];
-  state: ContentStateEnum;
-  createdAt: Scalars['DateTime'];
-  modifiedAt: Scalars['DateTime'];
-  publicationDate?: Maybe<Scalars['DateTime']>;
-  dePublicationDate?: Maybe<Scalars['DateTime']>;
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmp_ModelB_Record_Content>;
-};
-
-export type _Cmp_ModelB_Record_Content = {
-  __typename?: '_cmp_modelB_record_content';
-  myString?: Maybe<Scalars['String']>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_ModelA>;
-};
-
-export type _Cmp_ModelBConnection = {
-  __typename?: '_cmp_modelBConnection';
-  nodes: Array<_Cmp_ModelB_Record>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
-};
-
-export type _Cmpi_Article = {
-  __typename?: '_cmpi_article';
-  create: _Cmp_Article_Record;
-  update: _Cmp_Article_Record;
+export type _Cmpi_Example = {
+  __typename?: '_cmpi_example';
+  create: _Cmp_Example_Record;
+  update: _Cmp_Example_Record;
   delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_Article_Record>;
-  unpublish?: Maybe<_Cmp_Article_Record>;
+  publish?: Maybe<_Cmp_Example_Record>;
+  unpublish?: Maybe<_Cmp_Example_Record>;
 };
 
 
-export type _Cmpi_ArticleCreateArgs = {
-  input: _Cmpi_Article_Record_Create;
+export type _Cmpi_ExampleCreateArgs = {
+  input: _Cmpi_Example_Record_Create;
 };
 
 
-export type _Cmpi_ArticleUpdateArgs = {
-  input: _Cmpi_Article_Record_Update;
+export type _Cmpi_ExampleUpdateArgs = {
+  input: _Cmpi_Example_Record_Update;
 };
 
 
-export type _Cmpi_ArticleDeleteArgs = {
+export type _Cmpi_ExampleDeleteArgs = {
   id: Scalars['ID'];
   revision?: Maybe<Scalars['Int']>;
 };
 
 
-export type _Cmpi_ArticlePublishArgs = {
+export type _Cmpi_ExamplePublishArgs = {
   id: Scalars['ID'];
   revision: Scalars['Int'];
   publishAt?: Maybe<Scalars['DateTime']>;
@@ -425,263 +107,25 @@ export type _Cmpi_ArticlePublishArgs = {
 };
 
 
-export type _Cmpi_ArticleUnpublishArgs = {
+export type _Cmpi_ExampleUnpublishArgs = {
   id: Scalars['ID'];
 };
 
-export type _Cmpi_Article_Record_Content = {
-  blocks?: Maybe<Array<Maybe<_Cmpi_Article_Record_Content_Blocks>>>;
+export type _Cmpi_Example_Record_Content = {
+  foo?: Maybe<Scalars['String']>;
 };
 
-export type _Cmpi_Article_Record_Content_Blocks = {
-  title?: Maybe<_Cmpi_Article_Record_Content_Blocks_Title>;
-  richText?: Maybe<_Cmpi_Article_Record_Content_Blocks_RichText>;
-  image?: Maybe<_Cmpi_Article_Record_Content_Blocks_Image>;
-  imageGallery?: Maybe<_Cmpi_Article_Record_Content_Blocks_ImageGallery>;
-  listicle?: Maybe<_Cmpi_Article_Record_Content_Blocks_Listicle>;
-  vimeo?: Maybe<_Cmpi_Article_Record_Content_Blocks_Vimeo>;
-  youtube?: Maybe<_Cmpi_Article_Record_Content_Blocks_Youtube>;
-  soundCloudTrack?: Maybe<_Cmpi_Article_Record_Content_Blocks_SoundCloudTrack>;
-  embed?: Maybe<_Cmpi_Article_Record_Content_Blocks_Embed>;
-  linkPageBreak?: Maybe<_Cmpi_Article_Record_Content_Blocks_LinkPageBreak>;
-  quote?: Maybe<_Cmpi_Article_Record_Content_Blocks_Quote>;
-  teaserGrid?: Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Embed = {
-  type?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-  styleCustom?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Image = {
-  image: Ref_Input;
-  caption?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_ImageGallery = {
-  images: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_ImageGallery_Images>>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_ImageGallery_Images = {
-  image: Ref_Input;
-  caption?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_LinkPageBreak = {
-  text?: Maybe<Scalars['String']>;
-  richText: Scalars['RichText'];
-  linkURL?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkTarget?: Maybe<Scalars['String']>;
-  hideButton: Scalars['Boolean'];
-  styleOption?: Maybe<Scalars['String']>;
-  layoutOption?: Maybe<Scalars['String']>;
-  templateOption?: Maybe<Scalars['String']>;
-  image?: Maybe<Ref_Input>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Listicle = {
-  items: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_Listicle_Items>>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Listicle_Items = {
-  title?: Maybe<Scalars['String']>;
-  richText?: Maybe<Scalars['RichText']>;
-  image?: Maybe<Ref_Input>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Quote = {
-  quote?: Maybe<Scalars['String']>;
-  author?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_RichText = {
-  richText: Scalars['RichText'];
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_SoundCloudTrack = {
-  trackID: Scalars['ID'];
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid = {
-  teasers: Array<Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers>>;
-  numColumns: Scalars['Int'];
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers = {
-  style?: Maybe<_Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style>;
-  imageID?: Maybe<Ref_Input>;
-  preTitle?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-  contentRef?: Maybe<Ref_Input>;
-};
-
-export enum _Cmpi_Article_Record_Content_Blocks_TeaserGrid_Teasers_Style {
-  /** default */
-  Default = 'DEFAULT',
-  /** light */
-  Light = 'LIGHT',
-  /** text */
-  Text = 'TEXT'
-}
-
-export type _Cmpi_Article_Record_Content_Blocks_Title = {
-  title?: Maybe<Scalars['String']>;
-  lead?: Maybe<Scalars['String']>;
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Vimeo = {
-  videoID: Scalars['ID'];
-};
-
-export type _Cmpi_Article_Record_Content_Blocks_Youtube = {
-  videoID: Scalars['ID'];
-};
-
-export type _Cmpi_Article_Record_Create = {
+export type _Cmpi_Example_Record_Create = {
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Article_Record_Content>;
+  content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
-export type _Cmpi_Article_Record_Update = {
+export type _Cmpi_Example_Record_Update = {
   id: Scalars['ID'];
   title: Scalars['String'];
   shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_Article_Record_Content>;
-};
-
-export type _Cmpi_ModelA = {
-  __typename?: '_cmpi_modelA';
-  create: _Cmp_ModelA_Record;
-  update: _Cmp_ModelA_Record;
-  delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_ModelA_Record>;
-  unpublish?: Maybe<_Cmp_ModelA_Record>;
-};
-
-
-export type _Cmpi_ModelACreateArgs = {
-  input: _Cmpi_ModelA_Record_Create;
-};
-
-
-export type _Cmpi_ModelAUpdateArgs = {
-  input: _Cmpi_ModelA_Record_Update;
-};
-
-
-export type _Cmpi_ModelADeleteArgs = {
-  id: Scalars['ID'];
-  revision?: Maybe<Scalars['Int']>;
-};
-
-
-export type _Cmpi_ModelAPublishArgs = {
-  id: Scalars['ID'];
-  revision: Scalars['Int'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type _Cmpi_ModelAUnpublishArgs = {
-  id: Scalars['ID'];
-};
-
-export type _Cmpi_ModelA_Record_Content = {
-  myString?: Maybe<Scalars['String']>;
-  myStringI18n?: Maybe<I18n_String_Input>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRichTextI18n?: Maybe<I18n_RichText_Input>;
-  myRef?: Maybe<Ref_Input>;
-};
-
-export type _Cmpi_ModelA_Record_Create = {
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_ModelA_Record_Content>;
-  meta?: Maybe<_Cmpi_ModelA_Record_Meta>;
-};
-
-export type _Cmpi_ModelA_Record_Meta = {
-  myString?: Maybe<Scalars['String']>;
-  myStringI18n?: Maybe<I18n_String_Input>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRichTextI18n?: Maybe<I18n_RichText_Input>;
-  myRef?: Maybe<Ref_Input>;
-};
-
-export type _Cmpi_ModelA_Record_Update = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_ModelA_Record_Content>;
-  meta?: Maybe<_Cmpi_ModelA_Record_Meta>;
-};
-
-export type _Cmpi_ModelB = {
-  __typename?: '_cmpi_modelB';
-  create: _Cmp_ModelB_Record;
-  update: _Cmp_ModelB_Record;
-  delete: Scalars['Boolean'];
-  publish?: Maybe<_Cmp_ModelB_Record>;
-  unpublish?: Maybe<_Cmp_ModelB_Record>;
-};
-
-
-export type _Cmpi_ModelBCreateArgs = {
-  input: _Cmpi_ModelB_Record_Create;
-};
-
-
-export type _Cmpi_ModelBUpdateArgs = {
-  input: _Cmpi_ModelB_Record_Update;
-};
-
-
-export type _Cmpi_ModelBDeleteArgs = {
-  id: Scalars['ID'];
-  revision?: Maybe<Scalars['Int']>;
-};
-
-
-export type _Cmpi_ModelBPublishArgs = {
-  id: Scalars['ID'];
-  revision: Scalars['Int'];
-  publishAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  publishedAt?: Maybe<Scalars['DateTime']>;
-};
-
-
-export type _Cmpi_ModelBUnpublishArgs = {
-  id: Scalars['ID'];
-};
-
-export type _Cmpi_ModelB_Record_Content = {
-  myString?: Maybe<Scalars['String']>;
-  myRichText?: Maybe<Scalars['RichText']>;
-  myRef?: Maybe<Ref_Input>;
-};
-
-export type _Cmpi_ModelB_Record_Create = {
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_ModelB_Record_Content>;
-};
-
-export type _Cmpi_ModelB_Record_Update = {
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  shared: Scalars['Boolean'];
-  content?: Maybe<_Cmpi_ModelB_Record_Content>;
+  content?: Maybe<_Cmpi_Example_Record_Content>;
 };
 
 export type All = {
@@ -1031,17 +475,13 @@ export type Config = {
 
 export type Content = {
   __typename?: 'content';
-  modelA: _Cmp_ModelA;
-  modelB: _Cmp_ModelB;
-  article: _Cmp_Article;
+  example: _Cmp_Example;
   _all: All;
 };
 
 export type Content_Mutations = {
   __typename?: 'content_mutations';
-  modelA: _Cmpi_ModelA;
-  modelB: _Cmpi_ModelB;
-  article: _Cmpi_Article;
+  example: _Cmpi_Example;
   _all: AllMutations;
 };
 
@@ -1082,9 +522,7 @@ export enum ContentStateEnum {
 }
 
 export enum ContentTypeEnum {
-  ModelA = 'modelA',
-  ModelB = 'modelB',
-  Article = 'article'
+  Example = 'example'
 }
 
 export type CreatedToken = {
@@ -1186,28 +624,6 @@ export type GalleryImageEdge = {
 export type GalleryImageEdgeInput = {
   caption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
-};
-
-export type I18n_RichText = {
-  __typename?: 'i18n_RichText';
-  en?: Maybe<Scalars['RichText']>;
-  de?: Maybe<Scalars['RichText']>;
-};
-
-export type I18n_RichText_Input = {
-  en?: Maybe<Scalars['RichText']>;
-  de?: Maybe<Scalars['RichText']>;
-};
-
-export type I18n_String = {
-  __typename?: 'i18n_String';
-  en?: Maybe<Scalars['String']>;
-  de?: Maybe<Scalars['String']>;
-};
-
-export type I18n_String_Input = {
-  en?: Maybe<Scalars['String']>;
-  de?: Maybe<Scalars['String']>;
 };
 
 export type Image = {
@@ -2393,50 +1809,6 @@ export type QuoteBlockInput = {
   author?: Maybe<Scalars['String']>;
 };
 
-export type Ref__Media = {
-  __typename?: 'ref__media';
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Image>;
-  peer?: Maybe<Peer>;
-};
-
-export type Ref_Article_Page = {
-  __typename?: 'ref_article_page';
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<_Cmp_Article_Record_Content_Blocks_TeaserGrid_Teasers_ContentRef>;
-  peer?: Maybe<Peer>;
-};
-
-export type Ref_Input = {
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<Scalars['Unknown']>;
-  peer?: Maybe<Scalars['Unknown']>;
-};
-
-export type Ref_ModelA = {
-  __typename?: 'ref_modelA';
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<_Cmp_ModelA_Record>;
-  peer?: Maybe<Peer>;
-};
-
-export type Ref_ModelA_ModelB__Media = {
-  __typename?: 'ref_modelA_modelB__media';
-  recordId: Scalars['ID'];
-  contentType: Scalars['ID'];
-  peerId?: Maybe<Scalars['ID']>;
-  record?: Maybe<_Cmp_ModelA_Record_Content_MyRef>;
-  peer?: Maybe<Peer>;
-};
-
 
 export type RichTextBlock = {
   __typename?: 'RichTextBlock';
@@ -2543,7 +1915,6 @@ export type UnidirectionalPageInfo = {
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
 };
-
 
 export type UpdateImageInput = {
   filename?: Maybe<Scalars['String']>;
