@@ -18,6 +18,7 @@ import {Collection, Db, MongoCountPreferences, FilterQuery} from 'mongodb'
 import {CollectionName, DBAuthor} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBAuthorAdapter implements DBAuthorAdapter {
   private authors: Collection<DBAuthor>
@@ -125,7 +126,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
 
     // TODO: Rename to search
     if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter['$or'] = [{name: {$regex: escapeRegExp(filter.name), $options: 'i'}}]
     }
 
     const [totalCount, authors] = await Promise.all([
@@ -138,6 +139,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
         .match(textFilter)
         .match(cursorFilter)
         .sort({[sortField]: sortDirection, _id: sortDirection})
+        .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
     ])
@@ -192,9 +194,10 @@ function authorSortFieldForSort(sort: AuthorSort) {
   switch (sort) {
     case AuthorSort.CreatedAt:
       return 'createdAt'
-
     case AuthorSort.ModifiedAt:
       return 'modifiedAt'
+    case AuthorSort.Name:
+      return 'name'
   }
 }
 
@@ -202,8 +205,9 @@ function authorDateForSort(author: DBAuthor, sort: AuthorSort): Date {
   switch (sort) {
     case AuthorSort.CreatedAt:
       return author.createdAt
-
     case AuthorSort.ModifiedAt:
       return author.modifiedAt
+    case AuthorSort.Name:
+      return author.createdAt
   }
 }

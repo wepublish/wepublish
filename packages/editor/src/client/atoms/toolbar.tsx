@@ -14,6 +14,9 @@ import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
 // import './toolbar.less'
+import {WepublishEditor} from '../blocks/richTextBlock/editor/wepublishEditor'
+import {Format} from '../blocks/richTextBlock/editor/formats'
+import {useSlate} from 'slate-react'
 
 export interface ToolbarProps {
   readonly onMouseDown?: ReactEventHandler
@@ -111,10 +114,11 @@ export const SubMenuContext = createContext<SubMenuContextProps>({
 
 export interface SubMenuButtonProps extends ToolbarIconButtonProps {
   readonly children?: ReactNode
+  readonly format?: Format
 }
 
 export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
-  ({children, icon}, ref) => {
+  ({children, icon, format}, ref) => {
     // The Submenu buttons provides some local context to it's children.
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const localRef = useRef<PopoverProps>(null)
@@ -135,6 +139,8 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
 
     const menu = <Popover ref={menuRef}>{children}</Popover>
 
+    const editor = useSlate()
+
     return (
       <SubMenuContext.Provider
         value={{
@@ -143,7 +149,7 @@ export const SubMenuButton = forwardRef<PopoverProps, SubMenuButtonProps>(
         }}>
         <Whisper placement="auto" speaker={menu} ref={triggerRef} trigger="none">
           <ToolbarButton
-            active={isMenuOpen}
+            active={isMenuOpen || (format ? WepublishEditor.isFormatActive(editor, format) : false)}
             onMouseDown={e => {
               e.preventDefault()
               isMenuOpen ? closeMenu() : openMenu()

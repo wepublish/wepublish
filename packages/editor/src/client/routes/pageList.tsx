@@ -51,7 +51,7 @@ export function PageList() {
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pages, setPages] = useState<PageRefFragment[]>([])
 
@@ -176,7 +176,7 @@ export function PageList() {
                 <>
                   {rowData.published && (
                     <IconButton
-                      icon={<Icon icon="arrow-circle-o-down" />}
+                      icon={<Icon icon="btn-off" />}
                       circle
                       size="sm"
                       onClick={e => {

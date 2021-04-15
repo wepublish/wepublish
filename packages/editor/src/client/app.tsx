@@ -1,7 +1,7 @@
 import React from 'react'
 import {hot} from 'react-hot-loader/root'
 
-//import 'rsuite/lib/styles/index.less'
+// import 'rsuite/lib/styles/index.less'
 
 import {useRoute, RouteType, Route} from './route'
 
@@ -111,9 +111,9 @@ export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
     return null
   }
 
-  let editorConfig: EditorConfig | undefined = undefined
+  let editorConfig: EditorConfig | undefined
   if (data) {
-    let contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
+    const contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
       const editorConfig = contentModelExtension?.find(c => c.identifier === config.identifier)
 
       let result = config

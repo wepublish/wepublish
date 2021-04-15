@@ -60,9 +60,11 @@ export function renderElement({attributes, children, element}: RenderElementProp
       )
 
     case InlineFormat.Reference:
-      const reference = element.reference as Reference
       return (
-        <a data-title={element.title} data-href={reference.recordId} {...attributes}>
+        <a
+          data-title={element.title}
+          data-href={(element.reference as Reference).recordId}
+          {...attributes}>
           {children}
         </a>
       )

@@ -18,6 +18,7 @@ import {Collection, Db, MongoCountPreferences, FilterQuery} from 'mongodb'
 import {CollectionName, DBMailLog} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBMailLogAdapter implements DBMailLogAdapter {
   private mailLog: Collection<DBMailLog>
@@ -114,7 +115,7 @@ export class MongoDBMailLogAdapter implements DBMailLogAdapter {
 
     // TODO: Rename to search
     if (filter?.subject !== undefined) {
-      textFilter.$or = [{subject: {$regex: filter.subject, $options: 'i'}}]
+      textFilter.$or = [{subject: {$regex: escapeRegExp(filter.subject), $options: 'i'}}]
     }
 
     const [totalCount, mailLogs] = await Promise.all([

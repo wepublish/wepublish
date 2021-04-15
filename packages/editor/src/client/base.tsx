@@ -183,28 +183,28 @@ export function Base({children, editorConfig}: BaseProps) {
                   icon={<Icon icon="peoples" />}>
                   <DropdownItemLink
                     active={current?.type === RouteType.UserList}
-                    //icon={<Icon icon="user-circle" />}
+                    // icon={<Icon icon="user-circle" />}
                     route={UserListRoute.create({})}>
                     {t('navbar.users')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.UserRoleList}
-                    //icon={<Icon icon="character-authorize" />}
+                    // icon={<Icon icon="character-authorize" />}
                     route={UserRoleListRoute.create({})}>
                     {t('navbar.userRoles')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.MemberPlanList}
-                    //icon={<Icon icon="id-card" />}
+                    // icon={<Icon icon="id-card" />}
                     route={MemberPlanListRoute.create({})}>
                     {t('navbar.memberPlans')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    //icon={<Icon icon="money" />}
+                    // icon={<Icon icon="money" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>

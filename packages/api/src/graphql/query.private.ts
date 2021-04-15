@@ -262,7 +262,8 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
 
       me: {
         type: GraphQLUser,
-        resolve(root, args, {session}) {
+        resolve(root, args, {authenticate}) {
+          const session = authenticate()
           return session?.type === SessionType.User ? session.user : null
         }
       },
@@ -468,13 +469,14 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
           before: {type: GraphQLID},
           first: {type: GraphQLInt},
           last: {type: GraphQLInt},
+          skip: {type: GraphQLInt},
           filter: {type: GraphQLAuthorFilter},
           sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
           order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
         },
         resolve(
           root,
-          {filter, sort, order, after, before, first, last},
+          {filter, sort, order, after, before, first, skip, last},
           {authenticate, dbAdapter}
         ) {
           const {roles} = authenticate()
@@ -485,7 +487,7 @@ export function getGraphQLPrivateQuery<TSource, TContext, TArgs>(
             sort,
             order,
             cursor: InputCursor(after, before),
-            limit: Limit(first, last)
+            limit: Limit(first, last, skip)
           })
         }
       },

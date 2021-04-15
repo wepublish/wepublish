@@ -18,7 +18,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBUserRole} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
-import {isNonNull} from '../utility'
+import {escapeRegExp, isNonNull} from '../utility'
 
 export class MongoDBUserRoleAdapter implements DBUserRoleAdapter {
   private userRoles: Collection<DBUserRole>
@@ -167,7 +167,7 @@ export class MongoDBUserRoleAdapter implements DBUserRoleAdapter {
 
     // TODO: Rename to search
     if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter['$or'] = [{name: {$regex: escapeRegExp(filter.name), $options: 'i'}}]
     }
 
     const [totalCount, userRoles] = await Promise.all([

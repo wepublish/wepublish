@@ -16,6 +16,7 @@ import {Collection, Db, FilterQuery, MongoCountPreferences} from 'mongodb'
 import {CollectionName, DBMemberPlan} from './schema'
 import {MaxResultsPerPage} from './defaults'
 import {Cursor} from './cursor'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
   private memberPlans: Collection<DBMemberPlan>
@@ -119,7 +120,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
 
     // TODO: Rename to search
     if (filter?.name !== undefined) {
-      textFilter.$and?.push({name: {$regex: filter.name, $options: 'i'}})
+      textFilter.$and?.push({name: {$regex: escapeRegExp(filter.name), $options: 'i'}})
     }
 
     if (filter?.active !== undefined) {

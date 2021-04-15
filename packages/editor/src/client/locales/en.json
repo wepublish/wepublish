@@ -44,7 +44,8 @@
         "lead": "Lead",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
-        "publishedAt": "Published At"
+        "publishedAt": "Published At",
+        "createAuthorProfile": "Create Author Profile for {{name}}"
       }
     },
     "articleEditor": {
@@ -142,11 +143,13 @@
         "charCountWarning": "The maximum number of characters should be {{charCountWarning}}",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
         "seoTitleHelpBlock": "Please use an SEO-optimised title. <2>SEO Guide</2>",
-        "dontChangeSlug": "Please don't change the slug once the article is published",
+        "dontChangeSlug": "Please don't change the slug once the article is published. <2>Slug Guide</2>",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
         "articlePreviewLinkHours": "Validity period of link",
-        "articlePreviewLinkField": "Preview Link"
+        "articlePreviewLinkField": "Preview Link",
+        "chooseAReference": "Choose a reference",
+        "referenceTo": "Reference to"
       }
     },
     "comments": {
@@ -269,6 +272,7 @@
       "overview": {
         "delete": "Delete",
         "unknown": "Unknown",
+        "created": "Created",
         "newAuthor": "New Author",
         "search": "Search",
         "authors": "Authors",
@@ -395,6 +399,8 @@
         "close": "Close",
         "confirm": "Confirm",
         "name": "Name",
+        "preferredName": "Preferred Name",
+        "active": "Active",
         "email": "Email",
         "Unknown": "Unknown",
         "resetPassword": "Reset Password",
@@ -738,6 +744,13 @@
       "active": "Active",
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter"
+    },
+    "dateTimePicker": {
+      "now": "Now",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextSaturday": "Next Saturday",
+      "hour": "{{hour}}:00"
     },
     "untitled": "Untitled",
     "confirm": "Confirm",

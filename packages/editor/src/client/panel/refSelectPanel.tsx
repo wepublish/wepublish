@@ -36,7 +36,11 @@ export function RefSelectPanel({onClose, onSelectRef, config}: RefSelectPanelPro
   function currentContent(currentType: {type: string; context: ContentContextEnum}) {
     if (currentType.type === MediaReferenceType) {
       return (
-        <RefImageSelectPanel onSelectRef={onSelectRef} onClose={() => {}}></RefImageSelectPanel>
+        <RefImageSelectPanel
+          onSelectRef={onSelectRef}
+          onClose={() => {
+            /* do nothing */
+          }}></RefImageSelectPanel>
       )
     }
     return (

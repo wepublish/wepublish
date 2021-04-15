@@ -28,7 +28,7 @@ import {ControlLabel, Button, Form, FormControl, FormGroup, Divider, Icon, Alert
 import {SVGIcon} from 'rsuite/lib/@types/common'
 import {IconNames} from 'rsuite/lib/Icon/Icon'
 
-declare var PasswordCredential: any
+declare let PasswordCredential: any
 
 export function Login() {
   const [email, setEmail] = useState('')

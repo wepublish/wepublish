@@ -359,7 +359,8 @@ export type AuthorLinkInput = {
 
 export enum AuthorSort {
   CreatedAt = 'CREATED_AT',
-  ModifiedAt = 'MODIFIED_AT'
+  ModifiedAt = 'MODIFIED_AT',
+  Name = 'NAME'
 }
 
 export type AuthProvider = {
@@ -1657,6 +1658,7 @@ export type QueryAuthorsArgs = {
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
   filter?: Maybe<AuthorFilter>;
   sort?: Maybe<AuthorSort>;
   order?: Maybe<SortOrder>;
@@ -2455,7 +2457,7 @@ export type AuthorRefFragment = (
 
 export type FullAuthorFragment = (
   { __typename?: 'Author' }
-  & Pick<Author, 'slug' | 'bio'>
+  & Pick<Author, 'slug' | 'bio' | 'createdAt'>
   & { links?: Maybe<Array<(
     { __typename?: 'AuthorLink' }
     & Pick<AuthorLink, 'title' | 'url'>
@@ -2469,6 +2471,9 @@ export type AuthorListQueryVariables = Exact<{
   before?: Maybe<Scalars['ID']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  order?: Maybe<SortOrder>;
+  sort?: Maybe<AuthorSort>;
 }>;
 
 
@@ -3970,6 +3975,7 @@ export const FullAuthorFragmentDoc = gql`
     url
   }
   bio
+  createdAt
   ...AuthorRef
 }
     ${AuthorRefFragmentDoc}`;
@@ -4972,8 +4978,8 @@ export type CreateSessionWithJwtMutationHookResult = ReturnType<typeof useCreate
 export type CreateSessionWithJwtMutationResult = Apollo.MutationResult<CreateSessionWithJwtMutation>;
 export type CreateSessionWithJwtMutationOptions = Apollo.BaseMutationOptions<CreateSessionWithJwtMutation, CreateSessionWithJwtMutationVariables>;
 export const AuthorListDocument = gql`
-    query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
-  authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last) {
+    query AuthorList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: AuthorSort) {
+  authors(filter: {name: $filter}, after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...FullAuthor
     }
@@ -5005,6 +5011,9 @@ export const AuthorListDocument = gql`
  *      before: // value for 'before'
  *      first: // value for 'first'
  *      last: // value for 'last'
+ *      skip: // value for 'skip'
+ *      order: // value for 'order'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

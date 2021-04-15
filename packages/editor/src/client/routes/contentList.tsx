@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {Link, ButtonLink, ContentCreateRoute, ContentEditRoute} from '../route'
-import {useRoute} from '../route'
+import {Link, ButtonLink, ContentCreateRoute, ContentEditRoute, useRoute} from '../route'
+
 import {
   useUnpublishContentMutation,
   PageRefFragment,
@@ -13,9 +13,9 @@ import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Input, InputGroup, Icon, IconButton, Table, Modal, Button} from 'rsuite'
 import {getDeleteMutation} from '../utils/queryUtils'
 import {useMutation} from '@apollo/client'
-const {Column, HeaderCell, Cell} = Table
 import {Content} from '@wepublish/api'
 import {EditorConfig} from '../interfaces/extensionConfig'
+const {Column, HeaderCell, Cell} = Table
 
 enum ConfirmAction {
   Delete = 'delete',
@@ -182,7 +182,7 @@ export function ContentList({contentTypeList}: ArticleEditorProps) {
 
       {data?.content._all.list.pageInfo.hasNextPage && (
         <Button style={{height: '80px'}} label={t('articles.overview.loadMore')} onClick={loadMore}>
-          load more
+          {t('articles.overview.loadMore')}
         </Button>
       )}
 
