@@ -82,7 +82,10 @@ const onDOMContentLoaded = async () => {
       graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
         if (
           ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
-          !['/logout', '/login'].includes(window.location.pathname)
+          !(
+            window.location.pathname.includes('/logout') ||
+            window.location.pathname.includes('/login')
+          )
         ) {
           localStorage.removeItem(LocalStorageKey.SessionToken)
           window.location.pathname = '/logout'
