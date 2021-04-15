@@ -21,7 +21,6 @@
   * [#223](https://github.com/wepublish/wepublish/pull/223) fix table column width ([@penk85](https://github.com/penk85))
   * [#222](https://github.com/wepublish/wepublish/pull/222) Add missing translations to userlist panel ([@penk85](https://github.com/penk85))
   * [#217](https://github.com/wepublish/wepublish/pull/217) Selected authors stay selected during search ([@roosnic1](https://github.com/roosnic1))
-  * [#213](https://github.com/wepublish/wepublish/pull/213) b/WPC-261-embed-close-button-labeled-as-confirm ([@HanaAyman](https://github.com/HanaAyman))
 * `api`
   * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
 * `api`, `editor`
@@ -36,7 +35,6 @@
 * `editor`
   * [#224](https://github.com/wepublish/wepublish/pull/224) f/wpc-255-character-counter-count-more-blocks ([@HanaAyman](https://github.com/HanaAyman))
   * [#214](https://github.com/wepublish/wepublish/pull/214) f/wpc-256-see-the-max-amount-of-characters ([@HanaAyman](https://github.com/HanaAyman))
-  * [#210](https://github.com/wepublish/wepublish/pull/210) b/Wpc-229-make-duplicated-articles-appear-immediatly ([@HanaAyman](https://github.com/HanaAyman))
 * `api`
   * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
 * Other
@@ -48,7 +46,6 @@
 - Pat Mächler ([@valioDOTch](https://github.com/valioDOTch))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - [@bishoymelek](https://github.com/bishoymelek)
-
 
 ## v2.1.0 (2021-03-31)
 

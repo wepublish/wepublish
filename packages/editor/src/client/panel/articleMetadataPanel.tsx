@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 
 import {
   Button,
-  CheckPicker,
   ControlLabel,
   Drawer,
   Form,
@@ -22,9 +21,10 @@ import {
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
+import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {slugify} from '../utility'
-import {useAuthorListQuery, AuthorRefFragment, ImageRefFragment} from '../api'
+import {AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
@@ -115,28 +115,6 @@ export function ArticleMetadataPanel({
     }
   }
 
-  const [foundAuthors, setFoundAuthors] = useState<AuthorRefFragment[]>([])
-  const [foundSocialMediaAuthors, setFoundSocialMediaAuthors] = useState<AuthorRefFragment[]>([])
-  const [authorsFilter, setAuthorsFilter] = useState('')
-
-  const authorsVariables = {filter: authorsFilter || undefined, first: 10}
-  const {data} = useAuthorListQuery({
-    variables: authorsVariables,
-    fetchPolicy: 'network-only'
-  })
-
-  useEffect(() => {
-    if (data?.authors?.nodes) {
-      const authorIDs = data.authors.nodes.map(author => author.id)
-      const selectedAuthors = authors.filter(author => !authorIDs.includes(author.id))
-      setFoundAuthors([...data.authors.nodes, ...selectedAuthors])
-      const selectedSocialMediaAuthors = socialMediaAuthors.filter(
-        author => !authorIDs.includes(author.id)
-      )
-      setFoundSocialMediaAuthors([...data.authors.nodes, ...selectedSocialMediaAuthors])
-    }
-  }, [data?.authors, authors, socialMediaAuthors])
-
   const preTitleMax = 30
   const seoTitleMax = 70
   const titleMax = 140
@@ -204,24 +182,9 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.socialMediaAuthors')}</ControlLabel>
-                <CheckPicker
-                  cleanable={true}
-                  value={socialMediaAuthors?.map(socialMediaAuthor => socialMediaAuthor.id)}
-                  data={foundSocialMediaAuthors.map(author => ({
-                    value: author.id,
-                    label: author.name
-                  }))}
-                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
-                  onChange={socialMediaAuthorIDs => {
-                    const socialMediaAuthors = foundSocialMediaAuthors.filter(author =>
-                      socialMediaAuthorIDs.includes(author.id)
-                    )
-                    onChange?.({...value, socialMediaAuthors})
-                  }}
-                  onExit={() => {
-                    setAuthorsFilter('')
-                  }}
-                  block
+                <AuthorCheckPicker
+                  list={socialMediaAuthors}
+                  onChange={authors => onChange?.({...value, socialMediaAuthors: authors})}
                 />
               </FormGroup>
               <FormGroup>
@@ -367,19 +330,9 @@ export function ArticleMetadataPanel({
               </FormGroup>
               <FormGroup>
                 <ControlLabel>{t('articleEditor.panels.authors')}</ControlLabel>
-                <CheckPicker
-                  cleanable={true}
-                  value={authors.map(author => author.id)}
-                  data={foundAuthors.map(author => ({value: author.id, label: author.name}))}
-                  onSearch={searchKeyword => setAuthorsFilter(searchKeyword)}
-                  onChange={authorsID => {
-                    const authors = foundAuthors.filter(author => authorsID.includes(author.id))
-                    onChange?.({...value, authors})
-                  }}
-                  onExit={() => {
-                    setAuthorsFilter('')
-                  }}
-                  block
+                <AuthorCheckPicker
+                  list={authors}
+                  onChange={authors => onChange?.({...value, authors})}
                 />
               </FormGroup>
               <FormGroup>
