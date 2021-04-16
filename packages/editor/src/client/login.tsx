@@ -120,7 +120,7 @@ export function Login() {
       user: {email: responseEmail, roles}
     } = response.data.createSession
 
-    if (PasswordCredential) {
+    if (typeof PasswordCredential !== 'undefined') {
       const cred = new PasswordCredential({
         id: email,
         password
