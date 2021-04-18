@@ -1,7 +1,7 @@
 {
   "name": "@wepublish/oauth2",
   "version": "0.8.4",
-  "description": "We.publish OAuth2 Provider",
+  "description": "OAuth2 Provider for we.publish",
   "keywords": [
     "oauth2",
     "mongodb",
@@ -21,6 +21,7 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/oauth2"
   },
+  "typings": "./lib/index.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "run-p build:*",
