@@ -23,6 +23,7 @@ export interface OAuth2ServerOpts {
   readonly mongoUrlOauth2: string
   readonly wepublishDDAdapter: DBAdapter
 
+  readonly viewPath?: string
   readonly debug?: boolean
   readonly logger?: pino.Logger
 }
@@ -69,7 +70,11 @@ export class Oauth2Server {
       return next(err)
     })
 
-    app.set('views', path.join(__dirname, 'views'))
+    if (opts.viewPath) {
+      app.set('views', opts.viewPath)
+    } else {
+      app.set('views', path.join(__dirname, '..', 'views'))
+    }
     app.set('view engine', 'ejs')
 
     this.app = app
@@ -147,7 +152,7 @@ export class Oauth2Server {
 
     routes(this.app, provider, this.wepublishDDAdapter)
     this.app.use(provider.callback)
-
+    console.log('views_path', path.join(__dirname, 'views'))
     this.app.listen(port ?? 4100, hostname ?? 'localhost')
   }
 }

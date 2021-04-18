@@ -3,6 +3,7 @@
 import {MongoDBAdapter} from '@wepublish/api-db-mongodb'
 
 import {Oauth2Server} from '@wepublish/oauth2'
+import path from 'path'
 
 async function asyncMain() {
   if (!process.env.OAUTH_MONGODB_URI) {
@@ -46,7 +47,8 @@ async function asyncMain() {
     grantTypes: process.env.OAUTH_GRANT_TYPES.split(','),
     redirectUris: process.env.OAUTH_REDIRECT_URIS.split(','),
     cookieKeys: process.env.OAUTH_COOKIE_KEYS.split(','),
-    jwksKeys: JSON.parse(process.env.JWKS_KEYS)
+    jwksKeys: JSON.parse(process.env.JWKS_KEYS),
+    viewPath: path.join(__dirname, '..', 'views2')
   })
 
   await oauth2Server.listen(PORT, address)

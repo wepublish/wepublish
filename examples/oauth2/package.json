@@ -13,7 +13,7 @@
     "build": "run-s build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all --parallel watch:*",
-    "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9241 ./dist/index.js",
+    "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9242 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "clean": "shx rm -rf ./LICENSE ./dist",
     "prepare": "run-s clean build"
