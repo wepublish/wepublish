@@ -48,7 +48,7 @@ async function asyncMain() {
     redirectUris: process.env.OAUTH_REDIRECT_URIS.split(','),
     cookieKeys: process.env.OAUTH_COOKIE_KEYS.split(','),
     jwksKeys: JSON.parse(process.env.JWKS_KEYS),
-    viewPath: path.join(__dirname, '..', 'views2')
+    viewPath: path.join(__dirname, '..', 'customViews')
   })
 
   await oauth2Server.listen(PORT, address)
