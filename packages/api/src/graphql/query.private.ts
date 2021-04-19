@@ -78,6 +78,7 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
+  CanGetComment,
   CanGetComments,
   CanGetMemberPlan,
   CanGetMemberPlans,
@@ -101,7 +102,12 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError, NotFound} from '../error'
-import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
+import {
+  GraphQLComment,
+  GraphQLCommentConnection,
+  GraphQLCommentFilter,
+  GraphQLCommentSort
+} from './comment'
 import {
   GraphQLMemberPlan,
   GraphQLMemberPlanConnection,
@@ -431,6 +437,18 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Comments
     // =======
+
+    comment: {
+      type: GraphQLComment,
+      args: {id: {type: GraphQLID}},
+      resolve(root, {id}, {authenticate, dbAdapter}) {
+        const {roles} = authenticate()
+        authorise(CanGetComment, roles)
+
+        return dbAdapter.comment.getCommentById(id)
+      }
+    },
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {

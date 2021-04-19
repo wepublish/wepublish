@@ -15,6 +15,14 @@ fragment FullComment on Comment {
 
   createdAt
   modifiedAt
+
+  parentID
+}
+
+query Comment($id: ID) {
+  comment(id: $id) {
+    ...FullComment
+  }
 }
 
 query CommentList(

@@ -1299,6 +1299,7 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
+  comment?: Maybe<Comment>;
   comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
@@ -1399,6 +1400,11 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
+};
+
+
+export type QueryCommentArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 
@@ -2420,13 +2426,26 @@ export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_Ima
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt' | 'parentID'>
   & { user: (
     { __typename?: 'User' }
     & FullUserFragment
   ), revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
+  )> }
+);
+
+export type CommentQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type CommentQuery = (
+  { __typename?: 'Query' }
+  & { comment?: Maybe<(
+    { __typename?: 'Comment' }
+    & FullCommentFragment
   )> }
 );
 
@@ -3899,6 +3918,7 @@ export const FullCommentFragmentDoc = gql`
   }
   createdAt
   modifiedAt
+  parentID
 }
     ${FullUserFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
@@ -4709,6 +4729,39 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+export const CommentDocument = gql`
+    query Comment($id: ID) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+    ${FullCommentFragmentDoc}`;
+
+/**
+ * __useCommentQuery__
+ *
+ * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
+        return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+      }
+export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
+          return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+        }
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
+export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CommentListDocument = gql`
     query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {

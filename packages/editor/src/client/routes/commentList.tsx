@@ -4,6 +4,7 @@ import {
   CommentListQuery,
   FullCommentFragment,
   useCommentListQuery,
+  useCommentQuery,
   useApproveCommentMutation,
   useRequestChangesOnCommentMutation,
   CommentState,
@@ -14,7 +15,8 @@ import {
   CommentListDocument,
   ApproveCommentMutation,
   RequestChangesOnCommentMutation,
-  RejectCommentMutation
+  RejectCommentMutation,
+  CommentRevision
 } from '../api'
 import {
   Timeline,
@@ -27,7 +29,8 @@ import {
   Modal,
   Button,
   Dropdown,
-  Alert
+  Alert,
+  Panel
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -146,6 +149,19 @@ export function CommentList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
+
+  const fetchParentComment = useCommentQuery({
+    variables: {id: currentComment?.parentID}
+  }).data?.comment?.revisions[length - 1]
+
+  const [currentCommentParent, setCurrentCommentParent] = useState<CommentRevision | undefined>(
+    fetchParentComment
+  )
+
+  useEffect(() => {
+    setCurrentCommentParent(fetchParentComment)
+  }, [currentComment])
+
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
 
@@ -348,23 +364,50 @@ export function CommentList() {
               <DescriptionListItem label={t('comments.panels.updatedAt')}>
                 {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
               </DescriptionListItem>
-              <DescriptionListItem label={t('comments.panels.revisions')}>
-                <Timeline align="left">
-                  {currentComment?.revisions?.length
-                    ? currentComment?.revisions?.map(({text, createdAt}, i) => (
-                        <Timeline.Item key={i}>
-                          <div>{new Date(createdAt).toLocaleString()}</div>
+
+              {currentCommentParent && (
+                <>
+                  <DescriptionListItem label={t('comments.panels.parent')}>
+                    <Panel bordered style={{marginRight: 40, fontStyle: 'italic', color: 'gray'}}>
+                      {currentCommentParent.text.length ? (
+                        <>
+                          <div>{new Date(currentCommentParent.createdAt).toLocaleString()}</div>
                           <RichTextBlock
-                            disabled
                             displayOnly
+                            displayOneLine
+                            disabled
                             // TODO: remove this
                             onChange={console.log}
-                            value={text}
-                          />
-                        </Timeline.Item>
-                      ))
-                    : null}
-                </Timeline>
+                            value={currentCommentParent.text}
+                          />{' '}
+                        </>
+                      ) : null}
+                    </Panel>
+                    <div style={{marginTop: 8, marginLeft: 10}}>
+                      <Icon icon="reply" rotate={180} />
+                    </div>
+                  </DescriptionListItem>
+                </>
+              )}
+              <DescriptionListItem label={t('comments.panels.revisions')}>
+                <Panel bordered shaded>
+                  <Timeline align="left">
+                    {currentComment?.revisions?.length
+                      ? currentComment?.revisions?.map(({text, createdAt}, i) => (
+                          <Timeline.Item key={i}>
+                            <div>{new Date(createdAt).toLocaleString()}</div>
+                            <RichTextBlock
+                              disabled
+                              displayOnly
+                              // TODO: remove this
+                              onChange={console.log}
+                              value={text}
+                            />
+                          </Timeline.Item>
+                        ))
+                      : null}
+                  </Timeline>
+                </Panel>
               </DescriptionListItem>
               {confirmAction === ConfirmAction.Reject ||
               confirmAction === ConfirmAction.RequestChanges ? (

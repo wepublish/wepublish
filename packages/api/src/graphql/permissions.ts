@@ -171,6 +171,12 @@ export const CanTakeActionOnComment: Permission = {
   deprecated: false
 }
 
+export const CanGetComment: Permission = {
+  id: 'CAN_GET_COMMENT',
+  description: 'Allows to get comment',
+  deprecated: false
+}
+
 export const CanGetComments: Permission = {
   id: 'CAN_GET_COMMENTS',
   description: 'Allows to get all comments',
@@ -483,6 +489,7 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
+  CanGetComment,
   CanGetComments,
   CanCreateMemberPlan,
   CanGetMemberPlan,
@@ -505,6 +512,7 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
+  CanGetComment,
   CanGetComments,
   CanTakeActionOnComment,
   CanCreateAuthor,
