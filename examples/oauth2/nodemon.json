@@ -1,0 +1,9 @@
+{
+  "watch": [
+    "../../node_modules/@wepublish/api/lib/**/*.js",
+    "../../node_modules/@wepublish/oauth2/lib/**/*.js",
+    "./dist/**/*.js"
+  ],
+  "delay": 250,
+  "ignoreRoot": [".git"]
+}

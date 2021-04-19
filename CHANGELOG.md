@@ -38,6 +38,16 @@
 - [@michael-scheurer](https://github.com/michael-scheurer)
 
 
+## v2.2.1 (2021-04-15)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
 ## v2.2.0 (2021-04-14)
 
 #### :heart: New Feature
