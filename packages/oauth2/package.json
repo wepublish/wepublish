@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "0.8.4",
+  "version": "2.3.0-alpha.2",
   "description": "OAuth2 Provider for we.publish",
   "keywords": [
     "oauth2",
