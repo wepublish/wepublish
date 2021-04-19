@@ -325,6 +325,11 @@ Object {
                 },
                 Object {
                   "deprecated": false,
+                  "description": "Allows to get comment",
+                  "id": "CAN_GET_COMMENT",
+                },
+                Object {
+                  "deprecated": false,
                   "description": "Allows to get all comments",
                   "id": "CAN_GET_COMMENTS",
                 },
