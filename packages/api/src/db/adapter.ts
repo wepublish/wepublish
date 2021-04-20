@@ -14,6 +14,7 @@ import {DBPaymentMethodAdapter} from './paymentMethod'
 import {DBInvoiceAdapter} from './invoice'
 import {DBPaymentAdapter} from './payment'
 import {DBMailLogAdapter} from './mailLog'
+import {DBContentAdapter} from './content'
 
 export interface DBAdapter {
   readonly peer: DBPeerAdapter
@@ -27,6 +28,7 @@ export interface DBAdapter {
   readonly article: DBArticleAdapter
   readonly comment: DBCommentAdapter
   readonly page: DBPageAdapter
+  readonly content: DBContentAdapter
   readonly memberPlan: DBMemberPlanAdapter
   readonly paymentMethod: DBPaymentMethodAdapter
   readonly invoice: DBInvoiceAdapter

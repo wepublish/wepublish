@@ -1,15 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {
-  Alert,
-  Button,
-  CheckPicker,
-  ControlLabel,
-  Drawer,
-  Form,
-  FormControl,
-  FormGroup
-} from 'rsuite'
+import {Alert, Button, CheckPicker, ControlLabel, Form, FormControl, FormGroup, Modal} from 'rsuite'
 
 import {
   Permission,
@@ -118,13 +109,13 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('userRoles.panels.editUserRole') : t('userRoles.panels.createUserRole')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
+      <Modal.Body>
         <Form fluid={true}>
           <FormGroup>
             <ControlLabel>{t('userRoles.panels.name')}</ControlLabel>
@@ -162,16 +153,16 @@ export function UserRoleEditPanel({id, onClose, onSave}: UserRoleEditPanelProps)
             />
           </FormGroup>
         </Form>
-      </Drawer.Body>
+      </Modal.Body>
 
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('userRoles.panels.save') : t('userRoles.panels.create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('userRoles.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
     </>
   )
 }

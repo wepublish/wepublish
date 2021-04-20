@@ -25,12 +25,14 @@
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
+    "nanoid": "^3.0.2",
     "build": "run-s build:*",
     "build:typescript": "tsc -b ./src/tsconfig.json",
     "watch": "npm-run-all copy-license --parallel watch:*",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
     "copy-license": "shx cp ../../LICENSE ./",
     "clean": "shx rm -rf ./LICENSE ./lib",
+    "cleanDevEnv": "shx rm -rf ./node_modules .env",
     "prepare": "run-s clean copy-license build",
     "generate:api": "graphql-codegen -r dotenv/config --config codegen.yml",
     "test": "node -r dotenv/config ./node_modules/.bin/jest --runInBand"

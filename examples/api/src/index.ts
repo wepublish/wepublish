@@ -12,7 +12,8 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  JobType
+  JobType,
+  Context
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -27,6 +28,10 @@ import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
+import {contentModelArticle} from './modelArticle'
+import {contentModelA} from './modelA'
+import {contentModelB} from './modelB'
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -70,8 +75,8 @@ async function asyncMain() {
   const hostURL = process.env.HOST_URL
   const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
 
-  const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
-  const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
+  const port = parseInt(process.env.PORT || process.env.API_PORT || '4000')
+  const address = process.env.ADDRESS || 'localhost'
 
   if (!process.env.MEDIA_SERVER_URL) {
     throw new Error('No MEDIA_SERVER_URL defined in environment.')
@@ -288,6 +293,46 @@ async function asyncMain() {
     playground: true,
     introspection: true,
     tracing: true,
+    contentModels: [contentModelA, contentModelB, contentModelArticle],
+    languageConfig: {
+      defaultLanguageId: '1',
+      languages: [
+        {
+          id: '1',
+          description: 'en',
+          tag: 'en'
+        },
+        {
+          id: '2',
+          description: 'de',
+          tag: 'de'
+        }
+      ]
+    },
+    graphQLExtensionPrivate: {
+      mutation: new GraphQLObjectType<undefined, Context>({
+        name: 'ExtensionMutationFoo',
+        fields: {
+          example: {
+            type: GraphQLNonNull(GraphQLString),
+            resolve: () => {
+              return 'foo'
+            }
+          }
+        }
+      }),
+      query: new GraphQLObjectType<undefined, Context>({
+        name: 'ExtensionFoo',
+        fields: {
+          example: {
+            type: GraphQLNonNull(GraphQLString),
+            resolve: () => {
+              return 'foo'
+            }
+          }
+        }
+      })
+    },
     logger
   })
 

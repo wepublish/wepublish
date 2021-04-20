@@ -32,9 +32,9 @@ import {
   InputGroup,
   Panel,
   IconButton,
-  Drawer,
   Modal,
-  Button
+  Button,
+  Drawer
 } from 'rsuite'
 import {Overlay} from '../atoms/overlay'
 import {Typography} from '../atoms/typography'
@@ -116,30 +116,30 @@ export function ImageList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
       {images.length > 0 ? (
-        <FlexboxGrid justify="space-around" style={{marginTop: '20px'}}>
+        <FlexboxGrid justify="space-between" style={{marginTop: '20px'}}>
           {images.map((image, key) => (
             <FlexboxGrid.Item colspan={7} style={{marginBottom: '20px', maxWidth: '300'}} key={key}>
               <Link route={ImageEditRoute.create({id: image.id}, current ?? undefined)}>
-                <Panel shaded bordered bodyFill style={{height: '200', width: 'calc(100% + 2px)'}}>
+                <Panel shaded bodyFill style={{height: '200', width: '100%'}}>
                   <img
                     src={image.mediumURL || ''}
                     style={{height: '200', display: 'block', margin: '0 auto'}}
                   />
                   <Overlay bottom={0} width="100%" maxHeight="50%" padding={10}>
+                    <Typography variant="body2" color="white" ellipsize>
+                      {image.title || ''}
+                    </Typography>
                     <Typography variant="subtitle1" color="gray" ellipsize>
                       {`${image.filename || t('images.panels.untitled')}${image.extension}`}
-                    </Typography>
-                    <Typography variant="body2" color="white" ellipsize>
-                      {image.title || t('images.panels.Untitled')}
                     </Typography>
                   </Overlay>
                   <IconButton
@@ -164,7 +164,6 @@ export function ImageList() {
 
       <Drawer
         show={isUploadModalOpen}
-        size={'sm'}
         onHide={() => {
           setUploadModalOpen(false)
           dispatch({
@@ -191,7 +190,6 @@ export function ImageList() {
       </Drawer>
       <Drawer
         show={isEditModalOpen}
-        size={'sm'}
         onHide={() => {
           setEditModalOpen(false)
           dispatch({
@@ -250,7 +248,7 @@ export function ImageList() {
                   })
                 }
               })
-              setConfirmationDialogOpen(false);
+              setConfirmationDialogOpen(false)
             }}
             color="red">
             {t('images.panels.confirm')}

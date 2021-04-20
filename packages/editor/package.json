@@ -22,15 +22,24 @@
     "url": "https://github.com/wepublish/wepublish.git",
     "directory": "packages/editor"
   },
+  "files": [
+    "src",
+    "static",
+    "dist",
+    "assets",
+    "lib"
+  ],
   "bin": {
     "wepublish-editor": "./dist/server/index.js"
   },
-  "main": "./dist/server/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
     "setup": "shx cp .env.example .env",
-    "build": "run-p build:client build:server",
+    "build": "run-p build:client build:client-lib build:server",
     "build:client": "webpack --mode development",
+    "build:client-lib": "tsc --project tsconfig-lib.json",
     "build:server": "tsc -b ./src/shared ./src/server",
     "build:production": "webpack --mode production && yarn build:server",
     "watch": "npm-run-all copy-license --parallel watch:*",
@@ -40,7 +49,8 @@
     "watch:server:build": "tsc -b ./src/shared ./src/server --watch",
     "watch:generate": "yarn generate:api --watch \"./src/**/*.graphql\"",
     "crlf": "crlf --set=LF dist/**/*",
-    "clean": "shx rm -rf ./dist ./assets",
+    "clean": "shx rm -rf ./dist ./assets ./lib",
+    "cleanDevEnv": "shx rm -rf ./node_modules .env",
     "start": "node ./dist/server/index.js",
     "copy-license": "shx cp ../../LICENSE ./",
     "prepare": "run-s clean copy-license build crlf",
@@ -129,6 +139,9 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
+  "peerDependencies": {
+    "@wepublish/api": "*"
+  },
   "eslintConfig": {
     "plugins": [
       "i18next"
@@ -145,6 +158,8 @@
         {
           "markupOnly": true,
           "ignoreAttribute": [
+            "classPrefix",
+            "backdrop",
             "componentClass",
             "autoComplete",
             "controlId",
@@ -178,7 +193,9 @@
             "href",
             "fixed",
             "format",
-            "stack"
+            "stack",
+            "checkedChildren",
+            "unCheckedChildren"
           ],
           "ignoreComponent": [
             "code"

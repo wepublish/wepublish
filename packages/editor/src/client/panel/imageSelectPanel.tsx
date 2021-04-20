@@ -19,15 +19,17 @@ import {
 
 import {FileDropInput} from '../atoms/fileDropInput'
 import {Typography} from '../atoms/typography'
+import {MediaReferenceType, Reference} from '../interfaces/referenceType'
 
 export interface ImageSelectPanelProps {
   onClose(): void
   onSelect(image: ImageRefFragment): void
+  onSelectRef?: (ref: Reference) => void
 }
 
 const ImagesPerPage = 20
 
-export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
+export function ImageSelectPanel({onClose, onSelect, onSelectRef}: ImageSelectPanelProps) {
   const [filter, setFilter] = useState('')
 
   const [file, setFile] = useState<File | null>(null)
@@ -76,7 +78,18 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
   }
 
   if (file) {
-    return <ImagedEditPanel onClose={onClose} file={file} onSave={image => onSelect(image)} />
+    return (
+      <ImagedEditPanel
+        onClose={onClose}
+        file={file}
+        onSave={image => {
+          onSelect(image)
+          if (onSelectRef) {
+            onSelectRef({contentType: MediaReferenceType, recordId: image.id, record: image})
+          }
+        }}
+      />
+    )
   }
 
   return (
@@ -111,7 +124,16 @@ export function ImageSelectPanel({onClose, onSelect}: ImageSelectPanelProps) {
                   <FlexboxGrid.Item key={id} colspan={10} style={{marginBottom: 20}}>
                     <Panel
                       style={{cursor: 'pointer'}}
-                      onClick={() => onSelect(image)}
+                      onClick={() => {
+                        onSelect(image)
+                        if (onSelectRef) {
+                          onSelectRef({
+                            contentType: MediaReferenceType,
+                            recordId: image.id,
+                            record: image
+                          })
+                        }
+                      }}
                       shaded
                       bordered
                       bodyFill>

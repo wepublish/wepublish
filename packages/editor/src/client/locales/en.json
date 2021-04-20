@@ -1,5 +1,17 @@
 {
   "translation": {
+    "global": {
+      "buttons": {
+        "delete": "Delete",
+        "deleteNow": "Delete now",
+        "cancel": "Cancel",
+        "save": "Save",
+        "close": "Close",
+        "confirm": "Confirm",
+        "back": "Back",
+        "add": "Add"
+      }
+    },
     "articles": {
       "overview": {
         "title": "Title",
@@ -135,7 +147,9 @@
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
         "articlePreviewLinkHours": "Validity period of link",
-        "articlePreviewLinkField": "Preview Link"
+        "articlePreviewLinkField": "Preview Link",
+        "chooseAReference": "Choose a reference",
+        "referenceTo": "Reference to"
       }
     },
     "comments": {
@@ -263,7 +277,7 @@
         "search": "Search",
         "authors": "Authors",
         "noAuthorsFound": "No Authors found",
-        "deleteAuthor": "Delete Author?",
+        "deleteAuthor": "Delete Author",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "name": "Name",
@@ -339,6 +353,7 @@
         "filename": "Filename",
         "title": "Title",
         "description": "Description",
+        "meta": "Metadata",
         "cancel": "Cancel",
         "close": "Close",
         "upload": "Upload",
@@ -370,7 +385,7 @@
         "description": "Description",
         "noDescription": "No Description",
         "action": "Action",
-        "resetPassword": "Reset Password",
+        "reset": "Reset",
         "delete": "Delete",
         "users": "Users",
         "newUser": "New User",
@@ -398,7 +413,9 @@
         "addUserRole": "Add User Role",
         "selectUserRole": "Select User Role",
         "createUser": "Create User",
+        "preferredName": "Username",
         "create": "Create",
+        "active": "Active",
         "subTitle": "Subscription",
         "startedAt": "Started",
         "payedUntil": "Payed Until",
@@ -406,6 +423,11 @@
         "subEdit": "Edit",
         "subCreate": "Create",
         "subDisableDescription": "Subscription can only be added once the user has been created."
+      },
+      "popover": {
+        "deleteThisUser": "Delete this user",
+        "popoverText": "Are you sure? It can’t be undone.",
+        "deleteNow": "Delete now"
       }
     },
     "userRoles": {
@@ -435,6 +457,11 @@
         "description": "Description",
         "permissions": "Permissions",
         "systemRole": "is a System Role and can not be edited"
+      },
+      "popover": {
+        "deleteThisUser": "Delete this user role",
+        "popoverText": "Are you sure? It can’t be undone.",
+        "deleteNow": "Delete now"
       }
     },
     "peerList": {
@@ -561,6 +588,7 @@
         "startWriting": "Start writing ...",
         "optionalDescription": "Optional description for the link",
         "link": "Link",
+        "reference": "Reference",
         "text": "Text",
         "apply": "Apply",
         "cancel": "Cancel",
@@ -599,6 +627,8 @@
       "memberPlans": "Member Plans",
       "paymentMethods": "Payment Methods",
       "usersAndMembers": "Users & Members",
+      "settings": "Settings",
+      "language": "Language",
       "languageSwitch": {
         "currentLanguage": "English",
         "close": "Close",
@@ -688,6 +718,7 @@
       "autoRenewalDescription": "Forces auto renewal of subscription",
       "paymentPeriodicities": "Possible Payment Periodicities",
       "paymentMethods": "Possible Payment Methods",
+      "paymentOptions": "Payment options",
       "minimumMonthlyAmount": "Minimum amount per Month in cents (CHF)",
       "paymentPeriodicity": {
         "MONTHLY": "Monthly",

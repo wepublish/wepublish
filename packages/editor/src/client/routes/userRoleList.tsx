@@ -15,18 +15,8 @@ import {useDeleteUserRoleMutation, useUserRoleListQuery, FullUserRoleFragment} f
 import {UserRoleEditPanel} from '../panel/userRoleEditPanel'
 
 import {useTranslation} from 'react-i18next'
-import {
-  FlexboxGrid,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Table,
-  Drawer,
-  Modal,
-  Button
-} from 'rsuite'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
+import {FlexboxGrid, Icon, Input, InputGroup, Table, Modal, Button, Popover, Whisper} from 'rsuite'
+
 const {Column, HeaderCell, Cell /*, Pagination */} = Table
 
 export function UserRoleList() {
@@ -45,7 +35,6 @@ export function UserRoleList() {
 
   const [filter, setFilter] = useState('')
 
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
   const [currentUserRole, setCurrentUserRole] = useState<FullUserRoleFragment>()
 
@@ -58,6 +47,46 @@ export function UserRoleList() {
   })
 
   const [deleteUserRole, {loading: isDeleting}] = useDeleteUserRoleMutation()
+
+  const rowDeleteButton = (rowData: any) => {
+    const triggerRef = React.createRef<any>()
+    const close = () => triggerRef.current.close()
+    const speaker = (
+      <Popover title={currentUserRole?.name}>
+        <Button
+          color="red"
+          disabled={isDeleting}
+          onClick={() => {
+            if (!currentUserRole) return
+            close()
+            deleteUserRole({
+              variables: {id: currentUserRole.id}
+            })
+              .then(() => {
+                refetch()
+              })
+              .catch(console.error)
+          }}>
+          {t('global.buttons.deleteNow')}
+        </Button>
+      </Popover>
+    )
+    return (
+      <>
+        <Whisper placement="left" trigger="click" speaker={speaker} ref={triggerRef}>
+          <Button
+            appearance="link"
+            color="red"
+            onClick={() => {
+              setCurrentUserRole(rowData)
+            }}>
+            {' '}
+            {t('global.buttons.delete')}{' '}
+          </Button>
+        </Whisper>
+      </>
+    )
+  }
 
   useEffect(() => {
     if (current?.type === RouteType.UserRoleCreate) {
@@ -93,16 +122,16 @@ export function UserRoleList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={24} style={{marginTop: '20px'}}>
           <InputGroup>
-            <Input value={filter} onChange={value => setFilter(value)} />
             <InputGroup.Addon>
               <Icon icon="search" />
             </InputGroup.Addon>
+            <Input value={filter} onChange={value => setFilter(value)} />
           </InputGroup>
         </FlexboxGrid.Item>
       </FlexboxGrid>
 
       <Table autoHeight={true} style={{marginTop: '20px'}} loading={isLoading} data={userRoles}>
-        <Column width={200} align="left" resizable>
+        <Column flexGrow={1} align="left">
           <HeaderCell>{t('userRoles.overview.name')}</HeaderCell>
           <Cell>
             {(rowData: FullUserRoleFragment) => (
@@ -112,31 +141,19 @@ export function UserRoleList() {
             )}
           </Cell>
         </Column>
-        <Column width={400} align="left" resizable>
+        <Column flexGrow={2} align="left">
           <HeaderCell>{t('userRoles.overview.description')}</HeaderCell>
           <Cell dataKey="description" />
         </Column>
-        <Column width={100} align="center" fixed="right">
+        <Column width={60} align="right" fixed="right">
           <HeaderCell>{t('userRoles.overview.action')}</HeaderCell>
           <Cell style={{padding: '6px 0'}}>
-            {(rowData: FullUserRoleFragment) => (
-              <IconButton
-                icon={<Icon icon="trash" />}
-                disabled={rowData.systemRole}
-                circle
-                size="sm"
-                style={{marginLeft: '5px'}}
-                onClick={() => {
-                  setConfirmationDialogOpen(true)
-                  setCurrentUserRole(rowData)
-                }}
-              />
-            )}
+            {(rowData: FullUserRoleFragment) => <>{rowDeleteButton(rowData)}</>}
           </Cell>
         </Column>
       </Table>
 
-      <Drawer
+      <Modal
         show={isEditModalOpen}
         onHide={() => {
           setEditModalOpen(false)
@@ -164,40 +181,6 @@ export function UserRoleList() {
             })
           }}
         />
-      </Drawer>
-      <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
-        <Modal.Header>
-          <Modal.Title>{t('userRoles.panels.deleteUserRole')}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <DescriptionList>
-            <DescriptionListItem label={t('userRoles.panels.name')}>
-              {currentUserRole?.name || t('userRoles.panels.Unknown')}
-            </DescriptionListItem>
-          </DescriptionList>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentUserRole) return
-
-              await deleteUserRole({
-                variables: {id: currentUserRole.id}
-              })
-
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}
-            color="red">
-            {t('userRoles.panels.confirm')}
-          </Button>
-          <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">
-            {t('userRoles.panels.cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )

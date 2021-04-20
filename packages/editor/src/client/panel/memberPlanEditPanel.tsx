@@ -13,7 +13,9 @@ import {
   Alert,
   Toggle,
   HelpBlock,
-  CheckPicker
+  CheckPicker,
+  Modal,
+  FlexboxGrid
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
@@ -189,124 +191,133 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>
+      <Modal.Header>
+        <Modal.Title>
           {id ? t('memberPlanList.editTitle') : t('memberPlanList.createTitle')}
-        </Drawer.Title>
-      </Drawer.Header>
+        </Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.name')}</ControlLabel>
-              <FormControl
-                name={t('memberPlanList.name')}
-                value={name}
-                disabled={isDisabled}
-                onChange={value => {
-                  setName(value)
-                  setSlug(slugify(value))
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
-              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-              <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
-              <FormControl
-                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
-                value={amountPerMonthMin}
-                type="number"
-                disabled={isDisabled}
-                min={0}
-                steps={1}
-                onChange={value => {
-                  setAmountPerMonthMin(parseInt(`${value}`))
-                }}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
-              <RichTextBlock value={description} onChange={value => setDescription(value)} />
-            </FormGroup>
-          </Form>
-        </Panel>
+      <Modal.Body>
+        <FlexboxGrid justify="space-between">
+          <FlexboxGrid.Item colspan={12}>
+            <Form fluid={true}>
+              <FormGroup>
+                <ControlLabel>{t('memberPlanList.name')}</ControlLabel>
+                <FormControl
+                  name={t('memberPlanList.name')}
+                  value={name}
+                  disabled={isDisabled}
+                  onChange={value => {
+                    setName(value)
+                    setSlug(slugify(value))
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('memberPlanList.active')}</ControlLabel>
+                <Toggle
+                  checked={active}
+                  disabled={isDisabled}
+                  onChange={value => setActive(value)}
+                />
+                <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
+                <FormControl
+                  name={t('userSubscriptionEdit.minimumMonthlyAmount')}
+                  value={amountPerMonthMin}
+                  type="number"
+                  disabled={isDisabled}
+                  min={0}
+                  steps={1}
+                  onChange={value => {
+                    setAmountPerMonthMin(parseInt(`${value}`))
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('memberPlanList.description')}</ControlLabel>
+                <Panel bordered>
+                  <RichTextBlock value={description} onChange={value => setDescription(value)} />
+                </Panel>
+              </FormGroup>
+            </Form>
+            <h5 className="wep-section-title">{t('chooseEditImage.header')}</h5>
+            <ChooseEditImage
+              image={image}
+              disabled={isLoading}
+              openChooseModalOpen={() => setChooseModalOpen(true)}
+              openEditModalOpen={() => setEditModalOpen(true)}
+              removeImage={() => setImage(undefined)}
+            />
+          </FlexboxGrid.Item>
 
-        <ChooseEditImage
-          image={image}
-          disabled={isLoading}
-          openChooseModalOpen={() => setChooseModalOpen(true)}
-          openEditModalOpen={() => setEditModalOpen(true)}
-          removeImage={() => setImage(undefined)}
-        />
+          <FlexboxGrid.Item colspan={10}>
+            <h5 className="wep-section-title">{t('memberPlanList.paymentOptions')}</h5>
+            <ListInput
+              value={availablePaymentMethods}
+              onChange={app => setAvailablePaymentMethods(app)}
+              defaultValue={{
+                forceAutoRenewal: false,
+                paymentPeriodicities: [],
+                paymentMethods: []
+              }}>
+              {({value, onChange}) => (
+                <Form fluid={true}>
+                  <FormGroup>
+                    <ControlLabel>{t('memberPlanList.autoRenewal')}</ControlLabel>
+                    <Toggle
+                      checked={value.forceAutoRenewal}
+                      disabled={isDisabled}
+                      onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
+                    />
+                    <HelpBlock>{t('memberPlanList.autoRenewalDescription')}</HelpBlock>
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
+                    <CheckPicker
+                      value={value.paymentPeriodicities}
+                      data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                        value: pp,
+                        label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                      }))}
+                      onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
+                      block
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <ControlLabel>{t('memberPlanList.paymentMethods')}</ControlLabel>
+                    <CheckPicker
+                      value={value.paymentMethods.map(pm => pm.id)}
+                      data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                      onChange={paymentMethodIDs => {
+                        onChange({
+                          ...value,
+                          paymentMethods: paymentMethodIDs
+                            .map(pmID => paymentMethods.find(pm => pm.id === pmID))
+                            .filter(pm => pm !== undefined)
+                            .map(pm => pm as PaymentMethod)
+                        })
+                      }}
+                      block
+                    />
+                  </FormGroup>
+                </Form>
+              )}
+            </ListInput>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
+      </Modal.Body>
 
-        <Panel>
-          <ListInput
-            value={availablePaymentMethods}
-            onChange={app => setAvailablePaymentMethods(app)}
-            defaultValue={{
-              forceAutoRenewal: false,
-              paymentPeriodicities: [],
-              paymentMethods: []
-            }}>
-            {({value, onChange}) => (
-              <Form fluid={true}>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.autoRenewal')}</ControlLabel>
-                  <Toggle
-                    checked={value.forceAutoRenewal}
-                    disabled={isDisabled}
-                    onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
-                  />
-                  <HelpBlock>{t('memberPlanList.autoRenewalDescription')}</HelpBlock>
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.paymentPeriodicities')}</ControlLabel>
-                  <CheckPicker
-                    value={value.paymentPeriodicities}
-                    data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                      value: pp,
-                      label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-                    }))}
-                    onChange={paymentPeriodicities => onChange({...value, paymentPeriodicities})}
-                    block
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <ControlLabel>{t('memberPlanList.paymentMethods')}</ControlLabel>
-                  <CheckPicker
-                    value={value.paymentMethods.map(pm => pm.id)}
-                    data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                    onChange={paymentMethodIDs => {
-                      onChange({
-                        ...value,
-                        paymentMethods: paymentMethodIDs
-                          .map(pmID => paymentMethods.find(pm => pm.id === pmID))
-                          .filter(pm => pm !== undefined)
-                          .map(pm => pm as PaymentMethod)
-                      })
-                    }}
-                    block
-                  />
-                </FormGroup>
-              </Form>
-            )}
-          </ListInput>
-        </Panel>
-      </Drawer.Body>
-
-      <Drawer.Footer>
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {id ? t('save') : t('create')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

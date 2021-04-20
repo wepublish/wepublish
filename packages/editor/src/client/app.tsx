@@ -1,7 +1,7 @@
 import React from 'react'
 import {hot} from 'react-hot-loader/root'
 
-import 'rsuite/lib/styles/index.less'
+// import 'rsuite/lib/styles/index.less'
 
 import {useRoute, RouteType, Route} from './route'
 
@@ -23,9 +23,15 @@ import {MemberPlanList} from './routes/memberPlanList'
 import {PaymentMethodList} from './routes/paymentMethodList'
 import {NavigationList} from './routes/navigationList'
 
-import './global.less'
+// import './global.less'
+import {useConfigQuery} from './api'
+import {EditorConfig, ContentModelConfigMerged, ExtensionConfig} from './interfaces/extensionConfig'
+import {Extension} from './routes/extension'
+import {ContentEditor} from './routes/contentEditor'
+import {ContentList} from './routes/contentList'
+import {ConfigContext} from './Editorcontext'
 
-export function contentForRoute(route: Route) {
+export function contentForRoute(route: Route, configs?: EditorConfig) {
   switch (route.type) {
     case RouteType.Login:
       return <Login />
@@ -43,6 +49,9 @@ export function contentForRoute(route: Route) {
     case RouteType.Index:
     case RouteType.ArticleList:
       return <ArticleList />
+
+    case RouteType.ContentList:
+      return configs && <ContentList contentTypeList={configs} />
 
     case RouteType.CommentList:
       return <CommentList />
@@ -92,34 +101,77 @@ export function contentForRoute(route: Route) {
   return null
 }
 
-export function App() {
+export function App({contentModelExtension, cusomExtension}: ExtensionConfig) {
   const {current} = useRoute()
+  const {data} = useConfigQuery({
+    fetchPolicy: 'network-only'
+  })
 
-  if (current) {
-    switch (current.type) {
-      case RouteType.Login:
-        return <Login />
+  if (!current) {
+    return null
+  }
 
-      case RouteType.ArticleCreate:
-      case RouteType.ArticleEdit:
-        return (
-          <ArticleEditor
-            id={current.type === RouteType.ArticleEdit ? current.params.id : undefined}
-          />
-        )
+  let editorConfig: EditorConfig | undefined
+  if (data) {
+    const contentModelConfigMerged: ContentModelConfigMerged[] = data.config.content.map(config => {
+      const editorConfig = contentModelExtension?.find(c => c.identifier === config.identifier)
 
-      case RouteType.PageCreate:
-      case RouteType.PageEdit:
-        return (
-          <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
-        )
+      let result = config
+      if (editorConfig) {
+        result = Object.assign({}, result, editorConfig)
+      }
+      return result
+    })
 
-      default:
-        return <Base>{contentForRoute(current)}</Base>
+    editorConfig = {
+      contentModelExtension: contentModelConfigMerged,
+      cusomExtension: cusomExtension,
+      lang: data.config.languages
     }
   }
 
-  return null
+  let comp = null
+  switch (current.type) {
+    case RouteType.Login:
+      comp = <Login />
+      break
+
+    case RouteType.ArticleCreate:
+    case RouteType.ArticleEdit:
+      comp = (
+        <ArticleEditor
+          id={current.type === RouteType.ArticleEdit ? current.params.id : undefined}
+        />
+      )
+      break
+
+    case RouteType.PageCreate:
+    case RouteType.PageEdit:
+      comp = <PageEditor id={current.type === RouteType.PageEdit ? current.params.id : undefined} />
+      break
+
+    case RouteType.ContentCreate:
+    case RouteType.ContentEdit:
+      comp = editorConfig && (
+        <ContentEditor
+          editorConfig={editorConfig}
+          id={current.type === RouteType.ContentEdit ? current.params.id : undefined}
+        />
+      )
+      break
+
+    case RouteType.Extension:
+      comp = editorConfig && (
+        <Base editorConfig={editorConfig}>
+          <Extension configs={editorConfig} />
+        </Base>
+      )
+      break
+
+    default:
+      comp = <Base editorConfig={editorConfig}>{contentForRoute(current, editorConfig)}</Base>
+  }
+  return <ConfigContext.Provider value={editorConfig}>{comp}</ConfigContext.Provider>
 }
 
 export const HotApp = hot(App)

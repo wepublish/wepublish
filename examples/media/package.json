@@ -12,7 +12,8 @@
     "watch": "npm-run-all --parallel watch:*",
     "watch:server": "nodemon -r dotenv/config --inspect=0.0.0.0:9241 ./dist/index.js",
     "watch:typescript": "tsc -b ./src/tsconfig.json --watch",
-    "clean": "shx rm -rf ./dist ./.media"
+    "clean": "shx rm -rf ./dist ./.media",
+    "cleanDevEnv": "shx rm -rf ./node_modules .env"
   },
   "dependencies": {
     "@karma.run/media": "^0.2.1",

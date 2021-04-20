@@ -1,0 +1,19 @@
+query Config {
+  config {
+    content {
+      id
+      identifier
+      namePlural
+      nameSingular
+      schema
+    }
+    languages {
+      defaultLanguageId
+      languages {
+        id
+        tag
+        description
+      }
+    }
+  }
+}

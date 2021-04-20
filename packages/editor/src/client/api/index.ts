@@ -16,9 +16,189 @@ export type Scalars = {
   /** A hexidecimal color value. */
   Color: string;
   RichText: Node[];
+  ContentModelSchema: any;
   Slug: string;
   /** The `Upload` scalar type represents a file upload. */
   Upload: File;
+};
+
+export type _Cmp_Example = {
+  __typename?: '_cmp_example';
+  read: _Cmp_Example_Record;
+  list: _Cmp_ExampleConnection;
+};
+
+
+export type _Cmp_ExampleReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+
+export type _Cmp_ExampleListArgs = {
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+export type _Cmp_Example_Record = {
+  __typename?: '_cmp_example_record';
+  id: Scalars['ID'];
+  contentType: Scalars['String'];
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmp_Example_Record_Content>;
+};
+
+export type _Cmp_Example_Record_Content = {
+  __typename?: '_cmp_example_record_content';
+  foo?: Maybe<Scalars['String']>;
+};
+
+export type _Cmp_ExampleConnection = {
+  __typename?: '_cmp_exampleConnection';
+  nodes: Array<_Cmp_Example_Record>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type _Cmpi_Example = {
+  __typename?: '_cmpi_example';
+  create: _Cmp_Example_Record;
+  update: _Cmp_Example_Record;
+  delete: Scalars['Boolean'];
+  publish?: Maybe<_Cmp_Example_Record>;
+  unpublish?: Maybe<_Cmp_Example_Record>;
+};
+
+
+export type _Cmpi_ExampleCreateArgs = {
+  input: _Cmpi_Example_Record_Create;
+};
+
+
+export type _Cmpi_ExampleUpdateArgs = {
+  input: _Cmpi_Example_Record_Update;
+};
+
+
+export type _Cmpi_ExampleDeleteArgs = {
+  id: Scalars['ID'];
+  revision?: Maybe<Scalars['Int']>;
+};
+
+
+export type _Cmpi_ExamplePublishArgs = {
+  id: Scalars['ID'];
+  revision: Scalars['Int'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type _Cmpi_ExampleUnpublishArgs = {
+  id: Scalars['ID'];
+};
+
+export type _Cmpi_Example_Record_Content = {
+  foo?: Maybe<Scalars['String']>;
+};
+
+export type _Cmpi_Example_Record_Create = {
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Example_Record_Content>;
+};
+
+export type _Cmpi_Example_Record_Update = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  content?: Maybe<_Cmpi_Example_Record_Content>;
+};
+
+export type All = {
+  __typename?: 'All';
+  list: ListByTypeConnection;
+  read: ContentModelSummary;
+};
+
+
+export type AllListArgs = {
+  type: ContentTypeEnum;
+  context?: Maybe<ContentContextEnum>;
+  after?: Maybe<Scalars['ID']>;
+  before?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  filter?: Maybe<ArticleFilter>;
+  sort?: Maybe<ArticleSort>;
+  order?: Maybe<SortOrder>;
+};
+
+
+export type AllReadArgs = {
+  peerID?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
+export type AllCustomContents = {
+  __typename?: 'AllCustomContents';
+  id: Scalars['ID'];
+  shared: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  draft?: Maybe<AllCustomContentsRevision>;
+  published?: Maybe<AllCustomContentsRevision>;
+  pending?: Maybe<AllCustomContentsRevision>;
+  latest: AllCustomContentsRevision;
+};
+
+export type AllCustomContentsRevision = {
+  __typename?: 'AllCustomContentsRevision';
+  revision: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  title: Scalars['String'];
+  slug: Scalars['Slug'];
+};
+
+export type AllMutations = {
+  __typename?: 'AllMutations';
+  delete?: Maybe<Scalars['Boolean']>;
+  publish?: Maybe<AllCustomContents>;
+  unpublish?: Maybe<AllCustomContents>;
+};
+
+
+export type AllMutationsDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type AllMutationsPublishArgs = {
+  id: Scalars['ID'];
+  publishAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type AllMutationsUnpublishArgs = {
+  id: Scalars['ID'];
 };
 
 export type Article = {
@@ -288,6 +468,64 @@ export enum CommentState {
   Rejected = 'Rejected'
 }
 
+export type Config = {
+  __typename?: 'Config';
+  content: Array<ContentConfig>;
+  languages: LanguagesConfig;
+};
+
+export type Content = {
+  __typename?: 'content';
+  example: _Cmp_Example;
+  _all: All;
+};
+
+export type Content_Mutations = {
+  __typename?: 'content_mutations';
+  example: _Cmpi_Example;
+  _all: AllMutations;
+};
+
+export type ContentConfig = {
+  __typename?: 'ContentConfig';
+  id: Scalars['ID'];
+  identifier: Scalars['String'];
+  namePlural: Scalars['String'];
+  nameSingular: Scalars['String'];
+  schema: Scalars['ContentModelSchema'];
+};
+
+export enum ContentContextEnum {
+  Local = 'local',
+  Peers = 'peers'
+}
+
+
+export type ContentModelSummary = {
+  __typename?: 'ContentModelSummary';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  shared: Scalars['Boolean'];
+  contentType: ContentTypeEnum;
+  revision: Scalars['Int'];
+  state: ContentStateEnum;
+  createdAt: Scalars['DateTime'];
+  modifiedAt: Scalars['DateTime'];
+  publicationDate?: Maybe<Scalars['DateTime']>;
+  dePublicationDate?: Maybe<Scalars['DateTime']>;
+};
+
+export enum ContentStateEnum {
+  Draft = 'Draft',
+  Review = 'Review',
+  Release = 'Release',
+  Archive = 'Archive'
+}
+
+export enum ContentTypeEnum {
+  Example = 'example'
+}
+
 export type CreatedToken = {
   __typename?: 'CreatedToken';
   id: Scalars['ID'];
@@ -333,6 +571,16 @@ export type EmbedBlockInput = {
   width?: Maybe<Scalars['Int']>;
   height?: Maybe<Scalars['Int']>;
   styleCustom?: Maybe<Scalars['String']>;
+};
+
+export type ExtensionFoo = {
+  __typename?: 'ExtensionFoo';
+  example: Scalars['String'];
+};
+
+export type ExtensionMutationFoo = {
+  __typename?: 'ExtensionMutationFoo';
+  example: Scalars['String'];
 };
 
 export type ExternalNavigationLink = BaseNavigationLink & {
@@ -536,6 +784,19 @@ export enum InvoiceSort {
   PaidAt = 'PAID_AT'
 }
 
+export type LanguageConfig = {
+  __typename?: 'LanguageConfig';
+  id: Scalars['ID'];
+  tag: Scalars['String'];
+  description: Scalars['String'];
+};
+
+export type LanguagesConfig = {
+  __typename?: 'LanguagesConfig';
+  defaultLanguageId: Scalars['String'];
+  languages: Array<LanguageConfig>;
+};
+
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
   text?: Maybe<Scalars['String']>;
@@ -561,6 +822,19 @@ export type LinkPageBreakBlockInput = {
   templateOption?: Maybe<Scalars['String']>;
   layoutOption?: Maybe<Scalars['String']>;
   imageID?: Maybe<Scalars['ID']>;
+};
+
+export type ListByTypeConnection = {
+  __typename?: 'listByTypeConnection';
+  nodes: Array<ListByTypePeerCustomContent>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type ListByTypePeerCustomContent = {
+  __typename?: 'listByTypePeerCustomContent';
+  peer?: Maybe<Peer>;
+  content: ContentModelSummary;
 };
 
 export type ListicleBlock = {
@@ -628,6 +902,8 @@ export enum MemberPlanSort {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  extensions: ExtensionMutationFoo;
+  content: Content_Mutations;
   updatePeerProfile: PeerProfile;
   createPeer: Peer;
   updatePeer: Peer;
@@ -1281,6 +1557,9 @@ export type PropertiesInput = {
 
 export type Query = {
   __typename?: 'Query';
+  extensions: ExtensionFoo;
+  content: Content;
+  config: Config;
   peerProfile: PeerProfile;
   peers?: Maybe<Array<Peer>>;
   peer?: Maybe<Peer>;
@@ -2494,6 +2773,158 @@ export type RequestChangesOnCommentMutation = (
   & { requestChangesOnComment: (
     { __typename?: 'Comment' }
     & Pick<Comment, 'state' | 'rejectionReason'>
+  ) }
+);
+
+export type ContentListQueryVariables = Exact<{
+  type: ContentTypeEnum;
+  context?: Maybe<ContentContextEnum>;
+  filter?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['ID']>;
+  first?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type ContentListQuery = (
+  { __typename?: 'Query' }
+  & { content: (
+    { __typename?: 'content' }
+    & { _all: (
+      { __typename?: 'All' }
+      & { list: (
+        { __typename?: 'listByTypeConnection' }
+        & Pick<ListByTypeConnection, 'totalCount'>
+        & { nodes: Array<(
+          { __typename?: 'listByTypePeerCustomContent' }
+          & { peer?: Maybe<(
+            { __typename?: 'Peer' }
+            & Pick<Peer, 'id' | 'name'>
+          )>, content: (
+            { __typename?: 'ContentModelSummary' }
+            & ContentListRefFragment
+          ) }
+        )>, pageInfo: (
+          { __typename?: 'PageInfo' }
+          & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+        ) }
+      ) }
+    ) }
+  ) }
+);
+
+export type ContentGetQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type ContentGetQuery = (
+  { __typename?: 'Query' }
+  & { content: (
+    { __typename?: 'content' }
+    & { _all: (
+      { __typename?: 'All' }
+      & { read: (
+        { __typename?: 'ContentModelSummary' }
+        & ContentListRefFragment
+      ) }
+    ) }
+  ) }
+);
+
+export type ContentListRefFragment = (
+  { __typename?: 'ContentModelSummary' }
+  & Pick<ContentModelSummary, 'id' | 'title' | 'shared' | 'contentType' | 'revision' | 'state' | 'createdAt' | 'modifiedAt' | 'publicationDate' | 'dePublicationDate'>
+);
+
+export type PublishContentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  publishAt: Scalars['DateTime'];
+  publishedAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+}>;
+
+
+export type PublishContentMutation = (
+  { __typename?: 'Mutation' }
+  & { content: (
+    { __typename?: 'content_mutations' }
+    & { _all: (
+      { __typename?: 'AllMutations' }
+      & { publish?: Maybe<(
+        { __typename?: 'AllCustomContents' }
+        & Pick<AllCustomContents, 'id'>
+        & { pending?: Maybe<(
+          { __typename?: 'AllCustomContentsRevision' }
+          & Pick<AllCustomContentsRevision, 'publishAt'>
+        )>, published?: Maybe<(
+          { __typename?: 'AllCustomContentsRevision' }
+          & Pick<AllCustomContentsRevision, 'publishedAt'>
+        )> }
+      )> }
+    ) }
+  ) }
+);
+
+export type UnpublishContentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UnpublishContentMutation = (
+  { __typename?: 'Mutation' }
+  & { content: (
+    { __typename?: 'content_mutations' }
+    & { _all: (
+      { __typename?: 'AllMutations' }
+      & { unpublish?: Maybe<(
+        { __typename?: 'AllCustomContents' }
+        & Pick<AllCustomContents, 'id'>
+        & { pending?: Maybe<(
+          { __typename?: 'AllCustomContentsRevision' }
+          & Pick<AllCustomContentsRevision, 'publishAt'>
+        )>, published?: Maybe<(
+          { __typename?: 'AllCustomContentsRevision' }
+          & Pick<AllCustomContentsRevision, 'publishedAt'>
+        )> }
+      )> }
+    ) }
+  ) }
+);
+
+export type DeleteContentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteContentMutation = (
+  { __typename?: 'Mutation' }
+  & { content: (
+    { __typename?: 'content_mutations' }
+    & { _all: (
+      { __typename?: 'AllMutations' }
+      & Pick<AllMutations, 'delete'>
+    ) }
+  ) }
+);
+
+export type ConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ConfigQuery = (
+  { __typename?: 'Query' }
+  & { config: (
+    { __typename?: 'Config' }
+    & { content: Array<(
+      { __typename?: 'ContentConfig' }
+      & Pick<ContentConfig, 'id' | 'identifier' | 'namePlural' | 'nameSingular' | 'schema'>
+    )>, languages: (
+      { __typename?: 'LanguagesConfig' }
+      & Pick<LanguagesConfig, 'defaultLanguageId'>
+      & { languages: Array<(
+        { __typename?: 'LanguageConfig' }
+        & Pick<LanguageConfig, 'id' | 'tag' | 'description'>
+      )> }
+    ) }
   ) }
 );
 
@@ -3901,6 +4332,20 @@ export const FullCommentFragmentDoc = gql`
   modifiedAt
 }
     ${FullUserFragmentDoc}`;
+export const ContentListRefFragmentDoc = gql`
+    fragment ContentListRef on ContentModelSummary {
+  id
+  title
+  shared
+  contentType
+  revision
+  state
+  createdAt
+  modifiedAt
+  publicationDate
+  dePublicationDate
+}
+    `;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -4857,6 +5302,266 @@ export function useRequestChangesOnCommentMutation(baseOptions?: Apollo.Mutation
 export type RequestChangesOnCommentMutationHookResult = ReturnType<typeof useRequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationResult = Apollo.MutationResult<RequestChangesOnCommentMutation>;
 export type RequestChangesOnCommentMutationOptions = Apollo.BaseMutationOptions<RequestChangesOnCommentMutation, RequestChangesOnCommentMutationVariables>;
+export const ContentListDocument = gql`
+    query ContentList($type: contentTypeEnum!, $context: contentContextEnum, $filter: String, $after: ID, $first: Int) {
+  content {
+    _all {
+      list(type: $type, context: $context, first: $first, after: $after, filter: {title: $filter}) {
+        nodes {
+          peer {
+            id
+            name
+          }
+          content {
+            ...ContentListRef
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+      }
+    }
+  }
+}
+    ${ContentListRefFragmentDoc}`;
+
+/**
+ * __useContentListQuery__
+ *
+ * To run a query within a React component, call `useContentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useContentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useContentListQuery({
+ *   variables: {
+ *      type: // value for 'type'
+ *      context: // value for 'context'
+ *      filter: // value for 'filter'
+ *      after: // value for 'after'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function useContentListQuery(baseOptions?: Apollo.QueryHookOptions<ContentListQuery, ContentListQueryVariables>) {
+        return Apollo.useQuery<ContentListQuery, ContentListQueryVariables>(ContentListDocument, baseOptions);
+      }
+export function useContentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentListQuery, ContentListQueryVariables>) {
+          return Apollo.useLazyQuery<ContentListQuery, ContentListQueryVariables>(ContentListDocument, baseOptions);
+        }
+export type ContentListQueryHookResult = ReturnType<typeof useContentListQuery>;
+export type ContentListLazyQueryHookResult = ReturnType<typeof useContentListLazyQuery>;
+export type ContentListQueryResult = Apollo.QueryResult<ContentListQuery, ContentListQueryVariables>;
+export const ContentGetDocument = gql`
+    query ContentGet($id: ID!) {
+  content {
+    _all {
+      read(id: $id) {
+        ...ContentListRef
+      }
+    }
+  }
+}
+    ${ContentListRefFragmentDoc}`;
+
+/**
+ * __useContentGetQuery__
+ *
+ * To run a query within a React component, call `useContentGetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useContentGetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useContentGetQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useContentGetQuery(baseOptions?: Apollo.QueryHookOptions<ContentGetQuery, ContentGetQueryVariables>) {
+        return Apollo.useQuery<ContentGetQuery, ContentGetQueryVariables>(ContentGetDocument, baseOptions);
+      }
+export function useContentGetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ContentGetQuery, ContentGetQueryVariables>) {
+          return Apollo.useLazyQuery<ContentGetQuery, ContentGetQueryVariables>(ContentGetDocument, baseOptions);
+        }
+export type ContentGetQueryHookResult = ReturnType<typeof useContentGetQuery>;
+export type ContentGetLazyQueryHookResult = ReturnType<typeof useContentGetLazyQuery>;
+export type ContentGetQueryResult = Apollo.QueryResult<ContentGetQuery, ContentGetQueryVariables>;
+export const PublishContentDocument = gql`
+    mutation PublishContent($id: ID!, $publishAt: DateTime!, $publishedAt: DateTime!, $updatedAt: DateTime!) {
+  content {
+    _all {
+      publish(id: $id, publishAt: $publishAt, publishedAt: $publishedAt, updatedAt: $updatedAt) {
+        id
+        pending {
+          publishAt
+        }
+        published {
+          publishedAt
+        }
+      }
+    }
+  }
+}
+    `;
+export type PublishContentMutationFn = Apollo.MutationFunction<PublishContentMutation, PublishContentMutationVariables>;
+
+/**
+ * __usePublishContentMutation__
+ *
+ * To run a mutation, you first call `usePublishContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishContentMutation, { data, loading, error }] = usePublishContentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      publishAt: // value for 'publishAt'
+ *      publishedAt: // value for 'publishedAt'
+ *      updatedAt: // value for 'updatedAt'
+ *   },
+ * });
+ */
+export function usePublishContentMutation(baseOptions?: Apollo.MutationHookOptions<PublishContentMutation, PublishContentMutationVariables>) {
+        return Apollo.useMutation<PublishContentMutation, PublishContentMutationVariables>(PublishContentDocument, baseOptions);
+      }
+export type PublishContentMutationHookResult = ReturnType<typeof usePublishContentMutation>;
+export type PublishContentMutationResult = Apollo.MutationResult<PublishContentMutation>;
+export type PublishContentMutationOptions = Apollo.BaseMutationOptions<PublishContentMutation, PublishContentMutationVariables>;
+export const UnpublishContentDocument = gql`
+    mutation UnpublishContent($id: ID!) {
+  content {
+    _all {
+      unpublish(id: $id) {
+        id
+        pending {
+          publishAt
+        }
+        published {
+          publishedAt
+        }
+      }
+    }
+  }
+}
+    `;
+export type UnpublishContentMutationFn = Apollo.MutationFunction<UnpublishContentMutation, UnpublishContentMutationVariables>;
+
+/**
+ * __useUnpublishContentMutation__
+ *
+ * To run a mutation, you first call `useUnpublishContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpublishContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpublishContentMutation, { data, loading, error }] = useUnpublishContentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnpublishContentMutation(baseOptions?: Apollo.MutationHookOptions<UnpublishContentMutation, UnpublishContentMutationVariables>) {
+        return Apollo.useMutation<UnpublishContentMutation, UnpublishContentMutationVariables>(UnpublishContentDocument, baseOptions);
+      }
+export type UnpublishContentMutationHookResult = ReturnType<typeof useUnpublishContentMutation>;
+export type UnpublishContentMutationResult = Apollo.MutationResult<UnpublishContentMutation>;
+export type UnpublishContentMutationOptions = Apollo.BaseMutationOptions<UnpublishContentMutation, UnpublishContentMutationVariables>;
+export const DeleteContentDocument = gql`
+    mutation DeleteContent($id: ID!) {
+  content {
+    _all {
+      delete(id: $id)
+    }
+  }
+}
+    `;
+export type DeleteContentMutationFn = Apollo.MutationFunction<DeleteContentMutation, DeleteContentMutationVariables>;
+
+/**
+ * __useDeleteContentMutation__
+ *
+ * To run a mutation, you first call `useDeleteContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteContentMutation, { data, loading, error }] = useDeleteContentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteContentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteContentMutation, DeleteContentMutationVariables>) {
+        return Apollo.useMutation<DeleteContentMutation, DeleteContentMutationVariables>(DeleteContentDocument, baseOptions);
+      }
+export type DeleteContentMutationHookResult = ReturnType<typeof useDeleteContentMutation>;
+export type DeleteContentMutationResult = Apollo.MutationResult<DeleteContentMutation>;
+export type DeleteContentMutationOptions = Apollo.BaseMutationOptions<DeleteContentMutation, DeleteContentMutationVariables>;
+export const ConfigDocument = gql`
+    query Config {
+  config {
+    content {
+      id
+      identifier
+      namePlural
+      nameSingular
+      schema
+    }
+    languages {
+      defaultLanguageId
+      languages {
+        id
+        tag
+        description
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useConfigQuery__
+ *
+ * To run a query within a React component, call `useConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConfigQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useConfigQuery(baseOptions?: Apollo.QueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
+        return Apollo.useQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, baseOptions);
+      }
+export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
+          return Apollo.useLazyQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, baseOptions);
+        }
+export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
+export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
+export type ConfigQueryResult = Apollo.QueryResult<ConfigQuery, ConfigQueryVariables>;
 export const ImageListDocument = gql`
     query ImageList($filter: String, $after: ID, $before: ID, $first: Int, $last: Int) {
   images(filter: {title: $filter}, after: $after, before: $before, first: $first, last: $last) {

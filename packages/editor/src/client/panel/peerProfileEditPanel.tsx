@@ -1,6 +1,16 @@
 import React, {useState, useEffect} from 'react'
 
-import {Button, Drawer, Panel, Form, FormGroup, ControlLabel, FormControl, Alert} from 'rsuite'
+import {
+  Button,
+  Drawer,
+  Panel,
+  Form,
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Alert,
+  Modal
+} from 'rsuite'
 
 import {
   usePeerProfileQuery,
@@ -83,12 +93,13 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Title>{t('peerList.panels.editPeerInfo')}</Drawer.Title>
-      </Drawer.Header>
+      <Modal.Header>
+        <Modal.Title>{t('peerList.panels.editPeerInfo')}</Modal.Title>
+      </Modal.Header>
 
-      <Drawer.Body>
-        <Panel bodyFill header={t('peerList.panels.image')}>
+      <Modal.Body>
+        <h5 className="wep-section-title">{t('peerList.panels.image')}</h5>
+        <Panel bodyFill>
           <ChooseEditImage
             image={logoImage}
             header={''}
@@ -100,44 +111,47 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
             removeImage={() => setLogoImage(undefined)}
           />
         </Panel>
-        <Panel header={t('peerList.panels.information')}>
-          <Form fluid={true}>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
-              <FormControl name="name" value={name} onChange={value => setName(value)} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
-              <FormControl
-                name="themeColor"
-                value={themeColor}
-                onChange={value => setThemeColor(value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
-              <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.callToActionURL')}</ControlLabel>
-              <FormControl
-                name="callToActionURL"
-                value={callToActionURL}
-                onChange={url => setCallToActionURL(url)}
-              />
-            </FormGroup>
-          </Form>
-        </Panel>
-      </Drawer.Body>
 
-      <Drawer.Footer>
+        <h5 className="wep-section-title">{t('peerList.panels.information')}</h5>
+
+        <Form fluid={true}>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.name')}</ControlLabel>
+            <FormControl name="name" value={name} onChange={value => setName(value)} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.themeColor')}</ControlLabel>
+            <FormControl
+              name="themeColor"
+              value={themeColor}
+              onChange={value => setThemeColor(value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
+            <Panel bordered>
+              <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+            </Panel>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>{t('peerList.panels.callToActionURL')}</ControlLabel>
+            <FormControl
+              name="callToActionURL"
+              value={callToActionURL}
+              onChange={url => setCallToActionURL(url)}
+            />
+          </FormGroup>
+        </Form>
+      </Modal.Body>
+
+      <Modal.Footer classPrefix="wep-modal-footer">
         <Button appearance={'primary'} disabled={isDisabled} onClick={() => handleSave()}>
           {t('peerList.panels.save')}
         </Button>
         <Button appearance={'subtle'} onClick={() => onClose?.()}>
           {t('peerList.panels.close')}
         </Button>
-      </Drawer.Footer>
+      </Modal.Footer>
 
       <Drawer show={isChooseModalOpen} size={'sm'} onHide={() => setChooseModalOpen(false)}>
         <ImageSelectPanel

@@ -1,0 +1,7 @@
+{
+  "watch": [
+    "../../node_modules/@wepublish/editor/lib/*.js"
+  ],
+  "delay": 250,
+  "ignoreRoot": [".git"]
+}

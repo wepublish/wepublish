@@ -10,6 +10,7 @@ import {
   MetadataProperty,
   NavigationLink,
   PageBlock,
+  Content,
   PaymentProviderCustomer,
   RichTextNode,
   CommentRevision,
@@ -41,6 +42,8 @@ export enum CollectionName {
 
   Pages = 'pages',
   PagesHistory = 'pages.history',
+
+  Content = 'content',
 
   MemberPlans = 'member.plans',
   PaymentMethods = 'payment.methods',
@@ -314,6 +317,10 @@ export interface DBPageRevision {
 export interface DBPageHistoryRevision extends DBPageRevision {
   _id: any
   articleID: string
+}
+
+export interface DBContent extends Content {
+  _id: any
 }
 
 export interface DBMemberPlan {

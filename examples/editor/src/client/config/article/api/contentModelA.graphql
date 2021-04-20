@@ -1,0 +1,15 @@
+query ModelA($id: ID!) {
+  content {
+    modelA {
+      read(id: $id) {
+        id
+        contentType
+        title
+        content {
+          myString
+          myRichText
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+query ContentList(
+  $type: contentTypeEnum!
+  $context: contentContextEnum
+  $filter: String
+  $after: ID
+  $first: Int
+) {
+  content {
+    _all {
+      list(
+        type: $type
+        context: $context
+        first: $first
+        after: $after
+        filter: { title: $filter }
+      ) {
+        nodes {
+          peer {
+            id
+            name
+          }
+          content {
+            ...ContentListRef
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
+      }
+    }
+  }
+}
+
+fragment ContentListRef on ContentModelSummary {
+  id
+  title
+  shared
+  contentType
+  revision
+  state
+  createdAt
+  modifiedAt
+  publicationDate
+  dePublicationDate
+}
+
+mutation PublishContent(
+  $id: ID!
+  $publishAt: DateTime!
+  $publishedAt: DateTime!
+  $updatedAt: DateTime!
+) {
+  content {
+    _all {
+      publish(
+        id: $id
+        publishAt: $publishAt
+        publishedAt: $publishedAt
+        updatedAt: $updatedAt
+      ) {
+        id
+        pending {
+          publishAt
+        }
+        published {
+          publishedAt
+        }
+      }
+    }
+  }
+}
+
+mutation UnpublishContent($id: ID!) {
+  content {
+    _all {
+      unpublish(id: $id) {
+        id
+        pending {
+          publishAt
+        }
+        published {
+          publishedAt
+        }
+      }
+    }
+  }
+}
+
+mutation DeleteContent($id: ID!) {
+  content {
+    _all {
+      delete(id: $id)
+    }
+  }
+}

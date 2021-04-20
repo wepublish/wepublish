@@ -1,17 +1,15 @@
 import express, {Application, NextFunction} from 'express'
-
 import {ApolloServer} from 'apollo-server-express'
-
 import {contextFromRequest, ContextOptions} from './context'
-import {GraphQLWepublishSchema, GraphQLWepublishPublicSchema} from './graphql/schema'
+import {getGraphQLWepublishSchemas} from './graphql/schema'
 import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
 import {setupPaymentProvider, PAYMENT_WEBHOOK_PATH_PREFIX} from './payments/paymentProvider'
 import {capitalizeFirstLetter} from './utility'
-
 import {methodsToProxy} from './events'
 import {JobType, runJob} from './jobs'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
+import {getDemoModel} from './graphql/content/contentUtils'
 
 let serverLogger: pino.Logger
 
@@ -32,8 +30,11 @@ export class WepublishServer {
 
   constructor(opts: WepublishServerOpts) {
     const app = express()
+    if (!(opts?.contentModels && opts.contentModels.length > 0)) {
+      opts.contentModels = [getDemoModel()]
+    }
     this.opts = opts
-    const {dbAdapter} = opts
+    const {dbAdapter, graphQLExtensionPrivate} = opts
 
     serverLogger = opts.logger ? opts.logger : pino({name: 'we.publish'})
 
@@ -70,8 +71,14 @@ export class WepublishServer {
       }
     })
 
+    const {privateSchema, publicSchema} = getGraphQLWepublishSchemas(
+      opts,
+      graphQLExtensionPrivate?.query,
+      graphQLExtensionPrivate?.mutation
+    )
+
     const adminServer = new ApolloServer({
-      schema: GraphQLWepublishSchema,
+      schema: privateSchema,
       playground: opts.playground ?? false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,
@@ -79,7 +86,7 @@ export class WepublishServer {
     })
 
     const publicServer = new ApolloServer({
-      schema: GraphQLWepublishPublicSchema,
+      schema: publicSchema,
       playground: opts.playground ?? false,
       introspection: opts.introspection ?? false,
       tracing: opts.tracing ?? false,

@@ -1,6 +1,6 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, IconButton, Dropdown} from 'rsuite'
 
 import {
   ArticleListRoute,
@@ -18,13 +18,17 @@ import {
   MemberPlanListRoute,
   PaymentMethodListRoute,
   NavigationListRoute,
-  LogoutRoute
+  LogoutRoute,
+  ContentListRoute,
+  ExtensionRoute
 } from './route'
 
 import {useTranslation} from 'react-i18next'
+import {EditorConfig} from './interfaces/extensionConfig'
 
 export interface BaseProps {
   children?: ReactNode
+  readonly editorConfig?: EditorConfig
 }
 
 const AVAILABLE_LANG = [
@@ -33,12 +37,17 @@ const AVAILABLE_LANG = [
   {id: 'de', lang: 'de_CH', name: 'Deutsch'} */
 ]
 
-const iconStyles = {
-  width: 56,
-  height: 56,
-  lineHeight: '56px',
-  textAlign: 'center'
+const headerStyles = {
+  height: 60,
+  paddingLeft: 10,
+  display: 'flex',
+  alignItems: 'center'
 }
+
+const settingsStyles = {
+  marginLeft: 10
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const NavItemLink = routeLink(Nav.Item)
@@ -57,7 +66,7 @@ function useStickyState(defaultValue: string, key: string) {
   return [value, setValue]
 }
 
-export function Base({children}: BaseProps) {
+export function Base({children, editorConfig}: BaseProps) {
   const {current} = useRoute()
 
   const {t, i18n} = useTranslation()
@@ -65,6 +74,39 @@ export function Base({children}: BaseProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   const [uiLanguage, setUILanguage] = useStickyState(AVAILABLE_LANG[0].id, 'wepublish/language')
+
+  let customContentNavItems: any = []
+  if (editorConfig) {
+    customContentNavItems = editorConfig.contentModelExtension.map(item => {
+      const route = ContentListRoute.create({type: item.identifier})
+      return (
+        <NavItemLink
+          key={item.identifier}
+          icon={<Icon icon="file" />}
+          route={route}
+          active={
+            current?.type === RouteType.ContentList && current.params.type === item.identifier
+          }>
+          {item.namePlural}
+        </NavItemLink>
+      )
+    })
+
+    editorConfig.cusomExtension?.forEach(item => {
+      const route = ExtensionRoute.create({type: item.identifier})
+      customContentNavItems.push(
+        <NavItemLink
+          key={item.identifier}
+          icon={<Icon icon="file" />}
+          route={route}
+          active={
+            current?.type === RouteType.ContentList && current.params.type === item.identifier
+          }>
+          {item.namePlural}
+        </NavItemLink>
+      )
+    })
+  }
 
   useEffect(() => {
     i18n.changeLanguage(uiLanguage)
@@ -77,11 +119,17 @@ export function Base({children}: BaseProps) {
           style={{display: 'flex', flexDirection: 'column'}}
           width={isExpanded ? 260 : 56}
           collapsible>
-          <Sidenav
-            expanded={isExpanded}
-            defaultOpenKeys={['1']}
-            appearance="subtle"
-            style={{flex: '1 1 auto'}}>
+          <Sidenav expanded={isExpanded} defaultOpenKeys={['1']} style={{flex: '1 1 auto'}}>
+            <Sidenav.Header>
+              <div style={headerStyles}>
+                <IconButton
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  icon={<Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />}
+                  circle
+                  size="md"
+                />
+              </div>
+            </Sidenav.Header>
             <Sidenav.Body>
               <Nav>
                 <NavItemLink
@@ -97,6 +145,8 @@ export function Base({children}: BaseProps) {
                   active={current?.type === RouteType.PageList}>
                   {t('navbar.pages')}
                 </NavItemLink>
+
+                {customContentNavItems}
 
                 <NavItemLink
                   icon={<Icon icon="people-group" />}
@@ -128,32 +178,33 @@ export function Base({children}: BaseProps) {
 
                 <Dropdown
                   eventKey={'1'}
+                  placement="rightStart"
                   title={t('navbar.usersAndMembers')}
                   icon={<Icon icon="peoples" />}>
                   <DropdownItemLink
                     active={current?.type === RouteType.UserList}
-                    icon={<Icon icon="user-circle" />}
+                    // icon={<Icon icon="user-circle" />}
                     route={UserListRoute.create({})}>
                     {t('navbar.users')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.UserRoleList}
-                    icon={<Icon icon="character-authorize" />}
+                    // icon={<Icon icon="character-authorize" />}
                     route={UserRoleListRoute.create({})}>
                     {t('navbar.userRoles')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.MemberPlanList}
-                    icon={<Icon icon="id-card" />}
+                    // icon={<Icon icon="id-card" />}
                     route={MemberPlanListRoute.create({})}>
                     {t('navbar.memberPlans')}
                   </DropdownItemLink>
 
                   <DropdownItemLink
                     active={current?.type === RouteType.PaymentMethodList}
-                    icon={<Icon icon="money" />}
+                    // icon={<Icon icon="money" />}
                     route={PaymentMethodListRoute.create({})}>
                     {t('navbar.paymentMethods')}
                   </DropdownItemLink>
@@ -175,54 +226,29 @@ export function Base({children}: BaseProps) {
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-          <Navbar appearance="subtle" className="nav-toggle">
+
+          <Navbar className="settings">
             <Navbar.Body>
-              <Nav>
+              <Nav style={settingsStyles}>
                 <Dropdown
                   placement="topStart"
-                  trigger="click"
-                  renderTitle={children => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    return <Icon style={iconStyles} icon="cog" />
+                  renderTitle={() => {
+                    return <IconButton appearance="ghost" icon={<Icon icon="cog" />} circle />
                   }}>
-                  <DropdownItemLink route={LogoutRoute.create({})}>
+                  <Dropdown.Menu icon={<Icon icon="globe" />} title={t('navbar.language')}>
+                    {AVAILABLE_LANG.map(lang => (
+                      <Dropdown.Item
+                        key={lang.id}
+                        onSelect={() => setUILanguage(lang.id)}
+                        active={lang.id === uiLanguage}>
+                        {lang.name}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                  <DropdownItemLink route={LogoutRoute.create({})} icon={<Icon icon="sign-out" />}>
                     {t('navbar.logout')}
                   </DropdownItemLink>
                 </Dropdown>
-              </Nav>
-              <Nav>
-                <Dropdown
-                  placement="topStart"
-                  trigger="click"
-                  renderTitle={() => (
-                    <Icon
-                      icon="globe"
-                      style={{
-                        width: 56,
-                        height: 56,
-                        lineHeight: '56px',
-                        textAlign: 'center'
-                      }}
-                    />
-                  )}>
-                  {AVAILABLE_LANG.map(lang => (
-                    <Dropdown.Item
-                      key={lang.id}
-                      onSelect={() => setUILanguage(lang.id)}
-                      active={lang.id === uiLanguage}>
-                      {lang.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
-              </Nav>
-
-              <Nav pullRight>
-                <Nav.Item
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  style={{width: 56, textAlign: 'center'}}>
-                  <Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />
-                </Nav.Item>
               </Nav>
             </Navbar.Body>
           </Navbar>

@@ -7,7 +7,7 @@ import AbortController from 'abort-controller'
 
 import DataLoader from 'dataloader'
 
-import {GraphQLError, GraphQLSchema, print} from 'graphql'
+import {GraphQLError, GraphQLFieldConfigMap, GraphQLObjectType, GraphQLSchema, print} from 'graphql'
 
 import {
   Fetcher,
@@ -44,6 +44,27 @@ import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {logger} from './server'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
+import {LanguageConfig} from './interfaces/languageConfig'
+import {OptionalContent} from './db/content'
+import {BusinessLogic} from './business/contentModelBusiness'
+import {ContentModelSchema} from './interfaces/contentModelSchema'
+
+export interface ContentModel {
+  identifier: string
+  nameSingular: string
+  namePlural: string
+  schema: ContentModelSchema
+  apiExtension?: {
+    public?: {
+      queries?: GraphQLFieldConfigMap<any, Context, any>
+      mutations?: GraphQLFieldConfigMap<any, Context, any>
+    }
+    private?: {
+      queries?: GraphQLFieldConfigMap<any, Context, any>
+      mutations?: GraphQLFieldConfigMap<any, Context, any>
+    }
+  }
+}
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -60,6 +81,9 @@ export interface DataLoaderContext {
   readonly pages: DataLoader<string, OptionalPage>
   readonly publicPagesByID: DataLoader<string, OptionalPublicPage>
   readonly publicPagesBySlug: DataLoader<string, OptionalPublicPage>
+
+  readonly content: DataLoader<string, OptionalContent>
+  readonly publicContent: DataLoader<string, OptionalContent>
 
   readonly userRolesByID: DataLoader<string, OptionalUserRole>
 
@@ -89,6 +113,7 @@ export interface Context {
   readonly hostURL: string
   readonly websiteURL: string
 
+  readonly business: BusinessLogic
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
@@ -99,6 +124,10 @@ export interface Context {
   readonly urlAdapter: URLAdapter
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
+
+  readonly contentModels?: ContentModel[]
+  readonly languageConfig: LanguageConfig
+
   readonly hooks?: Hooks
 
   sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
@@ -134,6 +163,12 @@ export interface ContextOptions {
   readonly mailProvider?: BaseMailProvider
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
+  contentModels?: ContentModel[]
+  readonly languageConfig: LanguageConfig
+  readonly graphQLExtensionPrivate?: {
+    query: GraphQLObjectType<any, Context>
+    mutation: GraphQLObjectType<any, Context>
+  }
   readonly hooks?: Hooks
 }
 
@@ -171,7 +206,9 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
     mailProvider,
-    paymentProviders
+    paymentProviders,
+    contentModels,
+    languageConfig
   }: ContextOptions
 ): Promise<Context> {
   const token = tokenFromRequest(req)
@@ -223,6 +260,9 @@ export async function contextFromRequest(
     pages: new DataLoader(ids => dbAdapter.page.getPagesByID(ids)),
     publicPagesByID: new DataLoader(ids => dbAdapter.page.getPublishedPagesByID(ids)),
     publicPagesBySlug: new DataLoader(slugs => dbAdapter.page.getPublishedPagesBySlug(slugs)),
+
+    content: new DataLoader(ids => dbAdapter.content.getContentsByID(ids)),
+    publicContent: new DataLoader(ids => dbAdapter.content.getContentsByID(ids)),
 
     userRolesByID: new DataLoader(ids => dbAdapter.userRole.getUserRolesByID(ids)),
 
@@ -306,7 +346,7 @@ export async function contextFromRequest(
     sendMailFromProvider
   })
 
-  return {
+  const context: Omit<Context, 'business'> = {
     hostURL,
     websiteURL,
     session: isSessionValid ? session : null,
@@ -319,6 +359,9 @@ export async function contextFromRequest(
     urlAdapter,
     oauth2Providers,
     paymentProviders,
+    contentModels,
+    languageConfig,
+
     hooks,
 
     sendMailFromProvider,
@@ -439,6 +482,11 @@ export async function contextFromRequest(
 
       return updatedPayment
     }
+  }
+
+  return {
+    business: new BusinessLogic(context),
+    ...context
   }
 }
 

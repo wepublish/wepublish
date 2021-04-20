@@ -13,7 +13,6 @@ export function EditorTemplate({children, navigationChildren}: EditorTemplatePro
       style={{
         display: 'flex',
         flexDirection: 'column',
-
         width: '100%',
         minHeight: '100%'
       }}>
@@ -22,7 +21,7 @@ export function EditorTemplate({children, navigationChildren}: EditorTemplatePro
           display: 'flex',
           position: 'sticky',
           top: 0,
-          zIndex: 3,
+          zIndex: 10,
           width: '100%'
         }}>
         {navigationChildren}
