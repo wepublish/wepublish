@@ -15,8 +15,7 @@ import {
   CommentListDocument,
   ApproveCommentMutation,
   RequestChangesOnCommentMutation,
-  RejectCommentMutation,
-  CommentRevision
+  RejectCommentMutation
 } from '../api'
 import {
   Timeline,
@@ -150,16 +149,17 @@ export function CommentList() {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
 
-  const fetchParentComment = useCommentQuery({
-    variables: {id: currentComment?.parentID}
-  }).data?.comment?.revisions[length - 1]
+  const commentParentVariables = {
+    id: currentComment?.parentID
+  }
 
-  const [currentCommentParent, setCurrentCommentParent] = useState<CommentRevision | undefined>(
-    fetchParentComment
-  )
+  const {data: parentComment, refetch: refetchParentComment} = useCommentQuery({
+    variables: commentParentVariables,
+    skip: !currentComment?.parentID
+  })
 
   useEffect(() => {
-    setCurrentCommentParent(fetchParentComment)
+    refetchParentComment(commentParentVariables)
   }, [currentComment])
 
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
@@ -365,20 +365,24 @@ export function CommentList() {
                 {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
               </DescriptionListItem>
 
-              {currentCommentParent && (
+              {parentComment?.comment && (
                 <>
                   <DescriptionListItem label={t('comments.panels.parent')}>
                     <Panel bordered style={{marginRight: 40, fontStyle: 'italic', color: 'gray'}}>
-                      {currentCommentParent.text.length ? (
+                      {parentComment?.comment?.revisions[length - 1].text.length ? (
                         <>
-                          <div>{new Date(currentCommentParent.createdAt).toLocaleString()}</div>
+                          <div>
+                            {new Date(
+                              parentComment?.comment?.revisions[length - 1].createdAt
+                            ).toLocaleString()}
+                          </div>
                           <RichTextBlock
                             displayOnly
                             displayOneLine
                             disabled
                             // TODO: remove this
                             onChange={console.log}
-                            value={currentCommentParent.text}
+                            value={parentComment?.comment?.revisions[length - 1].text}
                           />{' '}
                         </>
                       ) : null}
