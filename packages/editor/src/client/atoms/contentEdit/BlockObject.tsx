@@ -22,7 +22,9 @@ export function BlockObject(props: {
         checkedChildren="Active"
         unCheckedChildren="Inactive"
         checked={hasContent}
-        onChange={e => {}}
+        onChange={() => {
+          /* do nothing */
+        }}
       />
     ) : null
 

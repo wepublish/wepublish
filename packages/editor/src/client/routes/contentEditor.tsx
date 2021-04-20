@@ -101,19 +101,21 @@ export interface ContentEditActionPush extends ContentEditActionBase {
 
 function reducer(state: any, action: ContentEditAction) {
   switch (action.type) {
-    case ContentEditActionEnum.setInitialState:
+    case ContentEditActionEnum.setInitialState: {
       const actionInitial = action as ContentEditActionInitial
       return actionInitial.value
+    }
 
-    case ContentEditActionEnum.update:
+    case ContentEditActionEnum.update: {
       const actionUpdate = action as ContentEditActionUpdate
       let updateOperation: CustomCommands<any> = {$set: actionUpdate.value}
       updateOperation = actionUpdate.schemaPath.reverse().reduce((accu, item) => {
         return {[item]: accu}
       }, updateOperation)
       return update(state, updateOperation)
+    }
 
-    case ContentEditActionEnum.splice:
+    case ContentEditActionEnum.splice: {
       const actionSplice = action as ContentEditActionSplice
       let spliceOperation: CustomCommands<any> = {
         $splice: [[actionSplice.start, actionSplice.delete, ...actionSplice.insert]]
@@ -122,8 +124,9 @@ function reducer(state: any, action: ContentEditAction) {
         return {[item]: accu}
       }, spliceOperation)
       return update(state, spliceOperation)
+    }
 
-    case ContentEditActionEnum.push:
+    case ContentEditActionEnum.push: {
       const actionPush = action as ContentEditActionPush
       let pushOperation: CustomCommands<any> = {
         $push: actionPush.insert
@@ -132,7 +135,7 @@ function reducer(state: any, action: ContentEditAction) {
         return {[item]: accu}
       }, pushOperation)
       return update(state, pushOperation)
-
+    }
     default:
       throw new Error()
   }

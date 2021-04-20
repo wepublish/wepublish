@@ -193,7 +193,9 @@
             "href",
             "fixed",
             "format",
-            "stack"
+            "stack",
+            "checkedChildren",
+            "unCheckedChildren"
           ],
           "ignoreComponent": [
             "code"
