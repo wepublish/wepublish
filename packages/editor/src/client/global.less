@@ -1,4 +1,32 @@
 .highlighted-row,
 .highlighted-row .rs-table-cell-group .rs-table-cell {
-    background-color: #f2faff;
+  background-color: #f2faff;
+}
+
+.rs-table {
+  &-hover &-row.approved:not(&-row-header):hover,
+  &-hover &-row.approved:hover &-cell-group,
+  &-hover &-row.approved:hover &-cell {
+    background: rgb(225, 248, 222);
+  }
+
+  &-hover &-row.pending-user:not(&-row-header):hover,
+  &-hover &-row.pending-user:hover &-cell-group,
+  &-hover &-row.pending-user:hover &-cell {
+    background: rgb(248, 239, 222);
+  }
+
+  &-hover &-row.pending-approval:not(&-row-header):hover,
+  &-hover &-row.pending-approval:hover &-cell-group,
+  &-hover &-row.pending-approval:hover &-cell {
+    background: rgb(248, 222, 242);
+  }
+
+  &-hover &-row.rejected:not(&-row-header),
+  &-hover &-row.rejected &-cell-group,
+  &-hover &-row.rejected &-cell {
+    background: rgb(83, 85, 83);
+    color: white;
+    text-decoration: line-through;
+  }
 }
