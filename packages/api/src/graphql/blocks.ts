@@ -26,6 +26,7 @@ import {
   VimeoVideoBlock,
   YouTubeVideoBlock,
   SoundCloudTrackBlock,
+  PolisConversationBlock,
   ListicleItem,
   ListicleBlock,
   LinkPageBreakBlock,
@@ -401,6 +402,18 @@ export const GraphQLSoundCloudTrackBlock = new GraphQLObjectType<SoundCloudTrack
   })
 })
 
+export const GraphQLPolisConversationBlock = new GraphQLObjectType<PolisConversationBlock, Context>(
+  {
+    name: 'PolisConversationBlock',
+    fields: {
+      conversationID: {type: GraphQLNonNull(GraphQLString)}
+    },
+    isTypeOf: createProxyingIsTypeOf(value => {
+      return value.type === BlockType.PolisConversation
+    })
+  }
+)
+
 export const GraphQLEmbedBlock = new GraphQLObjectType<EmbedBlock, Context>({
   name: 'EmbedBlock',
   fields: {
@@ -617,6 +630,13 @@ export const GraphQLSoundCloudTrackBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLPolisConversationBlockInput = new GraphQLInputObjectType({
+  name: 'PolisConversationBlockInput',
+  fields: {
+    conversationID: {type: GraphQLNonNull(GraphQLString)}
+  }
+})
+
 export const GraphQLEmbedBlockInput = new GraphQLInputObjectType({
   name: 'EmbedBlockInput',
   fields: {
@@ -698,6 +718,7 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.VimeoVideo]: {type: GraphQLVimeoVideoBlockInput},
     [BlockType.YouTubeVideo]: {type: GraphQLYouTubeVideoBlockInput},
     [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
+    [BlockType.PolisConversation]: {type: GraphQLPolisConversationBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
@@ -718,6 +739,7 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLVimeoVideoBlock,
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
+    GraphQLPolisConversationBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
@@ -739,6 +761,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLVimeoVideoBlock,
     GraphQLYouTubeVideoBlock,
     GraphQLSoundCloudTrackBlock,
+    GraphQLPolisConversationBlock,
     GraphQLEmbedBlock,
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,

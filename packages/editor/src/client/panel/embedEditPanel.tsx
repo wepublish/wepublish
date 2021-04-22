@@ -29,6 +29,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     const twitterMatch = input.match(/twitter.com\/([0-9a-zA-Z-_]+)\/status\/([0-9]+)/)
     const vimeoMatch = input.match(/vimeo.com\/([0-9]+)/)
     const youTubeMatch = input.match(/youtube.com\/watch\?v=([0-9a-zA-Z-_]+)/)
+    const polisMatch = input.match(/pol.is\/([0-9a-zA-Z-_]+)/)
 
     if (facebookPostMatch) {
       const [, userID, postID] = facebookPostMatch
@@ -48,6 +49,10 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
     } else if (youTubeMatch) {
       const [, videoID] = youTubeMatch
       setEmbed({type: EmbedType.YouTubeVideo, videoID})
+    } else if (polisMatch) {
+      console.log('polis match')
+      const [, conversationID] = polisMatch
+      setEmbed({type: EmbedType.PolisConversation, conversationID})
     } else {
       if (input) {
         const parser = new DOMParser()
@@ -79,7 +84,7 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
             setEmbed({type: EmbedType.Other, url: new URL(input).toString()})
           } catch {
             setEmbed({type: EmbedType.Other})
-            setErrorMessage(t('embeds.panels.invalidURL'))
+            setErrorMessage(t('blocks.embeds.panels.invalidURL'))
           }
         }
       } else {
@@ -150,6 +155,9 @@ function deriveInputFromEmbedBlockValue(embed: EmbedBlockValue) {
 
     case EmbedType.SoundCloudTrack:
       return `https://api.soundcloud.com/tracks/${embed.trackID}`
+
+    case EmbedType.PolisConversation:
+      return `https://pol.is/${embed.conversationID}`
 
     case EmbedType.Other: {
       const hasTitle = !!embed.title
