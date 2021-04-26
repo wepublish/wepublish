@@ -3,7 +3,7 @@ const path = require('path')
 
 const config = {
   entry: {
-    DreifussWysiwygEditorDemo: [path.resolve(__dirname, './src/DreifussWysiwygEditorDemo.tsx')]
+    WysiwygEditorDemo: [path.resolve(__dirname, './src/WysiwygEditorDemo.tsx')]
   },
   output: {
     path: path.resolve(__dirname, './demo'),
