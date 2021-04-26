@@ -124,34 +124,35 @@ export function ArticleList() {
     ]
   });
 
-  tour.addStep({
-    id: 'viewArticle',
-    text: 'Click on the article you want to view',
-    attachTo: {
-      element: '.example-css-selector',
-      on: 'top'
-    },
-    classes: 'example-step-extra-class',
-    buttons: [
-      {
-        text: 'Next',
-        action: tour.next
-      }
-    ]
-  });
+  // tour.addStep({
+  //   id: 'viewArticle',
+  //   text: 'Click on the article you want to view',
+  //   attachTo: {
+  //     element: '.example-css-selector',
+  //     on: 'top'
+  //   },
+  //   classes: 'example-step-extra-class',
+  //   buttons: [
+  //     {
+  //       text: 'Next',
+  //       action: tour.next
+  //     }
+  //   ]
+  // });
   
 
   tour.start();
 
   return (
     <>
-      <link rel="stylesheet" href="/node_modules/shepherd.js/dist/css/shepherd-theme-arrows.css" />
+      {/* <link rel="stylesheet" href="/node_modules/shepherd.js/dist/css/shepherd-theme-arrows.css" /> */}
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('articles.overview.articles')}</h2>
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ButtonLink
+            className="createArticleButton"
             appearance="primary"
             disabled={isLoading}
             route={ArticleCreateRoute.create({})}>
