@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
+// import {ShepherdTour, ShepherdTourContext, TourMethods} from 'react-shepherd'
+import Shepherd from 'shepherd.js'
 
 import {ArticleCreateRoute, Link, ArticleEditRoute, ButtonLink} from '../route'
 
@@ -95,8 +97,55 @@ export function ArticleList() {
     }
   }, [data?.articles])
 
+  const tour = new Shepherd.Tour({
+    defaultStepOptions: {
+      classes: 'shepherd-theme-arrows',
+      scrollTo: true
+    }
+  });
+
+  tour.addStep({
+    id: 'createArticle-step',
+    text: 'Click here to create a new article',
+    attachTo: {
+      element: '.createArticleButton',
+      on: 'bottom'
+    },
+    classes: 'shepherd-theme-arrows',
+    buttons: [
+      {
+        text: 'Next',
+        action: tour.next
+      },
+      {
+        text: 'Exit',
+        action: tour.cancel
+      }
+    ]
+  });
+
+  tour.addStep({
+    id: 'viewArticle',
+    text: 'Click on the article you want to view',
+    attachTo: {
+      element: '.example-css-selector',
+      on: 'top'
+    },
+    classes: 'example-step-extra-class',
+    buttons: [
+      {
+        text: 'Next',
+        action: tour.next
+      }
+    ]
+  });
+  
+
+  tour.start();
+
   return (
     <>
+      <link rel="stylesheet" href="/node_modules/shepherd.js/dist/css/shepherd-theme-arrows.css" />
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('articles.overview.articles')}</h2>
