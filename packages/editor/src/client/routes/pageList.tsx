@@ -142,7 +142,11 @@ export function PageList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: PageRefFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: PageRefFragment) =>
+                `${new Date(modifiedAt).toDateString()} ${new Date(
+                  modifiedAt
+                ).toLocaleTimeString()}`
+              }
             </Cell>
           </Column>
           <Column width={400} align="left" resizable>
