@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 // import {ShepherdTour, ShepherdTourContext, TourMethods} from 'react-shepherd'
 import Shepherd from 'shepherd.js'
 
