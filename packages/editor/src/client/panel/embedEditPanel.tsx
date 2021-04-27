@@ -50,7 +50,6 @@ export function EmbedEditPanel({value, onClose, onConfirm}: EmbedEditPanel) {
       const [, videoID] = youTubeMatch
       setEmbed({type: EmbedType.YouTubeVideo, videoID})
     } else if (polisMatch) {
-      console.log('polis match')
       const [, conversationID] = polisMatch
       setEmbed({type: EmbedType.PolisConversation, conversationID})
     } else {

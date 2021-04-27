@@ -11,6 +11,7 @@ export enum BlockTypes {
   VimeoVideoBlock = 'TwitterTweetBlock',
   YouTubeVideoBlock = 'YouTubeVideoBlock',
   SoundCloudTrackBlock = 'SoundCloudTrackBlock',
+  PolisConversationBlock = 'PolisConversationBlock',
   ListicleBlock = 'ListicleBlock',
   LinkPageBreakBlock = 'LinkPageBreakBlock'
 }
@@ -312,6 +313,12 @@ export const soundCloudTrackBlockDataFragment = gql`
   fragment SoundCloudTrackBlockData on SoundCloudTrackBlock {
     __typename
     trackID
+  }
+`
+export const polisConversationBlockDataFragment = gql`
+  fragment PolisConversationBlockData on PolisConversationBlock {
+    __typename
+    conversationID
   }
 `
 export const embedBlockDataFragment = gql`

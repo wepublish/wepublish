@@ -9,7 +9,7 @@ export function PolisEmbed({conversationID}: PolisEmbedProps) {
     <iframe
       src={`https://pol.is/${conversationID}`}
       width="100%"
-      height="100%"
+      height="600"
       scrolling="yes"
       frameBorder="0"
     />
