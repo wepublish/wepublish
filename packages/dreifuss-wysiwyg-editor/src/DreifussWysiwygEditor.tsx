@@ -37,7 +37,7 @@ import {
   ToolbarButtonsList,
   ToolbarButtonsTable
 } from './Toolbar'
-import {H1} from './SlateIcons'
+import {H1} from './Icons'
 export const editableProps = {
   // placeholder: 'Enter some rich text…',
   spellCheck: false,

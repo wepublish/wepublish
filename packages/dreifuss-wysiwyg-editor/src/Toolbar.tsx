@@ -23,7 +23,7 @@ import {
   BorderLeft,
   BorderRight,
   BorderTop
-} from './SlateIcons'
+} from './Icons'
 import {
   ELEMENT_ALIGN_CENTER,
   ELEMENT_ALIGN_JUSTIFY,
