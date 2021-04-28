@@ -35,6 +35,8 @@ import {
   ImageCaptionEdge,
   ArticleTeaser,
   TeaserGridBlock,
+  TeaserFlexGridBlock,
+  FlexItemLayout,
   TeaserStyle,
   PeerArticleTeaser,
   PageTeaser,
@@ -174,6 +176,29 @@ export const GraphQLTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Con
   })
 })
 
+export const GraphQLFlexItemLayout = new GraphQLObjectType<FlexItemLayout>({
+  name: 'FlexItemLayout',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>({
+  name: 'TeaserFlexGridBlock',
+  fields: {
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaser))},
+    layout: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexItemLayout)))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)},
+    numRows: {type: GraphQLNonNull(GraphQLInt)}
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserFlexGrid
+  })
+})
+
 export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
@@ -285,6 +310,21 @@ export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBloc
     return value.type === BlockType.TeaserGrid
   })
 })
+
+export const GraphQLPublicTeaserFlexGridBlock = new GraphQLObjectType<TeaserFlexGridBlock, Context>(
+  {
+    name: 'TeaserFlexGridBlock',
+    fields: {
+      teasers: {type: GraphQLNonNull(GraphQLList(GraphQLPublicTeaser))},
+      layout: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexItemLayout)))},
+      numColumns: {type: GraphQLNonNull(GraphQLInt)},
+      numRows: {type: GraphQLNonNull(GraphQLInt)}
+    },
+    isTypeOf: createProxyingIsTypeOf(value => {
+      return value.type === BlockType.TeaserFlexGrid
+    })
+  }
+)
 
 export const GraphQLGalleryImageEdge = new GraphQLObjectType<ImageCaptionEdge, Context>({
   name: 'GalleryImageEdge',
@@ -682,6 +722,26 @@ export const GraphQLTeaserGridBlockInput = new GraphQLInputObjectType({
   }
 })
 
+export const GraphQLFlexGridItemLayoutInput = new GraphQLInputObjectType({
+  name: 'FlexGridItemLayoutInput',
+  fields: {
+    x: {type: GraphQLNonNull(GraphQLInt)},
+    y: {type: GraphQLNonNull(GraphQLInt)},
+    w: {type: GraphQLNonNull(GraphQLInt)},
+    h: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
+export const GraphQLTeaserFlexGridBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserFlexGridBlockInput',
+  fields: {
+    layout: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLFlexGridItemLayoutInput)))},
+    teasers: {type: GraphQLNonNull(GraphQLList(GraphQLTeaserInput))},
+    numColumns: {type: GraphQLNonNull(GraphQLInt)},
+    numRows: {type: GraphQLNonNull(GraphQLInt)}
+  }
+})
+
 export const GraphQLBlockInput = new GraphQLInputObjectType({
   name: 'BlockInput',
   fields: () => ({
@@ -700,7 +760,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.SoundCloudTrack]: {type: GraphQLSoundCloudTrackBlockInput},
     [BlockType.Embed]: {type: GraphQLEmbedBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
-    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput}
+    [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
+    [BlockType.TeaserFlexGrid]: {type: GraphQLTeaserFlexGridBlockInput}
   })
 })
 
@@ -722,7 +783,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLTeaserGridBlock
+    GraphQLTeaserGridBlock,
+    GraphQLTeaserFlexGridBlock
   ]
 })
 
@@ -743,6 +805,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLLinkPageBreakBlock,
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
-    GraphQLPublicTeaserGridBlock
+    GraphQLPublicTeaserGridBlock,
+    GraphQLPublicTeaserFlexGridBlock
   ]
 })

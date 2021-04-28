@@ -1,5 +1,6 @@
 import {MapDiscriminatedUnion} from '@karma.run/utility'
 import {RichTextNode} from '../graphql/richText'
+import {Layout} from 'react-grid-layout'
 
 export enum BlockType {
   Title = 'title',
@@ -17,7 +18,8 @@ export enum BlockType {
   ImageGallery = 'imageGallery',
   Listicle = 'listicle',
   LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid'
+  TeaserGrid = 'teaserGrid',
+  TeaserFlexGrid = 'teaserFlexGrid'
 }
 
 export interface RichTextBlock {
@@ -179,6 +181,16 @@ export interface TeaserGridBlock {
   numColumns: number
 }
 
+export type FlexItemLayout = Omit<Layout, 'i'> // don't save component key
+
+export interface TeaserFlexGridBlock {
+  type: BlockType.TeaserFlexGrid
+  layout: FlexItemLayout[]
+  teasers: Teaser[]
+  numColumns: number // TODO: interface to extend gridlayout ?
+  numRows: number
+}
+
 export type ArticleBlock =
   | RichTextBlock
   | ImageBlock
@@ -194,6 +206,7 @@ export type ArticleBlock =
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
   | TeaserGridBlock
+  | TeaserFlexGridBlock
 
 export type PageBlock = ArticleBlock
 export type Block = ArticleBlock | PageBlock

@@ -156,4 +156,18 @@ fragment FullBlock on Block {
     }
     numColumns
   }
+
+  ... on TeaserFlexGridBlock {
+    teasers {
+      ...FullTeaser
+    }
+    layout {
+      x
+      y
+      w
+      h
+    }
+    numColumns
+    numRows
+  }
 }

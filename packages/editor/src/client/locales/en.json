@@ -505,6 +505,9 @@
           "removeImage": "Remove Image",
           "caption": "Caption"
         },
+        "teaserFlexGrid": {
+          "addTeasers": "Add Teasers"
+        },
         "panels": {
           "editGallery": "Edit Gallery",
           "close": "Close",
