@@ -1,6 +1,8 @@
-import React, {useMemo} from 'react'
+import React from 'react'
+import {createBasicElementPlugins} from '@udecode/slate-plugins'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
-import {createSlatePluginsComponents, createSlatePluginsOptions} from '@udecode/slate-plugins'
+import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
+import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
 import {
   createBoldPlugin,
   createItalicPlugin,
@@ -9,27 +11,18 @@ import {
 } from '@udecode/slate-plugins-basic-marks'
 import {createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
 import {createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
-import {
-  SlatePlugins,
-  createHistoryPlugin,
-  createReactPlugin,
-  SlatePlugin
-} from '@udecode/slate-plugins-core'
-import {useFindReplacePlugin} from '@udecode/slate-plugins-find-replace'
+import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/slate-plugins-core'
 import {createHeadingPlugin, ELEMENT_H1, ELEMENT_H2} from '@udecode/slate-plugins-heading'
 import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
-import {createDeserializeHTMLPlugin} from '@udecode/slate-plugins-html-serializer'
-import {createImagePlugin, ELEMENT_IMAGE} from '@udecode/slate-plugins-image'
+import {createImagePlugin} from '@udecode/slate-plugins-image'
 import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
 import {createLinkPlugin} from '@udecode/slate-plugins-link'
 import {createListPlugin, createTodoListPlugin} from '@udecode/slate-plugins-list'
 import {createMediaEmbedPlugin} from '@udecode/slate-plugins-media-embed'
-import {createNormalizeTypesPlugin} from '@udecode/slate-plugins-normalizers'
-import {createParagraphPlugin, ELEMENT_PARAGRAPH} from '@udecode/slate-plugins-paragraph'
-import {createSelectOnBackspacePlugin} from '@udecode/slate-plugins-select'
+// import {createNormalizeTypesPlugin} from '@udecode/slate-plugins-normalizers'
+import {createParagraphPlugin} from '@udecode/slate-plugins-paragraph'
 import {createTablePlugin} from '@udecode/slate-plugins-table'
 import {HeadingToolbar} from '@udecode/slate-plugins-toolbar'
-import {createTrailingBlockPlugin} from '@udecode/slate-plugins-trailing-block'
 import {
   ToolbarButtonsAlign,
   ToolbarButtonsBasicElements,
@@ -38,6 +31,7 @@ import {
   ToolbarButtonsTable
 } from './Toolbar'
 import {H1} from './Icons'
+
 export const editableProps = {
   // placeholder: 'Enter some rich text…',
   spellCheck: false,
@@ -62,7 +56,7 @@ const Divider = (props: DividerProps) => (
   />
 )
 
-export function WysiwygEditor(props: any) {
+export function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
 
@@ -77,47 +71,38 @@ export function WysiwygEditor(props: any) {
     }
   ]
 
-  const {setSearch, plugin: searchHighlightPlugin} = useFindReplacePlugin()
-  //   const { getMentionSelectProps, plugin: mentionPlugin } = useMentionPlugin(
-  //     optionsMentionPlugin
-  //   );
-
-  const pluginsMemo: SlatePlugin[] = useMemo(() => {
-    const plugins = [
-      createReactPlugin(),
-      createHistoryPlugin(),
-      createParagraphPlugin(),
-      createBlockquotePlugin(),
-      createTodoListPlugin(),
-      createHeadingPlugin(),
-      createImagePlugin(),
-      createLinkPlugin(),
-      createListPlugin(),
-      createTablePlugin(),
-      createMediaEmbedPlugin(),
-      createCodeBlockPlugin(),
-      createAlignPlugin(),
-      createBoldPlugin(),
-      createCodePlugin(),
-      createItalicPlugin(),
-      createHighlightPlugin(),
-      createUnderlinePlugin(),
-      createNormalizeTypesPlugin({
-        rules: [{path: [0, 0], strictType: options[ELEMENT_H1].type}]
-      }),
-      createTrailingBlockPlugin({
-        type: options[ELEMENT_PARAGRAPH].type,
-        level: 1
-      }),
-      createSelectOnBackspacePlugin({allow: options[ELEMENT_IMAGE].type}),
-      //   mentionPlugin,
-      searchHighlightPlugin
-    ]
-    //@ts-ignore
-    plugins.push(createDeserializeHTMLPlugin({plugins}))
-
-    return plugins
-  }, [options, searchHighlightPlugin])
+  const plugins = [
+    ...createBasicElementPlugins(),
+    createReactPlugin(),
+    createHistoryPlugin(),
+    createParagraphPlugin(),
+    createBlockquotePlugin(),
+    createTodoListPlugin(),
+    createHeadingPlugin(),
+    createImagePlugin(),
+    createLinkPlugin(),
+    createListPlugin(),
+    createTablePlugin(),
+    createMediaEmbedPlugin(),
+    createCodeBlockPlugin(),
+    createBoldPlugin(),
+    createItalicPlugin(),
+    createUnderlinePlugin(),
+    createAlignPlugin(),
+    createListPlugin(),
+    createCodePlugin(),
+    createImagePlugin(),
+    createHighlightPlugin(),
+    createUnderlinePlugin()
+    //   createNormalizeTypesPlugin({
+    //     rules: [{path: [0, 0], strictType: options[ELEMENT_H1].type}]
+    //   }),
+    //   createTrailingBlockPlugin({
+    //     type: options[ELEMENT_PARAGRAPH].type,
+    //     level: 1
+    //   }),
+    //   createSelectOnBackspacePlugin({allow: options[ELEMENT_IMAGE].type})
+  ]
 
   return (
     <SlatePlugins
@@ -125,7 +110,7 @@ export function WysiwygEditor(props: any) {
       onChange={value => {
         // console.log(value);
       }}
-      plugins={pluginsMemo}
+      plugins={plugins}
       components={components}
       options={options}
       editableProps={editableProps}
@@ -148,4 +133,4 @@ export function WysiwygEditor(props: any) {
   )
 }
 
-export default WysiwygEditor
+export default DreifussWysiwygEditor

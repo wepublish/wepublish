@@ -5,7 +5,7 @@ import DreifussWysiwygEditor from './DreifussWysiwygEditor'
 const DreifussWysiwygEditorDemo = () => (
   <div>
     <h1>React Component Demo</h1>
-    <DreifussWysiwygEditor title="Hello" />
+    <DreifussWysiwygEditor />
   </div>
 )
 

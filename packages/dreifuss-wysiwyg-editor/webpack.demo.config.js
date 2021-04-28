@@ -18,14 +18,22 @@ const config = {
         test: /.(ts|tsx|js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
       }
     ]
   },
   devServer: {
     contentBase: './demo',
     historyApiFallback: true,
-    open: true
-  }
+    open: true,
+    hot: true
+  },
+  plugins: [new webpack.HotModuleReplacementPlugin()]
 }
 
 module.exports = config
