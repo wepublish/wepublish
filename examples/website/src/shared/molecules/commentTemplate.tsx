@@ -463,10 +463,10 @@ export function LoginToComment(props: LoginToComment) {
       )}
       {!session && (
         <p className={css(Container, StateMessage)}>
-          Not logged in.
+          Not logged in.{' '}
           {current && (
             <Link route={LoginRoute.create({}, {query: {next: current?.path}})}>Login</Link>
-          )}
+          )}{' '}
           to comment
         </p>
       )}
