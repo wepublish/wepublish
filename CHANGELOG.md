@@ -1,5 +1,20 @@
 # Change Log
 
+## v2.2.2 (2021-04-27)
+
+#### :heart: New Feature
+* `editor`
+  * [#253](https://github.com/wepublish/wepublish/pull/253) added time in modefied coloumn ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :nail_care: Polish
+* `editor`
+  * [#252](https://github.com/wepublish/wepublish/pull/252) Comment list color ([@penk85](https://github.com/penk85))
+
+#### Committers: 2
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.2.1 (2021-04-15)
 
 #### :bug: Bug Fix
