@@ -8,6 +8,7 @@ import {useMutation} from '@apollo/client'
 import {AuthContext} from '../authContext'
 import {Link, LoginRoute, LogoutRoute} from '../route/routeContext'
 import {createDefaultValue, RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
+import {useRoute} from '../route/routeContext'
 
 // CSS-Rules
 // =========
@@ -442,6 +443,7 @@ export function CommentList(commentListProps: CommentListProps) {
 }
 
 export function LoginToComment(props: LoginToComment) {
+  const {current} = useRoute()
   const {session} = useContext(AuthContext)
   const css = useStyle()
 
@@ -461,7 +463,11 @@ export function LoginToComment(props: LoginToComment) {
       )}
       {!session && (
         <p className={css(Container, StateMessage)}>
-          Not logged in. <Link route={LoginRoute.create({})}>Login</Link> to comment
+          Not logged in.
+          {current && (
+            <Link route={LoginRoute.create({}, {query: {next: current?.path}})}>Login</Link>
+          )}
+          to comment
         </p>
       )}
     </>
