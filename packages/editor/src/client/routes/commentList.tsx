@@ -218,6 +218,20 @@ export function CommentList() {
         }}>
         <Table
           autoHeight={true}
+          rowClassName={rowData => {
+            switch (rowData?.state) {
+              case CommentState.Approved:
+                return 'approved'
+              case CommentState.PendingApproval:
+                return 'pending-approval'
+              case CommentState.PendingUserChanges:
+                return 'pending-user'
+              case CommentState.Rejected:
+                return 'rejected'
+              default:
+                return ''
+            }
+          }}
           style={{marginTop: '20px'}}
           loading={isLoading}
           data={comments}
