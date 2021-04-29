@@ -145,7 +145,6 @@ export function ArticleList() {
 
   return (
     <>
-      {/* <link rel="stylesheet" href="/node_modules/shepherd.js/dist/css/shepherd-theme-arrows.css" /> */}
       <FlexboxGrid>
         <FlexboxGrid.Item colspan={16}>
           <h2>{t('articles.overview.articles')}</h2>
