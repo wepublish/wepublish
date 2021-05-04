@@ -1299,7 +1299,6 @@ export type Query = {
   authors: AuthorConnection;
   image?: Maybe<Image>;
   images: ImageConnection;
-  comment?: Maybe<Comment>;
   comments: CommentConnection;
   article?: Maybe<Article>;
   articles: ArticleConnection;
@@ -1400,11 +1399,6 @@ export type QueryImagesArgs = {
   filter?: Maybe<ImageFilter>;
   sort?: Maybe<ImageSort>;
   order?: Maybe<SortOrder>;
-};
-
-
-export type QueryCommentArgs = {
-  id: Scalars['ID'];
 };
 
 
