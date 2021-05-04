@@ -245,11 +245,6 @@ Object {
         },
         Object {
           "deprecated": false,
-          "description": "Allows to get comment",
-          "id": "CAN_GET_COMMENT",
-        },
-        Object {
-          "deprecated": false,
           "description": "Allows to get all comments",
           "id": "CAN_GET_COMMENTS",
         },
@@ -647,11 +642,6 @@ Object {
             },
             Object {
               "deprecated": false,
-              "description": "Allows to get comment",
-              "id": "CAN_GET_COMMENT",
-            },
-            Object {
-              "deprecated": false,
               "description": "Allows to get all comments",
               "id": "CAN_GET_COMMENTS",
             },
@@ -790,11 +780,6 @@ Object {
           "id": Any<String>,
           "name": "Editor",
           "permissions": Array [
-            Object {
-              "deprecated": false,
-              "description": "Allows to get comment",
-              "id": "CAN_GET_COMMENT",
-            },
             Object {
               "deprecated": false,
               "description": "Allows to get all comments",
@@ -1137,11 +1122,6 @@ Object {
               "deprecated": false,
               "description": "Allows to get all permissions",
               "id": "CAN_GET_PERMISSIONS",
-            },
-            Object {
-              "deprecated": false,
-              "description": "Allows to get comment",
-              "id": "CAN_GET_COMMENT",
             },
             Object {
               "deprecated": false,
@@ -1531,11 +1511,6 @@ Object {
         "deprecated": false,
         "description": "Allows to get all permissions",
         "id": "CAN_GET_PERMISSIONS",
-      },
-      Object {
-        "deprecated": false,
-        "description": "Allows to get comment",
-        "id": "CAN_GET_COMMENT",
       },
       Object {
         "deprecated": false,
