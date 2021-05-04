@@ -78,7 +78,6 @@ import {
   CanGetPeers,
   CanGetPeer,
   AllPermissions,
-  CanGetComment,
   CanGetComments,
   CanGetMemberPlan,
   CanGetMemberPlans,
@@ -437,17 +436,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Comments
     // =======
-
-    comment: {
-      type: GraphQLComment,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve(root, {id}, {authenticate, dbAdapter}) {
-        const {roles} = authenticate()
-        authorise(CanGetComment, roles)
-
-        return dbAdapter.comment.getCommentById(id)
-      }
-    },
 
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
