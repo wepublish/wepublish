@@ -101,12 +101,7 @@ import {
 import {UserRoleSort} from '../db/userRole'
 
 import {NotAuthorisedError, NotFound} from '../error'
-import {
-  GraphQLComment,
-  GraphQLCommentConnection,
-  GraphQLCommentFilter,
-  GraphQLCommentSort
-} from './comment'
+import {GraphQLCommentConnection, GraphQLCommentFilter, GraphQLCommentSort} from './comment'
 import {
   GraphQLMemberPlan,
   GraphQLMemberPlanConnection,
