@@ -440,7 +440,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     comment: {
       type: GraphQLComment,
-      args: {id: {type: GraphQLID}},
+      args: {id: {type: GraphQLNonNull(GraphQLID)}},
       resolve(root, {id}, {authenticate, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanGetComment, roles)

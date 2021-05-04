@@ -235,7 +235,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  parentID?: Maybe<Scalars['ID']>;
+  parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -1404,7 +1404,7 @@ export type QueryImagesArgs = {
 
 
 export type QueryCommentArgs = {
-  id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
 };
 
 
@@ -2424,9 +2424,9 @@ type FullBlock_TeaserGridBlock_Fragment = (
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
-export type FullCommentFragment = (
+export type FullParentCommentFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt' | 'parentID'>
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
   & { user: (
     { __typename?: 'User' }
     & FullUserFragment
@@ -2436,16 +2436,18 @@ export type FullCommentFragment = (
   )> }
 );
 
-export type CommentQueryVariables = Exact<{
-  id?: Maybe<Scalars['ID']>;
-}>;
-
-
-export type CommentQuery = (
-  { __typename?: 'Query' }
-  & { comment?: Maybe<(
+export type FullCommentFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & FullUserFragment
+  ), revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & Pick<CommentRevision, 'text' | 'createdAt'>
+  )>, parentComment?: Maybe<(
     { __typename?: 'Comment' }
-    & FullCommentFragment
+    & FullParentCommentFragment
   )> }
 );
 
@@ -3904,6 +3906,22 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
+export const FullParentCommentFragmentDoc = gql`
+    fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  revisions {
+    text
+    createdAt
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUserFragmentDoc}`;
 export const FullCommentFragmentDoc = gql`
     fragment FullComment on Comment {
   id
@@ -3918,9 +3936,12 @@ export const FullCommentFragmentDoc = gql`
   }
   createdAt
   modifiedAt
-  parentID
+  parentComment {
+    ...FullParentComment
+  }
 }
-    ${FullUserFragmentDoc}`;
+    ${FullUserFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
@@ -4729,39 +4750,6 @@ export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
 export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
 export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
-export const CommentDocument = gql`
-    query Comment($id: ID) {
-  comment(id: $id) {
-    ...FullComment
-  }
-}
-    ${FullCommentFragmentDoc}`;
-
-/**
- * __useCommentQuery__
- *
- * To run a query within a React component, call `useCommentQuery` and pass it any options that fit your needs.
- * When your component renders, `useCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCommentQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useCommentQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
-        return Apollo.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
-      }
-export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
-          return Apollo.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
-        }
-export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
-export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
-export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CommentListDocument = gql`
     query CommentList($after: ID, $before: ID, $first: Int, $last: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
   comments(after: $after, before: $before, first: $first, last: $last, skip: $skip, order: $order, sort: $sort) {

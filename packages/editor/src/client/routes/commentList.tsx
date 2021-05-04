@@ -4,7 +4,6 @@ import {
   CommentListQuery,
   FullCommentFragment,
   useCommentListQuery,
-  useCommentQuery,
   useApproveCommentMutation,
   useRequestChangesOnCommentMutation,
   CommentState,
@@ -148,19 +147,6 @@ export function CommentList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
-
-  const commentParentVariables = {
-    id: currentComment?.parentID
-  }
-
-  const {data: parentComment, refetch: refetchParentComment} = useCommentQuery({
-    variables: commentParentVariables,
-    skip: !currentComment?.parentID
-  })
-
-  useEffect(() => {
-    refetchParentComment(commentParentVariables)
-  }, [currentComment])
 
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
@@ -379,27 +365,30 @@ export function CommentList() {
                 {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
               </DescriptionListItem>
 
-              {parentComment?.comment && (
+              {currentComment?.parentComment && (
                 <>
                   <DescriptionListItem label={t('comments.panels.parent')}>
-                    <Panel bordered style={{marginRight: 40, fontStyle: 'italic', color: 'gray'}}>
-                      {parentComment?.comment?.revisions[length - 1].text.length ? (
-                        <>
-                          <div>
-                            {new Date(
-                              parentComment?.comment?.revisions[length - 1].createdAt
-                            ).toLocaleString()}
-                          </div>
-                          <RichTextBlock
-                            displayOnly
-                            displayOneLine
-                            disabled
-                            // TODO: remove this
-                            onChange={console.log}
-                            value={parentComment?.comment?.revisions[length - 1].text}
-                          />{' '}
-                        </>
-                      ) : null}
+                    <Panel
+                      bordered
+                      style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
+                      <>
+                        <div>
+                          {new Date(currentComment.parentComment?.createdAt).toLocaleString()}
+                        </div>
+                        <p>{currentComment.parentComment.user?.name}:</p>
+                        <RichTextBlock
+                          displayOnly
+                          displayOneLine
+                          disabled
+                          // TODO: remove this
+                          onChange={console.log}
+                          value={
+                            currentComment.parentComment?.revisions[
+                              currentComment.parentComment.revisions.length - 1
+                            ]?.text
+                          }
+                        />
+                      </>
                     </Panel>
                     <div style={{marginTop: 8, marginLeft: 10}}>
                       <Icon icon="reply" rotate={180} />
@@ -407,6 +396,7 @@ export function CommentList() {
                   </DescriptionListItem>
                 </>
               )}
+
               <DescriptionListItem label={t('comments.panels.revisions')}>
                 <Panel bordered shaded>
                   <Timeline align="left">

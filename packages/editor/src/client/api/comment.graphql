@@ -1,3 +1,18 @@
+fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  revisions {
+    text
+    createdAt
+  }
+  createdAt
+  modifiedAt
+}
+
 fragment FullComment on Comment {
   id
 
@@ -16,13 +31,9 @@ fragment FullComment on Comment {
   createdAt
   modifiedAt
 
-  parentID
-}
-
-query Comment($id: ID) {
-  comment(id: $id) {
-    ...FullComment
-  }
+    parentComment {
+      ...FullParentComment
+    }
 }
 
 query CommentList(

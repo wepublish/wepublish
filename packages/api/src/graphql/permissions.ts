@@ -489,7 +489,6 @@ export const AllPermissions: Permission[] = [
   CanDeleteUserRole,
   CanGetPermission,
   CanGetPermissions,
-  CanGetComment,
   CanGetComments,
   CanCreateMemberPlan,
   CanGetMemberPlan,
@@ -512,7 +511,6 @@ export const AllPermissions: Permission[] = [
 ]
 
 export const EditorPermissions: Permission[] = [
-  CanGetComment,
   CanGetComments,
   CanTakeActionOnComment,
   CanCreateAuthor,
