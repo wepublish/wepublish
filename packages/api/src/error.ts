@@ -11,7 +11,7 @@ export enum ErrorCode {
   UserNotActive = 'USER_NOT_ACTIVE',
   NotFound = 'NOT_FOUND',
   EmailAlreadyInUse = 'EMAIL_ALREADY_IN_USE',
-  MonthlyAmountNotEnough = 'MONTHLY_AMOUNT_NOT_ENOUGH',
+  AmountNotEnough = 'AMOUNT_NOT_ENOUGH',
   PaymentConfigurationNotAllowed = 'PAYMENT_CONFIGURATION_NOT_ALLOWED',
   UserInputError = 'USER_INPUT_ERROR',
   DuplicatePageSlug = 'DUPLICATE_PAGE_SLUG'
@@ -77,9 +77,9 @@ export class EmailAlreadyInUseError extends ApolloError {
   }
 }
 
-export class MonthlyAmountNotEnough extends ApolloError {
+export class AmountNotEnough extends ApolloError {
   constructor() {
-    super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
+    super(`Amount is not enough`, ErrorCode.AmountNotEnough)
   }
 }
 

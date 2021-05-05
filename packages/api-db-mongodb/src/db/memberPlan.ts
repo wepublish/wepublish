@@ -36,7 +36,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
       imageID: input.imageID,
       description: input.description,
       active: input.active,
-      amountPerMonthMin: input.amountPerMonthMin,
+      minAmount: input.minAmount,
       availablePaymentMethods: input.availablePaymentMethods
     })
 
@@ -55,7 +55,7 @@ export class MongoDBMemberPlanAdapter implements DBMemberPlanAdapter {
           imageID: input.imageID,
           description: input.description,
           active: input.active,
-          amountPerMonthMin: input.amountPerMonthMin,
+          minAmount: input.minAmount,
           availablePaymentMethods: input.availablePaymentMethods
         }
       },

@@ -83,16 +83,19 @@ function calculateAmountForPeriodicity(
   monthlyAmount: number,
   periodicity: PaymentPeriodicity
 ): number {
-  switch (periodicity) {
-    case PaymentPeriodicity.Monthly:
-      return monthlyAmount
-    case PaymentPeriodicity.Quarterly:
-      return monthlyAmount * 3
-    case PaymentPeriodicity.Biannual:
-      return monthlyAmount * 6
-    case PaymentPeriodicity.Yearly:
-      return monthlyAmount * 12
-  }
+  console.log(periodicity)
+
+  return monthlyAmount
+  //   switch (periodicity) {
+  //     case PaymentPeriodicity.Monthly:
+  //       return monthlyAmount
+  //     case PaymentPeriodicity.Quarterly:
+  //       return monthlyAmount * 3
+  //     case PaymentPeriodicity.Biannual:
+  //       return monthlyAmount * 6
+  //     case PaymentPeriodicity.Yearly:
+  //       return monthlyAmount * 12
+  //   }
 }
 
 export class MemberContext implements MemberContext {
@@ -135,7 +138,7 @@ export class MemberContext implements MemberContext {
       )
       const nextDate = getNextDateForPeriodicity(startDate, userSubscription.paymentPeriodicity)
       const amount = calculateAmountForPeriodicity(
-        userSubscription.monthlyAmount,
+        userSubscription.amount,
         userSubscription.paymentPeriodicity
       )
 

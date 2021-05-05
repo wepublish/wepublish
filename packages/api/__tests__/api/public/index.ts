@@ -332,7 +332,7 @@ export type MemberPlan = {
   slug: Scalars['String']
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
-  amountPerMonthMin: Scalars['Int']
+  minAmount: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
 }
 
@@ -399,7 +399,7 @@ export type MutationRegisterMemberAndReceivePaymentArgs = {
   memberPlanID: Scalars['String']
   autoRenew: Scalars['Boolean']
   paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
+  amount: Scalars['Int']
   paymentMethodID: Scalars['String']
   successURL?: Maybe<Scalars['String']>
   failureURL?: Maybe<Scalars['String']>
@@ -769,7 +769,7 @@ export type UserSubscription = {
   __typename?: 'UserSubscription'
   memberPlan: MemberPlan
   paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
+  amount: Scalars['Int']
   autoRenew: Scalars['Boolean']
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
@@ -780,7 +780,7 @@ export type UserSubscription = {
 export type UserSubscriptionInput = {
   memberPlanID: Scalars['String']
   paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
+  amount: Scalars['Int']
   autoRenew: Scalars['Boolean']
   paymentMethodID: Scalars['String']
 }

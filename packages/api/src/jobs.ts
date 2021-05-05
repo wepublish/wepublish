@@ -10,6 +10,8 @@ export enum JobType {
 
 async function dailyMembershipRenewal(context: Context, data: any): Promise<void> {
   logger('jobs').info('starting dailyMembershipRenewal')
+  logger('jobs').info('-------------------------------------------------')
+  console.log('-----------------------------------------------')
 
   const daysToLookAhead = 7
   const startDate = data?.startDate ? new Date(data?.startDate) : new Date()

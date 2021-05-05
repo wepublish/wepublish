@@ -31,7 +31,7 @@ export const GraphQLUserSubscription = new GraphQLObjectType({
       }
     },
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    amount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
@@ -55,7 +55,7 @@ export const GraphQLPublicUserSubscription = new GraphQLObjectType({
       }
     },
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    amount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
@@ -196,7 +196,7 @@ export const GraphQLUserSubscriptionInput = new GraphQLInputObjectType({
   fields: {
     memberPlanID: {type: GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    amount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
@@ -221,7 +221,7 @@ export const GraphQLPublicUserSubscriptionInput = new GraphQLInputObjectType({
   fields: {
     memberPlanID: {type: GraphQLNonNull(GraphQLString)},
     paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+    amount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)}
   }

@@ -349,7 +349,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
     const {
       memberPlanID,
       paymentPeriodicity,
-      monthlyAmount,
+      amount,
       autoRenew,
       startsAt,
       paidUntil,
@@ -368,7 +368,7 @@ export class MongoDBUserAdapter implements DBUserAdapter {
           modifiedAt: new Date(),
           'subscription.memberPlanID': memberPlanID,
           'subscription.paymentPeriodicity': paymentPeriodicity,
-          'subscription.monthlyAmount': monthlyAmount,
+          'subscription.amount': amount,
           'subscription.autoRenew': autoRenew,
           'subscription.startsAt': startsAt,
           'subscription.periods': user.subscription?.periods ?? [],

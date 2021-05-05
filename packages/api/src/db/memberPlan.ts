@@ -31,7 +31,7 @@ export interface MemberPlan {
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly active: boolean
-  readonly amountPerMonthMin: number
+  readonly minAmount: number
   readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 
@@ -41,7 +41,7 @@ export interface MemberPlanInput {
   readonly imageID?: string
   readonly description: RichTextNode[]
   readonly active: boolean
-  readonly amountPerMonthMin: number
+  readonly minAmount: number
   readonly availablePaymentMethods: AvailablePaymentMethod[]
 }
 

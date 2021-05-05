@@ -49,7 +49,7 @@ export function UserSubscriptionEditPanel({
   const [paymentPeriodicity, setPaymentPeriodicity] = useState<PaymentPeriodicity>(
     subscription?.paymentPeriodicity ?? PaymentPeriodicity.Yearly
   )
-  const [monthlyAmount, setMonthlyAmount] = useState<number>(subscription?.monthlyAmount ?? 0)
+  const [amount, setAmount] = useState<number>(subscription?.amount ?? 0)
   const [autoRenew, setAutoRenew] = useState(subscription?.autoRenew ?? false)
   const [startsAt, setStartsAt] = useState<Date>(
     subscription ? new Date(subscription.startsAt) : new Date()
@@ -125,7 +125,7 @@ export function UserSubscriptionEditPanel({
         userID,
         input: {
           memberPlanID: memberPlan.id,
-          monthlyAmount,
+          amount,
           paymentPeriodicity,
           autoRenew,
           startsAt: startsAt.toISOString(),
@@ -164,22 +164,22 @@ export function UserSubscriptionEditPanel({
               {memberPlan && (
                 <HelpBlock>
                   <DescriptionList>
-                    <DescriptionListItem label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                      {memberPlan.amountPerMonthMin}
+                    <DescriptionListItem label={t('userSubscriptionEdit.memberPlanamount')}>
+                      {memberPlan.minAmount}
                     </DescriptionListItem>
                   </DescriptionList>
                 </HelpBlock>
               )}
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('userSubscriptionEdit.monthlyAmount')}</ControlLabel>
+              <ControlLabel>{t('userSubscriptionEdit.amount')}</ControlLabel>
               <FormControl
-                name={t('userSubscriptionEdit.monthlyAmount')}
-                value={monthlyAmount}
+                name={t('userSubscriptionEdit.amount')}
+                value={amount}
                 type="number"
                 disabled={isDisabled || hasNoMemberPlanSelected}
                 onChange={value => {
-                  setMonthlyAmount(parseInt(`${value}`)) // TODO: fix this
+                  setAmount(parseInt(`${value}`)) // TODO: fix this
                 }}
               />
             </FormGroup>

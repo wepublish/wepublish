@@ -91,7 +91,7 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     },
     description: {type: GraphQLRichText},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    minAmount: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     }
@@ -112,7 +112,7 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
       })
     },
     description: {type: GraphQLRichText},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    minAmount: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicAvailablePaymentMethod)))
     }
@@ -172,7 +172,7 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     imageID: {type: GraphQLID},
     description: {type: GraphQLRichText},
     active: {type: GraphQLNonNull(GraphQLBoolean)},
-    amountPerMonthMin: {type: GraphQLNonNull(GraphQLInt)},
+    minAmount: {type: GraphQLNonNull(GraphQLInt)},
     availablePaymentMethods: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAvailablePaymentMethodInput)))
     }

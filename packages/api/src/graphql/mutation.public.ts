@@ -12,7 +12,7 @@ import {
   InvalidOAuth2TokenError,
   UserNotFoundError,
   NotFound,
-  MonthlyAmountNotEnough,
+  AmountNotEnough,
   PaymentConfigurationNotAllowed,
   NotActiveError,
   EmailAlreadyInUseError,
@@ -162,7 +162,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         memberPlanID: {type: GraphQLNonNull(GraphQLString)},
         autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
         paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-        monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
+        amount: {type: GraphQLNonNull(GraphQLInt)},
         paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
@@ -176,7 +176,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberPlanID,
           autoRenew,
           paymentPeriodicity,
-          monthlyAmount,
+          amount,
           paymentMethodID,
           successURL,
           failureURL
@@ -193,7 +193,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
         if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount < memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (amount < memberPlan.minAmount) throw new AmountNotEnough()
 
         if (
           !memberPlan.availablePaymentMethods.some(apm => {
@@ -227,7 +227,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             paymentMethodID,
             paymentPeriodicity,
             paidUntil: null,
-            monthlyAmount,
+            amount,
             deactivatedAt: null,
             memberPlanID,
             autoRenew
@@ -340,7 +340,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
 
-        const {memberPlanID, paymentPeriodicity, monthlyAmount, autoRenew, paymentMethodID} = input
+        const {memberPlanID, paymentPeriodicity, amount, autoRenew, paymentMethodID} = input
 
         const memberPlan = await loaders.activeMemberPlansByID.load(memberPlanID)
         if (!memberPlan) throw new NotFound('MemberPlan', memberPlanID)
@@ -348,7 +348,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
         if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID)
 
-        if (monthlyAmount <= memberPlan.amountPerMonthMin) throw new MonthlyAmountNotEnough()
+        if (amount <= memberPlan.minAmount) throw new AmountNotEnough()
 
         if (
           !memberPlan.availablePaymentMethods.some(apm => {
@@ -367,7 +367,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             ...user.subscription,
             memberPlanID,
             paymentPeriodicity,
-            monthlyAmount,
+            amount,
             autoRenew,
             paymentMethodID
           }

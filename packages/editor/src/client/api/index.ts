@@ -595,7 +595,7 @@ export type MemberPlan = {
   image?: Maybe<Image>;
   description?: Maybe<Scalars['RichText']>;
   active: Scalars['Boolean'];
-  amountPerMonthMin: Scalars['Int'];
+  minAmount: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
 };
 
@@ -617,7 +617,7 @@ export type MemberPlanInput = {
   imageID?: Maybe<Scalars['ID']>;
   description?: Maybe<Scalars['RichText']>;
   active: Scalars['Boolean'];
-  amountPerMonthMin: Scalars['Int'];
+  minAmount: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
 };
 
@@ -1769,7 +1769,7 @@ export type UserSubscription = {
   __typename?: 'UserSubscription';
   memberPlan: MemberPlan;
   paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
+  amount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -1787,7 +1787,7 @@ export type UserSubscriptionFilter = {
 export type UserSubscriptionInput = {
   memberPlanID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
-  monthlyAmount: Scalars['Int'];
+  amount: Scalars['Int'];
   autoRenew: Scalars['Boolean'];
   startsAt: Scalars['DateTime'];
   paidUntil?: Maybe<Scalars['DateTime']>;
@@ -2603,7 +2603,7 @@ export type MemberPlanRefFragment = (
 
 export type FullMemberPlanFragment = (
   { __typename?: 'MemberPlan' }
-  & Pick<MemberPlan, 'description' | 'amountPerMonthMin'>
+  & Pick<MemberPlan, 'description' | 'minAmount'>
   & { availablePaymentMethods: Array<(
     { __typename?: 'AvailablePaymentMethod' }
     & Pick<AvailablePaymentMethod, 'paymentPeriodicities' | 'forceAutoRenewal'>
@@ -3235,7 +3235,7 @@ export type DeleteTokenMutation = (
 
 export type FullUserSubscriptionFragment = (
   { __typename?: 'UserSubscription' }
-  & Pick<UserSubscription, 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
+  & Pick<UserSubscription, 'paymentPeriodicity' | 'amount' | 'autoRenew' | 'startsAt' | 'paidUntil' | 'deactivatedAt'>
   & { memberPlan: (
     { __typename?: 'MemberPlan' }
     & FullMemberPlanFragment
@@ -3826,7 +3826,7 @@ export const MemberPlanRefFragmentDoc = gql`
 export const FullMemberPlanFragmentDoc = gql`
     fragment FullMemberPlan on MemberPlan {
   description
-  amountPerMonthMin
+  minAmount
   availablePaymentMethods {
     paymentMethods {
       ...FullPaymentMethod
@@ -3844,7 +3844,7 @@ export const FullUserSubscriptionFragmentDoc = gql`
     ...FullMemberPlan
   }
   paymentPeriodicity
-  monthlyAmount
+  amount
   autoRenew
   startsAt
   paidUntil

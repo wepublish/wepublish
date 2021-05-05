@@ -64,7 +64,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
     ListValue<AvailablePaymentMethod>[]
   >([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
-  const [amountPerMonthMin, setAmountPerMonthMin] = useState<number>(500)
+  const [minAmount, setMinAmount] = useState<number>(500)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
@@ -119,7 +119,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
             }))
           : []
       )
-      setAmountPerMonthMin(data.memberPlan.amountPerMonthMin)
+      setMinAmount(data.memberPlan.minAmount)
     }
   }, [data?.memberPlan])
 
@@ -158,7 +158,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            amountPerMonthMin
+            minAmount
           }
         }
       })
@@ -178,7 +178,7 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               forceAutoRenewal: value.forceAutoRenewal,
               paymentMethodIDs: value.paymentMethods.map(pm => pm.id)
             })),
-            amountPerMonthMin
+            minAmount
           }
         }
       })
@@ -216,16 +216,16 @@ export function MemberPlanEditPanel({id, onClose, onSave}: MemberPlanEditPanelPr
               <HelpBlock>{t('memberPlanList.activeDescription')}</HelpBlock>
             </FormGroup>
             <FormGroup>
-              <ControlLabel>{t('memberPlanList.minimumMonthlyAmount')}</ControlLabel>
+              <ControlLabel>{t('memberPlanList.minimumAmount')}</ControlLabel>
               <FormControl
-                name={t('userSubscriptionEdit.minimumMonthlyAmount')}
-                value={amountPerMonthMin}
+                name={t('userSubscriptionEdit.minimumAmount')}
+                value={minAmount}
                 type="number"
                 disabled={isDisabled}
                 min={0}
                 steps={1}
                 onChange={value => {
-                  setAmountPerMonthMin(parseInt(`${value}`))
+                  setMinAmount(parseInt(`${value}`))
                 }}
               />
             </FormGroup>

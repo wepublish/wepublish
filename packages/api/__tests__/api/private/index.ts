@@ -607,7 +607,7 @@ export type MemberPlan = {
   image?: Maybe<Image>
   description?: Maybe<Scalars['RichText']>
   active: Scalars['Boolean']
-  amountPerMonthMin: Scalars['Int']
+  minAmount: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethod>
 }
 
@@ -629,7 +629,7 @@ export type MemberPlanInput = {
   imageID?: Maybe<Scalars['ID']>
   description?: Maybe<Scalars['RichText']>
   active: Scalars['Boolean']
-  amountPerMonthMin: Scalars['Int']
+  minAmount: Scalars['Int']
   availablePaymentMethods: Array<AvailablePaymentMethodInput>
 }
 
@@ -1698,7 +1698,7 @@ export type UserSubscription = {
   __typename?: 'UserSubscription'
   memberPlan: MemberPlan
   paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
+  amount: Scalars['Int']
   autoRenew: Scalars['Boolean']
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
@@ -1716,7 +1716,7 @@ export type UserSubscriptionFilter = {
 export type UserSubscriptionInput = {
   memberPlanID: Scalars['String']
   paymentPeriodicity: PaymentPeriodicity
-  monthlyAmount: Scalars['Int']
+  amount: Scalars['Int']
   autoRenew: Scalars['Boolean']
   startsAt: Scalars['DateTime']
   paidUntil?: Maybe<Scalars['DateTime']>
