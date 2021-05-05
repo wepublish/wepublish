@@ -123,28 +123,51 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
 
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
-    const sortDirection = limit.type === LimitType.First ? order : -order
+    // const sortDirection = limit.type === LimitType.First ? order : -order
 
-    const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
+    // const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
-    const expr =
-      order === SortOrder.Ascending
-        ? cursor.type === InputCursorType.After
-          ? '$gt'
-          : '$lt'
-        : cursor.type === InputCursorType.After
-        ? '$lt'
-        : '$gt'
+    this.comments.aggregate([
+      { "$project": {
+          "weight": { "$cond": [
+              { "$eq": ["state" , CommentState.PendingApproval] },
+              4, 
+              { "$cond": [
+                  { "$eq": ["state", CommentState.PendingUserChanges] },
+                  3,
+                  { "$cond": [
+                      { "$eq": ["state", CommentState.Approved] },
+                      2,
+                      {"$cond": [
+                        { "$eq": ["state", CommentState.Rejected] },
+                      1,
+                      0
+                      ]},
+                  ]},
+              ]}, 
+          ]}
+      }},
+      { "$sort": { "weight": -1 } }
+    ])
 
-    const sortField = commentSortFieldForSort(sort)
-    const cursorFilter = cursorData
-      ? {
-          $or: [
-            {[sortField]: {[expr]: cursorData.date}},
-            {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
-          ]
-        }
-      : {}
+    // const expr =
+    //   order === SortOrder.Ascending
+    //     ? cursor.type === InputCursorType.After
+    //       ? '$gt'
+    //       : '$lt'
+    //     : cursor.type === InputCursorType.After
+    //     ? '$lt'
+    //     : '$gt'
+
+    // const sortField = commentSortFieldForSort(sort)
+    // const cursorFilter = cursorData
+    //   ? {
+    //       $or: [
+    //         {[sortField]: {[expr]: cursorData.date}},
+    //         {_id: {[expr]: cursorData.id}, [sortField]: cursorData.date}
+    //       ]
+    //     }
+    //   : {}
 
     const [totalCount, comments] = await Promise.all([
       this.comments.countDocuments({}, {
@@ -154,8 +177,8 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       this.comments
         .aggregate([], {collation: {locale: this.locale, strength: 2}})
         .match(metaFilters.length ? {$and: metaFilters} : {})
-        .match(cursorFilter)
-        .sort({[sortField]: sortDirection, _id: sortDirection})
+        // .match(cursorFilter)
+        // .sort({[sortField]: sortDirection, _id: sortDirection})
         .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
