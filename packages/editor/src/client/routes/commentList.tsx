@@ -94,7 +94,7 @@ export function CommentList() {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   const [filter, setFilter] = useState('')
@@ -117,8 +117,8 @@ export function CommentList() {
   const commentListVariables = {
     first: limit,
     skip: page - 1,
-    // sort: mapColumFieldToGraphQLField(sortField),
-    // order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    sort: mapColumFieldToGraphQLField(sortField),
+    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
   }
 
   const {data, refetch, loading: isLoading} = useCommentListQuery({
@@ -130,8 +130,8 @@ export function CommentList() {
     refetch({
       first: limit,
       skip: page - 1,
-      // sort: mapColumFieldToGraphQLField(sortField),
-      // order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
     })
   }, [filter, page, limit, sortOrder, sortField])
 
@@ -219,16 +219,15 @@ export function CommentList() {
           style={{marginTop: '20px'}}
           loading={isLoading}
           data={comments}
-          // sortColumn={sortField}
-          // sortType={sortOrder}
-          // onSortColumn={(sortColumn, sortType) => {
-          //   setSortOrder(sortType)
-          //   setSortField(sortColumn)
-          // }}
-          >
+          sortColumn={sortField}
+          sortType={sortOrder}
+          onSortColumn={(sortColumn, sortType) => {
+            setSortOrder(sortType)
+            setSortField(sortColumn)
+          }}>
           <Column width={350} align="left" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
-            <Cell dataKey="createdAt">
+            <Cell dataKey="revisions">
               {(rowData: FullCommentFragment) => (
                 <>
                   {rowData?.revisions?.length ? (
