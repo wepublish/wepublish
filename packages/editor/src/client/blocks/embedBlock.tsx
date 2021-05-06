@@ -13,6 +13,7 @@ import {SoundCloudTrackEmbed} from './embeds/soundCloud'
 import {InstagramPostEmbed} from './embeds/instagram'
 import {TwitterTweetEmbed} from './embeds/twitter'
 import {FacebookPostEmbed, FacebookVideoEmbed} from './embeds/facebook'
+import {PolisEmbed} from './embeds/polis'
 import {IframeEmbed} from './embeds/iframe'
 
 import {useTranslation} from 'react-i18next'
@@ -106,6 +107,9 @@ export function EmbedPreview({value}: EmbedPreviewProps) {
 
     case EmbedType.SoundCloudTrack:
       return <SoundCloudTrackEmbed trackID={value.trackID} />
+
+    case EmbedType.PolisConversation:
+      return <PolisEmbed conversationID={value.conversationID} />
 
     default:
       return value.url ? (
