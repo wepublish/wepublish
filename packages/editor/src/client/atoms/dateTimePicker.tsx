@@ -90,9 +90,9 @@ export function DateTimePicker({
               {
                 label: t('dateTimePicker.hour', {hour: '5'}),
                 value: () => {
-                  const date = new Date()
-                  date.setHours(5, 0, 0)
-                  return date
+                  const time = new Date()
+                  time.setHours(5, 0, 0)
+                  return time
                 }
               },
               {
