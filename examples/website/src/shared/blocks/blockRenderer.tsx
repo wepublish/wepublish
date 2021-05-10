@@ -30,9 +30,9 @@ export interface BlockRendererProps {
 export function BlockRenderer({blocks, children, ...props}: BlockRendererProps) {
   return (
     <>
-      {blocks.map(block =>
+      {blocks.map((block, index) =>
         block ? (
-          <React.Fragment key={block.key}>
+          <React.Fragment key={index}>
             {children ? children(renderBlock(block, props)) : renderBlock(block, props)}
           </React.Fragment>
         ) : null
