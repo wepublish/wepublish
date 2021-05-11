@@ -11,6 +11,7 @@ export enum BlockType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   Embed = 'embed',
   Quote = 'quote',
   Image = 'image',
@@ -77,6 +78,11 @@ export interface YouTubeVideoBlock {
 export interface SoundCloudTrackBlock {
   type: BlockType.SoundCloudTrack
   trackID: string
+}
+
+export interface PolisConversationBlock {
+  type: BlockType.PolisConversation
+  conversationID: string
 }
 
 export interface EmbedBlock {
@@ -193,6 +199,7 @@ export type ArticleBlock =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | PolisConversationBlock
   | TeaserGridBlock
 
 export type PageBlock = ArticleBlock
