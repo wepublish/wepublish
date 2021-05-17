@@ -64,17 +64,6 @@ export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
 
-  const initialValueBasicElements: any = [
-    {
-      type: options[ELEMENT_H1].type,
-      children: [{text: '🧱 Elements'}]
-    },
-    {
-      type: options[ELEMENT_H2].type,
-      children: [{text: '🔥 Basic Elements'}]
-    }
-  ]
-
   const plugins = [
     ...createBasicElementPlugins(),
     createReactPlugin(),
@@ -118,7 +107,7 @@ export default function DreifussWysiwygEditor(props: any) {
       components={components}
       options={options}
       editableProps={editableProps}
-      initialValue={props.value || initialValueBasicElements}>
+      initialValue={props.value || props.initialValue}>
       <HeadingToolbar>
         <ToolbarButtonsBasicElements />
         <Divider type={DividerType.vertical} />
