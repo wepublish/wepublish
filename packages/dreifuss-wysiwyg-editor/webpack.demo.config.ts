@@ -4,29 +4,16 @@ import path from 'path'
 export default (env: any, {mode}: any) =>
   ({
     entry: {
-      index: ['./src/index.ts']
+      DreifussWysiwygEditorDemo: [path.resolve(__dirname, './src/DreifussWysiwygEditorDemo.tsx')]
     },
     output: {
-      path: path.resolve(__dirname, '/lib'),
-      filename: '[name].js',
-      libraryTarget: 'umd',
-      library: 'DreifussWysiwygEditor'
+      path: path.resolve(__dirname, './demo'),
+      filename: 'bundle.js'
     },
     resolve: {
-      extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx']
-    },
-    externals: {
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react'
-      },
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs: 'react-dom',
-        commonjs2: 'react-dom',
-        amd: 'react-dom'
+      extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx'],
+      alias: {
+        'react/jsx-runtime': require.resolve('jsx-runtime')
       }
     },
     stats: {
@@ -48,8 +35,17 @@ export default (env: any, {mode}: any) =>
             presets: [
               '@babel/preset-react',
               '@babel/preset-typescript',
-              ['@babel/preset-env', {modules: false}],
-              ['rsuite', {style: true, theme: 'default'}]
+              [
+                '@babel/preset-env',
+                {
+                  modules: false,
+                  targets: [
+                    'last 2 Chrome versions',
+                    'last 2 Safari versions',
+                    'last 2 Firefox versions'
+                  ]
+                }
+              ]
             ],
             plugins: [
               '@babel/plugin-syntax-dynamic-import',
@@ -60,5 +56,12 @@ export default (env: any, {mode}: any) =>
           }
         }
       ]
-    }
+    },
+    devServer: {
+      contentBase: './demo',
+      historyApiFallback: true,
+      open: true,
+      hot: true
+    },
+    plugins: [new webpack.HotModuleReplacementPlugin()]
   } as webpack.Configuration)

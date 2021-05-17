@@ -1,7 +1,5 @@
-
 src/
 __tests__/
 .eslintrc
-.babelrc
 webpack.config.ts
-webpack.demo.config.js
+webpack.demo.config.ts

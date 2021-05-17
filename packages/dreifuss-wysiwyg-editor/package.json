@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack.demo.config.js --progress --mode development --hot",
-    "build-demo": "webpack --config webpack.demo.config.js --progress --mode production",
+    "start": "webpack-dev-server --config webpack.demo.config.ts --progress --mode development --hot",
+    "build-demo": "webpack --config webpack.demo.config.ts --progress --mode production",
     "build-component": "webpack --progress --mode production",
     "build": "npm run build-component && npm run build-demo",
     "prepublish": "npm run build",

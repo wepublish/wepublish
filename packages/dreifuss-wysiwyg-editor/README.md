@@ -12,4 +12,7 @@
       <div>
         <DreifussWysiwygEditor />
       </div>
-    );    t
+    )
+
+## TODO
+- Implement typescript checking
