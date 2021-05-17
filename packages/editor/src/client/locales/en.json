@@ -525,7 +525,7 @@
           "close": "Close",
           "confirm": "Confirm",
           "embed": "Embed",
-          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g.",
           "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",

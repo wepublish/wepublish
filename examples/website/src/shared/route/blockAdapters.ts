@@ -207,6 +207,16 @@ function getBlocks(blocks: any, articleMeta?: ArticleMeta, pageMeta?: PageMeta):
           }
         }
 
+      case 'PolisConversationBlock':
+        return {
+          type: BlockType.Embed,
+          key: index,
+          value: {
+            type: EmbedType.PolisConversation,
+            conversationID: block.conversationID
+          }
+        }
+
       case 'EmbedBlock':
         return {
           type: BlockType.Embed,

@@ -147,7 +147,11 @@ export function ArticleList() {
           <Column width={200} align="left" resizable sortable>
             <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
-              {({modifiedAt}: ArticleRefFragment) => new Date(modifiedAt).toDateString()}
+              {({modifiedAt}: ArticleRefFragment) =>
+                `${new Date(modifiedAt).toDateString()} ${new Date(
+                  modifiedAt
+                ).toLocaleTimeString()}`
+              }
             </Cell>
           </Column>
           <Column width={400} align="left" resizable>
