@@ -140,6 +140,7 @@ export type Block =
   | VimeoVideoBlock
   | YouTubeVideoBlock
   | SoundCloudTrackBlock
+  | PolisConversationBlock
   | EmbedBlock
   | LinkPageBreakBlock
   | TitleBlock
@@ -565,6 +566,11 @@ export type Point = {
   y: Scalars['Float']
 }
 
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock'
+  conversationID: Scalars['String']
+}
+
 export type PublicProperties = {
   __typename?: 'PublicProperties'
   key: Scalars['String']
@@ -851,6 +857,7 @@ export type ArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -898,6 +905,7 @@ export type PeerArticleQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)
@@ -1027,6 +1035,8 @@ type FullBlock_SoundCloudTrackBlock_Fragment = {__typename: 'SoundCloudTrackBloc
   'trackID'
 >
 
+type FullBlock_PolisConversationBlock_Fragment = {__typename: 'PolisConversationBlock'}
+
 type FullBlock_EmbedBlock_Fragment = {__typename: 'EmbedBlock'} & Pick<
   EmbedBlock,
   'url' | 'title' | 'width' | 'height' | 'styleCustom'
@@ -1068,6 +1078,7 @@ export type FullBlockFragment =
   | FullBlock_VimeoVideoBlock_Fragment
   | FullBlock_YouTubeVideoBlock_Fragment
   | FullBlock_SoundCloudTrackBlock_Fragment
+  | FullBlock_PolisConversationBlock_Fragment
   | FullBlock_EmbedBlock_Fragment
   | FullBlock_LinkPageBreakBlock_Fragment
   | FullBlock_TitleBlock_Fragment
@@ -1166,6 +1177,7 @@ export type PageQuery = {__typename?: 'Query'} & {
           | ({__typename?: 'VimeoVideoBlock'} & FullBlock_VimeoVideoBlock_Fragment)
           | ({__typename?: 'YouTubeVideoBlock'} & FullBlock_YouTubeVideoBlock_Fragment)
           | ({__typename?: 'SoundCloudTrackBlock'} & FullBlock_SoundCloudTrackBlock_Fragment)
+          | ({__typename?: 'PolisConversationBlock'} & FullBlock_PolisConversationBlock_Fragment)
           | ({__typename?: 'EmbedBlock'} & FullBlock_EmbedBlock_Fragment)
           | ({__typename?: 'LinkPageBreakBlock'} & FullBlock_LinkPageBreakBlock_Fragment)
           | ({__typename?: 'TitleBlock'} & FullBlock_TitleBlock_Fragment)

@@ -88,11 +88,11 @@ export function DateTimePicker({
                 value: new Date()
               },
               {
-                label: t('dateTimePicker.hour', {hour: '6'}),
+                label: t('dateTimePicker.hour', {hour: '5'}),
                 value: () => {
-                  const six = new Date()
-                  six.setHours(6, 0, 0)
-                  return six
+                  const time = new Date()
+                  time.setHours(5, 0, 0)
+                  return time
                 }
               },
               {
