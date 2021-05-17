@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["./**/*"],
+  "exclude": ["./__mocks__"],
+  "compilerOptions": {
+    "types": ["@types/node", "@types/webpack-dev-server", "@types/jest"],
+    "esModuleInterop": true,
+    "lib": ["ES2017", "ES2018", "ES2019", "dom", "dom.iterable"]
+  }
+}

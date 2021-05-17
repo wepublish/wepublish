@@ -1,5 +1,5 @@
-import React from 'react'
-import {createBasicElementPlugins} from '@udecode/slate-plugins'
+import React, {useMemo} from 'react'
+import {createBasicElementPlugins, SPEditor} from '@udecode/slate-plugins'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
 import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
 import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
@@ -31,6 +31,10 @@ import {
   ToolbarButtonsTable
 } from './Toolbar'
 import {H1} from './Icons'
+import {ReactEditor} from 'slate-react'
+import {HistoryEditor} from 'slate-history'
+
+type TEditor = SPEditor & ReactEditor & HistoryEditor
 
 export const editableProps = {
   // placeholder: 'Enter some rich text…',
@@ -56,7 +60,7 @@ const Divider = (props: DividerProps) => (
   />
 )
 
-export function DreifussWysiwygEditor(props: any) {
+export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
 
@@ -132,5 +136,3 @@ export function DreifussWysiwygEditor(props: any) {
     </SlatePlugins>
   )
 }
-
-export default DreifussWysiwygEditor

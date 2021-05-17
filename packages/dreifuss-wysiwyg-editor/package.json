@@ -57,23 +57,14 @@
     "@babel/preset-typescript": "^7.13.0",
     "@types/flux": "^3.1.9",
     "@types/jest": "^26.0.22",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
-    "eslint": "^7.24.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-react-hooks": "^4.2.0",
     "jest-cli": "^26.6.3",
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.2",
@@ -120,12 +111,74 @@
     "@udecode/slate-plugins-table": "^1.0.0-alpha.25",
     "@udecode/slate-plugins-table-ui": "^1.0.0-alpha.25",
     "@udecode/slate-plugins-trailing-block": "^1.0.0-alpha.25",
+    "jsx-runtime": "^1.2.0",
     "prop-types": "^15.7.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "slate": "^0.62.0",
     "slate-history": "^0.62.0",
     "slate-hyperscript": "^0.62.0",
     "slate-react": "^0.62.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "../../package.json"
+    ],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
+        }
+      }
+    },
+    "rules": {
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [
+            ".js",
+            ".ts",
+            ".tsx"
+          ]
+        }
+      ],
+      "import/prefer-default-export": "off",
+      "react/no-find-dom-node": 0,
+      "class-methods-use-this": "off",
+      "jsx-a11y/anchor-is-valid": [
+        "error",
+        {
+          "components": [
+            "Link"
+          ],
+          "specialLink": [
+            "to",
+            "hrefLeft",
+            "hrefRight"
+          ],
+          "aspects": [
+            "noHref",
+            "invalidHref",
+            "preferButton"
+          ]
+        }
+      ],
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ]
+    }
   }
 }

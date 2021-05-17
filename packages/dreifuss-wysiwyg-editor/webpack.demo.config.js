@@ -10,20 +10,26 @@ const config = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      'react/jsx-runtime': require.resolve('jsx-runtime')
+    }
+  },
+  stats: {
+    errorDetails: true
   },
   module: {
     rules: [
-      {
-        test: /.(ts|tsx|js|jsx)$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
       {
         test: /\.m?js/,
         resolve: {
           fullySpecified: false
         }
+      },
+      {
+        test: /.(ts|tsx|js|jsx)$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
       }
     ]
   },
