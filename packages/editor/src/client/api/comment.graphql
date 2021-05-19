@@ -31,8 +31,8 @@ fragment FullComment on Comment {
   createdAt
   modifiedAt
 
-    parentComment {
-      ...FullParentComment
+  parentComment {
+    ...FullParentComment
     }
 }
 
