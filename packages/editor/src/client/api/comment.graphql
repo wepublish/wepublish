@@ -33,7 +33,7 @@ fragment FullComment on Comment {
 
   parentComment {
     ...FullParentComment
-    }
+  }
 }
 
 query CommentList(
