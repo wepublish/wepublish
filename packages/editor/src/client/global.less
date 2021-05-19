@@ -4,29 +4,36 @@
     background-color: #f2faff;
   }
 
-  &-hover &-row.approved:not(&-row-header):hover,
-  &-hover &-row.approved:hover &-cell-group,
-  &-hover &-row.approved:hover &-cell {
+  &-row.approved:not(&-row-header),
+  &-row.approved &-cell-group,
+  &-row.approved &-cell {
     background: rgb(225, 248, 222);
   }
 
-  &-hover &-row.pending-user:not(&-row-header):hover,
-  &-hover &-row.pending-user:hover &-cell-group,
-  &-hover &-row.pending-user:hover &-cell {
+  &-row.pending-user:not(&-row-header),
+  &-row.pending-user &-cell-group,
+  &-row.pending-user &-cell {
     background: rgb(248, 239, 222);
   }
 
-  &-hover &-row.pending-approval:not(&-row-header):hover,
-  &-hover &-row.pending-approval:hover &-cell-group,
-  &-hover &-row.pending-approval:hover &-cell {
+  &-row.pending-approval:not(&-row-header),
+  &-row.pending-approval &-cell-group,
+  &-row.pending-approval &-cell {
     background: rgb(248, 222, 242);
   }
 
-  &-hover &-row.rejected:not(&-row-header),
-  &-hover &-row.rejected &-cell-group,
-  &-hover &-row.rejected &-cell {
+  &-row.rejected:not(&-row-header),
+  &-row.rejected &-cell-group,
+  &-row.rejected &-cell {
     background: rgb(83, 85, 83);
     color: white;
+    text-decoration: line-through;
+  }
+
+  &-hover &-row.rejected:not(&-row-header):hover,
+  &-hover &-row.rejected:hover &-cell-group,
+  &-hover &-row.rejected:hover &-cell {
+    color: rgb(83, 85, 83);
     text-decoration: line-through;
   }
 }

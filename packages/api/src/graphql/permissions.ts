@@ -171,12 +171,6 @@ export const CanTakeActionOnComment: Permission = {
   deprecated: false
 }
 
-export const CanGetComment: Permission = {
-  id: 'CAN_GET_COMMENT',
-  description: 'Allows to get comment',
-  deprecated: false
-}
-
 export const CanGetComments: Permission = {
   id: 'CAN_GET_COMMENTS',
   description: 'Allows to get all comments',
