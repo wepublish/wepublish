@@ -1,5 +1,5 @@
-import React, {useMemo} from 'react'
-import {createBasicElementPlugins, SPEditor} from '@udecode/slate-plugins'
+import React from 'react'
+import {createBasicElementPlugins, SPEditor, ToolbarLink} from '@udecode/slate-plugins'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
 import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
 import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
@@ -7,12 +7,15 @@ import {
   createBoldPlugin,
   createItalicPlugin,
   createCodePlugin,
-  createUnderlinePlugin
+  createUnderlinePlugin,
+  createStrikethroughPlugin,
+  createSubscriptPlugin,
+  createSuperscriptPlugin
 } from '@udecode/slate-plugins-basic-marks'
 import {createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
 import {createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
 import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/slate-plugins-core'
-import {createHeadingPlugin, ELEMENT_H1, ELEMENT_H2} from '@udecode/slate-plugins-heading'
+import {createHeadingPlugin} from '@udecode/slate-plugins-heading'
 import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
 import {createImagePlugin} from '@udecode/slate-plugins-image'
 import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
@@ -30,7 +33,7 @@ import {
   ToolbarButtonsList,
   ToolbarButtonsTable
 } from './Toolbar'
-import {H1} from './Icons'
+import {H1, Link} from './Icons'
 import {ReactEditor} from 'slate-react'
 import {HistoryEditor} from 'slate-history'
 
@@ -82,11 +85,13 @@ export default function DreifussWysiwygEditor(props: any) {
     createItalicPlugin(),
     createUnderlinePlugin(),
     createAlignPlugin(),
-    createListPlugin(),
     createCodePlugin(),
     createImagePlugin(),
     createHighlightPlugin(),
-    createUnderlinePlugin()
+    createUnderlinePlugin(),
+    createStrikethroughPlugin(),
+    createSubscriptPlugin(),
+    createSuperscriptPlugin()
     //   createNormalizeTypesPlugin({
     //     rules: [{path: [0, 0], strictType: options[ELEMENT_H1].type}]
     //   }),
@@ -117,7 +122,7 @@ export default function DreifussWysiwygEditor(props: any) {
         <Divider type={DividerType.vertical} />
         <ToolbarButtonsAlign />
         <Divider type={DividerType.vertical} />
-        {/* <ToolbarLink icon={<Link />} /> */}
+        <ToolbarLink icon={<Link />} />
         {/* TODO: icon to be changed */}
         <ToolbarImage icon={<H1 />} />
         <ToolbarButtonsTable />
