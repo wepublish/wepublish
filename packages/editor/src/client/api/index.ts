@@ -236,7 +236,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  parentID?: Maybe<Scalars['ID']>;
+  parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -2436,6 +2436,18 @@ type FullBlock_TeaserGridBlock_Fragment = (
 
 export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
 
+export type FullParentCommentFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & FullUserFragment
+  ), revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & Pick<CommentRevision, 'text' | 'createdAt'>
+  )> }
+);
+
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
   & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
@@ -2445,6 +2457,9 @@ export type FullCommentFragment = (
   ), revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
+  )>, parentComment?: Maybe<(
+    { __typename?: 'Comment' }
+    & FullParentCommentFragment
   )> }
 );
 
@@ -3909,8 +3924,8 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
-export const FullCommentFragmentDoc = gql`
-    fragment FullComment on Comment {
+export const FullParentCommentFragmentDoc = gql`
+    fragment FullParentComment on Comment {
   id
   state
   rejectionReason
@@ -3925,6 +3940,26 @@ export const FullCommentFragmentDoc = gql`
   modifiedAt
 }
     ${FullUserFragmentDoc}`;
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  revisions {
+    text
+    createdAt
+  }
+  createdAt
+  modifiedAt
+  parentComment {
+    ...FullParentComment
+  }
+}
+    ${FullUserFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
