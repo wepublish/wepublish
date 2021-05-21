@@ -268,7 +268,7 @@ const richTextAdapter = (val: any) => {
 const DreifussWysiwygEditorDemo = () => (
   <div>
     <h1>React Component Demo</h1>
-    <DreifussWysiwygEditor initialValue={richTextAdapter(wePublishCurrentValue)} />
+    <DreifussWysiwygEditor initialValue={richTextAdapter(wePublishCurrentValue)} showCharCount/>
   </div>
 )
 

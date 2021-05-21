@@ -36,14 +36,25 @@ import {
 import {H1, Link} from './Icons'
 import {ReactEditor} from 'slate-react'
 import {HistoryEditor} from 'slate-history'
+import { createEditor } from 'slate'
 
 type TEditor = SPEditor & ReactEditor & HistoryEditor
 
-export const editableProps = {
-  // placeholder: 'Enter some rich text…',
-  spellCheck: false,
-  autoFocus: true
+export interface EditableProps {
+  displayOnly?: boolean
+  showCharCount?: boolean
+  displayOneLine?: boolean
 }
+
+// export const editableProps = {
+//   // placeholder: 'Enter some rich text…',
+//   spellCheck: false,
+//   autoFocus: true,
+//   // displayOnly: false,
+//   // displayOneLine: false,
+//   // showCharCount: false,
+//   readOnly: true
+// }
 
 enum DividerType {
   horizontal = 'Horizontal',
@@ -63,9 +74,38 @@ const Divider = (props: DividerProps) => (
   />
 )
 
+// const charCount = editor => {
+//   // const { isVoid } = editor
+
+//   // editor.isVoid = element => {
+//   //   return element.type === 'image' ? true : isVoid(element)
+//   // }
+
+//   return editor.length
+// }
+
+// const editor = charCount(createEditor())
+
 export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
+  const charCount = 10;
+
+  const editableProps = {
+    // placeholder: 'Enter some rich text…',
+    spellCheck: false,
+    autoFocus: true,
+    showCount: props.showCharCount ?? false,
+    readOnly: props.displayOnly ?? false,
+    style: props.displayOneLine
+      ? {
+          // whiteSpace: 'nowrap',
+          // overflow: 'hidden',
+          // textOverflow: 'ellipsis',
+          color: 'red'
+        }
+      : {}
+  }
 
   const plugins = [
     ...createBasicElementPlugins(),
@@ -113,20 +153,23 @@ export default function DreifussWysiwygEditor(props: any) {
       options={options}
       editableProps={editableProps}
       initialValue={props.value || props.initialValue}>
-      <HeadingToolbar>
-        <ToolbarButtonsBasicElements />
-        <Divider type={DividerType.vertical} />
-        <ToolbarButtonsList />
-        <Divider type={DividerType.vertical} />
-        <ToolbarButtonsBasicMarks />
-        <Divider type={DividerType.vertical} />
-        <ToolbarButtonsAlign />
-        <Divider type={DividerType.vertical} />
-        <ToolbarLink icon={<Link />} />
-        {/* TODO: icon to be changed */}
-        <ToolbarImage icon={<H1 />} />
-        <ToolbarButtonsTable />
-      </HeadingToolbar>
+      {!editableProps.readOnly && (
+        <HeadingToolbar>
+          <ToolbarButtonsBasicElements />
+          <Divider type={DividerType.vertical} />
+          <ToolbarButtonsList />
+          <Divider type={DividerType.vertical} />
+          <ToolbarButtonsBasicMarks />
+          <Divider type={DividerType.vertical} />
+          <ToolbarButtonsAlign />
+          <Divider type={DividerType.vertical} />
+          <ToolbarLink icon={<Link />} />
+          {/* TODO: icon to be changed */}
+          <ToolbarImage icon={<H1 />} />
+          <ToolbarButtonsTable />
+        </HeadingToolbar>
+      )}
+      {editableProps.showCount && <p style={{textAlign: 'right'}}>{charCount}</p>}
     </SlatePlugins>
   )
 }
