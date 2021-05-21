@@ -161,6 +161,7 @@
         "untitled": "Untitled",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
+        "parent": "Parent",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
         "requestChangesOnComment": "Request Changes On Comment",
