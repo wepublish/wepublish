@@ -29,9 +29,6 @@ import {
 import {SlatePluginOptions} from '@udecode/slate-plugins-core'
 import {MARK_SEARCH_HIGHLIGHT} from '@udecode/slate-plugins-find-replace'
 import {
-  DEFAULTS_H1,
-  DEFAULTS_H2,
-  DEFAULTS_H3,
   ELEMENT_H1,
   ELEMENT_H2,
   ELEMENT_H3,
@@ -52,9 +49,8 @@ import {
 } from '@udecode/slate-plugins-list'
 import {ELEMENT_MEDIA_EMBED} from '@udecode/slate-plugins-media-embed'
 import {ELEMENT_MENTION} from '@udecode/slate-plugins-mention'
-import {DEFAULTS_PARAGRAPH, ELEMENT_PARAGRAPH} from '@udecode/slate-plugins-paragraph'
+import {ELEMENT_PARAGRAPH} from '@udecode/slate-plugins-paragraph'
 import {
-  DEFAULTS_TD,
   DEFAULTS_TH,
   ELEMENT_TABLE,
   ELEMENT_TD,
@@ -115,25 +111,51 @@ export const createSlatePluginsOptions = <T extends string = string>(
     [ELEMENT_BLOCKQUOTE]: DEFAULTS_BLOCKQUOTE,
     [ELEMENT_CODE_BLOCK]: DEFAULTS_CODE_BLOCK,
     [ELEMENT_CODE_LINE]: {},
-    [ELEMENT_H1]: DEFAULTS_H1,
-    [ELEMENT_H2]: DEFAULTS_H2,
-    [ELEMENT_H3]: DEFAULTS_H3,
-    [ELEMENT_H4]: {},
-    [ELEMENT_H5]: {},
-    [ELEMENT_H6]: {},
-    [ELEMENT_IMAGE]: {},
-    [ELEMENT_LI]: {},
-    [ELEMENT_LINK]: {},
+    [ELEMENT_PARAGRAPH]: {
+      type: 'paragraph',
+      defaultType: 'paragraph'
+    },
+    [ELEMENT_H1]: {
+      type: 'heading-one',
+      defaultType: 'heading-one'
+    },
+    [ELEMENT_H2]: {
+      type: 'heading-two',
+      defaultType: 'heading-two'
+    },
+    [ELEMENT_H3]: {
+      type: 'heading-three',
+      defaultType: 'heading-three'
+    },
+    [ELEMENT_UL]: {
+      type: 'unordered-list',
+      defaultType: 'unordered-list'
+    },
+    [ELEMENT_LI]: {
+      type: 'list-item',
+      defaultType: 'list-item'
+    },
+    [ELEMENT_LINK]: {
+      type: 'link',
+      defaultType: 'link'
+    },
     [ELEMENT_MEDIA_EMBED]: {},
     [ELEMENT_MENTION]: {},
-    [ELEMENT_OL]: {},
-    [ELEMENT_PARAGRAPH]: DEFAULTS_PARAGRAPH,
+    [ELEMENT_OL]: {
+      type: 'ordered-list',
+      defaultType: 'ordered-list'
+    },
     [ELEMENT_TABLE]: {},
-    [ELEMENT_TD]: DEFAULTS_TD,
+    [ELEMENT_TD]: {
+      type: 'table-cell',
+      defaultType: 'table-cell'
+    },
+    [ELEMENT_TR]: {
+      type: 'table-row',
+      defaultType: 'table-row'
+    },
     [ELEMENT_TH]: DEFAULTS_TH,
     [ELEMENT_TODO_LI]: DEFAULTS_TODO_LIST,
-    [ELEMENT_TR]: {},
-    [ELEMENT_UL]: {},
     [MARK_BOLD]: DEFAULTS_BOLD,
     [MARK_CODE]: DEFAULTS_CODE,
     [MARK_HIGHLIGHT]: DEFAULTS_HIGHLIGHT,
@@ -143,7 +165,8 @@ export const createSlatePluginsOptions = <T extends string = string>(
     [MARK_STRIKETHROUGH]: DEFAULTS_STRIKETHROUGH,
     [MARK_SUBSCRIPT]: DEFAULTS_SUBSCRIPT,
     [MARK_SUPERSCRIPT]: DEFAULTS_SUPERSCRIPT,
-    [MARK_UNDERLINE]: DEFAULTS_UNDERLINE
+    [MARK_UNDERLINE]: DEFAULTS_UNDERLINE,
+    [ELEMENT_IMAGE]: {}
   }
 
   if (overrides) {

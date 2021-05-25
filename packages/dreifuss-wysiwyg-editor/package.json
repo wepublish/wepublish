@@ -65,9 +65,11 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.4",
     "jest-cli": "^26.6.3",
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.2",
+    "style-loader": "^2.0.0",
     "typescript": "^4.2.4",
     "webpack": "^5.31.2",
     "webpack-bundle-analyzer": "^4.4.0",
@@ -111,6 +113,7 @@
     "@udecode/slate-plugins-table": "^1.0.0-alpha.25",
     "@udecode/slate-plugins-table-ui": "^1.0.0-alpha.25",
     "@udecode/slate-plugins-trailing-block": "^1.0.0-alpha.25",
+    "emoji-mart": "^3.0.1",
     "jsx-runtime": "^1.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
@@ -137,6 +140,12 @@
       }
     },
     "rules": {
+      "react/display-name": [
+        0
+      ],
+      "react/prop-types": [
+        0
+      ],
       "@typescript-eslint/explicit-function-return-type": "off",
       "react/jsx-filename-extension": [
         1,

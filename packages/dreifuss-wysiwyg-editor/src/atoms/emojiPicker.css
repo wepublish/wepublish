@@ -1,0 +1,14 @@
+@import '~emoji-mart/css/emoji-mart.css';
+
+.emoji-mart-bar:last-child {
+  display: none;
+}
+
+.emoji-mart-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* override height */
+  height: 12em;
+  padding: 0 6px 6px 6px;
+  will-change: transform;
+}

@@ -31,7 +31,8 @@ import {
   ToolbarButtonsBasicElements,
   ToolbarButtonsBasicMarks,
   ToolbarButtonsList,
-  ToolbarButtonsTable
+  ToolbarButtonsTable,
+  ToolbarEmoji
 } from './Toolbar'
 import {H1, Link} from './Icons'
 import {ReactEditor} from 'slate-react'
@@ -74,7 +75,7 @@ export default function DreifussWysiwygEditor(props: any) {
     createParagraphPlugin(),
     createBlockquotePlugin(),
     createTodoListPlugin(),
-    createHeadingPlugin(),
+    createHeadingPlugin({levels: 3}),
     createImagePlugin(),
     createLinkPlugin(),
     createListPlugin(),
@@ -126,6 +127,7 @@ export default function DreifussWysiwygEditor(props: any) {
         {/* TODO: icon to be changed */}
         <ToolbarImage icon={<H1 />} />
         <ToolbarButtonsTable />
+        {/* <ToolbarEmoji /> */}
       </HeadingToolbar>
     </SlatePlugins>
   )

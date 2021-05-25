@@ -58,7 +58,8 @@ export default (env: any, {mode}: any) =>
               ...(mode === 'production' ? [] : ['react-hot-loader/babel'])
             ]
           }
-        }
+        },
+        {test: /\.css$/, use: ['style-loader', 'css-loader']}
       ]
     }
   } as webpack.Configuration)

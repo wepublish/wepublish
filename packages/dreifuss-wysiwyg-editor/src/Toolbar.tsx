@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {
   H1,
   H2,
@@ -22,7 +22,8 @@ import {
   BorderClear,
   BorderLeft,
   BorderRight,
-  BorderTop
+  BorderTop,
+  Emoji
 } from './Icons'
 import {
   ELEMENT_ALIGN_CENTER,
@@ -46,10 +47,10 @@ import {
   MARK_UNDERLINE
 } from '@udecode/slate-plugins-basic-marks'
 import {ELEMENT_BLOCKQUOTE} from '@udecode/slate-plugins-block-quote'
-import {BlockquoteElement} from '@udecode/slate-plugins-block-quote-ui'
+// import {BlockquoteElement} from '@udecode/slate-plugins-block-quote-ui'
 import {ELEMENT_CODE_BLOCK} from '@udecode/slate-plugins-code-block'
 import {ToolbarCodeBlock} from '@udecode/slate-plugins-code-block-ui'
-import {useSlatePluginType} from '@udecode/slate-plugins-core'
+import {useSlatePluginType, useStoreEditor} from '@udecode/slate-plugins-core'
 import {ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4} from '@udecode/slate-plugins-heading'
 import {ELEMENT_OL, ELEMENT_UL} from '@udecode/slate-plugins-list'
 import {ToolbarList} from '@udecode/slate-plugins-list-ui'
@@ -63,6 +64,127 @@ import {
 } from '@udecode/slate-plugins-table'
 import {ToolbarTable} from '@udecode/slate-plugins-table-ui'
 import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
+import {EmojiPicker} from './atoms/EmojiPicker'
+import {Popover} from './atoms/Popover'
+
+// interface SubMenuContextProps {
+//   closeMenu: () => void
+//   openMenu: () => void
+// }
+
+// const emtpyFn = () => {
+//   /* do nothing */
+// }
+
+// // TODO: check if it's important
+// export const SubMenuContext = createContext<SubMenuContextProps>({
+//   closeMenu: emtpyFn,
+//   openMenu: emtpyFn
+// })
+
+// export interface SubMenuButtonProps {
+//   readonly children?: ReactNode
+//   //   readonly format?: Format
+//   readonly format?: any
+//   readonly icon?: any
+// }
+
+// export const SubMenuButton = forwardRef<any, SubMenuButtonProps>(
+//   ({children, icon, format}, ref) => {
+//     // The Submenu buttons provides some local context to it's children.
+//     const [isMenuOpen, setIsMenuOpen] = useState(false)
+//     const localRef = useRef<any>(null)
+//     // Optional forwarding ref from parent, else use local ref.
+//     const triggerRef = (ref || localRef) as typeof localRef
+
+//     const closeMenu = () => {
+//       triggerRef.current!.close()
+//     }
+
+//     const openMenu = () => {
+//       triggerRef.current!.open()
+//     }
+
+//     const menuRef = useCallback((node: any) => {
+//       setIsMenuOpen(!!node)
+//     }, [])
+
+//     const menu = <Popover ref={menuRef}>{children}</Popover>
+
+//     // const editor = useSlate()
+
+//     return (
+//       <SubMenuContext.Provider
+//         value={{
+//           closeMenu,
+//           openMenu
+//         }}>
+//         <Whisper placement="top" speaker={menu} ref={triggerRef} trigger="none">
+//           <ToolbarButton
+//             // active={isMenuOpen || (format ? WepublishEditor.isFormatActive(editor, format) : false)}
+//             onMouseDown={e => {
+//               e.preventDefault()
+//               isMenuOpen ? closeMenu() : openMenu()
+//             }}>
+//             <Icon
+//               style={{
+//                 minWidth: '15px' // width of close icon (14px) so that element does not change size as long as the provided icon is < 15px.
+//               }}
+//               icon={isMenuOpen ? 'close' : icon}
+//             />
+//           </ToolbarButton>
+//         </Whisper>
+//       </SubMenuContext.Provider>
+//     )
+//   }
+// )
+
+export const SubMenuButton = (props: any) => {
+  const {children} = props
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const handleClick = () => {
+    if (!isMenuOpen) {
+      // attach/remove event handler
+      document.addEventListener('click', this.handleOutsideClick, false)
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick, false)
+    }
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  const handleOutsideClick = (e: any) => {
+    // ignore clicks on the component itself
+    if (this.node.contains(e.target)) {
+      return
+    }
+
+    this.handleClick()
+  }
+
+  return (
+    <>
+      <div onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <ToolbarElement type="" icon={props.icon}>
+          <Emoji />
+        </ToolbarElement>
+      </div>
+      {isMenuOpen && children}
+    </>
+  )
+}
+
+export const ToolbarEmoji = () => {
+  const editor = useStoreEditor()
+
+  return (
+    <SubMenuButton icon={<Emoji />}>
+      <Popover isOpen Icon={Emoji}>
+        <EmojiPicker setEmoji={emoji => editor?.insertText(emoji)} />
+      </Popover>
+    </SubMenuButton>
+  )
+}
 
 export const ToolbarButtonsBasicElements = () => (
   <>
