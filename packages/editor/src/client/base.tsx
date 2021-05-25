@@ -22,6 +22,7 @@ import {
 } from './route'
 
 import {useTranslation} from 'react-i18next'
+import {TourMethods} from 'react-shepherd'
 
 export interface BaseProps {
   children?: ReactNode
@@ -189,6 +190,12 @@ export function Base({children}: BaseProps) {
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
                   </DropdownItemLink>
+                  <TourMethods>
+                    {tourContext => (
+                      // TODO: Move string to EN file
+                      <Dropdown.Item onSelect={tourContext?.start}>Start Tour</Dropdown.Item>
+                    )}
+                  </TourMethods>
                 </Dropdown>
               </Nav>
               <Nav>

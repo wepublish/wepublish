@@ -369,7 +369,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [isMetaDrawerOpen])
 
   return (
-    <>
+    <div className="article-editor">
       <EditorTemplate
         navigationChildren={
           <NavigationBar
@@ -463,6 +463,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
           }}
         />
       </Modal>
-    </>
+    </div>
   )
 }

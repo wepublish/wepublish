@@ -18,6 +18,9 @@ import {TwitterProvider} from './blocks/embeds/twitter'
 import {InstagramProvider} from './blocks/embeds/instagram'
 import {FacebookProvider} from './blocks/embeds/facebook'
 import {HotApp} from './app'
+import {ShepherdTour} from 'react-shepherd'
+import {options, steps} from './atoms/tourSteps'
+import 'shepherd.js/dist/css/shepherd.css'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
 export async function fetchIntrospectionQueryResultData(url: string) {
@@ -113,7 +116,9 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <HotApp />
+                <ShepherdTour steps={steps} tourOptions={options}>
+                  <HotApp />
+                </ShepherdTour>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>
