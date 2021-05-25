@@ -120,9 +120,8 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
   Context
 >({
   name: 'Comment',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLNonNull(GraphQLID)},
-
     user: {
       type: GraphQLNonNull(GraphQLUser),
       resolve: createProxyingResolver(({userID}, _, {dbAdapter}) => {
@@ -130,23 +129,25 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       })
     },
     authorType: {type: GraphQLNonNull(GraphQLCommentAuthorType)},
-
     itemID: {type: GraphQLNonNull(GraphQLID)},
     itemType: {
       type: GraphQLNonNull(GraphQLCommentItemType)
     },
-
-    parentID: {type: GraphQLID},
-
-    revisions: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))},
-
+    parentComment: {
+      type: GraphQLComment,
+      resolve: createProxyingResolver(({parentID}, _, {dbAdapter}) => {
+        if (parentID) return dbAdapter.comment.getCommentById(parentID)
+        return null
+      })
+    },
+    revisions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLCommentRevision)))
+    },
     state: {type: GraphQLNonNull(GraphQLCommentState)},
-
     rejectionReason: {type: GraphQLCommentRejectionReason},
-
     createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
-  }
+  })
 })
 
 export const GraphQLPublicComment: GraphQLObjectType<
