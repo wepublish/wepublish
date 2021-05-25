@@ -18,7 +18,7 @@ import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/sla
 import {createHeadingPlugin} from '@udecode/slate-plugins-heading'
 import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
 import {createImagePlugin} from '@udecode/slate-plugins-image'
-import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
+// import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
 import {createLinkPlugin} from '@udecode/slate-plugins-link'
 import {createListPlugin, createTodoListPlugin} from '@udecode/slate-plugins-list'
 import {createMediaEmbedPlugin} from '@udecode/slate-plugins-media-embed'
@@ -34,9 +34,10 @@ import {
   ToolbarButtonsTable,
   ToolbarEmoji
 } from './Toolbar'
-import {H1, Link} from './Icons'
+import {Link} from './Icons'
 import {ReactEditor} from 'slate-react'
 import {HistoryEditor} from 'slate-history'
+import Divider, {DividerType} from './atoms/Divider'
 
 type TEditor = SPEditor & ReactEditor & HistoryEditor
 
@@ -57,24 +58,6 @@ export interface EditableProps {
 //   // showCharCount: false,
 //   readOnly: true
 // }
-
-enum DividerType {
-  horizontal = 'Horizontal',
-  vertical = 'Vertical'
-}
-interface DividerProps {
-  type: DividerType
-}
-
-const Divider = (props: DividerProps) => (
-  <hr
-    style={{
-      margin: props.type === DividerType.vertical ? '0 10px' : '10px 0',
-      height: props.type === DividerType.vertical ? '22px' : undefined,
-      borderLeft: '1px solid black'
-    }}
-  />
-)
 
 // const charCount = editor => {
 //   // const { isVoid } = editor
@@ -163,10 +146,11 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           <ToolbarButtonsAlign />
           <Divider type={DividerType.vertical} />
-          <ToolbarLink icon={<Link />} />
           {/* TODO: icon to be changed */}
           {/* <ToolbarImage icon={<H1 />} /> */}
           <ToolbarButtonsTable />
+          <Divider type={DividerType.vertical} />
+          <ToolbarLink icon={<Link />} />
           <ToolbarEmoji />
         </HeadingToolbar>
       )}
