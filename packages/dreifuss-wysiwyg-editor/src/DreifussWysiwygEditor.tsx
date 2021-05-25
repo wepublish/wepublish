@@ -44,6 +44,7 @@ export interface EditableProps {
   displayOnly?: boolean
   showCharCount?: boolean
   displayOneLine?: boolean
+  disabled?: boolean
 }
 
 // export const editableProps = {
@@ -96,7 +97,7 @@ export default function DreifussWysiwygEditor(props: any) {
     spellCheck: false,
     autoFocus: true,
     showCount: props.showCharCount ?? false,
-    readOnly: props.displayOnly ?? false,
+    readOnly: props.displayOnly ?? props.disabled ?? false,
     style: props.displayOneLine
       ? {
           // whiteSpace: 'nowrap',
@@ -153,7 +154,7 @@ export default function DreifussWysiwygEditor(props: any) {
       options={options}
       editableProps={editableProps}
       initialValue={props.value || props.initialValue}>
-      {!editableProps.readOnly && (
+      {!props.displayOnly && (
         <HeadingToolbar>
           <ToolbarButtonsBasicElements />
           <Divider type={DividerType.vertical} />
