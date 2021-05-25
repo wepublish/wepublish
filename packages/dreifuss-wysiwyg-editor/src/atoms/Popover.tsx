@@ -1,19 +1,62 @@
-import React, {ReactNode} from 'react'
+import React from 'react'
 import './popover.css'
 
-interface PopoverProps {
-  setEmoji?: (emoji: string) => void
-  children?: ReactNode
-  Icon: ReactNode
-  isOpen: boolean
+export interface PopoverProps {
+  readonly children: any
+  readonly Icon: any
 }
 
-export function Popover({children, Icon}: PopoverProps) {
-  return (
-    <>
-      <div className="popover__wrapper">
-        <div className="popover__content">{children}</div>
-      </div>
-    </>
-  )
+export interface PopoverState {
+  isVisible: boolean
 }
+
+export class Popover extends React.Component<PopoverProps, PopoverState> {
+  node: any
+  constructor(props: any) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleOutsideClick = this.handleOutsideClick.bind(this)
+
+    this.state = {
+      isVisible: false
+    }
+  }
+
+  handleClick() {
+    if (!this.state.isVisible) {
+      // attach/remove event handler
+      document.addEventListener('click', this.handleOutsideClick, false)
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick, false)
+    }
+
+    this.setState((prevState: any) => ({
+      isVisible: !prevState.isVisible
+    }))
+  }
+
+  handleOutsideClick(e: any) {
+    // ignore clicks on the component itself
+    if (this.node.contains(e.target)) {
+      return
+    }
+
+    this.handleClick()
+  }
+
+  render() {
+    return (
+      <div
+        className="popover-container"
+        ref={node => {
+          this.node = node
+        }}>
+        <div role="presentation" onClick={this.handleClick}>
+          {this.props.Icon}
+        </div>
+        {this.state.isVisible && <div className="popover">{this.props.children}</div>}
+      </div>
+    )
+  }
+}
+export default Popover

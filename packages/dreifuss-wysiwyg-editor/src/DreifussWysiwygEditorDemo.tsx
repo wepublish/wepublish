@@ -212,9 +212,15 @@ const wePublishCurrentValue: any = [
 ]
 
 const DreifussWysiwygEditorDemo = () => (
-  <div>
-    <h1>React Component Demo</h1>
-    <DreifussWysiwygEditor initialValue={wePublishCurrentValue} />
+  <div style={{overflowX: 'hidden'}}>
+    <h1>RichText Component Demo</h1>
+    <DreifussWysiwygEditor
+      onChange={(value: any) => {
+        console.log(value)
+      }}
+      showCharCount
+      initialValue={wePublishCurrentValue}
+    />
   </div>
 )
 

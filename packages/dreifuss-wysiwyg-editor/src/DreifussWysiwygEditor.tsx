@@ -37,7 +37,6 @@ import {
 import {H1, Link} from './Icons'
 import {ReactEditor} from 'slate-react'
 import {HistoryEditor} from 'slate-history'
-import {createEditor} from 'slate'
 
 type TEditor = SPEditor & ReactEditor & HistoryEditor
 
@@ -46,6 +45,7 @@ export interface EditableProps {
   showCharCount?: boolean
   displayOneLine?: boolean
   disabled?: boolean
+  onChange?: React.Dispatch<React.SetStateAction<V>>
 }
 
 // export const editableProps = {
@@ -147,9 +147,7 @@ export default function DreifussWysiwygEditor(props: any) {
   return (
     <SlatePlugins
       id="3"
-      onChange={value => {
-        // console.log(value);
-      }}
+      onChange={props.onChange}
       plugins={plugins}
       components={components}
       options={options}
@@ -167,7 +165,7 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           <ToolbarLink icon={<Link />} />
           {/* TODO: icon to be changed */}
-          <ToolbarImage icon={<H1 />} />
+          {/* <ToolbarImage icon={<H1 />} /> */}
           <ToolbarButtonsTable />
           <ToolbarEmoji />
         </HeadingToolbar>
