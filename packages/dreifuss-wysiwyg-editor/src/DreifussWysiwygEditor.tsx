@@ -1,5 +1,5 @@
 import React from 'react'
-import {createBasicElementPlugins, SPEditor, ToolbarLink} from '@udecode/slate-plugins'
+import {createBasicElementPlugins, SPEditor} from '@udecode/slate-plugins'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
 import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
 import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
@@ -32,9 +32,9 @@ import {
   ToolbarButtonsBasicMarks,
   ToolbarButtonsList,
   ToolbarButtonsTable,
-  ToolbarEmoji
+  ToolbarEmoji,
+  ToolbarLink
 } from './Toolbar'
-import {Link} from './Icons'
 import {ReactEditor} from 'slate-react'
 import {HistoryEditor} from 'slate-history'
 import Divider, {DividerType} from './atoms/Divider'
@@ -150,7 +150,7 @@ export default function DreifussWysiwygEditor(props: any) {
           {/* <ToolbarImage icon={<H1 />} /> */}
           <ToolbarButtonsTable />
           <Divider type={DividerType.vertical} />
-          <ToolbarLink icon={<Link />} />
+          <ToolbarLink />
           <ToolbarEmoji />
         </HeadingToolbar>
       )}

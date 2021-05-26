@@ -1,5 +1,6 @@
 import React from 'react'
 import './popover.css'
+import {PopoverContext} from './PopoverContext'
 
 export interface PopoverProps {
   readonly children: any
@@ -46,16 +47,21 @@ export class Popover extends React.Component<PopoverProps, PopoverState> {
 
   render() {
     return (
-      <div
-        className="popover-container"
-        ref={node => {
-          this.node = node
+      <PopoverContext.Provider
+        value={{
+          togglePopover: this.handleClick
         }}>
-        <div role="presentation" onClick={this.handleClick}>
-          {this.props.Icon}
+        <div
+          className="popover-container"
+          ref={node => {
+            this.node = node
+          }}>
+          <div role="presentation" onClick={this.handleClick}>
+            {this.props.Icon}
+          </div>
+          {this.state.isVisible && <div className="popover">{this.props.children}</div>}
         </div>
-        {this.state.isVisible && <div className="popover">{this.props.children}</div>}
-      </div>
+      </PopoverContext.Provider>
     )
   }
 }

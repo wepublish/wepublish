@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   ELEMENT_ALIGN_CENTER,
   ELEMENT_ALIGN_JUSTIFY,

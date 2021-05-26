@@ -3,7 +3,7 @@ import {render} from 'react-dom'
 import DreifussWysiwygEditor from './DreifussWysiwygEditor'
 
 // TODO: remove this
-const wePublishCurrentValue: any = [
+const value: any = [
   {
     type: 'ordered-list',
     children: [
@@ -216,10 +216,10 @@ const DreifussWysiwygEditorDemo = () => (
     <h1>RichText Component Demo</h1>
     <DreifussWysiwygEditor
       onChange={(value: any) => {
-        console.log(value)
+        // console.log(value)
       }}
       showCharCount
-      initialValue={wePublishCurrentValue}
+      initialValue={value}
     />
   </div>
 )

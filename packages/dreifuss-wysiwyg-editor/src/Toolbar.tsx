@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback, useRef, useState} from 'react'
+import React from 'react'
 import {
   H1,
   H2,
@@ -23,7 +23,8 @@ import {
   BorderLeft,
   BorderRight,
   BorderTop,
-  Emoji
+  Emoji,
+  Link
 } from './Icons'
 import {
   ELEMENT_ALIGN_CENTER,
@@ -65,8 +66,14 @@ import {
 import {ToolbarTable} from '@udecode/slate-plugins-table-ui'
 import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
 import {EmojiPicker} from './atoms/EmojiPicker'
-// import {Popover} from './atoms/Popover'
 import Popover from './atoms/Popover'
+import {LinkToolbar} from './packages/LinkToolbar'
+
+export const ToolbarLink = () => (
+  <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
+    <LinkToolbar />
+  </Popover>
+)
 
 export const ToolbarEmoji = () => {
   const editor = useStoreEditor()
