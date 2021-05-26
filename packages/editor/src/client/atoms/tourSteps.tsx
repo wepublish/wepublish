@@ -1,3 +1,5 @@
+import {Step} from 'react-shepherd'
+
 const navButtons = {
   exit: {
     text: 'Exit',
@@ -13,7 +15,7 @@ const navButtons = {
   }
 }
 
-export const steps = [
+export const steps: Step.StepOptions[] = [
   {
     buttons: [navButtons.exit, navButtons.next],
     // classes: 'custom-class-name-1 custom-class-name-2',
