@@ -1,5 +1,30 @@
 # Change Log
 
+## v2.4.0-alpha.0 (2021-05-26)
+
+#### :heart: New Feature
+* Other
+  * [#261](https://github.com/wepublish/wepublish/pull/261) F/wpc 274 redirect back on comment after login ([@bishoymelek](https://github.com/bishoymelek))
+* `api`, `editor`
+  * [#258](https://github.com/wepublish/wepublish/pull/258) Add polis embed block ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#257](https://github.com/wepublish/wepublish/pull/257) placement of date picker in user subscription panel ([@penk85](https://github.com/penk85))
+  * [#264](https://github.com/wepublish/wepublish/pull/264) b/wpc-369-make-default-publishing-time-5 ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#251](https://github.com/wepublish/wepublish/pull/251) show parent comment in comment review panel ([@penk85](https://github.com/penk85))
+* `editor`
+  * [#256](https://github.com/wepublish/wepublish/pull/256) Color all rows on comment table ([@penk85](https://github.com/penk85))
+
+#### Committers: 3
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
 ## v2.3.0 (2021-05-26)
 
 #### :heart: New Feature
