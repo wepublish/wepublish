@@ -166,3 +166,12 @@ export const ALL_PAYMENT_PERIODICITIES: PaymentPeriodicity[] = [
   PaymentPeriodicity.Biannual,
   PaymentPeriodicity.Yearly
 ]
+
+export function wait(milliseconds: number): () => Promise<any> {
+  return () =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, milliseconds)
+    })
+}

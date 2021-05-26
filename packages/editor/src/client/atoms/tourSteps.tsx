@@ -1,4 +1,5 @@
 import {Step} from 'react-shepherd'
+import {wait} from '../utility'
 
 const navButtons = {
   exit: {
@@ -56,10 +57,20 @@ export const steps: Step.StepOptions[] = [
   },
   {
     arrow: true,
-    // showOn: () => {  },
-    attachTo: {element: '.rs-dropdown-menu', on: 'bottom'},
+    beforeShowPromise: wait(100),
+    attachTo: {element: '.rs-dropdown-item:nth-child(2)', on: 'bottom'},
+    advanceOn: {selector: '.rs-dropdown-item:nth-child(2)', event: 'click'},
+    buttons: [navButtons.back],
+    title: 'Create a new Richtext',
+    text: ['(options...)']
+  },
+  {
+    arrow: true,
+    beforeShowPromise: wait(100),
+    attachTo: {element: 'p[data-slate-node="element"]', on: 'bottom'},
+    // advanceOn: {selector: '.rs-dropdown-item:nth-child(2)', event: 'click'},
     buttons: [navButtons.back, navButtons.next],
-    title: 'Create an article',
+    title: 'Write something',
     text: ['(options...)']
   }
 ]
