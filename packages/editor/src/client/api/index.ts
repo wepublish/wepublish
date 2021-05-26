@@ -206,7 +206,7 @@ export type BaseNavigationLink = {
   label: Scalars['String'];
 };
 
-export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
+export type Block = RichTextBlock | ImageBlock | ImageGalleryBlock | ListicleBlock | FacebookPostBlock | FacebookVideoBlock | InstagramPostBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock | SoundCloudTrackBlock | PolisConversationBlock | EmbedBlock | LinkPageBreakBlock | TitleBlock | QuoteBlock | TeaserGridBlock;
 
 export type BlockInput = {
   richText?: Maybe<RichTextBlockInput>;
@@ -222,6 +222,7 @@ export type BlockInput = {
   vimeoVideo?: Maybe<VimeoVideoBlockInput>;
   youTubeVideo?: Maybe<YouTubeVideoBlockInput>;
   soundCloudTrack?: Maybe<SoundCloudTrackBlockInput>;
+  polisConversation?: Maybe<PolisConversationBlockInput>;
   embed?: Maybe<EmbedBlockInput>;
   linkPageBreak?: Maybe<LinkPageBreakBlockInput>;
   teaserGrid?: Maybe<TeaserGridBlockInput>;
@@ -235,7 +236,7 @@ export type Comment = {
   authorType: CommentAuthorType;
   itemID: Scalars['ID'];
   itemType: CommentItemType;
-  parentID?: Maybe<Scalars['ID']>;
+  parentComment?: Maybe<Comment>;
   revisions: Array<CommentRevision>;
   state: CommentState;
   rejectionReason?: Maybe<CommentRejectionReason>;
@@ -1266,6 +1267,15 @@ export type Point = {
   y: Scalars['Float'];
 };
 
+export type PolisConversationBlock = {
+  __typename?: 'PolisConversationBlock';
+  conversationID: Scalars['String'];
+};
+
+export type PolisConversationBlockInput = {
+  conversationID: Scalars['String'];
+};
+
 export type Properties = {
   __typename?: 'Properties';
   key: Scalars['String'];
@@ -2069,6 +2079,9 @@ export type ArticleQuery = (
         { __typename?: 'SoundCloudTrackBlock' }
         & FullBlock_SoundCloudTrackBlock_Fragment
       ) | (
+        { __typename?: 'PolisConversationBlock' }
+        & FullBlock_PolisConversationBlock_Fragment
+      ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
       ) | (
@@ -2377,6 +2390,11 @@ type FullBlock_SoundCloudTrackBlock_Fragment = (
   & Pick<SoundCloudTrackBlock, 'trackID'>
 );
 
+type FullBlock_PolisConversationBlock_Fragment = (
+  { __typename: 'PolisConversationBlock' }
+  & Pick<PolisConversationBlock, 'conversationID'>
+);
+
 type FullBlock_EmbedBlock_Fragment = (
   { __typename: 'EmbedBlock' }
   & Pick<EmbedBlock, 'url' | 'title' | 'width' | 'height' | 'styleCustom'>
@@ -2416,7 +2434,19 @@ type FullBlock_TeaserGridBlock_Fragment = (
   )>> }
 );
 
-export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+export type FullBlockFragment = FullBlock_RichTextBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_TeaserGridBlock_Fragment;
+
+export type FullParentCommentFragment = (
+  { __typename?: 'Comment' }
+  & Pick<Comment, 'id' | 'state' | 'rejectionReason' | 'createdAt' | 'modifiedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & FullUserFragment
+  ), revisions: Array<(
+    { __typename?: 'CommentRevision' }
+    & Pick<CommentRevision, 'text' | 'createdAt'>
+  )> }
+);
 
 export type FullCommentFragment = (
   { __typename?: 'Comment' }
@@ -2427,6 +2457,9 @@ export type FullCommentFragment = (
   ), revisions: Array<(
     { __typename?: 'CommentRevision' }
     & Pick<CommentRevision, 'text' | 'createdAt'>
+  )>, parentComment?: Maybe<(
+    { __typename?: 'Comment' }
+    & FullParentCommentFragment
   )> }
 );
 
@@ -2980,6 +3013,9 @@ export type PageQuery = (
       ) | (
         { __typename?: 'SoundCloudTrackBlock' }
         & FullBlock_SoundCloudTrackBlock_Fragment
+      ) | (
+        { __typename?: 'PolisConversationBlock' }
+        & FullBlock_PolisConversationBlock_Fragment
       ) | (
         { __typename?: 'EmbedBlock' }
         & FullBlock_EmbedBlock_Fragment
@@ -3759,6 +3795,9 @@ export const FullBlockFragmentDoc = gql`
   ... on SoundCloudTrackBlock {
     trackID
   }
+  ... on PolisConversationBlock {
+    conversationID
+  }
   ... on EmbedBlock {
     url
     title
@@ -3885,8 +3924,8 @@ export const FullUserFragmentDoc = gql`
 }
     ${FullUserRoleFragmentDoc}
 ${FullUserSubscriptionFragmentDoc}`;
-export const FullCommentFragmentDoc = gql`
-    fragment FullComment on Comment {
+export const FullParentCommentFragmentDoc = gql`
+    fragment FullParentComment on Comment {
   id
   state
   rejectionReason
@@ -3901,6 +3940,26 @@ export const FullCommentFragmentDoc = gql`
   modifiedAt
 }
     ${FullUserFragmentDoc}`;
+export const FullCommentFragmentDoc = gql`
+    fragment FullComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  revisions {
+    text
+    createdAt
+  }
+  createdAt
+  modifiedAt
+  parentComment {
+    ...FullParentComment
+  }
+}
+    ${FullUserFragmentDoc}
+${FullParentCommentFragmentDoc}`;
 export const FullImageFragmentDoc = gql`
     fragment FullImage on Image {
   id
