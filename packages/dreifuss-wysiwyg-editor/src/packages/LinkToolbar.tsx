@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {useStoreEditor} from '@udecode/slate-plugins-core'
 import {BaseEditor, BaseRange, Range, Editor, Node, Transforms} from 'slate'
 import {PopoverContext} from '../atoms/PopoverContext'
+import './link-toolbar.css'
 
 async function validateURL(url: string) {
   if (url) {
@@ -124,10 +125,10 @@ export const LinkToolbar = () => {
   }, [])
 
   return (
-    <form>
-      <div>
+    <form className="link-toolbar">
+      <div className="form-group">
         <label>Link</label>
-        <div>
+        <div className="input-group">
           <select
             style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
             value={prefix}
@@ -137,15 +138,17 @@ export const LinkToolbar = () => {
             <option value={prefixType.mailto}>{prefixType.mailto}</option>
             <option value={prefixType.other}>{prefixType.other}</option>
           </select>
-          <input value={url} onChange={(e: any) => setURL(e.target.value)} />
+          <input name="url" value={url} onChange={(e: any) => setURL(e.target.value)} />
         </div>
         <p>{url && !isValidURL ? 'Invalid Link' : undefined}</p>
       </div>
-      <div>
+      <div className="form-group">
         <label>Selected Text</label>
-        <input value={title} onChange={(e: any) => setTitle(e.target.value)} />
+        <div className="input-group">
+          <input name="text" value={title} onChange={(e: any) => setTitle(e.target.value)} />
+        </div>
       </div>
-      <div>
+      <div className="toolbar" role="toolbar">
         <button
           disabled={isDisabled}
           onClick={e => {
