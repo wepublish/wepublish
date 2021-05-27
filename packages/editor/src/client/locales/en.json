@@ -16,7 +16,8 @@
         "untitled": "Untitled",
         "draft": "Draft",
         "pending": "Pending",
-        "published": "Published"
+        "published": "Published",
+        "notPublished": "publish date not set"
       },
       "panels": {
         "cancel": "Cancel",
@@ -161,6 +162,7 @@
         "untitled": "Untitled",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
+        "parent": "Parent",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
         "requestChangesOnComment": "Request Changes On Comment",
@@ -196,7 +198,8 @@
         "newPage": "New Page",
         "search": "Search",
         "loadMore": "Load More",
-        "noPages": "No Pages found"
+        "noPages": "No Pages found",
+        "notPublished": "publish date not set"
       },
       "panels": {
         "unpublish": "Unpublish",
@@ -525,7 +528,7 @@
           "close": "Close",
           "confirm": "Confirm",
           "embed": "Embed",
-          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g.",
           "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",

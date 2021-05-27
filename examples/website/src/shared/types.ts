@@ -249,6 +249,7 @@ export enum EmbedType {
   VimeoVideo = 'vimeoVideo',
   YouTubeVideo = 'youTubeVideo',
   SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
   IFrame = 'iframe'
 }
 
@@ -284,6 +285,11 @@ export interface SoundCloudTrackEmbedData {
   trackID: string
 }
 
+export interface PolisConversationEmbedData {
+  type: EmbedType.PolisConversation
+  conversationID: string
+}
+
 export interface IFrameEmbed {
   type: EmbedType.IFrame
   title?: string
@@ -300,6 +306,7 @@ export type EmbedData =
   | VimeoVideoEmbedData
   | YouTubeVideoEmbedData
   | SoundCloudTrackEmbedData
+  | PolisConversationEmbedData
   | IFrameEmbed
 
 export type EmbedBlock = BaseBlock<BlockType.Embed, EmbedData>

@@ -1,18 +1,44 @@
 # Change Log
 
-## v2.2.2 (2021-04-27)
+## v2.3.0 (2021-05-26)
 
 #### :heart: New Feature
 * `editor`
   * [#253](https://github.com/wepublish/wepublish/pull/253) added time in modefied coloumn ([@bishoymelek](https://github.com/bishoymelek))
+  * [#240](https://github.com/wepublish/wepublish/pull/240) f/wpc-320-create-an-author-in-the-article-metadata ([@HanaAyman](https://github.com/HanaAyman))
+  * [#241](https://github.com/wepublish/wepublish/pull/241) changed sorting to be with modification date ([@bishoymelek](https://github.com/bishoymelek))
+* `api-db-mongodb`, `api`, `editor`
+  * [#238](https://github.com/wepublish/wepublish/pull/238) F/wpc 323 sorting pagination author list ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#243](https://github.com/wepublish/wepublish/pull/243) remove extra lead field from teaser panel ([@penk85](https://github.com/penk85))
+  * [#234](https://github.com/wepublish/wepublish/pull/234) wpc-305-change-unpublish-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#233](https://github.com/wepublish/wepublish/pull/233) wpc-286-image-updated-alert ([@HanaAyman](https://github.com/HanaAyman))
+  * [#232](https://github.com/wepublish/wepublish/pull/232) b/wpc-322-make-member-plans-visually-deleted ([@HanaAyman](https://github.com/HanaAyman))
+* `api-db-mongodb`
+  * [#244](https://github.com/wepublish/wepublish/pull/244) Fix escaping regex ([@bishoymelek](https://github.com/bishoymelek))
+* `api`
+  * [#231](https://github.com/wepublish/wepublish/pull/231) Always set updatedAt and publishedAt date ([@roosnic1](https://github.com/roosnic1))
 
 #### :nail_care: Polish
 * `editor`
   * [#252](https://github.com/wepublish/wepublish/pull/252) Comment list color ([@penk85](https://github.com/penk85))
+  * [#230](https://github.com/wepublish/wepublish/pull/230) split time and date picker ([@penk85](https://github.com/penk85))
+  * [#242](https://github.com/wepublish/wepublish/pull/242) add spacing to layout of forms in Navigation panel ([@penk85](https://github.com/penk85))
+  * [#239](https://github.com/wepublish/wepublish/pull/239) Highlight link button ([@penk85](https://github.com/penk85))
 
-#### Committers: 2
+#### :memo: Documentation
+* [#237](https://github.com/wepublish/wepublish/pull/237) enh. installation troubleshooting documentation ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - [@bishoymelek](https://github.com/bishoymelek)
+- [@michael-scheurer](https://github.com/michael-scheurer)
 
 
 ## v2.2.1 (2021-04-15)

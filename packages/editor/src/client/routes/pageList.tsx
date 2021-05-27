@@ -134,9 +134,15 @@ export function PageList() {
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
+            <HeaderCell>{t('pages.overview.published')}</HeaderCell>
+            <Cell dataKey="published">
+              {(pageRef: PageRefFragment) =>
+                pageRef.published?.publishedAt
+                  ? new Date(pageRef.published.publishedAt).toDateString()
+                  : pageRef.pending?.publishAt
+                  ? new Date(pageRef.pending.publishAt).toDateString()
+                  : t('articles.overview.notPublished')
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>

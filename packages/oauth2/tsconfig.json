@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "include": ["./**/*"],
-  "compilerOptions": {
-    "types": ["@types/node", "@types/webpack-dev-server"],
-    "lib": ["es2017"]
-  }
-}
