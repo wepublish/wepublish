@@ -95,7 +95,7 @@ export function CommentList() {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
-  const [sortField, setSortField] = useState('createdAt')
+  const [sortField, setSortField] = useState('modifiedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   const [filter, setFilter] = useState('')
@@ -229,7 +229,7 @@ export function CommentList() {
           }}>
           <Column width={350} align="left" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
-            <Cell dataKey="createdAt">
+            <Cell dataKey="revisions">
               {(rowData: FullCommentFragment) => (
                 <>
                   {rowData?.revisions?.length ? (

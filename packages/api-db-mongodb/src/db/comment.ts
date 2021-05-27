@@ -152,10 +152,35 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
       } as MongoCountPreferences), // MongoCountPreferences doesn't include collation
 
       this.comments
-        .aggregate([], {collation: {locale: this.locale, strength: 2}})
+        .aggregate(
+          [
+            // sort depending on state value
+            {
+              $addFields: {
+                stateSort: {
+                  $indexOfArray: [
+                    [
+                      CommentState.PendingApproval,
+                      CommentState.PendingUserChanges,
+                      CommentState.Approved,
+                      CommentState.Rejected
+                    ],
+                    '$state'
+                  ]
+                }
+              }
+            },
+            {
+              $sort: {
+                stateSort: 1,
+                [sortField]: sortDirection
+              }
+            }
+          ],
+          {collation: {locale: this.locale, strength: 2}}
+        )
         .match(metaFilters.length ? {$and: metaFilters} : {})
         .match(cursorFilter)
-        .sort({[sortField]: sortDirection, _id: sortDirection})
         .skip(limit.skip ?? 0)
         .limit(limitCount + 1)
         .toArray()
