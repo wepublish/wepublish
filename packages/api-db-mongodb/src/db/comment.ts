@@ -123,8 +123,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
     }
 
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
-    // const sortDirection = limit.type === LimitType.First ? order : -order
-
+    const sortDirection = limit.type === LimitType.First ? order : -order
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
@@ -157,7 +156,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
             // sort depending on state value
             {
               $addFields: {
-                sort: {
+                stateSort: {
                   $indexOfArray: [
                     [
                       CommentState.PendingApproval,
@@ -170,10 +169,10 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
                 }
               }
             },
-            //  TODO: which field?
             {
               $sort: {
-                sort: 1
+                stateSort: 1,
+                [sortField]: sortDirection
               }
             }
           ],
