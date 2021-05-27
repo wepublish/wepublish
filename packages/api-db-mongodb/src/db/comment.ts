@@ -124,6 +124,7 @@ export class MongoDBCommentAdapter implements DBCommentAdapter {
 
     const limitCount = Math.min(limit.count, MaxResultsPerPage)
     const sortDirection = limit.type === LimitType.First ? order : -order
+
     const cursorData = cursor.type !== InputCursorType.None ? Cursor.from(cursor.data) : undefined
 
     const expr =
