@@ -1854,7 +1854,7 @@
     core-js-compat "^3.6.2"
     semver "^5.5.0"
 
-"@babel/preset-env@^7.4.5", "@babel/preset-env@^7.5.0", "@babel/preset-env@^7.7.6":
+"@babel/preset-env@^7.4.5", "@babel/preset-env@^7.5.0":
   version "7.9.5"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.9.5.tgz#8ddc76039bc45b774b19e2fc548f6807d8a8919f"
   integrity sha512-eWGYeADTlPJH+wq1F0wNfPbVS1w1wtmMJiYk55Td5Yu28AsdR9AsC97sZ0Qq8fHqQuslVSIYSGJMcblr345GfQ==
@@ -4527,16 +4527,6 @@
     "@types/extract-files" "*"
     graphql "^15.3.0"
 
-"@types/apollo-upload-client@^8.1.3":
-  version "8.1.3"
-  resolved "https://registry.yarnpkg.com/@types/apollo-upload-client/-/apollo-upload-client-8.1.3.tgz#717df21070d7f12a8ccf9ff986e66ca91f0a5ee8"
-  integrity sha512-E0bmMnkXBIiHY5Tl+U1Yum70loe93AOV7K+/3E/oGcdpH4izX4owwu+Cz1hRDkkYacHahKJCHz0xSLiL/ENRmA==
-  dependencies:
-    "@types/extract-files" "*"
-    apollo-link "^1.2.12"
-    apollo-link-http-common "^0.2.4"
-    graphql "^14.5.3"
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.10"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.10.tgz#ca58fc195dd9734e77e57c6f2df565623636ab40"
@@ -5530,6 +5520,61 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wepublish/api-db-mongodb@*":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-db-mongodb/-/api-db-mongodb-2.2.2.tgz#7b37a2616604ffe8561e0303ca58d86a4f767ee3"
+  integrity sha512-wuen4UifxtHtRI6WKqmH1T6Nna8isNsfJRrfqSF9LWAa7rnufDSKoQVKZbs3hJEHa2sD2zlNHm/5Z9F8TAjGGg==
+  dependencies:
+    bcrypt "^5.0.0"
+    mongodb "^3.5.4"
+    nanoid "^2.1.11"
+
+"@wepublish/api-media-karma@*":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@wepublish/api-media-karma/-/api-media-karma-2.2.2.tgz#63cf096c20d385984814ea0bee15adf8df18ab16"
+  integrity sha512-1VDNUo3RMzzoBfUb6m0szrvL6OF9Xgf6nwWOJBTjtpK1sAV1nsPWfnMALP3mKmyMMrIpsDXgrDWlvvIkXLWZeQ==
+  dependencies:
+    form-data "^3.0.0"
+    node-fetch "^2.6.0"
+
+"@wepublish/api@*":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@wepublish/api/-/api-2.2.2.tgz#4d6316615a64e432a3035d7efb89085c41d741a4"
+  integrity sha512-j2/WRPuZrIh6peg2NSWHmJFayaydi5wOxsRXkL8vBfinUr4a13M8y0emFXHcEvQ106c30utEc9KzhO+jqJ8xAg==
+  dependencies:
+    "@karma.run/utility" "^0.1.0"
+    abort-controller "^3.0.0"
+    apollo-server-express "^2.18.2"
+    body-parser "^1.19.0"
+    crypto "^1.0.1"
+    dataloader "^2.0.0"
+    express "^4.17.1"
+    form-data "^3.0.0"
+    graphql "^14.6.0"
+    graphql-iso-date "^3.6.1"
+    graphql-tag "^2.11.0"
+    graphql-tools "^5.0.0"
+    jsonwebtoken "^8.5.1"
+    mandrill-api "^1.0.45"
+    ms "^2.1.2"
+    node-fetch "^2.6.0"
+    oidc-provider "^6.23.4"
+    openid-client "^3.14.0"
+    pino "^6.11.0"
+    pino-http "^5.3.0"
+    qs "^6.9.1"
+    stripe "^8.126.0"
+
+"@wepublish/oauth2@*":
+  version "2.3.0-alpha.3"
+  dependencies:
+    ejs "^3.0.2"
+    express "^4.17.1"
+    lodash "^4.17.19"
+    nanoid "^3.0.2"
+    oidc-provider "^6.23.4"
+    querystring "^0.2.0"
+
 "@wry/context@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.5.2.tgz#f2a5d5ab9227343aa74c81e06533c1ef84598ec7"
@@ -5926,7 +5971,7 @@ apollo-graphql@^0.6.0:
     apollo-env "^0.6.5"
     lodash.sortby "^4.7.0"
 
-apollo-link-http-common@^0.2.14, apollo-link-http-common@^0.2.4:
+apollo-link-http-common@^0.2.14:
   version "0.2.16"
   resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.16.tgz#756749dafc732792c8ca0923f9a40564b7c59ecc"
   integrity sha512-2tIhOIrnaF4UbQHf7kjeQA/EmSorB7+HyJIIrUjJOKBgnXwuexi8aMecRlqTIDWcyVXCeqLhUnztMa6bOH/jTg==
