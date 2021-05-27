@@ -27,7 +27,8 @@ import {
   Modal,
   Button,
   Dropdown,
-  Alert
+  Alert,
+  Panel
 } from 'rsuite'
 
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -146,6 +147,7 @@ export function CommentList() {
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [currentComment, setCurrentComment] = useState<Comment>()
+
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>()
   const [rejectionReason, setRejectionReason] = useState<CommentRejectionReason>()
 
@@ -362,23 +364,58 @@ export function CommentList() {
               <DescriptionListItem label={t('comments.panels.updatedAt')}>
                 {currentComment?.modifiedAt && new Date(currentComment.modifiedAt).toDateString()}
               </DescriptionListItem>
+
+              {currentComment?.parentComment && (
+                <>
+                  <DescriptionListItem label={t('comments.panels.parent')}>
+                    <Panel
+                      bordered
+                      style={{marginRight: 40, fontStyle: 'italic', color: 'lightslategrey'}}>
+                      <>
+                        <div>
+                          {new Date(currentComment.parentComment?.createdAt).toLocaleString()}
+                        </div>
+                        <p>{currentComment.parentComment.user?.name}:</p>
+                        <RichTextBlock
+                          displayOnly
+                          displayOneLine
+                          disabled
+                          // TODO: remove this
+                          onChange={console.log}
+                          value={
+                            currentComment.parentComment?.revisions[
+                              currentComment.parentComment.revisions.length - 1
+                            ]?.text
+                          }
+                        />
+                      </>
+                    </Panel>
+                    <div style={{marginTop: 8, marginLeft: 10}}>
+                      <Icon icon="reply" rotate={180} />
+                    </div>
+                  </DescriptionListItem>
+                </>
+              )}
+
               <DescriptionListItem label={t('comments.panels.revisions')}>
-                <Timeline align="left">
-                  {currentComment?.revisions?.length
-                    ? currentComment?.revisions?.map(({text, createdAt}, i) => (
-                        <Timeline.Item key={i}>
-                          <div>{new Date(createdAt).toLocaleString()}</div>
-                          <RichTextBlock
-                            disabled
-                            displayOnly
-                            // TODO: remove this
-                            onChange={console.log}
-                            value={text}
-                          />
-                        </Timeline.Item>
-                      ))
-                    : null}
-                </Timeline>
+                <Panel bordered shaded>
+                  <Timeline align="left">
+                    {currentComment?.revisions?.length
+                      ? currentComment?.revisions?.map(({text, createdAt}, i) => (
+                          <Timeline.Item key={i}>
+                            <div>{new Date(createdAt).toLocaleString()}</div>
+                            <RichTextBlock
+                              disabled
+                              displayOnly
+                              // TODO: remove this
+                              onChange={console.log}
+                              value={text}
+                            />
+                          </Timeline.Item>
+                        ))
+                      : null}
+                  </Timeline>
+                </Panel>
               </DescriptionListItem>
               {confirmAction === ConfirmAction.Reject ||
               confirmAction === ConfirmAction.RequestChanges ? (

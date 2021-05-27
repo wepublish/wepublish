@@ -1,12 +1,11 @@
-import {Application, NextFunction, Request, Response} from 'express'
+import {Application, NextFunction, Request, Response, urlencoded} from 'express'
 import Provider from 'oidc-provider'
-import {urlencoded} from 'express'
 import isEmpty from 'lodash/isEmpty'
 import querystring from 'querystring'
 import {inspect} from 'util'
 
 import * as assert from 'assert'
-import {MongoDBAdapter} from '@wepublish/api-db-mongodb/lib'
+import {DBAdapter} from '@wepublish/api'
 
 const body = urlencoded({extended: false})
 
@@ -28,7 +27,7 @@ const debug = (obj: any) =>
     }
   )
 
-export function routes(app: Application, provider: Provider, dbAdapter: MongoDBAdapter): void {
+export function routes(app: Application, provider: Provider, dbAdapter: DBAdapter): void {
   //const { constructor: { errors: { SessionNotFound } } } = provider;
 
   app.use((req, res, next) => {

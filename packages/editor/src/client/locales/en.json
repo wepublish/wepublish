@@ -16,7 +16,8 @@
         "untitled": "Untitled",
         "draft": "Draft",
         "pending": "Pending",
-        "published": "Published"
+        "published": "Published",
+        "notPublished": "publish date not set"
       },
       "panels": {
         "cancel": "Cancel",
@@ -161,6 +162,7 @@
         "untitled": "Untitled",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
+        "parent": "Parent",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
         "requestChangesOnComment": "Request Changes On Comment",
@@ -196,7 +198,8 @@
         "newPage": "New Page",
         "search": "Search",
         "loadMore": "Load More",
-        "noPages": "No Pages found"
+        "noPages": "No Pages found",
+        "notPublished": "publish date not set"
       },
       "panels": {
         "unpublish": "Unpublish",
