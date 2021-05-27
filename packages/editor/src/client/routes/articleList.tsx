@@ -139,9 +139,15 @@ export function ArticleList() {
             setSortField(sortColumn)
           }}>
           <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('articles.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: ArticleRefFragment) => new Date(createdAt).toDateString()}
+            <HeaderCell>{t('articles.overview.published')}</HeaderCell>
+            <Cell dataKey="published">
+              {(articleRef: ArticleRefFragment) =>
+                articleRef.published?.publishedAt
+                  ? new Date(articleRef.published.publishedAt).toDateString()
+                  : articleRef.pending?.publishAt
+                  ? new Date(articleRef.pending.publishAt).toDateString()
+                  : t('articles.overview.notPublished')
+              }
             </Cell>
           </Column>
           <Column width={200} align="left" resizable sortable>
