@@ -30,12 +30,13 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 export interface ImageEditPanelProps {
   id?: string
+  hostURL?: string
 
   onClose?(): void
   onSave?(): void
 }
 
-export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
+export function PeerEditPanel({id, hostURL, onClose, onSave}: ImageEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
@@ -101,7 +102,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
           setLoadingPeerProfile(false)
 
           // TODO: Better validation
-          if (response?.data?.peerProfile) {
+          if (response?.data?.peerProfile && response?.data?.peerProfile.hostURL !== hostURL) {
             setValidURL(true)
             setProfile(response.data.peerProfile)
           } else {
