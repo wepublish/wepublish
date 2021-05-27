@@ -32,7 +32,8 @@
         "lead": "Lead",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
-        "publishedAt": "Published At"
+        "publishedAt": "Published At",
+        "createAuthorProfile": "Create Author Profile for {{name}}"
       }
     },
     "articleEditor": {
@@ -160,6 +161,7 @@
         "untitled": "Untitled",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
+        "parent": "Parent",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
         "requestChangesOnComment": "Request Changes On Comment",
@@ -524,7 +526,7 @@
           "close": "Close",
           "confirm": "Confirm",
           "embed": "Embed",
-          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video formatted like e.g.",
+          "socialMediaList": "Facebook Post/Video, Instagram Post, Twitter Tweet, Vimeo Video, YouTube Video, Polis Conversation formatted like e.g.",
           "embedCodeAttributes": "Embed code attributes <code>title, src, width, height</code> are validated e.g.",
           "alternativeStyling": "Set <code>style</code> alternatively as attribute to overwrite the defaults and disable auto ratio size scaling .e.g.",
           "iframe1Sample": "<iframe width=\"560\" height=\"315\" src=\"https://...\"></iframe>",
@@ -712,6 +714,13 @@
       "active": "Active",
       "activeDescription": "Makes the method available",
       "adapter": "Payment Adapter"
+    },
+    "dateTimePicker": {
+      "now": "Now",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "nextSaturday": "Next Saturday",
+      "hour": "{{hour}}:00"
     },
     "untitled": "Untitled",
     "confirm": "Confirm",

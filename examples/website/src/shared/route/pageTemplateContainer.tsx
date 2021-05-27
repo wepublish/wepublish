@@ -12,6 +12,7 @@ import {
   vimeoVideoBlockDataFragment,
   youtubeVideoBlockDataFragment,
   soundCloudTrackBlockDataFragment,
+  polisConversationBlockDataFragment,
   embedBlockDataFragment,
   linkPageBreakBlockDataFragment,
   listicleBlockDataFragment,
@@ -59,6 +60,7 @@ const PageQuery = gql`
         ...VimeoVideoBlockData
         ...YoutubeVideoBlockData
         ...SoundCloudTrackBlockData
+        ...PolisConversationBlockData
         ...EmbedBlockData
         ...LinkPageBreakBlockData
         ...ListicleBlockData
@@ -79,6 +81,7 @@ const PageQuery = gql`
   ${vimeoVideoBlockDataFragment}
   ${youtubeVideoBlockDataFragment}
   ${soundCloudTrackBlockDataFragment}
+  ${polisConversationBlockDataFragment}
   ${embedBlockDataFragment}
   ${linkPageBreakBlockDataFragment}
   ${listicleBlockDataFragment}

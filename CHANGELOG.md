@@ -1,5 +1,93 @@
 # Change Log
 
+## v2.3.0 (2021-05-26)
+
+#### :heart: New Feature
+* `editor`
+  * [#253](https://github.com/wepublish/wepublish/pull/253) added time in modefied coloumn ([@bishoymelek](https://github.com/bishoymelek))
+  * [#240](https://github.com/wepublish/wepublish/pull/240) f/wpc-320-create-an-author-in-the-article-metadata ([@HanaAyman](https://github.com/HanaAyman))
+  * [#241](https://github.com/wepublish/wepublish/pull/241) changed sorting to be with modification date ([@bishoymelek](https://github.com/bishoymelek))
+* `api-db-mongodb`, `api`, `editor`
+  * [#238](https://github.com/wepublish/wepublish/pull/238) F/wpc 323 sorting pagination author list ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#243](https://github.com/wepublish/wepublish/pull/243) remove extra lead field from teaser panel ([@penk85](https://github.com/penk85))
+  * [#234](https://github.com/wepublish/wepublish/pull/234) wpc-305-change-unpublish-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#233](https://github.com/wepublish/wepublish/pull/233) wpc-286-image-updated-alert ([@HanaAyman](https://github.com/HanaAyman))
+  * [#232](https://github.com/wepublish/wepublish/pull/232) b/wpc-322-make-member-plans-visually-deleted ([@HanaAyman](https://github.com/HanaAyman))
+* `api-db-mongodb`
+  * [#244](https://github.com/wepublish/wepublish/pull/244) Fix escaping regex ([@bishoymelek](https://github.com/bishoymelek))
+* `api`
+  * [#231](https://github.com/wepublish/wepublish/pull/231) Always set updatedAt and publishedAt date ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#252](https://github.com/wepublish/wepublish/pull/252) Comment list color ([@penk85](https://github.com/penk85))
+  * [#230](https://github.com/wepublish/wepublish/pull/230) split time and date picker ([@penk85](https://github.com/penk85))
+  * [#242](https://github.com/wepublish/wepublish/pull/242) add spacing to layout of forms in Navigation panel ([@penk85](https://github.com/penk85))
+  * [#239](https://github.com/wepublish/wepublish/pull/239) Highlight link button ([@penk85](https://github.com/penk85))
+
+#### :memo: Documentation
+* [#237](https://github.com/wepublish/wepublish/pull/237) enh. installation troubleshooting documentation ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+
+## v2.2.1 (2021-04-15)
+
+#### :bug: Bug Fix
+* `editor`
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
+## v2.2.0 (2021-04-14)
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#228](https://github.com/wepublish/wepublish/pull/228) use Visibility API to check if still logged in ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#223](https://github.com/wepublish/wepublish/pull/223) fix table column width ([@penk85](https://github.com/penk85))
+  * [#222](https://github.com/wepublish/wepublish/pull/222) Add missing translations to userlist panel ([@penk85](https://github.com/penk85))
+  * [#217](https://github.com/wepublish/wepublish/pull/217) Selected authors stay selected during search ([@roosnic1](https://github.com/roosnic1))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* `api`, `editor`
+  * [#219](https://github.com/wepublish/wepublish/pull/219) Disable save without peer data and handle errors of invalid tokens ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#225](https://github.com/wepublish/wepublish/pull/225) f/wpc-296-add-slug-guide ([@HanaAyman](https://github.com/HanaAyman))
+  * [#216](https://github.com/wepublish/wepublish/pull/216) f/WPC-276-highlight-article-after-being-unpublished ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :house: Internal
+* `editor`
+  * [#224](https://github.com/wepublish/wepublish/pull/224) f/wpc-255-character-counter-count-more-blocks ([@HanaAyman](https://github.com/HanaAyman))
+  * [#214](https://github.com/wepublish/wepublish/pull/214) f/wpc-256-see-the-max-amount-of-characters ([@HanaAyman](https://github.com/HanaAyman))
+* `api`
+  * [#227](https://github.com/wepublish/wepublish/pull/227) f/wpc-266-add-getCommentUrl-in-UrlAdapter-interface ([@HanaAyman](https://github.com/HanaAyman))
+* Other
+  * [#218](https://github.com/wepublish/wepublish/pull/218) Added color to the table in the example website ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Pat Mächler ([@valioDOTch](https://github.com/valioDOTch))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
 ## v2.1.0 (2021-03-31)
 
 #### :heart: New Feature

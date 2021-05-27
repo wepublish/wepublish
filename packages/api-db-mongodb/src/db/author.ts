@@ -18,6 +18,7 @@ import {Collection, Db, MongoCountPreferences, FilterQuery} from 'mongodb'
 import {CollectionName, DBAuthor} from './schema'
 import {Cursor} from './cursor'
 import {MaxResultsPerPage} from './defaults'
+import {escapeRegExp} from '../utility'
 
 export class MongoDBAuthorAdapter implements DBAuthorAdapter {
   private authors: Collection<DBAuthor>
@@ -125,7 +126,7 @@ export class MongoDBAuthorAdapter implements DBAuthorAdapter {
 
     // TODO: Rename to search
     if (filter?.name != undefined) {
-      textFilter['$or'] = [{name: {$regex: filter.name, $options: 'i'}}]
+      textFilter['$or'] = [{name: {$regex: escapeRegExp(filter.name), $options: 'i'}}]
     }
 
     const [totalCount, authors] = await Promise.all([
