@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - f/wpc-341-order-comments-by-state
 
 jobs:
   release:
