@@ -1849,7 +1849,7 @@ export type ArticleRefFragment = (
     & Pick<ArticleRevision, 'revision'>
   )>, pending?: Maybe<(
     { __typename?: 'ArticleRevision' }
-    & Pick<ArticleRevision, 'revision'>
+    & Pick<ArticleRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'ArticleRevision' }
     & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -2832,7 +2832,7 @@ export type PageRefFragment = (
     & Pick<PageRevision, 'revision'>
   )>, pending?: Maybe<(
     { __typename?: 'PageRevision' }
-    & Pick<PageRevision, 'revision'>
+    & Pick<PageRevision, 'publishAt' | 'revision'>
   )>, published?: Maybe<(
     { __typename?: 'PageRevision' }
     & Pick<PageRevision, 'publishedAt' | 'updatedAt' | 'revision'>
@@ -3593,6 +3593,7 @@ export const ArticleRefFragmentDoc = gql`
     revision
   }
   pending {
+    publishAt
     revision
   }
   published {
@@ -3654,6 +3655,7 @@ export const PageRefFragmentDoc = gql`
     revision
   }
   pending {
+    publishAt
     revision
   }
   published {
