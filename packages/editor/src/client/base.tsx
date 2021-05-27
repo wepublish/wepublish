@@ -192,8 +192,9 @@ export function Base({children}: BaseProps) {
                   </DropdownItemLink>
                   <TourMethods>
                     {tourContext => (
-                      // TODO: Move string to EN file
-                      <Dropdown.Item onSelect={tourContext?.start}>Start Tour</Dropdown.Item>
+                      <Dropdown.Item onSelect={tourContext?.start}>
+                        {t('guideTour.startTour')}
+                      </Dropdown.Item>
                     )}
                   </TourMethods>
                 </Dropdown>

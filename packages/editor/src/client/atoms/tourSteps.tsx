@@ -33,6 +33,16 @@ export const steps: Step.StepOptions[] = [
         */
   },
   {
+    buttons: [navButtons.back],
+    title: 'click on articles',
+    text: ['go to articles tab'],
+    attachTo: {element: '.rs-nav-item-content', on: 'auto'},
+    advanceOn: {selector: '.rs-nav-item-content', event: 'click'},
+    showOn: () => {
+      return !window.location.href.includes('/articles')
+    }
+  },
+  {
     arrow: true,
     attachTo: {element: '.rs-btn-primary', on: 'auto'},
     advanceOn: {selector: '.rs-btn-primary', event: 'click'},

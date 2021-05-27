@@ -721,6 +721,9 @@
       "nextSaturday": "Next Saturday",
       "hour": "{{hour}}:00"
     },
+    "guideTour": {
+      "startTour": "Start Tour"
+    },
     "untitled": "Untitled",
     "confirm": "Confirm",
     "cancel": "Cancel",
