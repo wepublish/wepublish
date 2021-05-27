@@ -68,6 +68,9 @@ import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
 import {EmojiPicker} from './atoms/EmojiPicker'
 import Popover from './atoms/Popover'
 import {LinkToolbar} from './packages/LinkToolbar'
+import { Node} from 'slate'
+import {toArray} from 'lodash'
+import { QuotationMarksPicker } from './atoms/QuotationMarksPicker'
 
 export const ToolbarLink = () => (
   <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
@@ -77,11 +80,44 @@ export const ToolbarLink = () => (
 
 export const ToolbarEmoji = () => {
   const editor = useStoreEditor()
-
   return (
     <Popover Icon={<ToolbarElement type="" icon={<Emoji />} />}>
       <EmojiPicker setEmoji={emoji => editor?.insertText(emoji)} />
     </Popover>
+  )
+}
+
+export const ToolbarQutationMarks = () => {
+  const editor = useStoreEditor()
+  return (
+    <Popover Icon={<ToolbarElement type="" icon={"<<>>"} />}>
+      <QuotationMarksPicker setQuotationMarks={quotationMark => editor?.insertText(quotationMark)} />
+    </Popover>
+  )
+}
+
+export const ToolbarCharCount= () => {
+  const editor = useStoreEditor()
+  console.log(editor?.children)
+  const getTextString = (editor: any) => {
+    // get all text nodes and append them to each other in one string
+    console.log(editor)
+    return [...Node.texts(editor)].reduce((string, nodePair, index) => {
+      const [textNode] = nodePair
+      if (index === 0) return `${textNode.text}`
+      return `${string} ${textNode.text}`
+    }, '')
+  }
+
+  const calculateEditorCharCount = (editor: any) => {
+    // using lodash toArray to get correct length for characters like emojis
+    return toArray(getTextString(editor)).length
+  }
+
+  const charCount = calculateEditorCharCount(editor)
+
+  return (
+      <div> {charCount} </div>
   )
 }
 
