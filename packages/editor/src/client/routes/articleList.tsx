@@ -103,7 +103,6 @@ export function ArticleList() {
         </FlexboxGrid.Item>
         <FlexboxGrid.Item colspan={8} style={{textAlign: 'right'}}>
           <ButtonLink
-            className="newAuthorButton"
             appearance="primary"
             disabled={isLoading}
             route={ArticleCreateRoute.create({})}>
