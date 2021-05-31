@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
 import {useStoreEditor} from '@udecode/slate-plugins-core'
 import {PopoverContext} from '../atoms/PopoverContext'
-import './quotation-marks-picker.css'
+// import './quotation-marks-picker.css'
 
 function insertQuotationMarks(
   editor: BaseEditor,
