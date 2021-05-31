@@ -88,10 +88,9 @@ export const ToolbarEmoji = () => {
 }
 
 export const ToolbarQutationMarks = () => {
-  const editor = useStoreEditor()
   return (
     <Popover Icon={<ToolbarElement type="" icon={"<<>>"} />}>
-      <QuotationMarksPicker setQuotationMarks={quotationMark => editor?.insertText(quotationMark)} />
+      <QuotationMarksPicker />
     </Popover>
   )
 }

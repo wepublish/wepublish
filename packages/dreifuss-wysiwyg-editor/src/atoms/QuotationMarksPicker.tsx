@@ -1,11 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {BaseEditor, BaseRange, Range, Editor, Node, Transforms} from 'slate'
+import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
 import {useStoreEditor} from '@udecode/slate-plugins-core'
 import {PopoverContext} from '../atoms/PopoverContext'
-
-// interface QuotationMarksPickerProps {
-//   setQuotationMarks: (quotationMarks: string) => void
-// }
+import './quotation-marks-picker.css'
 
 function insertQuotationMarks(
   editor: BaseEditor,
@@ -13,23 +10,13 @@ function insertQuotationMarks(
   selectedQuotationMarks: string
 ) {
   if (selection) {
-    // if (Range.isCollapsed(selection)) {
-    console.log('hi')
-    console.log(editor)
-    console.log(selection)
-    console.log(selectedQuotationMarks)
     const nodes = Array.from(
       Editor.nodes(editor, {
         at: selection
-        // match: (node: Node) => node.type === 'link'
       })
     )
     const tuple = nodes[0]
-    console.log(tuple)
     if (tuple) {
-      // const [, path] = tuple
-      // Transforms.select(editor, path)
-      // const location = (selection.anchor.offset)
       console.log(selection.focus)
       console.log(selection.anchor)
       Transforms.setSelection(editor, {
@@ -80,44 +67,82 @@ function insertQuotationMarks(
       } else {
         switch (selectedQuotationMarks) {
           case '""': {
-            Transforms.insertText(editor, '"', {
-              at: selection.anchor
-            })
-            Transforms.insertText(editor, '"', {
-              at: selection.focus
-            })
-            break
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '"', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '"', {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, '"', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '"', {
+                at: selection.anchor
+              })
+              break
+            }
           }
           case '<>': {
-            Transforms.insertText(editor, '<', {
-              at: selection.anchor
-            })
-            Transforms.insertText(editor, '>', {
-              at: selection.focus
-            })
-            break
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '>', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '<', {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, '>', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '<', {
+                at: selection.anchor
+              })
+              break
+            }
           }
           case "' '": {
-            Transforms.insertText(editor, "'", {
-              at: selection.anchor
-            })
-            Transforms.insertText(editor, "'", {
-              at: selection.focus
-            })
-            break
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, "'", {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, "'", {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, "'", {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, "'", {
+                at: selection.anchor
+              })
+              break
+            }
           }
           default: {
-            Transforms.insertText(editor, '<<', {
-              at: selection.anchor
-            })
-            Transforms.insertText(editor, '>>', {
-              at: selection.focus
-            })
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '>>', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '<<', {
+                at: selection.focus
+              })
+            } else {
+              Transforms.insertText(editor, '>>', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '<<', {
+                at: selection.anchor
+              })
+            }
           }
         }
       }
     } else {
-      console.log('noooo')
       Transforms.insertText(editor, selectedQuotationMarks)
       Transforms.select(editor, {
         anchor: {
@@ -127,9 +152,6 @@ function insertQuotationMarks(
         focus: {path: selection.focus.path, offset: selection.focus.offset}
       })
     }
-    // } else {
-    //   Transforms.select(editor, selection)
-    // }
   }
 }
 
@@ -137,45 +159,15 @@ export function QuotationMarksPicker() {
   const editor: BaseEditor = useStoreEditor()
   const {togglePopover} = useContext(PopoverContext)
   const [selection, setSelection] = useState<BaseRange | null>(null)
-  // const [selectedQuotationMarks, setSelectedQuotationMarks] = useState<string | null>('<<>>')
   let selectedQuotationMarks = ''
+  // const [selectedQuotationMarks, setSelectedQuotationMarks] = useState<string>()
 
   useEffect(() => {
     setSelection(editor?.selection)
-
-    // const nodes = Array.from(
-    //   Editor.nodes(editor, {
-    //     at: editor?.selection ?? undefined,
-    //     // match: (node: any) => node.type === 'link'
-    //   })
-    // )
-    // const tuple = nodes[0]
-    // if (tuple) {
-    //   const [node] = tuple
-    // setTitle((node.title as string) ?? '')
-
-    // const nodeUrl = node.url as string
-    // if (
-    //   !nodeUrl.startsWith(prefixType.https) ||
-    //   !nodeUrl.startsWith(prefixType.http) ||
-    //   !nodeUrl.startsWith(prefixType.mailto)
-    // ) {
-    //   setPrefix(prefixType.other)
-    // }
-    // setURL((nodeUrl as string) ?? '')
-    // } else if (editor.selection) {
-    //   const text = Editor.string(editor, editor.selection)
-    // console.log(text)
-    // setTitle(text ?? '')
-    // }
   }, [])
 
   return (
-    <menu
-      // onChange={e => {
-      //   setQuotationMarks()
-      // }}
-      style={{cursor: 'pointer'}}>
+    <menu>
       <button
         onClick={e => {
           e.preventDefault()
@@ -216,15 +208,17 @@ export function QuotationMarksPicker() {
         {'" "'}{' '}
       </button>
     </menu>
-    // <Menu
-    //   id="simple-menu"
-    //   anchorEl={anchorEl}
-    //   keepMounted
-    //   open={Boolean(anchorEl)}
-    //   onClose={handleClose}>
-    //   <MenuItem onClick={handleClose}>Profile</MenuItem>
-    //   <MenuItem onClick={handleClose}>My account</MenuItem>
-    //   <MenuItem onClick={handleClose}>Logout</MenuItem>
-    // </Menu>
+    // <select
+    //   style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
+    //   value={selectedQuotationMarks}
+    //   onChange={e => {
+    //     setSelectedQuotationMarks(e.target.value)
+    //     insertQuotationMarks(editor, selection, selectedQuotationMarks)
+    //   }}>
+    //   <option value={'<<>>'}>{'<< >>'}</option>
+    //   <option value={'<>'}>{'< >'}</option>
+    //   <option value={'""'}>{'" "'}</option>
+    //   <option value={"' '"}>{"' '"}</option>
+    // </select>
   )
 }
