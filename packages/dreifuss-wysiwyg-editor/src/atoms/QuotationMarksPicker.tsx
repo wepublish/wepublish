@@ -17,8 +17,6 @@ function insertQuotationMarks(
     )
     const tuple = nodes[0]
     if (tuple) {
-      console.log(selection.focus)
-      console.log(selection.anchor)
       Transforms.setSelection(editor, {
         anchor: {
           path: selection.anchor.path,
@@ -177,6 +175,7 @@ export function QuotationMarksPicker() {
         }}>
         {'<< >>'}
       </button>
+
       <button
         onClick={e => {
           e.preventDefault()
@@ -187,6 +186,7 @@ export function QuotationMarksPicker() {
         {' '}
         {'< >'}{' '}
       </button>
+
       <button
         onClick={e => {
           e.preventDefault()
@@ -197,6 +197,7 @@ export function QuotationMarksPicker() {
         {' '}
         {"' '"}{' '}
       </button>
+
       <button
         onClick={e => {
           e.preventDefault()
@@ -220,5 +221,45 @@ export function QuotationMarksPicker() {
     //   <option value={'""'}>{'" "'}</option>
     //   <option value={"' '"}>{"' '"}</option>
     // </select>
+    // <div>
+    //   <ul>
+    //     <button
+    //       onClick={e => {
+    //         e.preventDefault()
+    //         selectedQuotationMarks = '<<>>'
+    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
+    //         togglePopover()
+    //       }}>
+    //       {'<< >>'}
+    //     </button>
+    //     <button
+    //       onClick={e => {
+    //         e.preventDefault()
+    //         selectedQuotationMarks = '<>'
+    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
+    //         togglePopover()
+    //       }}>
+    //       {'< >'}
+    //     </button>
+    //     <button
+    //       onClick={e => {
+    //         e.preventDefault()
+    //         selectedQuotationMarks = "''"
+    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
+    //         togglePopover()
+    //       }}>
+    //       {"' '"}
+    //     </button>
+    //     <button
+    //       onClick={e => {
+    //         e.preventDefault()
+    //         selectedQuotationMarks = '""'
+    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
+    //         togglePopover()
+    //       }}>
+    //       {'" "'}
+    //     </button>
+    //   </ul>
+    // </div>
   )
 }
