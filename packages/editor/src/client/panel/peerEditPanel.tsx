@@ -30,7 +30,7 @@ import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
 export interface ImageEditPanelProps {
   id?: string
-  hostURL?: string
+  hostURL: string
 
   onClose?(): void
   onSave?(): void
@@ -184,7 +184,13 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: ImageEditPanelProp
               <FormControl
                 value={urlString}
                 name={t('peerList.panels.URL')}
-                errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
+                errorMessage={
+                  urlString === hostURL
+                    ? t('peerList.panels.peeredToHost')
+                    : isValidURL === false
+                    ? t('peerList.panels.invalidURL')
+                    : undefined
+                }
                 onChange={value => {
                   setURLString(value)
                 }}

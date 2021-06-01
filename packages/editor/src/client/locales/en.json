@@ -473,7 +473,9 @@
         "callToActionText": "Call To Action Text",
         "callToActionURL": "Call To Action URL",
         "image": "Image",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "invalidURL": "Invalid URL",
+        "peeredToHost": "Cannot peer to self"
       }
     },
     "tokenList": {
