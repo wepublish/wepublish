@@ -212,7 +212,7 @@ export function PeerList() {
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
         <PeerEditPanel
           id={editID}
-          hostURL={peerInfoData?.peerProfile.hostURL}
+          hostURL={peerInfoData!.peerProfile.hostURL}
           onClose={() => {
             setEditModalOpen(false)
 

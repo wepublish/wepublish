@@ -42,7 +42,8 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
 
-  const [isValidURL, setValidURL] = useState<boolean>()
+  const [isValidPeer, setValidPeer] = useState<boolean>()
+  const [errorMessage, setErrorMessage] = useState('')
   const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
   const [profile, setProfile] = useState<FullPeerProfileFragment>()
 
@@ -61,7 +62,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   })
 
   const isDisabled =
-    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL || (!token && !id)
+    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidPeer || (!token && !id)
 
   const {t} = useTranslation()
 
@@ -102,27 +103,31 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
           setLoadingPeerProfile(false)
 
           // TODO: Better validation
-          if (response?.data?.peerProfile && response?.data?.peerProfile.hostURL !== hostURL) {
-            setValidURL(true)
-            setProfile(response.data.peerProfile)
+          if (!response?.data?.peerProfile) {
+            setValidPeer(false)
+            setErrorMessage(t('peerList.panels.invalidURL'))
+          } else if (response?.data?.peerProfile.hostURL !== hostURL) {
+            setValidPeer(false)
+            setErrorMessage('peerList.panels.peeredToHost')
           } else {
-            setValidURL(false)
+            setValidPeer(true)
+            setProfile(response.data.peerProfile)
           }
         })
         .catch(err => {
           if (err.name === 'AbortError') return
 
           setLoadingPeerProfile(false)
-          setValidURL(false)
+          setValidPeer(false)
         })
 
-      setValidURL(undefined)
+      setValidPeer(undefined)
       setLoadingPeerProfile(true)
 
       return () => abortController?.abort()
     } catch (err) {
       setLoadingPeerProfile(false)
-      setValidURL(false)
+      setValidPeer(false)
       return () => {
         /* do nothing */
       }
@@ -184,13 +189,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
               <FormControl
                 value={urlString}
                 name={t('peerList.panels.URL')}
-                errorMessage={
-                  urlString === hostURL
-                    ? t('peerList.panels.peeredToHost')
-                    : isValidURL === false
-                    ? t('peerList.panels.invalidURL')
-                    : undefined
-                }
+                errorMessage={errorMessage}
                 onChange={value => {
                   setURLString(value)
                 }}
@@ -210,7 +209,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
             </FormGroup>
           </Form>
         </Panel>
-        {!isLoadingPeerProfile && (token || id) && isValidURL && (
+        {!isLoadingPeerProfile && (token || id) && isValidPeer && (
           <Panel header={t('peerList.panels.information')}>
             <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>
