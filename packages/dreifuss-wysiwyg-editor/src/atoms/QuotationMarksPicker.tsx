@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
 import {useStoreEditor} from '@udecode/slate-plugins-core'
 import {PopoverContext} from '../atoms/PopoverContext'
-// import './quotation-marks-picker.css'
+import './quotation-marks-picker.css'
 
 function insertQuotationMarks(
   editor: BaseEditor,
@@ -158,7 +158,6 @@ export function QuotationMarksPicker() {
   const {togglePopover} = useContext(PopoverContext)
   const [selection, setSelection] = useState<BaseRange | null>(null)
   let selectedQuotationMarks = ''
-  // const [selectedQuotationMarks, setSelectedQuotationMarks] = useState<string>()
 
   useEffect(() => {
     setSelection(editor?.selection)
@@ -172,7 +171,8 @@ export function QuotationMarksPicker() {
           selectedQuotationMarks = '<<>>'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
-        }}>
+        }}
+        className="button">
         {'<< >>'}
       </button>
 
@@ -182,7 +182,8 @@ export function QuotationMarksPicker() {
           selectedQuotationMarks = '<>'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
-        }}>
+        }}
+        className="button">
         {' '}
         {'< >'}{' '}
       </button>
@@ -193,7 +194,8 @@ export function QuotationMarksPicker() {
           selectedQuotationMarks = "' '"
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
-        }}>
+        }}
+        className="button">
         {' '}
         {"' '"}{' '}
       </button>
@@ -204,62 +206,11 @@ export function QuotationMarksPicker() {
           selectedQuotationMarks = '""'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
-        }}>
+        }}
+        className="button">
         {' '}
         {'" "'}{' '}
       </button>
     </menu>
-    // <select
-    //   style={{backgroundColor: 'white', border: 'none', boxShadow: 'none'}}
-    //   value={selectedQuotationMarks}
-    //   onChange={e => {
-    //     setSelectedQuotationMarks(e.target.value)
-    //     insertQuotationMarks(editor, selection, selectedQuotationMarks)
-    //   }}>
-    //   <option value={'<<>>'}>{'<< >>'}</option>
-    //   <option value={'<>'}>{'< >'}</option>
-    //   <option value={'""'}>{'" "'}</option>
-    //   <option value={"' '"}>{"' '"}</option>
-    // </select>
-    // <div>
-    //   <ul>
-    //     <button
-    //       onClick={e => {
-    //         e.preventDefault()
-    //         selectedQuotationMarks = '<<>>'
-    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
-    //         togglePopover()
-    //       }}>
-    //       {'<< >>'}
-    //     </button>
-    //     <button
-    //       onClick={e => {
-    //         e.preventDefault()
-    //         selectedQuotationMarks = '<>'
-    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
-    //         togglePopover()
-    //       }}>
-    //       {'< >'}
-    //     </button>
-    //     <button
-    //       onClick={e => {
-    //         e.preventDefault()
-    //         selectedQuotationMarks = "''"
-    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
-    //         togglePopover()
-    //       }}>
-    //       {"' '"}
-    //     </button>
-    //     <button
-    //       onClick={e => {
-    //         e.preventDefault()
-    //         selectedQuotationMarks = '""'
-    //         insertQuotationMarks(editor, selection, selectedQuotationMarks)
-    //         togglePopover()
-    //       }}>
-    //       {'" "'}
-    //     </button>
-    //   </ul>
-    // </div>
   )
 }

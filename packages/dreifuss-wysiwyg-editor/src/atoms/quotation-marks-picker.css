@@ -1,0 +1,9 @@
+.button {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
