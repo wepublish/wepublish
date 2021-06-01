@@ -17,7 +17,8 @@
         "draft": "Draft",
         "pending": "Pending",
         "published": "Published",
-        "notPublished": "publish date not set"
+        "publicationDate": "Publication date",
+        "notPublished": "Not yet published"
       },
       "panels": {
         "cancel": "Cancel",
@@ -188,6 +189,7 @@
         "pages": "Pages",
         "title": "Title",
         "created": "Created",
+        "publicationDate": "Publication date",
         "updated": "Modified",
         "states": "States",
         "action": "Action",
@@ -199,7 +201,7 @@
         "search": "Search",
         "loadMore": "Load More",
         "noPages": "No Pages found",
-        "notPublished": "publish date not set"
+        "notPublished": "Not yet published"
       },
       "panels": {
         "unpublish": "Unpublish",
