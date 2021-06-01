@@ -35,29 +35,29 @@ function insertQuotationMarks(
             })
             break
           }
-          case '<>': {
-            Transforms.insertText(editor, '>', {
+          case '‹›': {
+            Transforms.insertText(editor, '›', {
               at: selection.anchor
             })
-            Transforms.insertText(editor, '<', {
+            Transforms.insertText(editor, '‹', {
               at: selection.focus
             })
             break
           }
-          case "' '": {
-            Transforms.insertText(editor, "'", {
+          case "’’": {
+            Transforms.insertText(editor, "’", {
               at: selection.anchor
             })
-            Transforms.insertText(editor, "'", {
+            Transforms.insertText(editor, "’", {
               at: selection.focus
             })
             break
           }
           default: {
-            Transforms.insertText(editor, '>>', {
+            Transforms.insertText(editor, '»', {
               at: selection.anchor
             })
-            Transforms.insertText(editor, '<<', {
+            Transforms.insertText(editor, '«', {
               at: selection.focus
             })
           }
@@ -83,39 +83,39 @@ function insertQuotationMarks(
               break
             }
           }
-          case '<>': {
+          case '‹›': {
             if (selection.anchor.offset > selection.focus.offset) {
-              Transforms.insertText(editor, '>', {
+              Transforms.insertText(editor, '›', {
                 at: selection.anchor
               })
-              Transforms.insertText(editor, '<', {
+              Transforms.insertText(editor, '‹', {
                 at: selection.focus
               })
               break
             } else {
-              Transforms.insertText(editor, '>', {
+              Transforms.insertText(editor, '›', {
                 at: selection.focus
               })
-              Transforms.insertText(editor, '<', {
+              Transforms.insertText(editor, '‹', {
                 at: selection.anchor
               })
               break
             }
           }
-          case "' '": {
+          case "’’": {
             if (selection.anchor.offset > selection.focus.offset) {
-              Transforms.insertText(editor, "'", {
+              Transforms.insertText(editor, "’", {
                 at: selection.anchor
               })
-              Transforms.insertText(editor, "'", {
+              Transforms.insertText(editor, "’", {
                 at: selection.focus
               })
               break
             } else {
-              Transforms.insertText(editor, "'", {
+              Transforms.insertText(editor, "’", {
                 at: selection.focus
               })
-              Transforms.insertText(editor, "'", {
+              Transforms.insertText(editor, "’", {
                 at: selection.anchor
               })
               break
@@ -123,17 +123,17 @@ function insertQuotationMarks(
           }
           default: {
             if (selection.anchor.offset > selection.focus.offset) {
-              Transforms.insertText(editor, '>>', {
+              Transforms.insertText(editor, '»', {
                 at: selection.anchor
               })
-              Transforms.insertText(editor, '<<', {
+              Transforms.insertText(editor, '«', {
                 at: selection.focus
               })
             } else {
-              Transforms.insertText(editor, '>>', {
+              Transforms.insertText(editor, '»', {
                 at: selection.focus
               })
-              Transforms.insertText(editor, '<<', {
+              Transforms.insertText(editor, '«', {
                 at: selection.anchor
               })
             }
@@ -168,36 +168,36 @@ export function QuotationMarksPicker() {
       <button
         onClick={e => {
           e.preventDefault()
-          selectedQuotationMarks = '<<>>'
+          selectedQuotationMarks = '«»'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
         }}
         className="button">
-        {'<< >>'}
+        {'« »'}
       </button>
 
       <button
         onClick={e => {
           e.preventDefault()
-          selectedQuotationMarks = '<>'
+          selectedQuotationMarks = '‹›'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
         }}
         className="button">
         {' '}
-        {'< >'}{' '}
+        {'‹ ›'}{' '}
       </button>
 
       <button
         onClick={e => {
           e.preventDefault()
-          selectedQuotationMarks = "' '"
+          selectedQuotationMarks = "’’"
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
           togglePopover()
         }}
         className="button">
         {' '}
-        {"' '"}{' '}
+        {"’ ’"}{' '}
       </button>
 
       <button
