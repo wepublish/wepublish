@@ -111,6 +111,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
             setErrorMessage(t('peerList.panels.peeredToHost'))
           } else {
             setValidPeer(true)
+            setErrorMessage('')
             setProfile(response.data.peerProfile)
           }
         })
