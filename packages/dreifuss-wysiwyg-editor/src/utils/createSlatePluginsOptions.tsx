@@ -149,7 +149,13 @@ export const createSlatePluginsOptions = <T extends string = string>(
     [ELEMENT_TABLE]: {},
     [ELEMENT_TD]: {
       type: 'table-cell',
-      defaultType: 'table-cell'
+      defaultType: 'table-cell',
+      // component: (props: any) => {
+      //   return (
+      //     <td style={{
+      //       borderColor: 'blue'}}></td>
+      //   )
+      // }
     },
     [ELEMENT_TR]: {
       type: 'table-row',

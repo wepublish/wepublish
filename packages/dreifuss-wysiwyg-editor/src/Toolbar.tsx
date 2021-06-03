@@ -71,6 +71,7 @@ import {LinkToolbar} from './packages/LinkToolbar'
 import { Node} from 'slate'
 import {toArray} from 'lodash'
 import { QuotationMarksPicker } from './atoms/QuotationMarksPicker'
+import { TableColorPicker } from './atoms/TableColorPicker'
 
 export const ToolbarLink = () => (
   <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
@@ -89,7 +90,7 @@ export const ToolbarEmoji = () => {
 
 export const ToolbarQutationMarks = () => {
   return (
-    <Popover Icon={<ToolbarElement type="" icon={"<<>>"} />}>
+    <Popover Icon={<ToolbarElement type="" icon={"« »"} />}>
       <QuotationMarksPicker />
     </Popover>
   )
@@ -178,6 +179,7 @@ export const ToolbarButtonsTable = () => (
     <ToolbarTable icon={<BorderTop />} transform={deleteRow} />
     <ToolbarTable icon={<BorderLeft />} transform={addColumn} />
     <ToolbarTable icon={<BorderRight />} transform={deleteColumn} />
+    <TableColorPicker></TableColorPicker>
   </>
 )
 
