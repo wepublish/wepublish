@@ -1,0 +1,15 @@
+{
+  "ignoreChanges": [
+    "**test**",
+    "**.spec**",
+    "**/*.md",
+    "**/*stories*",
+    "**template**",
+    "**fixture**"
+  ],
+  "includeMergedTags": true,
+  "npmClient": "yarn",
+  "packages": ["packages/**", "docs"],
+  "useWorkspaces": true,
+  "version": "1.0.0-alpha.25"
+}

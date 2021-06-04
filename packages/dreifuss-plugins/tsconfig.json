@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", "**/node_modules", "**/dist", "**/*.stories.*", "**/*template*"]
+}
