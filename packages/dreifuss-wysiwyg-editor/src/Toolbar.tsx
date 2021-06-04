@@ -14,6 +14,8 @@ import {
   AlignCenter,
   AlignJustify,
   StrikeThrough,
+  Superscript,
+  Subscript,
   //   FileImage,
   ListOL,
   ListUL,
@@ -39,12 +41,10 @@ import {ToolbarAlign} from '@udecode/slate-plugins-alignment-ui'
 // } from '@udecode/slate-plugins-basic-elements'
 import {
   MARK_BOLD,
-  //   MARK_CODE,
   MARK_ITALIC,
-  //   MARK_KBD,
   MARK_STRIKETHROUGH,
-  //   MARK_SUBSCRIPT,
-  //   MARK_SUPERSCRIPT,
+  MARK_SUBSCRIPT,
+  MARK_SUPERSCRIPT,
   MARK_UNDERLINE
 } from '@udecode/slate-plugins-basic-marks'
 import {ELEMENT_BLOCKQUOTE} from '@udecode/slate-plugins-block-quote'
@@ -68,9 +68,8 @@ import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
 import {EmojiPicker} from './atoms/EmojiPicker'
 import Popover from './atoms/Popover'
 import {LinkToolbar} from './packages/LinkToolbar'
-import { Node} from 'slate'
-import {toArray} from 'lodash'
-import { QuotationMarksPicker } from './atoms/QuotationMarksPicker'
+import {QuotationMarksPicker} from './atoms/QuotationMarksPicker'
+import {TableColorPicker} from './atoms/TableColorPicker'
 
 export const ToolbarLink = () => (
   <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
@@ -80,6 +79,7 @@ export const ToolbarLink = () => (
 
 export const ToolbarEmoji = () => {
   const editor = useStoreEditor()
+
   return (
     <Popover Icon={<ToolbarElement type="" icon={<Emoji />} />}>
       <EmojiPicker setEmoji={emoji => editor?.insertText(emoji)} />
@@ -89,35 +89,13 @@ export const ToolbarEmoji = () => {
 
 export const ToolbarQutationMarks = () => {
   const editor = useStoreEditor()
+
   return (
-    <Popover Icon={<ToolbarElement type="" icon={"<<>>"} />}>
-      <QuotationMarksPicker setQuotationMarks={quotationMark => editor?.insertText(quotationMark)} />
+    <Popover Icon={<ToolbarElement type="" icon={'<<>>'} />}>
+      <QuotationMarksPicker
+        setQuotationMarks={(quotationMark: any) => editor?.insertText(quotationMark)}
+      />
     </Popover>
-  )
-}
-
-export const ToolbarCharCount= () => {
-  const editor = useStoreEditor()
-  console.log(editor?.children)
-  const getTextString = (editor: any) => {
-    // get all text nodes and append them to each other in one string
-    console.log(editor)
-    return [...Node.texts(editor)].reduce((string, nodePair, index) => {
-      const [textNode] = nodePair
-      if (index === 0) return `${textNode.text}`
-      return `${string} ${textNode.text}`
-    }, '')
-  }
-
-  const calculateEditorCharCount = (editor: any) => {
-    // using lodash toArray to get correct length for characters like emojis
-    return toArray(getTextString(editor)).length
-  }
-
-  const charCount = calculateEditorCharCount(editor)
-
-  return (
-      <div> {charCount} </div>
   )
 }
 
@@ -157,7 +135,7 @@ export const ToolbarButtonsBasicMarks = () => {
       <ToolbarMark type={useSlatePluginType(MARK_STRIKETHROUGH)} icon={<StrikeThrough />} />
       {/* <ToolbarMark type={useSlatePluginType(MARK_CODE)} icon={<CodeAlt />} />
       <ToolbarMark type={useSlatePluginType(MARK_KBD)} icon={<Keyboard />} /> */}
-      {/* <ToolbarMark
+      <ToolbarMark
         type={useSlatePluginType(MARK_SUPERSCRIPT)}
         clear={useSlatePluginType(MARK_SUBSCRIPT)}
         icon={<Superscript />}
@@ -166,7 +144,7 @@ export const ToolbarButtonsBasicMarks = () => {
         type={useSlatePluginType(MARK_SUBSCRIPT)}
         clear={useSlatePluginType(MARK_SUPERSCRIPT)}
         icon={<Subscript />}
-      /> */}
+      />
     </>
   )
 }
@@ -179,6 +157,7 @@ export const ToolbarButtonsTable = () => (
     <ToolbarTable icon={<BorderTop />} transform={deleteRow} />
     <ToolbarTable icon={<BorderLeft />} transform={addColumn} />
     <ToolbarTable icon={<BorderRight />} transform={deleteColumn} />
+    <TableColorPicker></TableColorPicker>
   </>
 )
 

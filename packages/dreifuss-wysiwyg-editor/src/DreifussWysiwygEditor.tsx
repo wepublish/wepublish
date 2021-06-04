@@ -4,14 +4,14 @@ import {HistoryEditor} from 'slate-history'
 import Divider, {DividerType} from './atoms/Divider'
 import {createLinkPlugin} from '@udecode/slate-plugins-link'
 import {HeadingToolbar} from '@udecode/slate-plugins-toolbar'
-import {createImagePlugin} from '@udecode/slate-plugins-image'
+import {createImagePlugin, createImagePlugin} from '@udecode/slate-plugins-image'
 import {createTablePlugin} from '@udecode/slate-plugins-table'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
-import {createHeadingPlugin} from '@udecode/slate-plugins-heading'
-import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
+import {createHeadingPlugin, createHeadingPlugin} from '@udecode/slate-plugins-heading'
+import {createHighlightPlugin, createHighlightPlugin} from '@udecode/slate-plugins-highlight'
 import {createParagraphPlugin} from '@udecode/slate-plugins-paragraph'
-import {createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
-import {createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
+import {createCodeBlockPlugin, createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
+import {createBlockquotePlugin, createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
 import {createMediaEmbedPlugin} from '@udecode/slate-plugins-media-embed'
 import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
 import {createBasicElementPlugins} from '@udecode/slate-plugins-basic-elements'
@@ -27,12 +27,9 @@ import {
   createSubscriptPlugin,
   createSuperscriptPlugin
 } from '@udecode/slate-plugins-basic-marks'
-import {
-  SlatePlugins,
-  createHistoryPlugin,
-  createReactPlugin,
-  SPEditor
-} from '@udecode/slate-plugins-core'
+
+import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/slate-plugins-core'
+
 // import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
 // import {createNormalizeTypesPlugin} from '@udecode/slate-plugins-normalizers'
 import {
@@ -101,19 +98,11 @@ export default function DreifussWysiwygEditor(props: any) {
     createStrikethroughPlugin(),
     createSubscriptPlugin(),
     createSuperscriptPlugin()
-    //   createNormalizeTypesPlugin({
-    //     rules: [{path: [0, 0], strictType: options[ELEMENT_H1].type}]
-    //   }),
-    //   createTrailingBlockPlugin({
-    //     type: options[ELEMENT_PARAGRAPH].type,
-    //     level: 1
-    //   }),
-    //   createSelectOnBackspacePlugin({allow: options[ELEMENT_IMAGE].type})
   ]
 
   return (
     <SlatePlugins
-      id="3"
+      id="main"
       onChange={props.onChange}
       plugins={plugins}
       components={components}
@@ -139,11 +128,6 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           <ToolbarQutationMarks />
         </HeadingToolbar>
-      )}
-      {editableProps.showCount && (
-        <p style={{textAlign: 'right'}}>
-          <ToolbarCharCountUI />
-        </p>
       )}
     </SlatePlugins>
   )

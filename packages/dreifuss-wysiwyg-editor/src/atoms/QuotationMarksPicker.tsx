@@ -1,46 +1,216 @@
-import React from 'react'
+import React, {useContext, useEffect, useState} from 'react'
+import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
+import {useStoreEditor} from '@udecode/slate-plugins-core'
+import {PopoverContext} from '../atoms/PopoverContext'
+import './quotation-marks-picker.css'
 
-// import {BaseEmoji, Picker} from 'emoji-mart'
-// import {Picker} from
-
-interface QuotationMarksPickerProps {
-  setQuotationMarks: (quotationMarks: string) => void
+function insertQuotationMarks(
+  editor: BaseEditor,
+  selection: BaseRange | null,
+  selectedQuotationMarks: string
+) {
+  if (selection) {
+    const nodes = Array.from(
+      Editor.nodes(editor, {
+        at: selection
+      })
+    )
+    const tuple = nodes[0]
+    if (tuple) {
+      Transforms.setSelection(editor, {
+        anchor: {
+          path: selection.anchor.path,
+          offset: selection.anchor.offset
+        },
+        focus: {path: selection.focus.path, offset: selection.focus.offset}
+      })
+      if (Range.isCollapsed(selection)) {
+        switch (selectedQuotationMarks) {
+          case '""': {
+            Transforms.insertText(editor, '"', {
+              at: selection.anchor
+            })
+            Transforms.insertText(editor, '"', {
+              at: selection.focus
+            })
+            break
+          }
+          case '‹›': {
+            Transforms.insertText(editor, '›', {
+              at: selection.anchor
+            })
+            Transforms.insertText(editor, '‹', {
+              at: selection.focus
+            })
+            break
+          }
+          case '’’': {
+            Transforms.insertText(editor, '’', {
+              at: selection.anchor
+            })
+            Transforms.insertText(editor, '’', {
+              at: selection.focus
+            })
+            break
+          }
+          default: {
+            Transforms.insertText(editor, '»', {
+              at: selection.anchor
+            })
+            Transforms.insertText(editor, '«', {
+              at: selection.focus
+            })
+          }
+        }
+      } else {
+        switch (selectedQuotationMarks) {
+          case '""': {
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '"', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '"', {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, '"', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '"', {
+                at: selection.anchor
+              })
+              break
+            }
+          }
+          case '‹›': {
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '›', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '‹', {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, '›', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '‹', {
+                at: selection.anchor
+              })
+              break
+            }
+          }
+          case '’’': {
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '’', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '’', {
+                at: selection.focus
+              })
+              break
+            } else {
+              Transforms.insertText(editor, '’', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '’', {
+                at: selection.anchor
+              })
+              break
+            }
+          }
+          default: {
+            if (selection.anchor.offset > selection.focus.offset) {
+              Transforms.insertText(editor, '»', {
+                at: selection.anchor
+              })
+              Transforms.insertText(editor, '«', {
+                at: selection.focus
+              })
+            } else {
+              Transforms.insertText(editor, '»', {
+                at: selection.focus
+              })
+              Transforms.insertText(editor, '«', {
+                at: selection.anchor
+              })
+            }
+          }
+        }
+      }
+    } else {
+      Transforms.insertText(editor, selectedQuotationMarks)
+      Transforms.select(editor, {
+        anchor: {
+          path: selection.anchor.path,
+          offset: selection.anchor.offset
+        },
+        focus: {path: selection.focus.path, offset: selection.focus.offset}
+      })
+    }
+  }
 }
 
-export function QuotationMarksPicker({setQuotationMarks}: QuotationMarksPickerProps) {
+export function QuotationMarksPicker() {
+  const editor: BaseEditor = useStoreEditor()
+  const {togglePopover} = useContext(PopoverContext)
+  const [selection, setSelection] = useState<BaseRange | null>(null)
+  let selectedQuotationMarks = ''
+
+  useEffect(() => {
+    setSelection(editor?.selection)
+  }, [])
+
   return (
-    <menu
-        // onChange={e => {
-        //   setQuotationMarks()
-        // }}
-      style={{cursor: 'pointer'}}>
-      <button> {"<< >>"} </button>
-      <button> {"< >"} </button>
-      <button> {"' '"} </button>
+    <menu>
+      <button
+        onClick={e => {
+          e.preventDefault()
+          selectedQuotationMarks = '«»'
+          insertQuotationMarks(editor, selection, selectedQuotationMarks)
+          togglePopover()
+        }}
+        className="button">
+        {'« »'}
+      </button>
+
+      <button
+        onClick={e => {
+          e.preventDefault()
+          selectedQuotationMarks = '‹›'
+          insertQuotationMarks(editor, selection, selectedQuotationMarks)
+          togglePopover()
+        }}
+        className="button">
+        {' '}
+        {'‹ ›'}{' '}
+      </button>
+
+      <button
+        onClick={e => {
+          e.preventDefault()
+          selectedQuotationMarks = '’’'
+          insertQuotationMarks(editor, selection, selectedQuotationMarks)
+          togglePopover()
+        }}
+        className="button">
+        {' '}
+        {'’ ’'}{' '}
+      </button>
+
+      <button
+        onClick={e => {
+          e.preventDefault()
+          selectedQuotationMarks = '""'
+          insertQuotationMarks(editor, selection, selectedQuotationMarks)
+          togglePopover()
+        }}
+        className="button">
+        {' '}
+        {'" "'}{' '}
+      </button>
     </menu>
-    // <Menu
-    //   id="simple-menu"
-    //   anchorEl={anchorEl}
-    //   keepMounted
-    //   open={Boolean(anchorEl)}
-    //   onClose={handleClose}>
-    //   <MenuItem onClick={handleClose}>Profile</MenuItem>
-    //   <MenuItem onClick={handleClose}>My account</MenuItem>
-    //   <MenuItem onClick={handleClose}>Logout</MenuItem>
-    // </Menu>
   )
 }
-
-// import Dropdown from 'react-dropdown';
-// import 'react-dropdown/style.css';
-
-// const options = [
-//   'one', 'two', 'three'
-// ];
-// const defaultOption = options[0];
-
-// export function QuotationMarksPicker() {
-//   return (
-//     <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
-//   )
-// }
