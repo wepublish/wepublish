@@ -55,25 +55,6 @@ export interface EditableProps {
 export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
-  const charCount = 10
-  // const editor = useStoreEditor()
-
-  // const getTextString = (editor: any) => {
-  //   // get all text nodes and append them to each other in one string
-  //   console.log(editor)
-  //   return [...Node.texts(editor)].reduce((string, nodePair, index) => {
-  //     const [textNode] = nodePair
-  //     if (index === 0) return `${textNode.text}`
-  //     return `${string} ${textNode.text}`
-  //   }, '')
-  // }
-
-  // const calculateEditorCharCount = (editor: any) => {
-  //   // using lodash toArray to get correct length for characters like emojis
-  //   return toArray(getTextString(editor)).length
-  // }
-
-  // const charCount = calculateEditorCharCount(editor)
 
   const editableProps = {
     // placeholder: 'Enter some rich text…',
@@ -116,19 +97,11 @@ export default function DreifussWysiwygEditor(props: any) {
     createStrikethroughPlugin(),
     createSubscriptPlugin(),
     createSuperscriptPlugin()
-    //   createNormalizeTypesPlugin({
-    //     rules: [{path: [0, 0], strictType: options[ELEMENT_H1].type}]
-    //   }),
-    //   createTrailingBlockPlugin({
-    //     type: options[ELEMENT_PARAGRAPH].type,
-    //     level: 1
-    //   }),
-    //   createSelectOnBackspacePlugin({allow: options[ELEMENT_IMAGE].type})
   ]
 
   return (
     <SlatePlugins
-      id="3"
+      id="main"
       onChange={props.onChange}
       plugins={plugins}
       components={components}
@@ -155,7 +128,6 @@ export default function DreifussWysiwygEditor(props: any) {
           <ToolbarQutationMarks />
         </HeadingToolbar>
       )}
-      {editableProps.showCount && <p style={{textAlign: 'right'}}>{charCount}</p>}
     </SlatePlugins>
   )
 }
