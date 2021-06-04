@@ -14,7 +14,7 @@ import {
 } from '@udecode/slate-plugins-basic-marks'
 import {createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
 import {createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
-import {SlatePlugins, createHistoryPlugin, createReactPlugin, useStoreEditor} from '@udecode/slate-plugins-core'
+import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/slate-plugins-core'
 import {createHeadingPlugin} from '@udecode/slate-plugins-heading'
 import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
 import {createImagePlugin} from '@udecode/slate-plugins-image'
@@ -32,7 +32,6 @@ import {
   ToolbarButtonsBasicMarks,
   ToolbarButtonsList,
   ToolbarButtonsTable,
-  ToolbarCharCount,
   ToolbarEmoji,
   ToolbarLink,
   ToolbarQutationMarks
@@ -152,9 +151,8 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           <ToolbarLink />
           <ToolbarEmoji />
-          <ToolbarCharCount/>
           <Divider type={DividerType.vertical} />
-          <ToolbarQutationMarks/>
+          <ToolbarQutationMarks />
         </HeadingToolbar>
       )}
       {editableProps.showCount && <p style={{textAlign: 'right'}}>{charCount}</p>}
