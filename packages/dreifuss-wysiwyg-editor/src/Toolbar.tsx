@@ -69,6 +69,7 @@ import {EmojiPicker} from './atoms/EmojiPicker'
 import Popover from './atoms/Popover'
 import {LinkToolbar} from './packages/LinkToolbar'
 import {QuotationMarksPicker} from './atoms/QuotationMarksPicker'
+import {TableColorPicker} from './atoms/TableColorPicker'
 
 export const ToolbarLink = () => (
   <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
@@ -92,7 +93,7 @@ export const ToolbarQutationMarks = () => {
   return (
     <Popover Icon={<ToolbarElement type="" icon={'<<>>'} />}>
       <QuotationMarksPicker
-        setQuotationMarks={quotationMark => editor?.insertText(quotationMark)}
+        setQuotationMarks={(quotationMark: any) => editor?.insertText(quotationMark)}
       />
     </Popover>
   )
@@ -156,6 +157,7 @@ export const ToolbarButtonsTable = () => (
     <ToolbarTable icon={<BorderTop />} transform={deleteRow} />
     <ToolbarTable icon={<BorderLeft />} transform={addColumn} />
     <ToolbarTable icon={<BorderRight />} transform={deleteColumn} />
+    <TableColorPicker></TableColorPicker>
   </>
 )
 
