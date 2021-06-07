@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Node} from 'slate'
 import {toArray} from 'lodash'
-import {useSlatePluginsStore, useStoreEditor} from '@udecode/slate-plugins-core'
+import {useSlatePluginsStore} from '@udecode/slate-plugins-core'
 
 const getTextString = (editor: any) => {
   // get all text nodes and append them to each other in one string
@@ -17,16 +17,20 @@ const calculateEditorCharCount = (editor: any) => {
   return toArray(getTextString(editor)).length
 }
 
-export const ToolbarAlign = () => {
-  // TODO: this one needed to listen to changes and should be used to instead of `useStoreEditor`
-  // but it has key of "3"
-  useSlatePluginsStore()
+export const CharCount = ({editorId}: {editorId: string}) => {
+  const [charCount, setCharCount] = useState(0)
 
-  const editor = useStoreEditor()
-  const [charCount, setCharCount] = React.useState(0)
+  const dreifussStore = useSlatePluginsStore()
 
-  React.useEffect(() => {
+  const editor = dreifussStore[editorId]?.editor
+
+  if (!editor) {
+    return null
+  }
+
+  useEffect(() => {
     setCharCount(calculateEditorCharCount(editor))
   }, [editor?.children])
-  return <div>{charCount}</div>
+
+  return <span>{charCount}</span>
 }

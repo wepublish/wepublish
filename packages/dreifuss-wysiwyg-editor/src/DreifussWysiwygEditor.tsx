@@ -4,20 +4,20 @@ import {HistoryEditor} from 'slate-history'
 import Divider, {DividerType} from './atoms/Divider'
 import {createLinkPlugin} from '@udecode/slate-plugins-link'
 import {HeadingToolbar} from '@udecode/slate-plugins-toolbar'
-import {createImagePlugin, createImagePlugin} from '@udecode/slate-plugins-image'
+import {createImagePlugin} from '@udecode/slate-plugins-image'
 import {createTablePlugin} from '@udecode/slate-plugins-table'
 import {createAlignPlugin} from '@udecode/slate-plugins-alignment'
-import {createHeadingPlugin, createHeadingPlugin} from '@udecode/slate-plugins-heading'
-import {createHighlightPlugin, createHighlightPlugin} from '@udecode/slate-plugins-highlight'
+import {createHeadingPlugin} from '@udecode/slate-plugins-heading'
+import {createHighlightPlugin} from '@udecode/slate-plugins-highlight'
 import {createParagraphPlugin} from '@udecode/slate-plugins-paragraph'
-import {createCodeBlockPlugin, createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
-import {createBlockquotePlugin, createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
+import {createCodeBlockPlugin} from '@udecode/slate-plugins-code-block'
+import {createBlockquotePlugin} from '@udecode/slate-plugins-block-quote'
 import {createMediaEmbedPlugin} from '@udecode/slate-plugins-media-embed'
 import {createSlatePluginsOptions} from './utils/createSlatePluginsOptions'
 import {createBasicElementPlugins} from '@udecode/slate-plugins-basic-elements'
 import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
 import {createListPlugin, createTodoListPlugin} from '@udecode/slate-plugins-list'
-import {ToolbarAlign as ToolbarCharCountUI} from '@wepublish/dreifuss-plugins/packages/character-count-ui'
+import {CharCount} from '@wepublish/dreifuss-plugins/packages/character-count-ui'
 import {
   createBoldPlugin,
   createItalicPlugin,
@@ -27,9 +27,12 @@ import {
   createSubscriptPlugin,
   createSuperscriptPlugin
 } from '@udecode/slate-plugins-basic-marks'
-
-import {SlatePlugins, createHistoryPlugin, createReactPlugin} from '@udecode/slate-plugins-core'
-
+import {
+  SlatePlugins,
+  createHistoryPlugin,
+  createReactPlugin,
+  SPEditor
+} from '@udecode/slate-plugins-core'
 // import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
 // import {createNormalizeTypesPlugin} from '@udecode/slate-plugins-normalizers'
 import {
@@ -128,6 +131,11 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           <ToolbarQutationMarks />
         </HeadingToolbar>
+      )}
+      {editableProps.showCount && (
+        <p style={{textAlign: 'right'}}>
+          <CharCount editorId="main" />
+        </p>
       )}
     </SlatePlugins>
   )
