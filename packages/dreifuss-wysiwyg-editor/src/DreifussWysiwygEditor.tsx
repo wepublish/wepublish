@@ -56,6 +56,15 @@ export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
 
+  // if(props.displayOneLine){
+  //   console.log("hi")
+  //   console.log(props.initialValue[0])
+  //   if(props.initialValue.length > 10){
+  //     console.log("hiiiiiiiii")
+  //     props.initialValue = props.initialValue.slice(0, 1) + '...'
+  //   }
+  // }
+
   const editableProps = {
     // placeholder: 'Enter some rich text…',
     spellCheck: false,
@@ -67,7 +76,16 @@ export default function DreifussWysiwygEditor(props: any) {
           // whiteSpace: 'nowrap',
           // overflow: 'hidden',
           // textOverflow: 'ellipsis',
-          color: 'red'
+          // color: 'red'
+          // whiteSpace: 'nowrap',
+          // overflow: 'hidden',
+          // textOverflow: 'ellipsis'
+          // height: '50px',
+          // display: 'inline-block;',
+          height:'100px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
         }
       : {}
   }

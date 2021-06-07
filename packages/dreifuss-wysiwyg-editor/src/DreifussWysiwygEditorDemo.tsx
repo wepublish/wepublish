@@ -218,7 +218,7 @@ const DreifussWysiwygEditorDemo = () => (
       onChange={(value: any) => {
         // console.log(value)
       }}
-      showCharCount
+      displayOneLine
       initialValue={value}
     />
   </div>
