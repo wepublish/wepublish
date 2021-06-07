@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
-<PeerEditPanel>
+<PeerEditPanel
+  hostURL="localhost:4000"
+>
   <defaultProps(defaultProps(ModalHeader))
     classPrefix="rs-drawer-header"
     closeButton={true}
@@ -270,14 +272,14 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                               </defaultProps(ControlLabel)>
                               <defaultProps(FormControlWrapper)
                                 classPrefix="rs-form-control"
-                                errorMessage="Invalid URL"
+                                errorMessage=""
                                 name="peerList.panels.URL"
                                 onChange={[Function]}
                                 value="https://host-url.ch/"
                               >
                                 <FormControlWrapper
                                   classPrefix="rs-form-control"
-                                  errorMessage="Invalid URL"
+                                  errorMessage=""
                                   name="peerList.panels.URL"
                                   onChange={[Function]}
                                   value="https://host-url.ch/"
@@ -318,7 +320,7 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                       }
                                     }
                                     classPrefix="rs-form-control"
-                                    errorMessage="Invalid URL"
+                                    errorMessage=""
                                     errorPlacement="bottomStart"
                                     formValue={Object {}}
                                     name="peerList.panels.URL"
@@ -374,31 +376,14 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
                                         className="rs-form-control-message-wrapper"
                                         classPrefix="rs-error-message"
                                         placement="bottomStart"
-                                        show={true}
+                                        show={false}
                                       >
                                         <ErrorMessage
                                           className="rs-form-control-message-wrapper"
                                           classPrefix="rs-error-message"
                                           placement="bottomStart"
-                                          show={true}
-                                        >
-                                          <div
-                                            className="rs-error-message-wrapper rs-form-control-message-wrapper rs-error-message-placement-bottom-start"
-                                          >
-                                            <span
-                                              className="rs-error-message rs-error-message-show"
-                                            >
-                                              <span
-                                                className="rs-error-message-arrow"
-                                              />
-                                              <span
-                                                className="rs-error-message-inner"
-                                              >
-                                                Invalid URL
-                                              </span>
-                                            </span>
-                                          </div>
-                                        </ErrorMessage>
+                                          show={false}
+                                        />
                                       </defaultProps(ErrorMessage)>
                                     </div>
                                   </FormControl>
@@ -715,7 +700,9 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 `;
 
 exports[`Peer Edit Panel should render 1`] = `
-<PeerEditPanel>
+<PeerEditPanel
+  hostURL="localhost:4000"
+>
   <defaultProps(defaultProps(ModalHeader))
     classPrefix="rs-drawer-header"
     closeButton={true}
@@ -984,12 +971,14 @@ exports[`Peer Edit Panel should render 1`] = `
                               </defaultProps(ControlLabel)>
                               <defaultProps(FormControlWrapper)
                                 classPrefix="rs-form-control"
+                                errorMessage=""
                                 name="peerList.panels.URL"
                                 onChange={[Function]}
                                 value=""
                               >
                                 <FormControlWrapper
                                   classPrefix="rs-form-control"
+                                  errorMessage=""
                                   name="peerList.panels.URL"
                                   onChange={[Function]}
                                   value=""
@@ -1030,6 +1019,7 @@ exports[`Peer Edit Panel should render 1`] = `
                                       }
                                     }
                                     classPrefix="rs-form-control"
+                                    errorMessage=""
                                     errorPlacement="bottomStart"
                                     formValue={Object {}}
                                     name="peerList.panels.URL"
@@ -1408,6 +1398,7 @@ exports[`Peer Edit Panel should render 1`] = `
 
 exports[`Peer Edit Panel should render with ID 1`] = `
 <PeerEditPanel
+  hostURL="localhost:4000"
   id="peerId1"
 >
   <defaultProps(defaultProps(ModalHeader))
@@ -1678,14 +1669,14 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                               </defaultProps(ControlLabel)>
                               <defaultProps(FormControlWrapper)
                                 classPrefix="rs-form-control"
-                                errorMessage="Invalid URL"
+                                errorMessage=""
                                 name="peerList.panels.URL"
                                 onChange={[Function]}
                                 value="https://test-url.ch/"
                               >
                                 <FormControlWrapper
                                   classPrefix="rs-form-control"
-                                  errorMessage="Invalid URL"
+                                  errorMessage=""
                                   name="peerList.panels.URL"
                                   onChange={[Function]}
                                   value="https://test-url.ch/"
@@ -1726,7 +1717,7 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                       }
                                     }
                                     classPrefix="rs-form-control"
-                                    errorMessage="Invalid URL"
+                                    errorMessage=""
                                     errorPlacement="bottomStart"
                                     formValue={Object {}}
                                     name="peerList.panels.URL"
@@ -1782,31 +1773,14 @@ exports[`Peer Edit Panel should render with ID 1`] = `
                                         className="rs-form-control-message-wrapper"
                                         classPrefix="rs-error-message"
                                         placement="bottomStart"
-                                        show={true}
+                                        show={false}
                                       >
                                         <ErrorMessage
                                           className="rs-form-control-message-wrapper"
                                           classPrefix="rs-error-message"
                                           placement="bottomStart"
-                                          show={true}
-                                        >
-                                          <div
-                                            className="rs-error-message-wrapper rs-form-control-message-wrapper rs-error-message-placement-bottom-start"
-                                          >
-                                            <span
-                                              className="rs-error-message rs-error-message-show"
-                                            >
-                                              <span
-                                                className="rs-error-message-arrow"
-                                              />
-                                              <span
-                                                className="rs-error-message-inner"
-                                              >
-                                                Invalid URL
-                                              </span>
-                                            </span>
-                                          </div>
-                                        </ErrorMessage>
+                                          show={false}
+                                        />
                                       </defaultProps(ErrorMessage)>
                                     </div>
                                   </FormControl>
