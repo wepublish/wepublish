@@ -33,23 +33,21 @@ import {
   ELEMENT_ALIGN_JUSTIFY,
   ELEMENT_ALIGN_RIGHT
 } from '@udecode/slate-plugins-alignment'
-import {ToolbarAlign} from '@udecode/slate-plugins-alignment-ui'
-import {
-  MARK_BOLD,
-  MARK_ITALIC,
-  MARK_STRIKETHROUGH,
-  MARK_SUBSCRIPT,
-  MARK_SUPERSCRIPT,
-  MARK_UNDERLINE
-} from '@udecode/slate-plugins-basic-marks'
-import {ELEMENT_BLOCKQUOTE} from '@udecode/slate-plugins-block-quote'
-// import {BlockquoteElement} from '@udecode/slate-plugins-block-quote-ui'
-import {ELEMENT_CODE_BLOCK} from '@udecode/slate-plugins-code-block'
-import {ToolbarCodeBlock} from '@udecode/slate-plugins-code-block-ui'
-import {useSlatePluginType, useStoreEditor} from '@udecode/slate-plugins-core'
-import {ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4} from '@udecode/slate-plugins-heading'
-import {ELEMENT_OL, ELEMENT_UL} from '@udecode/slate-plugins-list'
+import Popover from './atoms/Popover'
+import {EmojiPicker} from './atoms/EmojiPicker'
+import {LinkToolbar} from './packages/LinkToolbar'
+import {TableColorPicker} from './atoms/TableColorPicker'
 import {ToolbarList} from '@udecode/slate-plugins-list-ui'
+import {ToolbarTable} from '@udecode/slate-plugins-table-ui'
+import {ToolbarAlign} from '@udecode/slate-plugins-alignment-ui'
+import {ELEMENT_OL, ELEMENT_UL} from '@udecode/slate-plugins-list'
+import {ELEMENT_CODE_BLOCK} from '@udecode/slate-plugins-code-block'
+import {ELEMENT_BLOCKQUOTE} from '@udecode/slate-plugins-block-quote'
+import {ToolbarCodeBlock} from '@udecode/slate-plugins-code-block-ui'
+import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
+import {useSlatePluginType, useStoreEditor} from '@udecode/slate-plugins-core'
+import {QuotationMarksPicker} from '@wepublish/dreifuss-plugins/packages/quotation-marks'
+import {ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4} from '@udecode/slate-plugins-heading'
 import {
   insertTable,
   deleteColumn,
@@ -58,13 +56,14 @@ import {
   addColumn,
   addRow
 } from '@udecode/slate-plugins-table'
-import {ToolbarTable} from '@udecode/slate-plugins-table-ui'
-import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
-import {EmojiPicker} from './atoms/EmojiPicker'
-import Popover from './atoms/Popover'
-import {LinkToolbar} from './packages/LinkToolbar'
-import {QuotationMarksPicker} from './atoms/QuotationMarksPicker'
-import {TableColorPicker} from './atoms/TableColorPicker'
+import {
+  MARK_BOLD,
+  MARK_ITALIC,
+  MARK_STRIKETHROUGH,
+  MARK_SUBSCRIPT,
+  MARK_SUPERSCRIPT,
+  MARK_UNDERLINE
+} from '@udecode/slate-plugins-basic-marks'
 
 export const ToolbarLink = () => (
   <Popover Icon={<ToolbarElement type="" icon={<Link />} />}>
@@ -88,7 +87,10 @@ export const ToolbarQuotationMarks = () => {
   return (
     <Popover Icon={<ToolbarElement type="" icon={'<<>>'} />}>
       <QuotationMarksPicker
-        setQuotationMarks={(quotationMark: any) => editor?.insertText(quotationMark)}
+        editor={editor}
+        setQuotationMarks={(quotationMark: any) => {
+          editor?.insertText(quotationMark)
+        }}
       />
     </Popover>
   )

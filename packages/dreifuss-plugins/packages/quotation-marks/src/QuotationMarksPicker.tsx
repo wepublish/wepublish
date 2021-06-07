@@ -1,8 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
-import {useStoreEditor} from '@udecode/slate-plugins-core'
-import {PopoverContext} from '../atoms/PopoverContext'
-import './quotation-marks-picker.css'
 
 function insertQuotationMarks(
   editor: BaseEditor,
@@ -153,9 +150,13 @@ function insertQuotationMarks(
   }
 }
 
-export function QuotationMarksPicker() {
-  const editor: BaseEditor = useStoreEditor()
-  const {togglePopover} = useContext(PopoverContext)
+export function QuotationMarksPicker({editor}:any) {
+
+  if (!editor) {
+    return null
+  }
+
+  // const {togglePopover} = useContext(PopoverContext)
   const [selection, setSelection] = useState<BaseRange | null>(null)
   let selectedQuotationMarks = ''
 
@@ -170,7 +171,7 @@ export function QuotationMarksPicker() {
           e.preventDefault()
           selectedQuotationMarks = '«»'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          togglePopover()
+          // togglePopover()
         }}
         className="button">
         {'« »'}
@@ -181,7 +182,7 @@ export function QuotationMarksPicker() {
           e.preventDefault()
           selectedQuotationMarks = '‹›'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          togglePopover()
+          // togglePopover()
         }}
         className="button">
         {' '}
@@ -193,7 +194,7 @@ export function QuotationMarksPicker() {
           e.preventDefault()
           selectedQuotationMarks = '’’'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          togglePopover()
+          // togglePopover()
         }}
         className="button">
         {' '}
@@ -205,7 +206,7 @@ export function QuotationMarksPicker() {
           e.preventDefault()
           selectedQuotationMarks = '""'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          togglePopover()
+          // togglePopover()
         }}
         className="button">
         {' '}
