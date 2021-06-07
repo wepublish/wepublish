@@ -18,6 +18,7 @@ import {createBasicElementPlugins} from '@udecode/slate-plugins-basic-elements'
 import {createSlatePluginsComponents} from './utils/createSlatePluginsComponents'
 import {createListPlugin, createTodoListPlugin} from '@udecode/slate-plugins-list'
 import {CharCount} from '@wepublish/dreifuss-plugins/packages/character-count-ui'
+import {createQuotationMarksPlugin} from '@wepublish/dreifuss-plugins/packages/block-quote'
 import {
   createBoldPlugin,
   createItalicPlugin,
@@ -42,8 +43,7 @@ import {
   ToolbarButtonsList,
   ToolbarButtonsTable,
   ToolbarEmoji,
-  ToolbarLink,
-  ToolbarQutationMarks
+  ToolbarLink
 } from './Toolbar'
 
 type TEditor = SPEditor & ReactEditor & HistoryEditor
@@ -77,6 +77,7 @@ export default function DreifussWysiwygEditor(props: any) {
   }
 
   const plugins = [
+    createQuotationMarksPlugin(),
     ...createBasicElementPlugins(),
     createReactPlugin(),
     createHistoryPlugin(),
@@ -129,7 +130,7 @@ export default function DreifussWysiwygEditor(props: any) {
           <ToolbarLink />
           <ToolbarEmoji />
           <Divider type={DividerType.vertical} />
-          <ToolbarQutationMarks />
+          {/* <ToolbarQuotationMarks /> */}
         </HeadingToolbar>
       )}
       {editableProps.showCount && (

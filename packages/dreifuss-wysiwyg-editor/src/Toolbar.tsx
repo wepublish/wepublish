@@ -34,11 +34,6 @@ import {
   ELEMENT_ALIGN_RIGHT
 } from '@udecode/slate-plugins-alignment'
 import {ToolbarAlign} from '@udecode/slate-plugins-alignment-ui'
-// import {} from '@udecode/slate-plugins-autoformat'
-// import {
-//   BasicElementPluginsOptions,
-//   createBasicElementPlugins
-// } from '@udecode/slate-plugins-basic-elements'
 import {
   MARK_BOLD,
   MARK_ITALIC,
@@ -87,7 +82,7 @@ export const ToolbarEmoji = () => {
   )
 }
 
-export const ToolbarQutationMarks = () => {
+export const ToolbarQuotationMarks = () => {
   const editor = useStoreEditor()
 
   return (
