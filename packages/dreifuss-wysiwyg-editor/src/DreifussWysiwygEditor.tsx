@@ -56,15 +56,6 @@ export default function DreifussWysiwygEditor(props: any) {
   const components = createSlatePluginsComponents()
   const options = createSlatePluginsOptions()
 
-  // if(props.displayOneLine){
-  //   console.log("hi")
-  //   console.log(props.initialValue[0])
-  //   if(props.initialValue.length > 10){
-  //     console.log("hiiiiiiiii")
-  //     props.initialValue = props.initialValue.slice(0, 1) + '...'
-  //   }
-  // }
-
   const editableProps = {
     // placeholder: 'Enter some rich text…',
     spellCheck: false,
@@ -73,16 +64,8 @@ export default function DreifussWysiwygEditor(props: any) {
     readOnly: props.displayOnly ?? props.disabled ?? false,
     style: props.displayOneLine
       ? {
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // textOverflow: 'ellipsis',
-          // color: 'red'
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // textOverflow: 'ellipsis'
-          // height: '50px',
-          // display: 'inline-block;',
-          height:'100px',
+          width: '300px',
+          height:'50px',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -125,7 +108,8 @@ export default function DreifussWysiwygEditor(props: any) {
       components={components}
       options={options}
       editableProps={editableProps}
-      initialValue={props.value || props.initialValue}>
+      initialValue={props.value || props.initialValue}
+      >
       {!props.displayOnly && (
         <HeadingToolbar>
           <ToolbarButtonsBasicElements />
