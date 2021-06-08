@@ -81,20 +81,11 @@ export const ToolbarEmoji = () => {
   )
 }
 
-export const ToolbarQuotationMarks = () => {
-  const editor = useStoreEditor()
-
-  return (
-    <Popover Icon={<ToolbarElement type="" icon={'<<>>'} />}>
-      <QuotationMarksPicker
-        editor={editor}
-        setQuotationMarks={(quotationMark: any) => {
-          editor?.insertText(quotationMark)
-        }}
-      />
-    </Popover>
-  )
-}
+export const ToolbarQuotationMarks = ({editorId}: {editorId: string}) => (
+  <Popover Icon={<ToolbarElement type="" icon={'<<>>'} />}>
+    <QuotationMarksPicker editorId={editorId} />
+  </Popover>
+)
 
 export const ToolbarButtonsBasicElements = () => (
   <>

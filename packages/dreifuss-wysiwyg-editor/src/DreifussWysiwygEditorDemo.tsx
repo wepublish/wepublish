@@ -2,7 +2,6 @@ import React from 'react'
 import {render} from 'react-dom'
 import DreifussWysiwygEditor from './DreifussWysiwygEditor'
 
-// TODO: remove this
 const value: any = [
   {
     type: 'ordered-list',
@@ -212,8 +211,41 @@ const value: any = [
 ]
 
 const DreifussWysiwygEditorDemo = () => (
-  <div style={{overflowX: 'hidden'}}>
+  <div style={{overflowX: 'hidden', minHeight: 400}}>
     <h1>RichText Component Demo</h1>
+    <table style={{width: '100%', border: '1px solid black'}}>
+      <tr>
+        <th style={{border: '1px solid black'}}>Firstname</th>
+        <th style={{border: '1px solid black'}}>Lastname</th>
+        <th style={{border: '1px solid black'}}>Age</th>
+      </tr>
+      <tr style={{border: '1px solid black'}}>
+        <td style={{border: '1px solid black', width: 300}}>
+          <DreifussWysiwygEditor
+            displayOneLine
+            id="second"
+            displayOnly
+            value={[
+              {
+                type: 'paragraph',
+                children: [
+                  {
+                    text:
+                      'Bold: Make the selected text bold.Bold: Make the selected text bold.Bold: Make the selected text bold.Bold: Make the selected text bold.',
+                    bold: true
+                  }
+                ]
+              }
+            ]}
+          />
+        </td>
+        <td style={{border: '1px solid black'}}>Smith</td>
+        <td style={{border: '1px solid black'}}>50</td>
+      </tr>
+    </table>
+    <hr />
+    <hr />
+    <hr />
     <DreifussWysiwygEditor
       onChange={(value: any) => {
         // console.log(value)

@@ -26,6 +26,7 @@
     "watch:api": "yarn workspace @wepublish/api watch",
     "test:api": "yarn workspace @wepublish/api test",
     "watch:wysiwyg-editor": "yarn workspace @wepublish/dreifuss-wysiwyg-editor start",
+    "watch:wysiwyg-plugins": "yarn workspace @wepublish/dreifuss-plugins build:w",
     "build:wysiwyg-editor": "yarn workspace @wepublish/dreifuss-wysiwyg-editor build",
     "clean:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb clean",
     "build:api-db-mongodb": "yarn workspace @wepublish/api-db-mongodb build",

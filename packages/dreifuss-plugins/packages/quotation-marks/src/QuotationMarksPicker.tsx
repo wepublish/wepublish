@@ -1,4 +1,5 @@
-import React, { useEffect, useState} from 'react'
+import {useSlatePluginsStore} from '@udecode/slate-plugins-core'
+import React, {useEffect, useState} from 'react'
 import {BaseEditor, BaseRange, Range, Editor, Transforms} from 'slate'
 
 function insertQuotationMarks(
@@ -150,13 +151,15 @@ function insertQuotationMarks(
   }
 }
 
-export function QuotationMarksPicker({editor}:any) {
+export function QuotationMarksPicker({editorId}: any) {
+  const dreifussStore = useSlatePluginsStore()
+
+  const editor = dreifussStore[editorId]?.editor
 
   if (!editor) {
     return null
   }
 
-  // const {togglePopover} = useContext(PopoverContext)
   const [selection, setSelection] = useState<BaseRange | null>(null)
   let selectedQuotationMarks = ''
 
@@ -171,7 +174,6 @@ export function QuotationMarksPicker({editor}:any) {
           e.preventDefault()
           selectedQuotationMarks = '«»'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          // togglePopover()
         }}
         className="button">
         {'« »'}
@@ -182,7 +184,6 @@ export function QuotationMarksPicker({editor}:any) {
           e.preventDefault()
           selectedQuotationMarks = '‹›'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          // togglePopover()
         }}
         className="button">
         {' '}
@@ -194,7 +195,6 @@ export function QuotationMarksPicker({editor}:any) {
           e.preventDefault()
           selectedQuotationMarks = '’’'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          // togglePopover()
         }}
         className="button">
         {' '}
@@ -206,7 +206,6 @@ export function QuotationMarksPicker({editor}:any) {
           e.preventDefault()
           selectedQuotationMarks = '""'
           insertQuotationMarks(editor, selection, selectedQuotationMarks)
-          // togglePopover()
         }}
         className="button">
         {' '}

@@ -61,16 +61,16 @@ export default function DreifussWysiwygEditor(props: any) {
   const options = createSlatePluginsOptions()
 
   const editableProps = {
-    // placeholder: 'Enter some rich text…',
+    placeholder: "What's on your mind?",
     spellCheck: false,
     autoFocus: true,
     readOnly: props.displayOnly ?? props.disabled ?? false,
     style: props.displayOneLine
       ? {
-          // whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // textOverflow: 'ellipsis',
-          color: 'red'
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          width: 'inherit'
         }
       : {}
   }
@@ -104,7 +104,7 @@ export default function DreifussWysiwygEditor(props: any) {
 
   return (
     <SlatePlugins
-      id="main"
+      id={props.id ?? 'main'}
       onChange={props.onChange}
       plugins={plugins}
       components={components}
@@ -128,12 +128,12 @@ export default function DreifussWysiwygEditor(props: any) {
           <ToolbarLink />
           <ToolbarEmoji />
           <Divider type={DividerType.vertical} />
-          <ToolbarQuotationMarks />
+          <ToolbarQuotationMarks editorId={props.id ?? 'main'} />
         </HeadingToolbar>
       )}
       {props.showCharCount && (
         <p style={{textAlign: 'right'}}>
-          <CharCount editorId="main" />
+          {'Characters count:'} <CharCount editorId={props.id ?? 'main'} />
         </p>
       )}
     </SlatePlugins>
