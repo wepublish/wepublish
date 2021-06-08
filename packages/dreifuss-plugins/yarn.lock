@@ -2935,13 +2935,13 @@
     "@typescript-eslint/types" "4.26.1"
     eslint-visitor-keys "^2.0.0"
 
-"@udecode/slate-plugins-common@1.0.0-next.36":
-  version "1.0.0-next.36"
-  resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-common/-/slate-plugins-common-1.0.0-next.36.tgz#ddd7fbc74e363b3f7a4af022e1b60802750912fb"
-  integrity sha512-Nvn1V5tvid5gfhSS790Mqg0fPUOAC4VjWN3gmVt3Q5q8vVbZ2DM5nLkslQKO2LWZweQNurYrW8icTkj+6Ab0qw==
+"@udecode/slate-plugins-block-quote@^1.0.0-alpha.25":
+  version "1.0.0-alpha.25"
+  resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-block-quote/-/slate-plugins-block-quote-1.0.0-alpha.25.tgz#112aa4ea3e52c87960656af97e4d2b73a380cf2e"
+  integrity sha512-GjoeBT8xKOMqR3/0KlYuolxssAA+Z0+glz2xtpy8MDM4jxTl0jLPuO45dKhVsR4I2r+W9mEAQdAiBwaU6s5LSQ==
   dependencies:
-    "@udecode/slate-plugins-core" "1.0.0-next.36"
-    is-hotkey "^0.1.6"
+    "@udecode/slate-plugins-common" "^1.0.0-alpha.25"
+    "@udecode/slate-plugins-core" "^1.0.0-alpha.25"
 
 "@udecode/slate-plugins-common@^1.0.0-alpha.25":
   version "1.0.0-alpha.25"
@@ -2951,7 +2951,7 @@
     "@udecode/slate-plugins-core" "^1.0.0-alpha.25"
     is-hotkey "^0.1.6"
 
-"@udecode/slate-plugins-core@1.0.0-alpha.25", "@udecode/slate-plugins-core@^1.0.0-alpha.25":
+"@udecode/slate-plugins-core@^1.0.0-alpha.25":
   version "1.0.0-alpha.25"
   resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-core/-/slate-plugins-core-1.0.0-alpha.25.tgz#e49f6539f07addf6765fb2ac75dc5c50a76ca056"
   integrity sha512-54MdrMJ2qgJSBoKCGxeH5RZeVJJZHv7Eo6qgUizsr1rzCduQ1zzdgSSJi63mgvpE2ieRqSF+fCNxXo4AK3cNvQ==
@@ -2959,15 +2959,7 @@
     lodash "^4.17.21"
     zustand "^3.3.2"
 
-"@udecode/slate-plugins-core@1.0.0-next.36":
-  version "1.0.0-next.36"
-  resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-core/-/slate-plugins-core-1.0.0-next.36.tgz#3470e55e215dfff45ad7062006aedab7a96d966e"
-  integrity sha512-YJw7dZvca3DKfb2if8a8EiNGkZJRWhpyNE6tt9YcmOujJzCBLJkDnS1acjCgsAzKiBpQUg5ntueNXFm1gqin9g==
-  dependencies:
-    lodash "^4.17.21"
-    zustand "^3.4.2"
-
-"@udecode/slate-plugins-toolbar@1.0.0-alpha.25":
+"@udecode/slate-plugins-toolbar@^1.0.0-alpha.25":
   version "1.0.0-alpha.25"
   resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-toolbar/-/slate-plugins-toolbar-1.0.0-alpha.25.tgz#bea78ca65c2fc4cc3de8d97f6babf1aad0901e14"
   integrity sha512-RVu7Ig1bDMQi6vsKHGRgY0YYptlfUM/hYLDnC5J6devmSSKTA6NupU8rhGDap2K5R85yy/xchZbySJNQXzD+GA==
@@ -2975,16 +2967,6 @@
     "@tippyjs/react" "^4.2.0"
     "@udecode/slate-plugins-ui-fluent" "^1.0.0-alpha.25"
     react-use "^17.1.1"
-
-"@udecode/slate-plugins-ui-fluent@1.0.0-next.36":
-  version "1.0.0-next.36"
-  resolved "https://registry.yarnpkg.com/@udecode/slate-plugins-ui-fluent/-/slate-plugins-ui-fluent-1.0.0-next.36.tgz#449c49068f4888725672bfd3f15f03da1ac112c0"
-  integrity sha512-wsaEpH+T8AJLZH2FZ+xrGbm1oYqcb02ZYVNuop7jnMLwI6P7cuRriUjiU9cWhTbUmXez/vdGdMJbmkqZXx15tw==
-  dependencies:
-    "@udecode/slate-plugins-common" "1.0.0-next.36"
-    "@udecode/slate-plugins-core" "1.0.0-next.36"
-    "@uifabric/styling" "^7.18.0"
-    "@uifabric/utilities" "^7.33.4"
 
 "@udecode/slate-plugins-ui-fluent@^1.0.0-alpha.25":
   version "1.0.0-alpha.25"
@@ -12112,7 +12094,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand@^3.3.2, zustand@^3.4.2:
+zustand@^3.3.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.2.tgz#cf162a8bd1d86475bf308bc856c4d02ff13fd53c"
   integrity sha512-HUCQI9O77/D/zvoWPNv4dwLriiiY2xtEqnQ0TVY8uaPjmOHls04Okd0w3sWUE9Ex2LaYlSk11DbPPIOZ6shEWg==

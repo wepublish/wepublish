@@ -64,7 +64,6 @@ export default function DreifussWysiwygEditor(props: any) {
     // placeholder: 'Enter some rich text…',
     spellCheck: false,
     autoFocus: true,
-    showCount: props.showCharCount ?? false,
     readOnly: props.displayOnly ?? props.disabled ?? false,
     style: props.displayOneLine
       ? {
@@ -132,7 +131,7 @@ export default function DreifussWysiwygEditor(props: any) {
           <ToolbarQuotationMarks />
         </HeadingToolbar>
       )}
-      {editableProps.showCount && (
+      {props.showCharCount && (
         <p style={{textAlign: 'right'}}>
           <CharCount editorId="main" />
         </p>
