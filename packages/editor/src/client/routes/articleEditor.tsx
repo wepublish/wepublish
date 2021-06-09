@@ -444,7 +444,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         <ArticleMetadataPanel
           value={metadata}
           infoData={infoData}
-          onClose={() => setMetaDrawerOpen(false)}
+          onClose={() => {
+            handleSave()
+            setMetaDrawerOpen(false)
+          }}
           onChange={value => {
             setMetadata(value)
             setChanged(true)
