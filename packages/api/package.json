@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/api",
-  "version": "2.4.0",
+  "version": "2.5.0-alpha.0",
   "description": "API core for we.publish.",
   "keywords": [
     "api",
