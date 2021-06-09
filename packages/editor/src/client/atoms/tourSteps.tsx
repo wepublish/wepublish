@@ -16,18 +16,23 @@ const navButtons = {
   }
 }
 
-export const steps: Step.StepOptions[] = [
+export const newUserSteps: Step.StepOptions[] = [
   {
     buttons: [navButtons.exit, navButtons.next],
     // classes: 'custom-class-name-1 custom-class-name-2',
     title: 'Welcome to We.Publish Editor!',
-    text: ['Get a guided tour of the editor']
+    text: ['Get a guided tour of the editor'],
+    when: {
+      show: () => {
+        localStorage.setItem('tourVersion', '1')
+      }
+    }
     /*   when: {
                show: () => {
                    console.log('show step')
                },
                hide: () => {
-                   console.log('hide step')
+                   console.log('hide stepShepherd.Tour(options)')
                }
            }
         */
@@ -44,11 +49,10 @@ export const steps: Step.StepOptions[] = [
   },
   {
     arrow: true,
+    text: ['click here'],
     attachTo: {element: '.rs-btn-primary', on: 'auto'},
     advanceOn: {selector: '.rs-btn-primary', event: 'click'},
-    buttons: [navButtons.back],
-    title: 'Create an article',
-    text: ['Click here to get started writing a new article']
+    buttons: [navButtons.back]
   },
   {
     buttons: [navButtons.next],
@@ -82,6 +86,22 @@ export const steps: Step.StepOptions[] = [
     buttons: [navButtons.back, navButtons.next],
     title: 'Write something',
     text: ['(options...)']
+  }
+]
+
+export const testSteps: Step.StepOptions[] = [
+  {
+    buttons: [navButtons.exit, navButtons.next],
+    title: 'test steps',
+    text: ['added in  base']
+  }
+]
+
+export const returnUserSteps: Step.StepOptions[] = [
+  {
+    buttons: [navButtons.exit, navButtons.next],
+    title: 'Welcome back',
+    text: ['Second time user']
   }
 ]
 

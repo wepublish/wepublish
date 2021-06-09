@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from 'react'
+import React, {ReactNode, useContext, useEffect, useState} from 'react'
 
 import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
 
@@ -22,7 +22,8 @@ import {
 } from './route'
 
 import {useTranslation} from 'react-i18next'
-import {TourMethods} from 'react-shepherd'
+import {ShepherdTourContext} from 'react-shepherd'
+import {newUserSteps} from './atoms/tourSteps'
 
 export interface BaseProps {
   children?: ReactNode
@@ -70,6 +71,14 @@ export function Base({children}: BaseProps) {
   useEffect(() => {
     i18n.changeLanguage(uiLanguage)
   }, [uiLanguage])
+
+  const tour = useContext(ShepherdTourContext)
+
+  useEffect(() => {
+    if (!localStorage.getItem('tourVersion')) {
+      tour?.start()
+    }
+  }, [])
 
   return (
     <div style={{display: 'flex', height: '100vh', width: '100vw'}}>
@@ -190,13 +199,12 @@ export function Base({children}: BaseProps) {
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
                   </DropdownItemLink>
-                  <TourMethods>
-                    {tourContext => (
-                      <Dropdown.Item onSelect={tourContext?.start}>
-                        {t('guideTour.startTour')}
-                      </Dropdown.Item>
-                    )}
-                  </TourMethods>
+                  <Dropdown.Item
+                    // check context
+                    // change tour
+                    onSelect={tour?.start}>
+                    {t('guideTour.startTour')}
+                  </Dropdown.Item>
                 </Dropdown>
               </Nav>
               <Nav>

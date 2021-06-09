@@ -17,9 +17,8 @@ import {LocalStorageKey} from './utility'
 import {TwitterProvider} from './blocks/embeds/twitter'
 import {InstagramProvider} from './blocks/embeds/instagram'
 import {FacebookProvider} from './blocks/embeds/facebook'
+import {ShepherdWrapper} from './atoms/shepherdWrapper'
 import {HotApp} from './app'
-import {ShepherdTour} from 'react-shepherd'
-import {options, steps} from './atoms/tourSteps'
 import 'shepherd.js/dist/css/shepherd.css'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
@@ -116,9 +115,9 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <ShepherdTour steps={steps} tourOptions={options}>
+                <ShepherdWrapper>
                   <HotApp />
-                </ShepherdTour>
+                </ShepherdWrapper>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>
