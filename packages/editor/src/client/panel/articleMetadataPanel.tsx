@@ -412,8 +412,8 @@ export function ArticleMetadataPanel({
       </Drawer.Body>
 
       <Drawer.Footer>
-        <Button appearance={'subtle'} onClick={() => onClose?.()}>
-          {t('articleEditor.panels.close')}
+        <Button appearance={'primary'} onClick={() => onClose?.()}>
+          {t('articleEditor.panels.saveAndClose')}
         </Button>
       </Drawer.Footer>
 
