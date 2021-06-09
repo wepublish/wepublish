@@ -80,6 +80,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
   }, [loadError, createError, updateError])
 
   useEffect(() => {
+    setErrorMessage('')
     if (urlString === '') return
 
     // NOTICE: `useQuery` refetch doesn't cancel and tends to clog up on timeout.
@@ -103,15 +104,15 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
           setLoadingPeerProfile(false)
 
           // TODO: Better validation
+
           if (!response?.data?.peerProfile) {
             setValidPeer(false)
             setErrorMessage(t('peerList.panels.invalidURL'))
-          } else if (response?.data?.peerProfile.hostURL !== hostURL) {
+          } else if (response?.data?.peerProfile.hostURL === hostURL) {
             setValidPeer(false)
             setErrorMessage(t('peerList.panels.peeredToHost'))
           } else {
             setValidPeer(true)
-            setErrorMessage('')
             setProfile(response.data.peerProfile)
           }
         })
@@ -120,6 +121,7 @@ export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps
 
           setLoadingPeerProfile(false)
           setValidPeer(false)
+          setErrorMessage(t('peerList.panels.invalidURL'))
         })
 
       setValidPeer(undefined)

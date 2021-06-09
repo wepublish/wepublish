@@ -127,6 +127,43 @@ export const articleMetaDataFragment = gql`
   ${recursiveCommentsDataFragment}
 `
 
+export const peerArticleMetaDataFragment = gql`
+  fragment PeerArticleMetaData on Article {
+    __typename
+    id
+    url
+
+    updatedAt
+    publishedAt
+
+    slug
+    preTitle
+    title
+    lead
+    breaking
+    tags
+    authors {
+      ...AuthorsData
+    }
+    image {
+      ...SimpleImageData
+    }
+
+    socialMediaTitle
+    socialMediaDescription
+    socialMediaAuthors {
+      ...AuthorsData
+    }
+    socialMediaImage {
+      ...SimpleImageData
+    }
+  }
+  ${simpleImageDataFragment}
+  ${authorsDataFragment}
+  ${commentsDataFragment}
+  ${recursiveCommentsDataFragment}
+`
+
 export const pageMetaDataFragment = gql`
   fragment PageMetaData on Page {
     __typename
@@ -210,7 +247,7 @@ export const gridBlockFrontDataGQLfragment = gql`
 
         articleID
         article {
-          ...ArticleMetaData
+          ...PeerArticleMetaData
         }
       }
 
@@ -235,6 +272,7 @@ export const gridBlockFrontDataGQLfragment = gql`
   ${articleMetaDataFragment}
   ${pageMetaDataFragment}
   ${peerMetaDataFragment}
+  ${peerArticleMetaDataFragment}
 `
 
 // # transform(input: [{width: 1280, height: 400}])
