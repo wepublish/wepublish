@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.4.0-alpha.0 (2021-05-26)
+## v2.4.0 (2021-06-09)
 
 #### :heart: New Feature
 * Other
