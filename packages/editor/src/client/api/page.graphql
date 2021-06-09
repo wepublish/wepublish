@@ -36,6 +36,7 @@ fragment PageRef on Page {
   }
 
   pending {
+    publishAt
     revision
   }
 

@@ -16,7 +16,9 @@
         "untitled": "Untitled",
         "draft": "Draft",
         "pending": "Pending",
-        "published": "Published"
+        "published": "Published",
+        "publicationDate": "Publication date",
+        "notPublished": "Not yet published"
       },
       "panels": {
         "cancel": "Cancel",
@@ -187,6 +189,7 @@
         "pages": "Pages",
         "title": "Title",
         "created": "Created",
+        "publicationDate": "Publication date",
         "updated": "Modified",
         "states": "States",
         "action": "Action",
@@ -197,7 +200,8 @@
         "newPage": "New Page",
         "search": "Search",
         "loadMore": "Load More",
-        "noPages": "No Pages found"
+        "noPages": "No Pages found",
+        "notPublished": "Not yet published"
       },
       "panels": {
         "unpublish": "Unpublish",
@@ -471,7 +475,9 @@
         "callToActionText": "Call To Action Text",
         "callToActionURL": "Call To Action URL",
         "image": "Image",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "invalidURL": "Invalid URL",
+        "peeredToHost": "Cannot peer to self"
       }
     },
     "tokenList": {
