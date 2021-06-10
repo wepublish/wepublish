@@ -431,6 +431,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     // Comments
     // =======
+
     comments: {
       type: GraphQLNonNull(GraphQLCommentConnection),
       args: {

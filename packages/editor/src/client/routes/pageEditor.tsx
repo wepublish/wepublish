@@ -283,7 +283,10 @@ export function PageEditor({id}: PageEditorProps) {
       <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <PageMetadataPanel
           value={metadata}
-          onClose={() => setMetaDrawerOpen(false)}
+          onClose={() => {
+            handleSave()
+            setMetaDrawerOpen(false)
+          }}
           onChange={value => {
             setMetadata(value)
             setChanged(true)

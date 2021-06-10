@@ -133,13 +133,23 @@ export function PageList() {
             setSortOrder(sortType)
             setSortField(sortColumn)
           }}>
-          <Column width={200} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.created')}</HeaderCell>
-            <Cell dataKey="createdAt">
-              {({createdAt}: PageRefFragment) => new Date(createdAt).toDateString()}
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(pageRef: PageRefFragment) =>
+                pageRef.published?.publishedAt
+                  ? `${new Date(pageRef.published.publishedAt).toDateString()} ${new Date(
+                      pageRef.published.publishedAt
+                    ).toLocaleTimeString()}`
+                  : pageRef.pending?.publishAt
+                  ? `${new Date(pageRef.pending.publishAt).toDateString()} ${new Date(
+                      pageRef.pending.publishAt
+                    ).toLocaleTimeString()}`
+                  : t('pages.overview.notPublished')
+              }
             </Cell>
           </Column>
-          <Column width={200} align="left" resizable sortable>
+          <Column width={210} align="left" resizable sortable>
             <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
             <Cell dataKey="modifiedAt">
               {({modifiedAt}: PageRefFragment) =>

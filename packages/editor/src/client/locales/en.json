@@ -16,7 +16,9 @@
         "untitled": "Untitled",
         "draft": "Draft",
         "pending": "Pending",
-        "published": "Published"
+        "published": "Published",
+        "publicationDate": "Publication date",
+        "notPublished": "Not yet published"
       },
       "panels": {
         "cancel": "Cancel",
@@ -59,6 +61,7 @@
         "publishDate": "Publish Date",
         "untitled": "Untitled",
         "close": "Close",
+        "saveAndClose": "Save and close",
         "preTitle": "Pre-title",
         "title": "Title",
         "seoTitle": "SEO Title",
@@ -161,6 +164,7 @@
         "untitled": "Untitled",
         "createdAt": "Created At",
         "updatedAt": "Updated At",
+        "parent": "Parent",
         "revisions": "Revisions",
         "approveComment": "Approve Comment",
         "requestChangesOnComment": "Request Changes On Comment",
@@ -186,6 +190,7 @@
         "pages": "Pages",
         "title": "Title",
         "created": "Created",
+        "publicationDate": "Publication date",
         "updated": "Modified",
         "states": "States",
         "action": "Action",
@@ -196,7 +201,8 @@
         "newPage": "New Page",
         "search": "Search",
         "loadMore": "Load More",
-        "noPages": "No Pages found"
+        "noPages": "No Pages found",
+        "notPublished": "Not yet published"
       },
       "panels": {
         "unpublish": "Unpublish",
@@ -236,6 +242,7 @@
         "addTag": "Press enter to add tag",
         "image": "Image",
         "close": "Close",
+        "saveAndClose": "Save and close",
         "chooseImage": "Choose Image",
         "removeImage": "Remove Image",
         "editImage": "Edit Image",
@@ -470,7 +477,9 @@
         "callToActionText": "Call To Action Text",
         "callToActionURL": "Call To Action URL",
         "image": "Image",
-        "validateToken": "Please confirm token is correct before saving"
+        "validateToken": "Please confirm token is correct before saving",
+        "invalidURL": "Invalid URL",
+        "peeredToHost": "Cannot peer to self"
       }
     },
     "tokenList": {
