@@ -2020,16 +2020,19 @@ export type ArticleQuery = (
   { __typename?: 'Query' }
   & { article?: Maybe<(
     { __typename?: 'Article' }
-    & Pick<Article, 'id' | 'shared'>
-    & { pending?: Maybe<(
+    & Pick<Article, 'id' | 'shared' | 'modifiedAt'>
+    & { draft?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishAt'>
+      & Pick<ArticleRevision, 'createdAt' | 'publishAt' | 'publishedAt' | 'updatedAt' | 'revision'>
+    )>, pending?: Maybe<(
+      { __typename?: 'ArticleRevision' }
+      & Pick<ArticleRevision, 'createdAt' | 'publishAt' | 'publishedAt' | 'updatedAt'>
     )>, published?: Maybe<(
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt'>
+      & Pick<ArticleRevision, 'createdAt' | 'publishAt' | 'publishedAt' | 'updatedAt'>
     )>, latest: (
       { __typename?: 'ArticleRevision' }
-      & Pick<ArticleRevision, 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
+      & Pick<ArticleRevision, 'createdAt' | 'publishAt' | 'publishedAt' | 'updatedAt' | 'revision' | 'slug' | 'preTitle' | 'title' | 'lead' | 'seoTitle' | 'tags' | 'hideAuthor' | 'breaking' | 'socialMediaTitle' | 'socialMediaDescription'>
       & { image?: Maybe<(
         { __typename?: 'Image' }
         & ImageRefFragment
@@ -4369,14 +4372,29 @@ export const ArticleDocument = gql`
   article(id: $id) {
     id
     shared
-    pending {
+    modifiedAt
+    draft {
+      createdAt
       publishAt
+      publishedAt
+      updatedAt
+      revision
+    }
+    pending {
+      createdAt
+      publishAt
+      publishedAt
+      updatedAt
     }
     published {
+      createdAt
+      publishAt
       publishedAt
       updatedAt
     }
     latest {
+      createdAt
+      publishAt
       publishedAt
       updatedAt
       revision
