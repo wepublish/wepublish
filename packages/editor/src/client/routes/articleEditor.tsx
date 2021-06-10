@@ -352,6 +352,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         duration: 2000
       })
     }
+    await refetch({id: articleID})
   }
 
   useEffect(() => {
