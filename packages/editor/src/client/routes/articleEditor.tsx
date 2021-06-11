@@ -65,7 +65,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     fetchPolicy: 'no-cache'
   })
 
-  console.log('update data', updatedData?.updateArticle)
   const [
     publishArticle,
     {data: publishData, loading: isPublishing, error: publishError}
@@ -125,6 +124,41 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setChanged(true)
   }, [])
 
+  const draft = {
+    title: t('articleEditor.overview.draft', {
+      date: articleData?.article?.modifiedAt ? new Date(articleData.article.modifiedAt) : ''
+    }),
+    color: 'yellow'
+  }
+
+  const pending = {
+    title: t('articleEditor.overview.pending', {
+      date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
+      time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+    }),
+    color: 'blue'
+  }
+  const published = {
+    title: t('articleEditor.overview.published', {
+      date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
+      time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+    }),
+    color: 'green'
+  }
+  const unpublished = {
+    title: t('articleEditor.overview.unpublished'),
+    color: 'red'
+  }
+
+  const ArticleState = {
+    draft,
+    pending,
+    published,
+    unpublished
+  }
+
+  const [articleState, setArticleState] = useState(ArticleState.unpublished)
+
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
@@ -178,6 +212,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [articleData])
+
+  useEffect(() => {
+    if (articleData?.article?.draft || hasChanged) {
+      setArticleState(ArticleState.draft)
+    } else if (articleData?.article?.pending) {
+      setArticleState(ArticleState.pending)
+    } else if (articleData?.article?.published) {
+      setArticleState(ArticleState.published)
+    } else {
+      setArticleState(ArticleState.unpublished)
+    }
+  }, [articleData, hasChanged])
 
   useEffect(() => {
     if (createError || updateError || publishError) {
@@ -374,23 +420,11 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     })
   }, [isMetaDrawerOpen])
 
-  const color = hasChanged ? 'orange' : publishedAt || pendingPublishDate ? 'green' : 'blue'
-  const articleState = hasChanged
-    ? 'Draft'
-    : pendingPublishDate || articleData?.article?.latest.publishedAt
-    ? `Published ${publishedAt?.toDateString() ?? pendingPublishDate?.toDateString()}`
-    : 'unpublished'
-
-  // useEffect(() => {
-
-  console.log('draft', articleData?.article?.draft)
-  // }, [])
-
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: `${color}`}}>
+      <fieldset style={{textAlign: 'center', borderColor: `${articleState.color}`}}>
         <legend>
-          <Tag color={color}>{articleState}</Tag>
+          <Tag color={articleState.color}>{articleState.title}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

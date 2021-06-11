@@ -49,7 +49,11 @@
         "create": "Create",
         "save": "Save",
         "publish": "Publish",
-        "noSlug": "Article Not Published. Please add a slug."
+        "noSlug": "Article Not Published. Please add a slug.",
+        "draft": "Draft",
+        "pending": "Pending publish on {{date}} at {{time}}",
+        "published": "Published on {{date}} at {{time}}",
+        "unpublished": "Unpublished"
       },
       "panels": {
         "metadata": "Metadata",
