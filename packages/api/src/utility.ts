@@ -98,7 +98,7 @@ export function mapEnumsBack(result: any) {
   for (const key in result) {
     const value = result[key]
 
-    if (typeof value === 'object' && value != null) {
+    if (typeof value === 'object' && value !== null) {
       mapEnumsBack(value)
     }
   }
