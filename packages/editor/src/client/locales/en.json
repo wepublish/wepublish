@@ -51,8 +51,8 @@
         "publish": "Publish",
         "noSlug": "Article Not Published. Please add a slug.",
         "draft": "Draft",
-        "pending": "Pending publish on {{date}} at {{time}}",
-        "published": "Published on {{date}} at {{time}}",
+        "pending": "Article pending publication on {{date}} at {{time}}",
+        "published": "Article published on {{date}} at {{time}}",
         "unpublished": "Unpublished"
       },
       "panels": {

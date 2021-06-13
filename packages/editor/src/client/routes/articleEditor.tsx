@@ -58,10 +58,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     {loading: isCreating, data: createData, error: createError}
   ] = useCreateArticleMutation()
 
-  const [
-    updateArticle,
-    {data: updatedData, loading: isUpdating, error: updateError}
-  ] = useUpdateArticleMutation({
+  const [updateArticle, {loading: isUpdating, error: updateError}] = useUpdateArticleMutation({
     fetchPolicy: 'no-cache'
   })
 
@@ -150,14 +147,14 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     color: 'red'
   }
 
-  const ArticleState = {
+  const ArticlePublishState = {
     draft,
     pending,
     published,
     unpublished
   }
 
-  const [articleState, setArticleState] = useState(ArticleState.unpublished)
+  const [articleState, setArticleState] = useState(ArticlePublishState.unpublished)
 
   useEffect(() => {
     if (articleData?.article) {
@@ -215,13 +212,13 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   useEffect(() => {
     if (articleData?.article?.draft || hasChanged) {
-      setArticleState(ArticleState.draft)
+      setArticleState(ArticlePublishState.draft)
     } else if (articleData?.article?.pending) {
-      setArticleState(ArticleState.pending)
+      setArticleState(ArticlePublishState.pending)
     } else if (articleData?.article?.published) {
-      setArticleState(ArticleState.published)
+      setArticleState(ArticlePublishState.published)
     } else {
-      setArticleState(ArticleState.unpublished)
+      setArticleState(ArticlePublishState.unpublished)
     }
   }, [articleData, hasChanged])
 

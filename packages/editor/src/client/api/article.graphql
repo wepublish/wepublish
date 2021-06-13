@@ -147,32 +147,21 @@ query Article($id: ID!) {
   article(id: $id) {
     id
     shared
-    modifiedAt
+
     draft {
-        createdAt
         publishAt
-        publishedAt
-        updatedAt
-        revision
     }
 
     pending {
-        createdAt
         publishAt
-        publishedAt
-        updatedAt
     }
 
     published {
-        createdAt
-        publishAt
         publishedAt
         updatedAt
     }
 
     latest {
-      createdAt
-      publishAt
       publishedAt
       updatedAt
       revision
