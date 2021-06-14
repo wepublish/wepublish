@@ -500,7 +500,7 @@
         "creationSuccess": "Token creation success",
         "generateError": "Could not create Token",
         "close": "Close",
-        "tokenWarning": "Tokens cannot be retreived later. It is recommended you copy and save your token somewhere safe."
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
       }
     },
     "blocks": {
