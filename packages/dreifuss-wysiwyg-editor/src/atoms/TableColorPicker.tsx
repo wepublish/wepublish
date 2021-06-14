@@ -36,38 +36,47 @@ import {useStoreEditor} from '@udecode/slate-plugins-core'
 // }
 
 export function TableColorPicker() {
-  // const id = nanoid()
-  const editor: BaseEditor = useStoreEditor()
+  const editor: any = useStoreEditor('main')
+  console.log(editor)
+
   const [borderColor, setBorderColor] = useState<string>()
   console.log(borderColor)
 
-  // useEffect(() => {
-  //   const nodes = Editor.nodes(editor, {
-  //     match: node => node.type === 'table-cell'
-  //   })
-  //   console.log(nodes)
-  //   for (const [node] of nodes) {
-  //     setBorderColor(node.borderColor as string)
-  //     return
-  //   }
-  // })
+  useEffect(() => {
+    const nodes: any = Editor.nodes(editor, {
+      match: (node: any) => node.type === 'table-cell'
+    })
+    console.log(nodes)
+    for (const [node] of nodes) {
+      setBorderColor(node.borderColor as string)
+      return
+    }
+  })
 
   useEffect(() => {
     if (borderColor) {
+      console.log('border:', borderColor)
+
       const nodes = Editor.nodes(editor, {
-        match: node => node.type === 'table-cell'
+        match: (node: any) => {
+          console.log(node.type)
+
+          return node.type === 'table-cell'
+        }
       })
-      for (const [, path] of nodes) {
-        Transforms.setNodes(
-          editor,
-          {borderColor},
-          {
-            at: path,
-            match: node => node.type === 'table-cell'
-          }
-        )
-        return
-      }
+      console.log(nodes)
+
+      // for (const [, path] of nodes) {
+      //   Transforms.setNodes(
+      //     editor,
+      //     {borderColor},
+      //     {
+      //       at: path,
+      //       match: node => node.type === 'table-cell'
+      //     }
+      //   )
+      //   return
+      // }
     }
   }, [borderColor])
 

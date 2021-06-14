@@ -145,46 +145,6 @@ export const ToolbarButtonsTable = () => (
     <ToolbarTable icon={<BorderTop />} transform={deleteRow} />
     <ToolbarTable icon={<BorderLeft />} transform={addColumn} />
     <ToolbarTable icon={<BorderRight />} transform={deleteColumn} />
-    <TableColorPicker></TableColorPicker>
+    <TableColorPicker />
   </>
 )
-
-// export const BallonToolbarMarks = () => {
-//   const arrow = false;
-//   const theme = 'dark';
-//   const direction = 'top';
-//   const hiddenDelay = 0;
-//   const tooltip: TippyProps = {
-//     arrow: true,
-//     delay: 0,
-//     duration: [200, 0],
-//     hideOnClick: false,
-//     offset: [0, 17],
-//     placement: 'top',
-//   };
-
-//   return (
-//     <BalloonToolbar
-//       direction={direction}
-//       hiddenDelay={hiddenDelay}
-//       theme={theme}
-//       arrow={arrow}
-//     >
-//       <ToolbarMark
-//         type={useSlatePluginType(MARK_BOLD)}
-//         icon={<Bold />}
-//         tooltip={{ content: 'Bold (⌘B)', ...tooltip }}
-//       />
-//       <ToolbarMark
-//         type={useSlatePluginType(MARK_ITALIC)}
-//         icon={<Italic />}
-//         tooltip={{ content: 'Italic (⌘I)', ...tooltip }}
-//       />
-//       <ToolbarMark
-//         type={useSlatePluginType(MARK_UNDERLINE)}
-//         icon={<Underlined />}
-//         tooltip={{ content: 'Underline (⌘U)', ...tooltip }}
-//       />
-//     </BalloonToolbar>
-//   );
-// };

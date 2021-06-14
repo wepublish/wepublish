@@ -33,8 +33,7 @@ import {
   createReactPlugin,
   SPEditor
 } from '@udecode/slate-plugins-core'
-// import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
-// import {createNormalizeTypesPlugin} from '@udecode/slate-plugins-normalizers'
+import {ToolbarImage} from '@udecode/slate-plugins-image-ui'
 import {
   ToolbarButtonsAlign,
   ToolbarButtonsBasicElements,
@@ -54,6 +53,10 @@ export interface EditableProps {
   displayOneLine?: boolean
   disabled?: boolean
   onChange?: React.Dispatch<React.SetStateAction<V>>
+}
+
+function Imagee(props: any) {
+  return <h1>Hi</h1>
 }
 
 export default function DreifussWysiwygEditor(props: any) {
@@ -79,27 +82,25 @@ export default function DreifussWysiwygEditor(props: any) {
     ...createBasicElementPlugins(),
     createReactPlugin(),
     createHistoryPlugin(),
-    createParagraphPlugin(),
-    createBlockquotePlugin(),
-    createTodoListPlugin(),
-    createHeadingPlugin({levels: 3}),
-    createImagePlugin(),
     createLinkPlugin(),
     createListPlugin(),
-    createTablePlugin(),
-    createMediaEmbedPlugin(),
-    createCodeBlockPlugin(),
     createBoldPlugin(),
-    createItalicPlugin(),
-    createUnderlinePlugin(),
-    createAlignPlugin(),
     createCodePlugin(),
+    createAlignPlugin(),
     createImagePlugin(),
+    createTablePlugin(),
+    createItalicPlugin(),
+    createTodoListPlugin(),
+    createParagraphPlugin(),
     createHighlightPlugin(),
+    createCodeBlockPlugin(),
     createUnderlinePlugin(),
-    createStrikethroughPlugin(),
     createSubscriptPlugin(),
-    createSuperscriptPlugin()
+    createMediaEmbedPlugin(),
+    createBlockquotePlugin(),
+    createSuperscriptPlugin(),
+    createStrikethroughPlugin(),
+    createHeadingPlugin({levels: 3})
   ]
 
   return (
@@ -122,7 +123,7 @@ export default function DreifussWysiwygEditor(props: any) {
           <ToolbarButtonsAlign />
           <Divider type={DividerType.vertical} />
           {/* TODO: icon to be changed */}
-          {/* <ToolbarImage icon={<H1 />} /> */}
+          <ToolbarImage icon={<Imagee />} />
           <ToolbarButtonsTable />
           <Divider type={DividerType.vertical} />
           <ToolbarLink />
