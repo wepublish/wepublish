@@ -122,9 +122,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [])
 
   const draft = {
-    title: t('articleEditor.overview.draft', {
-      date: articleData?.article?.modifiedAt ? new Date(articleData.article.modifiedAt) : ''
-    }),
+    title: t('articleEditor.overview.draft'),
     color: 'yellow'
   }
 
