@@ -1,5 +1,15 @@
 # Change Log
 
+## v2.5.0-alpha.1 (2021-06-15)
+
+#### :bug: Bug Fix
+* `api`
+  * [#281](https://github.com/wepublish/wepublish/pull/281) Bug fix for peered article that contain a teaser grid block ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
 ## v2.5.0-alpha.0 (2021-06-09)
 
 #### :heart: New Feature
