@@ -499,7 +499,8 @@
         "generate": "Generate",
         "creationSuccess": "Token creation success",
         "generateError": "Could not create Token",
-        "close": "Close"
+        "close": "Close",
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
       }
     },
     "blocks": {
