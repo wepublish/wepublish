@@ -107,7 +107,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      description: 'This mutation checks if the session is authenticated and returns a boolean.',
+      description: 'This mutation revokes and deletes the active session.',
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
@@ -274,7 +274,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to reset the password by accepting the user's email and sending a login to that email.",
+        "This mutation allows to reset the password by accepting the user's email and sending a login link to that email.",
       async resolve(root, {email}, {dbAdapter, generateJWT, sendMailFromProvider}) {
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
