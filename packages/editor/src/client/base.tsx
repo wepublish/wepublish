@@ -233,15 +233,6 @@ export function Base({children}: BaseProps) {
                   ))}
                 </Dropdown>
               </Nav>
-
-              {/* <Nav pullRight>
-                <Nav.Item
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  style={{width: 56, textAlign: 'center'}}
-                  className="pullright">
-                  <Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />
-                </Nav.Item>
-              </Nav> */}
             </Navbar.Body>
           </Navbar>
         </Sidebar>
