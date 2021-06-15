@@ -139,7 +139,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         slug: {type: GraphQLSlug},
         token: {type: GraphQLString}
       },
-      description: 'This query takes either the ID, slug ot token and returns the article.',
+      description: 'This query takes either the ID, slug or token and returns the article.',
       async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
         let article = id ? await loaders.publicArticles.load(id) : null
 

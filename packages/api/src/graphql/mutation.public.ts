@@ -48,7 +48,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         password: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token",
+        "This mutation allows to create a user session by taking the user's credentials email and password as an input and returns a session with token.",
       async resolve(root, {email, password}, {dbAdapter}) {
         const user = await dbAdapter.user.getUserForCredentials({email, password})
         if (!user) throw new InvalidCredentialsError()
@@ -82,7 +82,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         redirectUri: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        'This mutation allows to create user session with OAuth2 code by taking the name, code and redirect Uri as an input and returns a session with token',
+        'This mutation allows to create user session with OAuth2 code by taking the name, code and redirect Uri as an input and returns a session with token.',
       async resolve(root, {name, code, redirectUri}, {dbAdapter, oauth2Providers}) {
         const provider = oauth2Providers.find(provider => provider.name === name)
         if (!provider) throw new OAuth2ProviderNotFoundError()
@@ -107,7 +107,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     revokeActiveSession: {
       type: GraphQLNonNull(GraphQLBoolean),
       args: {},
-      description: 'This mutation checks if the session is authenticated and returns a boolean',
+      description: 'This mutation checks if the session is authenticated and returns a boolean.',
       async resolve(root, {}, {authenticateUser, dbAdapter}) {
         const session = authenticateUser()
         return session ? await dbAdapter.session.deleteUserSessionByToken(session.token) : false
@@ -139,7 +139,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPublicCommentUpdateInput)}
       },
       description:
-        'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the id of the comment you want to update and the new text',
+        'This mutation allows to update a comment. The input is of type CommentUpdateInput which contains the ID of the comment you want to update and the new text.',
       async resolve(_, {input}, {dbAdapter, authenticateUser}) {
         const {user} = authenticateUser()
 
@@ -274,7 +274,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         email: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to reset the password by sending the user's email and a login link will be sent to that email.",
+        "This mutation allows to reset the password by accepting the user's email and sending a login to that email.",
       async resolve(root, {email}, {dbAdapter, generateJWT, sendMailFromProvider}) {
         const user = await dbAdapter.user.getUser(email)
         if (!user) return email // TODO: implement check to avoid bots
@@ -298,7 +298,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPublicUserInput)}
       },
       description:
-        "This mutation allows to update the user's data by taking an input of type UserInput. ",
+        "This mutation allows to update the user's data by taking an input of type UserInput.",
       async resolve(root, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
@@ -333,7 +333,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         passwordRepeated: {type: GraphQLNonNull(GraphQLString)}
       },
       description:
-        "This mutation allows to update the user's password by entering the new password and the repeated new password and gives an error if the passwords don't match or if the user is not authenticated",
+        "This mutation allows to update the user's password by entering the new password. The repeated new password gives an error if the passwords don't match or if the user is not authenticated.",
       async resolve(root, {password, passwordRepeated}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
         if (!user) throw new NotAuthenticatedError()
@@ -354,7 +354,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPublicUserSubscriptionInput)}
       },
       description:
-        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription",
+        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
       async resolve(root, {input}, {authenticateUser, dbAdapter, loaders}) {
         const {user} = authenticateUser()
 
@@ -405,7 +405,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}
       },
       description:
-        'This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput',
+        'This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput.',
       async resolve(
         root,
         {input},
