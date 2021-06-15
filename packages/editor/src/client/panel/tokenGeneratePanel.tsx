@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {Alert, Button, Drawer, Input, Panel} from 'rsuite'
+import {Alert, Button, Drawer, Input, Message, Panel} from 'rsuite'
 
 import {useCreateTokenMutation, TokenListDocument} from '../api'
 import {getOperationNameFromDocument} from '../utility'
@@ -42,6 +42,12 @@ export function TokenGeneratePanel({onClose}: TokenGeneratePanelProps) {
           <>
             <p>{t('tokenList.panels.creationSuccess')}</p>
             <Panel bordered>{token}</Panel>
+            <Message
+              showIcon
+              style={{marginTop: 5}}
+              type="warning"
+              description={t('tokenList.panels.tokenWarning')}
+            />
           </>
         ) : (
           <Input
