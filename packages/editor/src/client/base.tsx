@@ -23,7 +23,7 @@ import {
 
 import {useTranslation} from 'react-i18next'
 import {ShepherdTourContext} from 'react-shepherd'
-import {newUserSteps} from './atoms/tourSteps'
+import {TourContext} from './atoms/shepherdWrapper'
 
 export interface BaseProps {
   children?: ReactNode
@@ -73,9 +73,10 @@ export function Base({children}: BaseProps) {
   }, [uiLanguage])
 
   const tour = useContext(ShepherdTourContext)
+  const {tourVersion, setTourVersion} = useContext(TourContext)
 
   useEffect(() => {
-    if (!localStorage.getItem('tourVersion')) {
+    if (tourVersion) {
       tour?.start()
     }
   }, [])
@@ -204,6 +205,15 @@ export function Base({children}: BaseProps) {
                     // change tour
                     onSelect={tour?.start}>
                     {t('guideTour.startTour')}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    // check context
+                    // change tour
+                    onSelect={() => {
+                      setTourVersion('3')
+                      tour?.start()
+                    }}>
+                    {t('guideTour.start.third.tour')}
                   </Dropdown.Item>
                 </Dropdown>
               </Nav>

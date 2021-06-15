@@ -16,7 +16,7 @@ const navButtons = {
   }
 }
 
-export const newUserSteps: Step.StepOptions[] = [
+export const versionOneSteps: Step.StepOptions[] = [
   {
     buttons: [navButtons.exit, navButtons.next],
     // classes: 'custom-class-name-1 custom-class-name-2',
@@ -97,11 +97,19 @@ export const testSteps: Step.StepOptions[] = [
   }
 ]
 
-export const returnUserSteps: Step.StepOptions[] = [
+export const versionTwoSteps: Step.StepOptions[] = [
   {
     buttons: [navButtons.exit, navButtons.next],
     title: 'Welcome back',
     text: ['Second time user']
+  }
+]
+
+export const versionThreeSteps: Step.StepOptions[] = [
+  {
+    buttons: [navButtons.exit, navButtons.next],
+    title: 'Welcome back again!',
+    text: ['Third time user']
   }
 ]
 
