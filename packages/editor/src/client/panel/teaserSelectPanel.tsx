@@ -145,7 +145,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.PeerArticle:
         return (
           <>
-            {peerArticles.map(({peer, article, peeredURL}) => {
+            {peerArticles.map(({peer, article, peeredArticleURL}) => {
               const states = []
 
               if (article.draft) states.push(t('articleEditor.panels.draft'))
@@ -173,7 +173,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
                       {states.join(' / ')}
                     </div>
                     <div style={{display: 'inline', fontSize: 12, marginLeft: 8}}>
-                      <a href={peeredURL} target="_blank" rel="noreferrer">
+                      <a href={peeredArticleURL} target="_blank" rel="noreferrer">
                         {t('articleEditor.panels.peeredArticlePreview')}{' '}
                         <Icon icon="external-link" />
                       </a>

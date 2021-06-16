@@ -204,7 +204,7 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
     },
-    peeredURL: {
+    peeredArticleURL: {
       type: GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(
         async ({peerID, article}, {}, {loaders, dbAdapter, urlAdapter}) => {
