@@ -2965,7 +2965,10 @@ export type PageQuery = (
   & { page?: Maybe<(
     { __typename?: 'Page' }
     & Pick<Page, 'id'>
-    & { pending?: Maybe<(
+    & { draft?: Maybe<(
+      { __typename?: 'PageRevision' }
+      & Pick<PageRevision, 'publishAt'>
+    )>, pending?: Maybe<(
       { __typename?: 'PageRevision' }
       & Pick<PageRevision, 'publishAt'>
     )>, published?: Maybe<(
@@ -5678,6 +5681,9 @@ export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {
     id
+    draft {
+      publishAt
+    }
     pending {
       publishAt
     }

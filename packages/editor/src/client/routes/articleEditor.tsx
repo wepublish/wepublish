@@ -416,7 +416,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   return (
     <>
       <fieldset style={{textAlign: 'center', borderColor: `${articleState.color}`}}>
-        <legend>
+        <legend style={{width: 'auto', margin: '0px auto'}}>
           <Tag color={articleState.color}>{articleState.title}</Tag>
         </legend>
         <EditorTemplate

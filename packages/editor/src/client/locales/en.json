@@ -235,7 +235,11 @@
         "pagePublished": "Page Published",
         "pageNotFound": "Page Not Found",
         "pageDraftCreated": "Page Draft Created",
-        "pageDraftSaved": "Page Draft Saved"
+        "pageDraftSaved": "Page Draft Saved",
+        "draft": "Draft",
+        "pending": "Page pending publication on {{date}} at {{time}}",
+        "published": "Page published on {{date}} at {{time}}",
+        "unpublished": "Unpublished"
       },
       "panels": {
         "metadata": "Metadata",
