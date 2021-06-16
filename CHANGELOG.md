@@ -1,5 +1,14 @@
 # Change Log
 
+## v2.5.0-alpha.2 (2021-06-16)
+
+#### :bug: Bug Fix
+* `api`
+  * Peering bug fix also for PeerArticleTeaser and PageTeaser ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
 ## v2.5.0-alpha.1 (2021-06-15)
 
 #### :bug: Bug Fix
