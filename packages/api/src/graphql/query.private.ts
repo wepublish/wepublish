@@ -591,6 +591,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
                         ...subtree.selections,
                         {
                           kind: Kind.FIELD,
+                          name: {kind: Kind.NAME, value: 'id'}
+                        },
+                        {
+                          kind: Kind.FIELD,
                           name: {kind: Kind.NAME, value: 'latest'},
                           selectionSet: {
                             kind: Kind.SELECTION_SET,

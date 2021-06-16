@@ -86,6 +86,8 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
         ...PeerWithProfile
       }
 
+      peeredURL
+
       article {
         ...ArticleRef
       }
