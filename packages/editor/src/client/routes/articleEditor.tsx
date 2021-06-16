@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {Alert, Drawer, Icon, IconButton, Modal, Notification, Tag} from 'rsuite'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Notification, Tag} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -121,11 +121,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setChanged(true)
   }, [])
 
-  const draft = {
-    title: t('articleEditor.overview.draft'),
-    color: 'yellow'
-  }
-
   const pending = {
     title: t('articleEditor.overview.pending', {
       date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
@@ -146,13 +141,18 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }
 
   const ArticlePublishState = {
-    draft,
     pending,
     published,
     unpublished
   }
 
-  const [articleState, setArticleState] = useState(ArticlePublishState.unpublished)
+  const [articleState, setArticleState] = useState(
+    articleData?.article?.pending
+      ? ArticlePublishState.pending
+      : articleData?.article?.published
+      ? ArticlePublishState.published
+      : ArticlePublishState.unpublished
+  )
 
   useEffect(() => {
     if (articleData?.article) {
@@ -209,9 +209,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [articleData])
 
   useEffect(() => {
-    if (articleData?.article?.draft || hasChanged) {
-      setArticleState(ArticlePublishState.draft)
-    } else if (articleData?.article?.pending) {
+    if (articleData?.article?.pending) {
       setArticleState(ArticlePublishState.pending)
     } else if (articleData?.article?.published) {
       setArticleState(ArticlePublishState.published)
@@ -426,6 +424,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             <NavigationBar
               leftChildren={
                 <IconButtonLink
+                  style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<Icon icon="arrow-left" />}
                   route={ArticleListRoute.create({})}
@@ -436,7 +435,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 </IconButtonLink>
               }
               centerChildren={
-                <>
+                <div style={{marginTop: '4px'}}>
                   <IconButton
                     icon={<Icon icon="newspaper-o" />}
                     size={'lg'}
@@ -461,29 +460,38 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                     </IconButton>
                   ) : (
                     <>
-                      <IconButton
-                        style={{
-                          marginLeft: '10px'
-                        }}
-                        size={'lg'}
-                        icon={<Icon icon="save" />}
-                        disabled={isDisabled}
-                        onClick={() => handleSave()}>
-                        {t('articleEditor.overview.save')}
-                      </IconButton>
-                      <IconButton
-                        style={{
-                          marginLeft: '10px'
-                        }}
-                        size={'lg'}
-                        icon={<Icon icon="cloud-upload" />}
-                        disabled={isDisabled}
-                        onClick={() => setPublishDialogOpen(true)}>
-                        {t('articleEditor.overview.publish')}
-                      </IconButton>
+                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="save" />}
+                          disabled={isDisabled}
+                          onClick={() => handleSave()}>
+                          {t('articleEditor.overview.save')}
+                        </IconButton>
+                      </Badge>
+                      <Badge
+                        className={
+                          articleData?.article?.draft || !articleData?.article?.published
+                            ? 'unsaved'
+                            : 'saved'
+                        }>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="cloud-upload" />}
+                          disabled={isDisabled}
+                          onClick={() => setPublishDialogOpen(true)}>
+                          {t('articleEditor.overview.publish')}
+                        </IconButton>
+                      </Badge>
                     </>
                   )}
-                </>
+                </div>
               }
             />
           }>
