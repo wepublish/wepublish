@@ -220,6 +220,14 @@ const DreifussWysiwygEditorDemo = () => (
       showCharCount
       initialValue={[
         {
+          type: 'paragraph',
+          children: [
+            {
+              text: 'Emojis'
+            }
+          ]
+        },
+        {
           type: 'table',
           children: [
             {

@@ -124,6 +124,7 @@ export default function DreifussWysiwygEditor(props: any) {
           <Divider type={DividerType.vertical} />
           {/* TODO: icon to be changed */}
           <ToolbarImage icon={<Imagee />} />
+          <Divider type={DividerType.vertical} />
           <ToolbarButtonsTable />
           <Divider type={DividerType.vertical} />
           <ToolbarLink />

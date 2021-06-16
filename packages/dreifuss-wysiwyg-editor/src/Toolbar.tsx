@@ -35,7 +35,6 @@ import {
 } from '@udecode/slate-plugins-alignment'
 import Popover from './atoms/Popover'
 import {EmojiPicker} from './atoms/EmojiPicker'
-import {TableColorPicker} from './atoms/TableColorPicker'
 import {ToolbarList} from '@udecode/slate-plugins-list-ui'
 import {ToolbarTable} from '@udecode/slate-plugins-table-ui'
 import {ToolbarAlign} from '@udecode/slate-plugins-alignment-ui'
@@ -43,9 +42,10 @@ import {ELEMENT_OL, ELEMENT_UL} from '@udecode/slate-plugins-list'
 import {ELEMENT_CODE_BLOCK} from '@udecode/slate-plugins-code-block'
 import {ELEMENT_BLOCKQUOTE} from '@udecode/slate-plugins-block-quote'
 import {ToolbarCodeBlock} from '@udecode/slate-plugins-code-block-ui'
+import {LinkToolbar} from '@wepublish/dreifuss-plugins/packages/link-ui'
 import {ToolbarElement, ToolbarMark} from '@udecode/slate-plugins-toolbar'
 import {useSlatePluginType, useStoreEditor} from '@udecode/slate-plugins-core'
-import {LinkToolbar} from '@wepublish/dreifuss-plugins/packages/link-ui'
+import {TableColorPicker} from '@wepublish/dreifuss-plugins/packages/table-border'
 import {QuotationMarksPicker} from '@wepublish/dreifuss-plugins/packages/quotation-marks'
 import {ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4} from '@udecode/slate-plugins-heading'
 import {
@@ -145,6 +145,8 @@ export const ToolbarButtonsTable = () => (
     <ToolbarTable icon={<BorderTop />} transform={deleteRow} />
     <ToolbarTable icon={<BorderLeft />} transform={addColumn} />
     <ToolbarTable icon={<BorderRight />} transform={deleteColumn} />
-    <TableColorPicker />
+    <Popover Icon={<ToolbarElement type="" icon={'+'} />}>
+      {'Border color: '} <TableColorPicker />
+    </Popover>
   </>
 )
