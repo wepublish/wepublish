@@ -102,7 +102,11 @@ export function mapEnumsBack(result: any) {
       mapEnumsBack(value)
     }
   }
-  if (result.__typename === 'ArticleTeaser') {
+  if (
+    result.__typename === 'ArticleTeaser' ||
+    result.__typename === 'PeerArticleTeaser' ||
+    result.__typename === 'PageTeaser'
+  ) {
     switch (result.style) {
       case 'DEFAULT':
         return Object.assign(result, {style: TeaserStyle.Default})
