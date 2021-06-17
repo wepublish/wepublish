@@ -26,6 +26,7 @@ import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
 import {Icon, IconButton, Drawer, Modal, Alert, Tag, Badge} from 'rsuite'
+import {tagColor} from './articleEditor'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -96,39 +97,6 @@ export function PageEditor({id}: PageEditorProps) {
     setChanged(true)
   }, [])
 
-  const pending = {
-    title: t('pageEditor.overview.pending', {
-      date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
-      time: new Date(pageData?.page?.pending?.publishAt ?? '').toLocaleTimeString()
-    }),
-    color: 'blue'
-  }
-  const published = {
-    title: t('pageEditor.overview.published', {
-      date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
-      time: new Date(pageData?.page?.published?.publishedAt ?? '').toLocaleTimeString()
-    }),
-    color: 'green'
-  }
-  const unpublished = {
-    title: t('pageEditor.overview.unpublished'),
-    color: 'red'
-  }
-
-  const PagePublishState = {
-    pending,
-    published,
-    unpublished
-  }
-
-  const [pageState, setPageState] = useState(
-    pageData?.page?.pending
-      ? PagePublishState.pending
-      : pageData?.page?.published
-      ? PagePublishState.published
-      : PagePublishState.unpublished
-  )
-
   useEffect(() => {
     if (pageData?.page) {
       const {latest, published} = pageData.page
@@ -168,13 +136,29 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }, [pageData])
 
+  const [borderColor, setBorderColor] = useState('')
+  const [tagTitle, setTagTitle] = useState('')
+
   useEffect(() => {
     if (pageData?.page?.pending) {
-      setPageState(PagePublishState.pending)
+      setBorderColor(tagColor.pending)
+      setTagTitle(
+        t('pageEditor.overview.pending', {
+          date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
+          time: new Date(pageData?.page?.pending?.publishAt ?? '').toLocaleTimeString()
+        })
+      )
     } else if (pageData?.page?.published) {
-      setPageState(PagePublishState.published)
+      setBorderColor(tagColor.published)
+      setTagTitle(
+        t('pageEditor.overview.published', {
+          date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
+          time: new Date(pageData?.page?.published?.publishedAt ?? '').toLocaleTimeString()
+        })
+      )
     } else {
-      setPageState(PagePublishState.unpublished)
+      setBorderColor(tagColor.unpublished)
+      setTagTitle(t('pageEditor.overview.unpublished'))
     }
   }, [pageData, hasChanged])
 
@@ -257,9 +241,9 @@ export function PageEditor({id}: PageEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: `${pageState.color}`}}>
+      <fieldset style={{textAlign: 'center', borderColor: borderColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={pageState.color}>{pageState.title}</Tag>
+          <Tag color={borderColor}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

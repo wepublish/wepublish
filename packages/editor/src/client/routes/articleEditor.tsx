@@ -48,6 +48,12 @@ const InitialArticleBlocks: BlockValue[] = [
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
 
+export enum tagColor {
+  pending = 'blue',
+  published = 'green',
+  unpublished = 'red'
+}
+
 export function ArticleEditor({id}: ArticleEditorProps) {
   const {t} = useTranslation()
 
@@ -121,39 +127,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     setChanged(true)
   }, [])
 
-  const pending = {
-    title: t('articleEditor.overview.pending', {
-      date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
-      time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
-    }),
-    color: 'blue'
-  }
-  const published = {
-    title: t('articleEditor.overview.published', {
-      date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
-      time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
-    }),
-    color: 'green'
-  }
-  const unpublished = {
-    title: t('articleEditor.overview.unpublished'),
-    color: 'red'
-  }
-
-  const ArticlePublishState = {
-    pending,
-    published,
-    unpublished
-  }
-
-  const [articleState, setArticleState] = useState(
-    articleData?.article?.pending
-      ? ArticlePublishState.pending
-      : articleData?.article?.published
-      ? ArticlePublishState.published
-      : ArticlePublishState.unpublished
-  )
-
   useEffect(() => {
     if (articleData?.article) {
       const {latest, published, shared} = articleData.article
@@ -208,13 +181,29 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [articleData])
 
+  const [borderColor, setBorderColor] = useState('')
+  const [tagTitle, setTagTitle] = useState('')
+
   useEffect(() => {
     if (articleData?.article?.pending) {
-      setArticleState(ArticlePublishState.pending)
+      setBorderColor(tagColor.pending)
+      setTagTitle(
+        t('articleEditor.overview.pending', {
+          date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
+          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+        })
+      )
     } else if (articleData?.article?.published) {
-      setArticleState(ArticlePublishState.published)
+      setBorderColor(tagColor.published)
+      setTagTitle(
+        t('articleEditor.overview.published', {
+          date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
+          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+        })
+      )
     } else {
-      setArticleState(ArticlePublishState.unpublished)
+      setBorderColor(tagColor.unpublished)
+      setTagTitle(t('articleEditor.overview.unpublished'))
     }
   }, [articleData, hasChanged])
 
@@ -415,9 +404,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: `${articleState.color}`}}>
+      <fieldset style={{textAlign: 'center', borderColor: borderColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={articleState.color}>{articleState.title}</Tag>
+          <Tag color={borderColor}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={
