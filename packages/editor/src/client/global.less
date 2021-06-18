@@ -40,12 +40,14 @@
 
 .rs-sidebar {
   .collapse-nav-btn {
-  display: none;
- }
-
- &:hover {
-  .collapse-nav-btn {
     display: block;
-   }
- }
+    visibility: hidden;
+    transition: visibility 500ms;
+  }
+
+  &:hover {
+    .collapse-nav-btn {
+      visibility: visible;
+    }
+  }
 }
