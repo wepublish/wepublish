@@ -138,7 +138,8 @@
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
         "articlePreviewLinkHours": "Validity period of link",
-        "articlePreviewLinkField": "Preview Link"
+        "articlePreviewLinkField": "Preview Link",
+        "peeredArticlePreview": "Preview"
       }
     },
     "comments": {
@@ -499,7 +500,8 @@
         "generate": "Generate",
         "creationSuccess": "Token creation success",
         "generateError": "Could not create Token",
-        "close": "Close"
+        "close": "Close",
+        "tokenWarning": "Tokens cannot be retrieved later. It is recommended that you copy and save your token somewhere safe."
       }
     },
     "blocks": {
