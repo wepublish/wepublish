@@ -44,6 +44,7 @@ import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
 import {logger} from './server'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
+import {MailContext, MailContextOptions} from './mails/mailContext'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -92,6 +93,7 @@ export interface Context {
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
+  readonly mailContext: MailContext
   readonly memberContext: MemberContext
 
   readonly dbAdapter: DBAdapter
@@ -132,6 +134,7 @@ export interface ContextOptions {
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly mailProvider?: BaseMailProvider
+  readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
@@ -171,6 +174,7 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
     mailProvider,
+    mailContextOptions,
     paymentProviders
   }: ContextOptions
 ): Promise<Context> {
@@ -306,6 +310,15 @@ export async function contextFromRequest(
     sendMailFromProvider
   })
 
+  const mailContext = new MailContext({
+    dbAdapter,
+    mailProvider,
+    defaultFromAddress: mailContextOptions.defaultFromAddress,
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
+    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
+    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+  })
+
   return {
     hostURL,
     websiteURL,
@@ -313,7 +326,7 @@ export async function contextFromRequest(
     loaders,
 
     memberContext,
-
+    mailContext,
     dbAdapter,
     mediaAdapter,
     urlAdapter,

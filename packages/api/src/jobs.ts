@@ -48,18 +48,16 @@ async function dailyInvoiceReminder(context: Context, data: any): Promise<void> 
 }
 
 async function sendTestMail(context: Context, data: any): Promise<void> {
-  const {
-    subject = 'Test Mail',
-    recipient = 'fake@fake.com',
-    message = 'This is a test message',
-    replyToAddress = 'no-reply@fake.com'
-  } = data
-  await context.sendMailFromProvider({
-    subject,
-    recipient,
-    message,
-    replyToAddress
-  })
+  // @ts-ignore
+  const {recipient = 'fake@fake.com', message = 'This is a test message'} = data
+
+  /* await context.mailContext.sendMail({
+    type: SendMailType.TestMail,
+    recipient: recipient,
+    data: {
+      message
+    }
+  }) */
 }
 
 export async function runJob(command: JobType, context: Context, data: any): Promise<void> {

@@ -90,6 +90,8 @@ import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
+// @ts-ignore
+import {SendMailType} from '../mails/mailContext'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -308,23 +310,20 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         url: {type: GraphQLNonNull(GraphQLString)},
         email: {type: GraphQLNonNull(GraphQLString)}
       },
-      async resolve(
-        root,
-        {url, email},
-        {authenticate, dbAdapter, generateJWT, sendMailFromProvider}
-      ) {
+      async resolve(root, {url, email}, {authenticate, dbAdapter, generateJWT, mailContext}) {
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
         const user = await dbAdapter.user.getUser(email)
         if (!user) throw new Error('User does not exist') // TODO: make this proper error
         const token = generateJWT({id: user.id})
-        const link = `${url}?jwt=${token}`
-        await sendMailFromProvider({
-          message: `Click the link to login:\n\n${link}`,
+        await mailContext.sendMail({
+          type: SendMailType.LoginLink,
           recipient: email,
-          subject: 'Login Link',
-          replyToAddress: 'dev@wepublish.ch'
+          data: {
+            url: `${url}?jwt=${token}`,
+            user
+          }
         })
         return email
       }

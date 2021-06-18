@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 import {
   Author,
-  PublicComment,
   CommentItemType,
+  JobType,
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
   PublicArticle,
+  PublicComment,
   PublicPage,
+  SendMailType,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer,
-  JobType
+  WepublishServer
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -27,6 +28,7 @@ import {createWriteStream} from 'pino-sentry'
 import yargs from 'yargs'
 // @ts-ignore
 import {hideBin} from 'yargs/helpers'
+import path from 'path'
 
 interface ExampleURLAdapterProps {
   websiteURL: string
@@ -283,6 +285,25 @@ async function asyncMain() {
     dbAdapter,
     oauth2Providers,
     mailProvider,
+    mailContextOptions: {
+      defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS ?? 'dev@wepublish.ch',
+      defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS ?? 'reply-to@wepublish.ch',
+      mailTemplateMaps: [
+        {
+          type: SendMailType.LoginLink,
+          localTemplate: 'loginLink',
+          local: true,
+          subject: 'Welcome new Member'
+        },
+        {
+          type: SendMailType.TestMail,
+          localTemplate: 'testMail/html',
+          local: true,
+          subject: 'We.Publish Test Mail'
+        }
+      ],
+      mailTemplatesPath: path.resolve('templates', 'emails')
+    },
     paymentProviders,
     urlAdapter: new ExampleURLAdapter({websiteURL}),
     playground: true,
@@ -315,10 +336,8 @@ async function asyncMain() {
       },
       async argv => {
         await server.runJob(JobType.SendTestMail, {
-          subject: 'This is a test mail from a we.publish instance',
           recipient: argv.recipient,
-          message: 'Hello from the other side',
-          replyToAddress: 'dev@wepublish.ch'
+          message: 'Hello from the other side'
         })
         process.exit(0)
       }
