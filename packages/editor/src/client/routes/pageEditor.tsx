@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
 import {RouteActionType} from '@karma.run/react'
 
@@ -6,27 +6,27 @@ import {BlockList, useBlockMap} from '../atoms/blockList'
 import {NavigationBar} from '../atoms/navigationBar'
 import {EditorTemplate} from '../atoms/editorTemplate'
 
-import {useRouteDispatch, PageEditRoute, PageListRoute, IconButtonLink} from '../route'
+import {IconButtonLink, PageEditRoute, PageListRoute, useRouteDispatch} from '../route'
 
 import {
   PageInput,
   useCreatePageMutation,
-  useUpdatePageMutation,
   usePageQuery,
-  usePublishPageMutation
+  usePublishPageMutation,
+  useUpdatePageMutation
 } from '../api'
 
 import {PageMetadata, PageMetadataPanel} from '../panel/pageMetadataPanel'
 import {PublishPagePanel} from '../panel/publishPagePanel'
 
-import {blockForQueryBlock, unionMapForBlock, BlockValue} from '../blocks/types'
+import {blockForQueryBlock, BlockValue, unionMapForBlock} from '../blocks/types'
 
 import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
-import {Icon, IconButton, Drawer, Modal, Alert, Tag, Badge} from 'rsuite'
-import {tagColor} from './articleEditor'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Tag} from 'rsuite'
+import {StateColor} from '../utility'
 
 export interface PageEditorProps {
   readonly id?: string
@@ -136,12 +136,12 @@ export function PageEditor({id}: PageEditorProps) {
     }
   }, [pageData])
 
-  const [borderColor, setBorderColor] = useState('')
+  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
   const [tagTitle, setTagTitle] = useState('')
 
   useEffect(() => {
     if (pageData?.page?.pending) {
-      setBorderColor(tagColor.pending)
+      setStateColor(StateColor.pending)
       setTagTitle(
         t('pageEditor.overview.pending', {
           date: new Date(pageData?.page?.pending?.publishAt ?? '').toDateString(),
@@ -149,7 +149,7 @@ export function PageEditor({id}: PageEditorProps) {
         })
       )
     } else if (pageData?.page?.published) {
-      setBorderColor(tagColor.published)
+      setStateColor(StateColor.published)
       setTagTitle(
         t('pageEditor.overview.published', {
           date: new Date(pageData?.page?.published?.publishedAt ?? '').toDateString(),
@@ -157,7 +157,7 @@ export function PageEditor({id}: PageEditorProps) {
         })
       )
     } else {
-      setBorderColor(tagColor.unpublished)
+      setStateColor(StateColor.unpublished)
       setTagTitle(t('pageEditor.overview.unpublished'))
     }
   }, [pageData, hasChanged])
@@ -241,9 +241,9 @@ export function PageEditor({id}: PageEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: borderColor}}>
+      <fieldset style={{textAlign: 'center', borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={borderColor}>{tagTitle}</Tag>
+          <Tag color={stateColor}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={

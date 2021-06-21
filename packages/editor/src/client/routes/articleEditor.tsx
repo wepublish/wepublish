@@ -38,6 +38,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
+import {StateColor} from '../utility'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -47,12 +48,6 @@ const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
-
-export enum tagColor {
-  pending = 'blue',
-  published = 'green',
-  unpublished = 'red'
-}
 
 export function ArticleEditor({id}: ArticleEditorProps) {
   const {t} = useTranslation()
@@ -181,12 +176,12 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     }
   }, [articleData])
 
-  const [borderColor, setBorderColor] = useState('')
+  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
   const [tagTitle, setTagTitle] = useState('')
 
   useEffect(() => {
     if (articleData?.article?.pending) {
-      setBorderColor(tagColor.pending)
+      setStateColor(StateColor.pending)
       setTagTitle(
         t('articleEditor.overview.pending', {
           date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
@@ -194,7 +189,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       )
     } else if (articleData?.article?.published) {
-      setBorderColor(tagColor.published)
+      setStateColor(StateColor.published)
       setTagTitle(
         t('articleEditor.overview.published', {
           date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
@@ -202,7 +197,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         })
       )
     } else {
-      setBorderColor(tagColor.unpublished)
+      setStateColor(StateColor.unpublished)
       setTagTitle(t('articleEditor.overview.unpublished'))
     }
   }, [articleData, hasChanged])
@@ -404,9 +399,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: borderColor}}>
+      <fieldset style={{textAlign: 'center', borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
-          <Tag color={borderColor}>{tagTitle}</Tag>
+          <Tag color={stateColor}>{tagTitle}</Tag>
         </legend>
         <EditorTemplate
           navigationChildren={
