@@ -1203,6 +1203,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle';
   peer: Peer;
+  peeredArticleURL: Scalars['String'];
   article: Article;
 };
 
@@ -1907,6 +1908,7 @@ export type PeerArticleListQuery = (
     & Pick<PeerArticleConnection, 'totalCount'>
     & { nodes: Array<(
       { __typename?: 'PeerArticle' }
+      & Pick<PeerArticle, 'peeredArticleURL'>
       & { peer: (
         { __typename?: 'Peer' }
         & PeerWithProfileFragment
@@ -4103,6 +4105,7 @@ export const PeerArticleListDocument = gql`
       peer {
         ...PeerWithProfile
       }
+      peeredArticleURL
       article {
         ...ArticleRef
       }
