@@ -55,6 +55,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     peerProfile: {
       type: GraphQLNonNull(GraphQLPeerProfile),
+      description: 'This query returns the peer profile.',
       async resolve(root, args, {hostURL, websiteURL, dbAdapter}) {
         return {...(await dbAdapter.peer.getPeerProfile()), hostURL, websiteURL}
       }
@@ -63,6 +64,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     peer: {
       type: GraphQLPeer,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query takes either the ID or the slug and returns the peer profile.',
       resolve(root, {id, slug}, {loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -78,6 +80,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     navigation: {
       type: GraphQLPublicNavigation,
       args: {id: {type: GraphQLID}, key: {type: GraphQLID}},
+      description: 'This query takes either the ID or the key and returns the navigation.',
       resolve(root, {id, key}, {authenticateUser, loaders}) {
         if ((id == null && key == null) || (id != null && key != null)) {
           throw new UserInputError('You must provide either `id` or `key`.')
@@ -93,6 +96,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     author: {
       type: GraphQLAuthor,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query takes either the ID or the slug and returns the author.',
       resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -113,6 +117,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLAuthorSort, defaultValue: AuthorSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query is to get the authors.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.author.getAuthors({
           filter,
@@ -134,6 +139,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         slug: {type: GraphQLSlug},
         token: {type: GraphQLString}
       },
+      description: 'This query takes either the ID, slug or token and returns the article.',
       async resolve(root, {id, slug, token}, {session, loaders, dbAdapter, verifyJWT}) {
         let article = id ? await loaders.publicArticles.load(id) : null
 
@@ -156,7 +162,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
                 } as PublicArticle)
               : null
           } catch (error) {
-            logger('graphql-query').warn(error, 'Error while verifying token with article id')
+            logger('graphql-query').warn(error, 'Error while verifying token with article id.')
           }
         }
 
@@ -179,6 +185,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the articles.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.article.getPublishedArticles({
           filter,
@@ -200,6 +207,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         peerSlug: {type: GraphQLSlug},
         id: {type: GraphQLNonNull(GraphQLID)}
       },
+      description: 'This query takes either the peer ID or the peer slug and returns the article.',
       async resolve(root, {peerID, peerSlug, id}, context, info) {
         const {loaders} = context
 
@@ -232,6 +240,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     page: {
       type: GraphQLPublicPage,
       args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
+      description: 'This query takes either the ID or the slug and returns the page.',
       resolve(root, {id, slug}, {authenticateUser, loaders}) {
         if ((id == null && slug == null) || (id != null && slug != null)) {
           throw new UserInputError('You must provide either `id` or `slug`.')
@@ -252,6 +261,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the pages.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.page.getPublishedPages({
           filter,
@@ -269,6 +279,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
     authProviders: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
       args: {redirectUri: {type: GraphQLString}},
+      description: 'This query returns the redirect Uri.',
       async resolve(root, {redirectUri}, {getOauth2Clients}) {
         const clients = await getOauth2Clients()
         return clients.map(client => {
@@ -291,6 +302,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     me: {
       type: GraphQLPublicUser,
+      description: 'This query returns the user.',
       resolve(root, args, {session}) {
         return session?.type === SessionType.User ? session.user : null
       }
@@ -298,6 +310,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     invoices: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicInvoice))),
+      description: 'This query returns the invoices.',
       resolve(root, {}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
 
@@ -316,6 +329,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         sort: {type: GraphQLMemberPlanSort, defaultValue: MemberPlanSort.CreatedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
+      description: 'This query returns the member plans.',
       resolve(root, {filter, sort, order, after, before, first, last}, {dbAdapter}) {
         return dbAdapter.memberPlan.getActiveMemberPlans({
           filter,

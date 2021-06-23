@@ -1,6 +1,6 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 
-import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown} from 'rsuite'
+import {Container, Sidebar, Sidenav, Nav, Navbar, Icon, Dropdown, IconButton} from 'rsuite'
 
 import {
   ArticleListRoute,
@@ -77,14 +77,31 @@ export function Base({children}: BaseProps) {
       <Container>
         <Sidebar
           style={{display: 'flex', flexDirection: 'column'}}
+          appearance="default"
           width={isExpanded ? 260 : 56}
           collapsible>
           <Sidenav
             expanded={isExpanded}
             defaultOpenKeys={['1']}
-            appearance="subtle"
+            appearance="default"
             style={{flex: '1 1 auto'}}>
             <Sidenav.Body>
+              <IconButton
+                style={{
+                  position: 'absolute',
+                  top: '5vh',
+                  left: isExpanded ? 260 : 56,
+                  transform: 'translate(-50%)',
+                  zIndex: 100
+                }}
+                className="collapse-nav-btn"
+                appearance="primary"
+                circle
+                size="xs"
+                onClick={() => setIsExpanded(!isExpanded)}
+                icon={<Icon size="lg" icon={isExpanded ? 'angle-left' : 'angle-right'} />}
+              />
+
               <Nav>
                 <NavItemLink
                   icon={<Icon icon="file-text" />}
@@ -177,7 +194,7 @@ export function Base({children}: BaseProps) {
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-          <Navbar appearance="subtle" className="nav-toggle">
+          <Navbar appearance="default" className="nav-toggle">
             <Navbar.Body>
               <Nav>
                 <Dropdown
@@ -218,14 +235,6 @@ export function Base({children}: BaseProps) {
                     </Dropdown.Item>
                   ))}
                 </Dropdown>
-              </Nav>
-
-              <Nav pullRight>
-                <Nav.Item
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  style={{width: 56, textAlign: 'center'}}>
-                  <Icon icon={isExpanded ? 'angle-left' : 'angle-right'} />
-                </Nav.Item>
               </Nav>
             </Navbar.Body>
           </Navbar>
