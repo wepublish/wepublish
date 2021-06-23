@@ -137,7 +137,7 @@ export function PageEditor({id}: PageEditorProps) {
   }, [pageData])
 
   const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
-  const [tagTitle, setTagTitle] = useState('')
+  const [tagTitle, setTagTitle] = useState<string>('')
 
   useEffect(() => {
     if (pageData?.page?.pending) {

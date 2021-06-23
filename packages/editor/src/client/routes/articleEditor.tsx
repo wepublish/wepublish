@@ -177,7 +177,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
   }, [articleData])
 
   const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
-  const [tagTitle, setTagTitle] = useState('')
+  const [tagTitle, setTagTitle] = useState<string>('')
 
   useEffect(() => {
     if (articleData?.article?.pending) {
