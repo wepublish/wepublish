@@ -29,11 +29,12 @@ import {AuthorRefFragment, ImageRefFragment} from '../api'
 import {useTranslation, Trans} from 'react-i18next'
 import {MetaDataType} from '../blocks/types'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
+import {ListInput, ListValue} from '../atoms/listInput'
 
 export interface ArticleMetadataProperty {
-  readonly key: string
-  readonly value: string
-  readonly public: boolean
+  readonly propertyKey: string
+  readonly propertyValue: string
+  readonly propertyIsPublic: boolean
 }
 
 export interface ArticleMetadata {
@@ -88,13 +89,18 @@ export function ArticleMetadataPanel({
     socialMediaTitle,
     socialMediaDescription,
     socialMediaAuthors,
-    socialMediaImage
+    socialMediaImage,
+    properties
   } = value
 
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  const [metaDataProperties, setMetadataProperties] = useState<
+    ListValue<ArticleMetadataProperty>[]
+  >([])
 
   const {t} = useTranslation()
 
@@ -384,6 +390,43 @@ export function ArticleMetadataPanel({
             />
           </Panel>
         )
+      case MetaDataType.Properties:
+        return (
+          <Panel>
+            <ListInput
+              value={metaDataProperties}
+              defaultValue={{propertyKey: '', propertyValue: '', propertyIsPublic: true}}
+              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}>
+              {({value, onChange}) => (
+                <Form layout="inline">
+                  <FormGroup>
+                    <FormControl
+                      onChange={propertyKey => onChange({...value, propertyKey})}
+                      value={value.propertyKey}
+                      placeholder={t('articleEditor.panels.key')}
+                      style={{width: '8rem'}}
+                    />
+                    <FormControl
+                      onChange={propertyValue => onChange({...value, propertyValue})}
+                      value={value.propertyValue}
+                      placeholder={t('articleEditor.panels.value')}
+                      style={{width: '8rem'}}
+                    />
+                  </FormGroup>
+                  <FormGroup style={{paddingTop: '5px'}}>
+                    <Toggle
+                      checkedChildren="public"
+                      unCheckedChildren="private"
+                      checked={value.propertyIsPublic}
+                      onChange={propertyIsPublic => onChange({...value, propertyIsPublic})}
+                      value={value.propertyIsPublic}
+                    />
+                  </FormGroup>
+                </Form>
+              )}
+            </ListInput>
+          </Panel>
+        )
       default:
         return <></>
     }
@@ -406,6 +449,9 @@ export function ArticleMetadataPanel({
           </Nav.Item>
           <Nav.Item eventKey={MetaDataType.SocialMedia} icon={<Icon icon="share-alt" />}>
             {t('articleEditor.panels.socialMedia')}
+          </Nav.Item>
+          <Nav.Item eventKey={MetaDataType.Properties} icon={<Icon icon="list" />}>
+            {t('articleEditor.panels.properties')}
           </Nav.Item>
         </Nav>
         {currentContent()}

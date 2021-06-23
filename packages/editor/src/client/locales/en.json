@@ -120,6 +120,7 @@
         "removeTeaser": "Remove Teaser",
         "sharedWithPeers": "Shared With Peers",
         "socialMedia": "Social Media",
+        "properties": "Properties",
         "general": "General",
         "socialMediaTitle": "Title for Social Media",
         "socialMediaDescription": "Description for Social Media",
@@ -139,7 +140,9 @@
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article",
         "articlePreviewLinkHours": "Validity period of link",
         "articlePreviewLinkField": "Preview Link",
-        "peeredArticlePreview": "Preview"
+        "peeredArticlePreview": "Preview",
+        "key": "key",
+        "value": "value"
       }
     },
     "comments": {
