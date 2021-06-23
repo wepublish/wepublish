@@ -1,5 +1,37 @@
 # Change Log
 
+## v2.6.0-alpha.0 (2021-06-23)
+
+#### :boom: Breaking Change
+* `api`, `editor`
+  * [#288](https://github.com/wepublish/wepublish/pull/288) Allow previews for peered articles ([@roosnic1](https://github.com/roosnic1))
+
+#### :heart: New Feature
+* `api`, `editor`
+  * [#288](https://github.com/wepublish/wepublish/pull/288) Allow previews for peered articles ([@roosnic1](https://github.com/roosnic1))
+
+#### :bug: Bug Fix
+* `api`
+  * [#287](https://github.com/wepublish/wepublish/pull/287) reverse enums also for PeerArticleTeasers and PageTeasers ([@roosnic1](https://github.com/roosnic1))
+  * [#281](https://github.com/wepublish/wepublish/pull/281) Bug fix for peered article that contain a teaser grid block ([@roosnic1](https://github.com/roosnic1))
+
+#### :nail_care: Polish
+* `editor`
+  * [#286](https://github.com/wepublish/wepublish/pull/286) F/wpc 408 navbar collapse ([@camilleory](https://github.com/camilleory))
+  * [#284](https://github.com/wepublish/wepublish/pull/284) token save notification ([@penk85](https://github.com/penk85))
+  * [#279](https://github.com/wepublish/wepublish/pull/279) wpc-397 metadata close button ([@camilleory](https://github.com/camilleory))
+
+#### :house: Internal
+* `api`
+  * [#285](https://github.com/wepublish/wepublish/pull/285) wpc-421 adding graphql description for public queries and mutations ([@HanaAyman](https://github.com/HanaAyman))
+
+#### Committers: 4
+- Camille ([@camilleory](https://github.com/camilleory))
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
 ## v2.5.0-alpha.2 (2021-06-16)
 
 #### :bug: Bug Fix
