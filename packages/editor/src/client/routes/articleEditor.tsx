@@ -389,6 +389,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 <IconButton
                   icon={<Icon icon="newspaper-o" />}
                   size={'lg'}
+                  style={{marginBottom: '20px'}}
                   disabled={isDisabled}
                   onClick={() => {
                     syncFirstTitleBlockWithMetadata()
@@ -400,7 +401,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 {isNew && createData == null ? (
                   <IconButton
                     style={{
-                      marginLeft: '10px'
+                      marginLeft: '10px',
+                      marginBottom: '20px'
                     }}
                     size={'lg'}
                     icon={<Icon icon="save" />}
@@ -412,7 +414,8 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   <>
                     <IconButton
                       style={{
-                        marginLeft: '10px'
+                        marginLeft: '10px',
+                        marginBottom: '20px'
                       }}
                       size={'lg'}
                       icon={<Icon icon="save" />}

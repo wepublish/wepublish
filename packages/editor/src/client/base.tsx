@@ -23,6 +23,8 @@ import {
 
 import {useTranslation} from 'react-i18next'
 
+import './global.less'
+
 export interface BaseProps {
   children?: ReactNode
 }
@@ -197,6 +199,7 @@ export function Base({children}: BaseProps) {
                   trigger="click"
                   renderTitle={() => (
                     <Icon
+                      className="language-selector"
                       icon="globe"
                       style={{
                         width: 56,

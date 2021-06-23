@@ -232,6 +232,7 @@ export function PageEditor({id}: PageEditorProps) {
                   icon={<Icon icon="newspaper-o" />}
                   size={'lg'}
                   disabled={isDisabled}
+                  style={{marginBottom: '20px'}}
                   onClick={() => setMetaDrawerOpen(true)}>
                   {t('pageEditor.overview.metadata')}
                 </IconButton>
@@ -239,7 +240,8 @@ export function PageEditor({id}: PageEditorProps) {
                 {isNew && createData == null ? (
                   <IconButton
                     style={{
-                      marginLeft: '10px'
+                      marginLeft: '10px',
+                      marginBottom: '20px'
                     }}
                     size={'lg'}
                     icon={<Icon icon="save" />}
@@ -251,7 +253,8 @@ export function PageEditor({id}: PageEditorProps) {
                   <>
                     <IconButton
                       style={{
-                        marginLeft: '10px'
+                        marginLeft: '10px',
+                        marginBottom: '20px'
                       }}
                       size={'lg'}
                       icon={<Icon icon="save" />}
@@ -261,7 +264,8 @@ export function PageEditor({id}: PageEditorProps) {
                     </IconButton>
                     <IconButton
                       style={{
-                        marginLeft: '10px'
+                        marginLeft: '10px',
+                        marginBottom: '20px'
                       }}
                       size={'lg'}
                       icon={<Icon icon="cloud-upload" />}
