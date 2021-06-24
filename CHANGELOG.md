@@ -1,5 +1,53 @@
 # Change Log
 
+## v2.5.0-alpha.2 (2021-06-16)
+
+#### :bug: Bug Fix
+* `api`
+  * Peering bug fix also for PeerArticleTeaser and PageTeaser ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+## v2.5.0-alpha.1 (2021-06-15)
+
+#### :bug: Bug Fix
+* `api`
+  * [#281](https://github.com/wepublish/wepublish/pull/281) Bug fix for peered article that contain a teaser grid block ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
+## v2.5.0-alpha.0 (2021-06-09)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `editor`
+  * [#263](https://github.com/wepublish/wepublish/pull/263) f/wpc-341-order-comments-by-state ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#278](https://github.com/wepublish/wepublish/pull/278) F/wpc 22 update ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#274](https://github.com/wepublish/wepublish/pull/274) F/wpc 353 show pending publish date ([@penk85](https://github.com/penk85))
+  * [#270](https://github.com/wepublish/wepublish/pull/270) Show publish date in article and page list ([@penk85](https://github.com/penk85))
+
+#### :house: Internal
+* Other
+  * [#277](https://github.com/wepublish/wepublish/pull/277) fix(website): removed comments from graphql query for peer articles ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#272](https://github.com/wepublish/wepublish/pull/272) validation for url peering to host ([@penk85](https://github.com/penk85))
+* `api-db-mongodb`, `editor`
+  * [#263](https://github.com/wepublish/wepublish/pull/263) f/wpc-341-order-comments-by-state ([@HanaAyman](https://github.com/HanaAyman))
+
+#### Committers: 3
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
 ## v2.4.0 (2021-06-09)
 
 #### :heart: New Feature

@@ -1203,6 +1203,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle';
   peer: Peer;
+  peeredArticleURL: Scalars['String'];
   article: Article;
 };
 
@@ -1907,6 +1908,7 @@ export type PeerArticleListQuery = (
     & Pick<PeerArticleConnection, 'totalCount'>
     & { nodes: Array<(
       { __typename?: 'PeerArticle' }
+      & Pick<PeerArticle, 'peeredArticleURL'>
       & { peer: (
         { __typename?: 'Peer' }
         & PeerWithProfileFragment
@@ -2021,7 +2023,10 @@ export type ArticleQuery = (
   & { article?: Maybe<(
     { __typename?: 'Article' }
     & Pick<Article, 'id' | 'shared'>
-    & { pending?: Maybe<(
+    & { draft?: Maybe<(
+      { __typename?: 'ArticleRevision' }
+      & Pick<ArticleRevision, 'publishAt'>
+    )>, pending?: Maybe<(
       { __typename?: 'ArticleRevision' }
       & Pick<ArticleRevision, 'publishAt'>
     )>, published?: Maybe<(
@@ -2962,7 +2967,10 @@ export type PageQuery = (
   & { page?: Maybe<(
     { __typename?: 'Page' }
     & Pick<Page, 'id'>
-    & { pending?: Maybe<(
+    & { draft?: Maybe<(
+      { __typename?: 'PageRevision' }
+      & Pick<PageRevision, 'publishAt'>
+    )>, pending?: Maybe<(
       { __typename?: 'PageRevision' }
       & Pick<PageRevision, 'publishAt'>
     )>, published?: Maybe<(
@@ -4097,6 +4105,7 @@ export const PeerArticleListDocument = gql`
       peer {
         ...PeerWithProfile
       }
+      peeredArticleURL
       article {
         ...ArticleRef
       }
@@ -4369,6 +4378,9 @@ export const ArticleDocument = gql`
   article(id: $id) {
     id
     shared
+    draft {
+      publishAt
+    }
     pending {
       publishAt
     }
@@ -5672,6 +5684,9 @@ export const PageDocument = gql`
     query Page($id: ID!) {
   page(id: $id) {
     id
+    draft {
+      publishAt
+    }
     pending {
       publishAt
     }
