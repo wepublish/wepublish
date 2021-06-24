@@ -32,9 +32,10 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 
 export interface ArticleMetadataProperty {
-  readonly propertyKey: string
-  readonly propertyValue: string
-  readonly propertyIsPublic: boolean
+  readonly id: string
+  readonly key: string
+  readonly value: string
+  readonly public: boolean
 }
 
 export interface ArticleMetadata {
@@ -98,9 +99,9 @@ export function ArticleMetadataPanel({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const [metaDataProperties, setMetadataProperties] = useState<
-    ListValue<ArticleMetadataProperty>[]
-  >([])
+  const [metaDataProperties, setMetadataProperties] = useState<ArticleMetadataProperty[]>(
+    properties
+  )
 
   const {t} = useTranslation()
 
@@ -395,20 +396,24 @@ export function ArticleMetadataPanel({
           <Panel>
             <ListInput
               value={metaDataProperties}
-              defaultValue={{propertyKey: '', propertyValue: '', propertyIsPublic: true}}
-              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}>
+              // label=""
+              // disabled={false}
+              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+              defaultValue={{key: '', value: '', public: true, id: 'dfvfds'}}>
               {({value, onChange}) => (
                 <Form layout="inline">
                   <FormGroup>
                     <FormControl
-                      onChange={propertyKey => onChange({...value, propertyKey})}
-                      value={value.propertyKey}
+                      name="propertyKey"
+                      onChange={propertyKey => onChange({...value, key: propertyKey})}
+                      value={value.key}
                       placeholder={t('articleEditor.panels.key')}
                       style={{width: '8rem'}}
                     />
                     <FormControl
-                      onChange={propertyValue => onChange({...value, propertyValue})}
-                      value={value.propertyValue}
+                      name="propertyValue"
+                      onChange={propertyValue => onChange({...value, value: propertyValue})}
+                      value={value.value}
                       placeholder={t('articleEditor.panels.value')}
                       style={{width: '8rem'}}
                     />
@@ -417,9 +422,9 @@ export function ArticleMetadataPanel({
                     <Toggle
                       checkedChildren="public"
                       unCheckedChildren="private"
-                      checked={value.propertyIsPublic}
-                      onChange={propertyIsPublic => onChange({...value, propertyIsPublic})}
-                      value={value.propertyIsPublic}
+                      checked={value.public}
+                      onChange={isPublic => onChange({...value, public: isPublic})}
+                      value={value.public}
                     />
                   </FormGroup>
                 </Form>
