@@ -49,7 +49,11 @@
         "create": "Create",
         "save": "Save",
         "publish": "Publish",
-        "noSlug": "Article Not Published. Please add a slug."
+        "noSlug": "Article Not Published. Please add a slug.",
+        "draft": "Draft",
+        "pending": "Article pending publication on {{date}} at {{time}}",
+        "published": "Article published on {{date}} at {{time}}",
+        "unpublished": "Unpublished"
       },
       "panels": {
         "metadata": "Metadata",
@@ -232,7 +236,11 @@
         "pagePublished": "Page Published",
         "pageNotFound": "Page Not Found",
         "pageDraftCreated": "Page Draft Created",
-        "pageDraftSaved": "Page Draft Saved"
+        "pageDraftSaved": "Page Draft Saved",
+        "draft": "Draft",
+        "pending": "Page pending publication on {{date}} at {{time}}",
+        "published": "Page published on {{date}} at {{time}}",
+        "unpublished": "Unpublished"
       },
       "panels": {
         "metadata": "Metadata",
