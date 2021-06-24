@@ -421,9 +421,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
               centerChildren={
                 <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
-                    style={{
-                      marginLeft: '10px'
-                    }}
                     icon={<Icon icon="newspaper-o" />}
                     size={'lg'}
                     disabled={isDisabled}
