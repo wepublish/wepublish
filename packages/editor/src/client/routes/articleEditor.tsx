@@ -437,7 +437,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   {isNew && createData == null ? (
                     <IconButton
                       style={{
-                        marginTop: '4px',
                         marginLeft: '10px'
                       }}
                       size={'lg'}
@@ -451,7 +450,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
-                            marginTop: '4px',
                             marginLeft: '10px'
                           }}
                           size={'lg'}
@@ -469,7 +467,6 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         }>
                         <IconButton
                           style={{
-                            marginTop: '4px',
                             marginLeft: '10px'
                           }}
                           size={'lg'}

@@ -273,8 +273,7 @@ export function PageEditor({id}: PageEditorProps) {
                   {isNew && createData == null ? (
                     <IconButton
                       style={{
-                        marginLeft: '10px',
-                        marginBottom: '20px'
+                        marginLeft: '10px'
                       }}
                       size={'lg'}
                       icon={<Icon icon="save" />}
