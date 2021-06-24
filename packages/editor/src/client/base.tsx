@@ -23,8 +23,6 @@ import {
 
 import {useTranslation} from 'react-i18next'
 
-import './global.less'
-
 export interface BaseProps {
   children?: ReactNode
 }
