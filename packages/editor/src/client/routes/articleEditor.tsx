@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {Alert, Drawer, Icon, IconButton, Modal, Notification} from 'rsuite'
+import {Alert, Badge, Drawer, Icon, IconButton, Modal, Notification, Tag} from 'rsuite'
 
 import {BlockList, useBlockMap} from '../atoms/blockList'
 import {EditorTemplate} from '../atoms/editorTemplate'
@@ -38,6 +38,7 @@ import {useUnsavedChangesDialog} from '../unsavedChangesDialog'
 import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
+import {StateColor} from '../utility'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -97,7 +98,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   const articleID = id || createData?.createArticle.id
 
-  const {data: articleData, loading: isLoading} = useArticleQuery({
+  const {data: articleData, refetch, loading: isLoading} = useArticleQuery({
     skip: isNew || createData != null,
     errorPolicy: 'all',
     fetchPolicy: 'no-cache',
@@ -174,6 +175,32 @@ export function ArticleEditor({id}: ArticleEditorProps) {
       setBlocks(blocks.map(blockForQueryBlock))
     }
   }, [articleData])
+
+  const [stateColor, setStateColor] = useState<StateColor>(StateColor.none)
+  const [tagTitle, setTagTitle] = useState<string>('')
+
+  useEffect(() => {
+    if (articleData?.article?.pending) {
+      setStateColor(StateColor.pending)
+      setTagTitle(
+        t('articleEditor.overview.pending', {
+          date: new Date(articleData?.article?.pending?.publishAt ?? '').toDateString(),
+          time: new Date(articleData?.article?.pending?.publishAt ?? '').toLocaleTimeString()
+        })
+      )
+    } else if (articleData?.article?.published) {
+      setStateColor(StateColor.published)
+      setTagTitle(
+        t('articleEditor.overview.published', {
+          date: new Date(articleData?.article?.published?.publishedAt ?? '').toDateString(),
+          time: new Date(articleData?.article?.published?.publishedAt ?? '').toLocaleTimeString()
+        })
+      )
+    } else {
+      setStateColor(StateColor.unpublished)
+      setTagTitle(t('articleEditor.overview.unpublished'))
+    }
+  }, [articleData, hasChanged])
 
   useEffect(() => {
     if (createError || updateError || publishError) {
@@ -313,6 +340,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         duration: 2000
       })
     }
+    await refetch({id: articleID})
   }
 
   async function handlePublish(publishDate: Date, updateDate: Date) {
@@ -347,6 +375,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
         duration: 2000
       })
     }
+    await refetch({id: articleID})
   }
 
   useEffect(() => {
@@ -370,46 +399,39 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
-      <EditorTemplate
-        navigationChildren={
-          <NavigationBar
-            leftChildren={
-              <IconButtonLink
-                size={'lg'}
-                icon={<Icon icon="arrow-left" />}
-                route={ArticleListRoute.create({})}
-                onClick={e => {
-                  if (!unsavedChangesDialog()) e.preventDefault()
-                }}>
-                {t('articleEditor.overview.back')}
-              </IconButtonLink>
-            }
-            centerChildren={
-              <>
-                <IconButton
-                  icon={<Icon icon="newspaper-o" />}
+      <fieldset style={{textAlign: 'center', borderColor: stateColor}}>
+        <legend style={{width: 'auto', margin: '0px auto'}}>
+          <Tag color={stateColor}>{tagTitle}</Tag>
+        </legend>
+        <EditorTemplate
+          navigationChildren={
+            <NavigationBar
+              leftChildren={
+                <IconButtonLink
+                  style={{marginTop: '4px'}}
                   size={'lg'}
-                  disabled={isDisabled}
-                  onClick={() => {
-                    syncFirstTitleBlockWithMetadata()
-                    setMetaDrawerOpen(true)
+                  icon={<Icon icon="arrow-left" />}
+                  route={ArticleListRoute.create({})}
+                  onClick={e => {
+                    if (!unsavedChangesDialog()) e.preventDefault()
                   }}>
-                  {t('articleEditor.overview.metadata')}
-                </IconButton>
-
-                {isNew && createData == null ? (
+                  {t('articleEditor.overview.back')}
+                </IconButtonLink>
+              }
+              centerChildren={
+                <div style={{marginTop: '4px'}}>
                   <IconButton
-                    style={{
-                      marginLeft: '10px'
-                    }}
+                    icon={<Icon icon="newspaper-o" />}
                     size={'lg'}
-                    icon={<Icon icon="save" />}
                     disabled={isDisabled}
-                    onClick={() => handleSave()}>
-                    {t('articleEditor.overview.create')}
+                    onClick={() => {
+                      syncFirstTitleBlockWithMetadata()
+                      setMetaDrawerOpen(true)
+                    }}>
+                    {t('articleEditor.overview.metadata')}
                   </IconButton>
-                ) : (
-                  <>
+
+                  {isNew && createData == null ? (
                     <IconButton
                       style={{
                         marginLeft: '10px'
@@ -418,28 +440,50 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                       icon={<Icon icon="save" />}
                       disabled={isDisabled}
                       onClick={() => handleSave()}>
-                      {t('articleEditor.overview.save')}
+                      {t('articleEditor.overview.create')}
                     </IconButton>
-                    <IconButton
-                      style={{
-                        marginLeft: '10px'
-                      }}
-                      size={'lg'}
-                      icon={<Icon icon="cloud-upload" />}
-                      disabled={isDisabled}
-                      onClick={() => setPublishDialogOpen(true)}>
-                      {t('articleEditor.overview.publish')}
-                    </IconButton>
-                  </>
-                )}
-              </>
-            }
-          />
-        }>
-        <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
-          {useBlockMap<BlockValue>(() => BlockMap, [])}
-        </BlockList>
-      </EditorTemplate>
+                  ) : (
+                    <>
+                      <Badge className={hasChanged ? 'unsaved' : 'saved'}>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="save" />}
+                          disabled={isDisabled}
+                          onClick={() => handleSave()}>
+                          {t('articleEditor.overview.save')}
+                        </IconButton>
+                      </Badge>
+                      <Badge
+                        className={
+                          articleData?.article?.draft || !articleData?.article?.published
+                            ? 'unsaved'
+                            : 'saved'
+                        }>
+                        <IconButton
+                          style={{
+                            marginLeft: '10px'
+                          }}
+                          size={'lg'}
+                          icon={<Icon icon="cloud-upload" />}
+                          disabled={isDisabled}
+                          onClick={() => setPublishDialogOpen(true)}>
+                          {t('articleEditor.overview.publish')}
+                        </IconButton>
+                      </Badge>
+                    </>
+                  )}
+                </div>
+              }
+            />
+          }>
+          <BlockList value={blocks} onChange={handleChange} disabled={isLoading || isDisabled}>
+            {useBlockMap<BlockValue>(() => BlockMap, [])}
+          </BlockList>
+        </EditorTemplate>
+      </fieldset>
       <Drawer show={isMetaDrawerOpen} size={'sm'} onHide={() => setMetaDrawerOpen(false)}>
         <ArticleMetadataPanel
           value={metadata}

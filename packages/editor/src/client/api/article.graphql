@@ -150,6 +150,10 @@ query Article($id: ID!) {
     id
     shared
 
+    draft {
+      publishAt
+    }
+
     pending {
       publishAt
     }
