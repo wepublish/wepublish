@@ -419,11 +419,10 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 </IconButtonLink>
               }
               centerChildren={
-                <div style={{marginTop: '4px'}}>
+                <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
                     style={{
-                      marginLeft: '10px',
-                      marginBottom: '20px'
+                      marginLeft: '10px'
                     }}
                     icon={<Icon icon="newspaper-o" />}
                     size={'lg'}
@@ -439,8 +438,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                     <IconButton
                       style={{
                         marginTop: '4px',
-                        marginLeft: '10px',
-                        marginBottom: '20px'
+                        marginLeft: '10px'
                       }}
                       size={'lg'}
                       icon={<Icon icon="save" />}
@@ -454,8 +452,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         <IconButton
                           style={{
                             marginTop: '4px',
-                            marginLeft: '10px',
-                            marginBottom: '20px'
+                            marginLeft: '10px'
                           }}
                           size={'lg'}
                           icon={<Icon icon="save" />}
@@ -473,8 +470,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         <IconButton
                           style={{
                             marginTop: '4px',
-                            marginLeft: '10px',
-                            marginBottom: '20px'
+                            marginLeft: '10px'
                           }}
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
