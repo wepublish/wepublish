@@ -438,6 +438,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                   {isNew && createData == null ? (
                     <IconButton
                       style={{
+                        marginTop: '4px',
                         marginLeft: '10px',
                         marginBottom: '20px'
                       }}
@@ -452,7 +453,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                       <Badge className={hasChanged ? 'unsaved' : 'saved'}>
                         <IconButton
                           style={{
-                            marginLeft: '10px'
+                            marginTop: '4px',
+                            marginLeft: '10px',
+                            marginBottom: '20px'
                           }}
                           size={'lg'}
                           icon={<Icon icon="save" />}
@@ -469,7 +472,9 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                         }>
                         <IconButton
                           style={{
-                            marginLeft: '10px'
+                            marginTop: '4px',
+                            marginLeft: '10px',
+                            marginBottom: '20px'
                           }}
                           size={'lg'}
                           icon={<Icon icon="cloud-upload" />}
