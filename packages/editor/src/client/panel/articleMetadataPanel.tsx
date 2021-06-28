@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
   Button,
@@ -17,13 +17,14 @@ import {
   InputGroup,
   IconButton,
   Tooltip,
-  Whisper
+  Whisper,
+  Input
 } from 'rsuite'
 
 import {ImagedEditPanel} from './imageEditPanel'
 import {AuthorCheckPicker} from './authorCheckPicker'
 import {ImageSelectPanel} from './imageSelectPanel'
-import {slugify} from '../utility'
+import {generateID, slugify} from '../utility'
 import {AuthorRefFragment, ImageRefFragment} from '../api'
 
 import {useTranslation, Trans} from 'react-i18next'
@@ -32,7 +33,6 @@ import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 
 export interface ArticleMetadataProperty {
-  readonly id: string
   readonly key: string
   readonly value: string
   readonly public: boolean
@@ -99,11 +99,24 @@ export function ArticleMetadataPanel({
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
 
-  const [metaDataProperties, setMetadataProperties] = useState<ArticleMetadataProperty[]>(
-    properties
-  )
+  const [metaDataProperties, setMetadataProperties] = useState<
+    ListValue<ArticleMetadataProperty>[]
+  >([])
 
   const {t} = useTranslation()
+
+  useEffect(() => {
+    if (properties) {
+      setMetadataProperties(
+        properties.length
+          ? properties.map(metaDataProperty => ({
+              id: generateID(),
+              value: metaDataProperty
+            }))
+          : []
+      )
+    }
+  }, [])
 
   function handleImageChange(currentImage: ImageRefFragment) {
     switch (activeKey) {
@@ -394,40 +407,44 @@ export function ArticleMetadataPanel({
       case MetaDataType.Properties:
         return (
           <Panel>
+            <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
             <ListInput
               value={metaDataProperties}
-              // label=""
-              // disabled={false}
-              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
-              defaultValue={{key: '', value: '', public: true, id: 'dfvfds'}}>
+              onChange={propertiesItemInput => {
+                setMetadataProperties(propertiesItemInput)
+                onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+              }}
+              defaultValue={{key: '', value: '', public: true}}>
               {({value, onChange}) => (
-                <Form layout="inline">
-                  <FormGroup>
-                    <FormControl
-                      name="propertyKey"
-                      onChange={propertyKey => onChange({...value, key: propertyKey})}
-                      value={value.key}
-                      placeholder={t('articleEditor.panels.key')}
-                      style={{width: '8rem'}}
-                    />
-                    <FormControl
-                      name="propertyValue"
-                      onChange={propertyValue => onChange({...value, value: propertyValue})}
-                      value={value.value}
-                      placeholder={t('articleEditor.panels.value')}
-                      style={{width: '8rem'}}
-                    />
-                  </FormGroup>
-                  <FormGroup style={{paddingTop: '5px'}}>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <Input
+                    placeholder={t('articleEditor.panels.key')}
+                    style={{
+                      width: '40%',
+                      marginRight: '10px'
+                    }}
+                    value={value.key}
+                    onChange={propertyKey => onChange({...value, key: propertyKey})}
+                  />
+                  <Input
+                    placeholder={t('articleEditor.panels.value')}
+                    style={{
+                      width: '60%'
+                    }}
+                    value={value.value}
+                    onChange={propertyValue => onChange({...value, value: propertyValue})}
+                  />
+                  <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
                     <Toggle
-                      checkedChildren="public"
-                      unCheckedChildren="private"
+                      style={{maxWidth: '70px', minWidth: '70px'}}
+                      checkedChildren={t('articleEditor.panels.public')}
+                      unCheckedChildren={t('articleEditor.panels.private')}
                       checked={value.public}
-                      onChange={isPublic => onChange({...value, public: isPublic})}
                       value={value.public}
+                      onChange={isPublic => onChange({...value, public: isPublic})}
                     />
                   </FormGroup>
-                </Form>
+                </div>
               )}
             </ListInput>
           </Panel>

@@ -142,7 +142,9 @@
         "articlePreviewLinkField": "Preview Link",
         "peeredArticlePreview": "Preview",
         "key": "key",
-        "value": "value"
+        "value": "value",
+        "private": "private",
+        "public": "public"
       }
     },
     "comments": {
@@ -262,7 +264,13 @@
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
         "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "descriptionHelpBlock": "Please use an SEO-optimised description"
+        "descriptionHelpBlock": "Please use an SEO-optimised description",
+        "postImage": "Image for Post",
+        "properties": "Properties",
+        "key": "key",
+        "value": "value",
+        "private": "private",
+        "public": "public"
       }
     },
     "authors": {
