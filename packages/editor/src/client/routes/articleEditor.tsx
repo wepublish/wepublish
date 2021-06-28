@@ -408,7 +408,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
             <NavigationBar
               leftChildren={
                 <IconButtonLink
-                  style={{marginTop: '4px', marginBottom: '20px'}}
+                  style={{marginTop: '4px'}}
                   size={'lg'}
                   icon={<Icon icon="arrow-left" />}
                   route={ArticleListRoute.create({})}
