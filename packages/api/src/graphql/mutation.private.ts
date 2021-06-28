@@ -90,7 +90,6 @@ import {GraphQLPaymentMethod, GraphQLPaymentMethodInput} from './paymentMethod'
 import {GraphQLInvoice, GraphQLInvoiceInput} from './invoice'
 import {GraphQLPayment, GraphQLPaymentFromInvoiceInput} from './payment'
 import {PaymentState} from '../db/payment'
-// @ts-ignore
 import {SendMailType} from '../mails/mailContext'
 
 function mapTeaserUnionMap(value: any) {
