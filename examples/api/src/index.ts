@@ -14,7 +14,6 @@ import {
   StripePaymentProvider,
   URLAdapter,
   WepublishServer,
-  JobType,
   Peer
 } from '@wepublish/api'
 
