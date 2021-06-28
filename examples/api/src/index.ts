@@ -302,7 +302,7 @@ async function asyncMain() {
         },
         {
           type: SendMailType.TestMail,
-          localTemplate: 'testMail/html',
+          localTemplate: 'testMail',
           local: true,
           subject: 'We.Publish Test Mail'
         }

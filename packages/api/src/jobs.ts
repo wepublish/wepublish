@@ -1,5 +1,6 @@
 import {Context} from './context'
 import {logger} from './server'
+import {SendMailType} from './mails/mailContext'
 
 export enum JobType {
   DailyMembershipRenewal = 'dailyMembershipRenewal',
@@ -48,16 +49,15 @@ async function dailyInvoiceReminder(context: Context, data: any): Promise<void> 
 }
 
 async function sendTestMail(context: Context, data: any): Promise<void> {
-  // @ts-ignore
   const {recipient = 'fake@fake.com', message = 'This is a test message'} = data
 
-  /* await context.mailContext.sendMail({
+  await context.mailContext.sendMail({
     type: SendMailType.TestMail,
     recipient: recipient,
     data: {
       message
     }
-  }) */
+  })
 }
 
 export async function runJob(command: JobType, context: Context, data: any): Promise<void> {
