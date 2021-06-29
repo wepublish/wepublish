@@ -76,7 +76,12 @@
     "slate-react": "^0.58.1"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^1.17.10",
+    "@graphql-codegen/introspection": "^1.18.0",
+    "@graphql-codegen/typescript": "^1.17.10",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.7",
     "@types/apollo-upload-client": "^14.1.0",
     "@types/emoji-mart": "3.0.0",
     "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -92,6 +97,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "crlf": "^1.1.1",
     "css-loader": "^4.2.1",
+    "dotenv": "^8.2.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "enzyme-to-json": "^3.6.1",
