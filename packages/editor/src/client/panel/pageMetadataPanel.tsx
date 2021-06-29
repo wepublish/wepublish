@@ -61,7 +61,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage,
-    properties
+    ...properties
   } = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -78,8 +78,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   useEffect(() => {
     if (properties) {
       setMetadataProperties(
-        properties.length
-          ? properties.map(metaDataProperty => ({
+        properties.properties
+          ? properties.properties.map(metaDataProperty => ({
               id: generateID(),
               value: metaDataProperty
             }))
@@ -222,7 +222,11 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                       marginRight: '10px'
                     }}
                     value={value.key}
-                    onChange={propertyKey => onChange({...value, key: propertyKey})}
+                    onChange={propertyKey => {
+                      onChange({...value, key: propertyKey})
+                      console.log('property key ', propertyKey)
+                      console.log('value key', value.key)
+                    }}
                   />
                   <Input
                     placeholder={t('pageEditor.panels.value')}
@@ -230,7 +234,12 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                       width: '60%'
                     }}
                     value={value.value}
-                    onChange={propertyValue => onChange({...value, value: propertyValue})}
+                    onChange={propertyValue => {
+                      onChange({...value, value: propertyValue})
+                      console.log('property value ', propertyValue)
+                      console.log('value value ', value.value)
+                      console.log('metadataPRops', metaDataProperties)
+                    }}
                   />
                   <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
                     <Toggle
