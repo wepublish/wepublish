@@ -76,6 +76,13 @@
     "slate-react": "^0.58.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.7.4",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^1.17.10",
     "@graphql-codegen/introspection": "^1.18.0",
