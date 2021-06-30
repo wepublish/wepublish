@@ -106,7 +106,7 @@ export function ArticleMetadataPanel({
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (properties) {
+    if (properties.length && !metaDataProperties.length) {
       setMetadataProperties(
         properties.length
           ? properties.map(metaDataProperty => ({
@@ -116,7 +116,13 @@ export function ArticleMetadataPanel({
           : []
       )
     }
-  }, [])
+  }, [properties, metaDataProperties])
+
+  useEffect(() => {
+    if (metaDataProperties) {
+      onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+    }
+  }, [metaDataProperties])
 
   function handleImageChange(currentImage: ImageRefFragment) {
     switch (activeKey) {
@@ -410,10 +416,7 @@ export function ArticleMetadataPanel({
             <ControlLabel>{t('articleEditor.panels.properties')}</ControlLabel>
             <ListInput
               value={metaDataProperties}
-              onChange={propertiesItemInput => {
-                setMetadataProperties(propertiesItemInput)
-                onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
-              }}
+              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
               defaultValue={{key: '', value: '', public: true}}>
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>

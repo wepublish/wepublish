@@ -77,7 +77,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const {t} = useTranslation()
 
   useEffect(() => {
-    if (properties) {
+    if (properties.length && !metaDataProperties.length) {
       setMetadataProperties(
         properties
           ? properties.map(metaDataProperty => ({
@@ -87,7 +87,13 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
           : []
       )
     }
-  }, [])
+  }, [properties, metaDataProperties])
+
+  useEffect(() => {
+    if (metaDataProperties) {
+      onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
+    }
+  }, [metaDataProperties])
 
   function handleImageChange(currentImage: ImageRefFragment) {
     switch (activeKey) {
@@ -209,10 +215,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
             <ControlLabel>{t('pageEditor.panels.properties')}</ControlLabel>
             <ListInput
               value={metaDataProperties}
-              onChange={propertiesItemInput => {
-                setMetadataProperties(propertiesItemInput)
-                onChange?.({...value, properties: metaDataProperties.map(({value}) => value)})
-              }}
+              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
               defaultValue={{key: '', value: '', public: true}}>
               {({value, onChange}) => (
                 <div style={{display: 'flex', flexDirection: 'row'}}>
