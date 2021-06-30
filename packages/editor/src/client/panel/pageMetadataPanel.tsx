@@ -26,6 +26,7 @@ import {useTranslation} from 'react-i18next'
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
 import {generateID} from '../utility'
+
 export interface PageMetadataProperty {
   readonly key: string
   readonly value: string
@@ -61,7 +62,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
     socialMediaTitle,
     socialMediaDescription,
     socialMediaImage,
-    ...properties
+    properties
   } = value
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
@@ -78,8 +79,8 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   useEffect(() => {
     if (properties) {
       setMetadataProperties(
-        properties.properties
-          ? properties.properties.map(metaDataProperty => ({
+        properties
+          ? properties.map(metaDataProperty => ({
               id: generateID(),
               value: metaDataProperty
             }))
@@ -236,6 +237,7 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     value={value.value}
                     onChange={propertyValue => {
                       onChange({...value, value: propertyValue})
+
                       console.log('property value ', propertyValue)
                       console.log('value value ', value.value)
                       console.log('metadataPRops', metaDataProperties)
