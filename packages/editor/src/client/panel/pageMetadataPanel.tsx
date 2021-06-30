@@ -228,8 +228,6 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     value={value.key}
                     onChange={propertyKey => {
                       onChange({...value, key: propertyKey})
-                      console.log('property key ', propertyKey)
-                      console.log('value key', value.key)
                     }}
                   />
                   <Input
@@ -240,10 +238,6 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
                     value={value.value}
                     onChange={propertyValue => {
                       onChange({...value, value: propertyValue})
-
-                      console.log('property value ', propertyValue)
-                      console.log('value value ', value.value)
-                      console.log('metadataPRops', metaDataProperties)
                     }}
                   />
                   <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
