@@ -99,7 +99,11 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return <TitleImageBlock image={block.value} width={1280} height={680} />
 
     case BlockType.Teaser:
-      return renderTeaser(block.key, block.value)
+      return (
+        <a href={block.value?.url} rel="noreferrer" target="_blank">
+          {renderTeaser(block.key, block.value, isPeerArticle)}
+        </a>
+      )
 
     case BlockType.PeerPageBreak:
       return (
@@ -142,7 +146,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   }
 }
 
-function renderTeaser(key: string, article: PublishedArticle) {
+function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
   function getTeaserTags(tags: string[], max: number): string[] {
     const result = []
     for (let i = 0; i < tags.length && i < max; i++) {
@@ -155,7 +159,10 @@ function renderTeaser(key: string, article: PublishedArticle) {
 
   switch (article.teaserType) {
     case TeaserType.Article:
-      route = ArticleRoute.create({id: article.id, slug: article.slug})
+      if (isPeerArticle) {
+      } else {
+        route = ArticleRoute.create({id: article.id, slug: article.slug})
+      }
       break
 
     case TeaserType.PeerArticle:
