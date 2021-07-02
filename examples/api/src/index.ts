@@ -6,6 +6,7 @@ import {
   MailgunMailProvider,
   Oauth2Provider,
   PayrexxPaymentProvider,
+  Peer,
   PublicArticle,
   PublicComment,
   PublicPage,
@@ -13,8 +14,7 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   URLAdapter,
-  WepublishServer,
-  Peer
+  WepublishServer
 } from '@wepublish/api'
 
 import {KarmaMediaAdapter} from '@wepublish/api-media-karma'
@@ -298,13 +298,42 @@ async function asyncMain() {
           type: SendMailType.LoginLink,
           localTemplate: 'loginLink',
           local: true,
-          subject: 'Welcome new Member'
+          subject: 'Welcome new Member' // only needed if remoteTemplate
         },
         {
           type: SendMailType.TestMail,
           localTemplate: 'testMail',
-          local: true,
-          subject: 'We.Publish Test Mail'
+          local: true
+        },
+        {
+          type: SendMailType.PasswordReset,
+          localTemplate: 'passwordReset',
+          local: true
+        },
+        {
+          type: SendMailType.NewMemberSubscription,
+          localTemplate: 'newMemberSubscription',
+          local: true
+        },
+        {
+          type: SendMailType.RenewedMemberSubscription,
+          localTemplate: 'newMemberSubscription',
+          local: true
+        },
+        {
+          type: SendMailType.MemberSubscriptionOffSessionBefore,
+          localTemplate: 'memberSubscriptionPayment/offSessionPaymentOneWeekBefore',
+          local: true
+        },
+        {
+          type: SendMailType.MemberSubscriptionOnSessionBefore,
+          localTemplate: 'memberSubscriptionPayment/onSessionBefore',
+          local: true
+        },
+        {
+          type: SendMailType.MemberSubscriptionOnSessionAfter,
+          localTemplate: 'memberSubscriptionPayment/onSessionAfter',
+          local: true
         }
       ],
       mailTemplatesPath: path.resolve('templates', 'emails')

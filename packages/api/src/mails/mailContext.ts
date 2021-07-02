@@ -7,7 +7,13 @@ import Email from 'email-templates'
 
 export enum SendMailType {
   LoginLink,
-  TestMail
+  TestMail,
+  PasswordReset,
+  NewMemberSubscription,
+  RenewedMemberSubscription,
+  MemberSubscriptionOffSessionBefore,
+  MemberSubscriptionOnSessionBefore,
+  MemberSubscriptionOnSessionAfter
 }
 
 export interface SendEMailProps {

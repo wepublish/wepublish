@@ -403,20 +403,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         password: {type: GraphQLNonNull(GraphQLString)},
         sendMail: {type: GraphQLBoolean}
       },
-      async resolve(
-        root,
-        {id, password, sendMail},
-        {authenticate, sendMailFromProvider, dbAdapter}
-      ) {
+      async resolve(root, {id, password, sendMail}, {authenticate, mailContext, dbAdapter}) {
         const {roles} = authenticate()
         authorise(CanResetUserPassword, roles)
         const user = await dbAdapter.user.resetUserPassword({id, password})
         if (sendMail && user) {
-          await sendMailFromProvider({
+          await mailContext.sendMail({
+            type: SendMailType.PasswordReset,
             recipient: user.email,
-            subject: 'Your password has been reset',
-            message: `Hello ${user.name}\n\nYour password has been reset. You can login with your new password.`,
-            replyToAddress: 'dev@wepublish.ch'
+            data: {
+              user
+            }
           })
         }
         return user

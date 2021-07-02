@@ -40,8 +40,7 @@ import {Invoice, OptionalInvoice} from './db/invoice'
 import {OptionalPayment, Payment, PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
-import {logger} from './server'
+import {OptionalMailLog} from './db/mailLog'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
 import {MailContext, MailContextOptions} from './mails/mailContext'
@@ -102,8 +101,6 @@ export interface Context {
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
-
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -190,7 +187,7 @@ export async function contextFromRequest(
     dbAdapter.peer.getPeersByID(ids)
   )
 
-  const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
+  /* const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
     const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
     const mailLog = await dbAdapter.mailLog.createMailLog({
       input: {
@@ -210,7 +207,7 @@ export async function contextFromRequest(
     }
 
     return mailLog
-  }
+  } */
 
   const loaders: DataLoaderContext = {
     navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
@@ -303,13 +300,6 @@ export async function contextFromRequest(
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
   }
 
-  const memberContext = new MemberContext({
-    loaders,
-    dbAdapter,
-    paymentProviders,
-    sendMailFromProvider
-  })
-
   const mailContext = new MailContext({
     dbAdapter,
     mailProvider,
@@ -317,6 +307,13 @@ export async function contextFromRequest(
     defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
     mailTemplateMaps: mailContextOptions.mailTemplateMaps,
     mailTemplatesPath: mailContextOptions.mailTemplatesPath
+  })
+
+  const memberContext = new MemberContext({
+    loaders,
+    dbAdapter,
+    paymentProviders,
+    mailContext
   })
 
   return {
@@ -333,8 +330,6 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
-
-    sendMailFromProvider,
 
     async getOauth2Clients() {
       return await Promise.all(
