@@ -187,28 +187,6 @@ export async function contextFromRequest(
     dbAdapter.peer.getPeersByID(ids)
   )
 
-  /* const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
-    const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
-    const mailLog = await dbAdapter.mailLog.createMailLog({
-      input: {
-        state: MailLogState.Submitted,
-        subject: props.subject,
-        recipient: props.recipient,
-        mailProviderID: mailProviderID
-      }
-    })
-
-    if (mailProvider) {
-      try {
-        await mailProvider.sendMail({...props, mailLogID: mailLog.id})
-      } catch (error) {
-        logger('context').error(error, 'Error during sendMail mailLogID: %s', mailLog.id)
-      }
-    }
-
-    return mailLog
-  } */
-
   const loaders: DataLoaderContext = {
     navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
     navigationByKey: new DataLoader(keys => dbAdapter.navigation.getNavigationsByKey(keys)),
