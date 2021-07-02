@@ -250,7 +250,7 @@ export function PageEditor({id}: PageEditorProps) {
             <NavigationBar
               leftChildren={
                 <IconButtonLink
-                  style={{marginTop: '4px'}}
+                  style={{marginTop: '4px', marginBottom: '20px'}}
                   size={'lg'}
                   icon={<Icon icon="arrow-left" />}
                   route={PageListRoute.create({})}
