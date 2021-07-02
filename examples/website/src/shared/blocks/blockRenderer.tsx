@@ -159,8 +159,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
 
   switch (article.teaserType) {
     case TeaserType.Article:
-      if (isPeerArticle) {
-      } else {
+      if (!isPeerArticle) {
         route = ArticleRoute.create({id: article.id, slug: article.slug})
       }
       break
