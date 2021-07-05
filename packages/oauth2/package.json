@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/oauth2",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "OAuth2 Provider for we.publish",
   "publishConfig": {
     "access": "public"
@@ -38,20 +38,15 @@
     "prepare": "run-s clean copy-license build crlf"
   },
   "dependencies": {
-    "ejs": "^3.0.2",
     "express": "^4.17.1",
     "lodash": "^4.17.19",
-    "nanoid": "^3.0.2",
-    "oidc-provider": "^6.23.4",
-    "querystring": "^0.2.0"
+    "oidc-provider": "^6.23.4"
   },
   "devDependencies": {
     "@types/node": "^12.12.16",
     "crlf": "^1.1.1",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.1",
     "npm-run-all": "^4.1.5",
-    "ts-node": "^8.5.4",
     "typescript": "^3.8.3"
   }
 }
