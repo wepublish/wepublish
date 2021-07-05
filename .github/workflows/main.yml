@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - master
-      - f/wpc-417-peering-url-fix
-
+      
 jobs:
   release:
     runs-on: ubuntu-latest
