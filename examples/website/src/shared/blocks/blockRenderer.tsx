@@ -99,11 +99,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return <TitleImageBlock image={block.value} width={1280} height={680} />
 
     case BlockType.Teaser:
-      return (
-        <a href={block.value?.url} rel="noreferrer" target="_blank">
-          {renderTeaser(block.key, block.value, isPeerArticle)}
-        </a>
-      )
+      return renderTeaser(block.key, block.value, isPeerArticle)
 
     case BlockType.PeerPageBreak:
       return (
@@ -192,6 +188,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
         />
       )
@@ -207,6 +204,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
         />
       )
@@ -219,6 +217,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           preTitle={article.preTitle}
           date={article.publishedAt}
           route={route}
+          url={article.url}
         />
       )
 
@@ -236,6 +235,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
           isSingle={true}
         />

@@ -16,6 +16,7 @@ import {
   TeaserTextStyling
 } from './defaultTeaser'
 import {Color} from '../style/colors'
+import {TeaserLink} from './TeaserLink'
 
 type ImageTeaserStyleProps = {
   readonly isSingle: boolean
@@ -111,7 +112,8 @@ export interface LightTeaserProps {
   readonly peer?: Peer
   readonly tags: string[]
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
 }
 
 export function ImageTeaser({
@@ -124,13 +126,14 @@ export function ImageTeaser({
   date,
   lead,
   route,
-  preTitle
+  preTitle,
+  url
 }: LightTeaserProps) {
   const css = useStyle({isSingle})
   return (
     <div className={css(ImageTeaserStyle)}>
       <span className={css(PreTitleStyle, ImageTeaserPreTitleStyle)}>{preTitle}</span>
-      <Link route={route}>
+      <TeaserLink url={url} route={route}>
         <div className={css(ImageTeaserImageStyle)}>
           <Image
             src={
@@ -150,7 +153,7 @@ export function ImageTeaser({
           )}>
           {title}
         </h2>
-      </Link>
+      </TeaserLink>
       {lead && <div className={css(TeaserTextStyling, ImageTeaserTextStyling)}>{lead}</div>}
       <div className={css(TeaserLinkStyling, ImageTeaserLinkStyle)}>
         {authors && authors.length !== 0 && (

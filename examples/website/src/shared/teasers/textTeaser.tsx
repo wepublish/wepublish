@@ -1,9 +1,8 @@
 import React from 'react'
-import {Peer} from '../types'
+import {Peer, Author} from '../types'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
 import {cssRule, useStyle} from '@karma.run/react'
-import {Author} from '../types'
 import {getHumanReadableTimePassed} from '../utility'
 import {pxToRem, hexToRgb, whenTablet} from '../style/helpers'
 import {Color} from '../style/colors'
@@ -14,6 +13,7 @@ import {
   TeaserTextStyling,
   DefaultTeaserTitleSingleStyle
 } from './defaultTeaser'
+import {TeaserLink} from './TeaserLink'
 
 type TextTeaserStyleProps = {
   readonly isSingle?: boolean
@@ -67,6 +67,7 @@ export interface TextTeaserProps {
   readonly tags: string[]
   readonly isSingle?: boolean
   readonly route: Route
+  readonly url: string
 }
 
 export function TextTeaser({
@@ -78,14 +79,15 @@ export function TextTeaser({
   tags,
   isSingle,
   route,
-  preTitle
+  preTitle,
+  url
 }: TextTeaserProps) {
   const css = useStyle({isSingle})
 
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>
-      <Link route={route}>
+      <TeaserLink url={url} route={route}>
         <h2
           className={css(
             DefaultTeaserTitleStyle,
@@ -94,7 +96,7 @@ export function TextTeaser({
           {title}
         </h2>
         <div className={css(TeaserTextStyling)}>{lead}</div>
-      </Link>
+      </TeaserLink>
       <div className={css(TeaserLinkStyling)}>
         {authors && authors.length !== 0 && (
           <>

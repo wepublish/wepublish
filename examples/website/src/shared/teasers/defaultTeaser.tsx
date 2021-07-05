@@ -1,15 +1,15 @@
 import React from 'react'
 import {ImageFit} from '../atoms/image'
-import {Peer} from '../types'
+import {Peer, ImageData, Author} from '../types'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
 import {cssRule, useStyle} from '@karma.run/react'
-import {ImageData, Author} from '../types'
 import {getHumanReadableTimePassed} from '../utility'
 import {BlockIcon, IconType} from '../atoms/icon'
 import {pxToRem, hexToRgb, whenTablet, whenDesktop} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RatioImage} from '../atoms/ratioImage'
+import {TeaserLink} from './TeaserLink'
 
 export const DefaultTeaserStyle = cssRule({
   width: '100%',
@@ -144,7 +144,8 @@ export interface DefaultTeaserProps {
   readonly tags: string[]
   readonly isVideo?: boolean
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
 }
 
 // TODO solve link in link Problem for teasers
@@ -160,13 +161,14 @@ export function DefaultTeaser({
   isUpdated = false,
   date,
   peer,
-  tags
+  tags,
+  url
 }: DefaultTeaserProps) {
   const css = useStyle()
 
   return (
     <div className={css(DefaultTeaserStyle)}>
-      <Link route={route}>
+      <TeaserLink url={url} route={route}>
         <div
           className={css(
             DefaultTeaserImageStyle,
@@ -196,7 +198,7 @@ export function DefaultTeaser({
           {title}
         </h2>
         {lead && <div className={css(TeaserTextStyling)}>{lead}</div>}
-      </Link>
+      </TeaserLink>
       <div className={css(TeaserLinkStyling)}>
         {authors && authors.length !== 0 && (
           <>
