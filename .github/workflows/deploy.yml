@@ -1,0 +1,51 @@
+name: Deployment
+
+on: [pull_request]
+# implement on Merge
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker
+        env:
+          PROJECT_ID: wepublish-269314
+          GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+        run: |
+          # https://cloud.google.com/container-registry/docs/advanced-authentication
+          printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
+          docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
+          docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
+          #docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}
+          docker push eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Create manifest
+        env:
+          PROJECT_ID: wepublish-269314
+        run: |
+          node ./config/create-gke-manifest.js
+          ls -al ./kubernetesConfigs
+      - name: Prepare and authenticate kubectl
+        uses: google-github-actions/get-gke-credentials@main
+        with:
+          cluster_name: funiciello-dev-cluster
+          location: europe-west6-c
+          project_id: wepublish-dev
+          credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+      - name: Deploy to kubernetes
+        run: kubectl apply -f ./kubernetesConfigs
+#      - name: Slack Notification
+#        if: success()
+#        uses: rtCamp/action-slack-notify@master
+#        env:
+#          SLACK_CHANNEL: dev
+#          SLACK_COLOR: '#3278BD'
+#          SLACK_ICON: https://github.com/wepublish.png?size=48
+#          SLACK_MESSAGE: 'Deployment successful! https://dreifuss-wysiwyg-editor.wepublish.dev/${{ github.event.pull_request.head.ref }}'
+#          SLACK_TITLE: 'dreifuss-wysiwyg-editor Deployment'
+#          SLACK_USERNAME: 'Github (dreifuss-wysiwyg-editor)'
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
