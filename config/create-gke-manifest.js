@@ -392,7 +392,7 @@ async function applyMediaServer() {
             {
               name: 'media-volume',
               persistentVolumeClaim: {
-                claimName: 'wepublish-media'
+                claimName: `${GITHUB_REF_SHORT}-media-server`
               }
             }
           ]
