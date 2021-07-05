@@ -52,6 +52,7 @@
         "images": "Images",
         "invalidDate": "Invalid Date",
         "invalidImage": "Invalid Image",
+        "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Please use an SEO-optimised lead",
         "light": "Light",
@@ -72,6 +73,10 @@
         "pending": "Pending",
         "postImage": "Image for Post",
         "preTitle": "Pre-title",
+        "private": "Private",
+        "properties": "Properties",
+        "propertiesInfo": "Properties can be set per article. Public properties are accessible through the public API.",
+        "public": "Public",
         "publishArticle": "Publish Article",
         "publishDate": "Publish Date",
         "published": "Published",
@@ -105,6 +110,7 @@
         "Untitled": "Untitled",
         "updateDate": "Update Date",
         "uploadImage": "Upload Image",
+        "value": "Value",
         "yes": "Yes"
       }
     },
@@ -524,10 +530,16 @@
         "editImage": "Edit Image",
         "image": "Image",
         "invalidDate": "Invalid Date",
+        "key": "Key",
         "lightStyledWithNoImageError": "Light styled teasers must have an image",
         "metadata": "Metadata",
         "metadataInfo": "Information from these fields are being used for previews in Social Media Posts. If left blank, information from general-tab will be used instead.",
         "pagePending": "There is already a pending publication scheduled at {{pendingPublishDate, MM/DD/YYYY HH:mm}}. Publishing again will override that publication. ",
+        "postImage": "Image for Post",
+        "private": "Private",
+        "properties": "Properties",
+        "propertiesInfo": "Properties can be set per page. Public properties are accessible through the public API.",
+        "public": "Public",
         "publishDate": "Publish Date",
         "publishPage": "Publish Page",
         "removeImage": "Remove Image",
@@ -539,7 +551,8 @@
         "tags": "Tags",
         "title": "SEO Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
-        "updateDate": "Update Date"
+        "updateDate": "Update Date",
+        "value": "Value"
       }
     },
     "pages": {
