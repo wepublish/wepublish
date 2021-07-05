@@ -28,20 +28,22 @@ import {useTranslation} from 'react-i18next'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
 import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
 
-export interface ImageEditPanelProps {
+export interface PeerEditPanelProps {
   id?: string
+  hostURL: string
 
   onClose?(): void
   onSave?(): void
 }
 
-export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
+export function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [urlString, setURLString] = useState('')
   const [token, setToken] = useState('')
 
-  const [isValidURL, setValidURL] = useState<boolean>()
+  const [isValidPeer, setValidPeer] = useState<boolean>()
+  const [errorMessage, setErrorMessage] = useState('')
   const [isLoadingPeerProfile, setLoadingPeerProfile] = useState(false)
   const [profile, setProfile] = useState<FullPeerProfileFragment>()
 
@@ -60,7 +62,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   })
 
   const isDisabled =
-    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidURL || (!token && !id)
+    isLoading || isLoadingPeerProfile || isCreating || isUpdating || !isValidPeer || (!token && !id)
 
   const {t} = useTranslation()
 
@@ -78,6 +80,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
   }, [loadError, createError, updateError])
 
   useEffect(() => {
+    setErrorMessage('')
     if (urlString === '') return
 
     // NOTICE: `useQuery` refetch doesn't cancel and tends to clog up on timeout.
@@ -101,27 +104,33 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
           setLoadingPeerProfile(false)
 
           // TODO: Better validation
-          if (response?.data?.peerProfile) {
-            setValidURL(true)
-            setProfile(response.data.peerProfile)
+
+          if (!response?.data?.peerProfile) {
+            setValidPeer(false)
+            setErrorMessage(t('peerList.panels.invalidURL'))
+          } else if (response?.data?.peerProfile.hostURL === hostURL) {
+            setValidPeer(false)
+            setErrorMessage(t('peerList.panels.peeredToHost'))
           } else {
-            setValidURL(false)
+            setValidPeer(true)
+            setProfile(response.data.peerProfile)
           }
         })
         .catch(err => {
           if (err.name === 'AbortError') return
 
           setLoadingPeerProfile(false)
-          setValidURL(false)
+          setValidPeer(false)
+          setErrorMessage(t('peerList.panels.invalidURL'))
         })
 
-      setValidURL(undefined)
+      setValidPeer(undefined)
       setLoadingPeerProfile(true)
 
       return () => abortController?.abort()
     } catch (err) {
       setLoadingPeerProfile(false)
-      setValidURL(false)
+      setValidPeer(false)
       return () => {
         /* do nothing */
       }
@@ -183,7 +192,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
               <FormControl
                 value={urlString}
                 name={t('peerList.panels.URL')}
-                errorMessage={isValidURL === false ? 'Invalid URL' : undefined}
+                errorMessage={errorMessage}
                 onChange={value => {
                   setURLString(value)
                 }}
@@ -203,7 +212,7 @@ export function PeerEditPanel({id, onClose, onSave}: ImageEditPanelProps) {
             </FormGroup>
           </Form>
         </Panel>
-        {!isLoadingPeerProfile && (token || id) && isValidURL && (
+        {!isLoadingPeerProfile && (token || id) && isValidPeer && (
           <Panel header={t('peerList.panels.information')}>
             <ChooseEditImage disabled image={profile?.logo} />
             <DescriptionList>

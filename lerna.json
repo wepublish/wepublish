@@ -1,5 +1,5 @@
 {
-  "version": "2.2.2",
+  "version": "2.5.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -30,6 +30,7 @@
     "packages/api",
     "packages/api-db-mongodb",
     "packages/api-media-karma",
-    "packages/editor"
+    "packages/editor",
+    "packages/oauth2"
   ]
 }

@@ -22,7 +22,7 @@ export function EditorTemplate({children, navigationChildren}: EditorTemplatePro
           display: 'flex',
           position: 'sticky',
           top: 0,
-          zIndex: 3,
+          zIndex: 10,
           width: '100%'
         }}>
         {navigationChildren}

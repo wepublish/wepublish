@@ -36,6 +36,7 @@ fragment ArticleRef on Article {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -84,6 +85,8 @@ query PeerArticleList($filter: String, $after: ID, $first: Int) {
       peer {
         ...PeerWithProfile
       }
+
+      peeredArticleURL
 
       article {
         ...ArticleRef
@@ -146,6 +149,10 @@ query Article($id: ID!) {
   article(id: $id) {
     id
     shared
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt

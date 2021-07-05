@@ -36,6 +36,7 @@ fragment PageRef on Page {
   }
 
   pending {
+    publishAt
     revision
   }
 
@@ -111,6 +112,10 @@ mutation DuplicatePage($id: ID!) {
 query Page($id: ID!) {
   page(id: $id) {
     id
+
+    draft {
+      publishAt
+    }
 
     pending {
       publishAt

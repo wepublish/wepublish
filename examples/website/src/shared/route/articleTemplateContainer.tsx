@@ -21,7 +21,8 @@ import {
   titleBlockDataFragment,
   articleMetaDataFragment,
   gridBlockFrontDataGQLfragment,
-  peerMetaDataFragment
+  peerMetaDataFragment,
+  peerArticleMetaDataFragment
 } from './gqlFragments'
 
 import {BlockRenderer} from '../blocks/blockRenderer'
@@ -192,7 +193,7 @@ const PeerQuery = gql`
 const PeerArticleQuery = gql`
   query PeerArticle($peerID: ID!, $id: ID!) {
     peerArticle(peerID: $peerID, id: $id) {
-      ...ArticleMetaData
+      ...PeerArticleMetaData
 
       blocks {
         __typename
@@ -216,7 +217,7 @@ const PeerArticleQuery = gql`
     }
   }
 
-  ${articleMetaDataFragment}
+  ${peerArticleMetaDataFragment}
   ${richTextBlockDataFragment}
   ${imageBlockDataFragment}
   ${imageGalleryBlockDataFragment}
