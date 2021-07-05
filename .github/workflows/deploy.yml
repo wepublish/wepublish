@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build docker
         env:
-          PROJECT_ID: wepublish-269314
-          GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
+          GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
           printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
@@ -25,7 +25,7 @@ jobs:
           node-version: '16'
       - name: Create manifest
         env:
-          PROJECT_ID: wepublish-269314
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
@@ -35,7 +35,7 @@ jobs:
           cluster_name: funiciello-dev-cluster
           location: europe-west6
           project_id: wepublish-dev
-          credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+          credentials: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
 #      - name: Slack Notification
