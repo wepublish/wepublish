@@ -71,23 +71,15 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
   const [activeKey, setActiveKey] = useState(MetaDataType.General)
 
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<PageMetadataProperty>[]>(
-    []
+    properties
+      ? properties.map(metaDataProperty => ({
+          id: generateID(),
+          value: metaDataProperty
+        }))
+      : []
   )
 
   const {t} = useTranslation()
-
-  useEffect(() => {
-    if (properties.length && !metaDataProperties.length) {
-      setMetadataProperties(
-        properties
-          ? properties.map(metaDataProperty => ({
-              id: generateID(),
-              value: metaDataProperty
-            }))
-          : []
-      )
-    }
-  }, [properties, metaDataProperties])
 
   useEffect(() => {
     if (metaDataProperties) {
@@ -212,47 +204,54 @@ export function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelP
       case MetaDataType.Properties:
         return (
           <Panel>
-            <ControlLabel>{t('pageEditor.panels.properties')}</ControlLabel>
-            <ListInput
-              value={metaDataProperties}
-              onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
-              defaultValue={{key: '', value: '', public: true}}>
-              {({value, onChange}) => (
-                <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <Input
-                    placeholder={t('pageEditor.panels.key')}
-                    style={{
-                      width: '40%',
-                      marginRight: '10px'
-                    }}
-                    value={value.key}
-                    onChange={propertyKey => {
-                      onChange({...value, key: propertyKey})
-                    }}
-                  />
-                  <Input
-                    placeholder={t('pageEditor.panels.value')}
-                    style={{
-                      width: '60%'
-                    }}
-                    value={value.value}
-                    onChange={propertyValue => {
-                      onChange({...value, value: propertyValue})
-                    }}
-                  />
-                  <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
-                    <Toggle
-                      style={{maxWidth: '70px', minWidth: '70px'}}
-                      value={value.public}
-                      checkedChildren={t('pageEditor.panels.public')}
-                      unCheckedChildren={t('pageEditor.panels.private')}
-                      checked={value.public}
-                      onChange={isPublic => onChange({...value, public: isPublic})}
-                    />
-                  </FormGroup>
-                </div>
-              )}
-            </ListInput>
+            <Form fluid={true}>
+              <FormGroup>
+                <Message showIcon type="info" description={t('pageEditor.panels.propertiesInfo')} />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>{t('pageEditor.panels.properties')}</ControlLabel>
+                <ListInput
+                  value={metaDataProperties}
+                  onChange={propertiesItemInput => setMetadataProperties(propertiesItemInput)}
+                  defaultValue={{key: '', value: '', public: true}}>
+                  {({value, onChange}) => (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      <Input
+                        placeholder={t('pageEditor.panels.key')}
+                        style={{
+                          width: '40%',
+                          marginRight: '10px'
+                        }}
+                        value={value.key}
+                        onChange={propertyKey => {
+                          onChange({...value, key: propertyKey})
+                        }}
+                      />
+                      <Input
+                        placeholder={t('pageEditor.panels.value')}
+                        style={{
+                          width: '60%'
+                        }}
+                        value={value.value}
+                        onChange={propertyValue => {
+                          onChange({...value, value: propertyValue})
+                        }}
+                      />
+                      <FormGroup style={{paddingTop: '6px', paddingLeft: '8px'}}>
+                        <Toggle
+                          style={{maxWidth: '70px', minWidth: '70px'}}
+                          value={value.public}
+                          checkedChildren={t('pageEditor.panels.public')}
+                          unCheckedChildren={t('pageEditor.panels.private')}
+                          checked={value.public}
+                          onChange={isPublic => onChange({...value, public: isPublic})}
+                        />
+                      </FormGroup>
+                    </div>
+                  )}
+                </ListInput>
+              </FormGroup>
+            </Form>
           </Panel>
         )
       default:
