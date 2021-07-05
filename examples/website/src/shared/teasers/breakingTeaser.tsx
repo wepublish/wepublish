@@ -9,8 +9,7 @@ import {
   DefaultTeaserTitleSingleStyle
 } from './defaultTeaser'
 import {pxToRem, whenTablet} from '../style/helpers'
-import {Route} from '../route/routeContext'
-import {TeaserLink} from './TeaserLink'
+import {Link, Route} from '../route/routeContext'
 
 type BreakingTeaserStyleProps = {readonly isSingle: boolean}
 
@@ -72,11 +71,11 @@ export function BreakingTeaser({
 
   return (
     <div className={css(BreakingTeaserStyle)}>
-      <TeaserLink
-        url={url}
-        route={route}
-        className={css(TeaserBreakingLinkStyle)}
-        isPeerArticle={isPeerArticle}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}
+        className={css(TeaserBreakingLinkStyle)}>
         <div className={css(PreTitleStyle, TeaserBreakingPreTitleStyle)}>{preTitle}</div>
         <h2
           className={css(
@@ -86,7 +85,7 @@ export function BreakingTeaser({
           {title}
         </h2>
         <div className={css(TeaserBreakingTimeStyle)}>{getHumanReadableTimePassed(date)}</div>
-      </TeaserLink>
+      </Link>
     </div>
   )
 }

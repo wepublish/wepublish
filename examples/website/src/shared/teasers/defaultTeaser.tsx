@@ -9,7 +9,6 @@ import {BlockIcon, IconType} from '../atoms/icon'
 import {pxToRem, hexToRgb, whenTablet, whenDesktop} from '../style/helpers'
 import {Color} from '../style/colors'
 import {RatioImage} from '../atoms/ratioImage'
-import {TeaserLink} from './TeaserLink'
 
 export const DefaultTeaserStyle = cssRule({
   width: '100%',
@@ -170,7 +169,10 @@ export function DefaultTeaser({
 
   return (
     <div className={css(DefaultTeaserStyle)}>
-      <TeaserLink isPeerArticle={isPeerArticle} url={url} route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <div
           className={css(
             DefaultTeaserImageStyle,
@@ -200,7 +202,7 @@ export function DefaultTeaser({
           {title}
         </h2>
         {lead && <div className={css(TeaserTextStyling)}>{lead}</div>}
-      </TeaserLink>
+      </Link>
       <div className={css(TeaserLinkStyling)}>
         {authors && authors.length !== 0 && (
           <>

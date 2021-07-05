@@ -16,7 +16,6 @@ import {
   TeaserTextStyling
 } from './defaultTeaser'
 import {Color} from '../style/colors'
-import {TeaserLink} from './TeaserLink'
 
 type ImageTeaserStyleProps = {
   readonly isSingle: boolean
@@ -135,7 +134,10 @@ export function ImageTeaser({
   return (
     <div className={css(ImageTeaserStyle)}>
       <span className={css(PreTitleStyle, ImageTeaserPreTitleStyle)}>{preTitle}</span>
-      <TeaserLink isPeerArticle={isPeerArticle} url={url} route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <div className={css(ImageTeaserImageStyle)}>
           <Image
             src={
@@ -155,7 +157,7 @@ export function ImageTeaser({
           )}>
           {title}
         </h2>
-      </TeaserLink>
+      </Link>
       {lead && <div className={css(TeaserTextStyling, ImageTeaserTextStyling)}>{lead}</div>}
       <div className={css(TeaserLinkStyling, ImageTeaserLinkStyle)}>
         {authors && authors.length !== 0 && (

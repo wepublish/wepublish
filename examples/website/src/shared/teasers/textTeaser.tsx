@@ -13,7 +13,6 @@ import {
   TeaserTextStyling,
   DefaultTeaserTitleSingleStyle
 } from './defaultTeaser'
-import {TeaserLink} from './TeaserLink'
 
 type TextTeaserStyleProps = {
   readonly isSingle?: boolean
@@ -89,7 +88,10 @@ export function TextTeaser({
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>
-      <TeaserLink isPeerArticle={isPeerArticle} url={url} route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <h2
           className={css(
             DefaultTeaserTitleStyle,
@@ -98,7 +100,7 @@ export function TextTeaser({
           {title}
         </h2>
         <div className={css(TeaserTextStyling)}>{lead}</div>
-      </TeaserLink>
+      </Link>
       <div className={css(TeaserLinkStyling)}>
         {authors && authors.length !== 0 && (
           <>
