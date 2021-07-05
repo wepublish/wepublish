@@ -33,7 +33,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@main
         with:
           cluster_name: funiciello-dev-cluster
-          location: europe-west6-c
+          location: europe-west6
           project_id: wepublish-dev
           credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
       - name: Deploy to kubernetes
