@@ -68,6 +68,7 @@ export interface TextTeaserProps {
   readonly isSingle?: boolean
   readonly route: Route
   readonly url: string
+  readonly isPeerArticle?: boolean
 }
 
 export function TextTeaser({
@@ -80,14 +81,15 @@ export function TextTeaser({
   isSingle,
   route,
   preTitle,
-  url
+  url,
+  isPeerArticle
 }: TextTeaserProps) {
   const css = useStyle({isSingle})
 
   return (
     <div className={css(TextTeaserStyle)}>
       <span className={css(PreTitleStyle)}>{preTitle}</span>
-      <TeaserLink url={url} route={route}>
+      <TeaserLink isPeerArticle={isPeerArticle} url={url} route={route}>
         <h2
           className={css(
             DefaultTeaserTitleStyle,

@@ -155,9 +155,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
 
   switch (article.teaserType) {
     case TeaserType.Article:
-      if (!isPeerArticle) {
-        route = ArticleRoute.create({id: article.id, slug: article.slug})
-      }
+      route = ArticleRoute.create({id: article.id, slug: article.slug})
       break
 
     case TeaserType.PeerArticle:
@@ -190,6 +188,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           route={route}
           url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -206,6 +205,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           route={route}
           url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -218,6 +218,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           date={article.publishedAt}
           route={route}
           url={article.url}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -238,6 +239,7 @@ function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = fa
           url={article.url}
           authors={article.authors}
           isSingle={true}
+          isPeerArticle={isPeerArticle}
         />
       )
   }
