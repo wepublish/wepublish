@@ -24,6 +24,7 @@ jobs:
           node-version: '16'
       - name: Create manifest
         env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
         run: |
           node ./config/create-gke-manifest.js
