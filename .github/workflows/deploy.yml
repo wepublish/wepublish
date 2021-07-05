@@ -14,7 +14,7 @@ jobs:
           GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
-          printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
+          printenv GCLOUD_AUTH | docker login -u _json_key --password-stdin https://eu.gcr.io
           docker pull eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest
           docker build --pull --cache-from eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
           #docker build -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA} -t eu.gcr.io/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:latest .
