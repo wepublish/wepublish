@@ -1,18 +1,117 @@
 # Change Log
 
-## v2.2.2 (2021-04-27)
+## v2.5.0-alpha.2 (2021-06-16)
+
+#### :bug: Bug Fix
+* `api`
+  * Peering bug fix also for PeerArticleTeaser and PageTeaser ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+## v2.5.0-alpha.1 (2021-06-15)
+
+#### :bug: Bug Fix
+* `api`
+  * [#281](https://github.com/wepublish/wepublish/pull/281) Bug fix for peered article that contain a teaser grid block ([@roosnic1](https://github.com/roosnic1))
+
+#### Committers: 1
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+
+
+## v2.5.0-alpha.0 (2021-06-09)
+
+#### :heart: New Feature
+* `api-db-mongodb`, `editor`
+  * [#263](https://github.com/wepublish/wepublish/pull/263) f/wpc-341-order-comments-by-state ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#278](https://github.com/wepublish/wepublish/pull/278) F/wpc 22 update ([@penk85](https://github.com/penk85))
+
+#### :nail_care: Polish
+* `editor`
+  * [#274](https://github.com/wepublish/wepublish/pull/274) F/wpc 353 show pending publish date ([@penk85](https://github.com/penk85))
+  * [#270](https://github.com/wepublish/wepublish/pull/270) Show publish date in article and page list ([@penk85](https://github.com/penk85))
+
+#### :house: Internal
+* Other
+  * [#277](https://github.com/wepublish/wepublish/pull/277) fix(website): removed comments from graphql query for peer articles ([@roosnic1](https://github.com/roosnic1))
+* `editor`
+  * [#272](https://github.com/wepublish/wepublish/pull/272) validation for url peering to host ([@penk85](https://github.com/penk85))
+* `api-db-mongodb`, `editor`
+  * [#263](https://github.com/wepublish/wepublish/pull/263) f/wpc-341-order-comments-by-state ([@HanaAyman](https://github.com/HanaAyman))
+
+#### Committers: 3
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+
+
+## v2.4.0 (2021-06-09)
+
+#### :heart: New Feature
+* Other
+  * [#261](https://github.com/wepublish/wepublish/pull/261) F/wpc 274 redirect back on comment after login ([@bishoymelek](https://github.com/bishoymelek))
+* `api`, `editor`
+  * [#258](https://github.com/wepublish/wepublish/pull/258) Add polis embed block ([@penk85](https://github.com/penk85))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#257](https://github.com/wepublish/wepublish/pull/257) placement of date picker in user subscription panel ([@penk85](https://github.com/penk85))
+  * [#264](https://github.com/wepublish/wepublish/pull/264) b/wpc-369-make-default-publishing-time-5 ([@HanaAyman](https://github.com/HanaAyman))
+
+#### :nail_care: Polish
+* `api`, `editor`
+  * [#251](https://github.com/wepublish/wepublish/pull/251) show parent comment in comment review panel ([@penk85](https://github.com/penk85))
+* `editor`
+  * [#256](https://github.com/wepublish/wepublish/pull/256) Color all rows on comment table ([@penk85](https://github.com/penk85))
+
+#### Committers: 3
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- [@bishoymelek](https://github.com/bishoymelek)
+
+
+## v2.3.0 (2021-05-26)
 
 #### :heart: New Feature
 * `editor`
   * [#253](https://github.com/wepublish/wepublish/pull/253) added time in modefied coloumn ([@bishoymelek](https://github.com/bishoymelek))
+  * [#240](https://github.com/wepublish/wepublish/pull/240) f/wpc-320-create-an-author-in-the-article-metadata ([@HanaAyman](https://github.com/HanaAyman))
+  * [#241](https://github.com/wepublish/wepublish/pull/241) changed sorting to be with modification date ([@bishoymelek](https://github.com/bishoymelek))
+* `api-db-mongodb`, `api`, `editor`
+  * [#238](https://github.com/wepublish/wepublish/pull/238) F/wpc 323 sorting pagination author list ([@bishoymelek](https://github.com/bishoymelek))
+
+#### :bug: Bug Fix
+* `editor`
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#247](https://github.com/wepublish/wepublish/pull/247) Proper check if the path includes login or logout ([@roosnic1](https://github.com/roosnic1))
+  * [#243](https://github.com/wepublish/wepublish/pull/243) remove extra lead field from teaser panel ([@penk85](https://github.com/penk85))
+  * [#234](https://github.com/wepublish/wepublish/pull/234) wpc-305-change-unpublish-icon ([@HanaAyman](https://github.com/HanaAyman))
+  * [#233](https://github.com/wepublish/wepublish/pull/233) wpc-286-image-updated-alert ([@HanaAyman](https://github.com/HanaAyman))
+  * [#232](https://github.com/wepublish/wepublish/pull/232) b/wpc-322-make-member-plans-visually-deleted ([@HanaAyman](https://github.com/HanaAyman))
+* `api-db-mongodb`
+  * [#244](https://github.com/wepublish/wepublish/pull/244) Fix escaping regex ([@bishoymelek](https://github.com/bishoymelek))
+* `api`
+  * [#231](https://github.com/wepublish/wepublish/pull/231) Always set updatedAt and publishedAt date ([@roosnic1](https://github.com/roosnic1))
 
 #### :nail_care: Polish
 * `editor`
   * [#252](https://github.com/wepublish/wepublish/pull/252) Comment list color ([@penk85](https://github.com/penk85))
+  * [#230](https://github.com/wepublish/wepublish/pull/230) split time and date picker ([@penk85](https://github.com/penk85))
+  * [#242](https://github.com/wepublish/wepublish/pull/242) add spacing to layout of forms in Navigation panel ([@penk85](https://github.com/penk85))
+  * [#239](https://github.com/wepublish/wepublish/pull/239) Highlight link button ([@penk85](https://github.com/penk85))
 
-#### Committers: 2
+#### :memo: Documentation
+* [#237](https://github.com/wepublish/wepublish/pull/237) enh. installation troubleshooting documentation ([@michael-scheurer](https://github.com/michael-scheurer))
+
+#### Committers: 5
+- Hana Ayman ([@HanaAyman](https://github.com/HanaAyman))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
 - Penina Cheshin ([@penk85](https://github.com/penk85))
 - [@bishoymelek](https://github.com/bishoymelek)
+- [@michael-scheurer](https://github.com/michael-scheurer)
 
 
 ## v2.2.1 (2021-04-15)

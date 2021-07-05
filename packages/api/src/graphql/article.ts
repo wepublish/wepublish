@@ -29,6 +29,7 @@ import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment'
+import {SessionType} from '../db/session'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -203,6 +204,16 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, {}, {loaders}) => loaders.peer.load(peerID))
     },
+    peeredArticleURL: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(
+        async ({peerID, article}, {}, {loaders, dbAdapter, urlAdapter}) => {
+          const peer = await loaders.peer.load(peerID)
+          if (!peer || !article) return ''
+          return urlAdapter.getPeeredArticleURL(peer, article)
+        }
+      )
+    },
     article: {type: GraphQLNonNull(GraphQLArticle)}
   }
 })
@@ -295,12 +306,11 @@ export const GraphQLPublicArticle: GraphQLObjectType<
       resolve: createProxyingResolver(async ({id}, _, {session, authenticateUser, dbAdapter}) => {
         // if session exists, should get user's un-approved comments as well
         // if not we should get approved ones
-        const userSession = session ? authenticateUser() : null
-        const articleComments = await dbAdapter.comment.getPublicCommentsForItemByID({
+        const userSession = session?.type === SessionType.User ? authenticateUser() : null
+        return await dbAdapter.comment.getPublicCommentsForItemByID({
           id,
           userID: userSession?.user?.id
         })
-        return articleComments
       })
     }
   }
