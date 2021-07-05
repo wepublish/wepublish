@@ -52,8 +52,10 @@ export interface BreakingTeaserProps {
   readonly title: string
   readonly date: Date
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
   readonly preTitle?: string
+  readonly isPeerArticle?: boolean
 }
 
 export function BreakingTeaser({
@@ -61,13 +63,19 @@ export function BreakingTeaser({
   title,
   date,
   isSingle = false,
-  route
+  route,
+  url,
+  isPeerArticle
 }: BreakingTeaserProps) {
   const css = useStyle({isSingle})
 
   return (
     <div className={css(BreakingTeaserStyle)}>
-      <Link route={route} className={css(TeaserBreakingLinkStyle)}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}
+        className={css(TeaserBreakingLinkStyle)}>
         <div className={css(PreTitleStyle, TeaserBreakingPreTitleStyle)}>{preTitle}</div>
         <h2
           className={css(
