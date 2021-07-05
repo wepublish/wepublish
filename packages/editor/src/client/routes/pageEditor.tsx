@@ -241,7 +241,7 @@ export function PageEditor({id}: PageEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: stateColor}}>
+      <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
           <Tag color={stateColor}>{tagTitle}</Tag>
         </legend>
