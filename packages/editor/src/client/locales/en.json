@@ -75,7 +75,7 @@
         "preTitle": "Pre-title",
         "private": "private",
         "properties": "Properties",
-        "public": "public"
+        "public": "public",
         "publishArticle": "Publish Article",
         "publishDate": "Publish Date",
         "published": "Published",
@@ -173,7 +173,7 @@
         "key": "key",
         "value": "value",
         "private": "private",
-        "public": "public"
+        "public": "public",
         "created": "Created",
         "delete": "Delete",
         "deleteAuthor": "Delete Author?",
