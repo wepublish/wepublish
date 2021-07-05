@@ -10,11 +10,5 @@ export function PolisEmbed({conversationID}: PolisEmbedProps) {
 
   useEffect(() => load(), [])
 
-  return (
-    <div
-      style={{width: '100%'}}
-      className="polis"
-      data-page_id={conversationID}
-      data-site_id="polis_site_id_ssFrYaCCx4UpbUX63X"></div>
-  )
+  return <div style={{width: '100%'}} className="polis" data-conversation_id={conversationID}></div>
 }
