@@ -29,7 +29,7 @@ jobs:
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
-          echo "github_ref_short=${GITHUB_REF_SHORT}" >> $GITHUB_ENV
+          echo "github_ref_short=sOMeThInG" >> $GITHUB_ENV
       - name: Prepare and authenticate kubectl
         uses: google-github-actions/get-gke-credentials@main
         with:
