@@ -1,10 +1,9 @@
 import React from 'react'
 import {ImageFit} from '../atoms/image'
-import {Peer} from '../types'
+import {Peer, ImageData, Author} from '../types'
 import {Link, Route, AuthorRoute} from '../route/routeContext'
 import {TagList} from '../atoms/tagList'
 import {cssRule, useStyle} from '@karma.run/react'
-import {ImageData, Author} from '../types'
 import {getHumanReadableTimePassed} from '../utility'
 import {BlockIcon, IconType} from '../atoms/icon'
 import {pxToRem, hexToRgb, whenTablet, whenDesktop} from '../style/helpers'
@@ -144,7 +143,9 @@ export interface DefaultTeaserProps {
   readonly tags: string[]
   readonly isVideo?: boolean
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
+  readonly isPeerArticle?: boolean
 }
 
 // TODO solve link in link Problem for teasers
@@ -160,13 +161,18 @@ export function DefaultTeaser({
   isUpdated = false,
   date,
   peer,
-  tags
+  tags,
+  url,
+  isPeerArticle
 }: DefaultTeaserProps) {
   const css = useStyle()
 
   return (
     <div className={css(DefaultTeaserStyle)}>
-      <Link route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <div
           className={css(
             DefaultTeaserImageStyle,

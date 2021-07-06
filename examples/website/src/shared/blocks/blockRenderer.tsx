@@ -99,7 +99,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
       return <TitleImageBlock image={block.value} width={1280} height={680} />
 
     case BlockType.Teaser:
-      return renderTeaser(block.key, block.value)
+      return renderTeaser(block.key, block.value, isPeerArticle)
 
     case BlockType.PeerPageBreak:
       return (
@@ -142,7 +142,7 @@ export function renderBlock(block: Block | null, opts: RenderBlockOptions) {
   }
 }
 
-function renderTeaser(key: string, article: PublishedArticle) {
+function renderTeaser(key: string, article: PublishedArticle, isPeerArticle = false) {
   function getTeaserTags(tags: string[], max: number): string[] {
     const result = []
     for (let i = 0; i < tags.length && i < max; i++) {
@@ -186,7 +186,9 @@ function renderTeaser(key: string, article: PublishedArticle) {
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -201,7 +203,9 @@ function renderTeaser(key: string, article: PublishedArticle) {
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -213,6 +217,8 @@ function renderTeaser(key: string, article: PublishedArticle) {
           preTitle={article.preTitle}
           date={article.publishedAt}
           route={route}
+          url={article.url}
+          isPeerArticle={isPeerArticle}
         />
       )
 
@@ -230,8 +236,10 @@ function renderTeaser(key: string, article: PublishedArticle) {
           peer={article.peer}
           tags={getTeaserTags(article.tags, 3)}
           route={route}
+          url={article.url}
           authors={article.authors}
           isSingle={true}
+          isPeerArticle={isPeerArticle}
         />
       )
   }
