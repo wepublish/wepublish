@@ -48,12 +48,3 @@ jobs:
           cd ./config
           yarn install
           node ./notify.js
-#        uses: rtCamp/action-slack-notify@master
-#        env:
-#          SLACK_CHANNEL: dev
-#          SLACK_COLOR: '#3278BD'
-#          SLACK_ICON: https://github.com/wepublish.png?size=48
-#          SLACK_MESSAGE: '... was successful! \n Website: ${{ GITHUB_REF_SHORT }}'
-#          SLACK_TITLE: 'We.Publish Feature Deployment...'
-#          SLACK_USERNAME: 'Github (wepublish)'
-#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}

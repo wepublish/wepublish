@@ -19,7 +19,11 @@ async function main() {
   const GITHUB_REF_SHORT = slugify(process.env.BRANCH_NAME)
 
   webhook.send({
-    text: `We.Publish Feature Deployment successful: ${GITHUB_REF_SHORT}`
+    text: `We.Publish Feature Deployment successful. Branch ${process.env.BRANCH_NAME} has been deployed to:
+           Website: https://${GITHUB_REF_SHORT}.wepublish.dev
+           Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
+           API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
+           Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
   })
 }
 
