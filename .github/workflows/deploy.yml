@@ -49,7 +49,7 @@ jobs:
             {
               attachments: [{
                 color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `We.Publish Feature Deployment was successful. ${{ GITHUB_REF_SHORT }}`,
+                text: `We.Publish Feature Deployment was successful. ${GITHUB_REF_SHORT}`,
               }]
             }
         env:
