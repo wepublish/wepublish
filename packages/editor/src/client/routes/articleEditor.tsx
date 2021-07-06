@@ -405,7 +405,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
 
   return (
     <>
-      <fieldset style={{textAlign: 'center', borderColor: stateColor}}>
+      <fieldset style={{borderColor: stateColor}}>
         <legend style={{width: 'auto', margin: '0px auto'}}>
           <Tag color={stateColor}>{tagTitle}</Tag>
         </legend>
@@ -425,7 +425,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
                 </IconButtonLink>
               }
               centerChildren={
-                <div style={{marginTop: '4px'}}>
+                <div style={{marginTop: '4px', marginBottom: '20px'}}>
                   <IconButton
                     icon={<Icon icon="newspaper-o" />}
                     size={'lg'}

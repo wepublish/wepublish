@@ -68,6 +68,7 @@ export function TagTemplateContainer({tag}: TagTemplateContainerProps) {
             route={ArticleRoute.create({id: article.id, slug: article.slug})}
             authors={article.authors}
             isSingle={true}
+            url={article.url}
           />
         ))}
       </GridBlock>

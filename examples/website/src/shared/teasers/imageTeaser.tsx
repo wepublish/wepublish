@@ -111,7 +111,9 @@ export interface LightTeaserProps {
   readonly peer?: Peer
   readonly tags: string[]
   readonly isSingle?: boolean
-  readonly route: Route
+  readonly route?: Route
+  readonly url: string
+  readonly isPeerArticle?: boolean
 }
 
 export function ImageTeaser({
@@ -124,13 +126,18 @@ export function ImageTeaser({
   date,
   lead,
   route,
-  preTitle
+  preTitle,
+  url,
+  isPeerArticle
 }: LightTeaserProps) {
   const css = useStyle({isSingle})
   return (
     <div className={css(ImageTeaserStyle)}>
       <span className={css(PreTitleStyle, ImageTeaserPreTitleStyle)}>{preTitle}</span>
-      <Link route={route}>
+      <Link
+        route={isPeerArticle ? undefined : route}
+        href={url}
+        target={isPeerArticle ? '_blank' : '_self'}>
         <div className={css(ImageTeaserImageStyle)}>
           <Image
             src={
