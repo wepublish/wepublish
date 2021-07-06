@@ -40,10 +40,6 @@ jobs:
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
         if: success()
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      - name: Create manifest
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
