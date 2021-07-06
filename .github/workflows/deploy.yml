@@ -41,12 +41,25 @@ jobs:
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
         if: success()
-        uses: rtCamp/action-slack-notify@master
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `We.Publish Feature Deployment was successful. ${{ GITHUB_REF_SHORT }}`,
+              }]
+            }
         env:
-          SLACK_CHANNEL: dev
-          SLACK_COLOR: '#3278BD'
-          SLACK_ICON: https://github.com/wepublish.png?size=48
-          SLACK_MESSAGE: '... was successful! \n Website: ${{ GITHUB_REF_SHORT }}'
-          SLACK_TITLE: 'We.Publish Feature Deployment...'
-          SLACK_USERNAME: 'Github (wepublish)'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
+#        uses: rtCamp/action-slack-notify@master
+#        env:
+#          SLACK_CHANNEL: dev
+#          SLACK_COLOR: '#3278BD'
+#          SLACK_ICON: https://github.com/wepublish.png?size=48
+#          SLACK_MESSAGE: '... was successful! \n Website: ${{ GITHUB_REF_SHORT }}'
+#          SLACK_TITLE: 'We.Publish Feature Deployment...'
+#          SLACK_USERNAME: 'Github (wepublish)'
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
