@@ -29,7 +29,6 @@ jobs:
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
-          echo "github_ref_short=${STATE_githubRefShort}" >> $GITHUB_ENV
       - name: Prepare and authenticate kubectl
         uses: google-github-actions/get-gke-credentials@main
         with:
@@ -41,19 +40,18 @@ jobs:
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
         if: success()
-        uses: 8398a7/action-slack@v3
+      - uses: actions/setup-node@v2
         with:
-          status: custom
-          fields: workflow,job,commit,repo,ref,author,took
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `We.Publish Feature Deployment was successful. ${{ env.github_ref_short }}`,
-              }]
-            }
+          node-version: '16'
+      - name: Create manifest
         env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
+        run: |
+          cd ./config
+          yarn install
+          node ./notify.js
 #        uses: rtCamp/action-slack-notify@master
 #        env:
 #          SLACK_CHANNEL: dev
