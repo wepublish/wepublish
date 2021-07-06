@@ -29,6 +29,7 @@ jobs:
         run: |
           node ./config/create-gke-manifest.js
           ls -al ./kubernetesConfigs
+          echo "::set-env name=GITHUB_REF_SHORT::$GITHUB_REF_SHORT"
       - name: Prepare and authenticate kubectl
         uses: google-github-actions/get-gke-credentials@main
         with:
@@ -38,14 +39,14 @@ jobs:
           credentials: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
-#      - name: Slack Notification
-#        if: success()
-#        uses: rtCamp/action-slack-notify@master
-#        env:
-#          SLACK_CHANNEL: dev
-#          SLACK_COLOR: '#3278BD'
-#          SLACK_ICON: https://github.com/wepublish.png?size=48
-#          SLACK_MESSAGE: 'Deployment successful! https://dreifuss-wysiwyg-editor.wepublish.dev/${{ github.event.pull_request.head.ref }}'
-#          SLACK_TITLE: 'dreifuss-wysiwyg-editor Deployment'
-#          SLACK_USERNAME: 'Github (dreifuss-wysiwyg-editor)'
-#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
+      - name: Slack Notification
+        if: success()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_CHANNEL: dev
+          SLACK_COLOR: '#3278BD'
+          SLACK_ICON: https://github.com/wepublish.png?size=48
+          SLACK_MESSAGE: '... was successful! \n Website: ${{ GITHUB_REF_SHORT }}'
+          SLACK_TITLE: 'We.Publish Feature Deployment...'
+          SLACK_USERNAME: 'Github (wepublish)'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
