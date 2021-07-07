@@ -42,6 +42,7 @@ jobs:
         if: success()
         env:
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_WEP_DEV }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_WP_DEV_CHANNEL }}
         run: |

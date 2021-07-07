@@ -13,17 +13,18 @@ function slugify(text, separator = "-") {
 };
 
 async function main() {
-  const incomingWebhook = process.env.SLACK_WEBHOOK_URL
-  const webhook = new IncomingWebhook(incomingWebhook);
+  const {SLACK_WEBHOOK_URL, BRANCH_NAME, PR_NUMBER} = process.env
+  const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
-  const GITHUB_REF_SHORT = slugify(process.env.BRANCH_NAME)
+  const GITHUB_REF_SHORT = slugify(BRANCH_NAME)
 
-  webhook.send({
-    text: `We.Publish Feature Deployment successful. Branch ${process.env.BRANCH_NAME} has been deployed to:
-           Website: https://${GITHUB_REF_SHORT}.wepublish.dev
-           Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
-           API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
-           Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
+  await webhook.send({
+    text: `We.Publish PR Deployment :white_check_mark:. 
+<https://github.com/wepublish/wepublish/pull/${PR_NUMBER}|PR ${PR_NUMBER}> with branch \`${BRANCH_NAME}\` has been deployed to:
+Website: https://${GITHUB_REF_SHORT}.wepublish.dev
+Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
+API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
+Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
   })
 }
 
