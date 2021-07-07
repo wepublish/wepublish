@@ -201,7 +201,7 @@ export function Base({children}: BaseProps) {
                   renderTitle={children => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
-                    return <Icon style={iconStyles} icon="cog" />
+                    return <Icon style={iconStyles} icon="cog" className="icon-selector" />
                   }}>
                   <DropdownItemLink route={LogoutRoute.create({})}>
                     {t('navbar.logout')}
@@ -214,6 +214,7 @@ export function Base({children}: BaseProps) {
                   trigger="click"
                   renderTitle={() => (
                     <Icon
+                      className="icon-selector"
                       icon="globe"
                       style={{
                         width: 56,
