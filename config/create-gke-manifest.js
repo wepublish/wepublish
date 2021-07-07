@@ -11,16 +11,12 @@ if (GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') {
   ENVIRONMENT_NAME = 'production'
 }
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
-const NAMESPACE = envSwitch(ENVIRONMENT_NAME,'wepublish', 'wepublish-dev')
+const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
 const devDomain = 'dev.wepublish.media'
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
-const domainSan = envSwitch(
-  ENVIRONMENT_NAME,
-  `www.${domain}`,
-  `www.${devDomain}`
-)
+const domainSan = envSwitch(ENVIRONMENT_NAME, `www.${domain}`, `www.${devDomain}`)
 
 const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
@@ -196,11 +192,7 @@ async function applyWebsite() {
                 },
                 {
                   name: 'CANONICAL_HOST',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'API_URL',
@@ -279,10 +271,10 @@ async function applyMediaServer() {
       namespace: NAMESPACE
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: "30Gi"
+          storage: '30Gi'
         }
       }
     }
@@ -519,8 +511,8 @@ async function applyApiServer() {
               command: ['node', './examples/api/dist/index.js'],
               volumeMounts: [
                 {
-                  "name": "google-cloud-key",
-                  "mountPath": "/var/secrets/google"
+                  name: 'google-cloud-key',
+                  mountPath: '/var/secrets/google'
                 }
               ],
               env: [
@@ -529,8 +521,8 @@ async function applyApiServer() {
                   value: `production`
                 },
                 {
-                  name: "GOOGLE_APPLICATION_CREDENTIALS",
-                  value: "/var/secrets/google/key.json"
+                  name: 'GOOGLE_APPLICATION_CREDENTIALS',
+                  value: '/var/secrets/google/key.json'
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
@@ -571,15 +563,11 @@ async function applyApiServer() {
 
                 {
                   name: 'HOST_URL',
-                  value: `https://${domainAPI}`,
+                  value: `https://${domainAPI}`
                 },
                 {
                   name: 'WEBSITE_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'MEDIA_SERVER_TOKEN',
@@ -623,7 +611,8 @@ async function applyApiServer() {
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: envSwitch(ENVIRONMENT_NAME,
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
                     'https://login.demo.wepublish.media/.well-known/openid-configuration',
                     'https://login.dev.wepublish.media/.well-known/openid-configuration'
                   )
@@ -729,7 +718,8 @@ async function applyApiServer() {
                       key: 'payrexx_api_secret'
                     }
                   }
-                },{
+                },
+                {
                   name: 'SENTRY_DSN',
                   valueFrom: {
                     secretKeyRef: {
@@ -737,10 +727,12 @@ async function applyApiServer() {
                       key: 'sentry_dsn'
                     }
                   }
-                },{
+                },
+                {
                   name: 'SENTRY_ENV',
                   value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
-                },{
+                },
+                {
                   name: 'GOOGLE_PROJECT',
                   value: PROJECT_ID
                 }
@@ -892,6 +884,10 @@ async function applyEditor() {
                 {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
+                },
+                {
+                  name: 'PEER_BY_DEFAULT',
+                  value: 'true'
                 }
               ],
               ports: [
@@ -1044,14 +1040,16 @@ async function applyOAuth2() {
                 },
                 {
                   name: 'MONGO_URL',
-                  value: envSwitch(ENVIRONMENT_NAME,
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
                     `mongodb://mongo-production:27017/wepublish`,
                     `mongodb://mongo-development:27017/wepublish`
                   )
                 },
                 {
                   name: 'OAUTH_MONGODB_URI',
-                  value: envSwitch(ENVIRONMENT_NAME,
+                  value: envSwitch(
+                    ENVIRONMENT_NAME,
                     `mongodb://mongo-production:27017/wepublish-oauth2`,
                     `mongodb://mongo-development:27017/wepublish-oauth2`
                   )
@@ -1218,18 +1216,14 @@ async function applyMongo() {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: {
-      name: envSwitch(
-        ENVIRONMENT_NAME,
-        'wepublish-mongo',
-        `wepublish-mongo-${GITHUB_SHA}`
-      ),
+      name: envSwitch(ENVIRONMENT_NAME, 'wepublish-mongo', `wepublish-mongo-${GITHUB_SHA}`),
       namespace: NAMESPACE
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", "1Gi")
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
         }
       }
     }
@@ -1308,7 +1302,7 @@ async function applyMongo() {
                   ENVIRONMENT_NAME,
                   'wepublish-mongo',
                   `wepublish-mongo-${GITHUB_SHA}`
-                ),
+                )
               }
             }
           ]
