@@ -1055,7 +1055,7 @@ async function applyOAuth2() {
             {
               name: appName,
               image: image,
-              command: ['node', './packages/oauth2/dist/server/index.js'],
+              command: ['node', './examples/oauth2/dist/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
