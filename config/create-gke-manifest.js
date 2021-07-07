@@ -24,8 +24,6 @@ if (GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') {
 
 const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME)
 
-console.log(`::save-state name=githubRefShort::${GITHUB_REF_SHORT}`)
-
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = envSwitch(ENVIRONMENT_NAME,'wepublish', 'wepublish-dev')
 

@@ -1,7 +1,6 @@
 name: Deployment
 
 on: [pull_request]
-# implement on Merge
 
 jobs:
   deployment:

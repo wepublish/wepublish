@@ -21,10 +21,12 @@ async function main() {
   await webhook.send({
     text: `We.Publish PR Deployment :white_check_mark:. 
 <https://github.com/wepublish/wepublish/pull/${PR_NUMBER}|PR ${PR_NUMBER}> with branch \`${BRANCH_NAME}\` has been deployed to:
-Website: https://${GITHUB_REF_SHORT}.wepublish.dev
-Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
-API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
-Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev`
+- Website: https://${GITHUB_REF_SHORT}.wepublish.dev
+- Editor: https://editor.${GITHUB_REF_SHORT}.wepublish.dev
+- Public API: https://api.${GITHUB_REF_SHORT}.wepublish.dev
+- Privat API: https://api.${GITHUB_REF_SHORT}.wepublish.dev/admin
+- Media: https://media.${GITHUB_REF_SHORT}.wepublish.dev
+- Login: https://login.${GITHUB_REF_SHORT}.wepublish.dev`
   })
 }
 
