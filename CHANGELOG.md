@@ -1,6 +1,6 @@
 # Change Log
 
-## v2.6.0-alpha.0 (2021-06-23)
+## v2.6.0 (2021-06-23)
 
 #### :boom: Breaking Change
 * `api`, `editor`
