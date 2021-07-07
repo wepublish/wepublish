@@ -44,7 +44,7 @@ export function ChooseEditImage({
               src={image?.largeURL ?? '/static/placeholder-240x240.png'}
             />
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
-              <div style={{position: 'absolute', left: left, top: top}}>
+              <div style={{position: 'absolute'}}>
                 <Dropdown
                   renderTitle={() => {
                     return <IconButton appearance="primary" icon={<Icon icon="wrench" />} circle />
