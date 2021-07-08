@@ -21,7 +21,9 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     logoID: {type: GraphQLID},
     themeColor: {type: GraphQLNonNull(GraphQLColor)},
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
-    callToActionURL: {type: GraphQLNonNull(GraphQLString)}
+    callToActionTextURL: {type: GraphQLNonNull(GraphQLString)},
+    callToActionImageURL: {type: GraphQLString},
+    callToActionImageID: {type: GraphQLString}
   }
 })
 

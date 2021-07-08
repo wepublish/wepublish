@@ -6,7 +6,8 @@ import {
   usePeerProfileQuery,
   useUpdatePeerProfileMutation,
   PeerProfileDocument,
-  PeerProfileQuery
+  PeerProfileQuery,
+  Image
 } from '../api'
 
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -33,7 +34,9 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
-  const [callToActionURL, setCallToActionURL] = useState('')
+  const [callToActionTextURL, setCallToActionTextURL] = useState('')
+  const [callToActionImageID, setCallToActionImageID] = useState<Image>()
+  const [callToActionImageURL, setCallToActionImageURL] = useState('')
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
     fetchPolicy: 'network-only'
@@ -56,7 +59,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           ? data.peerProfile.callToActionText
           : createDefaultValue()
       )
-      setCallToActionURL(data.peerProfile.callToActionURL)
+      setCallToActionTextURL(data.peerProfile.callToActionURL)
     }
   }, [data?.peerProfile])
 
@@ -72,8 +75,10 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           name,
           logoID: logoImage?.id,
           themeColor,
-          callToActionURL,
-          callToActionText
+          callToActionText,
+          callToActionTextURL,
+          callToActionImageID,
+          callToActionImageURL
         }
       }
     })
@@ -114,18 +119,49 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                 onChange={value => setThemeColor(value)}
               />
             </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.callToActionText')}</ControlLabel>
-              <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
-            </FormGroup>
-            <FormGroup>
-              <ControlLabel>{t('peerList.panels.callToActionURL')}</ControlLabel>
-              <FormControl
-                name="callToActionURL"
-                value={callToActionURL}
-                onChange={url => setCallToActionURL(url)}
-              />
-            </FormGroup>
+
+            <ControlLabel>Call to action text</ControlLabel>
+            <div style={{border: 'solid 1px #cad5e4', borderRadius: '8px', padding: '16px'}}>
+              <FormGroup>
+                <ControlLabel>text</ControlLabel>
+                <RichTextBlock value={callToActionText} onChange={setCallToActionText} />
+              </FormGroup>
+
+              <FormGroup>
+                <FormControl
+                  placeholder="URL"
+                  name="callToActionTextURL"
+                  value={callToActionTextURL}
+                  onChange={url => setCallToActionTextURL(url)}
+                />
+              </FormGroup>
+            </div>
+            <br />
+            <ControlLabel>Call to action image</ControlLabel>
+            <div style={{border: 'solid 1px #cad5e4', borderRadius: '8px', padding: '10px'}}>
+              <FormGroup>
+                <ControlLabel>image</ControlLabel>
+                <ChooseEditImage
+                  image={logoImage}
+                  header={''}
+                  top={0}
+                  left={20}
+                  disabled={isLoading}
+                  openChooseModalOpen={() => setChooseModalOpen(true)}
+                  openEditModalOpen={() => setEditModalOpen(true)}
+                  removeImage={() => setLogoImage(undefined)}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <ControlLabel>url</ControlLabel>
+                <FormControl
+                  name="callToActionTextURL"
+                  value={callToActionTextURL}
+                  onChange={url => setCallToActionTextURL(url)}
+                />
+              </FormGroup>
+            </div>
           </Form>
         </Panel>
       </Drawer.Body>
