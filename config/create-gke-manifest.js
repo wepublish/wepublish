@@ -4,17 +4,31 @@ try {
   require('dotenv').config()
 } catch (e) {}
 
-const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID} = process.env
+function slugify(text, separator = "-") {
+  return text
+    .toString()
+    .normalize('NFD')                   // split an accented letter in the base letter and the acent
+    .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, separator);
+};
+
+const {GITHUB_SHA, GITHUB_REPOSITORY, GITHUB_REF, PROJECT_ID, BRANCH_NAME} = process.env
 
 let ENVIRONMENT_NAME = 'development'
-if (GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') {
+if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_NAME) {
   ENVIRONMENT_NAME = 'production'
 }
+
+const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME)
+
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
 const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
-const devDomain = 'dev.wepublish.media'
+const devDomain = `${GITHUB_REF_SHORT}.wepublish.dev`
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
 const domainSan = envSwitch(ENVIRONMENT_NAME, `www.${domain}`, `www.${devDomain}`)
 
@@ -22,6 +36,9 @@ const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devD
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
 const domainEditor = envSwitch(ENVIRONMENT_NAME, `editor.${domain}`, `editor.${devDomain}`)
 const domainOauth = envSwitch(ENVIRONMENT_NAME, `login.${domain}`, `login.${devDomain}`)
+
+const databaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish`
+const oauthDatabaseURL = `mongodb://${GITHUB_REF_SHORT}-mongo-${ENVIRONMENT_NAME}:27017/wepublish-oauth2`
 
 const image = `${GOOGLE_REGISTRY_HOST_NAME}/${PROJECT_ID}/${GITHUB_REPOSITORY}/main:${GITHUB_SHA}`
 
@@ -31,7 +48,6 @@ main().catch(e => {
 })
 
 async function main() {
-  await applyNamespace()
   await applyWebsite()
   await applyMediaServer()
   await applyApiServer()
@@ -40,24 +56,10 @@ async function main() {
   await applyMongo()
 }
 
-async function applyNamespace() {
-  let namespace = {
-    apiVersion: 'v1',
-    kind: 'Namespace',
-    metadata: {
-      name: NAMESPACE,
-      labels: {
-        name: NAMESPACE
-      }
-    }
-  }
-  await applyConfig('namespace', namespace)
-}
-
 async function applyWebsite() {
   const servicePort = 8000
   const app = 'website'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
 
   const service = {
     apiVersion: 'v1',
@@ -77,6 +79,7 @@ async function applyWebsite() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       sessionAffinity: 'None',
@@ -110,7 +113,7 @@ async function applyWebsite() {
     hosts = hosts.concat(domains)
   }
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -149,6 +152,7 @@ async function applyWebsite() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -157,6 +161,7 @@ async function applyWebsite() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -172,6 +177,7 @@ async function applyWebsite() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -260,21 +266,21 @@ async function applyWebsite() {
 
 async function applyMediaServer() {
   const app = 'media'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const pvc = {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: {
-      name: 'wepublish-media',
+      name: `${GITHUB_REF_SHORT}-media-server`,
       namespace: NAMESPACE
     },
     spec: {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: '30Gi'
+          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", '1Gi')
         }
       }
     }
@@ -290,6 +296,7 @@ async function applyMediaServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -298,6 +305,7 @@ async function applyMediaServer() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -309,6 +317,7 @@ async function applyMediaServer() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -375,7 +384,7 @@ async function applyMediaServer() {
             {
               name: 'media-volume',
               persistentVolumeClaim: {
-                claimName: 'wepublish-media'
+                claimName: `${GITHUB_REF_SHORT}-media-server`
               }
             }
           ]
@@ -403,6 +412,7 @@ async function applyMediaServer() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -410,7 +420,7 @@ async function applyMediaServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -418,6 +428,7 @@ async function applyMediaServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -458,7 +469,7 @@ async function applyMediaServer() {
 
 async function applyApiServer() {
   const app = 'api'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -469,6 +480,7 @@ async function applyApiServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -477,6 +489,7 @@ async function applyApiServer() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -492,6 +505,7 @@ async function applyApiServer() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -550,11 +564,7 @@ async function applyApiServer() {
                 // },
                 {
                   name: 'MONGO_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'mongodb://mongo-production:27017/wepublish',
-                    'mongodb://mongo-development:27017/wepublish'
-                  )
+                  value: databaseURL
                 },
                 {
                   name: 'MONGO_LOCALE',
@@ -611,11 +621,7 @@ async function applyApiServer() {
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_DISCOVERY_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    'https://login.demo.wepublish.media/.well-known/openid-configuration',
-                    'https://login.dev.wepublish.media/.well-known/openid-configuration'
-                  )
+                  value: `https://${domainOauth}/.well-known/openid-configuration`
                 },
                 {
                   name: 'OAUTH_WEPUBLISH_CLIENT_ID',
@@ -778,6 +784,7 @@ async function applyApiServer() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -785,7 +792,7 @@ async function applyApiServer() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -793,6 +800,7 @@ async function applyApiServer() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -833,7 +841,7 @@ async function applyApiServer() {
 
 async function applyEditor() {
   const app = 'editor'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -844,6 +852,7 @@ async function applyEditor() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -852,6 +861,7 @@ async function applyEditor() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -867,6 +877,7 @@ async function applyEditor() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -935,6 +946,7 @@ async function applyEditor() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -942,7 +954,7 @@ async function applyEditor() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -950,6 +962,7 @@ async function applyEditor() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       annotations: {
@@ -990,7 +1003,7 @@ async function applyEditor() {
 
 async function applyOAuth2() {
   const app = 'oauth2'
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
   const appPort = 8000
 
   const deployment = {
@@ -1001,6 +1014,7 @@ async function applyOAuth2() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -1009,6 +1023,7 @@ async function applyOAuth2() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -1024,6 +1039,7 @@ async function applyOAuth2() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -1032,7 +1048,7 @@ async function applyOAuth2() {
             {
               name: appName,
               image: image,
-              command: ['node', './packages/oauth2/dist/server/index.js'],
+              command: ['node', './examples/oauth2/dist/index.js'],
               env: [
                 {
                   name: 'NODE_ENV',
@@ -1040,19 +1056,11 @@ async function applyOAuth2() {
                 },
                 {
                   name: 'MONGO_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `mongodb://mongo-production:27017/wepublish`,
-                    `mongodb://mongo-development:27017/wepublish`
-                  )
+                  value: databaseURL
                 },
                 {
                   name: 'OAUTH_MONGODB_URI',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `mongodb://mongo-production:27017/wepublish-oauth2`,
-                    `mongodb://mongo-development:27017/wepublish-oauth2`
-                  )
+                  value: oauthDatabaseURL
                 },
                 {
                   name: 'OAUTH_CLIENT_ID',
@@ -1154,6 +1162,7 @@ async function applyOAuth2() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
@@ -1161,7 +1170,7 @@ async function applyOAuth2() {
   }
   await applyConfig(`service-${app}`, service)
 
-  let ingress = {
+  const ingress = {
     apiVersion: 'networking.k8s.io/v1beta1',
     kind: 'Ingress',
     metadata: {
@@ -1210,13 +1219,13 @@ async function applyOAuth2() {
 async function applyMongo() {
   const app = 'mongo'
   const port = 27017
-  const appName = `${app}-${ENVIRONMENT_NAME}`
+  const appName = `${GITHUB_REF_SHORT}-${app}-${ENVIRONMENT_NAME}`
 
   const pvc = {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
     metadata: {
-      name: envSwitch(ENVIRONMENT_NAME, 'wepublish-mongo', `wepublish-mongo-${GITHUB_SHA}`),
+      name: `${GITHUB_REF_SHORT}-mongo-data`,
       namespace: NAMESPACE
     },
     spec: {
@@ -1239,6 +1248,7 @@ async function applyMongo() {
       namespace: NAMESPACE,
       labels: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       }
     },
@@ -1247,6 +1257,7 @@ async function applyMongo() {
       selector: {
         matchLabels: {
           app: app,
+          slug: GITHUB_REF_SHORT,
           release: ENVIRONMENT_NAME
         }
       },
@@ -1258,6 +1269,7 @@ async function applyMongo() {
           name: appName,
           labels: {
             app: app,
+            slug: GITHUB_REF_SHORT,
             release: ENVIRONMENT_NAME
           }
         },
@@ -1298,11 +1310,7 @@ async function applyMongo() {
             {
               name: 'mongo-volume',
               persistentVolumeClaim: {
-                claimName: envSwitch(
-                  ENVIRONMENT_NAME,
-                  'wepublish-mongo',
-                  `wepublish-mongo-${GITHUB_SHA}`
-                )
+                claimName: `${GITHUB_REF_SHORT}-mongo-data`,
               }
             }
           ]
@@ -1330,6 +1338,7 @@ async function applyMongo() {
       ],
       selector: {
         app: app,
+        slug: GITHUB_REF_SHORT,
         release: ENVIRONMENT_NAME
       },
       type: 'ClusterIP'
