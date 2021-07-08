@@ -13,7 +13,7 @@ jobs:
       - name: Build docker
         env:
           PROJECT_ID: wepublish-269314
-          GCLOUD_AUTH: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_WEPUBLISH }}
+          GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
         run: |
           # https://cloud.google.com/container-registry/docs/advanced-authentication
           printenv GCLOUD_AUTH | base64 --decode | docker login -u _json_key --password-stdin https://eu.gcr.io
@@ -34,10 +34,10 @@ jobs:
       - name: Prepare and authenticate kubectl
         uses: google-github-actions/get-gke-credentials@main
         with:
-          cluster_name: tsri-django
-          location: europe-west6-c
-          project_id: tsri-246213
-          credentials: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_TSRI }}
+          cluster_name: funiciello-dev-cluster
+          location: europe-west6
+          project_id: wepublish-dev
+          credentials: ${{ secrets.GCP_SA_KEY_WEP_DEV }}
       - name: Deploy to kubernetes
         run: kubectl apply -f ./kubernetesConfigs
       - name: Slack Notification
