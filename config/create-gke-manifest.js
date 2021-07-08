@@ -25,16 +25,12 @@ if ((GITHUB_REF === 'refs/heads/master' || GITHUB_REF === 'master') && !BRANCH_N
 const GITHUB_REF_SHORT = slugify(!BRANCH_NAME ? GITHUB_REF.substring(GITHUB_REF.lastIndexOf('/') + 1) : BRANCH_NAME)
 
 const GOOGLE_REGISTRY_HOST_NAME = 'eu.gcr.io'
-const NAMESPACE = envSwitch(ENVIRONMENT_NAME,'wepublish', 'wepublish-dev')
+const NAMESPACE = envSwitch(ENVIRONMENT_NAME, 'wepublish', 'wepublish-dev')
 
 const domain = 'demo.wepublish.media'
 const devDomain = `${GITHUB_REF_SHORT}.wepublish.dev`
 const domainCn = envSwitch(ENVIRONMENT_NAME, `${domain}`, `${devDomain}`)
-const domainSan = envSwitch(
-  ENVIRONMENT_NAME,
-  `www.${domain}`,
-  `www.${devDomain}`
-)
+const domainSan = envSwitch(ENVIRONMENT_NAME, `www.${domain}`, `www.${devDomain}`)
 
 const domainMedia = envSwitch(ENVIRONMENT_NAME, `media.${domain}`, `media.${devDomain}`)
 const domainAPI = envSwitch(ENVIRONMENT_NAME, `api.${domain}`, `api.${devDomain}`)
@@ -202,11 +198,7 @@ async function applyWebsite() {
                 },
                 {
                   name: 'CANONICAL_HOST',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'API_URL',
@@ -285,7 +277,7 @@ async function applyMediaServer() {
       namespace: NAMESPACE
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
           storage: envSwitch(ENVIRONMENT_NAME, "30Gi", '1Gi')
@@ -533,8 +525,8 @@ async function applyApiServer() {
               command: ['node', './examples/api/dist/index.js'],
               volumeMounts: [
                 {
-                  "name": "google-cloud-key",
-                  "mountPath": "/var/secrets/google"
+                  name: 'google-cloud-key',
+                  mountPath: '/var/secrets/google'
                 }
               ],
               env: [
@@ -543,8 +535,8 @@ async function applyApiServer() {
                   value: `production`
                 },
                 {
-                  name: "GOOGLE_APPLICATION_CREDENTIALS",
-                  value: "/var/secrets/google/key.json"
+                  name: 'GOOGLE_APPLICATION_CREDENTIALS',
+                  value: '/var/secrets/google/key.json'
                 },
                 {
                   name: 'MEDIA_SERVER_URL',
@@ -581,15 +573,11 @@ async function applyApiServer() {
 
                 {
                   name: 'HOST_URL',
-                  value: `https://${domainAPI}`,
+                  value: `https://${domainAPI}`
                 },
                 {
                   name: 'WEBSITE_URL',
-                  value: envSwitch(
-                    ENVIRONMENT_NAME,
-                    `https://${domain}`,
-                    `https://${devDomain}`
-                  )
+                  value: envSwitch(ENVIRONMENT_NAME, `https://${domain}`, `https://${devDomain}`)
                 },
                 {
                   name: 'MEDIA_SERVER_TOKEN',
@@ -736,7 +724,8 @@ async function applyApiServer() {
                       key: 'payrexx_api_secret'
                     }
                   }
-                },{
+                },
+                {
                   name: 'SENTRY_DSN',
                   valueFrom: {
                     secretKeyRef: {
@@ -744,10 +733,12 @@ async function applyApiServer() {
                       key: 'sentry_dsn'
                     }
                   }
-                },{
+                },
+                {
                   name: 'SENTRY_ENV',
                   value: envSwitch(ENVIRONMENT_NAME, 'production', 'staging')
-                },{
+                },
+                {
                   name: 'GOOGLE_PROJECT',
                   value: PROJECT_ID
                 }
@@ -904,6 +895,10 @@ async function applyEditor() {
                 {
                   name: 'API_URL',
                   value: `https://${domainAPI}`
+                },
+                {
+                  name: 'PEER_BY_DEFAULT',
+                  value: 'true'
                 }
               ],
               ports: [
@@ -1234,10 +1229,10 @@ async function applyMongo() {
       namespace: NAMESPACE
     },
     spec: {
-      accessModes: ["ReadWriteOnce"],
+      accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: envSwitch(ENVIRONMENT_NAME, "30Gi", "1Gi")
+          storage: envSwitch(ENVIRONMENT_NAME, '30Gi', '1Gi')
         }
       }
     }
