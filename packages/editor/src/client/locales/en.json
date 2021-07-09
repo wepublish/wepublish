@@ -613,7 +613,10 @@
       "panels": {
         "callToAction": "Call To Action",
         "callToActionText": "Call To Action Text",
+        "callToActionImage": "Call To Action Image",
         "callToActionURL": "Call To Action URL",
+        "text": "Text",
+        "image": "Image",
         "cancel": "Cancel",
         "chooseImage": "Choose Image",
         "close": "Close",

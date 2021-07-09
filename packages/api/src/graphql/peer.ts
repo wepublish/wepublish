@@ -23,7 +23,7 @@ export const GraphQLPeerProfileInput = new GraphQLInputObjectType({
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
     callToActionTextURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLString}
+    callToActionImageID: {type: GraphQLID}
   }
 })
 
@@ -45,7 +45,12 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
     callToActionTextURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {type: GraphQLString}
+    callToActionImageID: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+        return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
+      })
+    }
   }
 })
 
