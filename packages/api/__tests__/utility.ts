@@ -45,6 +45,10 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
 
+  getPagePreviewURL(token: string): string {
+    return `https://demo.wepulish.ch/page/preview/${token}`
+  }
+
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment): string {
     if (comment.itemType === CommentItemType.Article) {
       return `https://demo.wepublish.media/comments/a/${item.id}/${item.slug}/${comment.id}`
