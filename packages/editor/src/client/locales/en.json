@@ -112,7 +112,9 @@
         "updateDate": "Update Date",
         "uploadImage": "Upload Image",
         "value": "Value",
-        "yes": "Yes"
+        "yes": "Yes",
+        "canonicalUrl": "Canonical Url",
+        "canonicalUrLHelpBlock": "Helping in SEO"
       }
     },
     "articles": {
