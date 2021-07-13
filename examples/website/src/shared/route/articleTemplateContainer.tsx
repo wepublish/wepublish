@@ -31,8 +31,7 @@ import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
 import {Loader} from '../atoms/loader'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
 import {Helmet} from 'react-helmet-async'
-import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
-import {useAppContext} from '../appContext'
+import {Link} from './routeContext'
 import {Peer, ArticleMeta} from '../types'
 import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
@@ -98,7 +97,6 @@ const mapAuthors = (metaData: any[] | undefined) => {
 }
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
-  const {canonicalHost} = useAppContext()
   const variables =
     id === 'preview'
       ? {
@@ -129,20 +127,19 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     socialMediaDescription,
     socialMediaImage,
     socialMediaAuthors,
-    comments
+    comments,
+    canonicalUrl
   } = articleData
 
-  const path = ArticleRoute.reverse({id, slug})
-  const canonicalURL = canonicalHost + path
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalUrl} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -160,9 +157,9 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalUrl} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalUrl}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -247,7 +244,6 @@ export function PeerArticleTemplateContainer({
   id,
   slug
 }: PeerArticleTemplateContainerProps) {
-  const {canonicalHost} = useAppContext()
   const {data, loading} = useQuery(PeerArticleQuery, {variables: {peerID, id}})
   const {data: peerData, loading: isPeerLoading} = useQuery(PeerQuery, {variables: {id: peerID}})
 
@@ -267,14 +263,12 @@ export function PeerArticleTemplateContainer({
     publishedAt,
     updatedAt,
     blocks,
+    canonicalUrl,
     socialMediaImage,
     socialMediaDescription,
     socialMediaTitle,
     socialMediaAuthors
   } = articleData
-
-  const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const canonicalURL = canonicalHost + path
 
   return (
     <>
@@ -282,11 +276,11 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalURL} />
+        <link rel="canonical" href={canonicalUrl} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:url" content={canonicalUrl} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -304,10 +298,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalUrl} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalURL}
+        articleShareUrl={canonicalUrl}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
