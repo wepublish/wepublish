@@ -31,7 +31,8 @@ import {DesktopSocialMediaButtons} from '../atoms/socialMediaButtons'
 import {Loader} from '../atoms/loader'
 import {NotFoundTemplate} from '../templates/notFoundTemplate'
 import {Helmet} from 'react-helmet-async'
-import {Link} from './routeContext'
+import {ArticleRoute, PeerArticleRoute, Link} from './routeContext'
+import {useAppContext} from '../appContext'
 import {Peer, ArticleMeta} from '../types'
 import {useStyle, cssRule} from '@karma.run/react'
 import {Image} from '../atoms/image'
@@ -97,6 +98,7 @@ const mapAuthors = (metaData: any[] | undefined) => {
 }
 
 export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerProps) {
+  const {canonicalHost} = useAppContext()
   const variables =
     id === 'preview'
       ? {
@@ -131,15 +133,17 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
     canonicalUrl
   } = articleData
 
+  const path = ArticleRoute.reverse({id, slug})
+  const articleCanonicalURL = canonicalUrl || canonicalHost + path
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={canonicalUrl} />
+        <link rel="canonical" href={articleCanonicalURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:url" content={articleCanonicalURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -157,9 +161,9 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalUrl} />
+      <DesktopSocialMediaButtons shareUrl={articleCanonicalURL} />
       <BlockRenderer
-        articleShareUrl={canonicalUrl}
+        articleShareUrl={articleCanonicalURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -244,6 +248,7 @@ export function PeerArticleTemplateContainer({
   id,
   slug
 }: PeerArticleTemplateContainerProps) {
+  const {canonicalHost} = useAppContext()
   const {data, loading} = useQuery(PeerArticleQuery, {variables: {peerID, id}})
   const {data: peerData, loading: isPeerLoading} = useQuery(PeerQuery, {variables: {id: peerID}})
 
@@ -270,17 +275,19 @@ export function PeerArticleTemplateContainer({
     socialMediaAuthors
   } = articleData
 
+  const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
+  const peerArticleCanonicalURL = canonicalUrl || canonicalHost + path
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={canonicalUrl} />
+        <link rel="canonical" href={peerArticleCanonicalURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:url" content={peerArticleCanonicalURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -298,10 +305,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={canonicalUrl} />
+      <DesktopSocialMediaButtons shareUrl={peerArticleCanonicalURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={canonicalUrl}
+        articleShareUrl={peerArticleCanonicalURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
