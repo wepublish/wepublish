@@ -19,7 +19,7 @@
     "publish": "lerna publish from-package --ignore-scripts",
     "watch": "run-p --print-label watch:*",
     "lint": "run-p --print-label lint:*",
-    "start:docker": "docker-compose up mongo mongo-express",
+    "start:docker": "docker-compose up mongo mongo-express media",
     "setup:api": "yarn workspace @wepublish/api setup",
     "clean:api": "yarn workspace @wepublish/api clean",
     "build:api": "yarn workspace @wepublish/api build",
