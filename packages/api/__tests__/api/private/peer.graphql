@@ -6,7 +6,7 @@ fragment FullPeerProfile on PeerProfile {
     ...ImageRef
   }
   callToActionText
-  callToActionTextURL
+  callToActionURL
   callToActionImageID
   callToActionImageURL
 }

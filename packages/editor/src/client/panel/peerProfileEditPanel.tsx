@@ -59,7 +59,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           ? data.peerProfile.callToActionText
           : createDefaultValue()
       )
-      setCallToActionTextURL(data.peerProfile.callToActionTextURL)
+      setCallToActionTextURL(data.peerProfile.callToActionURL)
       setCallToActionImageID(data.peerProfile.callToActionImageID)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
     }
@@ -78,7 +78,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           logoID: logoImage?.id,
           themeColor,
           callToActionText,
-          callToActionTextURL,
+          callToActionURL: callToActionTextURL,
           callToActionImageID: callToActionImageID?.id,
           callToActionImageURL
         }
