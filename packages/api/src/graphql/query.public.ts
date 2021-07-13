@@ -248,7 +248,8 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
         let page = id ? await loaders.publicPagesByID.load(id) : null
 
-        if (!page && slug) {
+        if (!page) {
+          // slug can be empty string
           page = await loaders.publicPagesBySlug.load(slug)
         }
 
