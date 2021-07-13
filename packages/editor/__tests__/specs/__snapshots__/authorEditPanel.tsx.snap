@@ -449,7 +449,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                             header=""
                             style={
                               Object {
-                                "height": 240,
+                                "height": 450,
                                 "marginBottom": 10,
                               }
                             }
@@ -460,7 +460,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                               header=""
                               style={
                                 Object {
-                                  "height": 240,
+                                  "height": 450,
                                   "marginBottom": 10,
                                 }
                               }
@@ -469,7 +469,7 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                 className="rs-panel rs-panel-default"
                                 style={
                                   Object {
-                                    "height": 240,
+                                    "height": 450,
                                     "marginBottom": 10,
                                   }
                                 }
@@ -2969,7 +2969,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                             header=""
                             style={
                               Object {
-                                "height": 240,
+                                "height": 450,
                                 "marginBottom": 10,
                               }
                             }
@@ -2980,7 +2980,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                               header=""
                               style={
                                 Object {
-                                  "height": 240,
+                                  "height": 450,
                                   "marginBottom": 10,
                                 }
                               }
@@ -2989,7 +2989,7 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                 className="rs-panel rs-panel-default"
                                 style={
                                   Object {
-                                    "height": 240,
+                                    "height": 450,
                                     "marginBottom": 10,
                                   }
                                 }
@@ -5962,7 +5962,7 @@ exports[`Author Edit Panel should render 1`] = `
                             header=""
                             style={
                               Object {
-                                "height": 240,
+                                "height": 450,
                                 "marginBottom": 10,
                               }
                             }
@@ -5973,7 +5973,7 @@ exports[`Author Edit Panel should render 1`] = `
                               header=""
                               style={
                                 Object {
-                                  "height": 240,
+                                  "height": 450,
                                   "marginBottom": 10,
                                 }
                               }
@@ -5982,7 +5982,7 @@ exports[`Author Edit Panel should render 1`] = `
                                 className="rs-panel rs-panel-default"
                                 style={
                                   Object {
-                                    "height": 240,
+                                    "height": 450,
                                     "marginBottom": 10,
                                   }
                                 }
@@ -8474,7 +8474,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                             header=""
                             style={
                               Object {
-                                "height": 240,
+                                "height": 450,
                                 "marginBottom": 10,
                               }
                             }
@@ -8485,7 +8485,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                               header=""
                               style={
                                 Object {
-                                  "height": 240,
+                                  "height": 450,
                                   "marginBottom": 10,
                                 }
                               }
@@ -8494,7 +8494,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                 className="rs-panel rs-panel-default"
                                 style={
                                   Object {
-                                    "height": 240,
+                                    "height": 450,
                                     "marginBottom": 10,
                                   }
                                 }

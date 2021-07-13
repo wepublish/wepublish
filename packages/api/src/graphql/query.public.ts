@@ -35,7 +35,7 @@ import {
   GraphQLPublishedPageFilter,
   GraphQLPublishedPageSort
 } from './page'
-import {PageSort} from '../db/page'
+import {PageSort, PublicPage} from '../db/page'
 import {
   GraphQLMemberPlanFilter,
   GraphQLMemberPlanSort,
@@ -239,14 +239,39 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
 
     page: {
       type: GraphQLPublicPage,
-      args: {id: {type: GraphQLID}, slug: {type: GraphQLSlug}},
-      description: 'This query takes either the ID or the slug and returns the page.',
-      resolve(root, {id, slug}, {authenticateUser, loaders}) {
-        if ((id == null && slug == null) || (id != null && slug != null)) {
-          throw new UserInputError('You must provide either `id` or `slug`.')
+      args: {
+        id: {type: GraphQLID},
+        slug: {type: GraphQLSlug},
+        token: {type: GraphQLString}
+      },
+      description: 'This query takes either the ID, slug or token and returns the page.',
+      async resolve(root, {id, slug, token}, {session, loaders, verifyJWT}) {
+        let page = id ? await loaders.publicPagesByID.load(id) : null
+
+        if (!page) {
+          // slug can be empty string
+          page = await loaders.publicPagesBySlug.load(slug)
         }
 
-        return id ? loaders.publicPagesByID.load(id) : loaders.publicPagesBySlug.load(slug)
+        if (!page && token) {
+          try {
+            const pageId = verifyJWT(token)
+            const privatePage = await loaders.pages.load(pageId)
+
+            page = privatePage?.draft
+              ? ({
+                  id: privatePage.id,
+                  ...privatePage.draft,
+                  updatedAt: new Date(),
+                  publishedAt: new Date()
+                } as PublicPage)
+              : null
+          } catch (error) {
+            logger('graphql-query').warn(error, 'Error while verifying token with page id.')
+          }
+        }
+
+        return page
       }
     },
 
