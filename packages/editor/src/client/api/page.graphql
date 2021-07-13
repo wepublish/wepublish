@@ -109,6 +109,10 @@ mutation DuplicatePage($id: ID!) {
   }
 }
 
+query PagePreviewLink($id: ID!, $hours: Int!) {
+  pagePreviewLink(id: $id, hours: $hours)
+}
+
 query Page($id: ID!) {
   page(id: $id) {
     id
