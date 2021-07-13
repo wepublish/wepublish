@@ -122,7 +122,6 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
-        console.log(input)
         for (let index = 0; index < input.text.length; index++) {
           if (input.text[index].children[index].text.length > 1000) {
             throw new Error(`Comment Length should be maximum of 1000 characters`)
