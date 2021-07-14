@@ -34,6 +34,7 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+import {GraphQLDateTime} from 'graphql-iso-date'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -390,6 +391,38 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             monthlyAmount,
             autoRenew,
             paymentMethodID
+          }
+        })
+
+        if (!updateSubscription) throw new Error('Error during updateSubscription')
+
+        return updateSubscription
+      }
+    },
+
+    cancelUserSubscription: {
+      type: GraphQLPublicUserSubscription,
+      args: {
+        date: {type: GraphQLDateTime}
+      },
+      description:
+        "This mutation allows to update the user's subscription by taking an input of type UserSubscription and throws an error if the user doesn't already have a subscription.",
+      async resolve(root, {date}, {authenticateUser, dbAdapter, loaders}) {
+        const {user} = authenticateUser()
+
+        if (!user.subscription) throw new Error('User does not have a subscription') // TODO: implement better handling
+
+        if (date && user.subscription.paidUntil !== null && user.subscription.paidUntil < date) {
+          throw new Error('Cancellation date can not be later then paid until date')
+        }
+
+        if ((date && date < new Date()) || !date) date = new Date()
+
+        const updateSubscription = await dbAdapter.user.updateUserSubscription({
+          userID: user.id,
+          input: {
+            ...user.subscription,
+            deactivatedAt: date
           }
         })
 
