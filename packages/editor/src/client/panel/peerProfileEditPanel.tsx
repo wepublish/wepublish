@@ -60,7 +60,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           : createDefaultValue()
       )
       setCallToActionTextURL(data.peerProfile.callToActionURL)
-      setCallToActionImageID(data.peerProfile.callToActionImageID)
+      setCallToActionImageID(data.peerProfile.callToActionImage)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
     }
   }, [data?.peerProfile])

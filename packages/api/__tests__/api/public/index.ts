@@ -590,9 +590,9 @@ export type PeerProfile = {
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
-  callToActionTextURL: Scalars['String']
+  callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
-  callToActionImageID?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type Point = {

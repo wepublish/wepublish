@@ -45,7 +45,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionText: {type: GraphQLNonNull(GraphQLRichText)},
     callToActionURL: {type: GraphQLNonNull(GraphQLString)},
     callToActionImageURL: {type: GraphQLString},
-    callToActionImageID: {
+    callToActionImage: {
       type: GraphQLImage,
       resolve: createProxyingResolver((profile, args, {loaders}, info) => {
         return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null

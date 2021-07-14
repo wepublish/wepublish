@@ -1205,9 +1205,9 @@ export type PeerProfile = {
   hostURL: Scalars['String']
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
-  callToActionTextURL: Scalars['String']
+  callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
-  callToActionImageID?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type PeerProfileInput = {
@@ -1215,9 +1215,9 @@ export type PeerProfileInput = {
   logoID?: Maybe<Scalars['ID']>
   themeColor: Scalars['Color']
   callToActionText: Scalars['RichText']
-  callToActionTextURL: Scalars['String']
+  callToActionURL: Scalars['String']
   callToActionImageURL?: Maybe<Scalars['String']>
-  callToActionImageID?: Maybe<Scalars['String']>
+  callToActionImageID?: Maybe<Scalars['ID']>
 }
 
 export type Permission = {
@@ -2450,10 +2450,12 @@ export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   | 'hostURL'
   | 'themeColor'
   | 'callToActionText'
-  | 'callToActionTextURL'
-  | 'callToActionImageID'
+  | 'callToActionURL'
   | 'callToActionImageURL'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
@@ -2877,8 +2879,10 @@ export const FullPeerProfile = gql`
       ...ImageRef
     }
     callToActionText
-    callToActionTextURL
-    callToActionImageID
+    callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
     callToActionImageURL
   }
   ${ImageRef}
