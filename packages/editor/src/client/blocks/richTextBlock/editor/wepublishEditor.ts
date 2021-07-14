@@ -53,6 +53,19 @@ export const WepublishEditor = {
     }
   },
 
+  changeColor(editor: Editor, color?: string) {
+    if (color) {
+      Transforms.setNodes(
+        editor,
+        {color},
+        {
+          match: () => true,
+          split: true
+        }
+      )
+    }
+  },
+
   createDefaultValue(): RichTextBlockValue {
     return [emptyTextParagraph()]
   },

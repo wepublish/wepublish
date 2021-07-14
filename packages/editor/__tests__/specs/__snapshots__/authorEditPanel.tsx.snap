@@ -1603,8 +1603,91 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatColor>
+                                      <ForwardRef
+                                        onClick={[Function]}
+                                      >
+                                        <button
+                                          className="icon-button"
+                                          onClick={[Function]}
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <TextColorIcon>
+                                            <svg
+                                              height="1.2em"
+                                              preserveAspectRatio="xMidYMid meet"
+                                              viewBox="0 0 52.000000 52.000000"
+                                              width="1.2em"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <g
+                                                fill="#000000"
+                                                stroke="none"
+                                                transform="translate(0.000000,52.000000) scale(0.100000,-0.100000)"
+                                              >
+                                                <path
+                                                  d="M219 433 c-14 -38 -96 -254 -104 -275 -6 -15 -2 -18 22 -18 26 0 32
+5 43 40 l13 40 67 0 67 0 12 -40 c10 -35 16 -40 41 -40 17 0 30 1 30 3 0 1
+-27 72 -59 157 -58 151 -60 155 -90 158 -26 3 -33 -1 -42 -25z m64 -96 c9 -30
+17 -57 17 -60 0 -4 -20 -7 -44 -7 l-45 0 21 60 c11 33 23 60 27 60 4 0 15 -24
+24 -53z"
+                                                />
+                                                <path
+                                                  d="M100 40 l0 -40 160 0 160 0 0 40 0 40 -160 0 -160 0 0 -40z"
+                                                />
+                                              </g>
+                                            </svg>
+                                          </TextColorIcon>
+                                          <input
+                                            onChange={[Function]}
+                                            style={
+                                              Object {
+                                                "visibility": "hidden",
+                                                "width": 0,
+                                              }
+                                            }
+                                            type="color"
+                                          />
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
-                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -4596,8 +4679,91 @@ exports[`Author Edit Panel should expand links fields when Add Block button is c
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatColor>
+                                      <ForwardRef
+                                        onClick={[Function]}
+                                      >
+                                        <button
+                                          className="icon-button"
+                                          onClick={[Function]}
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <TextColorIcon>
+                                            <svg
+                                              height="1.2em"
+                                              preserveAspectRatio="xMidYMid meet"
+                                              viewBox="0 0 52.000000 52.000000"
+                                              width="1.2em"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <g
+                                                fill="#000000"
+                                                stroke="none"
+                                                transform="translate(0.000000,52.000000) scale(0.100000,-0.100000)"
+                                              >
+                                                <path
+                                                  d="M219 433 c-14 -38 -96 -254 -104 -275 -6 -15 -2 -18 22 -18 26 0 32
+5 43 40 l13 40 67 0 67 0 12 -40 c10 -35 16 -40 41 -40 17 0 30 1 30 3 0 1
+-27 72 -59 157 -58 151 -60 155 -90 158 -26 3 -33 -1 -42 -25z m64 -96 c9 -30
+17 -57 17 -60 0 -4 -20 -7 -44 -7 l-45 0 21 60 c11 33 23 60 27 60 4 0 15 -24
+24 -53z"
+                                                />
+                                                <path
+                                                  d="M100 40 l0 -40 160 0 160 0 0 40 0 40 -160 0 -160 0 0 -40z"
+                                                />
+                                              </g>
+                                            </svg>
+                                          </TextColorIcon>
+                                          <input
+                                            onChange={[Function]}
+                                            style={
+                                              Object {
+                                                "visibility": "hidden",
+                                                "width": 0,
+                                              }
+                                            }
+                                            type="color"
+                                          />
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
-                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -7116,8 +7282,91 @@ exports[`Author Edit Panel should render 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatColor>
+                                      <ForwardRef
+                                        onClick={[Function]}
+                                      >
+                                        <button
+                                          className="icon-button"
+                                          onClick={[Function]}
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <TextColorIcon>
+                                            <svg
+                                              height="1.2em"
+                                              preserveAspectRatio="xMidYMid meet"
+                                              viewBox="0 0 52.000000 52.000000"
+                                              width="1.2em"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <g
+                                                fill="#000000"
+                                                stroke="none"
+                                                transform="translate(0.000000,52.000000) scale(0.100000,-0.100000)"
+                                              >
+                                                <path
+                                                  d="M219 433 c-14 -38 -96 -254 -104 -275 -6 -15 -2 -18 22 -18 26 0 32
+5 43 40 l13 40 67 0 67 0 12 -40 c10 -35 16 -40 41 -40 17 0 30 1 30 3 0 1
+-27 72 -59 157 -58 151 -60 155 -90 158 -26 3 -33 -1 -42 -25z m64 -96 c9 -30
+17 -57 17 -60 0 -4 -20 -7 -44 -7 l-45 0 21 60 c11 33 23 60 27 60 4 0 15 -24
+24 -53z"
+                                                />
+                                                <path
+                                                  d="M100 40 l0 -40 160 0 160 0 0 40 0 40 -160 0 -160 0 0 -40z"
+                                                />
+                                              </g>
+                                            </svg>
+                                          </TextColorIcon>
+                                          <input
+                                            onChange={[Function]}
+                                            style={
+                                              Object {
+                                                "visibility": "hidden",
+                                                "width": 0,
+                                              }
+                                            }
+                                            type="color"
+                                          />
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
-                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
@@ -9628,8 +9877,91 @@ exports[`Author Edit Panel should render with ID 1`] = `
                                         </Divider>
                                       </defaultProps(Divider)>
                                     </ToolbarDivider>
+                                    <FormatColor>
+                                      <ForwardRef
+                                        onClick={[Function]}
+                                      >
+                                        <button
+                                          className="icon-button"
+                                          onClick={[Function]}
+                                          style={
+                                            Object {
+                                              "border": "#00000000 1px solid",
+                                            }
+                                          }
+                                        >
+                                          <TextColorIcon>
+                                            <svg
+                                              height="1.2em"
+                                              preserveAspectRatio="xMidYMid meet"
+                                              viewBox="0 0 52.000000 52.000000"
+                                              width="1.2em"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <g
+                                                fill="#000000"
+                                                stroke="none"
+                                                transform="translate(0.000000,52.000000) scale(0.100000,-0.100000)"
+                                              >
+                                                <path
+                                                  d="M219 433 c-14 -38 -96 -254 -104 -275 -6 -15 -2 -18 22 -18 26 0 32
+5 43 40 l13 40 67 0 67 0 12 -40 c10 -35 16 -40 41 -40 17 0 30 1 30 3 0 1
+-27 72 -59 157 -58 151 -60 155 -90 158 -26 3 -33 -1 -42 -25z m64 -96 c9 -30
+17 -57 17 -60 0 -4 -20 -7 -44 -7 l-45 0 21 60 c11 33 23 60 27 60 4 0 15 -24
+24 -53z"
+                                                />
+                                                <path
+                                                  d="M100 40 l0 -40 160 0 160 0 0 40 0 40 -160 0 -160 0 0 -40z"
+                                                />
+                                              </g>
+                                            </svg>
+                                          </TextColorIcon>
+                                          <input
+                                            onChange={[Function]}
+                                            style={
+                                              Object {
+                                                "visibility": "hidden",
+                                                "width": 0,
+                                              }
+                                            }
+                                            type="color"
+                                          />
+                                        </button>
+                                      </ForwardRef>
+                                    </FormatColor>
+                                    <ToolbarDivider>
+                                      <defaultProps(Divider)
+                                        classPrefix="rs-divider"
+                                        componentClass="div"
+                                        style={
+                                          Object {
+                                            "height": "1.5em",
+                                          }
+                                        }
+                                        vertical={true}
+                                      >
+                                        <Divider
+                                          classPrefix="rs-divider"
+                                          componentClass="div"
+                                          style={
+                                            Object {
+                                              "height": "1.5em",
+                                            }
+                                          }
+                                          vertical={true}
+                                        >
+                                          <div
+                                            className="rs-divider rs-divider-vertical"
+                                            style={
+                                              Object {
+                                                "height": "1.5em",
+                                              }
+                                            }
+                                          />
+                                        </Divider>
+                                      </defaultProps(Divider)>
+                                    </ToolbarDivider>
                                     <ForwardRef
-                                      format="link"
                                       icon="link"
                                     >
                                       <withLocale(Whisper)
