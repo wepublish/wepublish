@@ -6,7 +6,9 @@ import {
   usePeerProfileQuery,
   useUpdatePeerProfileMutation,
   PeerProfileDocument,
-  PeerProfileQuery
+  PeerProfileQuery,
+  Maybe,
+  ImageRefFragment
 } from '../api'
 
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -34,8 +36,8 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [themeColor, setThemeColor] = useState('')
   const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
-  const [callToActionImageID, setCallToActionImageID] = useState<PeerProfileImage>()
-  const [callToActionImageURL, setCallToActionImageURL] = useState('')
+  const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
+  const [callToActionImageURL, setCallToActionImageURL] = useState<string | undefined>()
   const [isLogoChange, setIsLogoChange] = useState(false)
 
   const {data, loading: isLoading, error: fetchError} = usePeerProfileQuery({
@@ -60,7 +62,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           : createDefaultValue()
       )
       setCallToActionTextURL(data.peerProfile.callToActionURL)
-      setCallToActionImageID(data.peerProfile.callToActionImage)
+      setCallToActionImage(data?.peerProfile?.callToActionImage ?? undefined)
       setCallToActionImageURL(data.peerProfile.callToActionImageURL ?? '')
     }
   }, [data?.peerProfile])
@@ -79,7 +81,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           themeColor,
           callToActionText,
           callToActionURL: callToActionTextURL,
-          callToActionImageID: callToActionImageID?.id,
+          callToActionImageID: callToActionImage?.id,
           callToActionImageURL
         }
       }
@@ -161,7 +163,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
               <FormGroup>
                 <ControlLabel>{t('peerList.panels.image')}</ControlLabel>
                 <ChooseEditImage
-                  image={callToActionImageID}
+                  image={callToActionImage}
                   header={''}
                   top={0}
                   left={20}
@@ -174,7 +176,7 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
                     setIsLogoChange(false)
                     setEditModalOpen(true)
                   }}
-                  removeImage={() => setCallToActionImageID(undefined)}
+                  removeImage={() => setCallToActionImage(undefined)}
                 />
               </FormGroup>
               <FormGroup>
@@ -204,22 +206,18 @@ export function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
           onClose={() => setChooseModalOpen(false)}
           onSelect={value => {
             setChooseModalOpen(false)
-            isLogoChange ? setLogoImage(value) : setCallToActionImageID(value)
+            isLogoChange ? setLogoImage(value) : setCallToActionImage(value)
           }}
         />
       </Drawer>
 
       <Drawer show={isEditModalOpen} size={'sm'} onHide={() => setEditModalOpen(false)}>
-        {isLogoChange
-          ? logoImage && (
-              <ImagedEditPanel id={logoImage!.id} onClose={() => setEditModalOpen(false)} />
-            )
-          : callToActionImageID && (
-              <ImagedEditPanel
-                id={callToActionImageID.id}
-                onClose={() => setEditModalOpen(false)}
-              />
-            )}
+        {(logoImage || callToActionImage) && (
+          <ImagedEditPanel
+            id={isLogoChange ? logoImage?.id : callToActionImage?.id}
+            onClose={() => setEditModalOpen(false)}
+          />
+        )}
       </Drawer>
     </>
   )

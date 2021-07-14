@@ -114,7 +114,7 @@ Object {
   "data": Object {
     "peerProfile": Object {
       "callToActionImage": null,
-      "callToActionImageURL": "",
+      "callToActionImageURL": null,
       "callToActionText": Array [],
       "callToActionURL": "",
       "hostURL": "https://fakeURL",
