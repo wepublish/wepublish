@@ -24,7 +24,6 @@ import {
   InputGroup,
   Table,
   Avatar,
-  Drawer,
   Modal,
   Button
 } from 'rsuite'
@@ -209,34 +208,24 @@ export function AuthorList() {
         />
       </div>
 
-      <Drawer
-        show={isEditModalOpen}
-        size={'sm'}
-        onHide={() => {
+      <AuthorEditPanel
+        isOpen={isEditModalOpen}
+        id={editID}
+        onClose={() => {
           setEditModalOpen(false)
           dispatch({
             type: RouteActionType.PushRoute,
             route: AuthorListRoute.create({}, current ?? undefined)
           })
-        }}>
-        <AuthorEditPanel
-          id={editID}
-          onClose={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: AuthorListRoute.create({}, current ?? undefined)
-            })
-          }}
-          onSave={() => {
-            setEditModalOpen(false)
-            dispatch({
-              type: RouteActionType.PushRoute,
-              route: AuthorListRoute.create({}, current ?? undefined)
-            })
-          }}
-        />
-      </Drawer>
+        }}
+        onSave={() => {
+          setEditModalOpen(false)
+          dispatch({
+            type: RouteActionType.PushRoute,
+            route: AuthorListRoute.create({}, current ?? undefined)
+          })
+        }}
+      />
 
       <Modal show={isConfirmationDialogOpen} onHide={() => setConfirmationDialogOpen(false)}>
         <Modal.Header>
