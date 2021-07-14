@@ -39,6 +39,8 @@ import {BlockMap} from '../blocks/blockMap'
 
 import {useTranslation} from 'react-i18next'
 import {StateColor} from '../utility'
+import {ClientSettings} from '../../shared/types'
+import {ElementID} from '../../shared/elementID'
 
 export interface ArticleEditorProps {
   readonly id?: string
@@ -51,6 +53,10 @@ const InitialArticleBlocks: BlockValue[] = [
 
 export function ArticleEditor({id}: ArticleEditorProps) {
   const {t} = useTranslation()
+
+  const {peerByDefault}: ClientSettings = JSON.parse(
+    document.getElementById(ElementID.Settings)!.textContent!
+  )
 
   const dispatch = useRouteDispatch()
 
@@ -83,7 +89,7 @@ export function ArticleEditor({id}: ArticleEditorProps) {
     authors: [],
     tags: [],
     properties: [],
-    shared: false,
+    shared: peerByDefault,
     breaking: false,
     image: undefined,
     hideAuthor: false,
