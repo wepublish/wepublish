@@ -41,7 +41,7 @@ describe('Mailchimp Mail Provider', () => {
     expect(mockSend).toHaveBeenCalledTimes(1)
     expect(mockSend).toHaveBeenCalledWith({
       message: {
-        html: `<p>hello Test</p>`,
+        html: undefined,
         text: 'hello Test',
         subject: 'test subject',
         from_email: 'dev@wepublish.ch',

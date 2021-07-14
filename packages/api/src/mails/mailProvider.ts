@@ -17,6 +17,7 @@ export interface SendMailProps {
   replyToAddress: string
   subject: string
   message?: string
+  messageHtml?: string
   template?: string
   templateData?: Record<string, any>
 }

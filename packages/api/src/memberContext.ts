@@ -2,13 +2,13 @@ import {PaymentProviderCustomer, UserSort, UserSubscription} from './db/user'
 import {Invoice, InvoiceSort, OptionalInvoice} from './db/invoice'
 import {DBAdapter} from './db/adapter'
 import {logger} from './server'
-import {DataLoaderContext, SendMailFromProviderProps} from './context'
+import {DataLoaderContext} from './context'
 import {ONE_DAY_IN_MILLISECONDS, ONE_HOUR_IN_MILLISECONDS} from './utility'
 import {PaymentPeriodicity} from './db/memberPlan'
 import {DateFilterComparison, InputCursor, LimitType, SortOrder} from './db/common'
 import {PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
-import {MailLog} from './db/mailLog'
+import {MailContext, SendMailType} from './mails/mailContext'
 
 export interface RenewSubscriptionForUserProps {
   userID: string
@@ -45,7 +45,7 @@ export interface MemberContext {
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+  mailContext: MailContext
 
   renewSubscriptionForUser(props: RenewSubscriptionForUserProps): Promise<OptionalInvoice>
   renewSubscriptionForUsers(props: RenewSubscriptionForUsersProps): Promise<void>
@@ -61,8 +61,7 @@ export interface MemberContextProps {
   readonly dbAdapter: DBAdapter
   readonly loaders: DataLoaderContext
   readonly paymentProviders: PaymentProvider[]
-
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
+  readonly mailContext: MailContext
 }
 
 function getNextDateForPeriodicity(start: Date, periodicity: PaymentPeriodicity): Date {
@@ -100,12 +99,14 @@ export class MemberContext implements MemberContext {
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
 
+  mailContext: MailContext
+
   constructor(props: MemberContextProps) {
     this.dbAdapter = props.dbAdapter
     this.loaders = props.loaders
     this.paymentProviders = props.paymentProviders
 
-    this.sendMailFromProvider = props.sendMailFromProvider
+    this.mailContext = props.mailContext
   }
 
   async renewSubscriptionForUser({
@@ -430,36 +431,38 @@ export class MemberContext implements MemberContext {
     const offSessionPayments = paymentProvider?.offSessionPayments ?? false
     if (offSessionPayments) {
       if (invoice.dueAt > today) {
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `We will try to bill your cc in ${invoice.dueAt.toISOString()}. 
-            If you want to change the amount, paymentMethod or something else. PLease use the link:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail({
+          type: SendMailType.MemberSubscriptionOffSessionBefore,
           recipient: invoice.mail,
-          subject: 'New invoice'
+          data: {
+            invoice,
+            user,
+            userPaymentURL
+          }
         })
       } else {
         // system will try to bill every night and send error to user.
       }
     } else {
       if (invoice.dueAt > today) {
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `You have a new invoice open which is due at  ${invoice.dueAt.toISOString()}. 
-            Click the link to pay:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail({
+          type: SendMailType.MemberSubscriptionOnSessionBefore,
           recipient: invoice.mail,
-          subject: 'New invoice'
+          data: {
+            invoice,
+            user,
+            userPaymentURL
+          }
         })
       } else {
-        // Send message => "Your invoice is due since ${days}. Please click link to pay. Your account will be suspended..."
-        await this.sendMailFromProvider({
-          replyToAddress,
-          message: `Your invoice is due since ${invoice.dueAt.toISOString()}. 
-            Please click the link to pay otherwise your account will be suspended:
-            ${userPaymentURL}?invoice=${invoice.id}`,
+        await this.mailContext.sendMail({
+          type: SendMailType.MemberSubscriptionOnSessionAfter,
           recipient: invoice.mail,
-          subject: 'New invoice'
+          data: {
+            invoice,
+            user,
+            userPaymentURL
+          }
         })
       }
     }

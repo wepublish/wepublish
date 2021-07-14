@@ -40,10 +40,10 @@ import {Invoice, OptionalInvoice} from './db/invoice'
 import {OptionalPayment, Payment, PaymentState} from './db/payment'
 import {PaymentProvider} from './payments/paymentProvider'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MailLog, MailLogState, OptionalMailLog} from './db/mailLog'
-import {logger} from './server'
+import {OptionalMailLog} from './db/mailLog'
 import {MemberContext} from './memberContext'
 import {Client, Issuer} from 'openid-client'
+import {MailContext, MailContextOptions} from './mails/mailContext'
 
 export interface DataLoaderContext {
   readonly navigationByID: DataLoader<string, OptionalNavigation>
@@ -92,6 +92,7 @@ export interface Context {
   readonly session: OptionalSession
   readonly loaders: DataLoaderContext
 
+  readonly mailContext: MailContext
   readonly memberContext: MemberContext
 
   readonly dbAdapter: DBAdapter
@@ -100,8 +101,6 @@ export interface Context {
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
-
-  sendMailFromProvider(props: SendMailFromProviderProps): Promise<MailLog>
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -132,6 +131,7 @@ export interface ContextOptions {
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
   readonly mailProvider?: BaseMailProvider
+  readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
@@ -171,6 +171,7 @@ export async function contextFromRequest(
     oauth2Providers,
     hooks,
     mailProvider,
+    mailContextOptions,
     paymentProviders
   }: ContextOptions
 ): Promise<Context> {
@@ -185,28 +186,6 @@ export async function contextFromRequest(
   const peerDataLoader = new DataLoader<string, OptionalPeer>(async ids =>
     dbAdapter.peer.getPeersByID(ids)
   )
-
-  const sendMailFromProvider = async function (props: SendMailFromProviderProps) {
-    const mailProviderID = mailProvider ? mailProvider.id : 'fakeMailProvider'
-    const mailLog = await dbAdapter.mailLog.createMailLog({
-      input: {
-        state: MailLogState.Submitted,
-        subject: props.subject,
-        recipient: props.recipient,
-        mailProviderID: mailProviderID
-      }
-    })
-
-    if (mailProvider) {
-      try {
-        await mailProvider.sendMail({...props, mailLogID: mailLog.id})
-      } catch (error) {
-        logger('context').error(error, 'Error during sendMail mailLogID: %s', mailLog.id)
-      }
-    }
-
-    return mailLog
-  }
 
   const loaders: DataLoaderContext = {
     navigationByID: new DataLoader(ids => dbAdapter.navigation.getNavigationsByID(ids)),
@@ -299,11 +278,20 @@ export async function contextFromRequest(
     paymentsByID: new DataLoader(ids => dbAdapter.payment.getPaymentsByID(ids))
   }
 
+  const mailContext = new MailContext({
+    dbAdapter,
+    mailProvider,
+    defaultFromAddress: mailContextOptions.defaultFromAddress,
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
+    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
+    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+  })
+
   const memberContext = new MemberContext({
     loaders,
     dbAdapter,
     paymentProviders,
-    sendMailFromProvider
+    mailContext
   })
 
   return {
@@ -313,15 +301,13 @@ export async function contextFromRequest(
     loaders,
 
     memberContext,
-
+    mailContext,
     dbAdapter,
     mediaAdapter,
     urlAdapter,
     oauth2Providers,
     paymentProviders,
     hooks,
-
-    sendMailFromProvider,
 
     async getOauth2Clients() {
       return await Promise.all(
