@@ -143,7 +143,7 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <link rel="canonical" href={articleCanonicalURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={articleCanonicalURL} />
+        <meta property="og:url" content={canonicalHost + path} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -268,7 +268,6 @@ export function PeerArticleTemplateContainer({
     publishedAt,
     updatedAt,
     blocks,
-    canonicalUrl,
     socialMediaImage,
     socialMediaDescription,
     socialMediaTitle,
@@ -276,7 +275,9 @@ export function PeerArticleTemplateContainer({
   } = articleData
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
-  const peerArticleCanonicalURL = canonicalUrl || canonicalHost + path
+
+  const peerArticleCanonicalURL = articleData.canonicalUrl || articleData.url
+
   return (
     <>
       <Helmet>
@@ -287,7 +288,7 @@ export function PeerArticleTemplateContainer({
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={peerArticleCanonicalURL} />
+        <meta property="og:url" content={canonicalHost + path} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
