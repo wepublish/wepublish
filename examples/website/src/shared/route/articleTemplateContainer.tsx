@@ -134,16 +134,18 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
   } = articleData
 
   const path = ArticleRoute.reverse({id, slug})
-  const articleCanonicalURL = canonicalUrl || canonicalHost + path
+  const canonicalURL = canonicalHost + path
+  const canonicalPeerURL = canonicalUrl || canonicalHost + path
+
   return (
     <>
       <Helmet>
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
-        <link rel="canonical" href={articleCanonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalHost + path} />
+        <meta property="og:url" content={canonicalURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -161,9 +163,9 @@ export function ArticleTemplateContainer({id, slug}: ArticleTemplateContainerPro
         <meta name="twitter:card" content="summary_large_image"></meta>
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={articleCanonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
       <BlockRenderer
-        articleShareUrl={articleCanonicalURL}
+        articleShareUrl={canonicalURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}
@@ -276,7 +278,8 @@ export function PeerArticleTemplateContainer({
 
   const path = PeerArticleRoute.reverse({peerID: '12', id, slug})
 
-  const peerArticleCanonicalURL = articleData.canonicalUrl || articleData.url
+  const canonicalURL = canonicalHost + path
+  const canonicalPeerURL = articleData.canonicalUrl || articleData.url
 
   return (
     <>
@@ -284,11 +287,11 @@ export function PeerArticleTemplateContainer({
         <title>{title}</title>
         {lead && <meta name="description" content={lead} />}
 
-        <link rel="canonical" href={peerArticleCanonicalURL} />
+        <link rel="canonical" href={canonicalPeerURL} />
 
         <meta property="og:title" content={socialMediaTitle ?? title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={canonicalHost + path} />
+        <meta property="og:url" content={canonicalURL} />
         {socialMediaDescription && (
           <meta property="og:description" content={socialMediaDescription} />
         )}
@@ -306,10 +309,10 @@ export function PeerArticleTemplateContainer({
         ))}
       </Helmet>
 
-      <DesktopSocialMediaButtons shareUrl={peerArticleCanonicalURL} />
+      <DesktopSocialMediaButtons shareUrl={canonicalURL} />
       <PeerProfileBlock peer={peer} article={articleData} />
       <BlockRenderer
-        articleShareUrl={peerArticleCanonicalURL}
+        articleShareUrl={canonicalURL}
         authors={authors}
         publishedAt={publishedAt}
         updatedAt={updatedAt}

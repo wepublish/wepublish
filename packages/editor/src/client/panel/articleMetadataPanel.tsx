@@ -389,7 +389,17 @@ export function ArticleMetadataPanel({
                   value={canonicalUrl}
                   onChange={canonicalUrl => onChange?.({...value, canonicalUrl})}
                 />
-                <HelpBlock>{t('articleEditor.panels.canonicalUrLHelpBlock')}</HelpBlock>
+                <HelpBlock>
+                  <Trans i18nKey={'articleEditor.panels.canonicalUrLHelpBlock'}>
+                    text{' '}
+                    <a
+                      href="https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls"
+                      target="_blank"
+                      rel="noreferrer">
+                      more text
+                    </a>
+                  </Trans>
+                </HelpBlock>
               </FormGroup>
             </Form>
             <Form fluid={true} style={{marginTop: '20px'}}>
