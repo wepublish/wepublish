@@ -35,7 +35,6 @@ import {
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
 import { commentLengthValidation } from '../utility'
-// import { commentLengthValidation } from '../utility'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
