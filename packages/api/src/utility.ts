@@ -4,7 +4,6 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import { CommentInput } from './db/comment'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -152,18 +151,16 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-// export function commentLengthValidation (comment: CommentInput) {
-//   console.log(comment)
-//   // if(!comment.text.length){
-//   //   return []
-//   // }
-//   // if(comment.text.length > 0){
-//   //   comment.text.forEach(element => {
-//   //     element.children
-//   //   });
-//   // }
-//   // }
-// }
+export function commentLengthValidation (comment: any) {
+  let charCount = 0;
+  for (let i = 0; i < comment.text.length; i++) {
+    charCount += comment.text[i].children[i].text.length
+    if (charCount > 1000) {
+      throw new Error(`Comment Length should be maximum of 1000 characters`)
+      return [];
+    }
+  }
+}
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS
