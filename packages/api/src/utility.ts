@@ -4,6 +4,7 @@ import {delegateToSchema, IDelegateToSchemaOptions, Transform, ExecutionResult} 
 
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
+import { CommentInput } from './db/comment'
 
 // https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
 export function slugify(str: string) {
@@ -150,6 +151,19 @@ export async function delegateToPeerSchema(
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+// export function commentLengthValidation (comment: CommentInput) {
+//   console.log(comment)
+//   // if(!comment.text.length){
+//   //   return []
+//   // }
+//   // if(comment.text.length > 0){
+//   //   comment.text.forEach(element => {
+//   //     element.children
+//   //   });
+//   // }
+//   // }
+// }
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 export const ONE_DAY_IN_MILLISECONDS = 24 * ONE_HOUR_IN_MILLISECONDS

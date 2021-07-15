@@ -34,6 +34,7 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
+// import { commentLengthValidation } from '../utility'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -122,12 +123,14 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
-        for (let index = 0; index < input.text.length; index++) {
-          if (input.text[index].children[index].text.length > 1000) {
+        for (let i = 0; i < input.text.length; i++) {
+          if (input.text[i]?.children[i].text.length > 1000) {
+            console.log(input)
             throw new Error(`Comment Length should be maximum of 1000 characters`)
             return [];
           }
         }
+        // commentLengthValidation(input)
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
