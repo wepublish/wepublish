@@ -34,7 +34,7 @@ import {
   GraphQLPublicComment
 } from './comment'
 import {CommentAuthorType, CommentState} from '../db/comment'
-import { validateCommentLength } from '../utility'
+import {validateCommentLength} from '../utility'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -123,7 +123,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       description: 'This mutation allows to add a comment. The input is of type CommentInput.',
       async resolve(_, {input}, {authenticateUser, dbAdapter}) {
         const {user} = authenticateUser()
-        validateCommentLength(input)
+
+        validateCommentLength(input.text)
+
         return await dbAdapter.comment.addPublicComment({
           input: {
             ...input,
