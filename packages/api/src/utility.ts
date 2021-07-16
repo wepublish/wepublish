@@ -151,7 +151,7 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-export function commentLengthValidation (comment: any) {
+export function validateCommentLength (comment: any) {
   let charCount = 0;
   for (let i = 0; i < comment.text.length; i++) {
     charCount += comment.text[i].children[i].text.length
