@@ -83,6 +83,8 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
 
+    canonicalUrl: {type: GraphQLString},
+
     imageID: {type: GraphQLID},
     authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
 
@@ -123,6 +125,8 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
 
     properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     image: {
       type: GraphQLImage,
@@ -252,6 +256,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
     tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+
+    canonicalUrl: {type: GraphQLString},
 
     properties: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),

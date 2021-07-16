@@ -59,6 +59,7 @@ fragment ArticleRef on Article {
     image {
       ...ImageRef
     }
+    canonicalUrl
   }
 }
 
@@ -176,6 +177,7 @@ query Article($id: ID!) {
         ...ImageRef
       }
       tags
+      canonicalUrl
       properties {
         key
         value

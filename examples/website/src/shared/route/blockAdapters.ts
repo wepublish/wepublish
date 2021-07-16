@@ -330,6 +330,7 @@ export function teaserAdapter(teaser: any): ArticleMeta | null {
     authors: data.authors && authorsAdapter(data.authors),
     socialMediaAuthors: data.socialMediaAuthors && authorsAdapter(data.socialMediaAuthors),
     tags: data.tags ?? [],
-    isBreaking: data.breaking
+    isBreaking: data.breaking,
+    canonicalUrl: data.canonicalUrl
   }
 }

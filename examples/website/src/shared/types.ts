@@ -82,6 +82,8 @@ export interface ArticleMeta {
   slug?: string
   isBreaking: boolean
 
+  canonicalUrl: string
+
   socialMediaTitle?: string
   socialMediaDescription?: string
   socialMediaAuthors: Author[]

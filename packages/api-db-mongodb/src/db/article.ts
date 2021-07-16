@@ -105,6 +105,8 @@ export class MongoDBArticleAdapter implements DBArticleAdapter {
 
             'draft.hideAuthor': data.hideAuthor,
 
+            'draft.canonicalUrl': data.canonicalUrl,
+
             'draft.socialMediaTitle': data.socialMediaTitle,
             'draft.socialMediaAuthorIDs': data.socialMediaAuthorIDs,
             'draft.socialMediaDescription': data.socialMediaDescription,

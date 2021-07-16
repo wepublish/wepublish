@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -56,6 +58,7 @@ export type ArticleInput = {
   seoTitle?: Maybe<Scalars['String']>
   tags: Array<Scalars['String']>
   properties: Array<PropertiesInput>
+  canonicalUrl?: Maybe<Scalars['String']>
   imageID?: Maybe<Scalars['ID']>
   authorIDs: Array<Scalars['ID']>
   shared: Scalars['Boolean']
@@ -94,6 +97,7 @@ export type ArticleRevision = {
   slug: Scalars['Slug']
   tags: Array<Scalars['String']>
   properties: Array<Properties>
+  canonicalUrl?: Maybe<Scalars['String']>
   image?: Maybe<Image>
   authors: Array<Maybe<Author>>
   breaking: Scalars['Boolean']
@@ -251,7 +255,7 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
-  parentID?: Maybe<Scalars['ID']>
+  parentComment?: Maybe<Comment>
   revisions: Array<CommentRevision>
   state: CommentState
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -1162,6 +1166,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle'
   peer: Peer
+  peeredArticleURL: Scalars['String']
   article: Article
 }
 
@@ -1276,6 +1281,7 @@ export type Query = {
   articlePreviewLink?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   pages: PageConnection
+  pagePreviewLink?: Maybe<Scalars['String']>
   memberPlan?: Maybe<MemberPlan>
   memberPlans: MemberPlanConnection
   paymentMethod?: Maybe<PaymentMethod>
@@ -1416,6 +1422,11 @@ export type QueryPagesArgs = {
   skip?: Maybe<Scalars['Int']>
   sort?: Maybe<PageSort>
   order?: Maybe<SortOrder>
+}
+
+export type QueryPagePreviewLinkArgs = {
+  id: Scalars['ID']
+  hours: Scalars['Int']
 }
 
 export type QueryMemberPlanArgs = {

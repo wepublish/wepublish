@@ -61,6 +61,7 @@ function articleMetaAdapter(article: any): ArticleMeta {
     authors: authorsAdapter(article.authors),
     isBreaking: article.breaking,
     tags: article.tags,
+    canonicalUrl: article.canonicalUrl,
     socialMediaTitle: article.socialMediaTitle,
     socialMediaDescription: article.socialMediaDescription,
     socialMediaAuthors: authorsAdapter(article.socialMediaAuthors),
