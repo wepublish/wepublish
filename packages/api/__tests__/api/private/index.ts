@@ -3,6 +3,8 @@ import {Node} from 'slate'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
 export type Exact<T extends {[key: string]: unknown}> = {[K in keyof T]: T[K]}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]?: Maybe<T[SubKey]>}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {[SubKey in K]: Maybe<T[SubKey]>}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -251,7 +253,7 @@ export type Comment = {
   authorType: CommentAuthorType
   itemID: Scalars['ID']
   itemType: CommentItemType
-  parentID?: Maybe<Scalars['ID']>
+  parentComment?: Maybe<Comment>
   revisions: Array<CommentRevision>
   state: CommentState
   rejectionReason?: Maybe<CommentRejectionReason>
@@ -1162,6 +1164,7 @@ export type Peer = {
 export type PeerArticle = {
   __typename?: 'PeerArticle'
   peer: Peer
+  peeredArticleURL: Scalars['String']
   article: Article
 }
 
@@ -1203,6 +1206,8 @@ export type PeerProfile = {
   websiteURL: Scalars['String']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImage?: Maybe<Image>
 }
 
 export type PeerProfileInput = {
@@ -1211,6 +1216,8 @@ export type PeerProfileInput = {
   themeColor: Scalars['Color']
   callToActionText: Scalars['RichText']
   callToActionURL: Scalars['String']
+  callToActionImageURL?: Maybe<Scalars['String']>
+  callToActionImageID?: Maybe<Scalars['ID']>
 }
 
 export type Permission = {
@@ -2439,8 +2446,16 @@ export type PageQuery = {__typename?: 'Query'} & {
 
 export type FullPeerProfileFragment = {__typename?: 'PeerProfile'} & Pick<
   PeerProfile,
-  'name' | 'hostURL' | 'themeColor' | 'callToActionText' | 'callToActionURL'
-> & {logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>}
+  | 'name'
+  | 'hostURL'
+  | 'themeColor'
+  | 'callToActionText'
+  | 'callToActionURL'
+  | 'callToActionImageURL'
+> & {
+    logo?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+    callToActionImage?: Maybe<{__typename?: 'Image'} & ImageRefFragment>
+  }
 
 export type PeerRefFragment = {__typename?: 'Peer'} & Pick<Peer, 'id' | 'name' | 'slug' | 'hostURL'>
 
@@ -2865,6 +2880,10 @@ export const FullPeerProfile = gql`
     }
     callToActionText
     callToActionURL
+    callToActionImage {
+      ...ImageRef
+    }
+    callToActionImageURL
   }
   ${ImageRef}
 `
