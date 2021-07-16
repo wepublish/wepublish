@@ -1,5 +1,9 @@
-import React from 'react'
-import {DatePicker, FormGroup, ControlLabel, Form} from 'rsuite'
+import React, {useState} from 'react'
+
+import './dateTimePicker.less'
+
+import DatePicker from 'react-datepicker'
+import {DatePicker as DT, FormGroup, ControlLabel, Form} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 
 export interface DateTimeRange {
@@ -16,7 +20,32 @@ export interface DateTimePickerProps {
 
   changeDate(publishDate: Date): void
 }
+// New date picker component
+export function KeyboardDateTimePicker({dateTime, label, changeDate}: any) {
+  const {t} = useTranslation()
+  const date = new Date(dateTime ?? new Date())
 
+  const [startDate, setStartDate] = useState<any>(date)
+
+  return (
+    <>
+      <p>{label}</p>
+      <DatePicker
+        selected={startDate}
+        onChange={value => {
+          setStartDate(value)
+          console.log('change value ', value)
+          changeDate(value)
+        }}
+        dateFormat="dd/MM/yyyy h:mm"
+        isClearable
+        showTimeSelect
+        todayButton={t('dateTimePicker.today')}
+      />
+    </>
+  )
+}
+// Old date picker component - to remove
 export function DateTimePicker({
   dateTime,
   label,
@@ -32,7 +61,7 @@ export function DateTimePicker({
     <Form fluid={true}>
       <FormGroup>
         <ControlLabel>{label}</ControlLabel>
-        <DatePicker
+        <DT
           style={{marginRight: 8}}
           placement="auto"
           value={date}
@@ -76,7 +105,7 @@ export function DateTimePicker({
             }
           }}
         />
-        <DatePicker
+        <DT
           placement="auto"
           format="HH:mm"
           value={date}
