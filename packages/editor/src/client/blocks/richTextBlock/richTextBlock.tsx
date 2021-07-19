@@ -169,6 +169,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
         onKeyDown={e => {
+          // @ts-ignore FIXME: fix this asap
           if (e.ctrlKey || e.metaKey) activateHotkey(e)
         }}
       />

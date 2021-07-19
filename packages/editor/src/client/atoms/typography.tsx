@@ -93,9 +93,9 @@ export function marginForTypographySpacing(spacing: TypographySpacing): string {
 }
 
 export interface TypographyVariantCSS {
-  readonly fontSize?: CSS.FontSizeProperty<string>
-  readonly fontWeight?: CSS.FontWeightProperty
-  readonly fontStyle?: CSS.FontStyleProperty
+  readonly fontSize?: CSS.Property.FontSize
+  readonly fontWeight?: CSS.Property.FontWeight
+  readonly fontStyle?: CSS.Property.FontStyle
 }
 
 export function stylesForTypographyVariant(style: TypographyVariant): TypographyVariantCSS {
