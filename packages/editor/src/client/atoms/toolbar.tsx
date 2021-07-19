@@ -61,10 +61,6 @@ export function Toolbar({onMouseDown, fadeOut = false, children}: ToolbarProps) 
   )
 }
 
-/* interface BaseToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly active?: boolean
-} */
-
 interface BaseToolbarButtonProps extends React.ComponentPropsWithRef<'button'> {
   readonly active?: boolean
 }
