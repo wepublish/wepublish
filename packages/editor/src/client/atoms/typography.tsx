@@ -1,4 +1,5 @@
-import React, {CSSProperties, ElementType, forwardRef, ReactNode} from 'react'
+import React, {ElementType, forwardRef, ReactNode} from 'react'
+import * as CSS from 'csstype'
 
 export type TypographyVariant =
   | 'title'
@@ -14,7 +15,7 @@ export type TypographyTextAlign = 'left' | 'center' | 'right'
 export type TypographyDisplay = 'block' | 'inline'
 export type TypographySpacing = 'small' | 'large'
 
-export interface TypographyProps {
+export interface TypographyProps extends React.ComponentPropsWithRef<'div'> {
   variant?: TypographyVariant
   color?: string
   align?: TypographyTextAlign
@@ -91,43 +92,49 @@ export function marginForTypographySpacing(spacing: TypographySpacing): string {
   }
 }
 
-export function stylesForTypographyVariant(style: TypographyVariant): CSSProperties {
+export interface TypographyVariantCSS {
+  readonly fontSize?: CSS.Property.FontSize
+  readonly fontWeight?: CSS.Property.FontWeight
+  readonly fontStyle?: CSS.Property.FontStyle
+}
+
+export function stylesForTypographyVariant(style: TypographyVariant): TypographyVariantCSS {
   switch (style) {
     case 'title':
       return {
-        fontSize: 40,
+        fontSize: '40px',
         fontWeight: 'bold'
       }
 
     case 'h1':
       return {
-        fontSize: 28,
+        fontSize: '28px',
         fontWeight: 'bold'
       }
 
     case 'h2':
       return {
-        fontSize: 24,
+        fontSize: '24px',
         fontWeight: 'bold'
       }
 
     case 'h3':
       return {
-        fontSize: 20,
+        fontSize: '20px',
         fontWeight: 'bold'
       }
 
     case 'body1':
     case 'body2':
       return {
-        fontSize: 16,
+        fontSize: '16px',
         fontWeight: style === 'body2' ? 'bold' : undefined
       }
 
     case 'subtitle1':
     case 'subtitle2':
       return {
-        fontSize: 12,
+        fontSize: '12px',
         fontStyle: style === 'subtitle2' ? 'italic' : undefined
       }
   }
