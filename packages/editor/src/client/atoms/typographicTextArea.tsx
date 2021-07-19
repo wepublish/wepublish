@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useRef,
-  TextareaHTMLAttributes,
   useLayoutEffect,
   forwardRef,
   useImperativeHandle,
@@ -12,7 +11,7 @@ import {TypographyVariant, stylesForTypographyVariant, TypographyTextAlign} from
 
 const AutoSizeBuffer = 2
 
-export interface TypographicTextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TypographicTextAreaProps extends React.ComponentPropsWithRef<'textarea'> {
   readonly variant?: TypographyVariant
   readonly align?: TypographyTextAlign
 }
@@ -57,7 +56,6 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
     return (
       <textarea
         ref={ref}
-        {...props}
         style={{
           display: 'block',
 
@@ -79,6 +77,7 @@ export const TypographicTextArea = forwardRef<HTMLTextAreaElement, TypographicTe
         }}
         onChange={handleChange}
         rows={1}
+        {...props}
       />
     )
   }
