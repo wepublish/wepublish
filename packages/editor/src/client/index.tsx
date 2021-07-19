@@ -99,6 +99,7 @@ const onDOMContentLoaded = async () => {
   const mainLink = createUploadLink({uri: adminAPIURL})
 
   const client = new ApolloClient({
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     link: authLink.concat(authErrorLink).concat(mainLink),
     cache: new InMemoryCache({

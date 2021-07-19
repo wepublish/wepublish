@@ -169,6 +169,7 @@ export const RichTextBlock = memo(function RichTextBlock({
           setLocation(editor.selection)
         }}
         onKeyDown={e => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore FIXME: fix this asap
           if (e.ctrlKey || e.metaKey) activateHotkey(e)
         }}
