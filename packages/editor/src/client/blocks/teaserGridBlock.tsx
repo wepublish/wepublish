@@ -328,7 +328,7 @@ export function TeaserContent({
       </div>
 
       <Overlay
-        styles={{
+        style={{
           bottom: '0px',
           width: '100%',
           padding: '10px'

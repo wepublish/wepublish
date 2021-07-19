@@ -135,7 +135,7 @@ export function ImageList() {
                     style={{height: '200', display: 'block', margin: '0 auto'}}
                   />
                   <Overlay
-                    styles={{
+                    style={{
                       bottom: '0px',
                       width: '100%',
                       maxHeight: '50%',
